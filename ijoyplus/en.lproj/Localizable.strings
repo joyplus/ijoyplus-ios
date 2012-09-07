@@ -1,0 +1,20 @@
+
+"Pull down to refresh..." = "下拉可以刷新...";
+"Loading..." = "努力加载中...";
+"Release to refresh..." = "松开可以刷新...";
+"Pull to load more" = "上拉加载更多...";
+
+app_name = "Joy+";
+login = "登陆";
+register = "注册";
+search = "搜索";
+
+movie = "电影";
+drama = "剧集";
+video = "视频";
+local = "本地";
+
+film = "影视";
+friend = "圈子";
+list = "列表";
+myself = "个人";

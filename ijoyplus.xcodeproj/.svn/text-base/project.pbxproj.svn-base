@@ -1,0 +1,465 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC615F885EC00C878D5 /* UIKit.framework */; };
+		EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC815F885EC00C878D5 /* Foundation.framework */; };
+		EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */; };
+		EB32BCD115F885EC00C878D5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB32BCCF15F885EC00C878D5 /* InfoPlist.strings */; };
+		EB32BCD315F885EC00C878D5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCD215F885EC00C878D5 /* main.m */; };
+		EB32BCD715F885EC00C878D5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCD615F885EC00C878D5 /* AppDelegate.m */; };
+		EB32BCF015F8873100C878D5 /* BottomTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCEF15F8873100C878D5 /* BottomTabViewController.m */; };
+		EB32BD0315F8873B00C878D5 /* LoadingMoreFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCFC15F8873B00C878D5 /* LoadingMoreFooterView.m */; };
+		EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCFE15F8873B00C878D5 /* WaterflowView.m */; };
+		EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BD3715F888BD00C878D5 /* QuartzCore.framework */; };
+		EB32BD3F15F8948400C878D5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB32BD3D15F8948400C878D5 /* Localizable.strings */; };
+		EBAFBBF115F9B6EA007579D1 /* CustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBBF015F9B6EA007579D1 /* CustomTabBar.m */; };
+		EBAFBBF415F9B93C007579D1 /* TopTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBBF315F9B93C007579D1 /* TopTabViewController.m */; };
+		EBAFBC0915F9BB58007579D1 /* chat.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBF515F9BB58007579D1 /* chat.png */; };
+		EBAFBC0A15F9BB58007579D1 /* chat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBF615F9BB58007579D1 /* chat@2x.png */; };
+		EBAFBC0B15F9BB58007579D1 /* compose-at.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBF715F9BB58007579D1 /* compose-at.png */; };
+		EBAFBC0C15F9BB58007579D1 /* compose-at@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBF815F9BB58007579D1 /* compose-at@2x.png */; };
+		EBAFBC0D15F9BB58007579D1 /* magnifying-glass.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBF915F9BB58007579D1 /* magnifying-glass.png */; };
+		EBAFBC0E15F9BB58007579D1 /* magnifying-glass@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBFA15F9BB58007579D1 /* magnifying-glass@2x.png */; };
+		EBAFBC0F15F9BB58007579D1 /* messages.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBFB15F9BB58007579D1 /* messages.png */; };
+		EBAFBC1015F9BB58007579D1 /* messages@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBFC15F9BB58007579D1 /* messages@2x.png */; };
+		EBAFBC1115F9BB58007579D1 /* more.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBFD15F9BB58007579D1 /* more.png */; };
+		EBAFBC1215F9BB58007579D1 /* more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBFE15F9BB58007579D1 /* more@2x.png */; };
+		EBAFBC1315F9BB58007579D1 /* TabBarGlow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBBFF15F9BB58007579D1 /* TabBarGlow.png */; };
+		EBAFBC1415F9BB58007579D1 /* TabBarGlow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0015F9BB58007579D1 /* TabBarGlow@2x.png */; };
+		EBAFBC1515F9BB58007579D1 /* TabBarGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0115F9BB58007579D1 /* TabBarGradient.png */; };
+		EBAFBC1615F9BB58007579D1 /* TabBarGradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0215F9BB58007579D1 /* TabBarGradient@2x.png */; };
+		EBAFBC1715F9BB58007579D1 /* TabBarItemSelectedBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0315F9BB58007579D1 /* TabBarItemSelectedBackground.png */; };
+		EBAFBC1815F9BB58007579D1 /* TabBarItemSelectedBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0415F9BB58007579D1 /* TabBarItemSelectedBackground@2x.png */; };
+		EBAFBC1915F9BB59007579D1 /* TabBarNipple.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0515F9BB58007579D1 /* TabBarNipple.png */; };
+		EBAFBC1A15F9BB59007579D1 /* TabBarNipple@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0615F9BB58007579D1 /* TabBarNipple@2x.png */; };
+		EBAFBC1B15F9BB59007579D1 /* TabBarSelection.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0715F9BB58007579D1 /* TabBarSelection.png */; };
+		EBAFBC1C15F9BB59007579D1 /* TabBarSelection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0815F9BB58007579D1 /* TabBarSelection@2x.png */; };
+		EBAFBC1F15F9BFFF007579D1 /* FilmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC1E15F9BFFF007579D1 /* FilmViewController.m */; };
+		EBAFBC2215F9C6E3007579D1 /* TextCustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC2115F9C6E3007579D1 /* TextCustomTabBar.m */; };
+		F08E79464D5B418D93D509A6 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF63B43DF6849BC89060EC7 /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B94A1800965845D3B4A40881 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		DDF63B43DF6849BC89060EC7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB32BCC215F885EC00C878D5 /* ijoyplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ijoyplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB32BCC615F885EC00C878D5 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EB32BCC815F885EC00C878D5 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EB32BCCE15F885EC00C878D5 /* ijoyplus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ijoyplus-Info.plist"; sourceTree = "<group>"; };
+		EB32BCD015F885EC00C878D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EB32BCD215F885EC00C878D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EB32BCD415F885EC00C878D5 /* ijoyplus-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ijoyplus-Prefix.pch"; sourceTree = "<group>"; };
+		EB32BCD515F885EC00C878D5 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		EB32BCD615F885EC00C878D5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		EB32BCEE15F8873100C878D5 /* BottomTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomTabViewController.h; sourceTree = "<group>"; };
+		EB32BCEF15F8873100C878D5 /* BottomTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomTabViewController.m; sourceTree = "<group>"; };
+		EB32BCFB15F8873B00C878D5 /* LoadingMoreFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingMoreFooterView.h; sourceTree = "<group>"; };
+		EB32BCFC15F8873B00C878D5 /* LoadingMoreFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingMoreFooterView.m; sourceTree = "<group>"; };
+		EB32BCFD15F8873B00C878D5 /* WaterflowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterflowView.h; sourceTree = "<group>"; };
+		EB32BCFE15F8873B00C878D5 /* WaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterflowView.m; sourceTree = "<group>"; };
+		EB32BD3715F888BD00C878D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		EB32BD3E15F8948400C878D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EBAFBBEF15F9B6EA007579D1 /* CustomTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTabBar.h; sourceTree = "<group>"; };
+		EBAFBBF015F9B6EA007579D1 /* CustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTabBar.m; sourceTree = "<group>"; };
+		EBAFBBF215F9B93C007579D1 /* TopTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopTabViewController.h; sourceTree = "<group>"; };
+		EBAFBBF315F9B93C007579D1 /* TopTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopTabViewController.m; sourceTree = "<group>"; };
+		EBAFBBF515F9BB58007579D1 /* chat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chat.png; sourceTree = "<group>"; };
+		EBAFBBF615F9BB58007579D1 /* chat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chat@2x.png"; sourceTree = "<group>"; };
+		EBAFBBF715F9BB58007579D1 /* compose-at.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose-at.png"; sourceTree = "<group>"; };
+		EBAFBBF815F9BB58007579D1 /* compose-at@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compose-at@2x.png"; sourceTree = "<group>"; };
+		EBAFBBF915F9BB58007579D1 /* magnifying-glass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "magnifying-glass.png"; sourceTree = "<group>"; };
+		EBAFBBFA15F9BB58007579D1 /* magnifying-glass@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "magnifying-glass@2x.png"; sourceTree = "<group>"; };
+		EBAFBBFB15F9BB58007579D1 /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messages.png; sourceTree = "<group>"; };
+		EBAFBBFC15F9BB58007579D1 /* messages@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "messages@2x.png"; sourceTree = "<group>"; };
+		EBAFBBFD15F9BB58007579D1 /* more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = more.png; sourceTree = "<group>"; };
+		EBAFBBFE15F9BB58007579D1 /* more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "more@2x.png"; sourceTree = "<group>"; };
+		EBAFBBFF15F9BB58007579D1 /* TabBarGlow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarGlow.png; sourceTree = "<group>"; };
+		EBAFBC0015F9BB58007579D1 /* TabBarGlow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarGlow@2x.png"; sourceTree = "<group>"; };
+		EBAFBC0115F9BB58007579D1 /* TabBarGradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarGradient.png; sourceTree = "<group>"; };
+		EBAFBC0215F9BB58007579D1 /* TabBarGradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarGradient@2x.png"; sourceTree = "<group>"; };
+		EBAFBC0315F9BB58007579D1 /* TabBarItemSelectedBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarItemSelectedBackground.png; sourceTree = "<group>"; };
+		EBAFBC0415F9BB58007579D1 /* TabBarItemSelectedBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarItemSelectedBackground@2x.png"; sourceTree = "<group>"; };
+		EBAFBC0515F9BB58007579D1 /* TabBarNipple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarNipple.png; sourceTree = "<group>"; };
+		EBAFBC0615F9BB58007579D1 /* TabBarNipple@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarNipple@2x.png"; sourceTree = "<group>"; };
+		EBAFBC0715F9BB58007579D1 /* TabBarSelection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarSelection.png; sourceTree = "<group>"; };
+		EBAFBC0815F9BB58007579D1 /* TabBarSelection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarSelection@2x.png"; sourceTree = "<group>"; };
+		EBAFBC1D15F9BFFF007579D1 /* FilmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilmViewController.h; sourceTree = "<group>"; };
+		EBAFBC1E15F9BFFF007579D1 /* FilmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilmViewController.m; sourceTree = "<group>"; };
+		EBAFBC2015F9C6E3007579D1 /* TextCustomTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextCustomTabBar.h; sourceTree = "<group>"; };
+		EBAFBC2115F9C6E3007579D1 /* TextCustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextCustomTabBar.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EB32BCBF15F885EC00C878D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */,
+				EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */,
+				EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */,
+				EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */,
+				F08E79464D5B418D93D509A6 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EB32BCB715F885EC00C878D5 = {
+			isa = PBXGroup;
+			children = (
+				EB32BCCC15F885EC00C878D5 /* ijoyplus */,
+				EB32BD0515F887A400C878D5 /* External */,
+				EB32BD1C15F887A400C878D5 /* Resources */,
+				EB32BCC515F885EC00C878D5 /* Frameworks */,
+				EB32BCC315F885EC00C878D5 /* Products */,
+				B94A1800965845D3B4A40881 /* Pods.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		EB32BCC315F885EC00C878D5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EB32BCC215F885EC00C878D5 /* ijoyplus.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EB32BCC515F885EC00C878D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EB32BD3715F888BD00C878D5 /* QuartzCore.framework */,
+				EB32BCC615F885EC00C878D5 /* UIKit.framework */,
+				EB32BCC815F885EC00C878D5 /* Foundation.framework */,
+				EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */,
+				DDF63B43DF6849BC89060EC7 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EB32BCCC15F885EC00C878D5 /* ijoyplus */ = {
+			isa = PBXGroup;
+			children = (
+				EBAFBC1D15F9BFFF007579D1 /* FilmViewController.h */,
+				EBAFBC1E15F9BFFF007579D1 /* FilmViewController.m */,
+				EBAFBBF215F9B93C007579D1 /* TopTabViewController.h */,
+				EBAFBBF315F9B93C007579D1 /* TopTabViewController.m */,
+				EB32BCEE15F8873100C878D5 /* BottomTabViewController.h */,
+				EB32BCEF15F8873100C878D5 /* BottomTabViewController.m */,
+				EB32BCD515F885EC00C878D5 /* AppDelegate.h */,
+				EB32BCD615F885EC00C878D5 /* AppDelegate.m */,
+				EB32BCF215F8873B00C878D5 /* component */,
+				EB32BCCD15F885EC00C878D5 /* Supporting Files */,
+			);
+			path = ijoyplus;
+			sourceTree = "<group>";
+		};
+		EB32BCCD15F885EC00C878D5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EB32BD3D15F8948400C878D5 /* Localizable.strings */,
+				EB32BCCE15F885EC00C878D5 /* ijoyplus-Info.plist */,
+				EB32BCCF15F885EC00C878D5 /* InfoPlist.strings */,
+				EB32BCD215F885EC00C878D5 /* main.m */,
+				EB32BCD415F885EC00C878D5 /* ijoyplus-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EB32BCF215F8873B00C878D5 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				EBAFBC2015F9C6E3007579D1 /* TextCustomTabBar.h */,
+				EBAFBC2115F9C6E3007579D1 /* TextCustomTabBar.m */,
+				EBAFBBEF15F9B6EA007579D1 /* CustomTabBar.h */,
+				EBAFBBF015F9B6EA007579D1 /* CustomTabBar.m */,
+				EB32BCFB15F8873B00C878D5 /* LoadingMoreFooterView.h */,
+				EB32BCFC15F8873B00C878D5 /* LoadingMoreFooterView.m */,
+				EB32BCFD15F8873B00C878D5 /* WaterflowView.h */,
+				EB32BCFE15F8873B00C878D5 /* WaterflowView.m */,
+			);
+			path = component;
+			sourceTree = "<group>";
+		};
+		EB32BD0515F887A400C878D5 /* External */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
+		EB32BD1C15F887A400C878D5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EB32BD2615F887CE00C878D5 /* temp */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EB32BD2615F887CE00C878D5 /* temp */ = {
+			isa = PBXGroup;
+			children = (
+				EBAFBBF515F9BB58007579D1 /* chat.png */,
+				EBAFBBF615F9BB58007579D1 /* chat@2x.png */,
+				EBAFBBF715F9BB58007579D1 /* compose-at.png */,
+				EBAFBBF815F9BB58007579D1 /* compose-at@2x.png */,
+				EBAFBBF915F9BB58007579D1 /* magnifying-glass.png */,
+				EBAFBBFA15F9BB58007579D1 /* magnifying-glass@2x.png */,
+				EBAFBBFB15F9BB58007579D1 /* messages.png */,
+				EBAFBBFC15F9BB58007579D1 /* messages@2x.png */,
+				EBAFBBFD15F9BB58007579D1 /* more.png */,
+				EBAFBBFE15F9BB58007579D1 /* more@2x.png */,
+				EBAFBBFF15F9BB58007579D1 /* TabBarGlow.png */,
+				EBAFBC0015F9BB58007579D1 /* TabBarGlow@2x.png */,
+				EBAFBC0115F9BB58007579D1 /* TabBarGradient.png */,
+				EBAFBC0215F9BB58007579D1 /* TabBarGradient@2x.png */,
+				EBAFBC0315F9BB58007579D1 /* TabBarItemSelectedBackground.png */,
+				EBAFBC0415F9BB58007579D1 /* TabBarItemSelectedBackground@2x.png */,
+				EBAFBC0515F9BB58007579D1 /* TabBarNipple.png */,
+				EBAFBC0615F9BB58007579D1 /* TabBarNipple@2x.png */,
+				EBAFBC0715F9BB58007579D1 /* TabBarSelection.png */,
+				EBAFBC0815F9BB58007579D1 /* TabBarSelection@2x.png */,
+			);
+			path = temp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EB32BCC115F885EC00C878D5 /* ijoyplus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EB32BCE015F885EC00C878D5 /* Build configuration list for PBXNativeTarget "ijoyplus" */;
+			buildPhases = (
+				EB32BCBE15F885EC00C878D5 /* Sources */,
+				EB32BCBF15F885EC00C878D5 /* Frameworks */,
+				EB32BCC015F885EC00C878D5 /* Resources */,
+				9DCC1A1C23BA42AC92C1C808 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ijoyplus;
+			productName = ijoyplus;
+			productReference = EB32BCC215F885EC00C878D5 /* ijoyplus.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EB32BCB915F885EC00C878D5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = joyplus;
+			};
+			buildConfigurationList = EB32BCBC15F885EC00C878D5 /* Build configuration list for PBXProject "ijoyplus" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EB32BCB715F885EC00C878D5;
+			productRefGroup = EB32BCC315F885EC00C878D5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EB32BCC115F885EC00C878D5 /* ijoyplus */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EB32BCC015F885EC00C878D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB32BCD115F885EC00C878D5 /* InfoPlist.strings in Resources */,
+				EB32BD3F15F8948400C878D5 /* Localizable.strings in Resources */,
+				EBAFBC0915F9BB58007579D1 /* chat.png in Resources */,
+				EBAFBC0A15F9BB58007579D1 /* chat@2x.png in Resources */,
+				EBAFBC0B15F9BB58007579D1 /* compose-at.png in Resources */,
+				EBAFBC0C15F9BB58007579D1 /* compose-at@2x.png in Resources */,
+				EBAFBC0D15F9BB58007579D1 /* magnifying-glass.png in Resources */,
+				EBAFBC0E15F9BB58007579D1 /* magnifying-glass@2x.png in Resources */,
+				EBAFBC0F15F9BB58007579D1 /* messages.png in Resources */,
+				EBAFBC1015F9BB58007579D1 /* messages@2x.png in Resources */,
+				EBAFBC1115F9BB58007579D1 /* more.png in Resources */,
+				EBAFBC1215F9BB58007579D1 /* more@2x.png in Resources */,
+				EBAFBC1315F9BB58007579D1 /* TabBarGlow.png in Resources */,
+				EBAFBC1415F9BB58007579D1 /* TabBarGlow@2x.png in Resources */,
+				EBAFBC1515F9BB58007579D1 /* TabBarGradient.png in Resources */,
+				EBAFBC1615F9BB58007579D1 /* TabBarGradient@2x.png in Resources */,
+				EBAFBC1715F9BB58007579D1 /* TabBarItemSelectedBackground.png in Resources */,
+				EBAFBC1815F9BB58007579D1 /* TabBarItemSelectedBackground@2x.png in Resources */,
+				EBAFBC1915F9BB59007579D1 /* TabBarNipple.png in Resources */,
+				EBAFBC1A15F9BB59007579D1 /* TabBarNipple@2x.png in Resources */,
+				EBAFBC1B15F9BB59007579D1 /* TabBarSelection.png in Resources */,
+				EBAFBC1C15F9BB59007579D1 /* TabBarSelection@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9DCC1A1C23BA42AC92C1C808 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EB32BCBE15F885EC00C878D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EB32BCD315F885EC00C878D5 /* main.m in Sources */,
+				EB32BCD715F885EC00C878D5 /* AppDelegate.m in Sources */,
+				EB32BCF015F8873100C878D5 /* BottomTabViewController.m in Sources */,
+				EB32BD0315F8873B00C878D5 /* LoadingMoreFooterView.m in Sources */,
+				EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */,
+				EBAFBBF115F9B6EA007579D1 /* CustomTabBar.m in Sources */,
+				EBAFBBF415F9B93C007579D1 /* TopTabViewController.m in Sources */,
+				EBAFBC1F15F9BFFF007579D1 /* FilmViewController.m in Sources */,
+				EBAFBC2215F9C6E3007579D1 /* TextCustomTabBar.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		EB32BCCF15F885EC00C878D5 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EB32BCD015F885EC00C878D5 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EB32BD3D15F8948400C878D5 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EB32BD3E15F8948400C878D5 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EB32BCDE15F885EC00C878D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		EB32BCDF15F885EC00C878D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EB32BCE115F885EC00C878D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B94A1800965845D3B4A40881 /* Pods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ijoyplus/ijoyplus-Prefix.pch";
+				INFOPLIST_FILE = "ijoyplus/ijoyplus-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EB32BCE215F885EC00C878D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B94A1800965845D3B4A40881 /* Pods.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ijoyplus/ijoyplus-Prefix.pch";
+				INFOPLIST_FILE = "ijoyplus/ijoyplus-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EB32BCBC15F885EC00C878D5 /* Build configuration list for PBXProject "ijoyplus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB32BCDE15F885EC00C878D5 /* Debug */,
+				EB32BCDF15F885EC00C878D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EB32BCE015F885EC00C878D5 /* Build configuration list for PBXNativeTarget "ijoyplus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB32BCE115F885EC00C878D5 /* Debug */,
+				EB32BCE215F885EC00C878D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EB32BCB915F885EC00C878D5 /* Project object */;
+}

@@ -1,0 +1,15 @@
+PODS:
+  - AFNetworking (1.0RC1)
+  - EGOTableViewPullRefresh (0.1.0)
+  - SDWebImage (2.6)
+  - UIGlossyButton (0.0.7):
+    - UIGlossyButton/Core (= 0.0.7)
+    - UIGlossyButton/LayerEffects (= 0.0.7)
+  - UIGlossyButton/Core (0.0.7)
+  - UIGlossyButton/LayerEffects (0.0.7)
+
+DEPENDENCIES:
+  - AFNetworking (= 1.0RC1)
+  - EGOTableViewPullRefresh (= 0.1.0)
+  - SDWebImage (= 2.6)
+  - UIGlossyButton (= 0.0.7)

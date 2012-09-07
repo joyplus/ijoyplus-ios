@@ -1,0 +1,14 @@
+UIGlossyButton
+==============
+
+- create standard iPhone buttons without any image
+- easy to embed into any project, two files are needed
+- easy to setup
+- easy to add new effects
+- also create nice buttons that is not in iOS style
+
+![screenshot](https://github.com/waterlou/UIGlossyButton/raw/master/screenshot.png)
+
+### License
+
+These specifications and CocoaPods are available under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
