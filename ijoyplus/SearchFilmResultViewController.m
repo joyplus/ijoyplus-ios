@@ -7,12 +7,25 @@
 //
 
 #import "SearchFilmResultViewController.h"
+#import "SearchFilmCell.h"
+#import "UIImageView+WebCache.h"
+#import "SearchVideoCell.h"
 
-@interface SearchFilmResultViewController ()
+@interface SearchFilmResultViewController (){
+     NSMutableArray *itemsArray;
+}
 
 @end
 
 @implementation SearchFilmResultViewController
+
+@synthesize keyword;
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.keyword = nil;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -26,19 +39,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.title = NSLocalizedString(@"search", nil);
 }
 
-- (void)viewDidUnload
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    
+    NSMutableArray *items1 = [[NSMutableArray alloc]initWithCapacity:20];
+    [items1 addObject:@"北京青年"];
+    NSMutableDictionary *itemDic1 = [[NSMutableDictionary alloc]initWithCapacity:10];
+    [itemDic1 setValue:items1 forKey:@"related_film"];
+    [itemsArray addObject:itemDic1];
+    
+    NSMutableArray *items2 = [[NSMutableArray alloc]initWithCapacity:20];
+    [items2 addObject:@"爱情公寓3"];
+    [items2 addObject:@"快乐大本营"];
+    [items2 addObject:@"康熙来了"];
+    [items2 addObject:@"百变大咖秀"];
+    [items2 addObject:@"天天向上"];
+    [items2 addObject:@"海贼王"];
+    NSMutableDictionary *itemDic2 = [[NSMutableDictionary alloc]initWithCapacity:10];
+    [itemDic2 setValue:items2 forKey:@"related_video"];
+    
+    [itemsArray addObject:itemDic2];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -50,28 +74,76 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return itemsArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
+    NSEnumerator *keys = item.keyEnumerator;
+    NSString *key = [keys nextObject];
+    NSMutableArray *array = [item objectForKey:key];
+    return array.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    // Configure the cell...
-    
-    return cell;
+    switch (indexPath.section) {
+        case 0:
+        {
+            SearchFilmCell *cell = (SearchFilmCell*) [tableView dequeueReusableCellWithIdentifier:@"searchFilmCell"];
+            if (cell == nil) {
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+                cell = (SearchFilmCell *)[nib objectAtIndex:0];
+            }
+            [cell.filmImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+            cell.filmTitleLabel.text = @"《银光之森》";
+            cell.filmThirdTitleLabel.text = @"时长：1小时06分钟";
+            return cell;
+        }
+        case 1:
+        {
+            SearchVideoCell *cell = (SearchVideoCell*) [tableView dequeueReusableCellWithIdentifier:@"searchVideoCell"];
+            if (cell == nil) {
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+                cell = (SearchVideoCell *)[nib objectAtIndex:1];
+            }
+            [cell.videoImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+            cell.videoTitleLabel.text = @"《银光之森》";
+            cell.videoSubtitleLabel.text = @"时长：1小时06分钟";
+            return cell;
+        }
+    }
+    return nil;
 }
 
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+    customView.backgroundColor = [UIColor blackColor];
+    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont boldSystemFontOfSize:12];
+    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
+    NSEnumerator *keys = item.keyEnumerator;
+    NSString *key = [keys nextObject];
+    headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
+    headerLabel.textColor = [UIColor whiteColor];
+    [headerLabel sizeToFit];
+    headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+    [customView addSubview:headerLabel];
+    return customView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.section ==0){
+        return 140;
+    } else {
+        return 120;
+    }
+}
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

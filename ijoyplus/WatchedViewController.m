@@ -1,4 +1,4 @@
-#import "PopularViewController.h"
+#import "WatchedViewController.h"
 #import "UIImageView+WebCache.h"
 
 #define NUMBER_OF_COLUMNS 3
@@ -6,23 +6,21 @@
 #define BOTTOM_TAB_HEIGHT 60
 #define COLUMN_GAP_WIDTH 10
 
-@interface PopularViewController(){
+@interface WatchedViewController(){
     WaterflowView *flowView;
     NSMutableArray *imageUrls;
     int currentPage;
-    int tempCount;
 }
 - (void)addContentView;
 @end
 
-@implementation PopularViewController
+@implementation WatchedViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
-    tempCount = imageUrls.count;
+
     [self addContentView];
 }
 
@@ -38,6 +36,9 @@
     [self.view addSubview:flowView];
     
     currentPage = 1;
+    
+    imageUrls = [NSMutableArray array];
+    imageUrls = [NSArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     [flowView reloadData];
     
 }
@@ -75,7 +76,7 @@
     } else {        
         imageView.frame = CGRectMake(COLUMN_GAP_WIDTH/2, COLUMN_GAP_WIDTH, (self.view.frame.size.width - (NUMBER_OF_COLUMNS+1)*COLUMN_GAP_WIDTH)/NUMBER_OF_COLUMNS, height - 30);
     }
-    [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % 5]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     [cell addSubview:imageView];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
@@ -109,13 +110,6 @@
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"did select at %i %i",indexPath.row, indexPath.section);
-}
-
-- (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
-{
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    tempCount = imageUrls.count;
-    [flowView reloadData];
 }
 
 @end

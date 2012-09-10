@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 
 #import "BottomTabViewController.h"
-#import "FilmTabViewController.h"
+#import "PopularTabViewController.h"
 
 @implementation AppDelegate
 @synthesize userLoggedIn;
@@ -18,14 +18,13 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIViewController *viewController;
-    self.userLoggedIn = NO;
+    self.userLoggedIn = YES;
     if(self.userLoggedIn){
         viewController = [[BottomTabViewController alloc] init];
     } else {
-        viewController = [[FilmTabViewController alloc] init];
+        viewController = [[PopularTabViewController alloc] init];
     }
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-    self.window.rootViewController = navController;
+    self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     return YES;
 }

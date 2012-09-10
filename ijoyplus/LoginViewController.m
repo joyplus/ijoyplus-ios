@@ -7,10 +7,13 @@
 //
 
 #import "LoginViewController.h"
+#import "BottomTabViewController.h"
+#import "AppDelegate.h"
 
 @interface LoginViewController ()
 
 - (void)closeSelf;
+- (void)login;
 @end
 
 @implementation LoginViewController
@@ -29,6 +32,9 @@
     [super viewDidLoad];
     UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
     self.navigationItem.leftBarButtonItem = button;
+    
+    UIBarButtonItem *loginBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Login", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(login)];
+    self.navigationItem.rightBarButtonItem = loginBtn;
 }
 
 - (void)viewDidUnload
@@ -46,5 +52,15 @@
 - (void)closeSelf
 {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)login
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.userLoggedIn = YES;
+    BottomTabViewController *viewController = [[BottomTabViewController alloc]init];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    appDelegate.window.rootViewController = navController;
+    [self presentViewController:navController animated:YES completion:nil];
 }
 @end

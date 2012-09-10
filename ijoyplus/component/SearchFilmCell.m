@@ -9,6 +9,10 @@
 #import "SearchFilmCell.h"
 
 @implementation SearchFilmCell
+@synthesize filmThirdTitleLabel;
+@synthesize filmImageView;
+@synthesize filmSubitleLabel;
+@synthesize filmTitleLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

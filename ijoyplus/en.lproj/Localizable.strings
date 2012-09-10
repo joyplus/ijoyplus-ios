@@ -4,17 +4,38 @@
 "Release to refresh..." = "松开可以刷新...";
 "Pull to load more" = "上拉加载更多...";
 
+"MNM_BOTTOM_PTR_PULL_TEXT" = "上拉加载更多...";
+"MNM_BOTTOM_PTR_RELEASE_TEXT" = "松开加载!";
+"MNM_BOTTOM_PTR_LOADING_TEXT" = "努力加载中...";
+
 app_name = "Joy+";
 login = "登陆";
 register = "注册";
 search = "搜索";
+search_history = "历史记录";
+hot_keys = "最热搜索";
+go_back = "返回";
+cancel = "取消";
+related_film = "和 %@ 有关的电影";
+related_video = "和 %@ 有关的视频";
 
+popular = "正在流行";
 movie = "电影";
 drama = "剧集";
 video = "视频";
 local = "本地";
 
-film = "影视";
-friend = "圈子";
-list = "列表";
-myself = "个人";
+friend = "好友推荐";
+recommand_movie = "推荐的影片";
+friend_news = "好友的动态";
+search_friend = "寻找好友";
+
+list = "我的列表";
+watched = "我看过的";
+my_collection = "我收藏的";
+
+myself = "个人主页";
+notification_center = "通知中心";
+settings = "设置";
+my_followed = "我关注的";
+my_fans = "我的粉丝";

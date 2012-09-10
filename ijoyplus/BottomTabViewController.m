@@ -1,6 +1,9 @@
 #import "BottomTabViewController.h"
-#import "FilmTabViewController.h"
+#import "PopularTabViewController.h"
 #import "UIImageView+WebCache.h"
+#import "FriendTabViewController.h"
+#import "ListTabViewController.h"
+#import "MyselfViewController.h"
 
 #define NUMBER_OF_COLUMNS 3
 #define TOP_TAB_HEIGHT 40
@@ -12,6 +15,7 @@
     NSArray* tabBarItems;
 }
 - (void)initTabs;
+- (UINavigationController *)addNavigationBar:(UIViewController *)viewController;
 @end
 
 @implementation BottomTabViewController
@@ -20,8 +24,7 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"app_name", nil);
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    [self.navigationItem setHidesBackButton:YES];
     [self.view setBackgroundColor:[UIColor whiteColor]];
 
     [self initTabs];
@@ -30,23 +33,23 @@
 - (void)initTabs
 {
     // Set up some fake view controllers each with a different background color so we can visually see the controllers getting swapped around
-    FilmTabViewController *detailController1 = [[FilmTabViewController alloc] init];
-    detailController1.view.backgroundColor = [UIColor whiteColor];
+    PopularTabViewController *detailController1 = [[PopularTabViewController alloc] init];
+    detailController1.view.backgroundColor = [UIColor clearColor];
     
-    UIViewController *detailController2 = [[UIViewController alloc] init];
-    detailController2.view.backgroundColor = [UIColor greenColor];
+    FriendTabViewController *detailController2 = [[FriendTabViewController alloc] init];
+    detailController2.view.backgroundColor = [UIColor clearColor];
     
-    UIViewController *detailController3 = [[UIViewController alloc] init];
-    detailController3.view.backgroundColor = [UIColor blueColor];
+    ListTabViewController *detailController3 = [[ListTabViewController alloc] init];
+    detailController3.view.backgroundColor = [UIColor clearColor];
     
-    UIViewController *detailController4 = [[UIViewController alloc] init];
-    detailController4.view.backgroundColor = [UIColor cyanColor];
+    MyselfViewController *detailController4 = [[MyselfViewController alloc]initWithNibName:@"MyselfViewController" bundle:nil];
+    detailController4.view.backgroundColor = [UIColor clearColor];
     
     tabBarItems = [NSArray arrayWithObjects:
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"film", nil), @"text", @"chat.png", @"image", detailController1, @"viewController", nil],
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"friend", nil), @"text", @"compose-at.png", @"image", detailController2, @"viewController", nil],
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"list", nil), @"text", @"messages.png", @"image", detailController3, @"viewController", nil],
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"myself", nil), @"text", @"magnifying-glass.png", @"image", detailController4, @"viewController", nil], nil];
+                   [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"popular", nil), @"text", @"chat.png", @"image", [self addNavigationBar:detailController1], @"viewController", nil],
+                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"friend", nil), @"text", @"compose-at.png", @"image", [self addNavigationBar:detailController2], @"viewController", nil],
+                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"list", nil), @"text", @"messages.png", @"image", [self addNavigationBar:detailController3], @"viewController", nil],
+                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"myself", nil), @"text", @"magnifying-glass.png", @"image", [self addNavigationBar:detailController4], @"viewController", nil], nil];
     // Use the TabBarGradient image to figure out the tab bar's height (22x2=44)
     UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
     
@@ -62,9 +65,11 @@
     [self touchDownAtItemAtIndex:0];
     
 }
-- (void)search
+
+- (UINavigationController *)addNavigationBar:(UIViewController *)viewController
 {
-    
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    return navController;
 }
 
 #pragma mark -
@@ -83,7 +88,7 @@
     NSDictionary* data = [tabBarItems objectAtIndex:itemIndex];
     UILabel *title = [[UILabel alloc]init];
     title.text = [data valueForKey:@"text"];
-    title.font = [UIFont systemFontOfSize:12];
+    title.font = [UIFont boldSystemFontOfSize:12];
     title.textColor = [UIColor whiteColor];
     return title;
 }

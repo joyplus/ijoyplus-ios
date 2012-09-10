@@ -10,4 +10,6 @@
 
 @interface SearchFilmResultViewController : UITableViewController
 
+@property (nonatomic, strong)NSString *keyword;
+
 @end

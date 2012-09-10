@@ -9,6 +9,9 @@
 #import "MyProfileWithImageCell.h"
 
 @implementation MyProfileWithImageCell
+@synthesize usernameLabel;
+@synthesize signatureLabel;
+@synthesize avatarImageView;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

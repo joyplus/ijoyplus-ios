@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MyProfileWithImageCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *signatureLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+
 
 @end

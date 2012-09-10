@@ -9,5 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface SearchFilmCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *filmImageView;
+@property (weak, nonatomic) IBOutlet UILabel *filmTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *filmSubitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *filmThirdTitleLabel;
 
 @end

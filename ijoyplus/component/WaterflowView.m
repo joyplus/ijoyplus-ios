@@ -229,11 +229,7 @@
 					rowToDisplay ++;
 				}
 			}
-			
-            #ifdef DEBUG
-			NSLog(@"row to display %d", rowToDisplay);
-            #endif	
-            
+			            
 			float origin_y = 0;
 			float height = 0;
 			if(rowToDisplay == 0)  
@@ -380,7 +376,11 @@
         self.loadFooterView.showActivityIndicator = YES;
         
         currentPage ++;
-        [self performSelector:@selector(reloadData) withObject:self afterDelay:1.0f]; //make a delay to show loading process for a while
+        if ([self.flowdelegate respondsToSelector:@selector(flowView:willLoadData:)])
+        {
+            [self.flowdelegate flowView:self willLoadData:currentPage];  //在delegate中对flowview进行reloadData
+        }
+//        [self performSelector:@selector(reloadData) withObject:self afterDelay:1.0f]; //make a delay to show loading process for a while
     }
 }
 

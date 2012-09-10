@@ -1,21 +1,19 @@
-#import "FriendNewsViewController.h"
+#import "MyselfViewController.h"
 
-@interface FriendNewsViewController(){
+@interface MyselfViewController(){
     NSMutableArray *itemsArray;
 }
 
-/**
- * Loads the table
- *
- * @private
- */
+- (void)notificatonCenter;
+- (void)settings;
 - (void)loadTable;
 
 @end
 
-@implementation FriendNewsViewController
+@implementation MyselfViewController
 
 @synthesize table;
+@synthesize myProfileCell;
 
 #pragma mark -
 #pragma mark Memory management
@@ -31,17 +29,17 @@
 #pragma mark -
 #pragma mark View cycle
 
-/**
- * Called after the controller’s view is loaded into memory.
- */
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.title = NSLocalizedString(@"app_name", nil);
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];
+    self.navigationItem.rightBarButtonItem = rightButton;
+    
 }
-
-/**
- * Called when the controller’s view is released from memory
- */
 - (void)viewDidUnload {
+    [self setMyProfileCell:nil];
     [super viewDidUnload];
     
     self.table = nil;
@@ -49,16 +47,21 @@
 }
 
 #pragma mark -
-#pragma mark Aux view methods
-
-/*
- * Loads the table
- */
+#pragma mark Aux view method
 - (void)loadTable {
     
     [self.table reloadData];
     
     [pullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)notificatonCenter
+{
+    
+}
+- (void)settings
+{
+    
 }
 
 #pragma mark -
@@ -116,73 +119,98 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return itemsArray.count;
+    return itemsArray.count + 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    NSMutableArray *array = [item objectForKey:key];
-    return array.count;
+    if(section > 2){
+        NSMutableDictionary *item = [itemsArray objectAtIndex:section - 3];
+        NSEnumerator *keys = item.keyEnumerator;
+        NSString *key = [keys nextObject];
+        NSMutableArray *array = [item objectForKey:key];
+        return array.count;
+    } else {
+        return 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if(cell == nil){
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    if(indexPath.section == 0){
+        self.myProfileCell.usernameLabel.text = @"Joy+";
+        return self.myProfileCell;
+    } else if(indexPath.section == 1){
+        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"aaa"];
+        cell.textLabel.text = @"aaa";
+        return cell;
+    } else if(indexPath.section == 2){
+        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"bbb"];
+        cell.textLabel.text = @"aaa";
+        return cell;
+    } else {
+        static NSString *CellIdentifier = @"Cell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if(cell == nil){
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:   CellIdentifier];
+        }
+        NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section - 3];
+        NSEnumerator *keys = item.keyEnumerator;
+        NSMutableArray *items = [item objectForKey:[keys nextObject]];
+        cell.textLabel.text = [items objectAtIndex:indexPath.row];
+        return cell;
     }
-    NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSMutableArray *items = [item objectForKey:[keys nextObject]];
-    cell.textLabel.text = [items objectAtIndex:indexPath.row];
-    
-    return cell;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.section == 0){
+        return 240;
+    } else if(indexPath.section == 1){
+        return 80;
+    } else if(indexPath.section == 2){
+        return 80;
+    } else {
+        return 44;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if(section == 0){
+        return 0;
+    } else{
+        return 24;
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-    customView.backgroundColor = [UIColor blackColor];
+    if(section == 0){
+        return nil;
+    } else{
+        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+        customView.backgroundColor = [UIColor blackColor];
     
-    //    // create the label objects
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    headerLabel.backgroundColor = [UIColor clearColor];
-    headerLabel.font = [UIFont boldSystemFontOfSize:12];
-    headerLabel.text =  key;
-    headerLabel.textColor = [UIColor whiteColor];
-    [headerLabel sizeToFit];
-    headerLabel.center = CGPointMake(headerLabel.frame.size.width/2, customView.frame.size.height/2);
-    
-    // create the imageView with the image in it
-    // create image object
-    //    UIImage *myImage = [UIImage imageNamed:@"someimage.png"];
-    //    UIImageView *imageView = [[UIImageView alloc] initWithImage:myImage];
-    //    imageView.frame = CGRectMake(10,10,50,50);
-    //
-    //    [customView addSubview:imageView];
-    [customView addSubview:headerLabel];
-    
-    return customView;
+        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        headerLabel.backgroundColor = [UIColor clearColor];
+        headerLabel.font = [UIFont boldSystemFontOfSize:12];
+        if(section == 1){
+            headerLabel.text =  NSLocalizedString(@"my_followed", nil);
+        } else if(section == 2){
+            headerLabel.text =  NSLocalizedString(@"my_fans", nil);
+        } else {
+            NSMutableDictionary *item = [itemsArray objectAtIndex:section - 3];
+            NSEnumerator *keys = item.keyEnumerator;
+            NSString *key = [keys nextObject];
+            headerLabel.text =  key;
+        }
+        headerLabel.textColor = [UIColor whiteColor];
+        [headerLabel sizeToFit];
+        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+        [customView addSubview:headerLabel];
+        return customView;
+    }
 }
 
-
-/**
- * Asks the delegate for the height to use for a row in a specified location.
- * 
- * @param The table-view object requesting this information.
- * @param indexPath: An index path that locates a row in tableView.
- * @return A floating-point value that specifies the height (in points) that row should be.
- */
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return tableView.rowHeight;
-}
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient

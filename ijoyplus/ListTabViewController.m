@@ -1,22 +1,21 @@
 //
-//  PopularTabViewController.m
+//  ListTabViewController
 //  CustomTabBar
 //
 //  Created by joyplus1 on 12-9-7.
 //
 //
 #import <QuartzCore/QuartzCore.h>
-#import "PopularTabViewController.h"
-#import "PopularViewController.h"
+#import "ListTabViewController.h"
+#import "WatchedViewController.h"
 #import "UIGlossyButton.h"
 #import "CMConstants.h"
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "AnimationFactory.h"
-#import "SearchFilmViewController.h"
 
 #define BOTTOM_TAB_HEIGHT 44
-@interface PopularTabViewController (){
+@interface ListTabViewController (){
     NSArray* tabBarItems;
     TextCustomTabBar* tabBar;
 }
@@ -26,31 +25,22 @@
 - (void)loginScreen;
 @end
 
-@implementation PopularTabViewController
+@implementation ListTabViewController
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"app_name", nil);
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
     self.navigationItem.rightBarButtonItem = rightButton;
-    // Set up some fake view controllers each with a different background color so we can visually see the controllers getting swapped around
-    PopularViewController *detailController1 = [[PopularViewController alloc] init];
+    WatchedViewController *detailController1 = [[WatchedViewController alloc] init];
     detailController1.view.backgroundColor = [UIColor whiteColor];
     
     UIViewController *detailController2 = [[UIViewController alloc] init];
     detailController2.view.backgroundColor = [UIColor whiteColor];
     
-    UIViewController *detailController3 = [[UIViewController alloc] init];
-    detailController3.view.backgroundColor = [UIColor whiteColor];
-    
-    UIViewController *detailController4 = [[UIViewController alloc] init];
-    detailController4.view.backgroundColor = [UIColor whiteColor];
-    
     tabBarItems = [NSArray arrayWithObjects:
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"movie", nil), @"text", detailController1, @"viewController", nil],
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"drama", nil), @"text", detailController2, @"viewController", nil],
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"video", nil), @"text", detailController3, @"viewController", nil],
-                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"local", nil), @"text", detailController4, @"viewController", nil], nil];
+                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"watched", nil), @"text", detailController1, @"viewController", nil],
+                    [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"my_collection", nil), @"text", detailController2, @"viewController", nil],nil];
     
     // Use the TabBarGradient image to figure out the tab bar's height (22x2=44)
     UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
@@ -78,9 +68,7 @@
 
 - (void)search
 {
-    SearchFilmViewController *viewController = [[SearchFilmViewController alloc]initWithNibName:@"SearchFilmViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    [self presentModalViewController:navController animated:YES];
+    
 }
 
 - (void)addToolBar

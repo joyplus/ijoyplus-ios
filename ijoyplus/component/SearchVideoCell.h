@@ -9,5 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface SearchVideoCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *videoImageView;
+@property (weak, nonatomic) IBOutlet UILabel *videoTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *videoSubtitleLabel;
 
 @end

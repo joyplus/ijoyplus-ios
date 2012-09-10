@@ -9,6 +9,9 @@
 #import "SearchVideoCell.h"
 
 @implementation SearchVideoCell
+@synthesize videoImageView;
+@synthesize videoTitleLabel;
+@synthesize videoSubtitleLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
