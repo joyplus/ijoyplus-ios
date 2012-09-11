@@ -14,6 +14,7 @@
 #import "LoginViewController.h"
 #import "AnimationFactory.h"
 #import "SearchFilmViewController.h"
+#import "RegisterViewController.h"
 
 #define BOTTOM_TAB_HEIGHT 44
 @interface PopularTabViewController (){
@@ -118,6 +119,9 @@
 
 - (void)registerScreen
 {
+    RegisterViewController *viewController = [[RegisterViewController alloc]initWithNibName:@"RegisterViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
     
 }
 

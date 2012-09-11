@@ -13,6 +13,7 @@
 @synthesize titleLabel;
 @synthesize subtitleLabel;
 @synthesize thirdTitleLabel;
+@synthesize avatarBtn;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

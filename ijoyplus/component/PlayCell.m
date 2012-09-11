@@ -11,6 +11,7 @@
 @implementation PlayCell
 @synthesize filmImageView;
 @synthesize filmTitleLabel;
+@synthesize introuctionBtn;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

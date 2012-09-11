@@ -18,11 +18,12 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIViewController *viewController;
-    self.userLoggedIn = YES;
+    self.userLoggedIn = NO;
     if(self.userLoggedIn){
         viewController = [[BottomTabViewController alloc] init];
     } else {
-        viewController = [[PopularTabViewController alloc] init];
+        UIViewController *detailViewController = [[PopularTabViewController alloc] init];
+        viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
     }
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];

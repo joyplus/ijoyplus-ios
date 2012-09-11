@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "GHCollapsingAndSpinningTableViewCell.h"
 
-@interface CommentCell : UITableViewCell
+@interface CommentCell : GHCollapsingAndSpinningTableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *thirdTitleLabel;
+@property (weak, nonatomic) IBOutlet UIButton *avatarBtn;
 
 @end

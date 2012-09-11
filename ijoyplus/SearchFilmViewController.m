@@ -187,7 +187,9 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     [searchBar resignFirstResponder];
-    
+    SearchFilmResultViewController *viewController = [[SearchFilmResultViewController alloc] initWithNibName:@"SearchFilmResultViewController" bundle:nil];
+    viewController.keyword = self.sBar.text;
+    [self.navigationController pushViewController:viewController animated:YES];   
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar

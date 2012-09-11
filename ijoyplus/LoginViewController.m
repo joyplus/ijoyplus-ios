@@ -30,10 +30,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"cancel", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
+    self.title = NSLocalizedString(@"login", nil);
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
     self.navigationItem.leftBarButtonItem = button;
     
-    UIBarButtonItem *loginBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Login", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(login)];
+    UIBarButtonItem *loginBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"login", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(login)];
     self.navigationItem.rightBarButtonItem = loginBtn;
 }
 

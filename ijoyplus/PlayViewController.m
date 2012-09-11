@@ -10,17 +10,24 @@
 #import "PlayCell.h"
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
+#import "UIExpandableTableView.h"
+#import "GHCollapsingAndSpinningTableViewCell.h"
+#import "CMConstants.h"
+#import "IntroductionViewController.h"
+#import "UIViewController+MJPopupViewController.h"
+#import "FriendProfileViewController.h"
 
 @interface PlayViewController (){
     NSMutableArray *commentArray;
+    UIViewController *subviewController;//视图
 }
-@property (strong, nonatomic) IBOutlet PlayCell *playCell;
+- (void)avatarClicked;
 - (void)loadTable;
 - (void)closeSelf;
+- (void)showIntroduction;
 @end
 
 @implementation PlayViewController
-@synthesize playCell;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -39,6 +46,13 @@
     self.navigationItem.leftBarButtonItem = leftButton;
 }
 
+- (void)loadView {
+    self.tableView = [[UIExpandableTableView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f) style:UITableViewStylePlain];
+    
+    
+    
+}
+
 - (void)closeSelf
 {
     UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
@@ -49,7 +63,6 @@
 
 - (void)viewDidUnload
 {
-    [self setPlayCell:nil];
     [super viewDidUnload];
     pullToRefreshManager_ = nil;
 }
@@ -66,9 +79,17 @@
     NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", nil];
     NSMutableDictionary *commentDic = [[NSMutableDictionary alloc]initWithObjects:values forKeys:keys];
     
+    NSArray *keys1 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", nil];
+    NSArray *values1 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", nil];
+    NSMutableDictionary *commentDic1 = [[NSMutableDictionary alloc]initWithObjects:values1 forKeys:keys1];
+    
+    NSArray *keys2 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", nil];
+    NSArray *values2 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"顶。", nil];
+    NSMutableDictionary *commentDic2 = [[NSMutableDictionary alloc]initWithObjects:values2 forKeys:keys2];
+    
     [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
+    [commentArray addObject:commentDic1];
+    [commentArray addObject:commentDic2];
     [commentArray addObject:commentDic];
     [commentArray addObject:commentDic];
     
@@ -88,38 +109,36 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return commentArray.count + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch (section) {
-        case 0:
-            return 1;
-        default:
-            return commentArray.count;
+    if(section == 0){
+        return 1;
+    } else {
+        return 2;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0){
-        return self.playCell;
-    } else{
-        CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
-        if (cell == nil) {
+    if (indexPath.section ==0) {
+        PlayCell *playCell = (PlayCell*) [tableView dequeueReusableCellWithIdentifier:@"playCell"];
+        if (playCell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-            cell = (CommentCell *)[nib objectAtIndex:2];
+            playCell = (PlayCell *)[nib objectAtIndex:3];
         }
-        NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-        cell.titleLabel.text = [commentDic objectForKey:@"username"];
-        cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
-        cell.thirdTitleLabel.text = @"10:30";
+        [playCell.introuctionBtn setActionSheetButtonWithColor: CMConstants.greyColor];
+        playCell.introuctionBtn.buttonBorderWidth = 0;
+        [playCell.introuctionBtn setTitle: NSLocalizedString(@"introduction", nil) forState:UIControlStateNormal];
+        [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside];
+        return playCell;
+    } else {
+        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"a"];
+        cell.textLabel.text = @"some buttons";
         return cell;
-
     }
-
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,17 +146,15 @@
     if (indexPath.section == 0) {
         return 300;
     } else {
-        NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-        NSString *content = [commentDic objectForKey:@"content"];
-        CGSize labelSize = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:CGSizeMake(280, 100) lineBreakMode:UILineBreakModeCharacterWrap];
-        return 68 + labelSize.height + 68;
-//        UILabel* label = [[UILabel alloc] init];
-//        label.frame = CGRectMake(68, 39, labelSize.width, labelSize.height);
-//        label.backgroundColor = [UIColor whiteColor];
-//        label.text = content;
-//        label.font = [UIFont systemFontOfSize:15.0f];
-//        label.numberOfLines = 0;
-//        label.lineBreakMode = UILineBreakModeCharacterWrap;
+        if(indexPath.row == 0){
+            NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.section - 1];
+            NSString *content = [commentDic objectForKey:@"content"];
+            CGSize constraint = CGSizeMake(232, 20000.0f);
+            CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+            return 80 + size.height;
+        } else {
+            return 44;
+        }
     }
 }
 
@@ -184,24 +201,27 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (section == 0) {
-        return 0;
-    } else {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 1) {
         return 24;
+    } else {
+        return 0;
     }
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(section != 1){
+        return nil;
+    }
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width,24)];
     customView.backgroundColor = [UIColor blackColor];
     
@@ -213,14 +233,6 @@
     headerLabel.textColor = [UIColor whiteColor];
     [headerLabel sizeToFit];
     headerLabel.center = CGPointMake(headerLabel.frame.size.width/2, customView.frame.size.height/2);
-    
-    // create the imageView with the image in it
-    // create image object
-    //    UIImage *myImage = [UIImage imageNamed:@"someimage.png"];
-    //    UIImageView *imageView = [[UIImageView alloc] initWithImage:myImage];
-    //    imageView.frame = CGRectMake(10,10,50,50);
-    //
-    //    [customView addSubview:imageView];
     [customView addSubview:headerLabel];
     
     return customView;
@@ -270,6 +282,64 @@
     [commentArray addObject:commentDic];
     [commentArray addObject:commentDic];
     [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+}
+
+
+#pragma mark - UIExpandableTableViewDatasource
+
+- (BOOL)tableView:(UIExpandableTableView *)tableView canExpandSection:(NSInteger)section {
+    // return YES, if the section should be expandable
+    if(section > 0){
+        return YES;
+    }else{
+        
+        return NO;
+    }
+    
+}
+
+- (BOOL)tableView:(UIExpandableTableView *)tableView needsToDownloadDataForExpandableSection:(NSInteger)section {
+    return NO;
+}
+
+
+- (UITableViewCell<UIExpandingTableViewCell> *)tableView:(UIExpandableTableView *)tableView expandingCellForSection:(NSInteger)section {  
+    if(section > 0){
+        CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+        if (cell == nil) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+            cell = (CommentCell *)[nib objectAtIndex:2];
+        }
+        NSMutableDictionary *commentDic = [commentArray objectAtIndex:section - 1];
+        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        cell.titleLabel.text = [commentDic objectForKey:@"username"];
+        
+        cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
+        [cell.subtitleLabel setNumberOfLines:0];
+        CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
+        CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+        [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
+        
+        NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
+        cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
+        cell.thirdTitleLabel.text = @"10:30";
+        
+        [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+        return cell;
+    }
+}
+
+- (void)showIntroduction{
+    IntroductionViewController *viewController = [[IntroductionViewController alloc]initWithNibName:@"IntroductionViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width * 0.8, 300);
+    viewController.view.center = self.view.center;
+    [self presentPopupViewController:viewController animationType:MJPopupViewAnimationFade];
+}
+
+- (void)avatarClicked
+{
+    FriendProfileViewController *viewController = [[FriendProfileViewController alloc]initWithNibName:@"FriendProfileViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

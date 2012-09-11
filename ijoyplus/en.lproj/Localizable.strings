@@ -25,11 +25,14 @@ drama = "剧集";
 video = "视频";
 local = "本地";
 user_comment = "用户评论";
+introduction = "简介";
 
 friend = "好友推荐";
 recommand_movie = "推荐的影片";
 friend_news = "好友的动态";
 search_friend = "寻找好友";
+follow = "关注";
+cancel_follow = "取消关注";
 
 list = "我的列表";
 watched = "我看过的";

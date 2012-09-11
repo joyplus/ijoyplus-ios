@@ -197,7 +197,7 @@
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     PlayViewController *viewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
