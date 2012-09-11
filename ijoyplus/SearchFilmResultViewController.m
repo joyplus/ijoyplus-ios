@@ -10,11 +10,12 @@
 #import "SearchFilmCell.h"
 #import "UIImageView+WebCache.h"
 #import "SearchVideoCell.h"
+#import "PlayViewController.h"
 
 @interface SearchFilmResultViewController (){
      NSMutableArray *itemsArray;
 }
-
+- (void)closeSelf;
 @end
 
 @implementation SearchFilmResultViewController
@@ -40,6 +41,13 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
+    self.navigationItem.leftBarButtonItem = leftButton;
+}
+
+- (void)closeSelf
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -119,7 +127,7 @@
 
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width,24)];
     customView.backgroundColor = [UIColor blackColor];
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -187,13 +195,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    PlayViewController *viewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

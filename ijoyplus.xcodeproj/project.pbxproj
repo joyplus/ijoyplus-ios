@@ -18,6 +18,10 @@
 		EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCFE15F8873B00C878D5 /* WaterflowView.m */; };
 		EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BD3715F888BD00C878D5 /* QuartzCore.framework */; };
 		EB32BD3F15F8948400C878D5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB32BD3D15F8948400C878D5 /* Localizable.strings */; };
+		EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32415FED3D100192AE4 /* PlayViewController.m */; };
+		EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED32515FED3D100192AE4 /* PlayViewController.xib */; };
+		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
+		EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED33515FEDF1900192AE4 /* CommentCell.m */; };
 		EBAF698815FD896D00938FE3 /* FriendTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF698715FD896D00938FE3 /* FriendTabViewController.m */; };
 		EBAF698E15FD8D9600938FE3 /* RecommandMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */; };
 		EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */; };
@@ -93,6 +97,13 @@
 		EB32BCFE15F8873B00C878D5 /* WaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterflowView.m; sourceTree = "<group>"; };
 		EB32BD3715F888BD00C878D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EB32BD3E15F8948400C878D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EBAED32315FED3D100192AE4 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
+		EBAED32415FED3D100192AE4 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
+		EBAED32515FED3D100192AE4 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
+		EBAED32D15FED75700192AE4 /* PlayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayCell.h; path = component/PlayCell.h; sourceTree = "<group>"; };
+		EBAED32E15FED75700192AE4 /* PlayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayCell.m; path = component/PlayCell.m; sourceTree = "<group>"; };
+		EBAED33415FEDF1900192AE4 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentCell.h; path = component/CommentCell.h; sourceTree = "<group>"; };
+		EBAED33515FEDF1900192AE4 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommentCell.m; path = component/CommentCell.m; sourceTree = "<group>"; };
 		EBAF698615FD896D00938FE3 /* FriendTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTabViewController.h; sourceTree = "<group>"; };
 		EBAF698715FD896D00938FE3 /* FriendTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTabViewController.m; sourceTree = "<group>"; };
 		EBAF698915FD8D8200938FE3 /* RecommandMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommandMovieViewController.h; sourceTree = "<group>"; };
@@ -324,6 +335,9 @@
 				EBAF6AA715FDE9CE00938FE3 /* SearchFilmResultViewController.h */,
 				EBAF6AA815FDE9CF00938FE3 /* SearchFilmResultViewController.m */,
 				EBAF6AA915FDE9CF00938FE3 /* SearchFilmResultViewController.xib */,
+				EBAED32315FED3D100192AE4 /* PlayViewController.h */,
+				EBAED32415FED3D100192AE4 /* PlayViewController.m */,
+				EBAED32515FED3D100192AE4 /* PlayViewController.xib */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -394,6 +408,10 @@
 				EBAF6AB015FDEB1C00938FE3 /* SearchFilmCell.m */,
 				EBAF6AB515FDF27300938FE3 /* SearchVideoCell.h */,
 				EBAF6AB615FDF27300938FE3 /* SearchVideoCell.m */,
+				EBAED32D15FED75700192AE4 /* PlayCell.h */,
+				EBAED32E15FED75700192AE4 /* PlayCell.m */,
+				EBAED33415FEDF1900192AE4 /* CommentCell.h */,
+				EBAED33515FEDF1900192AE4 /* CommentCell.m */,
 			);
 			name = compoment;
 			sourceTree = "<group>";
@@ -493,6 +511,7 @@
 				EBAF6A4315FDDBB400938FE3 /* SearchFilmViewController.xib in Resources */,
 				EBAF6AAB15FDE9CF00938FE3 /* SearchFilmResultViewController.xib in Resources */,
 				EBAF6AAE15FDEA2900938FE3 /* PopularCellFactory.xib in Resources */,
+				EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,6 +565,9 @@
 				EBAF6AAA15FDE9CF00938FE3 /* SearchFilmResultViewController.m in Sources */,
 				EBAF6AB115FDEB1C00938FE3 /* SearchFilmCell.m in Sources */,
 				EBAF6AB715FDF27300938FE3 /* SearchVideoCell.m in Sources */,
+				EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */,
+				EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */,
+				EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

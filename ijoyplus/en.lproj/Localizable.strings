@@ -24,6 +24,7 @@ movie = "电影";
 drama = "剧集";
 video = "视频";
 local = "本地";
+user_comment = "用户评论";
 
 friend = "好友推荐";
 recommand_movie = "推荐的影片";

@@ -23,7 +23,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"app_name", nil);
     [self.navigationItem setHidesBackButton:YES];
     [self.view setBackgroundColor:[UIColor whiteColor]];
 

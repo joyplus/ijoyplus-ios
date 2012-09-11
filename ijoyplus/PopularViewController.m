@@ -1,5 +1,7 @@
 #import "PopularViewController.h"
 #import "UIImageView+WebCache.h"
+#import "PlayViewController.h"
+#import "AppDelegate.h"
 
 #define NUMBER_OF_COLUMNS 3
 #define TOP_TAB_HEIGHT 40
@@ -109,6 +111,10 @@
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"did select at %i %i",indexPath.row, indexPath.section);
+    PlayViewController *viewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page

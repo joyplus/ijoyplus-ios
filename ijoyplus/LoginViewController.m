@@ -59,8 +59,7 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.userLoggedIn = YES;
     BottomTabViewController *viewController = [[BottomTabViewController alloc]init];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    appDelegate.window.rootViewController = navController;
-    [self presentViewController:navController animated:YES completion:nil];
+    appDelegate.window.rootViewController = viewController;
+    [self presentViewController:viewController animated:YES completion:nil];
 }
 @end
