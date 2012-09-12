@@ -10,12 +10,13 @@
 #import "PlayCell.h"
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
-#import "UIExpandableTableView.h"
-#import "GHCollapsingAndSpinningTableViewCell.h"
 #import "CMConstants.h"
 #import "IntroductionViewController.h"
 #import "UIViewController+MJPopupViewController.h"
 #import "FriendProfileViewController.h"
+
+#define ANIMATION_DURATION 0.4
+#define ANIMATION_DELAY 0
 
 @interface PlayViewController (){
     NSMutableArray *commentArray;
@@ -23,7 +24,6 @@
 }
 - (void)avatarClicked;
 - (void)loadTable;
-- (void)closeSelf;
 - (void)showIntroduction;
 @end
 
@@ -41,24 +41,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"app_name", nil);
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
-    self.navigationItem.leftBarButtonItem = leftButton;
-}
-
-- (void)loadView {
-    self.tableView = [[UIExpandableTableView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, 480.0f) style:UITableViewStylePlain];
-    
-    
-    
-}
-
-- (void)closeSelf
-{
-    UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
-    if(viewController == nil){
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
 }
 
 - (void)viewDidUnload
@@ -109,7 +91,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return commentArray.count + 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -117,7 +99,7 @@
     if(section == 0){
         return 1;
     } else {
-        return 2;
+        return commentArray.count;
     }
 }
 
@@ -135,9 +117,28 @@
         [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside];
         return playCell;
     } else {
-        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"a"];
-        cell.textLabel.text = @"some buttons";
+        CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+        if (cell == nil) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+            cell = (CommentCell *)[nib objectAtIndex:2];
+        }
+        NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
+        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        cell.titleLabel.text = [commentDic objectForKey:@"username"];
+        
+        cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
+        [cell.subtitleLabel setNumberOfLines:0];
+        CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
+        CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+        [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
+        
+        NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
+        cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
+        cell.thirdTitleLabel.text = @"10:30";
+        
+        [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
         return cell;
+
     }
 }
 
@@ -146,15 +147,11 @@
     if (indexPath.section == 0) {
         return 300;
     } else {
-        if(indexPath.row == 0){
-            NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.section - 1];
-            NSString *content = [commentDic objectForKey:@"content"];
-            CGSize constraint = CGSizeMake(232, 20000.0f);
-            CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-            return 80 + size.height;
-        } else {
-            return 44;
-        }
+        NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
+        NSString *content = [commentDic objectForKey:@"content"];
+        CGSize constraint = CGSizeMake(232, 20000.0f);
+        CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+        return 80 + size.height;
     }
 }
 
@@ -206,20 +203,15 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if (section == 1) {
-        return 24;
-    } else {
+    if (section == 0) {
         return 0;
+    } else {
+        return 24;
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 0;
-}
-
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if(section != 1){
+    if(section == 0){
         return nil;
     }
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width,24)];
@@ -282,51 +274,6 @@
     [commentArray addObject:commentDic];
     [commentArray addObject:commentDic];
     [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
-}
-
-
-#pragma mark - UIExpandableTableViewDatasource
-
-- (BOOL)tableView:(UIExpandableTableView *)tableView canExpandSection:(NSInteger)section {
-    // return YES, if the section should be expandable
-    if(section > 0){
-        return YES;
-    }else{
-        
-        return NO;
-    }
-    
-}
-
-- (BOOL)tableView:(UIExpandableTableView *)tableView needsToDownloadDataForExpandableSection:(NSInteger)section {
-    return NO;
-}
-
-
-- (UITableViewCell<UIExpandingTableViewCell> *)tableView:(UIExpandableTableView *)tableView expandingCellForSection:(NSInteger)section {  
-    if(section > 0){
-        CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
-        if (cell == nil) {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-            cell = (CommentCell *)[nib objectAtIndex:2];
-        }
-        NSMutableDictionary *commentDic = [commentArray objectAtIndex:section - 1];
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-        cell.titleLabel.text = [commentDic objectForKey:@"username"];
-        
-        cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
-        [cell.subtitleLabel setNumberOfLines:0];
-        CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
-        CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-        [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
-        
-        NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
-        cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
-        cell.thirdTitleLabel.text = @"10:30";
-        
-        [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
-        return cell;
-    }
 }
 
 - (void)showIntroduction{

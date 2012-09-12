@@ -10,6 +10,6 @@
 
 @interface AnimationFactory : NSObject
 
-+ (CATransition *)pushToLeftAnimation;
-
++ (CATransition *)pushToLeftAnimation:(void (^)(void))animations;
++ (CATransition *)pushToRightAnimation:(void (^)(void))animations;
 @end

@@ -25,8 +25,6 @@
 		EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35315FF07D000192AE4 /* JWFolders.m */; };
 		EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */; };
 		EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */; };
-		EBAED36815FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED36515FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.m */; };
-		EBAED36915FF0EC000192AE4 /* UIExpandableTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED36715FF0EC000192AE4 /* UIExpandableTableView.m */; };
 		EBAED38B15FF23E200192AE4 /* MJPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED38815FF23E200192AE4 /* MJPopupBackgroundView.m */; };
 		EBAED38C15FF23E200192AE4 /* UIViewController+MJPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED38A15FF23E200192AE4 /* UIViewController+MJPopupViewController.m */; };
 		EBAED39015FF25FB00192AE4 /* IntroductionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED38E15FF25FA00192AE4 /* IntroductionViewController.m */; };
@@ -86,6 +84,7 @@
 		EBAFBC3D15F9E507007579D1 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3B15F9E506007579D1 /* LoginViewController.m */; };
 		EBAFBC3E15F9E507007579D1 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */; };
 		EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC4415F9E849007579D1 /* AnimationFactory.m */; };
+		EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */; };
 		F08E79464D5B418D93D509A6 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF63B43DF6849BC89060EC7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -123,10 +122,6 @@
 		EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Scale.m"; sourceTree = "<group>"; };
 		EBAED35615FF07D000192AE4 /* UIView+Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Screenshot.h"; sourceTree = "<group>"; };
 		EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Screenshot.m"; sourceTree = "<group>"; };
-		EBAED36415FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GHCollapsingAndSpinningTableViewCell.h; sourceTree = "<group>"; };
-		EBAED36515FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GHCollapsingAndSpinningTableViewCell.m; sourceTree = "<group>"; };
-		EBAED36615FF0EC000192AE4 /* UIExpandableTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIExpandableTableView.h; sourceTree = "<group>"; };
-		EBAED36715FF0EC000192AE4 /* UIExpandableTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIExpandableTableView.m; sourceTree = "<group>"; };
 		EBAED38715FF23E200192AE4 /* MJPopupBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPopupBackgroundView.h; sourceTree = "<group>"; };
 		EBAED38815FF23E200192AE4 /* MJPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPopupBackgroundView.m; sourceTree = "<group>"; };
 		EBAED38915FF23E200192AE4 /* UIViewController+MJPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+MJPopupViewController.h"; sourceTree = "<group>"; };
@@ -212,6 +207,8 @@
 		EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		EBAFBC4315F9E849007579D1 /* AnimationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationFactory.h; sourceTree = "<group>"; };
 		EBAFBC4415F9E849007579D1 /* AnimationFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationFactory.m; sourceTree = "<group>"; };
+		EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayRootViewController.h; sourceTree = "<group>"; };
+		EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayRootViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -314,7 +311,6 @@
 			isa = PBXGroup;
 			children = (
 				EBAED38615FF23E200192AE4 /* MJPopupViewController */,
-				EBAED36315FF0EBF00192AE4 /* UIExpendableView */,
 				EBAED35115FF07D000192AE4 /* JWFolders */,
 				EBAF69CA15FDB78D00938FE3 /* MNMBottomPullToRefresh */,
 			);
@@ -371,17 +367,6 @@
 			path = JWFolders;
 			sourceTree = "<group>";
 		};
-		EBAED36315FF0EBF00192AE4 /* UIExpendableView */ = {
-			isa = PBXGroup;
-			children = (
-				EBAED36415FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.h */,
-				EBAED36515FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.m */,
-				EBAED36615FF0EC000192AE4 /* UIExpandableTableView.h */,
-				EBAED36715FF0EC000192AE4 /* UIExpandableTableView.m */,
-			);
-			path = UIExpendableView;
-			sourceTree = "<group>";
-		};
 		EBAED38615FF23E200192AE4 /* MJPopupViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,6 +411,8 @@
 				EBAED38D15FF25FA00192AE4 /* IntroductionViewController.h */,
 				EBAED38E15FF25FA00192AE4 /* IntroductionViewController.m */,
 				EBAED38F15FF25FA00192AE4 /* IntroductionViewController.xib */,
+				EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */,
+				EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -665,13 +652,12 @@
 				EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */,
 				EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */,
 				EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */,
-				EBAED36815FF0EC000192AE4 /* GHCollapsingAndSpinningTableViewCell.m in Sources */,
-				EBAED36915FF0EC000192AE4 /* UIExpandableTableView.m in Sources */,
 				EBAED38B15FF23E200192AE4 /* MJPopupBackgroundView.m in Sources */,
 				EBAED38C15FF23E200192AE4 /* UIViewController+MJPopupViewController.m in Sources */,
 				EBAED39015FF25FB00192AE4 /* IntroductionViewController.m in Sources */,
 				EBAED39615FF2D4800192AE4 /* RegisterViewController.m in Sources */,
 				EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */,
+				EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

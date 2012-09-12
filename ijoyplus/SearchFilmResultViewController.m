@@ -10,7 +10,7 @@
 #import "SearchFilmCell.h"
 #import "UIImageView+WebCache.h"
 #import "SearchVideoCell.h"
-#import "PlayViewController.h"
+#import "PlayRootViewController.h"
 
 @interface SearchFilmResultViewController (){
      NSMutableArray *itemsArray;
@@ -196,7 +196,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    PlayViewController *viewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
 //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [self.navigationController pushViewController:viewController animated:YES];
 }

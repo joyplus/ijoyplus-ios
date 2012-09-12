@@ -7,14 +7,14 @@
 //
 #import <QuartzCore/QuartzCore.h>
 #import "AnimationFactory.h"
-#define kDuration 0.7   // 动画持续时间(秒)
+#define kDuration 0.4   // 动画持续时间(秒)
 
 @interface AnimationFactory ()
 
 @end
 @implementation AnimationFactory
 
-+ (CATransition *)pushToLeftAnimation
++ (CATransition *)pushToLeftAnimation:(void (^)(void))animations
 {
     CATransition *animation = [CATransition animation];
     animation.delegate = self;
@@ -22,6 +22,19 @@
     animation.timingFunction = UIViewAnimationCurveEaseInOut;
     animation.type = kCATransitionPush;
     animation.subtype = kCATransitionFromLeft;
+    animations();
+    return animation;
+}
+
++ (CATransition *)pushToRightAnimation:(void (^)(void))animations
+{
+    CATransition *animation = [CATransition animation];
+    animation.delegate = self;
+    animation.duration = kDuration;
+    animation.timingFunction = UIViewAnimationCurveEaseInOut;
+    animation.type = kCATransitionPush;
+    animation.subtype = kCATransitionFromRight;
+    animations();
     return animation;
 }
 
