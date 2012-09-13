@@ -32,6 +32,7 @@
 @synthesize flowdatasource=_flowdatasource;
 @synthesize loadFooterView=_loadFooterView,loadingmore=_loadingmore;
 @synthesize refreshHeaderView=_refreshHeaderView,isRefreshing=_isRefreshing;
+@synthesize cellSelectedNotificationName;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -41,10 +42,12 @@
 		self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
 		self.delegate = self;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self 
+        if(self.cellSelectedNotificationName == nil){
+            self.cellSelectedNotificationName = @"CellSelected";
+        }
+        [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(cellSelected:)
-                                                     name:@"CellSelected"
+                                                     name:self.cellSelectedNotificationName
                                                    object:nil];
         
         
@@ -63,10 +66,19 @@
     return self;
 }
 
+- (void)setCellSelectedNotificationName:(NSString *)notificationName
+{
+    cellSelectedNotificationName = notificationName;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(cellSelected:)
+                                                 name:self.cellSelectedNotificationName
+                                               object:nil];
+}
+
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:@"CellSelected"
+                                                    name:self.cellSelectedNotificationName
                                                   object:nil];
     
     self.cellHeight = nil;
@@ -109,6 +121,7 @@
     if (cellsWithIndentifier &&  cellsWithIndentifier.count > 0)
     {
         WaterFlowCell *cell = [cellsWithIndentifier lastObject];
+        cell.cellSelectedNotificationName = self.cellSelectedNotificationName;
         [[self.reusableCells objectForKey:identifier] removeLastObject];
         return cell;
     }
@@ -410,6 +423,7 @@
 @implementation WaterFlowCell
 @synthesize indexPath = _indexPath;
 @synthesize reuseIdentifier = _reuseIdentifier;
+@synthesize cellSelectedNotificationName = _cellSelectedNotificationName;
 
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -429,7 +443,7 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CellSelected"
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.cellSelectedNotificationName
                                                         object:self
                                                       userInfo:[NSDictionary dictionaryWithObject:self.indexPath forKey:@"IndexPath"]];
     

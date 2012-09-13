@@ -53,6 +53,8 @@
     if(appDelegate.userLoggedIn){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
+    } else {
+        [self addToolBar];
     }
     topSegment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, SEGMENT_HEIGHT_GAP, SEGMENT_WIDTH, SEGMENT_HEIGHT);
     topSegment.selectedSegmentIndex = 0;
@@ -66,7 +68,7 @@
     selectedViewController = movieController;
     movieController.view.backgroundColor = [UIColor whiteColor];
     [self addChildViewController:movieController];
-    movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height);
+    movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
     [self.view addSubview:movieController.view];
 }
 
@@ -79,11 +81,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -93,48 +90,52 @@
     if(topSegment.selectedSegmentIndex == 0){
         [selectedViewController.view removeFromSuperview];
         [selectedViewController removeFromParentViewController];
+        selectedViewController = nil;
         if(movieController == nil){
             movieController = [[MovieViewController alloc] init];
         }
         selectedViewController = movieController;
         movieController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:movieController];
-        movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height);
-        [self.view addSubview:dramaController.view];    } else if (topSegment.selectedSegmentIndex == 1){
+        movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
+        [self.view addSubview:movieController.view];
+    } else if (topSegment.selectedSegmentIndex == 1){
         [selectedViewController.view removeFromSuperview];
         [selectedViewController removeFromParentViewController];
+        selectedViewController = nil;
         if(dramaController == nil){
             dramaController = [[DramaViewController alloc] init];
         }
         selectedViewController = dramaController;
         dramaController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:dramaController];
-        dramaController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height);
+        dramaController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
         [self.view addSubview:dramaController.view];
     } else if (topSegment.selectedSegmentIndex == 2){
         [selectedViewController.view removeFromSuperview];
         [selectedViewController removeFromParentViewController];
+        selectedViewController = nil;
         if(videoController == nil){
             videoController = [[VideoViewController alloc] init];
         }
         selectedViewController = videoController;
         videoController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:videoController];
-        videoController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height);
+        videoController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
         [self.view addSubview:videoController.view];
     } else if (topSegment.selectedSegmentIndex == 3){
         [selectedViewController.view removeFromSuperview];
         [selectedViewController removeFromParentViewController];
+        selectedViewController = nil;
         if(localController == nil){
             localController = [[LocalViewController alloc] init];
         }
         selectedViewController = localController;
         localController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:localController];
-        localController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height);
+        localController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
         [self.view addSubview:localController.view];
     }
-    [self viewWillAppear:YES];
 }
 
 - (void)search

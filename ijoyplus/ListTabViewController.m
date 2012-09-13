@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "AnimationFactory.h"
+#import "CollectionViewController.h"
 
 #define BOTTOM_TAB_HEIGHT 44
 @interface ListTabViewController (){
@@ -35,7 +36,7 @@
     WatchedViewController *detailController1 = [[WatchedViewController alloc] init];
     detailController1.view.backgroundColor = [UIColor whiteColor];
     
-    UIViewController *detailController2 = [[UIViewController alloc] init];
+    CollectionViewController *detailController2 = [[CollectionViewController alloc] init];
     detailController2.view.backgroundColor = [UIColor whiteColor];
     
     tabBarItems = [NSArray arrayWithObjects:

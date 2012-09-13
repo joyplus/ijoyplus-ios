@@ -31,6 +31,7 @@
         [flowView removeFromSuperview];
     }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    flowView.cellSelectedNotificationName = @"movieSelected";
     [flowView showsVerticalScrollIndicator];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
@@ -62,9 +63,9 @@
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"movieCell";
 	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
-
+    cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
     if(indexPath.section == 0){
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
@@ -103,7 +104,7 @@
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"did select at %i %i",indexPath.row, indexPath.section);
+    NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

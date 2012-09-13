@@ -98,6 +98,8 @@
 		EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E8160188D400E04289 /* LocalViewController.m */; };
 		EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E9160188D400E04289 /* MovieViewController.m */; };
 		EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3EB160188D400E04289 /* VideoViewController.m */; };
+		EBB1B3F1160190A000E04289 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F0160190A000E04289 /* CollectionViewController.m */; };
+		EBB1B3F5160190C600E04289 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F4160190C600E04289 /* TestView.m */; };
 		F08E79464D5B418D93D509A6 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF63B43DF6849BC89060EC7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -241,6 +243,10 @@
 		EBB1B3E9160188D400E04289 /* MovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieViewController.m; sourceTree = "<group>"; };
 		EBB1B3EA160188D400E04289 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
 		EBB1B3EB160188D400E04289 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
+		EBB1B3EF160190A000E04289 /* CollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewController.h; sourceTree = "<group>"; };
+		EBB1B3F0160190A000E04289 /* CollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
+		EBB1B3F3160190C600E04289 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestView.h; path = component/TestView.h; sourceTree = "<group>"; };
+		EBB1B3F4160190C600E04289 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestView.m; path = component/TestView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -497,10 +503,13 @@
 		EBAF69DC15FDC13D00938FE3 /* list */ = {
 			isa = PBXGroup;
 			children = (
+				EBB1B3F2160190AE00E04289 /* component */,
 				EBAF69DD15FDC22800938FE3 /* ListTabViewController.h */,
 				EBAF69DE15FDC22800938FE3 /* ListTabViewController.m */,
 				EBAF69DF15FDC22800938FE3 /* WatchedViewController.h */,
 				EBAF69E015FDC22800938FE3 /* WatchedViewController.m */,
+				EBB1B3EF160190A000E04289 /* CollectionViewController.h */,
+				EBB1B3F0160190A000E04289 /* CollectionViewController.m */,
 			);
 			name = list;
 			sourceTree = "<group>";
@@ -562,6 +571,15 @@
 				EBB1B3D01601777900E04289 /* UIUtility.m */,
 			);
 			name = utility;
+			sourceTree = "<group>";
+		};
+		EBB1B3F2160190AE00E04289 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				EBB1B3F3160190C600E04289 /* TestView.h */,
+				EBB1B3F4160190C600E04289 /* TestView.m */,
+			);
+			name = component;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -730,6 +748,8 @@
 				EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */,
 				EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */,
 				EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */,
+				EBB1B3F1160190A000E04289 /* CollectionViewController.m in Sources */,
+				EBB1B3F5160190C600E04289 /* TestView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

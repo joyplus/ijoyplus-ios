@@ -109,7 +109,7 @@
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"did select at %i %i",indexPath.row, indexPath.section);
+    NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
 }
 
 @end

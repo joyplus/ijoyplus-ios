@@ -61,6 +61,6 @@
     appDelegate.userLoggedIn = YES;
     BottomTabViewController *viewController = [[BottomTabViewController alloc]init];
     appDelegate.window.rootViewController = viewController;
-    [self presentViewController:viewController animated:YES completion:nil];
+    [self presentModalViewController:viewController animated:YES];
 }
 @end

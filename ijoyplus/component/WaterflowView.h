@@ -15,11 +15,12 @@
 {
     NSIndexPath *_indexPath;
     NSString *_reuseIdentifier;
+    NSString *cellSelectedNotificationName;
 }
 
 @property (nonatomic, retain) NSIndexPath *indexPath;
 @property (nonatomic, retain) NSString *reuseIdentifier;
-
+@property (nonatomic, strong) NSString *cellSelectedNotificationName;
 - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier;
 
 @end
@@ -63,5 +64,6 @@
 @property (nonatomic, strong) NSMutableDictionary *reusableCells;  //key- identifier, value- array of cells
 @property (nonatomic, strong) id <WaterflowViewDelegate> flowdelegate;
 @property (nonatomic, strong) id <WaterflowViewDatasource> flowdatasource;
+@property (nonatomic, strong) NSString *cellSelectedNotificationName;
 
 @end

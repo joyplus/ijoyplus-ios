@@ -14,17 +14,10 @@
 
 @implementation BaseViewController
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if(!appDelegate.userLoggedIn){
-        [self addToolBar];
-    }
-}
-
 - (void)addToolBar
 {
-    UIToolbar *toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - TAB_BAR_HEIGHT, self.view.frame.size.width, TAB_BAR_HEIGHT)];
+    UIToolbar *toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - TAB_BAR_HEIGHT - 44, self.view.frame.size.width, TAB_BAR_HEIGHT)];
+    toolBar.layer.zPosition = 1;
     [UIUtility customizeToolbar:toolBar];
     
     UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
