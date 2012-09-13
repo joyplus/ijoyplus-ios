@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface PopularSegmentViewController : UIViewController
+@interface PopularSegmentViewController : BaseViewController
 
 
 @end

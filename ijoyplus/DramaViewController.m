@@ -1,11 +1,11 @@
-#import "MovieViewController.h"
+#import "DramaViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "PlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface MovieViewController(){
+@interface DramaViewController(){
     WaterflowView *flowView;
     NSMutableArray *imageUrls;
     int currentPage;
@@ -14,7 +14,7 @@
 - (void)addContentView;
 @end
 
-@implementation MovieViewController
+@implementation DramaViewController
 
 - (void)viewDidLoad
 {

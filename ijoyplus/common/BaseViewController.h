@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import "UIUtility.h"
+#import "CMConstants.h"
+#import "AppDelegate.h"
 
 @interface BaseViewController : UIViewController
+
+- (void)addToolBar;
 
 @end

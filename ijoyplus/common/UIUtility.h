@@ -10,6 +10,8 @@
 
 @interface UIUtility : NSObject
 
++ (void)customizeNavigationBar:(UINavigationBar *)navBar;
 + (void)customizeToolbar:(UIToolbar *)toolbar;
++ (void)addTextShadow:(UILabel *)textLabel;
 
 @end

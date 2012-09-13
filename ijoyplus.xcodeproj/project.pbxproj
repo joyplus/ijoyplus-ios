@@ -78,7 +78,6 @@
 		EBAFBC1A15F9BB59007579D1 /* TabBarNipple@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0615F9BB58007579D1 /* TabBarNipple@2x.png */; };
 		EBAFBC1B15F9BB59007579D1 /* TabBarSelection.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0715F9BB58007579D1 /* TabBarSelection.png */; };
 		EBAFBC1C15F9BB59007579D1 /* TabBarSelection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0815F9BB58007579D1 /* TabBarSelection@2x.png */; };
-		EBAFBC1F15F9BFFF007579D1 /* PopularViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC1E15F9BFFF007579D1 /* PopularViewController.m */; };
 		EBAFBC2215F9C6E3007579D1 /* TextCustomTabBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC2115F9C6E3007579D1 /* TextCustomTabBar.m */; };
 		EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3315F9DDC0007579D1 /* CMConstants.m */; };
 		EBAFBC3D15F9E507007579D1 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3B15F9E506007579D1 /* LoginViewController.m */; };
@@ -90,6 +89,15 @@
 		EBB1B3C91601749500E04289 /* nav_bar_bg_44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3C81601749500E04289 /* nav_bar_bg_44@2x.png */; };
 		EBB1B3CC1601770D00E04289 /* tool_bar_bg@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3CB1601770D00E04289 /* tool_bar_bg@2X.png */; };
 		EBB1B3D11601777900E04289 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3D01601777900E04289 /* UIUtility.m */; };
+		EBB1B3DD16017FBD00E04289 /* log_btn_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3D916017FBD00E04289 /* log_btn_active@2x.png */; };
+		EBB1B3DE16017FBD00E04289 /* log_btn_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */; };
+		EBB1B3DF16017FBD00E04289 /* reg_btn_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */; };
+		EBB1B3E016017FBD00E04289 /* reg_btn_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */; };
+		EBB1B3E31601836600E04289 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E21601836600E04289 /* BaseViewController.m */; };
+		EBB1B3E61601876B00E04289 /* DramaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E51601876B00E04289 /* DramaViewController.m */; };
+		EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E8160188D400E04289 /* LocalViewController.m */; };
+		EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E9160188D400E04289 /* MovieViewController.m */; };
+		EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3EB160188D400E04289 /* VideoViewController.m */; };
 		F08E79464D5B418D93D509A6 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF63B43DF6849BC89060EC7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -201,8 +209,7 @@
 		EBAFBC0615F9BB58007579D1 /* TabBarNipple@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarNipple@2x.png"; sourceTree = "<group>"; };
 		EBAFBC0715F9BB58007579D1 /* TabBarSelection.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TabBarSelection.png; sourceTree = "<group>"; };
 		EBAFBC0815F9BB58007579D1 /* TabBarSelection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TabBarSelection@2x.png"; sourceTree = "<group>"; };
-		EBAFBC1D15F9BFFF007579D1 /* PopularViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularViewController.h; sourceTree = "<group>"; };
-		EBAFBC1E15F9BFFF007579D1 /* PopularViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopularViewController.m; sourceTree = "<group>"; };
+		EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieViewController.h; sourceTree = "<group>"; };
 		EBAFBC2015F9C6E3007579D1 /* TextCustomTabBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextCustomTabBar.h; sourceTree = "<group>"; };
 		EBAFBC2115F9C6E3007579D1 /* TextCustomTabBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextCustomTabBar.m; sourceTree = "<group>"; };
 		EBAFBC3215F9DDC0007579D1 /* CMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConstants.h; sourceTree = "<group>"; };
@@ -221,6 +228,19 @@
 		EBB1B3CB1601770D00E04289 /* tool_bar_bg@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tool_bar_bg@2X.png"; sourceTree = "<group>"; };
 		EBB1B3CF1601777900E04289 /* UIUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIUtility.h; sourceTree = "<group>"; };
 		EBB1B3D01601777900E04289 /* UIUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIUtility.m; sourceTree = "<group>"; };
+		EBB1B3D916017FBD00E04289 /* log_btn_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "log_btn_active@2x.png"; sourceTree = "<group>"; };
+		EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "log_btn_normal@2x.png"; sourceTree = "<group>"; };
+		EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reg_btn_active@2x.png"; sourceTree = "<group>"; };
+		EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reg_btn_normal@2x.png"; sourceTree = "<group>"; };
+		EBB1B3E11601836600E04289 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		EBB1B3E21601836600E04289 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
+		EBB1B3E41601876A00E04289 /* DramaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaViewController.h; sourceTree = "<group>"; };
+		EBB1B3E51601876B00E04289 /* DramaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaViewController.m; sourceTree = "<group>"; };
+		EBB1B3E7160188D400E04289 /* LocalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalViewController.h; sourceTree = "<group>"; };
+		EBB1B3E8160188D400E04289 /* LocalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalViewController.m; sourceTree = "<group>"; };
+		EBB1B3E9160188D400E04289 /* MovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieViewController.m; sourceTree = "<group>"; };
+		EBB1B3EA160188D400E04289 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
+		EBB1B3EB160188D400E04289 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -334,6 +354,10 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBB1B3D916017FBD00E04289 /* log_btn_active@2x.png */,
+				EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */,
+				EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */,
+				EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */,
 				EBB1B3CB1601770D00E04289 /* tool_bar_bg@2X.png */,
 				EBB1B3C81601749500E04289 /* nav_bar_bg_44@2x.png */,
 				EB32BD2615F887CE00C878D5 /* temp */,
@@ -414,8 +438,14 @@
 				EBB0C952160073BA00A9B8F8 /* PopularSegmentViewController.h */,
 				EBB0C953160073BB00A9B8F8 /* PopularSegmentViewController.m */,
 				EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */,
-				EBAFBC1D15F9BFFF007579D1 /* PopularViewController.h */,
-				EBAFBC1E15F9BFFF007579D1 /* PopularViewController.m */,
+				EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */,
+				EBB1B3E9160188D400E04289 /* MovieViewController.m */,
+				EBB1B3E41601876A00E04289 /* DramaViewController.h */,
+				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
+				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
+				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
+				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
+				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
 				EBAF6A3F15FDDBB300938FE3 /* SearchFilmViewController.h */,
 				EBAF6A4015FDDBB300938FE3 /* SearchFilmViewController.m */,
 				EBAF6A4115FDDBB400938FE3 /* SearchFilmViewController.xib */,
@@ -519,6 +549,8 @@
 				EBAFBC3315F9DDC0007579D1 /* CMConstants.m */,
 				EBAFBC4315F9E849007579D1 /* AnimationFactory.h */,
 				EBAFBC4415F9E849007579D1 /* AnimationFactory.m */,
+				EBB1B3E11601836600E04289 /* BaseViewController.h */,
+				EBB1B3E21601836600E04289 /* BaseViewController.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -623,6 +655,10 @@
 				EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */,
 				EBB1B3C91601749500E04289 /* nav_bar_bg_44@2x.png in Resources */,
 				EBB1B3CC1601770D00E04289 /* tool_bar_bg@2X.png in Resources */,
+				EBB1B3DD16017FBD00E04289 /* log_btn_active@2x.png in Resources */,
+				EBB1B3DE16017FBD00E04289 /* log_btn_normal@2x.png in Resources */,
+				EBB1B3DF16017FBD00E04289 /* reg_btn_active@2x.png in Resources */,
+				EBB1B3E016017FBD00E04289 /* reg_btn_normal@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,7 +692,6 @@
 				EB32BD0315F8873B00C878D5 /* LoadingMoreFooterView.m in Sources */,
 				EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */,
 				EBAFBBF115F9B6EA007579D1 /* CustomTabBar.m in Sources */,
-				EBAFBC1F15F9BFFF007579D1 /* PopularViewController.m in Sources */,
 				EBAFBC2215F9C6E3007579D1 /* TextCustomTabBar.m in Sources */,
 				EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */,
 				EBAFBC3D15F9E507007579D1 /* LoginViewController.m in Sources */,
@@ -690,6 +725,11 @@
 				EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */,
 				EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */,
 				EBB1B3D11601777900E04289 /* UIUtility.m in Sources */,
+				EBB1B3E31601836600E04289 /* BaseViewController.m in Sources */,
+				EBB1B3E61601876B00E04289 /* DramaViewController.m in Sources */,
+				EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */,
+				EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */,
+				EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

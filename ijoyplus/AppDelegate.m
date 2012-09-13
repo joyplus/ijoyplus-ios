@@ -23,11 +23,11 @@
     // Customize the title text for *all* UINavigationBars
     [[UINavigationBar appearance] setTitleTextAttributes:
      [NSDictionary dictionaryWithObjectsAndKeys:
-      [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:1.0],
+      [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0],
       UITextAttributeTextColor,
-      [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.8],
+      [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5],
       UITextAttributeTextShadowColor,
-      [NSValue valueWithUIOffset:UIOffsetMake(1, 1)],
+      [NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
       UITextAttributeTextShadowOffset,
       [UIFont fontWithName:@"Arial-Bold" size:20],
       UITextAttributeFont,

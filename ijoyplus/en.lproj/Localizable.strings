@@ -9,7 +9,7 @@
 "MNM_BOTTOM_PTR_LOADING_TEXT" = "努力加载中...";
 
 app_name = "Joy+";
-login = "登陆";
+login = "登录";
 register = "注册";
 search = "搜索";
 search_history = "历史记录";

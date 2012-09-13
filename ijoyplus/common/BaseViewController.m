@@ -14,30 +14,46 @@
 
 @implementation BaseViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (void)viewWillAppear:(BOOL)animated
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    if(!appDelegate.userLoggedIn){
+        [self addToolBar];
     }
-    return self;
 }
 
-- (void)viewDidLoad
+- (void)addToolBar
 {
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    UIToolbar *toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - TAB_BAR_HEIGHT, self.view.frame.size.width, TAB_BAR_HEIGHT)];
+    [UIUtility customizeToolbar:toolBar];
+    
+    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [registerBtn setFrame:CGRectMake(2, 2, self.view.frame.size.width/2-1, TAB_BAR_HEIGHT-3)];
+    [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
+    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [UIUtility addTextShadow:registerBtn.titleLabel];
+    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+    [registerBtn addTarget:self action:@selector(registerScreen)forControlEvents:UIControlEventTouchUpInside];
+    [toolBar addSubview:registerBtn];
+    
+    UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [loginBtn setFrame:CGRectMake(self.view.frame.size.width/2 + 2, 2, self.view.frame.size.width/2 - 4, TAB_BAR_HEIGHT-3)];
+    [loginBtn setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
+    [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [loginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [UIUtility addTextShadow:loginBtn.titleLabel];
+    loginBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    [loginBtn setBackgroundImage:[[UIImage imageNamed:@"log_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    [loginBtn setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+    [loginBtn addTarget:self action:@selector(loginScreen)forControlEvents:UIControlEventTouchUpInside];
+    [toolBar addSubview:loginBtn];
+    
+    [self.view addSubview:toolBar];
 }
 
 @end

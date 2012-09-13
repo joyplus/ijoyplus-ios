@@ -1,11 +1,11 @@
-#import "MovieViewController.h"
+#import "VideoViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "PlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface MovieViewController(){
+@interface VideoViewController(){
     WaterflowView *flowView;
     NSMutableArray *imageUrls;
     int currentPage;
@@ -14,7 +14,7 @@
 - (void)addContentView;
 @end
 
-@implementation MovieViewController
+@implementation VideoViewController
 
 - (void)viewDidLoad
 {
@@ -67,11 +67,11 @@
 
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
     if(indexPath.section == 0){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     } else {        
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     }
     [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     imageView.layer.borderWidth = 1;
@@ -81,7 +81,7 @@
     imageView.layer.shadowOpacity = 1;
     [cell addSubview:imageView];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, VIDEO_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
     titleLabel.text = @"电影";
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor colorWithRed:252/255.0 green:252/255.0 blue:252/255.0 alpha:1];
@@ -97,7 +97,7 @@
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-	return MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT + 5 + 10;
+	return VIDEO_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT + 5 + 10;
     
 }
 
