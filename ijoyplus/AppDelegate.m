@@ -9,10 +9,50 @@
 #import "AppDelegate.h"
 
 #import "BottomTabViewController.h"
-#import "PopularTabViewController.h"
+#import "PopularSegmentViewController.h"
 
 @implementation AppDelegate
 @synthesize userLoggedIn;
+
+- (void)customizeAppearance
+{
+    // Set the background image for *all* UINavigationBars
+    UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
+    
+    // Customize the title text for *all* UINavigationBars
+    [[UINavigationBar appearance] setTitleTextAttributes:
+     [NSDictionary dictionaryWithObjectsAndKeys:
+      [UIColor colorWithRed:0/255.0 green:0/255.0 blue:0/255.0 alpha:1.0],
+      UITextAttributeTextColor,
+      [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.8],
+      UITextAttributeTextShadowColor,
+      [NSValue valueWithUIOffset:UIOffsetMake(1, 1)],
+      UITextAttributeTextShadowOffset,
+      [UIFont fontWithName:@"Arial-Bold" size:20],
+      UITextAttributeFont,
+      nil]];
+    
+    // Customize UIBarButtonItems
+    UIImage *button30 = [[UIImage imageNamed:@"nav_bar_button_30"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    [[UIBarButtonItem appearance] setBackgroundImage:button30 forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    
+    [[UIBarButtonItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor colorWithRed:220.0/255.0 green:104.0/255.0 blue:1.0/255.0 alpha:1.0], UITextAttributeTextColor, [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0], UITextAttributeTextShadowColor, [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset, [UIFont fontWithName:@"AmericanTypewriter" size:0.0], UITextAttributeFont, nil] forState:UIControlStateNormal];
+    
+    // Customize UISegment
+    UIImage *segmentSelected = [[UIImage imageNamed:@"segcontrol_sel.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 15, 0, 15)];
+    UIImage *segmentUnselected = [[UIImage imageNamed:@"segcontrol_uns.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 15, 0, 15)];
+    UIImage *segmentSelectedUnselected = [UIImage imageNamed:@"segcontrol_sel-uns.png"];
+    UIImage *segUnselectedSelected = [UIImage imageNamed:@"segcontrol_uns-sel.png"];
+    UIImage *segmentUnselectedUnselected = [UIImage imageNamed:@"segcontrol_uns-uns.png"];
+    
+    [[UISegmentedControl appearance] setBackgroundImage:segmentUnselected forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [[UISegmentedControl appearance] setBackgroundImage:segmentSelected forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+    
+    [[UISegmentedControl appearance] setDividerImage:segmentUnselectedUnselected forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [[UISegmentedControl appearance] setDividerImage:segmentSelectedUnselected forLeftSegmentState:UIControlStateSelected rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [[UISegmentedControl appearance] setDividerImage:segUnselectedSelected forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -22,11 +62,12 @@
     if(self.userLoggedIn){
         viewController = [[BottomTabViewController alloc] init];
     } else {
-        UIViewController *detailViewController = [[PopularTabViewController alloc] init];
+        PopularSegmentViewController *detailViewController = [[PopularSegmentViewController alloc]initWithNibName:@"PopularSegmentViewController" bundle:nil];
         viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
     }
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
+    [self customizeAppearance];
     return YES;
 }
 

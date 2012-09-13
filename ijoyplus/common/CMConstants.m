@@ -7,7 +7,6 @@
 //
 
 #import "CMConstants.h"
-
 @implementation CMConstants
 
 + (UIColor *)greyColor
@@ -32,6 +31,11 @@
 + (UIColor *)textColor
 {
     return [UIColor colorWithRed:145/255.0 green:210/255.0 blue:212/255.0 alpha:1];
+}
+
++ (UIFont *)titleFont
+{
+    return [UIFont systemFontOfSize:15];
 }
 
 @end

@@ -2,11 +2,12 @@
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "PlayRootViewController.h"
+#import "CMConstants.h"
 
 #define NUMBER_OF_COLUMNS 3
-#define TOP_TAB_HEIGHT 40
-#define BOTTOM_TAB_HEIGHT 60
-#define COLUMN_GAP_WIDTH 10
+//#define TOP_TAB_HEIGHT 40
+//#define BOTTOM_TAB_HEIGHT 60
+//#define COLUMN_GAP_WIDTH 10
 
 @interface PopularViewController(){
     WaterflowView *flowView;
@@ -33,7 +34,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.navigationController.navigationBar.frame.size.height - TOP_TAB_HEIGHT - BOTTOM_TAB_HEIGHT + 8)];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     [flowView showsVerticalScrollIndicator];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
@@ -68,43 +69,34 @@
     static NSString *CellIdentifier = @"Cell";
 	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
 
-    float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
     if(indexPath.section == 0){
-        imageView.frame = CGRectMake(COLUMN_GAP_WIDTH, COLUMN_GAP_WIDTH, (self.view.frame.size.width - (NUMBER_OF_COLUMNS+1)*COLUMN_GAP_WIDTH)/NUMBER_OF_COLUMNS, height - 30);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
-        imageView.frame = CGRectMake(COLUMN_GAP_WIDTH/2, COLUMN_GAP_WIDTH, (self.view.frame.size.width - (NUMBER_OF_COLUMNS+1)*COLUMN_GAP_WIDTH)/NUMBER_OF_COLUMNS, height - 30);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     } else {        
-        imageView.frame = CGRectMake(COLUMN_GAP_WIDTH/2, COLUMN_GAP_WIDTH, (self.view.frame.size.width - (NUMBER_OF_COLUMNS+1)*COLUMN_GAP_WIDTH)/NUMBER_OF_COLUMNS, height - 30);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     }
     [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     [cell addSubview:imageView];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
     titleLabel.text = @"电影";
-    [titleLabel sizeToFit];
-    titleLabel.center = CGPointMake(self.view.frame.size.width / NUMBER_OF_COLUMNS / 2, height - 10);
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [UIColor grayColor];
-    titleLabel.font = [UIFont systemFontOfSize:15];
+    titleLabel.textAlignment = UITextAlignmentCenter;
+    titleLabel.backgroundColor = [UIColor colorWithRed:252/255.0 green:252/255.0 blue:252/255.0 alpha:1];
+    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.font = CMConstants.titleFont;
     [cell addSubview:titleLabel];
     return cell;
     
 }
 
-
-- (CGFloat)flowView:(WaterflowView *)flowView heightForCellAtIndex:(NSInteger)index
-{
-    return 50;
-}
 #pragma mark-
 #pragma mark- WaterflowDelegate
-
-
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-	return 150;
+	return MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT + 5 + 10;
     
 }
 

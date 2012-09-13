@@ -1,9 +1,9 @@
 #import "BottomTabViewController.h"
-#import "PopularTabViewController.h"
 #import "UIImageView+WebCache.h"
 #import "FriendTabViewController.h"
 #import "ListTabViewController.h"
 #import "MyselfViewController.h"
+#import "PopularSegmentViewController.h"
 
 #define NUMBER_OF_COLUMNS 3
 #define TOP_TAB_HEIGHT 40
@@ -32,7 +32,7 @@
 - (void)initTabs
 {
     // Set up some fake view controllers each with a different background color so we can visually see the controllers getting swapped around
-    PopularTabViewController *detailController1 = [[PopularTabViewController alloc] init];
+    PopularSegmentViewController *detailController1 = [[PopularSegmentViewController alloc] initWithNibName:@"PopularSegmentViewController" bundle:nil];
     detailController1.view.backgroundColor = [UIColor clearColor];
     
     FriendTabViewController *detailController2 = [[FriendTabViewController alloc] init];

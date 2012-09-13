@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface AnimationFactory : NSObject
 
 + (CATransition *)pushToLeftAnimation:(void (^)(void))animations;
 + (CATransition *)pushToRightAnimation:(void (^)(void))animations;
++ (CATransition *)pushToRippleAnimation:(void (^)(void))animations;
 @end
