@@ -21,7 +21,7 @@
     [UIUtility customizeToolbar:toolBar];
     
     UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [registerBtn setFrame:CGRectMake(2, 2, self.view.frame.size.width/2-1, TAB_BAR_HEIGHT-3)];
+    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, self.view.frame.size.width/2-12, TAB_BAR_HEIGHT-10)];
     [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
     [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
@@ -34,7 +34,7 @@
     [toolBar addSubview:registerBtn];
     
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [loginBtn setFrame:CGRectMake(self.view.frame.size.width/2 + 2, 2, self.view.frame.size.width/2 - 4, TAB_BAR_HEIGHT-3)];
+    [loginBtn setFrame:CGRectMake(self.view.frame.size.width/2 + MOVIE_LOGO_WIDTH_GAP/2, 5, self.view.frame.size.width/2 - 12, TAB_BAR_HEIGHT-10)];
     [loginBtn setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];

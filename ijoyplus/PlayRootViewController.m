@@ -28,7 +28,7 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"app_name", nil);
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
+    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemCancel target:self action:@selector(closeSelf)];
     self.navigationItem.leftBarButtonItem = leftButton;
 	currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];

@@ -31,7 +31,12 @@
         [flowView removeFromSuperview];
     }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    flowView.cellSelectedNotificationName = @"dramaSelected";
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    NSString *flag = @"0";
+    if(appDelegate.userLoggedIn){
+        flag = @"1";
+    }
+    flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"dramaelected",flag];
     [flowView showsVerticalScrollIndicator];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
@@ -44,7 +49,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark-

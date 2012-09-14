@@ -31,7 +31,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"app_name", nil);
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
     self.navigationItem.leftBarButtonItem = leftButton;
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];

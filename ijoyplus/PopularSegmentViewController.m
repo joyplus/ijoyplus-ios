@@ -47,7 +47,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"app_name", nil);
     [UIUtility customizeNavigationBar:self.navigationController.navigationBar];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if(appDelegate.userLoggedIn){
@@ -63,6 +62,9 @@
     [topSegment setTitle:NSLocalizedString(@"video", nil) forSegmentAtIndex:2];
     [topSegment setTitle:NSLocalizedString(@"local", nil) forSegmentAtIndex:3];
     [topSegment addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
+    topSegment.layer.shadowColor = [UIColor blackColor].CGColor;
+    topSegment.layer.shadowOffset = CGSizeMake(0, 1);
+    topSegment.layer.shadowOpacity = 1;
     [self.view addSubview:topSegment];
     movieController = [[MovieViewController alloc] init];
     selectedViewController = movieController;

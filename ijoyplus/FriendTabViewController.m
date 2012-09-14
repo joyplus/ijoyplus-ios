@@ -18,7 +18,7 @@
 #define BOTTOM_TAB_HEIGHT 44
 @interface FriendTabViewController (){
     NSArray* tabBarItems;
-    TextCustomTabBar* tabBar;
+//    TextCustomTabBar* tabBar;
 }
 - (void)searchFriend;
 - (void)addToolBar;
@@ -30,7 +30,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"app_name", nil);
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(searchFriend)];
     self.navigationItem.rightBarButtonItem = rightButton;
     RecommandMovieViewController *detailController1 = [[RecommandMovieViewController alloc] init];
@@ -47,14 +46,14 @@
     UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
     
     // Create a custom tab bar passing in the number of items, the size of each item and setting ourself as the delegate
-    tabBar = [[TextCustomTabBar alloc] initWithItemCount:tabBarItems.count itemSize:CGSizeMake(self.view.frame.size.width/tabBarItems.count, tabBarGradient.size.height*1.5) tag:111 delegate:self];
-    
-    // Place the tab bar at the bottom of our view
-    tabBar.frame = CGRectMake(0,1,self.view.frame.size.width, tabBarGradient.size.height*1.5);
-    [self.view addSubview:tabBar];
-    
-    // Select the first tab
-    [tabBar selectItemAtIndex:0];
+//    tabBar = [[TextCustomTabBar alloc] initWithItemCount:tabBarItems.count itemSize:CGSizeMake(self.view.frame.size.width/tabBarItems.count, tabBarGradient.size.height*1.5) tag:111 delegate:self];
+//    
+//    // Place the tab bar at the bottom of our view
+//    tabBar.frame = CGRectMake(0,1,self.view.frame.size.width, tabBarGradient.size.height*1.5);
+//    [self.view addSubview:tabBar];
+//    
+//    // Select the first tab
+//    [tabBar selectItemAtIndex:0];
     [self touchDownAtItemAtIndex:0];
     
 }
@@ -215,13 +214,13 @@
     UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
     
     // Set the view controller's frame to account for the tab bar
-    viewController.view.frame = CGRectMake(0,tabBar.frame.size.height,self.view.bounds.size.width, self.view.bounds.size.height-(tabBarGradient.size.height*2));
+//    viewController.view.frame = CGRectMake(0,tabBar.frame.size.height,self.view.bounds.size.width, self.view.bounds.size.height-(tabBarGradient.size.height*2));
     
     // Se the tag so we can find it later
     viewController.view.tag = 911;
     
     // Add the new view controller's view
-    [self.view insertSubview:viewController.view belowSubview:tabBar];
+//    [self.view insertSubview:viewController.view belowSubview:tabBar];
     
     // In 1 second glow the selected tab
     [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(addGlowTimerFireMethod:) userInfo:[NSNumber numberWithInteger:itemIndex] repeats:NO];
@@ -233,22 +232,22 @@
     // Remove the glow from all tab bar items
     for (NSUInteger i = 0 ; i < tabBarItems.count ; i++)
     {
-        [tabBar removeGlowAtIndex:i];
+//        [tabBar removeGlowAtIndex:i];
     }
     
     // Then add it to this tab bar item
-    [tabBar glowItemAtIndex:[[theTimer userInfo] integerValue]];
+//    [tabBar glowItemAtIndex:[[theTimer userInfo] integerValue]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     // Let the tab bar that we're about to rotate
-    [tabBar willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+//    [tabBar willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
     
     // Adjust the current view in prepartion for the new orientation
     UIView* currentView = [self.view viewWithTag:911];

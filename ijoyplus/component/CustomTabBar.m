@@ -251,7 +251,7 @@
   UILabel *title = [delegate textFor:self atIndex:itemIndex];
   [title sizeToFit];
   title.backgroundColor = [UIColor clearColor];
-  title.center = CGPointMake(button.center.x, self.frame.size.height - 5);
+  title.center = CGPointMake(button.center.x, self.frame.size.height - 7);
   [button addSubview:title];
   return button;
 }

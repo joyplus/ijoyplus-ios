@@ -13,5 +13,5 @@
 + (void)customizeNavigationBar:(UINavigationBar *)navBar;
 + (void)customizeToolbar:(UIToolbar *)toolbar;
 + (void)addTextShadow:(UILabel *)textLabel;
-
++ (UILabel *)customizeAppTitle;
 @end
