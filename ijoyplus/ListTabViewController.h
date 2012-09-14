@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TextCustomTabBar.h"
 
-@interface ListTabViewController : UIViewController <TextCustomTabBarDelegate>
+@interface ListTabViewController : UIViewController
 {
     
 }

@@ -111,21 +111,7 @@
 #pragma mark -
 #pragma mark CustomTabBarDelegate
 
-- (UIImage*) imageFor:(TextCustomTabBar*)tabBar atIndex:(NSUInteger)itemIndex
-{
-    return nil;
-}
 
-- (UILabel*) textFor:(TextCustomTabBar*)tabBar atIndex:(NSUInteger)itemIndex
-{
-    NSDictionary* data = [tabBarItems objectAtIndex:itemIndex];
-    UILabel *title = [[UILabel alloc]init];
-    title.text = [data valueForKey:@"text"];
-    title.font = [UIFont boldSystemFontOfSize:12];
-    title.textColor = [UIColor whiteColor];
-    [title sizeToFit];
-    return title;
-}
 
 - (UIImage*) backgroundImage
 {

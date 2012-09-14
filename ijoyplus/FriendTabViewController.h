@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TextCustomTabBar.h"
 
-@interface FriendTabViewController : UIViewController <TextCustomTabBarDelegate>
+@interface FriendTabViewController : UIViewController
 {
     
 }
