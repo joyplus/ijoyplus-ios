@@ -23,6 +23,10 @@
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
     [self addContentView];
+    
+    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
+    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    [flowView addGestureRecognizer:downGesture];
 }
 
 - (void)addContentView
@@ -31,6 +35,7 @@
         [flowView removeFromSuperview];
     }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
     if(appDelegate.userLoggedIn){
@@ -110,10 +115,11 @@
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
-    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
+    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
+//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [navController pushViewController:viewController animated:YES];
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page

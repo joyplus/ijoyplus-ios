@@ -54,6 +54,7 @@
 - (id)init {
     if ((self = [super init])) {
     }
+    self.delegate = self;
     return self;
 }
 
@@ -72,7 +73,7 @@
     self.title = NSLocalizedString(@"app_name", nil);
     self.delegate = self;
     [self initTabControllers];
-    self.viewControllers = [NSArray arrayWithObjects: [self addNavigation:detailController1], [self addNavigation:detailController2], [self addNavigation:detailController3],[self addNavigation:detailController4], nil];
+    self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController3,detailController4, nil];
     [self setSelectedIndex:0];
 }
 
@@ -97,5 +98,13 @@
     return navController;
 }
 
-
+#pragma mark - Tab bar delegate
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+{
+    if([viewController isKindOfClass:[PopularSegmentViewController class]]){
+        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+        self.navigationItem.rightBarButtonItem = rightButton;
+    }
+    return YES;
+}
 @end

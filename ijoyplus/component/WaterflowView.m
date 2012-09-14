@@ -9,11 +9,14 @@
 #import "WaterflowView.h"
 #import "LoadingMoreFooterView.h"
 #import "EGORefreshTableHeaderView.h"
+#import "AppDelegate.h"
 
 #define LOADINGVIEW_HEIGHT 44
 #define REFRESHINGVIEW_HEIGHT 88
 
-@interface WaterflowView() <EGORefreshTableHeaderDelegate>
+@interface WaterflowView() <EGORefreshTableHeaderDelegate>{
+    CGPoint previousOffSet;
+}
 - (void)initialize;
 - (void)recycleCellIntoReusableQueue:(WaterFlowCell*)cell;
 - (void)pageScroll;
@@ -190,6 +193,8 @@
     self.loadFooterView.frame = CGRectMake(0, scrollHeight, self.frame.size.width, LOADINGVIEW_HEIGHT);
     
     [self pageScroll];
+    [self showNavigationBarAnimation];
+    
 }
 
 - (void)reloadData
@@ -368,6 +373,17 @@
     [self pageScroll];
     
     [self.refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    static float newx = 0;
+    static float oldIx = 0;
+    newx= scrollView.contentOffset.y ;
+    if (newx != oldIx ) {
+        if (newx > oldIx && newx > 0) {
+            [self hideNavigationBarAnimation];
+        }else if(newx < oldIx){
+            [self showNavigationBarAnimation];
+        }
+        oldIx = newx;
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -395,6 +411,24 @@
         }
 //        [self performSelector:@selector(reloadData) withObject:self afterDelay:1.0f]; //make a delay to show loading process for a while
     }
+}
+
+- (void)hideNavigationBarAnimation
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [UIView beginAnimations:@"FadeOutNav" context:NULL];
+    [UIView setAnimationDuration:2.0];
+    [(UINavigationController *)appDelegate.window.rootViewController setNavigationBarHidden:YES animated:YES];
+    [UIView commitAnimations];
+}
+
+- (void)showNavigationBarAnimation
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [UIView beginAnimations:@"FadeOutNav" context:NULL];
+    [UIView setAnimationDuration:2.0];
+    [(UINavigationController *)appDelegate.window.rootViewController setNavigationBarHidden:NO animated:YES];
+    [UIView commitAnimations];
 }
 
 #pragma mark -
@@ -441,7 +475,7 @@
     self.reuseIdentifier = nil;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:self.cellSelectedNotificationName
                                                         object:self

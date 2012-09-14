@@ -478,14 +478,14 @@
 				EBAF6AA715FDE9CE00938FE3 /* SearchFilmResultViewController.h */,
 				EBAF6AA815FDE9CF00938FE3 /* SearchFilmResultViewController.m */,
 				EBAF6AA915FDE9CF00938FE3 /* SearchFilmResultViewController.xib */,
+				EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */,
+				EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */,
 				EBAED32315FED3D100192AE4 /* PlayViewController.h */,
 				EBAED32415FED3D100192AE4 /* PlayViewController.m */,
 				EBAED32515FED3D100192AE4 /* PlayViewController.xib */,
 				EBAED38D15FF25FA00192AE4 /* IntroductionViewController.h */,
 				EBAED38E15FF25FA00192AE4 /* IntroductionViewController.m */,
 				EBAED38F15FF25FA00192AE4 /* IntroductionViewController.xib */,
-				EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */,
-				EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */,
 			);
 			name = popular;
 			sourceTree = "<group>";

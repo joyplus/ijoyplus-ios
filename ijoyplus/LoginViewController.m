@@ -59,7 +59,8 @@
 {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.userLoggedIn = YES;
-    BottomTabViewController *viewController = [[BottomTabViewController alloc]init];
+    BottomTabViewController *detailViewController = [[BottomTabViewController alloc] init];
+    UINavigationController *viewController =  [[UINavigationController alloc]initWithRootViewController:detailViewController];
     appDelegate.window.rootViewController = viewController;
     [self presentModalViewController:viewController animated:YES];
 }

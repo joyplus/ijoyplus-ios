@@ -27,6 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.navigationController setNavigationBarHidden:NO animated:NO];
     self.title = NSLocalizedString(@"app_name", nil);
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemCancel target:self action:@selector(closeSelf)];
     self.navigationItem.leftBarButtonItem = leftButton;

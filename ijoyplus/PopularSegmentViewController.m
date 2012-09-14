@@ -8,10 +8,8 @@
 
 #import "PopularSegmentViewController.h"
 #import "MovieViewController.h"
-#import "LoginViewController.h"
 #import "AnimationFactory.h"
 #import "SearchFilmViewController.h"
-#import "RegisterViewController.h"
 #import "CustomSegmentedControl.h"
 #import "DramaViewController.h"
 #import "VideoViewController.h"
@@ -27,11 +25,10 @@
 @property (strong, nonatomic) IBOutlet CustomSegmentedControl *topSegment;
 - (void)segmentValueChanged:(id)sender;
 - (void)search;
-- (void)registerScreen;
-- (void)loginScreen;
 @end
 
 @implementation PopularSegmentViewController
+//@synthesize bottomToolbar;
 @synthesize topSegment;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -52,6 +49,7 @@
     if(appDelegate.userLoggedIn){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
+        [self hideToolBar];
     } else {
         [self addToolBar];
     }
@@ -77,6 +75,7 @@
 - (void)viewDidUnload
 {
     [self setTopSegment:nil];
+    [self setBottomToolbar:nil];
     [super viewDidUnload];
     topSegment = nil;
     // Release any retained subviews of the main view.
@@ -146,22 +145,6 @@
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
-}
-
-- (void)loginScreen
-{
-    LoginViewController *viewController = [[LoginViewController alloc]initWithNibName:@"LoginViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    [self.navigationController presentViewController:navController animated:YES completion:nil];
-}
-
-
-- (void)registerScreen
-{
-    RegisterViewController *viewController = [[RegisterViewController alloc]initWithNibName:@"RegisterViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    [self.navigationController presentViewController:navController animated:YES completion:nil];
-    
 }
 
 @end
