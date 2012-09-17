@@ -415,20 +415,20 @@
 
 - (void)hideNavigationBarAnimation
 {
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [UIView beginAnimations:@"FadeOutNav" context:NULL];
-    [UIView setAnimationDuration:2.0];
-    [(UINavigationController *)appDelegate.window.rootViewController setNavigationBarHidden:YES animated:YES];
-    [UIView commitAnimations];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [UIView beginAnimations:@"FadeOutNav" context:NULL];
+//    [UIView setAnimationDuration:2.0];
+//    [(UINavigationController *)appDelegate.window.rootViewController setNavigationBarHidden:YES animated:YES];
+//    [UIView commitAnimations];
 }
 
 - (void)showNavigationBarAnimation
 {
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [UIView beginAnimations:@"FadeOutNav" context:NULL];
-    [UIView setAnimationDuration:2.0];
-    [(UINavigationController *)appDelegate.window.rootViewController setNavigationBarHidden:NO animated:YES];
-    [UIView commitAnimations];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [UIView beginAnimations:@"FadeOutNav" context:NULL];
+//    [UIView setAnimationDuration:2.0];
+//    [(UINavigationController *)appDelegate.window.rootViewController setNavigationBarHidden:NO animated:YES];
+//    [UIView commitAnimations];
 }
 
 #pragma mark -

@@ -10,6 +10,8 @@
 #import "PlayViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AnimationFactory.h"
+#import "CustomBackButton.h"
+#import "CustomBackButtonHolder.h"
 
 @interface PlayRootViewController (){
     UISwipeGestureRecognizer *leftGesture;
@@ -29,8 +31,9 @@
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     self.title = NSLocalizedString(@"app_name", nil);
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemCancel target:self action:@selector(closeSelf)];
-    self.navigationItem.leftBarButtonItem = leftButton;
+    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+    CustomBackButton* backButton = [backButtonHolder getBackButton:[UIImage imageNamed:@"navigationBarBackButton.png"] highlight:nil leftCapWidth:14.0 text:NSLocalizedString(@"go_back", nil)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
