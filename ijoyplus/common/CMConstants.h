@@ -5,6 +5,8 @@
 //  Created by 永庆 李 on 12-3-20.
 //  Copyright (c) 2012年 __MyCompanyName__. All rights reserved.
 //
+#import <QuartzCore/QuartzCore.h>
+
 #define NUMBER_OF_COLUMNS 3
 
 #define NAVIGATION_BAR_HEIGHT 44

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MNMBottomPullToRefreshManager.h"
+#import "IntroductionView.h"
 
-@interface PlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient> {
+@interface PlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate> {
 @private
     /**
      * Pull to refresh manager

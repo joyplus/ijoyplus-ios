@@ -11,9 +11,10 @@
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
 #import "CMConstants.h"
-#import "IntroductionViewController.h"
-#import "UIViewController+MJPopupViewController.h"
+#import "IntroductionView.h"
 #import "FriendProfileViewController.h"
+#import "DateUtility.h"
+#import "TTTTimeIntervalFormatter.h"
 
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
@@ -57,16 +58,16 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", nil];
-    NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", nil];
+    NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
+    NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [NSDate date], nil];
     NSMutableDictionary *commentDic = [[NSMutableDictionary alloc]initWithObjects:values forKeys:keys];
     
-    NSArray *keys1 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", nil];
-    NSArray *values1 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", nil];
+    NSArray *keys1 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
+    NSArray *values1 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [DateUtility addMinutes:[NSDate date] minutes:10], nil];
     NSMutableDictionary *commentDic1 = [[NSMutableDictionary alloc]initWithObjects:values1 forKeys:keys1];
     
-    NSArray *keys2 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", nil];
-    NSArray *values2 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"顶。", nil];
+    NSArray *keys2 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
+    NSArray *values2 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"顶。", [DateUtility dateWithDaysFromGivenDate:10 givenDate:[NSDate date]], nil];
     NSMutableDictionary *commentDic2 = [[NSMutableDictionary alloc]initWithObjects:values2 forKeys:keys2];
     
     [commentArray addObject:commentDic];
@@ -124,6 +125,10 @@
         }
         NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
         [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        cell.avatarImageView.layer.cornerRadius = 25;
+        cell.avatarImageView.layer.masksToBounds = YES;
+        cell.avatarImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+        cell.avatarImageView.layer.borderWidth = 3;
         cell.titleLabel.text = [commentDic objectForKey:@"username"];
         
         cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
@@ -134,7 +139,10 @@
         
         NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
         cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
-        cell.thirdTitleLabel.text = @"10:30";
+        
+        TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
+        NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
+        cell.thirdTitleLabel.text = timeDiff;
         
         [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
         return cell;
@@ -264,8 +272,8 @@
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     reloads_++;
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", nil];
-    NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", nil];
+    NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
+    NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [DateUtility dateWithDaysFromNow:10], nil];
     NSMutableDictionary *commentDic = [[NSMutableDictionary alloc]initWithObjects:values forKeys:keys];
     
     [commentArray addObject:commentDic];
@@ -277,10 +285,17 @@
 }
 
 - (void)showIntroduction{
-    IntroductionViewController *viewController = [[IntroductionViewController alloc]initWithNibName:@"IntroductionViewController" bundle:nil];
-    viewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width * 0.8, 300);
-    viewController.view.center = self.view.center;
-    [self presentPopupViewController:viewController animationType:MJPopupViewAnimationFade];
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:@"电影名称"];
+    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.9);
+    lplv.center = CGPointMake(160, 210);
+    lplv.delegate = self;
+    [lplv showInView:self.view animated:YES];
+    self.tableView.scrollEnabled = NO;
+}
+
+- (void)leveyPopListViewDidCancel
+{
+    self.tableView.scrollEnabled = YES;
 }
 
 - (void)avatarClicked

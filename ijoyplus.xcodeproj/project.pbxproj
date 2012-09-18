@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02B842160094E30027F31C /* CustomSegmentedControl.m */; };
+		EB090B0116081E9E002F7E57 /* IntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B0016081E9E002F7E57 /* IntroductionView.m */; };
 		EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC615F885EC00C878D5 /* UIKit.framework */; };
 		EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC815F885EC00C878D5 /* Foundation.framework */; };
 		EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */; };
@@ -35,10 +36,6 @@
 		EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35315FF07D000192AE4 /* JWFolders.m */; };
 		EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */; };
 		EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */; };
-		EBAED38B15FF23E200192AE4 /* MJPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED38815FF23E200192AE4 /* MJPopupBackgroundView.m */; };
-		EBAED38C15FF23E200192AE4 /* UIViewController+MJPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED38A15FF23E200192AE4 /* UIViewController+MJPopupViewController.m */; };
-		EBAED39015FF25FB00192AE4 /* IntroductionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED38E15FF25FA00192AE4 /* IntroductionViewController.m */; };
-		EBAED39115FF25FB00192AE4 /* IntroductionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED38F15FF25FA00192AE4 /* IntroductionViewController.xib */; };
 		EBAED39615FF2D4800192AE4 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED39415FF2D4800192AE4 /* RegisterViewController.m */; };
 		EBAED39715FF2D4800192AE4 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED39515FF2D4800192AE4 /* RegisterViewController.xib */; };
 		EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */; };
@@ -91,6 +88,8 @@
 		EBAFBC3D15F9E507007579D1 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3B15F9E506007579D1 /* LoginViewController.m */; };
 		EBAFBC3E15F9E507007579D1 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */; };
 		EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC4415F9E849007579D1 /* AnimationFactory.m */; };
+		EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA616080DA900AAA818 /* DateUtility.m */; };
+		EBB06FAA16080DA900AAA818 /* StringUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA816080DA900AAA818 /* StringUtility.m */; };
 		EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */; };
 		EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB0C953160073BB00A9B8F8 /* PopularSegmentViewController.m */; };
 		EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */; };
@@ -120,6 +119,8 @@
 		DDF63B43DF6849BC89060EC7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB02B841160094E30027F31C /* CustomSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegmentedControl.h; sourceTree = "<group>"; };
 		EB02B842160094E30027F31C /* CustomSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSegmentedControl.m; sourceTree = "<group>"; };
+		EB090AFF16081E9D002F7E57 /* IntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroductionView.h; sourceTree = "<group>"; };
+		EB090B0016081E9E002F7E57 /* IntroductionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroductionView.m; sourceTree = "<group>"; };
 		EB32BCC215F885EC00C878D5 /* ijoyplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ijoyplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB32BCC615F885EC00C878D5 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB32BCC815F885EC00C878D5 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -159,13 +160,6 @@
 		EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Scale.m"; sourceTree = "<group>"; };
 		EBAED35615FF07D000192AE4 /* UIView+Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Screenshot.h"; sourceTree = "<group>"; };
 		EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Screenshot.m"; sourceTree = "<group>"; };
-		EBAED38715FF23E200192AE4 /* MJPopupBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPopupBackgroundView.h; sourceTree = "<group>"; };
-		EBAED38815FF23E200192AE4 /* MJPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPopupBackgroundView.m; sourceTree = "<group>"; };
-		EBAED38915FF23E200192AE4 /* UIViewController+MJPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+MJPopupViewController.h"; sourceTree = "<group>"; };
-		EBAED38A15FF23E200192AE4 /* UIViewController+MJPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+MJPopupViewController.m"; sourceTree = "<group>"; };
-		EBAED38D15FF25FA00192AE4 /* IntroductionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroductionViewController.h; sourceTree = "<group>"; };
-		EBAED38E15FF25FA00192AE4 /* IntroductionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroductionViewController.m; sourceTree = "<group>"; };
-		EBAED38F15FF25FA00192AE4 /* IntroductionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = IntroductionViewController.xib; sourceTree = "<group>"; };
 		EBAED39315FF2D4800192AE4 /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
 		EBAED39415FF2D4800192AE4 /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
 		EBAED39515FF2D4800192AE4 /* RegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
@@ -239,6 +233,10 @@
 		EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		EBAFBC4315F9E849007579D1 /* AnimationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationFactory.h; sourceTree = "<group>"; };
 		EBAFBC4415F9E849007579D1 /* AnimationFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationFactory.m; sourceTree = "<group>"; };
+		EBB06FA516080DA900AAA818 /* DateUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateUtility.h; sourceTree = "<group>"; };
+		EBB06FA616080DA900AAA818 /* DateUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateUtility.m; sourceTree = "<group>"; };
+		EBB06FA716080DA900AAA818 /* StringUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtility.h; sourceTree = "<group>"; };
+		EBB06FA816080DA900AAA818 /* StringUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtility.m; sourceTree = "<group>"; };
 		EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayRootViewController.h; sourceTree = "<group>"; };
 		EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayRootViewController.m; sourceTree = "<group>"; };
 		EBB0C952160073BA00A9B8F8 /* PopularSegmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularSegmentViewController.h; sourceTree = "<group>"; };
@@ -374,7 +372,6 @@
 		EB32BD0515F887A400C878D5 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				EBAED38615FF23E200192AE4 /* MJPopupViewController */,
 				EBAED35115FF07D000192AE4 /* JWFolders */,
 				EBAF69CA15FDB78D00938FE3 /* MNMBottomPullToRefresh */,
 			);
@@ -449,17 +446,6 @@
 			path = JWFolders;
 			sourceTree = "<group>";
 		};
-		EBAED38615FF23E200192AE4 /* MJPopupViewController */ = {
-			isa = PBXGroup;
-			children = (
-				EBAED38715FF23E200192AE4 /* MJPopupBackgroundView.h */,
-				EBAED38815FF23E200192AE4 /* MJPopupBackgroundView.m */,
-				EBAED38915FF23E200192AE4 /* UIViewController+MJPopupViewController.h */,
-				EBAED38A15FF23E200192AE4 /* UIViewController+MJPopupViewController.m */,
-			);
-			path = MJPopupViewController;
-			sourceTree = "<group>";
-		};
 		EBAED39215FF2D1A00192AE4 /* login */ = {
 			isa = PBXGroup;
 			children = (
@@ -499,9 +485,8 @@
 				EBAED32315FED3D100192AE4 /* PlayViewController.h */,
 				EBAED32415FED3D100192AE4 /* PlayViewController.m */,
 				EBAED32515FED3D100192AE4 /* PlayViewController.xib */,
-				EBAED38D15FF25FA00192AE4 /* IntroductionViewController.h */,
-				EBAED38E15FF25FA00192AE4 /* IntroductionViewController.m */,
-				EBAED38F15FF25FA00192AE4 /* IntroductionViewController.xib */,
+				EB090AFF16081E9D002F7E57 /* IntroductionView.h */,
+				EB090B0016081E9E002F7E57 /* IntroductionView.m */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -603,6 +588,10 @@
 		EBB1B3CD1601775400E04289 /* utility */ = {
 			isa = PBXGroup;
 			children = (
+				EBB06FA516080DA900AAA818 /* DateUtility.h */,
+				EBB06FA616080DA900AAA818 /* DateUtility.m */,
+				EBB06FA716080DA900AAA818 /* StringUtility.h */,
+				EBB06FA816080DA900AAA818 /* StringUtility.m */,
 				EBB1B3CF1601777900E04289 /* UIUtility.h */,
 				EBB1B3D01601777900E04289 /* UIUtility.m */,
 			);
@@ -703,7 +692,6 @@
 				EBAF6AAB15FDE9CF00938FE3 /* SearchFilmResultViewController.xib in Resources */,
 				EBAF6AAE15FDEA2900938FE3 /* PopularCellFactory.xib in Resources */,
 				EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */,
-				EBAED39115FF25FB00192AE4 /* IntroductionViewController.xib in Resources */,
 				EBAED39715FF2D4800192AE4 /* RegisterViewController.xib in Resources */,
 				EBAED39C15FF3D2700192AE4 /* FriendProfileViewController.xib in Resources */,
 				EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */,
@@ -779,9 +767,6 @@
 				EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */,
 				EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */,
 				EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */,
-				EBAED38B15FF23E200192AE4 /* MJPopupBackgroundView.m in Sources */,
-				EBAED38C15FF23E200192AE4 /* UIViewController+MJPopupViewController.m in Sources */,
-				EBAED39015FF25FB00192AE4 /* IntroductionViewController.m in Sources */,
 				EBAED39615FF2D4800192AE4 /* RegisterViewController.m in Sources */,
 				EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */,
 				EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */,
@@ -798,6 +783,9 @@
 				EBAF939E1602C89600929013 /* BottomTabViewController.m in Sources */,
 				EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */,
 				EBB40F471607102200A49CD9 /* CustomBackButtonHolder.m in Sources */,
+				EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */,
+				EBB06FAA16080DA900AAA818 /* StringUtility.m in Sources */,
+				EB090B0116081E9E002F7E57 /* IntroductionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

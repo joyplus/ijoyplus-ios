@@ -1,6 +1,19 @@
 PODS:
   - AFNetworking (1.0RC1)
   - EGOTableViewPullRefresh (0.1.0)
+  - FormatterKit (1.0.1):
+    - FormatterKit/ArrayFormatter (= 1.0.1)
+    - FormatterKit/LocationFormatter (= 1.0.1)
+    - FormatterKit/OrdinalNumberFormatter (= 1.0.1)
+    - FormatterKit/TimeIntervalFormatter (= 1.0.1)
+    - FormatterKit/URLRequestFormatter (= 1.0.1)
+    - FormatterKit/UnitOfInformationFormatter (= 1.0.1)
+  - FormatterKit/ArrayFormatter (1.0.1)
+  - FormatterKit/LocationFormatter (1.0.1)
+  - FormatterKit/OrdinalNumberFormatter (1.0.1)
+  - FormatterKit/TimeIntervalFormatter (1.0.1)
+  - FormatterKit/URLRequestFormatter (1.0.1)
+  - FormatterKit/UnitOfInformationFormatter (1.0.1)
   - SDWebImage (2.6)
   - UIGlossyButton (0.0.7):
     - UIGlossyButton/Core (= 0.0.7)
@@ -11,5 +24,6 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (= 1.0RC1)
   - EGOTableViewPullRefresh (= 0.1.0)
+  - FormatterKit
   - SDWebImage (= 2.6)
   - UIGlossyButton (= 0.0.7)

@@ -43,3 +43,26 @@ notification_center = "通知中心";
 settings = "设置";
 my_followed = "我关注的";
 my_fans = "我的粉丝";
+
+
+//FormatterKit
+"year" = "年";
+"month" = "月";
+"week" = "周";
+"day" = "天";
+"hour" = "小时";
+"minute" = "分钟";
+"second" = "秒";
+
+"years" = "年";
+"months" = "月";
+"weeks" = "周";
+"days" = "天";
+"hours" = "小时";
+"minutes" = "分钟";
+"seconds" = "秒";
+"ago" = "前";
+"just now" = "刚才";
+"from now" = "后";
+"%@ %@" = "%@%@";
+"about %@" = "大概%@";
