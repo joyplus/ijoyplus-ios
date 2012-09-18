@@ -32,7 +32,7 @@
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     self.title = NSLocalizedString(@"app_name", nil);
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:[UIImage imageNamed:@"navigationBarBackButton.png"] highlight:nil leftCapWidth:14.0 text:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];

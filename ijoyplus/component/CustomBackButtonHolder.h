@@ -7,9 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CustomBackButton.h"
 
 @interface CustomBackButtonHolder : NSObject
 - (id)initWithViewController:(UIViewController *)viewController;
-- (id)getBackButton:(UIImage*)backButtonImage highlight:(UIImage*)backButtonHighlightImage leftCapWidth:(CGFloat)capWidth text:(NSString *)text;
+- (id)getBackButton:(NSString *)text;
+- (id)getNavgiationButton:(NSString *)text;
 
 @end

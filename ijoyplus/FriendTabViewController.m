@@ -43,7 +43,7 @@
                     [NSDictionary dictionaryWithObjectsAndKeys:NSLocalizedString(@"friend_news", nil), @"text", detailController2, @"viewController", nil],nil];
     
     // Use the TabBarGradient image to figure out the tab bar's height (22x2=44)
-    UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
+//    UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
     
     // Create a custom tab bar passing in the number of items, the size of each item and setting ourself as the delegate
 //    tabBar = [[TextCustomTabBar alloc] initWithItemCount:tabBarItems.count itemSize:CGSizeMake(self.view.frame.size.width/tabBarItems.count, tabBarGradient.size.height*1.5) tag:111 delegate:self];
@@ -194,7 +194,7 @@
     UIViewController* viewController = [data objectForKey:@"viewController"];
     
     // Use the TabBarGradient image to figure out the tab bar's height (22x2=44)
-    UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
+//    UIImage* tabBarGradient = [UIImage imageNamed:@"TabBarGradient.png"];
     
     // Set the view controller's frame to account for the tab bar
 //    viewController.view.frame = CGRectMake(0,tabBar.frame.size.height,self.view.bounds.size.width, self.view.bounds.size.height-(tabBarGradient.size.height*2));

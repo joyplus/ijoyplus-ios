@@ -19,7 +19,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
     [self addContentView];
@@ -35,7 +34,7 @@
         [flowView removeFromSuperview];
     }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    
+    [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
     if(appDelegate.userLoggedIn){
@@ -86,7 +85,7 @@
     }
     [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     imageView.layer.borderWidth = 1;
-    imageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     imageView.layer.shadowOffset = CGSizeMake(1, 1);
     imageView.layer.shadowOpacity = 1;
@@ -95,8 +94,8 @@
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
     titleLabel.text = @"电影";
     titleLabel.textAlignment = UITextAlignmentCenter;
-    titleLabel.backgroundColor = [UIColor colorWithRed:252/255.0 green:252/255.0 blue:252/255.0 alpha:1];
-    titleLabel.textColor = [UIColor blackColor];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.textColor = [UIColor whiteColor];
     titleLabel.font = CMConstants.titleFont;
     [cell addSubview:titleLabel];
     return cell;

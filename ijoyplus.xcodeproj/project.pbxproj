@@ -9,6 +9,17 @@
 /* Begin PBXBuildFile section */
 		EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02B842160094E30027F31C /* CustomSegmentedControl.m */; };
 		EB090B0116081E9E002F7E57 /* IntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B0016081E9E002F7E57 /* IntroductionView.m */; };
+		EB090B05160823DC002F7E57 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B03160823DC002F7E57 /* RegisterViewController.m */; };
+		EB090B06160823DC002F7E57 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB090B04160823DC002F7E57 /* RegisterViewController.xib */; };
+		EB090B0D16084E2A002F7E57 /* NicknameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B0C16084E2A002F7E57 /* NicknameCell.m */; };
+		EB090B1016084E39002F7E57 /* EmailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B0F16084E39002F7E57 /* EmailCell.m */; };
+		EB090B1316084E47002F7E57 /* PasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1216084E47002F7E57 /* PasswordCell.m */; };
+		EB090B1616084E58002F7E57 /* ConfirmPasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1516084E58002F7E57 /* ConfirmPasswordCell.m */; };
+		EB090B1816085CF5002F7E57 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB090B1716085CF5002F7E57 /* background@2x.png */; };
+		EB090B1A16085E15002F7E57 /* back-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB090B1916085E15002F7E57 /* back-button@2x.png */; };
+		EB090B1D160860FD002F7E57 /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1C160860FD002F7E57 /* CustomTextField.m */; };
+		EB090B2016086498002F7E57 /* UsernameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1F16086498002F7E57 /* UsernameCell.m */; };
+		EB090B23160864D5002F7E57 /* LoginPasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B22160864D4002F7E57 /* LoginPasswordCell.m */; };
 		EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC615F885EC00C878D5 /* UIKit.framework */; };
 		EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC815F885EC00C878D5 /* Foundation.framework */; };
 		EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */; };
@@ -29,6 +40,16 @@
 		EB3F0A6D1601D0F8005D97F8 /* pop_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A681601D0F7005D97F8 /* pop_tab@2x.png */; };
 		EB3F0A6E1601D0F8005D97F8 /* rec_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A691601D0F7005D97F8 /* rec_tab@2x.png */; };
 		EB3F0A6F1601D0F8005D97F8 /* tab_selected_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A6A1601D0F7005D97F8 /* tab_selected_bg@2x.png */; };
+		EB94EAE916086EBF009280FA /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB94EAE716086EBF009280FA /* LoginViewController.m */; };
+		EB94EAEA16086EBF009280FA /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAE816086EBF009280FA /* LoginViewController.xib */; };
+		EB94EAEC160877E9009280FA /* custom-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAEB160877E9009280FA /* custom-button@2x.png */; };
+		EB94EAF11608888C009280FA /* collection_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAED1608888C009280FA /* collection_icon@2x.png */; };
+		EB94EAF21608888C009280FA /* love_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAEE1608888C009280FA /* love_icon@2x.png */; };
+		EB94EAF31608888C009280FA /* score_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAEF1608888C009280FA /* score_icon@2x.png */; };
+		EB94EAF41608888C009280FA /* watch_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF01608888C009280FA /* watch_icon@2x.png */; };
+		EB94EAF61608971C009280FA /* brief_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF51608971C009280FA /* brief_btn@2x.png */; };
+		EB94EAF816089B23009280FA /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF716089B23009280FA /* play@2x.png */; };
+		EB94EAFA16089DCE009280FA /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF916089DCE009280FA /* user@2x.png */; };
 		EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32415FED3D100192AE4 /* PlayViewController.m */; };
 		EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED32515FED3D100192AE4 /* PlayViewController.xib */; };
 		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
@@ -36,8 +57,6 @@
 		EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35315FF07D000192AE4 /* JWFolders.m */; };
 		EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */; };
 		EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */; };
-		EBAED39615FF2D4800192AE4 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED39415FF2D4800192AE4 /* RegisterViewController.m */; };
-		EBAED39715FF2D4800192AE4 /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED39515FF2D4800192AE4 /* RegisterViewController.xib */; };
 		EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */; };
 		EBAED39C15FF3D2700192AE4 /* FriendProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */; };
 		EBAF698815FD896D00938FE3 /* FriendTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF698715FD896D00938FE3 /* FriendTabViewController.m */; };
@@ -85,8 +104,6 @@
 		EBAFBC1B15F9BB59007579D1 /* TabBarSelection.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0715F9BB58007579D1 /* TabBarSelection.png */; };
 		EBAFBC1C15F9BB59007579D1 /* TabBarSelection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC0815F9BB58007579D1 /* TabBarSelection@2x.png */; };
 		EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3315F9DDC0007579D1 /* CMConstants.m */; };
-		EBAFBC3D15F9E507007579D1 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3B15F9E506007579D1 /* LoginViewController.m */; };
-		EBAFBC3E15F9E507007579D1 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */; };
 		EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC4415F9E849007579D1 /* AnimationFactory.m */; };
 		EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA616080DA900AAA818 /* DateUtility.m */; };
 		EBB06FAA16080DA900AAA818 /* StringUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA816080DA900AAA818 /* StringUtility.m */; };
@@ -121,6 +138,25 @@
 		EB02B842160094E30027F31C /* CustomSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSegmentedControl.m; sourceTree = "<group>"; };
 		EB090AFF16081E9D002F7E57 /* IntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroductionView.h; sourceTree = "<group>"; };
 		EB090B0016081E9E002F7E57 /* IntroductionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroductionView.m; sourceTree = "<group>"; };
+		EB090B02160823DC002F7E57 /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
+		EB090B03160823DC002F7E57 /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
+		EB090B04160823DC002F7E57 /* RegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
+		EB090B0B16084E2A002F7E57 /* NicknameCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NicknameCell.h; path = component/NicknameCell.h; sourceTree = "<group>"; };
+		EB090B0C16084E2A002F7E57 /* NicknameCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NicknameCell.m; path = component/NicknameCell.m; sourceTree = "<group>"; };
+		EB090B0E16084E39002F7E57 /* EmailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmailCell.h; path = component/EmailCell.h; sourceTree = "<group>"; };
+		EB090B0F16084E39002F7E57 /* EmailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmailCell.m; path = component/EmailCell.m; sourceTree = "<group>"; };
+		EB090B1116084E47002F7E57 /* PasswordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PasswordCell.h; path = component/PasswordCell.h; sourceTree = "<group>"; };
+		EB090B1216084E47002F7E57 /* PasswordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PasswordCell.m; path = component/PasswordCell.m; sourceTree = "<group>"; };
+		EB090B1416084E58002F7E57 /* ConfirmPasswordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfirmPasswordCell.h; path = component/ConfirmPasswordCell.h; sourceTree = "<group>"; };
+		EB090B1516084E58002F7E57 /* ConfirmPasswordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConfirmPasswordCell.m; path = component/ConfirmPasswordCell.m; sourceTree = "<group>"; };
+		EB090B1716085CF5002F7E57 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
+		EB090B1916085E15002F7E57 /* back-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back-button@2x.png"; sourceTree = "<group>"; };
+		EB090B1B160860FD002F7E57 /* CustomTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomTextField.h; sourceTree = "<group>"; };
+		EB090B1C160860FD002F7E57 /* CustomTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomTextField.m; sourceTree = "<group>"; };
+		EB090B1E16086498002F7E57 /* UsernameCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UsernameCell.h; path = component/UsernameCell.h; sourceTree = "<group>"; };
+		EB090B1F16086498002F7E57 /* UsernameCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsernameCell.m; path = component/UsernameCell.m; sourceTree = "<group>"; };
+		EB090B21160864D4002F7E57 /* LoginPasswordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginPasswordCell.h; path = component/LoginPasswordCell.h; sourceTree = "<group>"; };
+		EB090B22160864D4002F7E57 /* LoginPasswordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginPasswordCell.m; path = component/LoginPasswordCell.m; sourceTree = "<group>"; };
 		EB32BCC215F885EC00C878D5 /* ijoyplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ijoyplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB32BCC615F885EC00C878D5 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB32BCC815F885EC00C878D5 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -147,6 +183,17 @@
 		EB3F0A681601D0F7005D97F8 /* pop_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pop_tab@2x.png"; sourceTree = "<group>"; };
 		EB3F0A691601D0F7005D97F8 /* rec_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rec_tab@2x.png"; sourceTree = "<group>"; };
 		EB3F0A6A1601D0F7005D97F8 /* tab_selected_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_selected_bg@2x.png"; sourceTree = "<group>"; };
+		EB94EAE616086EBF009280FA /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
+		EB94EAE716086EBF009280FA /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		EB94EAE816086EBF009280FA /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
+		EB94EAEB160877E9009280FA /* custom-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-button@2x.png"; sourceTree = "<group>"; };
+		EB94EAED1608888C009280FA /* collection_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collection_icon@2x.png"; sourceTree = "<group>"; };
+		EB94EAEE1608888C009280FA /* love_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "love_icon@2x.png"; sourceTree = "<group>"; };
+		EB94EAEF1608888C009280FA /* score_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "score_icon@2x.png"; sourceTree = "<group>"; };
+		EB94EAF01608888C009280FA /* watch_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "watch_icon@2x.png"; sourceTree = "<group>"; };
+		EB94EAF51608971C009280FA /* brief_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brief_btn@2x.png"; sourceTree = "<group>"; };
+		EB94EAF716089B23009280FA /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
+		EB94EAF916089DCE009280FA /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
 		EBAED32315FED3D100192AE4 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		EBAED32415FED3D100192AE4 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
 		EBAED32515FED3D100192AE4 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
@@ -160,9 +207,6 @@
 		EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Scale.m"; sourceTree = "<group>"; };
 		EBAED35615FF07D000192AE4 /* UIView+Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Screenshot.h"; sourceTree = "<group>"; };
 		EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Screenshot.m"; sourceTree = "<group>"; };
-		EBAED39315FF2D4800192AE4 /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
-		EBAED39415FF2D4800192AE4 /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterViewController.m; sourceTree = "<group>"; };
-		EBAED39515FF2D4800192AE4 /* RegisterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterViewController.xib; sourceTree = "<group>"; };
 		EBAED39815FF3D2600192AE4 /* FriendProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendProfileViewController.h; sourceTree = "<group>"; };
 		EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendProfileViewController.m; sourceTree = "<group>"; };
 		EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendProfileViewController.xib; sourceTree = "<group>"; };
@@ -228,9 +272,6 @@
 		EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieViewController.h; sourceTree = "<group>"; };
 		EBAFBC3215F9DDC0007579D1 /* CMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConstants.h; sourceTree = "<group>"; };
 		EBAFBC3315F9DDC0007579D1 /* CMConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConstants.m; sourceTree = "<group>"; };
-		EBAFBC3A15F9E506007579D1 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		EBAFBC3B15F9E506007579D1 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
 		EBAFBC4315F9E849007579D1 /* AnimationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationFactory.h; sourceTree = "<group>"; };
 		EBAFBC4415F9E849007579D1 /* AnimationFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationFactory.m; sourceTree = "<group>"; };
 		EBB06FA516080DA900AAA818 /* DateUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateUtility.h; sourceTree = "<group>"; };
@@ -287,6 +328,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EB090B0716082473002F7E57 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				EB090B0B16084E2A002F7E57 /* NicknameCell.h */,
+				EB090B0C16084E2A002F7E57 /* NicknameCell.m */,
+				EB090B0E16084E39002F7E57 /* EmailCell.h */,
+				EB090B0F16084E39002F7E57 /* EmailCell.m */,
+				EB090B1116084E47002F7E57 /* PasswordCell.h */,
+				EB090B1216084E47002F7E57 /* PasswordCell.m */,
+				EB090B1416084E58002F7E57 /* ConfirmPasswordCell.h */,
+				EB090B1516084E58002F7E57 /* ConfirmPasswordCell.m */,
+				EB090B1E16086498002F7E57 /* UsernameCell.h */,
+				EB090B1F16086498002F7E57 /* UsernameCell.m */,
+				EB090B21160864D4002F7E57 /* LoginPasswordCell.h */,
+				EB090B22160864D4002F7E57 /* LoginPasswordCell.m */,
+			);
+			name = component;
+			sourceTree = "<group>";
+		};
 		EB32BCB715F885EC00C878D5 = {
 			isa = PBXGroup;
 			children = (
@@ -365,6 +425,8 @@
 				EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */,
 				EBB40F451607102100A49CD9 /* CustomBackButtonHolder.h */,
 				EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */,
+				EB090B1B160860FD002F7E57 /* CustomTextField.h */,
+				EB090B1C160860FD002F7E57 /* CustomTextField.m */,
 			);
 			path = component;
 			sourceTree = "<group>";
@@ -381,6 +443,16 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EB94EAF916089DCE009280FA /* user@2x.png */,
+				EB94EAF716089B23009280FA /* play@2x.png */,
+				EB94EAF51608971C009280FA /* brief_btn@2x.png */,
+				EB94EAED1608888C009280FA /* collection_icon@2x.png */,
+				EB94EAEE1608888C009280FA /* love_icon@2x.png */,
+				EB94EAEF1608888C009280FA /* score_icon@2x.png */,
+				EB94EAF01608888C009280FA /* watch_icon@2x.png */,
+				EB94EAEB160877E9009280FA /* custom-button@2x.png */,
+				EB090B1916085E15002F7E57 /* back-button@2x.png */,
+				EB090B1716085CF5002F7E57 /* background@2x.png */,
 				EB3F0A661601D0F7005D97F8 /* list_tab@2x.png */,
 				EB3F0A671601D0F7005D97F8 /* my_tab@2x.png */,
 				EB3F0A681601D0F7005D97F8 /* pop_tab@2x.png */,
@@ -449,12 +521,13 @@
 		EBAED39215FF2D1A00192AE4 /* login */ = {
 			isa = PBXGroup;
 			children = (
-				EBAFBC3A15F9E506007579D1 /* LoginViewController.h */,
-				EBAFBC3B15F9E506007579D1 /* LoginViewController.m */,
-				EBAFBC3C15F9E506007579D1 /* LoginViewController.xib */,
-				EBAED39315FF2D4800192AE4 /* RegisterViewController.h */,
-				EBAED39415FF2D4800192AE4 /* RegisterViewController.m */,
-				EBAED39515FF2D4800192AE4 /* RegisterViewController.xib */,
+				EB090B0716082473002F7E57 /* component */,
+				EB090B02160823DC002F7E57 /* RegisterViewController.h */,
+				EB090B03160823DC002F7E57 /* RegisterViewController.m */,
+				EB090B04160823DC002F7E57 /* RegisterViewController.xib */,
+				EB94EAE616086EBF009280FA /* LoginViewController.h */,
+				EB94EAE716086EBF009280FA /* LoginViewController.m */,
+				EB94EAE816086EBF009280FA /* LoginViewController.xib */,
 			);
 			name = login;
 			sourceTree = "<group>";
@@ -681,7 +754,6 @@
 				EBAFBC1A15F9BB59007579D1 /* TabBarNipple@2x.png in Resources */,
 				EBAFBC1B15F9BB59007579D1 /* TabBarSelection.png in Resources */,
 				EBAFBC1C15F9BB59007579D1 /* TabBarSelection@2x.png in Resources */,
-				EBAFBC3E15F9E507007579D1 /* LoginViewController.xib in Resources */,
 				EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */,
 				EBAF69D415FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png in Resources */,
 				EBAF69DB15FDB80A00938FE3 /* FriendNewsViewController.xib in Resources */,
@@ -692,7 +764,6 @@
 				EBAF6AAB15FDE9CF00938FE3 /* SearchFilmResultViewController.xib in Resources */,
 				EBAF6AAE15FDEA2900938FE3 /* PopularCellFactory.xib in Resources */,
 				EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */,
-				EBAED39715FF2D4800192AE4 /* RegisterViewController.xib in Resources */,
 				EBAED39C15FF3D2700192AE4 /* FriendProfileViewController.xib in Resources */,
 				EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */,
 				EBB1B3C91601749500E04289 /* nav_bar_bg_44@2x.png in Resources */,
@@ -713,6 +784,18 @@
 				EB3F0A6F1601D0F8005D97F8 /* tab_selected_bg@2x.png in Resources */,
 				EBB40F2016070AA700A49CD9 /* navigationBarBackButton.png in Resources */,
 				EBB40F2116070AA700A49CD9 /* navigationBarBackButton@2x.png in Resources */,
+				EB090B06160823DC002F7E57 /* RegisterViewController.xib in Resources */,
+				EB090B1816085CF5002F7E57 /* background@2x.png in Resources */,
+				EB090B1A16085E15002F7E57 /* back-button@2x.png in Resources */,
+				EB94EAEA16086EBF009280FA /* LoginViewController.xib in Resources */,
+				EB94EAEC160877E9009280FA /* custom-button@2x.png in Resources */,
+				EB94EAF11608888C009280FA /* collection_icon@2x.png in Resources */,
+				EB94EAF21608888C009280FA /* love_icon@2x.png in Resources */,
+				EB94EAF31608888C009280FA /* score_icon@2x.png in Resources */,
+				EB94EAF41608888C009280FA /* watch_icon@2x.png in Resources */,
+				EB94EAF61608971C009280FA /* brief_btn@2x.png in Resources */,
+				EB94EAF816089B23009280FA /* play@2x.png in Resources */,
+				EB94EAFA16089DCE009280FA /* user@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,7 +828,6 @@
 				EB32BD0315F8873B00C878D5 /* LoadingMoreFooterView.m in Sources */,
 				EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */,
 				EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */,
-				EBAFBC3D15F9E507007579D1 /* LoginViewController.m in Sources */,
 				EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */,
 				EBAF698815FD896D00938FE3 /* FriendTabViewController.m in Sources */,
 				EBAF698E15FD8D9600938FE3 /* RecommandMovieViewController.m in Sources */,
@@ -767,7 +849,6 @@
 				EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */,
 				EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */,
 				EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */,
-				EBAED39615FF2D4800192AE4 /* RegisterViewController.m in Sources */,
 				EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */,
 				EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */,
 				EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */,
@@ -786,6 +867,15 @@
 				EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */,
 				EBB06FAA16080DA900AAA818 /* StringUtility.m in Sources */,
 				EB090B0116081E9E002F7E57 /* IntroductionView.m in Sources */,
+				EB090B05160823DC002F7E57 /* RegisterViewController.m in Sources */,
+				EB090B0D16084E2A002F7E57 /* NicknameCell.m in Sources */,
+				EB090B1016084E39002F7E57 /* EmailCell.m in Sources */,
+				EB090B1316084E47002F7E57 /* PasswordCell.m in Sources */,
+				EB090B1616084E58002F7E57 /* ConfirmPasswordCell.m in Sources */,
+				EB090B1D160860FD002F7E57 /* CustomTextField.m in Sources */,
+				EB090B2016086498002F7E57 /* UsernameCell.m in Sources */,
+				EB090B23160864D5002F7E57 /* LoginPasswordCell.m in Sources */,
+				EB94EAE916086EBF009280FA /* LoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

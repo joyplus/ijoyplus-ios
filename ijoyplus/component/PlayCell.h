@@ -7,11 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIGlossyButton.h"
 
 @interface PlayCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *filmImageView;
 @property (weak, nonatomic) IBOutlet UILabel *filmTitleLabel;
-@property (weak, nonatomic) IBOutlet UIGlossyButton *introuctionBtn;
+@property (weak, nonatomic) IBOutlet UIButton *introuctionBtn;
+@property (weak, nonatomic) IBOutlet UILabel *publicLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *scoreImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *likeImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *watchedImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *collectionImageView;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
+@property (weak, nonatomic) IBOutlet UILabel *likeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *watchedLabel;
+@property (weak, nonatomic) IBOutlet UILabel *collectionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *playBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *playImageView;
 
 @end

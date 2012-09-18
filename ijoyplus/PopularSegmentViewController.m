@@ -44,6 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     [UIUtility customizeNavigationBar:self.navigationController.navigationBar];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if(appDelegate.userLoggedIn){

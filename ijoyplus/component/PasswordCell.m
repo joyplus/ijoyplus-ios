@@ -1,28 +1,16 @@
 //
-//  PlayCell.m
+//  PasswordCell.m
 //  ijoyplus
 //
-//  Created by joyplus1 on 12-9-11.
+//  Created by joyplus1 on 12-9-18.
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "PlayCell.h"
+#import "PasswordCell.h"
 
-@implementation PlayCell
-@synthesize filmImageView;
-@synthesize filmTitleLabel;
-@synthesize introuctionBtn;
-@synthesize publicLabel;
-@synthesize scoreImageView;
-@synthesize likeImageView;
-@synthesize watchedImageView;
-@synthesize collectionImageView;
-@synthesize scoreLabel;
-@synthesize likeLabel;
-@synthesize watchedLabel;
-@synthesize collectionLabel;
-@synthesize playBtn;
-@synthesize playImageView;
+@implementation PasswordCell
+@synthesize titleLabel;
+@synthesize subtitleLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

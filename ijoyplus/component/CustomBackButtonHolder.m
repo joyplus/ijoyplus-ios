@@ -7,7 +7,6 @@
 //
 
 #import "CustomBackButtonHolder.h"
-#import "CustomBackButton.h"
 
 @interface CustomBackButtonHolder ()
 {
@@ -28,9 +27,16 @@
     
 }
 
-- (id)getBackButton:(UIImage*)backButtonImage highlight:(UIImage*)backButtonHighlightImage leftCapWidth:(CGFloat)capWidth text:(NSString *)text
+- (id)getBackButton:(NSString *)text
 {
-    CustomBackButton* backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"navigationBarBackButton.png"] highlight:nil leftCapWidth:14.0 text:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton* backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:text];
+    backButton.titleLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
+    [backButton addTarget:vController action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
+    return backButton;
+}
+
+- (id)getNavgiationButton:(NSString *)text{
+    CustomBackButton* backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"custom-button"] highlight:[UIImage imageNamed:@"custom-button"] leftCapWidth:8.0 text:text];
     backButton.titleLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
     [backButton addTarget:vController action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     return backButton;

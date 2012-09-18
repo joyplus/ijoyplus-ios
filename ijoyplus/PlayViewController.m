@@ -19,16 +19,22 @@
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
 
+#define ROW_HEIGHT 40
+#define PUBLISH_HEIGHT 15
+
 @interface PlayViewController (){
     NSMutableArray *commentArray;
     UIViewController *subviewController;//视图
+    PlayCell *playCell;
 }
 - (void)avatarClicked;
 - (void)loadTable;
 - (void)showIntroduction;
+- (void)playVideo;
 @end
 
 @implementation PlayViewController
+@synthesize imageHeight;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -42,6 +48,56 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
+    self.imageHeight = 160;
+    [self initPlayCell];
+}
+
+- (void)initPlayCell
+{
+    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+    playCell = (PlayCell *)[nib objectAtIndex:3];
+    playCell.filmImageView.frame = CGRectMake(0, 0, playCell.filmImageView.frame.size.width, self.imageHeight);
+//    [playCell.introuctionBtn setTitle: NSLocalizedString(@"introduction", nil) forState:UIControlStateNormal];
+    [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside];
+    playCell.scoreLabel.text = @"8.3";
+    playCell.watchedLabel.text = @"1024";
+    playCell.collectionLabel.text = @"2048";
+    playCell.likeLabel.text = @"3072";    
+    playCell.playBtn.center = CGPointMake(playCell.playBtn.center.x, self.imageHeight / 2);
+    playCell.playImageView.center = CGPointMake(playCell.playImageView.center.x, self.imageHeight / 2);
+    [playCell.playBtn setTitle:@"" forState:UIControlStateNormal];
+    [playCell.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    
+//    NSString *name = @"电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称1234567890";
+    NSString *name = @"电影";
+    CGSize constraint = CGSizeMake(290, 20000.0f);
+    CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    NSLog(@"%f", size.height);
+    playCell.publicLabel.text = @"发布者名称";
+    playCell.filmTitleLabel.text = name;
+    [playCell.filmTitleLabel setNumberOfLines:0];
+    [playCell.publicLabel sizeToFit];
+    if(size.height < 30){
+        playCell.publicLabel.textAlignment = UITextAlignmentRight;
+        
+    } else {
+        playCell.publicLabel.textAlignment = UITextAlignmentLeft;
+        playCell.frame = CGRectMake(0, 0, self.view.frame.size.width, self.imageHeight + size.height + 3 * ROW_HEIGHT + 20);
+        [playCell.filmTitleLabel setFrame:CGRectMake(playCell.filmTitleLabel.frame.origin.x, playCell.filmImageView.frame.origin.y + self.imageHeight + 10, size.width, size.height)];
+        playCell.publicLabel.frame = CGRectMake(10, self.imageHeight + size.height + 20, 260, playCell.publicLabel.frame.size.height);
+        playCell.introuctionBtn.center = CGPointMake(playCell.introuctionBtn.center.x, playCell.publicLabel.center.y);
+        playCell.scoreImageView.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreImageView.frame.size.width, playCell.scoreImageView.frame.size.height);
+        playCell.scoreLabel.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreLabel.frame.size.width, playCell.scoreLabel.frame.size.height);
+        
+        playCell.watchedImageView.frame = CGRectMake(playCell.watchedImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedImageView.frame.size.width, playCell.watchedImageView.frame.size.height);
+        playCell.watchedLabel.frame = CGRectMake(playCell.watchedLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedLabel.frame.size.width, playCell.watchedLabel.frame.size.height);
+        playCell.likeImageView.frame = CGRectMake(playCell.likeImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.likeImageView.frame.size.width, playCell.likeImageView.frame.size.height);
+        playCell.likeLabel.frame = CGRectMake(playCell.likeLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.likeLabel.frame.size.width, playCell.likeLabel.frame.size.height);
+        playCell.collectionImageView.frame = CGRectMake(playCell.collectionImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionImageView.frame.size.width, playCell.collectionImageView.frame.size.height);
+        playCell.collectionLabel.frame = CGRectMake(playCell.collectionLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionLabel.frame.size.width, playCell.collectionLabel.frame.size.height);
+        
+    }
 }
 
 - (void)viewDidUnload
@@ -106,16 +162,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section ==0) {
-        PlayCell *playCell = (PlayCell*) [tableView dequeueReusableCellWithIdentifier:@"playCell"];
-        if (playCell == nil) {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-            playCell = (PlayCell *)[nib objectAtIndex:3];
-        }
-        [playCell.introuctionBtn setActionSheetButtonWithColor: CMConstants.greyColor];
-        playCell.introuctionBtn.buttonBorderWidth = 0;
-        [playCell.introuctionBtn setTitle: NSLocalizedString(@"introduction", nil) forState:UIControlStateNormal];
-        [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside];
+    if (indexPath.section ==0) {        
         return playCell;
     } else {
         CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
@@ -127,8 +174,8 @@
         [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         cell.avatarImageView.layer.cornerRadius = 25;
         cell.avatarImageView.layer.masksToBounds = YES;
-        cell.avatarImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-        cell.avatarImageView.layer.borderWidth = 3;
+//        cell.avatarImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+//        cell.avatarImageView.layer.borderWidth = 3;
         cell.titleLabel.text = [commentDic objectForKey:@"username"];
         
         cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
@@ -153,7 +200,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        return 300;
+        return playCell.frame.size.height;
     } else {
         NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
         NSString *content = [commentDic objectForKey:@"content"];
@@ -222,17 +269,15 @@
     if(section == 0){
         return nil;
     }
-    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width,24)];
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 24)];
     customView.backgroundColor = [UIColor blackColor];
     
-    //    // create the label objects
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    // create the label objects
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width-10, 24)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
     headerLabel.text =  NSLocalizedString(@"user_comment", nil);
     headerLabel.textColor = [UIColor whiteColor];
-    [headerLabel sizeToFit];
-    headerLabel.center = CGPointMake(headerLabel.frame.size.width/2, customView.frame.size.height/2);
     [customView addSubview:headerLabel];
     
     return customView;
@@ -287,7 +332,7 @@
 - (void)showIntroduction{
     IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:@"电影名称"];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.9);
-    lplv.center = CGPointMake(160, 210);
+    lplv.center = CGPointMake(160, 210 + self.tableView.contentOffset.y);
     lplv.delegate = self;
     [lplv showInView:self.view animated:YES];
     self.tableView.scrollEnabled = NO;
@@ -302,6 +347,11 @@
 {
     FriendProfileViewController *viewController = [[FriendProfileViewController alloc]initWithNibName:@"FriendProfileViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)playVideo
+{
+    NSLog(@"play");
 }
 
 @end

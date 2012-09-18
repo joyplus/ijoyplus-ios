@@ -23,5 +23,6 @@
     NSUInteger reloads_;
 }
 
+@property (nonatomic, assign)int imageHeight;
 
 @end
