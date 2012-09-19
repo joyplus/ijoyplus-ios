@@ -47,15 +47,25 @@ search_friend = "寻找好友";
 follow = "关注";
 cancel_follow = "取消关注";
 
-list = "我的列表";
+list = "我的主页";
 watched = "我看过的";
 my_collection = "我收藏的";
 
-myself = "个人主页";
+myself = "个人设置";
 notification_center = "通知中心";
 settings = "设置";
 my_followed = "我关注的";
 my_fans = "我的粉丝";
+your_account = "个人账号";
+other_settings = "其他设置";
+logout_user = "注销：%@";
+search_add_friend = "查找/添加好友";
+comment = "意见反馈";
+about_us = "关于我们";
+score_app = "去App Store评分";
+logout = "注销";
+logout_account = "注销当前账号";
+logout_message = "注销后您的社交化网络绑定也会同时解除，确定要注销吗？";
 
 
 //FormatterKit

@@ -1,4 +1,9 @@
 #import "MyselfViewController.h"
+#import "MyProfileCell.h"
+#import "CMConstants.h"
+#import "UIImageView+WebCache.h"
+#import "TTTTimeIntervalFormatter.h"
+
 
 @interface MyselfViewController(){
     NSMutableArray *itemsArray;
@@ -31,10 +36,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
     self.navigationItem.leftBarButtonItem = leftButton;
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];
     self.navigationItem.rightBarButtonItem = rightButton;
+    
     
 }
 - (void)viewDidUnload {
@@ -118,96 +125,71 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return itemsArray.count + 3;
+    return itemsArray.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section > 2){
-        NSMutableDictionary *item = [itemsArray objectAtIndex:section - 3];
-        NSEnumerator *keys = item.keyEnumerator;
-        NSString *key = [keys nextObject];
-        NSMutableArray *array = [item objectForKey:key];
-        return array.count;
-    } else {
-        return 1;
-    }
+    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
+    NSEnumerator *keys = item.keyEnumerator;
+    NSString *key = [keys nextObject];
+    NSMutableArray *array = [item objectForKey:key];
+    return array.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0){
-        self.myProfileCell.usernameLabel.text = @"Joy+";
-        return self.myProfileCell;
-    } else if(indexPath.section == 1){
-        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"aaa"];
-        cell.textLabel.text = @"aaa";
-        return cell;
-    } else if(indexPath.section == 2){
-        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"bbb"];
-        cell.textLabel.text = @"aaa";
-        return cell;
-    } else {
-        static NSString *CellIdentifier = @"Cell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if(cell == nil){
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:   CellIdentifier];
-        }
-        NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section - 3];
-        NSEnumerator *keys = item.keyEnumerator;
-        NSMutableArray *items = [item objectForKey:[keys nextObject]];
-        cell.textLabel.text = [items objectAtIndex:indexPath.row];
-        return cell;
-    }
+    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MyCellFactory" owner:self options:nil];
+    MyProfileCell *myCell = (MyProfileCell *)[nib objectAtIndex:0];
+
+    NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section];
+    NSEnumerator *keys = item.keyEnumerator;
+    NSMutableArray *items = [item objectForKey:[keys nextObject]];
+    [myCell.avatarImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    myCell.avatarImageView.layer.cornerRadius = 25;
+    myCell.avatarImageView.layer.masksToBounds = YES;
+    myCell.titleLabel.text = [items objectAtIndex:indexPath.row];
+    myCell.subtitleLabel.text = @"我看过电影名";
+    myCell.titleLabel.text = [items objectAtIndex:indexPath.row];
+    [myCell.filmImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    myCell.filmImageView.layer.borderWidth = 1;
+    myCell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
+    myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
+    myCell.filmImageView.layer.shadowOpacity = 1;
+    
+    TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
+    NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:[NSDate date]];
+    myCell.thirdTitleLabel.text = timeDiff;
+    return myCell;
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0){
-        return 240;
-    } else if(indexPath.section == 1){
-        return 80;
-    } else if(indexPath.section == 2){
-        return 80;
-    } else {
-        return 44;
-    }
+    int imageHeight = 135;
+    return imageHeight + 90;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(section == 0){
-        return 0;
-    } else{
-        return 24;
-    }
+    return 24;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if(section == 0){
-        return nil;
-    } else{
-        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-        customView.backgroundColor = [UIColor blackColor];
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+    customView.backgroundColor = [UIColor blackColor];
     
-        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        headerLabel.backgroundColor = [UIColor clearColor];
-        headerLabel.font = [UIFont boldSystemFontOfSize:12];
-        if(section == 1){
-            headerLabel.text =  NSLocalizedString(@"my_followed", nil);
-        } else if(section == 2){
-            headerLabel.text =  NSLocalizedString(@"my_fans", nil);
-        } else {
-            NSMutableDictionary *item = [itemsArray objectAtIndex:section - 3];
-            NSEnumerator *keys = item.keyEnumerator;
-            NSString *key = [keys nextObject];
-            headerLabel.text =  key;
-        }
-        headerLabel.textColor = [UIColor whiteColor];
-        [headerLabel sizeToFit];
-        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
-        [customView addSubview:headerLabel];
-        return customView;
-    }
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont boldSystemFontOfSize:12];
+    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
+    NSEnumerator *keys = item.keyEnumerator;
+    NSString *key = [keys nextObject];
+    headerLabel.text =  key;
+    headerLabel.textColor = [UIColor whiteColor];
+    [headerLabel sizeToFit];
+    headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+    [customView addSubview:headerLabel];
+    return customView;
 }
 
 

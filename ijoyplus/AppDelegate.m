@@ -46,15 +46,15 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UINavigationController *viewController;
-    self.userLoggedIn = NO;
-    if(self.userLoggedIn){
+    self.userLoggedIn = YES;
+//    if(self.userLoggedIn){
         BottomTabViewController *detailViewController = [[BottomTabViewController alloc] init];
         viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
-    } else {
-        PopularSegmentViewController *detailViewController = [[PopularSegmentViewController alloc]initWithNibName:@"PopularSegmentViewController" bundle:nil];
-        detailViewController.navigationItem.titleView = [UIUtility customizeAppTitle];
-        viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
-    }
+//    } else {
+//        PopularSegmentViewController *detailViewController = [[PopularSegmentViewController alloc]initWithNibName:@"PopularSegmentViewController" bundle:nil];
+//        detailViewController.navigationItem.titleView = [UIUtility customizeAppTitle];
+//        viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
+//    }
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];

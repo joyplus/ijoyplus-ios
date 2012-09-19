@@ -1,7 +1,7 @@
-PODS_BUILD_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/AFNetworking" "${PODS_ROOT}/BuildHeaders/EGOTableViewPullRefresh" "${PODS_ROOT}/BuildHeaders/FormatterKit" "${PODS_ROOT}/BuildHeaders/SDWebImage" "${PODS_ROOT}/BuildHeaders/UIGlossyButton"
-OTHER_LDFLAGS = -ObjC -framework CoreLocation -framework QuartzCore -framework SystemConfiguration -framework UIKit
-PODS_PUBLIC_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/EGOTableViewPullRefresh" "${PODS_ROOT}/Headers/FormatterKit" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/UIGlossyButton"
-PODS_ROOT = ${SRCROOT}/Pods
 ALWAYS_SEARCH_USER_PATHS = YES
-PODS_HEADERS_SEARCH_PATHS = ${PODS_PUBLIC_HEADERS_SEARCH_PATHS}
+OTHER_LDFLAGS = -ObjC -framework CoreLocation -framework QuartzCore -framework SystemConfiguration -framework UIKit
 HEADER_SEARCH_PATHS = ${PODS_HEADERS_SEARCH_PATHS}
+PODS_BUILD_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/AFNetworking" "${PODS_ROOT}/BuildHeaders/BlockAlertsAnd-ActionSheets" "${PODS_ROOT}/BuildHeaders/EGOTableViewPullRefresh" "${PODS_ROOT}/BuildHeaders/FormatterKit" "${PODS_ROOT}/BuildHeaders/SDWebImage" "${PODS_ROOT}/BuildHeaders/UIGlossyButton"
+PODS_PUBLIC_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/Headers" "${PODS_ROOT}/Headers/AFNetworking" "${PODS_ROOT}/Headers/BlockAlertsAnd-ActionSheets" "${PODS_ROOT}/Headers/EGOTableViewPullRefresh" "${PODS_ROOT}/Headers/FormatterKit" "${PODS_ROOT}/Headers/SDWebImage" "${PODS_ROOT}/Headers/UIGlossyButton"
+PODS_HEADERS_SEARCH_PATHS = ${PODS_PUBLIC_HEADERS_SEARCH_PATHS}
+PODS_ROOT = ${SRCROOT}/Pods

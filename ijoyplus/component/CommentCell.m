@@ -14,6 +14,7 @@
 @synthesize subtitleLabel;
 @synthesize thirdTitleLabel;
 @synthesize avatarBtn;
+@synthesize separatorImageBottom;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -29,6 +30,12 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+- (void)layoutSubviews {
+    // Layout separator
+    self.separatorImageBottom.image = [UIImage imageNamed:@"black_separator"];
+    [self.separatorImageBottom setFrame:CGRectMake( 0.0f, self.frame.size.height - 2.0f, self.frame.size.width, 2.0f)];
 }
 
 @end

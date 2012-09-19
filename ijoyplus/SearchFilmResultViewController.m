@@ -11,6 +11,11 @@
 #import "UIImageView+WebCache.h"
 #import "SearchVideoCell.h"
 #import "PlayRootViewController.h"
+#import "CustomBackButtonHolder.h"
+#import "CustomBackButton.h"
+#import "CustomCellBlackBackground.h"
+#import "CustomCellBackground.h"
+#import "CMConstants.h"
 
 @interface SearchFilmResultViewController (){
      NSMutableArray *itemsArray;
@@ -21,9 +26,11 @@
 @implementation SearchFilmResultViewController
 
 @synthesize keyword;
+@synthesize sBar;
 
 - (void)viewDidUnload
 {
+    [self setSBar:nil];
     [super viewDidUnload];
     self.keyword = nil;
 }
@@ -41,8 +48,14 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(closeSelf)];
-    self.navigationItem.leftBarButtonItem = leftButton;
+    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+	
+    [self.sBar setText:self.keyword];
+    self.sBar.delegate = self;
+    
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)closeSelf
@@ -107,6 +120,22 @@
             [cell.filmImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
             cell.filmTitleLabel.text = @"《银光之森》";
             cell.filmThirdTitleLabel.text = @"时长：1小时06分钟";
+            
+            NSString *intro = @"电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看电影真好看";
+            CGSize constraint = CGSizeMake(182, 70);
+            CGSize size = [intro sizeWithFont:[UIFont systemFontOfSize:13.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeTailTruncation];
+            cell.filmSubitleLabel.frame = CGRectMake(cell.filmSubitleLabel.frame.origin.x, cell.filmSubitleLabel.frame.origin.y, size.width, size.height);
+            cell.filmSubitleLabel.text = intro;
+            
+            
+            UIView *backgroundView;
+            if(indexPath.row % 2 == 0){
+                backgroundView = [[CustomCellBlackBackground alloc]init];
+            } else {
+                backgroundView = [[CustomCellBackground alloc]init];
+            }
+            [cell setBackgroundView:backgroundView];
+            
             return cell;
         }
         case 1:
@@ -119,6 +148,16 @@
             [cell.videoImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
             cell.videoTitleLabel.text = @"《银光之森》";
             cell.videoSubtitleLabel.text = @"时长：1小时06分钟";
+            cell.videoImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+            cell.videoImageView.layer.borderWidth = 1;
+            
+            UIView *backgroundView;
+            if(indexPath.row % 2 == 0){
+                backgroundView = [[CustomCellBlackBackground alloc]init];
+            } else {
+                backgroundView = [[CustomCellBackground alloc]init];
+            }
+            [cell setBackgroundView:backgroundView];
             return cell;
         }
     }
@@ -129,6 +168,9 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width,24)];
     customView.backgroundColor = [UIColor blackColor];
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
+    imageView.frame = customView.frame;
+    [customView addSubview:imageView];
     
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     headerLabel.backgroundColor = [UIColor clearColor];
@@ -137,7 +179,7 @@
     NSEnumerator *keys = item.keyEnumerator;
     NSString *key = [keys nextObject];
     headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
-    headerLabel.textColor = [UIColor whiteColor];
+    headerLabel.textColor = [UIColor lightGrayColor];
     [headerLabel sizeToFit];
     headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
     [customView addSubview:headerLabel];
@@ -195,10 +237,28 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
-//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
+{
+    searchBar.showsCancelButton = YES;
+    return YES;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+    [self.tableView reloadData];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
+{
+    searchBar.showsCancelButton = NO;
+    [searchBar resignFirstResponder];
 }
 
 @end

@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CustomSearchBar.h"
 
-@interface SearchFilmResultViewController : UITableViewController
+@interface SearchFilmResultViewController : UITableViewController  <UISearchBarDelegate>
 
 @property (nonatomic, strong)NSString *keyword;
+@property (strong, nonatomic) IBOutlet CustomSearchBar *sBar;
 
 @end

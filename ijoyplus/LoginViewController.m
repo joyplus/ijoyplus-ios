@@ -174,11 +174,13 @@
 }
 
 - (IBAction)loginAction:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     appDelegate.userLoggedIn = YES;
-    BottomTabViewController *detailViewController = [[BottomTabViewController alloc] init];
-    UINavigationController *viewController =  [[UINavigationController alloc]initWithRootViewController:detailViewController];
-    appDelegate.window.rootViewController = viewController;
-    [self presentModalViewController:viewController animated:YES];
+    [appDelegate.window.rootViewController viewDidLoad];
+//    BottomTabViewController *detailViewController = [[BottomTabViewController alloc] init];
+//    UINavigationController *viewController =  [[UINavigationController alloc]initWithRootViewController:detailViewController];
+//     = viewController;
+//    [self presentModalViewController:viewController animated:YES];
 }
 @end

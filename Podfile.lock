@@ -1,5 +1,6 @@
 PODS:
   - AFNetworking (1.0RC1)
+  - BlockAlertsAnd-ActionSheets (1.0.0)
   - EGOTableViewPullRefresh (0.1.0)
   - FormatterKit (1.0.1):
     - FormatterKit/ArrayFormatter (= 1.0.1)
@@ -23,6 +24,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (= 1.0RC1)
+  - BlockAlertsAnd-ActionSheets
   - EGOTableViewPullRefresh (= 0.1.0)
   - FormatterKit
   - SDWebImage (= 2.6)

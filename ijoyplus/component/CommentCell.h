@@ -14,5 +14,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *thirdTitleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *avatarBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *separatorImageBottom;
 
 @end

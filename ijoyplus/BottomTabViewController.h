@@ -30,5 +30,5 @@
 @interface BottomTabViewController : UITabBarController <UITabBarControllerDelegate>{
 
 }
-
+@property (strong, nonatomic) UIToolbar *bottomToolbar;
 @end

@@ -8,12 +8,18 @@
 
 #import "SearchFilmViewController.h"
 #import "SearchFilmResultViewController.h"
+#import "CustomBackButtonHolder.h"
+#import "CustomBackButton.h"
+#import "CustomTableViewCell.h"
+#import "CustomCellBackground.h"
+#import "CustomCellBlackBackground.h"
+
 
 @interface SearchFilmViewController (){
     NSMutableArray *itemsArray;
 }
 
-- (void)close;
+- (void)closeSelf;
 
 @end
 
@@ -33,10 +39,12 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"go_back", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(close)];
-    self.navigationItem.leftBarButtonItem = button;
-    
+    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];   
     self.sBar.delegate = self;
+    
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)viewDidUnload
@@ -75,7 +83,7 @@
     [itemsArray addObject:itemDic2];
 }
 
-- (void)close
+- (void)closeSelf
 {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -99,21 +107,33 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:   CellIdentifier];
+        cell = [[CustomTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    UIView *backgroundView;
+    if(indexPath.row % 2 == 0){
+        backgroundView = [[CustomCellBlackBackground alloc]init];
+    } else {
+        backgroundView = [[CustomCellBackground alloc]init];
+    }
+    [cell setBackgroundView:backgroundView];
+    
     NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section];
     NSEnumerator *keys = item.keyEnumerator;
     NSMutableArray *items = [item objectForKey:[keys nextObject]];
     cell.textLabel.text = [items objectAtIndex:indexPath.row];
+    cell.textLabel.font = [UIFont systemFontOfSize:15];
+    cell.textLabel.textColor = [UIColor whiteColor];
     return cell;
 
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-    customView.backgroundColor = [UIColor blackColor];
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
+    imageView.frame = customView.frame;
+    [customView addSubview:imageView];
         
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     headerLabel.backgroundColor = [UIColor clearColor];
@@ -181,6 +201,7 @@
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
+    searchBar.showsCancelButton = YES;
     return YES;
 }
 
@@ -194,6 +215,7 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
 {
+    searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
 }
 

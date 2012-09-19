@@ -23,6 +23,9 @@
 - (void) clearSearchBarBg {
     for (UIView *subview in self.subviews) {
         if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])  {
+            UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
+            bg.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"cell_bg2"]];
+            [self insertSubview:bg aboveSubview:subview];
             [subview removeFromSuperview];
             break;
         }

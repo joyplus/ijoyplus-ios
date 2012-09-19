@@ -39,7 +39,7 @@
     
     imageUrls = [NSMutableArray array];
     imageUrls = [NSArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
-    [flowView reloadData];
+//    [flowView reloadData];
     
 }
 
