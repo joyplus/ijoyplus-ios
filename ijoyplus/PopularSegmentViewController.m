@@ -14,7 +14,9 @@
 #import "DramaViewController.h"
 #import "VideoViewController.h"
 #import "LocalViewController.h"
-
+#import "CMConstants.h"
+#import "AppDelegate.h"
+#import "UIUtility.h"
 @interface PopularSegmentViewController (){
     MovieViewController *movieController;
     DramaViewController *dramaController;
@@ -28,7 +30,6 @@
 @end
 
 @implementation PopularSegmentViewController
-//@synthesize bottomToolbar;
 @synthesize topSegment;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -50,9 +51,6 @@
     if(appDelegate.userLoggedIn){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
-        [self hideToolBar];
-    } else {
-        [self addToolBar];
     }
     topSegment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, SEGMENT_HEIGHT_GAP, SEGMENT_WIDTH, SEGMENT_HEIGHT);
     topSegment.selectedSegmentIndex = 0;
@@ -76,7 +74,6 @@
 - (void)viewDidUnload
 {
     [self setTopSegment:nil];
-    [self setBottomToolbar:nil];
     [super viewDidUnload];
     topSegment = nil;
     // Release any retained subviews of the main view.

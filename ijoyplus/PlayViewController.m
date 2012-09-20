@@ -73,7 +73,6 @@
     NSString *name = @"电影";
     CGSize constraint = CGSizeMake(290, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    NSLog(@"%f", size.height);
     playCell.publicLabel.text = @"发布者名称";
     playCell.filmTitleLabel.text = name;
     [playCell.filmTitleLabel setNumberOfLines:0];

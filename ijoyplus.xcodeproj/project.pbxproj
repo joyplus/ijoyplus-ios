@@ -22,6 +22,8 @@
 		EB090B23160864D5002F7E57 /* LoginPasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B22160864D4002F7E57 /* LoginPasswordCell.m */; };
 		EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */; };
 		EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */; };
+		EB24CC8C160AFFD2009618C6 /* user_big@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC8A160AFFD2009618C6 /* user_big@2x.png */; };
+		EB24CC8D160AFFD2009618C6 /* user_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC8B160AFFD2009618C6 /* user_small@2x.png */; };
 		EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC615F885EC00C878D5 /* UIKit.framework */; };
 		EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC815F885EC00C878D5 /* Foundation.framework */; };
 		EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */; };
@@ -51,7 +53,6 @@
 		EB94EAF41608888C009280FA /* watch_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF01608888C009280FA /* watch_icon@2x.png */; };
 		EB94EAF61608971C009280FA /* brief_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF51608971C009280FA /* brief_btn@2x.png */; };
 		EB94EAF816089B23009280FA /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF716089B23009280FA /* play@2x.png */; };
-		EB94EAFA16089DCE009280FA /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF916089DCE009280FA /* user@2x.png */; };
 		EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32415FED3D100192AE4 /* PlayViewController.m */; };
 		EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED32515FED3D100192AE4 /* PlayViewController.xib */; };
 		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
@@ -123,7 +124,6 @@
 		EBB1B3DE16017FBD00E04289 /* log_btn_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */; };
 		EBB1B3DF16017FBD00E04289 /* reg_btn_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */; };
 		EBB1B3E016017FBD00E04289 /* reg_btn_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */; };
-		EBB1B3E31601836600E04289 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E21601836600E04289 /* BaseViewController.m */; };
 		EBB1B3E61601876B00E04289 /* DramaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E51601876B00E04289 /* DramaViewController.m */; };
 		EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E8160188D400E04289 /* LocalViewController.m */; };
 		EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E9160188D400E04289 /* MovieViewController.m */; };
@@ -176,6 +176,8 @@
 		EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedUserViewController.h; sourceTree = "<group>"; };
 		EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedUserViewController.m; sourceTree = "<group>"; };
 		EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FollowedUserViewController.xib; sourceTree = "<group>"; };
+		EB24CC8A160AFFD2009618C6 /* user_big@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_big@2x.png"; sourceTree = "<group>"; };
+		EB24CC8B160AFFD2009618C6 /* user_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_small@2x.png"; sourceTree = "<group>"; };
 		EB32BCC215F885EC00C878D5 /* ijoyplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ijoyplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB32BCC615F885EC00C878D5 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB32BCC815F885EC00C878D5 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -212,7 +214,6 @@
 		EB94EAF01608888C009280FA /* watch_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "watch_icon@2x.png"; sourceTree = "<group>"; };
 		EB94EAF51608971C009280FA /* brief_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brief_btn@2x.png"; sourceTree = "<group>"; };
 		EB94EAF716089B23009280FA /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
-		EB94EAF916089DCE009280FA /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
 		EBAED32315FED3D100192AE4 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		EBAED32415FED3D100192AE4 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
 		EBAED32515FED3D100192AE4 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
@@ -316,8 +317,6 @@
 		EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "log_btn_normal@2x.png"; sourceTree = "<group>"; };
 		EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reg_btn_active@2x.png"; sourceTree = "<group>"; };
 		EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reg_btn_normal@2x.png"; sourceTree = "<group>"; };
-		EBB1B3E11601836600E04289 /* BaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
-		EBB1B3E21601836600E04289 /* BaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		EBB1B3E41601876A00E04289 /* DramaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaViewController.h; sourceTree = "<group>"; };
 		EBB1B3E51601876B00E04289 /* DramaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaViewController.m; sourceTree = "<group>"; };
 		EBB1B3E7160188D400E04289 /* LocalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalViewController.h; sourceTree = "<group>"; };
@@ -491,11 +490,12 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EB24CC8A160AFFD2009618C6 /* user_big@2x.png */,
+				EB24CC8B160AFFD2009618C6 /* user_small@2x.png */,
 				EBE44B701609E645002BEB0C /* bgwithline@2X.png */,
 				EBE44B711609E645002BEB0C /* cell_bg@2X.png */,
 				EBE44B721609E645002BEB0C /* cell_bg2@2X.png */,
 				EBAFAEC0160961ED00649263 /* black_separator@2x.png */,
-				EB94EAF916089DCE009280FA /* user@2x.png */,
 				EB94EAF716089B23009280FA /* play@2x.png */,
 				EB94EAF51608971C009280FA /* brief_btn@2x.png */,
 				EB94EAED1608888C009280FA /* collection_icon@2x.png */,
@@ -714,8 +714,6 @@
 				EBAFBC3315F9DDC0007579D1 /* CMConstants.m */,
 				EBAFBC4315F9E849007579D1 /* AnimationFactory.h */,
 				EBAFBC4415F9E849007579D1 /* AnimationFactory.m */,
-				EBB1B3E11601836600E04289 /* BaseViewController.h */,
-				EBB1B3E21601836600E04289 /* BaseViewController.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -859,7 +857,6 @@
 				EB94EAF41608888C009280FA /* watch_icon@2x.png in Resources */,
 				EB94EAF61608971C009280FA /* brief_btn@2x.png in Resources */,
 				EB94EAF816089B23009280FA /* play@2x.png in Resources */,
-				EB94EAFA16089DCE009280FA /* user@2x.png in Resources */,
 				EBAFAEBB16095C2400649263 /* MyCellFactory.xib in Resources */,
 				EBAFAEC1160961ED00649263 /* black_separator@2x.png in Resources */,
 				EBAFAECA160968A100649263 /* SettingsViewController.xib in Resources */,
@@ -868,6 +865,8 @@
 				EBE44B741609E645002BEB0C /* cell_bg@2X.png in Resources */,
 				EBE44B751609E645002BEB0C /* cell_bg2@2X.png in Resources */,
 				EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */,
+				EB24CC8C160AFFD2009618C6 /* user_big@2x.png in Resources */,
+				EB24CC8D160AFFD2009618C6 /* user_small@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -925,7 +924,6 @@
 				EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */,
 				EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */,
 				EBB1B3D11601777900E04289 /* UIUtility.m in Sources */,
-				EBB1B3E31601836600E04289 /* BaseViewController.m in Sources */,
 				EBB1B3E61601876B00E04289 /* DramaViewController.m in Sources */,
 				EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */,
 				EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */,

@@ -27,6 +27,7 @@
 @synthesize loginBtn;
 @synthesize usernameCell;
 @synthesize loginPasswordCell;
+@synthesize delegate;
 
 - (void)viewDidUnload
 {
@@ -167,6 +168,7 @@
 - (void)registerAction
 {
     RegisterViewController *viewController = [[RegisterViewController alloc]initWithNibName:@"RegisterViewController" bundle:nil];
+    viewController.delegate = self.delegate;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -174,13 +176,6 @@
 }
 
 - (IBAction)loginAction:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.userLoggedIn = YES;
-    [appDelegate.window.rootViewController viewDidLoad];
-//    BottomTabViewController *detailViewController = [[BottomTabViewController alloc] init];
-//    UINavigationController *viewController =  [[UINavigationController alloc]initWithRootViewController:detailViewController];
-//     = viewController;
-//    [self presentModalViewController:viewController animated:YES];
+    [self.delegate closeChild];
 }
 @end

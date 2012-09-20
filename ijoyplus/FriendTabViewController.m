@@ -71,42 +71,7 @@
     
 }
 
-- (void)addToolBar
-{
-    UIToolbar *toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - BOTTOM_TAB_HEIGHT, self.view.frame.size.width, BOTTOM_TAB_HEIGHT)];
-    UIGlossyButton *registerBtn = [[UIGlossyButton alloc] initWithFrame:CGRectMake(2, 2, self.view.frame.size.width/2-1, BOTTOM_TAB_HEIGHT-3)];
-    [registerBtn setActionSheetButtonWithColor: CMConstants.greyColor];
-    registerBtn.buttonBorderWidth = 0;
-    [registerBtn setTitle: NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
-    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [registerBtn addTarget:self action:@selector(registerScreen) forControlEvents:UIControlEventTouchUpInside];
-    [toolBar addSubview:registerBtn];
-    
-    UIGlossyButton *loginBtn = [[UIGlossyButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width/2 + 2, 2, self.view.frame.size.width/2 - 4, BOTTOM_TAB_HEIGHT-3)];
-    [loginBtn setActionSheetButtonWithColor: CMConstants.greyColor];
-    loginBtn.buttonBorderWidth = 0;
-    [loginBtn setTitle: NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
-    loginBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [loginBtn addTarget:self action:@selector(loginScreen) forControlEvents:UIControlEventTouchUpInside];
-    [toolBar addSubview:loginBtn];
-    
-    [self.view addSubview:toolBar];
-}
 
-- (void)loginScreen
-{
-    LoginViewController *viewController = [[LoginViewController alloc]initWithNibName:@"LoginViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    [self.navigationController presentViewController:navController animated:YES completion:nil];   
-}
-
-
-- (void)registerScreen
-{
-    
-}
 
 
 

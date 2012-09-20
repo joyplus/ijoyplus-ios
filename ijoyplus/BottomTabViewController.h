@@ -25,10 +25,13 @@
 // THE SOFTWARE
 //
 
+@protocol BottomTabViewControllerDelegate <NSObject>
 
+- (void)closeChild;
 
-@interface BottomTabViewController : UITabBarController <UITabBarControllerDelegate>{
+@end
+
+@interface BottomTabViewController : UITabBarController <UITabBarControllerDelegate, BottomTabViewControllerDelegate>{
 
 }
-@property (strong, nonatomic) UIToolbar *bottomToolbar;
 @end

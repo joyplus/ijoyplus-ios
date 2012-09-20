@@ -34,22 +34,31 @@
 #import "SearchFilmViewController.h"
 #import "SettingsViewController.h"
 #import "HomeViewController.h"
+#import "AppDelegate.h"
+#import "UIUtility.h"
+#import "CMConstants.h"
+#import "LoginViewController.h"
+#import "RegisterViewController.h"
+
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
     FriendTabViewController *detailController2;
     HomeViewController *detailController3;
     MyselfViewController *detailController4;
+    UIToolbar *bottomToolbar;
 }
 - (void)initTabControllers;
 - (void)search;
 - (void)settings;
 - (void)message;
 - (void)searchFriend;
+- (void)loginScreen;
+- (void)registerScreen;
+- (void)initToolBar;
 - (UINavigationController*) addNavigation:(UIViewController*) rootViewController;
 @end
 
 @implementation BottomTabViewController
-@synthesize bottomToolbar;
 
 - (void)viewDidUnload {
     [super viewDidUnload];
@@ -78,15 +87,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if(bottomToolbar == nil){
+        [self initToolBar];
+    }
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     if(appDelegate.userLoggedIn){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"popular", nil);
+        [self.tabBar setHidden:NO];
+        [bottomToolbar setHidden:YES];
+        [bottomToolbar removeFromSuperview];
     } else {
+        self.navigationItem.rightBarButtonItem = nil;
         self.title = NSLocalizedString(@"app_name", nil);
         [self.tabBar setHidden:YES];
-        [self addToolBar];
+        [bottomToolbar setHidden:NO];
+        [self.view addSubview:bottomToolbar];
     }
     self.delegate = self;
     [self initTabControllers];
@@ -172,12 +189,12 @@
     
 }
 
-- (void)addToolBar
+- (void)initToolBar
 {
-    self.bottomToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - NAVIGATION_BAR_HEIGHT - SEGMENT_HEIGHT, self.view.frame.size.width, TAB_BAR_HEIGHT)];
-//    [UIUtility customizeToolbar:self.bottomToolbar];
+    bottomToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - NAVIGATION_BAR_HEIGHT - SEGMENT_HEIGHT + 9, self.view.frame.size.width, TAB_BAR_HEIGHT)];
+    [UIUtility customizeToolbar:bottomToolbar];
     UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, self.view.frame.size.width/2-12, TAB_BAR_HEIGHT-10)];
+    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
     [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
     [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
@@ -187,10 +204,10 @@
     [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
     [registerBtn addTarget:self action:@selector(registerScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomToolbar addSubview:registerBtn];
+    [bottomToolbar addSubview:registerBtn];
     
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [loginBtn setFrame:CGRectMake(self.view.frame.size.width/2 + MOVIE_LOGO_WIDTH_GAP/2, 5, self.view.frame.size.width/2 - 12, TAB_BAR_HEIGHT-10)];
+    [loginBtn setFrame:CGRectMake(self.view.frame.size.width/2 + MOVIE_LOGO_WIDTH_GAP/2, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
     [loginBtn setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
@@ -200,11 +217,35 @@
     [loginBtn setBackgroundImage:[[UIImage imageNamed:@"log_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [loginBtn setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
     [loginBtn addTarget:self action:@selector(loginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomToolbar addSubview:loginBtn];
-    self.bottomToolbar.layer.zPosition = 1;
-    [self.bottomToolbar addSubview:loginBtn];
+    [bottomToolbar addSubview:loginBtn];
+    bottomToolbar.layer.zPosition = 1;
+    [bottomToolbar addSubview:loginBtn];
+}
+
+- (void)loginScreen
+{
+    LoginViewController *viewController = [[LoginViewController alloc]initWithNibName:@"LoginViewController" bundle:nil];
+    viewController.delegate = self;
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
+}
+
+
+- (void)registerScreen
+{
+    RegisterViewController *viewController = [[RegisterViewController alloc]initWithNibName:@"RegisterViewController" bundle:nil];
+    viewController.delegate = self;
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
     
-    [self.view addSubview:self.bottomToolbar];
+}
+
+- (void)closeChild
+{
+    [self dismissModalViewControllerAnimated:YES];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.userLoggedIn = YES;
+    [self viewDidLoad];
 }
 
 @end

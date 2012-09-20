@@ -16,11 +16,13 @@
 #define MOVIE_LOGO_HEIGHT 270 / 2
 #define MOVIE_LOGO_WIDTH  190 / 2
 #define MOVIE_LOGO_WIDTH_GAP 16 / 2
-#define TAB_BAR_HEIGHT 48
-#define MOVE_NAME_LABEL_HEIGHT 30
+#define TAB_BAR_HEIGHT 96 / 2
+#define MOVE_NAME_LABEL_HEIGHT 60 / 2
 #define MOVE_NAME_LABEL_WIDTH 192 / 2
 #define VIDEO_LOGO_WIDTH 190 / 2
 #define VIDEO_LOGO_HEIGHT 144 / 2
+#define LOG_BTN_WIDTH 296 / 2
+#define LOG_BTN_HEIGHT 76 / 2
 
 
 @interface CMConstants : NSObject 

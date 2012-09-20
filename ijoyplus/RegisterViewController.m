@@ -27,6 +27,7 @@
 @synthesize passwordCell;
 @synthesize confirmPasswordCell;
 @synthesize nicknameCell;
+@synthesize delegate;
 
 - (void)viewDidUnload
 {
@@ -80,7 +81,7 @@
 
 - (void)registerAction
 {
-    
+    [self.delegate closeChild];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

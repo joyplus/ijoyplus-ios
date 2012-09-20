@@ -15,8 +15,8 @@
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 
-#define TOP_IMAGE_HEIGHT 180
-#define TOP_GAP 50
+#define TOP_IMAGE_HEIGHT 170
+#define TOP_GAP 40
 
 @interface HomeViewController (){
     WaterflowView *flowView;
@@ -136,7 +136,7 @@
     self.username.text = @"Joyce";
     [view addSubview:self.username];
     
-    self.segment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, TOP_IMAGE_HEIGHT + 40, self.view.frame.size.width - MOVIE_LOGO_WIDTH_GAP * 2, SEGMENT_HEIGHT);
+    self.segment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, TOP_IMAGE_HEIGHT + TOP_GAP, self.view.frame.size.width - MOVIE_LOGO_WIDTH_GAP * 2, SEGMENT_HEIGHT);
     self.segment.selectedSegmentIndex = 0;
     [self.segment setTitle:NSLocalizedString(@"watched", nil) forSegmentAtIndex:0];
     [self.segment setTitle:NSLocalizedString(@"my_collection", nil) forSegmentAtIndex:1];
@@ -189,7 +189,7 @@
         imageView.layer.shadowOpacity = 1;
         [cell addSubview:imageView];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
         titleLabel.text = [NSString stringWithFormat:@"%i, %i", indexPath.row, indexPath.section];
         titleLabel.textAlignment = UITextAlignmentCenter;
         titleLabel.backgroundColor = [UIColor clearColor];
@@ -208,10 +208,10 @@
     float height = 0;
 	switch (indexPath.row) {
 		case 0:
-			height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP;
+			height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
 			break;
 		default:
-            height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT + 5 + 10;
+            height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
 			break;
 	}
 	

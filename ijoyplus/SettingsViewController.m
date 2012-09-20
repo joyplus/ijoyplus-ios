@@ -12,6 +12,7 @@
 #import "BlockAlertView.h"
 #import "AppDelegate.h"
 #import "PopularSegmentViewController.h"
+#import "UIUtility.h"
 
 @interface SettingsViewController ()
 
@@ -85,12 +86,7 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDelegate.userLoggedIn = NO;
-        PopularSegmentViewController *detailViewController = [[PopularSegmentViewController alloc]initWithNibName:@"PopularSegmentViewController" bundle:nil];
-        detailViewController.navigationItem.titleView = [UIUtility customizeAppTitle];
-
-        UINavigationController *viewController =  [[UINavigationController alloc]initWithRootViewController:detailViewController];
-        appDelegate.window.rootViewController = viewController;
-        [self presentModalViewController:viewController animated:YES];
+        [[((UINavigationController *)appDelegate.window.rootViewController).viewControllers objectAtIndex:0] viewDidLoad];
     }];
     [alert show];
 }

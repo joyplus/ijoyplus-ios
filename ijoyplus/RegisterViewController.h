@@ -11,11 +11,12 @@
 #import "EmailCell.h"
 #import "PasswordCell.h"
 #import "ConfirmPasswordCell.h"
+#import "BottomTabViewController.h"
 
 @interface RegisterViewController : UITableViewController
 @property (strong, nonatomic) IBOutlet NicknameCell *nicknameCell;
 @property (strong, nonatomic) IBOutlet EmailCell *emailCell;
 @property (strong, nonatomic) IBOutlet PasswordCell *passwordCell;
 @property (strong, nonatomic) IBOutlet ConfirmPasswordCell *confirmPasswordCell;
-
+@property (weak, nonatomic) id<BottomTabViewControllerDelegate>delegate;
 @end

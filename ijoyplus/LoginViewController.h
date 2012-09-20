@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UsernameCell.h"
 #import "LoginPasswordCell.h"
+#import "BottomTabViewController.h"
 
 @interface LoginViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -18,5 +19,7 @@
 @property (strong, nonatomic) IBOutlet LoginPasswordCell *loginPasswordCell;
 - (IBAction)forgotPassword:(id)sender;
 - (IBAction)loginAction:(id)sender;
+
+@property (weak, nonatomic) id<BottomTabViewControllerDelegate>delegate;
 
 @end
