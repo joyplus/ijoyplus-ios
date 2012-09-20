@@ -36,6 +36,8 @@
 @synthesize loadFooterView=_loadFooterView,loadingmore=_loadingmore;
 @synthesize refreshHeaderView=_refreshHeaderView,isRefreshing=_isRefreshing;
 @synthesize cellSelectedNotificationName;
+@synthesize mergeRow;
+@synthesize mergeCell;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -264,8 +266,15 @@
 			cell = [_flowdatasource flowView:self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:rowToDisplay inSection:i]];
 			cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay inSection:i];
 			cell.frame = CGRectMake(origin_x, origin_y, width, height);
-			[self addSubview:cell];
 			[[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];
+            if(self.mergeCell && rowToDisplay == self.mergeRow){
+            if(i == 0){
+                    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 320, cell.frame.size.height);
+                } else{
+                    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 0, cell.frame.size.height);
+                }
+            }
+			[self addSubview:cell];
        }
         else   //there are cells in visibelCellArray
         {
@@ -300,7 +309,13 @@
             cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay > 0 ? (rowToDisplay - 1) : 0 inSection:i];
             cell.frame = CGRectMake(origin_x,origin_y , width, height);
             [[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];
-            
+            if(self.mergeCell && rowToDisplay == self.mergeRow){
+                if(i == 0){
+                    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 320, cell.frame.size.height);
+                } else{
+                    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 0, cell.frame.size.height);
+                }
+            }
             [self addSubview:cell];
         }
         //2. remove cell above this basic cell if there's no margin between basic cell and top
@@ -344,7 +359,13 @@
             cell.indexPath = [NSIndexPath indexPathForRow:rowToDisplay + 1 inSection:i];
             cell.frame = CGRectMake(origin_x, origin_y, width, height);
             [[self.visibleCells objectAtIndex:i] addObject:cell];
-            
+            if(self.mergeCell && rowToDisplay == self.mergeRow){
+                if(i == 0){
+                    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 320, cell.frame.size.height);
+                } else{
+                    cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 0, cell.frame.size.height);
+                }
+            }
             [self addSubview:cell];
         }
         //4. remove cells below this basic cell if there's no margin between basic cell and bottom

@@ -65,5 +65,6 @@
 @property (nonatomic, strong) id <WaterflowViewDelegate> flowdelegate;
 @property (nonatomic, strong) id <WaterflowViewDatasource> flowdatasource;
 @property (nonatomic, strong) NSString *cellSelectedNotificationName;
-
+@property (nonatomic, assign) BOOL mergeCell;
+@property (nonatomic, assign) int mergeRow;
 @end

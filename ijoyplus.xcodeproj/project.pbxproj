@@ -20,6 +20,8 @@
 		EB090B1D160860FD002F7E57 /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1C160860FD002F7E57 /* CustomTextField.m */; };
 		EB090B2016086498002F7E57 /* UsernameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1F16086498002F7E57 /* UsernameCell.m */; };
 		EB090B23160864D5002F7E57 /* LoginPasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B22160864D4002F7E57 /* LoginPasswordCell.m */; };
+		EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */; };
+		EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */; };
 		EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC615F885EC00C878D5 /* UIKit.framework */; };
 		EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC815F885EC00C878D5 /* Foundation.framework */; };
 		EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */; };
@@ -132,11 +134,8 @@
 		EBB40F2016070AA700A49CD9 /* navigationBarBackButton.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB40F1D16070AA700A49CD9 /* navigationBarBackButton.png */; };
 		EBB40F2116070AA700A49CD9 /* navigationBarBackButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB40F1E16070AA700A49CD9 /* navigationBarBackButton@2x.png */; };
 		EBB40F471607102200A49CD9 /* CustomBackButtonHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */; };
-		EBE44B5516098F64002BEB0C /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B5316098F64002BEB0C /* HomeViewController.m */; };
-		EBE44B5616098F64002BEB0C /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B5416098F64002BEB0C /* HomeViewController.xib */; };
-		EBE44B6216099EE7002BEB0C /* MyWaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B6116099EE7002BEB0C /* MyWaterflowView.m */; };
-		EBE44B661609A01E002BEB0C /* TestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B641609A01E002BEB0C /* TestViewController.m */; };
-		EBE44B671609A01E002BEB0C /* TestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B651609A01E002BEB0C /* TestViewController.xib */; };
+		EBE44B661609A01E002BEB0C /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B641609A01E002BEB0C /* HomeViewController.m */; };
+		EBE44B671609A01E002BEB0C /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B651609A01E002BEB0C /* HomeViewController.xib */; };
 		EBE44B731609E645002BEB0C /* bgwithline@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B701609E645002BEB0C /* bgwithline@2X.png */; };
 		EBE44B741609E645002BEB0C /* cell_bg@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B711609E645002BEB0C /* cell_bg@2X.png */; };
 		EBE44B751609E645002BEB0C /* cell_bg2@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B721609E645002BEB0C /* cell_bg2@2X.png */; };
@@ -174,6 +173,9 @@
 		EB090B1F16086498002F7E57 /* UsernameCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsernameCell.m; path = component/UsernameCell.m; sourceTree = "<group>"; };
 		EB090B21160864D4002F7E57 /* LoginPasswordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginPasswordCell.h; path = component/LoginPasswordCell.h; sourceTree = "<group>"; };
 		EB090B22160864D4002F7E57 /* LoginPasswordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginPasswordCell.m; path = component/LoginPasswordCell.m; sourceTree = "<group>"; };
+		EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedUserViewController.h; sourceTree = "<group>"; };
+		EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedUserViewController.m; sourceTree = "<group>"; };
+		EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FollowedUserViewController.xib; sourceTree = "<group>"; };
 		EB32BCC215F885EC00C878D5 /* ijoyplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ijoyplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB32BCC615F885EC00C878D5 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB32BCC815F885EC00C878D5 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -296,6 +298,7 @@
 		EBAFBC3315F9DDC0007579D1 /* CMConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConstants.m; sourceTree = "<group>"; };
 		EBAFBC4315F9E849007579D1 /* AnimationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationFactory.h; sourceTree = "<group>"; };
 		EBAFBC4415F9E849007579D1 /* AnimationFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationFactory.m; sourceTree = "<group>"; };
+		EBB064D7160ABAB000BE685B /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		EBB06FA516080DA900AAA818 /* DateUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateUtility.h; sourceTree = "<group>"; };
 		EBB06FA616080DA900AAA818 /* DateUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateUtility.m; sourceTree = "<group>"; };
 		EBB06FA716080DA900AAA818 /* StringUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtility.h; sourceTree = "<group>"; };
@@ -332,14 +335,8 @@
 		EBB40F1E16070AA700A49CD9 /* navigationBarBackButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationBarBackButton@2x.png"; sourceTree = "<group>"; };
 		EBB40F451607102100A49CD9 /* CustomBackButtonHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButtonHolder.h; sourceTree = "<group>"; };
 		EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBackButtonHolder.m; sourceTree = "<group>"; };
-		EBE44B5216098F64002BEB0C /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
-		EBE44B5316098F64002BEB0C /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
-		EBE44B5416098F64002BEB0C /* HomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
-		EBE44B6016099EE7002BEB0C /* MyWaterflowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWaterflowView.h; path = component/MyWaterflowView.h; sourceTree = "<group>"; };
-		EBE44B6116099EE7002BEB0C /* MyWaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWaterflowView.m; path = component/MyWaterflowView.m; sourceTree = "<group>"; };
-		EBE44B631609A01E002BEB0C /* TestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestViewController.h; sourceTree = "<group>"; };
-		EBE44B641609A01E002BEB0C /* TestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestViewController.m; sourceTree = "<group>"; };
-		EBE44B651609A01E002BEB0C /* TestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestViewController.xib; sourceTree = "<group>"; };
+		EBE44B641609A01E002BEB0C /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
+		EBE44B651609A01E002BEB0C /* HomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		EBE44B701609E645002BEB0C /* bgwithline@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgwithline@2X.png"; sourceTree = "<group>"; };
 		EBE44B711609E645002BEB0C /* cell_bg@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_bg@2X.png"; sourceTree = "<group>"; };
 		EBE44B721609E645002BEB0C /* cell_bg2@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cell_bg2@2X.png"; sourceTree = "<group>"; };
@@ -652,19 +649,17 @@
 		EBAF69DC15FDC13D00938FE3 /* list */ = {
 			isa = PBXGroup;
 			children = (
-				EBE44B6016099EE7002BEB0C /* MyWaterflowView.h */,
-				EBE44B6116099EE7002BEB0C /* MyWaterflowView.m */,
 				EBB1B3F2160190AE00E04289 /* component */,
 				EBAF69DF15FDC22800938FE3 /* WatchedViewController.h */,
 				EBAF69E015FDC22800938FE3 /* WatchedViewController.m */,
 				EBB1B3EF160190A000E04289 /* CollectionViewController.h */,
 				EBB1B3F0160190A000E04289 /* CollectionViewController.m */,
-				EBE44B5216098F64002BEB0C /* HomeViewController.h */,
-				EBE44B5316098F64002BEB0C /* HomeViewController.m */,
-				EBE44B5416098F64002BEB0C /* HomeViewController.xib */,
-				EBE44B631609A01E002BEB0C /* TestViewController.h */,
-				EBE44B641609A01E002BEB0C /* TestViewController.m */,
-				EBE44B651609A01E002BEB0C /* TestViewController.xib */,
+				EBB064D7160ABAB000BE685B /* HomeViewController.h */,
+				EBE44B641609A01E002BEB0C /* HomeViewController.m */,
+				EBE44B651609A01E002BEB0C /* HomeViewController.xib */,
+				EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */,
+				EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */,
+				EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */,
 			);
 			name = list;
 			sourceTree = "<group>";
@@ -868,11 +863,11 @@
 				EBAFAEBB16095C2400649263 /* MyCellFactory.xib in Resources */,
 				EBAFAEC1160961ED00649263 /* black_separator@2x.png in Resources */,
 				EBAFAECA160968A100649263 /* SettingsViewController.xib in Resources */,
-				EBE44B5616098F64002BEB0C /* HomeViewController.xib in Resources */,
-				EBE44B671609A01E002BEB0C /* TestViewController.xib in Resources */,
+				EBE44B671609A01E002BEB0C /* HomeViewController.xib in Resources */,
 				EBE44B731609E645002BEB0C /* bgwithline@2X.png in Resources */,
 				EBE44B741609E645002BEB0C /* cell_bg@2X.png in Resources */,
 				EBE44B751609E645002BEB0C /* cell_bg2@2X.png in Resources */,
+				EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -954,14 +949,13 @@
 				EB94EAE916086EBF009280FA /* LoginViewController.m in Sources */,
 				EBAFAEBF16095D8900649263 /* MyProfileCell.m in Sources */,
 				EBAFAEC9160968A100649263 /* SettingsViewController.m in Sources */,
-				EBE44B5516098F64002BEB0C /* HomeViewController.m in Sources */,
-				EBE44B6216099EE7002BEB0C /* MyWaterflowView.m in Sources */,
-				EBE44B661609A01E002BEB0C /* TestViewController.m in Sources */,
+				EBE44B661609A01E002BEB0C /* HomeViewController.m in Sources */,
 				EBE44B8A1609E8A4002BEB0C /* CustomCellBackground.m in Sources */,
 				EBE44B8B1609E8A4002BEB0C /* CustomCellBlackBackground.m in Sources */,
 				EBE44B8C1609E8A4002BEB0C /* CustomTableViewCell.m in Sources */,
 				EBE44B8F1609E8F6002BEB0C /* Common.m in Sources */,
 				EBE44B931609E993002BEB0C /* SelectedCellBackground.m in Sources */,
+				EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

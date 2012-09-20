@@ -1,5 +1,5 @@
 //
-//  HomeViewController.m
+//  TestViewController.m
 //  ijoyplus
 //
 //  Created by joyplus1 on 12-9-19.
@@ -11,6 +11,12 @@
 #import "AppDelegate.h"
 #import "CMConstants.h"
 #import "PlayRootViewController.h"
+#import "FollowedUserViewController.h"
+#import "CustomBackButtonHolder.h"
+#import "CustomBackButton.h"
+
+#define TOP_IMAGE_HEIGHT 180
+#define TOP_GAP 50
 
 @interface HomeViewController (){
     WaterflowView *flowView;
@@ -19,12 +25,21 @@
     int tempCount;
 }
 
-
+- (void)addHeaderContent:(UIView *)view;
 @end
 
 @implementation HomeViewController
-@synthesize scrollView;
+@synthesize segment;
+@synthesize topImageView;
 @synthesize avatarImageView;
+@synthesize roundImageView;
+@synthesize loveNumberLabel;
+@synthesize watchedNumberLabel;
+@synthesize collectionNumberLabel;
+@synthesize loveBtn;
+@synthesize watchBtn;
+@synthesize collectionBtn;
+@synthesize username;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,17 +49,16 @@
     }
     return self;
 }
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.scrollView.contentSize = CGSizeMake(320, 2000);
-    [self.avatarImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-    self.avatarImageView.layer.cornerRadius = 35;
-    self.avatarImageView.layer.masksToBounds = YES;
+    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+	
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
-//    [self addContentView];
+    [self addContentView];
     
 }
 
@@ -53,31 +67,81 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 190, self.view.bounds.size.width, self.view.bounds.size.height)];
+    flowView = [[WaterflowView alloc] initWithFrame:self.view.frame];
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
     if(appDelegate.userLoggedIn){
         flag = @"1";
     }
-    flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"movieSelected",flag];
+    flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",flag];
     [flowView showsVerticalScrollIndicator];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
+    flowView.mergeRow = 0;
+    flowView.mergeCell = YES;
     [self.view addSubview:flowView];
     
     currentPage = 1;
+    
+    [self.topImageView removeFromSuperview];
+    [self.avatarImageView removeFromSuperview];
+    [self.roundImageView removeFromSuperview];
+    [self.loveBtn removeFromSuperview];
+    [self.watchBtn removeFromSuperview];
+    [self.collectionBtn removeFromSuperview];
+    [self.loveNumberLabel removeFromSuperview];
+    [self.watchedNumberLabel removeFromSuperview];
+    [self.collectionNumberLabel removeFromSuperview];
+    [self.segment removeFromSuperview];
+    [self.username removeFromSuperview];
     [flowView reloadData];
     
 }
 
 - (void)viewDidUnload
 {
-    [self setScrollView:nil];
+    [self setSegment:nil];
+    [self setTopImageView:nil];
     [self setAvatarImageView:nil];
+    [self setRoundImageView:nil];
+    [self setLoveNumberLabel:nil];
+    [self setWatchedNumberLabel:nil];
+    [self setCollectionNumberLabel:nil];
+    [self setLoveBtn:nil];
+    [self setWatchBtn:nil];
+    [self setCollectionBtn:nil];
+    [self setUsername:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+}
+
+- (void)addHeaderContent:(UIView *)view
+{
+    
+    [view addSubview:self.topImageView];
+    self.avatarImageView.image = [UIImage imageNamed:@"u0_normal"];
+    [self.avatarImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    self.avatarImageView.layer.cornerRadius = 27.5;
+    self.avatarImageView.layer.masksToBounds = YES;
+    [view addSubview:self.avatarImageView];
+    [view addSubview:self.roundImageView];
+    [view addSubview:self.loveBtn];
+    [view addSubview:self.watchBtn];
+    [view addSubview:self.collectionBtn];
+    [view addSubview:self.loveNumberLabel];
+    [view addSubview:self.watchedNumberLabel];
+    [view addSubview:self.collectionNumberLabel];
+    self.username.text = @"Joyce";
+    [view addSubview:self.username];
+    
+    self.segment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, TOP_IMAGE_HEIGHT + 40, self.view.frame.size.width - MOVIE_LOGO_WIDTH_GAP * 2, SEGMENT_HEIGHT);
+    self.segment.selectedSegmentIndex = 0;
+    [self.segment setTitle:NSLocalizedString(@"watched", nil) forSegmentAtIndex:0];
+    [self.segment setTitle:NSLocalizedString(@"my_collection", nil) forSegmentAtIndex:1];
+    [self.segment addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [view addSubview:self.segment];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -102,31 +166,37 @@
 {
     
     static NSString *CellIdentifier = @"movieCell";
-	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
+    WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
     cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
-    if(indexPath.section == 0){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
-    } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+    if(indexPath.row == 0){
+        if(indexPath.section == 0){
+            [self addHeaderContent:cell];
+        }
     } else {
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        if(indexPath.section == 0){
+            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
+            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        } else {
+            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        }
+        [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        imageView.layer.borderWidth = 1;
+        imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+        imageView.layer.shadowOffset = CGSizeMake(1, 1);
+        imageView.layer.shadowOpacity = 1;
+        [cell addSubview:imageView];
+        
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+        titleLabel.text = [NSString stringWithFormat:@"%i, %i", indexPath.row, indexPath.section];
+        titleLabel.textAlignment = UITextAlignmentCenter;
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.font = CMConstants.titleFont;
+        [cell addSubview:titleLabel];
     }
-    [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
-    imageView.layer.borderWidth = 1;
-    imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-    imageView.layer.shadowOffset = CGSizeMake(1, 1);
-    imageView.layer.shadowOpacity = 1;
-    [cell addSubview:imageView];
-    
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT + 5, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
-    titleLabel.text = @"电影";
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.font = CMConstants.titleFont;
-    [cell addSubview:titleLabel];
     return cell;
     
 }
@@ -135,14 +205,24 @@
 #pragma mark- WaterflowDelegate
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-	return MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT + 5 + 10;
-    
+    float height = 0;
+	switch (indexPath.row) {
+		case 0:
+			height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP;
+			break;
+		default:
+            height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT + 5 + 10;
+			break;
+	}
+	
+	return height;
 }
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
+    if(indexPath.row == 0){
+        return;
+    }
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
     PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
@@ -157,5 +237,19 @@
     [flowView reloadData];
 }
 
+- (void)segmentValueChanged:(id)sender {
+}
 
+- (IBAction)followUser:(id)sender {
+    FollowedUserViewController *viewController = [[FollowedUserViewController alloc]initWithNibName:@"FollowedUserViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)closeSelf
+{
+    UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
+    if(viewController == nil){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
 @end

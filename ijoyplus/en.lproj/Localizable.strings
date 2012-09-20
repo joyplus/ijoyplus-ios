@@ -48,8 +48,11 @@ follow = "关注";
 cancel_follow = "取消关注";
 
 list = "我的主页";
-watched = "我看过的";
-my_collection = "我收藏的";
+watched = "看过的影片";
+my_collection = "收藏的影片";
+cancel_follow = "取消关注";
+my_followed_people = "我关注的人";
+message = "消息";
 
 myself = "个人设置";
 notification_center = "通知中心";
