@@ -15,7 +15,7 @@
 #import "HomeViewController.h"
 
 #define LEFT_GAP 25
-#define AVATAR_IMAGE_WIDTH 55
+#define AVATAR_IMAGE_WIDTH 60
 
 @interface FollowedUserViewController (){
     NSMutableArray *userArray;
@@ -102,19 +102,26 @@
         [imageBtn addTarget:self action:@selector(viewUser) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:imageBtn];
         
+        UIImageView *roundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 74, 74)];
+        roundImageView.image = [UIImage imageNamed:@"user_big"];
+        roundImageView.center = avatarImageView.center;
+        [cell.contentView addSubview:roundImageView];
+        
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         nameLabel.text = [userArray objectAtIndex:indexPath.row * 3 + num - 1];
         [nameLabel sizeToFit];
-        nameLabel.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 10);
+        nameLabel.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);
         nameLabel.textColor = [UIColor whiteColor];
         nameLabel.font = [UIFont systemFontOfSize:15];
         [nameLabel setBackgroundColor:[UIColor clearColor]];
         [cell.contentView addSubview:nameLabel];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        btn.frame = CGRectMake(0, 0, 95, 25);
-        btn.center = CGPointMake(avatarImageView.center.x, nameLabel.center.y + 25);
+        btn.frame = CGRectMake(0, 0, 96, 25);
+        btn.center = CGPointMake(avatarImageView.center.x, nameLabel.center.y + 27);
         [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(cancelFollow) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:btn];
     }
@@ -122,7 +129,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 295 / 2;
+    return 292 / 2;
 }
 
 /*
@@ -189,9 +196,8 @@
 
 - (void)viewUser
 {
-    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    [self.navigationController pushViewController:viewController animated:YES];
+//    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+//    [self.navigationController pushViewController:viewController animated:YES];
     
 }
 

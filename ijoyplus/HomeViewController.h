@@ -16,11 +16,14 @@
 @property (strong, nonatomic) IBOutlet UIImageView *roundImageView;
 @property (strong, nonatomic) IBOutlet UILabel *loveNumberLabel;
 @property (strong, nonatomic) IBOutlet UILabel *watchedNumberLabel;
-@property (strong, nonatomic) IBOutlet UILabel *collectionNumberLabel;
+@property (strong, nonatomic) IBOutlet UILabel *fansNumberLabel;
 @property (strong, nonatomic) IBOutlet UIButton *loveBtn;
 @property (strong, nonatomic) IBOutlet UIButton *watchBtn;
 @property (strong, nonatomic) IBOutlet UIButton *collectionBtn;
 @property (strong, nonatomic) IBOutlet UILabel *username;
 - (IBAction)followUser:(id)sender;
+@property (strong, nonatomic) IBOutlet UILabel *loveLabel;
+@property (strong, nonatomic) IBOutlet UILabel *watchedLabel;
+@property (strong, nonatomic) IBOutlet UILabel *fansLabel;
 
 @end

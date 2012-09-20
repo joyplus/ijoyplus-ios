@@ -65,9 +65,8 @@
     [self.view addSubview:topSegment];
     movieController = [[MovieViewController alloc] init];
     selectedViewController = movieController;
-    movieController.view.backgroundColor = [UIColor whiteColor];
     [self addChildViewController:movieController];
-    movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
+    movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
     [self.view addSubview:movieController.view];
 }
 
@@ -94,9 +93,8 @@
             movieController = [[MovieViewController alloc] init];
         }
         selectedViewController = movieController;
-        movieController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:movieController];
-        movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
+        movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
         [self.view addSubview:movieController.view];
     } else if (topSegment.selectedSegmentIndex == 1){
         [selectedViewController.view removeFromSuperview];
@@ -106,9 +104,8 @@
             dramaController = [[DramaViewController alloc] init];
         }
         selectedViewController = dramaController;
-        dramaController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:dramaController];
-        dramaController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
+        dramaController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
         [self.view addSubview:dramaController.view];
     } else if (topSegment.selectedSegmentIndex == 2){
         [selectedViewController.view removeFromSuperview];
@@ -118,9 +115,8 @@
             videoController = [[VideoViewController alloc] init];
         }
         selectedViewController = videoController;
-        videoController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:videoController];
-        videoController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
+        videoController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
         [self.view addSubview:videoController.view];
     } else if (topSegment.selectedSegmentIndex == 3){
         [selectedViewController.view removeFromSuperview];
@@ -130,9 +126,8 @@
             localController = [[LocalViewController alloc] init];
         }
         selectedViewController = localController;
-        localController.view.backgroundColor = [UIColor whiteColor];
         [self addChildViewController:localController];
-        localController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2 - NAVIGATION_BAR_HEIGHT);
+        localController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
         [self.view addSubview:localController.view];
     }
 }

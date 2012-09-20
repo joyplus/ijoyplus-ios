@@ -27,7 +27,7 @@
 
 #import "BottomTabViewController.h"
 #import "UIImageView+WebCache.h"
-#import "FriendTabViewController.h"
+#import "FriendViewController.h"
 #import "HomeViewController.h"
 #import "MyselfViewController.h"
 #import "PopularSegmentViewController.h"
@@ -42,7 +42,7 @@
 
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
-    FriendTabViewController *detailController2;
+    FriendViewController *detailController2;
     HomeViewController *detailController3;
     MyselfViewController *detailController4;
     UIToolbar *bottomToolbar;
@@ -117,7 +117,7 @@
     detailController1 = [[PopularSegmentViewController alloc] initWithNibName:@"PopularSegmentViewController" bundle:nil];
     detailController1.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"popular", nil)  image:[UIImage imageNamed:@"pop_tab"] tag:0];
     
-    detailController2 = [[FriendTabViewController alloc] init];
+    detailController2 = [[FriendViewController alloc] init];
     detailController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"friend", nil) image:[UIImage imageNamed:@"rec_tab"] tag:0];
     detailController3 = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
     detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"list_tab"] tag:0];
@@ -148,7 +148,7 @@
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"list", nil);
     // Friend
-    } else if ([viewController isKindOfClass: [HomeViewController class]]){
+    } else if ([viewController isKindOfClass: [FriendViewController class]]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemAction target:self action:@selector(searchFriend)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"friend", nil);

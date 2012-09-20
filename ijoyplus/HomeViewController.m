@@ -29,13 +29,16 @@
 @end
 
 @implementation HomeViewController
+@synthesize loveLabel;
+@synthesize watchedLabel;
+@synthesize fansLabel;
 @synthesize segment;
 @synthesize topImageView;
 @synthesize avatarImageView;
 @synthesize roundImageView;
 @synthesize loveNumberLabel;
 @synthesize watchedNumberLabel;
-@synthesize collectionNumberLabel;
+@synthesize fansNumberLabel;
 @synthesize loveBtn;
 @synthesize watchBtn;
 @synthesize collectionBtn;
@@ -92,9 +95,12 @@
     [self.collectionBtn removeFromSuperview];
     [self.loveNumberLabel removeFromSuperview];
     [self.watchedNumberLabel removeFromSuperview];
-    [self.collectionNumberLabel removeFromSuperview];
+    [self.fansNumberLabel removeFromSuperview];
     [self.segment removeFromSuperview];
     [self.username removeFromSuperview];
+    [self.loveLabel removeFromSuperview];
+    [self.watchedLabel removeFromSuperview];
+    [self.fansLabel removeFromSuperview];
     [flowView reloadData];
     
 }
@@ -107,11 +113,14 @@
     [self setRoundImageView:nil];
     [self setLoveNumberLabel:nil];
     [self setWatchedNumberLabel:nil];
-    [self setCollectionNumberLabel:nil];
+    [self setFansNumberLabel:nil];
     [self setLoveBtn:nil];
     [self setWatchBtn:nil];
     [self setCollectionBtn:nil];
     [self setUsername:nil];
+    [self setLoveLabel:nil];
+    [self setWatchedLabel:nil];
+    [self setFansLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -132,14 +141,17 @@
     [view addSubview:self.collectionBtn];
     [view addSubview:self.loveNumberLabel];
     [view addSubview:self.watchedNumberLabel];
-    [view addSubview:self.collectionNumberLabel];
+    [view addSubview:self.fansNumberLabel];
+    [view addSubview:self.loveLabel];
+    [view addSubview:self.watchedLabel];
+    [view addSubview:self.fansLabel];
     self.username.text = @"Joyce";
     [view addSubview:self.username];
     
     self.segment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, TOP_IMAGE_HEIGHT + TOP_GAP, self.view.frame.size.width - MOVIE_LOGO_WIDTH_GAP * 2, SEGMENT_HEIGHT);
-    self.segment.selectedSegmentIndex = 0;
     [self.segment setTitle:NSLocalizedString(@"watched", nil) forSegmentAtIndex:0];
     [self.segment setTitle:NSLocalizedString(@"my_collection", nil) forSegmentAtIndex:1];
+    self.segment.selectedSegmentIndex = 0;
     [self.segment addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
     [view addSubview:self.segment];
 }
@@ -174,12 +186,13 @@
         }
     } else {
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
         if(indexPath.section == 0){
-            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
-            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         } else {
-            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+            imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         }
         [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         imageView.layer.borderWidth = 1;
@@ -189,7 +202,7 @@
         imageView.layer.shadowOpacity = 1;
         [cell addSubview:imageView];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
         titleLabel.text = [NSString stringWithFormat:@"%i, %i", indexPath.row, indexPath.section];
         titleLabel.textAlignment = UITextAlignmentCenter;
         titleLabel.backgroundColor = [UIColor clearColor];
@@ -206,16 +219,15 @@
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     float height = 0;
-	switch (indexPath.row) {
-		case 0:
-			height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
-			break;
-		default:
-            height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
-			break;
-	}
-	
-	return height;
+	if(indexPath.row == 0) {
+		height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
+        return height;
+    } else if(indexPath.section % 3 == 0) {
+        height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
+    } else if(indexPath.section % 3 == 1 || indexPath.section % 3 == 2) {
+        height = VIDEO_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
+    } 
+    return height + MOVE_NAME_LABEL_HEIGHT;
 }
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -238,6 +250,19 @@
 }
 
 - (void)segmentValueChanged:(id)sender {
+    [imageUrls removeAllObjects];
+    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
+    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
+    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
+    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
+    tempCount = imageUrls.count;
+    NSInteger ind = ((UISegmentedControl *)sender).selectedSegmentIndex;
+    if(ind == 0){
+        [((UISegmentedControl *)sender) setSelectedSegmentIndex:1];
+    } else{
+        [((UISegmentedControl *)sender) setSelectedSegmentIndex:0];
+    }
+    [flowView reloadData];
 }
 
 - (IBAction)followUser:(id)sender {

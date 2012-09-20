@@ -1,11 +1,19 @@
-#import "LocalViewController.h"
+//
+//  FriendViewController.m
+//  ijoyplus
+//
+//  Created by joyplus1 on 12-9-20.
+//  Copyright (c) 2012年 joyplus. All rights reserved.
+//
+
+#import "FriendViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "PlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface LocalViewController(){
+@interface FriendViewController (){
     WaterflowView *flowView;
     NSMutableArray *imageUrls;
     int currentPage;
@@ -14,15 +22,18 @@
 - (void)addContentView;
 @end
 
-@implementation LocalViewController
+@implementation FriendViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
     [self addContentView];
+    
+    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
+    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    [flowView addGestureRecognizer:downGesture];
 }
 
 - (void)addContentView
@@ -30,14 +41,14 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 10, self.view.bounds.size.width, self.view.bounds.size.height)];
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
     if(appDelegate.userLoggedIn){
         flag = @"1";
     }
-    flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"localSelected",flag];
+    flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"friendVideoSelected",flag];
     [flowView showsVerticalScrollIndicator];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
@@ -68,17 +79,18 @@
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    static NSString *CellIdentifier = @"Cell";
+    
+    static NSString *CellIdentifier = @"movieCell";
 	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
     cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+    float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
     if(indexPath.section == 0){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
-    } else {        
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
+    } else {
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
     }
     [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     imageView.layer.borderWidth = 1;
@@ -88,7 +100,7 @@
     imageView.layer.shadowOpacity = 1;
     [cell addSubview:imageView];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, VIDEO_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
     titleLabel.text = [NSString stringWithFormat:@"%i, %i", indexPath.row, indexPath.section];
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor clearColor];
@@ -104,17 +116,28 @@
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-	return VIDEO_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
-    
+    float height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
+	switch (indexPath.section  % 3) {
+		case 0:
+			height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;;
+			break;
+		case 1:
+			height = VIDEO_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;;
+			break;
+		default:
+			break;
+	}
+	return height + MOVE_NAME_LABEL_HEIGHT;
 }
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
-    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
+    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
+    //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [navController pushViewController:viewController animated:YES];
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page

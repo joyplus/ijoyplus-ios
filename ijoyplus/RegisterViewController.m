@@ -113,12 +113,17 @@
         if(cell == nil){
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
+        UIImageView *lineView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"line"]];
+        lineView.frame = CGRectMake(0, cell.frame.size.height - 1, cell.frame.size.width - 20, 1);
         if(indexPath.row == 0){
             cell.textLabel.text = NSLocalizedString(@"sina_weibo", nil);
+            [cell.contentView addSubview:lineView];
         } else if(indexPath.row == 1){
             cell.textLabel.text = NSLocalizedString(@"tencent_weibo", nil);
+            [cell.contentView addSubview:lineView];
         } else if(indexPath.row == 2){
             cell.textLabel.text = NSLocalizedString(@"renren", nil);
+            [cell.contentView addSubview:lineView];
         } else if(indexPath.row == 3){
             cell.textLabel.text = NSLocalizedString(@"douban", nil);
         }

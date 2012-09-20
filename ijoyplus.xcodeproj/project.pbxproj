@@ -24,6 +24,11 @@
 		EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */; };
 		EB24CC8C160AFFD2009618C6 /* user_big@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC8A160AFFD2009618C6 /* user_big@2x.png */; };
 		EB24CC8D160AFFD2009618C6 /* user_small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC8B160AFFD2009618C6 /* user_small@2x.png */; };
+		EB24CC91160B1155009618C6 /* line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC90160B1155009618C6 /* line@2x.png */; };
+		EB24CC93160B159F009618C6 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC92160B159F009618C6 /* Default@2x.png */; };
+		EB24CC97160B178D009618C6 /* user_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC96160B178D009618C6 /* user_btn@2x.png */; };
+		EB24CC99160B1908009618C6 /* unfocus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC98160B1908009618C6 /* unfocus@2x.png */; };
+		EB24CC9C160B232F009618C6 /* FriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB24CC9B160B232F009618C6 /* FriendViewController.m */; };
 		EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC615F885EC00C878D5 /* UIKit.framework */; };
 		EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCC815F885EC00C878D5 /* Foundation.framework */; };
 		EB32BCCB15F885EC00C878D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BCCA15F885EC00C878D5 /* CoreGraphics.framework */; };
@@ -62,7 +67,6 @@
 		EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */; };
 		EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */; };
 		EBAED39C15FF3D2700192AE4 /* FriendProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */; };
-		EBAF698815FD896D00938FE3 /* FriendTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF698715FD896D00938FE3 /* FriendTabViewController.m */; };
 		EBAF698E15FD8D9600938FE3 /* RecommandMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */; };
 		EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */; };
 		EBAF69D415FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CD15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png */; };
@@ -178,6 +182,12 @@
 		EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FollowedUserViewController.xib; sourceTree = "<group>"; };
 		EB24CC8A160AFFD2009618C6 /* user_big@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_big@2x.png"; sourceTree = "<group>"; };
 		EB24CC8B160AFFD2009618C6 /* user_small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_small@2x.png"; sourceTree = "<group>"; };
+		EB24CC90160B1155009618C6 /* line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "line@2x.png"; sourceTree = "<group>"; };
+		EB24CC92160B159F009618C6 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		EB24CC96160B178D009618C6 /* user_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user_btn@2x.png"; sourceTree = "<group>"; };
+		EB24CC98160B1908009618C6 /* unfocus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unfocus@2x.png"; sourceTree = "<group>"; };
+		EB24CC9A160B232F009618C6 /* FriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendViewController.h; sourceTree = "<group>"; };
+		EB24CC9B160B232F009618C6 /* FriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendViewController.m; sourceTree = "<group>"; };
 		EB32BCC215F885EC00C878D5 /* ijoyplus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ijoyplus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB32BCC615F885EC00C878D5 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB32BCC815F885EC00C878D5 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -230,8 +240,6 @@
 		EBAED39815FF3D2600192AE4 /* FriendProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendProfileViewController.h; sourceTree = "<group>"; };
 		EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendProfileViewController.m; sourceTree = "<group>"; };
 		EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendProfileViewController.xib; sourceTree = "<group>"; };
-		EBAF698615FD896D00938FE3 /* FriendTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendTabViewController.h; sourceTree = "<group>"; };
-		EBAF698715FD896D00938FE3 /* FriendTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendTabViewController.m; sourceTree = "<group>"; };
 		EBAF698915FD8D8200938FE3 /* RecommandMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommandMovieViewController.h; sourceTree = "<group>"; };
 		EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommandMovieViewController.m; sourceTree = "<group>"; };
 		EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
@@ -389,6 +397,7 @@
 		EB32BCB715F885EC00C878D5 = {
 			isa = PBXGroup;
 			children = (
+				EB24CC92160B159F009618C6 /* Default@2x.png */,
 				EB32BCCC15F885EC00C878D5 /* ijoyplus */,
 				EB32BD0515F887A400C878D5 /* External */,
 				EB32BD1C15F887A400C878D5 /* Resources */,
@@ -490,6 +499,9 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EB24CC98160B1908009618C6 /* unfocus@2x.png */,
+				EB24CC96160B178D009618C6 /* user_btn@2x.png */,
+				EB24CC90160B1155009618C6 /* line@2x.png */,
 				EB24CC8A160AFFD2009618C6 /* user_big@2x.png */,
 				EB24CC8B160AFFD2009618C6 /* user_small@2x.png */,
 				EBE44B701609E645002BEB0C /* bgwithline@2X.png */,
@@ -619,8 +631,6 @@
 		EBAF698515FD880E00938FE3 /* friend */ = {
 			isa = PBXGroup;
 			children = (
-				EBAF698615FD896D00938FE3 /* FriendTabViewController.h */,
-				EBAF698715FD896D00938FE3 /* FriendTabViewController.m */,
 				EBAF698915FD8D8200938FE3 /* RecommandMovieViewController.h */,
 				EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */,
 				EBAF69D715FDB80900938FE3 /* FriendNewsViewController.h */,
@@ -629,6 +639,8 @@
 				EBAED39815FF3D2600192AE4 /* FriendProfileViewController.h */,
 				EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */,
 				EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */,
+				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
+				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
 			);
 			name = friend;
 			sourceTree = "<group>";
@@ -867,6 +879,10 @@
 				EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */,
 				EB24CC8C160AFFD2009618C6 /* user_big@2x.png in Resources */,
 				EB24CC8D160AFFD2009618C6 /* user_small@2x.png in Resources */,
+				EB24CC91160B1155009618C6 /* line@2x.png in Resources */,
+				EB24CC93160B159F009618C6 /* Default@2x.png in Resources */,
+				EB24CC97160B178D009618C6 /* user_btn@2x.png in Resources */,
+				EB24CC99160B1908009618C6 /* unfocus@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -900,7 +916,6 @@
 				EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */,
 				EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */,
 				EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */,
-				EBAF698815FD896D00938FE3 /* FriendTabViewController.m in Sources */,
 				EBAF698E15FD8D9600938FE3 /* RecommandMovieViewController.m in Sources */,
 				EBAF69D515FDB78D00938FE3 /* MNMBottomPullToRefreshManager.m in Sources */,
 				EBAF69D615FDB78D00938FE3 /* MNMBottomPullToRefreshView.m in Sources */,
@@ -954,6 +969,7 @@
 				EBE44B8F1609E8F6002BEB0C /* Common.m in Sources */,
 				EBE44B931609E993002BEB0C /* SelectedCellBackground.m in Sources */,
 				EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */,
+				EB24CC9C160B232F009618C6 /* FriendViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
