@@ -50,6 +50,10 @@
 		EB3F0A6D1601D0F8005D97F8 /* pop_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A681601D0F7005D97F8 /* pop_tab@2x.png */; };
 		EB3F0A6E1601D0F8005D97F8 /* rec_tab@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A691601D0F7005D97F8 /* rec_tab@2x.png */; };
 		EB3F0A6F1601D0F8005D97F8 /* tab_selected_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A6A1601D0F7005D97F8 /* tab_selected_bg@2x.png */; };
+		EB7841C4160C68830003FB10 /* SinaOAuthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7841C2160C68830003FB10 /* SinaOAuthViewController.m */; };
+		EB7841C5160C68830003FB10 /* SinaOAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB7841C3160C68830003FB10 /* SinaOAuthViewController.xib */; };
+		EB7841D2160C70550003FB10 /* FillFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7841D0160C70550003FB10 /* FillFormViewController.m */; };
+		EB7841D3160C70550003FB10 /* FillFormViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB7841D1160C70550003FB10 /* FillFormViewController.xib */; };
 		EB94EAE916086EBF009280FA /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB94EAE716086EBF009280FA /* LoginViewController.m */; };
 		EB94EAEA16086EBF009280FA /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAE816086EBF009280FA /* LoginViewController.xib */; };
 		EB94EAEC160877E9009280FA /* custom-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAEB160877E9009280FA /* custom-button@2x.png */; };
@@ -181,6 +185,12 @@
 		EB3F0A681601D0F7005D97F8 /* pop_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pop_tab@2x.png"; sourceTree = "<group>"; };
 		EB3F0A691601D0F7005D97F8 /* rec_tab@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rec_tab@2x.png"; sourceTree = "<group>"; };
 		EB3F0A6A1601D0F7005D97F8 /* tab_selected_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_selected_bg@2x.png"; sourceTree = "<group>"; };
+		EB7841C1160C68830003FB10 /* SinaOAuthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinaOAuthViewController.h; sourceTree = "<group>"; };
+		EB7841C2160C68830003FB10 /* SinaOAuthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SinaOAuthViewController.m; sourceTree = "<group>"; };
+		EB7841C3160C68830003FB10 /* SinaOAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SinaOAuthViewController.xib; sourceTree = "<group>"; };
+		EB7841CF160C70550003FB10 /* FillFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillFormViewController.h; sourceTree = "<group>"; };
+		EB7841D0160C70550003FB10 /* FillFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillFormViewController.m; sourceTree = "<group>"; };
+		EB7841D1160C70550003FB10 /* FillFormViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FillFormViewController.xib; sourceTree = "<group>"; };
 		EB94EAE616086EBF009280FA /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		EB94EAE716086EBF009280FA /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		EB94EAE816086EBF009280FA /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
@@ -478,6 +488,12 @@
 				EB94EAE616086EBF009280FA /* LoginViewController.h */,
 				EB94EAE716086EBF009280FA /* LoginViewController.m */,
 				EB94EAE816086EBF009280FA /* LoginViewController.xib */,
+				EB7841C1160C68830003FB10 /* SinaOAuthViewController.h */,
+				EB7841C2160C68830003FB10 /* SinaOAuthViewController.m */,
+				EB7841C3160C68830003FB10 /* SinaOAuthViewController.xib */,
+				EB7841CF160C70550003FB10 /* FillFormViewController.h */,
+				EB7841D0160C70550003FB10 /* FillFormViewController.m */,
+				EB7841D1160C70550003FB10 /* FillFormViewController.xib */,
 			);
 			name = login;
 			sourceTree = "<group>";
@@ -730,6 +746,8 @@
 				EB24CC97160B178D009618C6 /* user_btn@2x.png in Resources */,
 				EB24CC99160B1908009618C6 /* unfocus@2x.png in Resources */,
 				EB1E2966160C58FE005048E5 /* u0_normal.png in Resources */,
+				EB7841C5160C68830003FB10 /* SinaOAuthViewController.xib in Resources */,
+				EB7841D3160C70550003FB10 /* FillFormViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -808,6 +826,8 @@
 				EBE44B931609E993002BEB0C /* SelectedCellBackground.m in Sources */,
 				EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */,
 				EB24CC9C160B232F009618C6 /* FriendViewController.m in Sources */,
+				EB7841C4160C68830003FB10 /* SinaOAuthViewController.m in Sources */,
+				EB7841D2160C70550003FB10 /* FillFormViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -100,7 +100,9 @@
 {
     if(section == 2){
         return 1;
-    } else {
+    } else if (section == 1){
+        return 3;
+    } else{
         return 4;
     }
 }
@@ -197,9 +199,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if(section == 2){
-        return 10;
+        return 5;
     } else {
-        return 35;
+        return 25;
     }
 }
 
@@ -207,11 +209,11 @@
     if(section == 2){
         return nil;
     }
-    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,35)];
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,25)];
     customView.backgroundColor = [UIColor clearColor];
     
     //    // create the label objects
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15, customView.frame.size.width, customView.frame.size.height)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 5, customView.frame.size.width, customView.frame.size.height)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:15];
     if(section == 0){
@@ -230,13 +232,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
