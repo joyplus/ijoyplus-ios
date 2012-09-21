@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WatchedViewController.h"
+#import "WaterflowView.h"
 
 @interface FriendViewController : UIViewController<WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate>{
 

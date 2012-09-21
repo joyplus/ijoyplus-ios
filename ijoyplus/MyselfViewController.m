@@ -18,7 +18,6 @@
 @implementation MyselfViewController
 
 @synthesize table;
-@synthesize myProfileCell;
 
 #pragma mark -
 #pragma mark Memory management
@@ -45,7 +44,6 @@
     
 }
 - (void)viewDidUnload {
-    [self setMyProfileCell:nil];
     [super viewDidUnload];
     
     self.table = nil;

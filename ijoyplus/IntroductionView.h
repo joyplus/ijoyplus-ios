@@ -14,6 +14,5 @@
 @end
 
 @protocol IntroductionViewDelegate <NSObject>
-- (void)leveyPopListView:(IntroductionView *)popListView didSelectedIndex:(NSInteger)anIndex;
 - (void)leveyPopListViewDidCancel;
 @end

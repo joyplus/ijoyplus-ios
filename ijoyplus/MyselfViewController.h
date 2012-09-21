@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import "MNMBottomPullToRefreshManager.h"
-#import "MyProfileWithImageCell.h"
+#import "MyProfileCell.h"
 
 /**
  * View controller with the demo table
@@ -22,6 +22,5 @@
  * Provides readwrite access to the table_. Exported to IB
  */
 @property (nonatomic, readwrite, retain) IBOutlet UITableView *table;
-@property (strong, nonatomic) IBOutlet MyProfileWithImageCell *myProfileCell;
 
 @end

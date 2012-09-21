@@ -15,17 +15,15 @@ PODS:
   - FormatterKit/TimeIntervalFormatter (1.0.1)
   - FormatterKit/URLRequestFormatter (1.0.1)
   - FormatterKit/UnitOfInformationFormatter (1.0.1)
+  - MBProgressHUD (0.5)
   - SDWebImage (2.6)
-  - UIGlossyButton (0.0.7):
-    - UIGlossyButton/Core (= 0.0.7)
-    - UIGlossyButton/LayerEffects (= 0.0.7)
-  - UIGlossyButton/Core (0.0.7)
-  - UIGlossyButton/LayerEffects (0.0.7)
+  - SFHFKeychainUtils (0.0.1)
 
 DEPENDENCIES:
   - AFNetworking (= 1.0RC1)
-  - BlockAlertsAnd-ActionSheets
+  - BlockAlertsAnd-ActionSheets (= 1.0.0)
   - EGOTableViewPullRefresh (= 0.1.0)
-  - FormatterKit
+  - FormatterKit (= 1.0.1)
+  - MBProgressHUD (= 0.5)
   - SDWebImage (= 2.6)
-  - UIGlossyButton (= 0.0.7)
+  - SFHFKeychainUtils (= 0.0.1)

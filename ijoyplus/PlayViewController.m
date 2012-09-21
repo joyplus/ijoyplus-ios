@@ -11,8 +11,6 @@
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
 #import "CMConstants.h"
-#import "IntroductionView.h"
-#import "FriendProfileViewController.h"
 #import "DateUtility.h"
 #import "TTTTimeIntervalFormatter.h"
 
@@ -344,8 +342,7 @@
 
 - (void)avatarClicked
 {
-    FriendProfileViewController *viewController = [[FriendProfileViewController alloc]initWithNibName:@"FriendProfileViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
+
 }
 
 - (void)playVideo

@@ -20,6 +20,7 @@
 		EB090B1D160860FD002F7E57 /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1C160860FD002F7E57 /* CustomTextField.m */; };
 		EB090B2016086498002F7E57 /* UsernameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1F16086498002F7E57 /* UsernameCell.m */; };
 		EB090B23160864D5002F7E57 /* LoginPasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B22160864D4002F7E57 /* LoginPasswordCell.m */; };
+		EB1E2966160C58FE005048E5 /* u0_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EB1E2965160C58FE005048E5 /* u0_normal.png */; };
 		EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */; };
 		EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */; };
 		EB24CC8C160AFFD2009618C6 /* user_big@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC8A160AFFD2009618C6 /* user_big@2x.png */; };
@@ -62,22 +63,12 @@
 		EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED32515FED3D100192AE4 /* PlayViewController.xib */; };
 		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
 		EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED33515FEDF1900192AE4 /* CommentCell.m */; };
-		EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35315FF07D000192AE4 /* JWFolders.m */; };
-		EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */; };
-		EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */; };
-		EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */; };
-		EBAED39C15FF3D2700192AE4 /* FriendProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */; };
-		EBAF698E15FD8D9600938FE3 /* RecommandMovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */; };
 		EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */; };
 		EBAF69D415FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CD15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png */; };
 		EBAF69D515FDB78D00938FE3 /* MNMBottomPullToRefreshManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF69CF15FDB78D00938FE3 /* MNMBottomPullToRefreshManager.m */; };
 		EBAF69D615FDB78D00938FE3 /* MNMBottomPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF69D115FDB78D00938FE3 /* MNMBottomPullToRefreshView.m */; };
-		EBAF69DA15FDB80A00938FE3 /* FriendNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF69D815FDB80900938FE3 /* FriendNewsViewController.m */; };
-		EBAF69DB15FDB80A00938FE3 /* FriendNewsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69D915FDB80A00938FE3 /* FriendNewsViewController.xib */; };
-		EBAF69E215FDC22800938FE3 /* WatchedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF69E015FDC22800938FE3 /* WatchedViewController.m */; };
 		EBAF69E715FDC4A700938FE3 /* MyselfViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF69E515FDC4A700938FE3 /* MyselfViewController.m */; };
 		EBAF69E815FDC4A700938FE3 /* MyselfViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69E615FDC4A700938FE3 /* MyselfViewController.xib */; };
-		EBAF69F015FDCAA100938FE3 /* MyProfileWithImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF69EF15FDCAA100938FE3 /* MyProfileWithImageCell.m */; };
 		EBAF6A4215FDDBB400938FE3 /* SearchFilmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF6A4015FDDBB300938FE3 /* SearchFilmViewController.m */; };
 		EBAF6A4315FDDBB400938FE3 /* SearchFilmViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAF6A4115FDDBB400938FE3 /* SearchFilmViewController.xib */; };
 		EBAF6A4D15FDDFA300938FE3 /* CustomSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAF6A4C15FDDFA300938FE3 /* CustomSearchBar.m */; };
@@ -110,7 +101,6 @@
 		EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E8160188D400E04289 /* LocalViewController.m */; };
 		EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E9160188D400E04289 /* MovieViewController.m */; };
 		EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3EB160188D400E04289 /* VideoViewController.m */; };
-		EBB1B3F1160190A000E04289 /* CollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F0160190A000E04289 /* CollectionViewController.m */; };
 		EBB1B3F5160190C600E04289 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F4160190C600E04289 /* TestView.m */; };
 		EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */; };
 		EBB40F471607102200A49CD9 /* CustomBackButtonHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */; };
@@ -153,6 +143,7 @@
 		EB090B1F16086498002F7E57 /* UsernameCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsernameCell.m; path = component/UsernameCell.m; sourceTree = "<group>"; };
 		EB090B21160864D4002F7E57 /* LoginPasswordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginPasswordCell.h; path = component/LoginPasswordCell.h; sourceTree = "<group>"; };
 		EB090B22160864D4002F7E57 /* LoginPasswordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginPasswordCell.m; path = component/LoginPasswordCell.m; sourceTree = "<group>"; };
+		EB1E2965160C58FE005048E5 /* u0_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u0_normal.png; sourceTree = "<group>"; };
 		EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedUserViewController.h; sourceTree = "<group>"; };
 		EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedUserViewController.m; sourceTree = "<group>"; };
 		EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FollowedUserViewController.xib; sourceTree = "<group>"; };
@@ -207,33 +198,15 @@
 		EBAED32E15FED75700192AE4 /* PlayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayCell.m; path = component/PlayCell.m; sourceTree = "<group>"; };
 		EBAED33415FEDF1900192AE4 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentCell.h; path = component/CommentCell.h; sourceTree = "<group>"; };
 		EBAED33515FEDF1900192AE4 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommentCell.m; path = component/CommentCell.m; sourceTree = "<group>"; };
-		EBAED35215FF07D000192AE4 /* JWFolders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWFolders.h; sourceTree = "<group>"; };
-		EBAED35315FF07D000192AE4 /* JWFolders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JWFolders.m; sourceTree = "<group>"; };
-		EBAED35415FF07D000192AE4 /* UIScreen+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScreen+Scale.h"; sourceTree = "<group>"; };
-		EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+Scale.m"; sourceTree = "<group>"; };
-		EBAED35615FF07D000192AE4 /* UIView+Screenshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Screenshot.h"; sourceTree = "<group>"; };
-		EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Screenshot.m"; sourceTree = "<group>"; };
-		EBAED39815FF3D2600192AE4 /* FriendProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendProfileViewController.h; sourceTree = "<group>"; };
-		EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendProfileViewController.m; sourceTree = "<group>"; };
-		EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendProfileViewController.xib; sourceTree = "<group>"; };
-		EBAF698915FD8D8200938FE3 /* RecommandMovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommandMovieViewController.h; sourceTree = "<group>"; };
-		EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommandMovieViewController.m; sourceTree = "<group>"; };
 		EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
 		EBAF69CD15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MNMBottomPullToRefreshArrow@2x.png"; sourceTree = "<group>"; };
 		EBAF69CE15FDB78D00938FE3 /* MNMBottomPullToRefreshManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshManager.h; sourceTree = "<group>"; };
 		EBAF69CF15FDB78D00938FE3 /* MNMBottomPullToRefreshManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBottomPullToRefreshManager.m; sourceTree = "<group>"; };
 		EBAF69D015FDB78D00938FE3 /* MNMBottomPullToRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshView.h; sourceTree = "<group>"; };
 		EBAF69D115FDB78D00938FE3 /* MNMBottomPullToRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBottomPullToRefreshView.m; sourceTree = "<group>"; };
-		EBAF69D715FDB80900938FE3 /* FriendNewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendNewsViewController.h; sourceTree = "<group>"; };
-		EBAF69D815FDB80900938FE3 /* FriendNewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendNewsViewController.m; sourceTree = "<group>"; };
-		EBAF69D915FDB80A00938FE3 /* FriendNewsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendNewsViewController.xib; sourceTree = "<group>"; };
-		EBAF69DF15FDC22800938FE3 /* WatchedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchedViewController.h; sourceTree = "<group>"; };
-		EBAF69E015FDC22800938FE3 /* WatchedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchedViewController.m; sourceTree = "<group>"; };
 		EBAF69E415FDC4A700938FE3 /* MyselfViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyselfViewController.h; sourceTree = "<group>"; };
 		EBAF69E515FDC4A700938FE3 /* MyselfViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyselfViewController.m; sourceTree = "<group>"; };
 		EBAF69E615FDC4A700938FE3 /* MyselfViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyselfViewController.xib; sourceTree = "<group>"; };
-		EBAF69EE15FDCAA100938FE3 /* MyProfileWithImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyProfileWithImageCell.h; path = component/MyProfileWithImageCell.h; sourceTree = "<group>"; };
-		EBAF69EF15FDCAA100938FE3 /* MyProfileWithImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyProfileWithImageCell.m; path = component/MyProfileWithImageCell.m; sourceTree = "<group>"; };
 		EBAF6A3F15FDDBB300938FE3 /* SearchFilmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFilmViewController.h; sourceTree = "<group>"; };
 		EBAF6A4015FDDBB300938FE3 /* SearchFilmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFilmViewController.m; sourceTree = "<group>"; };
 		EBAF6A4115FDDBB400938FE3 /* SearchFilmViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchFilmViewController.xib; sourceTree = "<group>"; };
@@ -286,8 +259,6 @@
 		EBB1B3E9160188D400E04289 /* MovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieViewController.m; sourceTree = "<group>"; };
 		EBB1B3EA160188D400E04289 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
 		EBB1B3EB160188D400E04289 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
-		EBB1B3EF160190A000E04289 /* CollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewController.h; sourceTree = "<group>"; };
-		EBB1B3F0160190A000E04289 /* CollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewController.m; sourceTree = "<group>"; };
 		EBB1B3F3160190C600E04289 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestView.h; path = component/TestView.h; sourceTree = "<group>"; };
 		EBB1B3F4160190C600E04289 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestView.m; path = component/TestView.m; sourceTree = "<group>"; };
 		EBB40F19160707FB00A49CD9 /* CustomBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButton.h; sourceTree = "<group>"; };
@@ -344,6 +315,14 @@
 				EB090B22160864D4002F7E57 /* LoginPasswordCell.m */,
 			);
 			name = component;
+			sourceTree = "<group>";
+		};
+		EB1E2964160C58FE005048E5 /* temp */ = {
+			isa = PBXGroup;
+			children = (
+				EB1E2965160C58FE005048E5 /* u0_normal.png */,
+			);
+			path = temp;
 			sourceTree = "<group>";
 		};
 		EB32BCB715F885EC00C878D5 = {
@@ -442,7 +421,6 @@
 		EB32BD0515F887A400C878D5 /* External */ = {
 			isa = PBXGroup;
 			children = (
-				EBAED35115FF07D000192AE4 /* JWFolders */,
 				EBAF69CA15FDB78D00938FE3 /* MNMBottomPullToRefresh */,
 			);
 			path = External;
@@ -451,6 +429,7 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EB1E2964160C58FE005048E5 /* temp */,
 				EB24CC98160B1908009618C6 /* unfocus@2x.png */,
 				EB24CC96160B178D009618C6 /* user_btn@2x.png */,
 				EB24CC90160B1155009618C6 /* line@2x.png */,
@@ -487,19 +466,6 @@
 				EBB1B3C81601749500E04289 /* nav_bar_bg_44@2x.png */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		EBAED35115FF07D000192AE4 /* JWFolders */ = {
-			isa = PBXGroup;
-			children = (
-				EBAED35215FF07D000192AE4 /* JWFolders.h */,
-				EBAED35315FF07D000192AE4 /* JWFolders.m */,
-				EBAED35415FF07D000192AE4 /* UIScreen+Scale.h */,
-				EBAED35515FF07D000192AE4 /* UIScreen+Scale.m */,
-				EBAED35615FF07D000192AE4 /* UIView+Screenshot.h */,
-				EBAED35715FF07D000192AE4 /* UIView+Screenshot.m */,
-			);
-			path = JWFolders;
 			sourceTree = "<group>";
 		};
 		EBAED39215FF2D1A00192AE4 /* login */ = {
@@ -551,14 +517,6 @@
 		EBAF698515FD880E00938FE3 /* friend */ = {
 			isa = PBXGroup;
 			children = (
-				EBAF698915FD8D8200938FE3 /* RecommandMovieViewController.h */,
-				EBAF698C15FD8D9600938FE3 /* RecommandMovieViewController.m */,
-				EBAF69D715FDB80900938FE3 /* FriendNewsViewController.h */,
-				EBAF69D815FDB80900938FE3 /* FriendNewsViewController.m */,
-				EBAF69D915FDB80A00938FE3 /* FriendNewsViewController.xib */,
-				EBAED39815FF3D2600192AE4 /* FriendProfileViewController.h */,
-				EBAED39915FF3D2700192AE4 /* FriendProfileViewController.m */,
-				EBAED39A15FF3D2700192AE4 /* FriendProfileViewController.xib */,
 				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
 				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
 			);
@@ -582,10 +540,6 @@
 			isa = PBXGroup;
 			children = (
 				EBB1B3F2160190AE00E04289 /* component */,
-				EBAF69DF15FDC22800938FE3 /* WatchedViewController.h */,
-				EBAF69E015FDC22800938FE3 /* WatchedViewController.m */,
-				EBB1B3EF160190A000E04289 /* CollectionViewController.h */,
-				EBB1B3F0160190A000E04289 /* CollectionViewController.m */,
 				EBB064D7160ABAB000BE685B /* HomeViewController.h */,
 				EBE44B641609A01E002BEB0C /* HomeViewController.m */,
 				EBE44B651609A01E002BEB0C /* HomeViewController.xib */,
@@ -613,8 +567,6 @@
 		EBAF69ED15FDCA6F00938FE3 /* component */ = {
 			isa = PBXGroup;
 			children = (
-				EBAF69EE15FDCAA100938FE3 /* MyProfileWithImageCell.h */,
-				EBAF69EF15FDCAA100938FE3 /* MyProfileWithImageCell.m */,
 				EBAFAEBA16095C2400649263 /* MyCellFactory.xib */,
 				EBAFAEBD16095D8900649263 /* MyProfileCell.h */,
 				EBAFAEBE16095D8900649263 /* MyProfileCell.m */,
@@ -730,13 +682,11 @@
 				EB32BD3F15F8948400C878D5 /* Localizable.strings in Resources */,
 				EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */,
 				EBAF69D415FDB78D00938FE3 /* MNMBottomPullToRefreshArrow@2x.png in Resources */,
-				EBAF69DB15FDB80A00938FE3 /* FriendNewsViewController.xib in Resources */,
 				EBAF69E815FDC4A700938FE3 /* MyselfViewController.xib in Resources */,
 				EBAF6A4315FDDBB400938FE3 /* SearchFilmViewController.xib in Resources */,
 				EBAF6AAB15FDE9CF00938FE3 /* SearchFilmResultViewController.xib in Resources */,
 				EBAF6AAE15FDEA2900938FE3 /* PopularCellFactory.xib in Resources */,
 				EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */,
-				EBAED39C15FF3D2700192AE4 /* FriendProfileViewController.xib in Resources */,
 				EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */,
 				EBB1B3C91601749500E04289 /* nav_bar_bg_44@2x.png in Resources */,
 				EBB1B3CC1601770D00E04289 /* tool_bar_bg@2x.png in Resources */,
@@ -779,6 +729,7 @@
 				EB24CC93160B159F009618C6 /* Default@2x.png in Resources */,
 				EB24CC97160B178D009618C6 /* user_btn@2x.png in Resources */,
 				EB24CC99160B1908009618C6 /* unfocus@2x.png in Resources */,
+				EB1E2966160C58FE005048E5 /* u0_normal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -812,13 +763,9 @@
 				EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */,
 				EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */,
 				EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */,
-				EBAF698E15FD8D9600938FE3 /* RecommandMovieViewController.m in Sources */,
 				EBAF69D515FDB78D00938FE3 /* MNMBottomPullToRefreshManager.m in Sources */,
 				EBAF69D615FDB78D00938FE3 /* MNMBottomPullToRefreshView.m in Sources */,
-				EBAF69DA15FDB80A00938FE3 /* FriendNewsViewController.m in Sources */,
-				EBAF69E215FDC22800938FE3 /* WatchedViewController.m in Sources */,
 				EBAF69E715FDC4A700938FE3 /* MyselfViewController.m in Sources */,
-				EBAF69F015FDCAA100938FE3 /* MyProfileWithImageCell.m in Sources */,
 				EBAF6A4215FDDBB400938FE3 /* SearchFilmViewController.m in Sources */,
 				EBAF6A4D15FDDFA300938FE3 /* CustomSearchBar.m in Sources */,
 				EBAF6AAA15FDE9CF00938FE3 /* SearchFilmResultViewController.m in Sources */,
@@ -827,10 +774,6 @@
 				EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */,
 				EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */,
 				EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */,
-				EBAED35815FF07D000192AE4 /* JWFolders.m in Sources */,
-				EBAED35915FF07D000192AE4 /* UIScreen+Scale.m in Sources */,
-				EBAED35A15FF07D000192AE4 /* UIView+Screenshot.m in Sources */,
-				EBAED39B15FF3D2700192AE4 /* FriendProfileViewController.m in Sources */,
 				EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */,
 				EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */,
 				EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */,
@@ -839,7 +782,6 @@
 				EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */,
 				EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */,
 				EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */,
-				EBB1B3F1160190A000E04289 /* CollectionViewController.m in Sources */,
 				EBB1B3F5160190C600E04289 /* TestView.m in Sources */,
 				EBAF939E1602C89600929013 /* BottomTabViewController.m in Sources */,
 				EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */,
