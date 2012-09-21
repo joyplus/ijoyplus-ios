@@ -16,6 +16,7 @@ PODS:
   - FormatterKit/URLRequestFormatter (1.0.1)
   - FormatterKit/UnitOfInformationFormatter (1.0.1)
   - MBProgressHUD (0.5)
+  - Reachability (3.0.0)
   - SDWebImage (2.6)
   - SFHFKeychainUtils (0.0.1)
 
@@ -25,5 +26,6 @@ DEPENDENCIES:
   - EGOTableViewPullRefresh (= 0.1.0)
   - FormatterKit (= 1.0.1)
   - MBProgressHUD (= 0.5)
+  - Reachability (= 3.0.0)
   - SDWebImage (= 2.6)
   - SFHFKeychainUtils (= 0.0.1)
