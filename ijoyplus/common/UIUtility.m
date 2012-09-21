@@ -21,7 +21,7 @@
 + (void)customizeToolbar:(UIToolbar *)toolbar
 {
     UIImage *toobarImage = [[UIImage imageNamed:@"tool_bar_bg"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
-    [toolbar setBackgroundImage:toobarImage forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
+    [toolbar setBackgroundImage:toobarImage forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
 }
 
 + (void)addTextShadow:(UILabel *)textLabel
