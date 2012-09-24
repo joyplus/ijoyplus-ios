@@ -12,5 +12,5 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (assign, nonatomic) BOOL userLoggedIn;
-
+- (void)refreshRootView;
 @end

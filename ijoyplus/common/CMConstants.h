@@ -24,6 +24,13 @@
 #define LOG_BTN_WIDTH 296 / 2
 #define LOG_BTN_HEIGHT 76 / 2
 
+#define kSinaWeiboAppKey  @"3399718976"
+#define kSinaWeiboAppSecret  @"236f8a7ae87ec82e0c536d168cb5ca24"
+
+#define kTencentAppKey @"801232108"
+#define kTencentAppSecret @"c041e953e68e7fea950b7edd769e7e21"
+
+#define kPAPUserDefaultsCacheSinaFriendsKey @"sinaFriendKey"
 
 @interface CMConstants : NSObject 
     extern NSString * const MyString;

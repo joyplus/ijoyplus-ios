@@ -56,7 +56,7 @@
 
 - (id)initWithAppKey:(NSString *)theAppKey appSecret:(NSString *)theAppSecret;
 
-- (void)startAuthorize;
+- (WBAuthorizeWebView *)startAuthorize;
 - (void)startAuthorizeUsingUserID:(NSString *)userID password:(NSString *)password;
 
 @end

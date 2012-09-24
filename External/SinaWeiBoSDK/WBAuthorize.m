@@ -118,7 +118,7 @@
 
 #pragma mark - WBAuthorize Public Methods
 
-- (void)startAuthorize
+- (WBAuthorizeWebView *)startAuthorize
 {
     NSDictionary *params = [NSDictionary dictionaryWithObjectsAndKeys:appKey, @"client_id",
                                                                       @"code", @"response_type",
@@ -128,11 +128,12 @@
                                            params:params
                                        httpMethod:@"GET"];
     
-    WBAuthorizeWebView *webView = [[WBAuthorizeWebView alloc] init];
+    WBAuthorizeWebView *webView = [[[WBAuthorizeWebView alloc] init] autorelease];
     [webView setDelegate:self];
     [webView loadRequestWithURL:[NSURL URLWithString:urlString]];
-    [webView show:YES];
-    [webView release];
+//    [webView show:YES];
+//    [webView release];
+    return webView;
 }
 
 - (void)startAuthorizeUsingUserID:(NSString *)userID password:(NSString *)password

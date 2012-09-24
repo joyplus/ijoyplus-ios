@@ -45,6 +45,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    movieController = nil;
+    dramaController = nil;
+    videoController = nil;
+    localController = nil;
+    selectedViewController = nil;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     [UIUtility customizeNavigationBar:self.navigationController.navigationBar];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -68,6 +77,7 @@
     [self addChildViewController:movieController];
     movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
     [self.view addSubview:movieController.view];
+    
 }
 
 - (void)viewDidUnload

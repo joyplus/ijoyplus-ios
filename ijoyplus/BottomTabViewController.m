@@ -119,6 +119,7 @@
     
     detailController2 = [[FriendViewController alloc] init];
     detailController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"friend", nil) image:[UIImage imageNamed:@"rec_tab"] tag:0];
+    
     detailController3 = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
     detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"list_tab"] tag:0];
     
@@ -225,7 +226,6 @@
 - (void)loginScreen
 {
     LoginViewController *viewController = [[LoginViewController alloc]initWithNibName:@"LoginViewController" bundle:nil];
-    viewController.delegate = self;
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [self.navigationController presentViewController:navController animated:YES completion:nil];
 }
@@ -234,7 +234,6 @@
 - (void)registerScreen
 {
     RegisterViewController *viewController = [[RegisterViewController alloc]initWithNibName:@"RegisterViewController" bundle:nil];
-    viewController.delegate = self;
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [self.navigationController presentViewController:navController animated:YES completion:nil];
     
@@ -243,8 +242,6 @@
 - (void)closeChild
 {
     [self dismissModalViewControllerAnimated:YES];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.userLoggedIn = YES;
     [self viewDidLoad];
 }
 

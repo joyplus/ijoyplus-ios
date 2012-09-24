@@ -10,6 +10,12 @@
 #import "BottomTabViewController.h"
 #import "PopularSegmentViewController.h"
 
+@interface AppDelegate (){
+    BottomTabViewController *detailViewController;
+}
+
+@end
+
 @implementation AppDelegate
 @synthesize userLoggedIn;
 
@@ -48,7 +54,7 @@
     UINavigationController *viewController;
     self.userLoggedIn = NO;
 //    if(self.userLoggedIn){
-        BottomTabViewController *detailViewController = [[BottomTabViewController alloc] init];
+        detailViewController = [[BottomTabViewController alloc] init];
         viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
 //    } else {
 //        PopularSegmentViewController *detailViewController = [[PopularSegmentViewController alloc]initWithNibName:@"PopularSegmentViewController" bundle:nil];
@@ -86,6 +92,11 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)refreshRootView
+{
+    [detailViewController closeChild];
 }
 
 @end

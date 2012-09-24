@@ -86,7 +86,7 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         appDelegate.userLoggedIn = NO;
-        [[((UINavigationController *)appDelegate.window.rootViewController).viewControllers objectAtIndex:0] viewDidLoad];
+        [appDelegate refreshRootView];
     }];
     [alert show];
 }

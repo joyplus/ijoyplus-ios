@@ -19,7 +19,6 @@
 #import "SFHFKeychainUtils.h"
 #import "WBSDKGlobal.h"
 #import "WBUtil.h"
-#import "PAPConstants.h"
 
 #define kWBURLSchemePrefix              @"WB_"
 
@@ -142,7 +141,7 @@
 
 #pragma mark Authorization
 
-- (void)logIn
+- (WBAuthorizeWebView *)logIn
 {
     if ([self isLoggedIn])
     {
@@ -152,7 +151,7 @@
         }
         if (isUserExclusive)
         {
-            return;
+            return nil;
         }
     }
     
@@ -171,7 +170,8 @@
         [authorize setRedirectURI:@"http://"];
     }
     
-    [authorize startAuthorize];
+    WBAuthorizeWebView *webView = [authorize startAuthorize];
+    return webView;
 }
 
 - (void)logInUsingUserID:(NSString *)theUserID password:(NSString *)thePassword

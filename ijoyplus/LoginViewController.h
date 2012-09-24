@@ -11,7 +11,7 @@
 #import "LoginPasswordCell.h"
 #import "BottomTabViewController.h"
 
-@interface LoginViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface LoginViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UINavigationControllerDelegate>
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UITableView *table;
 @property (strong, nonatomic) IBOutlet UIButton *loginBtn;
@@ -19,7 +19,5 @@
 @property (strong, nonatomic) IBOutlet LoginPasswordCell *loginPasswordCell;
 - (IBAction)forgotPassword:(id)sender;
 - (IBAction)loginAction:(id)sender;
-
-@property (weak, nonatomic) id<BottomTabViewControllerDelegate>delegate;
 
 @end

@@ -11,9 +11,15 @@
 #import "CustomBackButton.h"
 #import "UIUtility.h"
 #import "CMConstants.h"
+#import "AppDelegate.h"
+#import "SinaLoginViewController.h"
+#import "TecentViewController.h"
+
+#define FIELDS_COUNT 3
 
 @interface RegisterViewController () {
     UIButton *registerBtn;
+    UIToolbar *keyboardToolbar;
 }
 
 - (void)closeSelf;
@@ -25,16 +31,13 @@
 @implementation RegisterViewController
 @synthesize emailCell;
 @synthesize passwordCell;
-@synthesize confirmPasswordCell;
 @synthesize nicknameCell;
-@synthesize delegate;
 
 - (void)viewDidUnload
 {
     [self setNicknameCell:nil];
     [self setEmailCell:nil];
     [self setPasswordCell:nil];
-    [self setConfirmPasswordCell:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -60,6 +63,44 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorColor = [UIColor clearColor];
     [self initRegisterBtn];
+    
+    // Keyboard toolbar
+    if (keyboardToolbar == nil) {
+        keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 38.0f)];
+        keyboardToolbar.barStyle = UIBarStyleBlackTranslucent;
+        
+        UIBarButtonItem *previousBarItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"previous", @"")
+                                                                            style:UIBarButtonItemStyleBordered
+                                                                           target:self
+                                                                           action:@selector(previousField:)];
+        
+        UIBarButtonItem *nextBarItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"next", @"")
+                                                                        style:UIBarButtonItemStyleBordered
+                                                                       target:self
+                                                                       action:@selector(nextField:)];
+        
+        UIBarButtonItem *spaceBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                      target:nil
+                                                                                      action:nil];
+        
+        UIBarButtonItem *doneBarItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"done", @"")
+                                                                        style:UIBarButtonItemStyleDone
+                                                                       target:self
+                                                                       action:@selector(resignKeyboard:)];
+        
+        [keyboardToolbar setItems:[NSArray arrayWithObjects:previousBarItem, nextBarItem, spaceBarItem, doneBarItem, nil]];
+        
+        nicknameCell.titleLabel.tag = 1;
+        nicknameCell.titleLabel.delegate = self;
+        nicknameCell.titleLabel.inputAccessoryView = keyboardToolbar;
+        emailCell.titleLabel.tag = 2;
+        emailCell.titleLabel.delegate = self;
+        emailCell.titleLabel.inputAccessoryView = keyboardToolbar;
+        passwordCell.titleLabel.tag = 3;
+        passwordCell.titleLabel.inputAccessoryView = keyboardToolbar;
+        passwordCell.titleLabel.delegate = self;
+    }
+
 }
 
 - (void)initRegisterBtn
@@ -81,7 +122,9 @@
 
 - (void)registerAction
 {
-    [self.delegate closeChild];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.userLoggedIn = YES;
+    [appDelegate refreshRootView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -143,10 +186,7 @@
         } else if(indexPath.row == 2){
             passwordCell.titleLabel.placeholder = NSLocalizedString(@"password", nil);
             return passwordCell;
-        } else if(indexPath.row == 3){
-            confirmPasswordCell.titleLabel.placeholder = NSLocalizedString(@"confirm_password", nil);
-            return confirmPasswordCell;
-        }
+        } 
     } else {
         UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"registerBtnCell"];
         UIView *backView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -201,7 +241,7 @@
     if(section == 2){
         return 5;
     } else {
-        return 25;
+        return 30;
     }
 }
 
@@ -209,7 +249,7 @@
     if(section == 2){
         return nil;
     }
-    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,25)];
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,30)];
     customView.backgroundColor = [UIColor clearColor];
     
     //    // create the label objects
@@ -232,8 +272,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if(indexPath.section == 0){
+        if(indexPath.row == 0){
+            SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else if (indexPath.row == 1){
+            TecentViewController *viewController =
+            [[TecentViewController alloc] init];
+			[self.navigationController pushViewController:viewController animated:YES];
+        }
+    }
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (void)closeSelf
@@ -242,6 +291,104 @@
     if(viewController == nil){
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+}
+
+- (void)resignKeyboard:(id)sender
+{
+    id firstResponder = [self getFirstResponder];
+    if ([firstResponder isKindOfClass:[UITextField class]]) {
+        [firstResponder resignFirstResponder];
+        [self animateBackView];
+    }
+}
+
+- (void)previousField:(id)sender
+{
+    id firstResponder = [self getFirstResponder];
+    if ([firstResponder isKindOfClass:[UITextField class]]) {
+        NSUInteger tag = [firstResponder tag];
+        NSUInteger previousTag = tag == 1 ? 1 : tag - 1;
+        [self checkBarButton:previousTag];
+        [self animateView:previousTag];
+        UITextField *previousField = (UITextField *)[self.tableView viewWithTag:previousTag];
+        [previousField becomeFirstResponder];
+    }
+}
+
+- (void)nextField:(id)sender
+{
+    id firstResponder = [self getFirstResponder];
+    if ([firstResponder isKindOfClass:[UITextField class]]) {
+        NSUInteger tag = [firstResponder tag];
+        NSUInteger nextTag = tag == FIELDS_COUNT ? FIELDS_COUNT : tag + 1;
+        [self checkBarButton:nextTag];
+        [self animateView:nextTag];
+        UITextField *nextField = (UITextField *)[self.tableView viewWithTag:nextTag];
+        [nextField becomeFirstResponder];
+    }
+}
+
+- (id)getFirstResponder
+{
+    NSUInteger index = 1;
+    while (index <= FIELDS_COUNT) {
+        UITextField *textField = (UITextField *)[self.view viewWithTag:index];
+        if ([textField isFirstResponder]) {
+            return textField;
+        }
+        index++;
+    }
+    
+    return nil;
+}
+
+- (void)animateView:(NSUInteger)tag
+{
+    CGRect rect = self.view.frame;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    
+    if (tag > 2) {
+        rect.origin.y = -44.0f * 5 - 15;
+    } else {
+        rect.origin.y = -44.0f * 5;
+    }
+    self.view.frame = rect;
+    [UIView commitAnimations];
+}
+
+- (void)animateBackView
+{
+    CGRect rect = self.view.frame;
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3];
+    rect.origin.y = 0.0f;
+    self.view.frame = rect;
+    [UIView commitAnimations];
+}
+
+- (void)checkBarButton:(NSUInteger)tag
+{
+    UIBarButtonItem *previousBarItem = (UIBarButtonItem *)[[keyboardToolbar items] objectAtIndex:0];
+    UIBarButtonItem *nextBarItem = (UIBarButtonItem *)[[keyboardToolbar items] objectAtIndex:1];
+    
+    [previousBarItem setEnabled:tag == 1 ? NO : YES];
+    [nextBarItem setEnabled:tag == FIELDS_COUNT ? NO : YES];
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    NSUInteger tag = [textField tag];
+    [self animateView:tag];
+    [self checkBarButton:tag];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    [self resignKeyboard:nil];
+    return YES;
 }
 
 @end

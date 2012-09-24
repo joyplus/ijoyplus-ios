@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NicknameCell.h"
+#import "EmailCell.h"
+#import "PasswordCell.h"
 
-@interface FillFormViewController : UITableViewController
+
+@interface FillFormViewController : UITableViewController<UITextFieldDelegate, UINavigationControllerDelegate>
+@property (strong, nonatomic) IBOutlet PasswordCell *passwordCell;
+@property (strong, nonatomic) IBOutlet EmailCell *emailCell;
+@property (strong, nonatomic) IBOutlet NicknameCell *nicknameCell;
 
 @end

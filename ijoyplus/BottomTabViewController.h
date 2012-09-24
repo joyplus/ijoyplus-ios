@@ -25,13 +25,9 @@
 // THE SOFTWARE
 //
 
-@protocol BottomTabViewControllerDelegate <NSObject>
-
-- (void)closeChild;
-
-@end
-
-@interface BottomTabViewController : UITabBarController <UITabBarControllerDelegate, BottomTabViewControllerDelegate>{
+@interface BottomTabViewController : UITabBarController <UITabBarControllerDelegate>{
 
 }
+
+- (void)closeChild;
 @end

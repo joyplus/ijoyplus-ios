@@ -27,8 +27,8 @@
 
 @interface WBAuthorizeWebView : UIView <UIWebViewDelegate> 
 {
-    UIView *panelView;
-    UIView *containerView;
+//    UIView *panelView;
+//    UIView *containerView;
     UIActivityIndicatorView *indicatorView;
 	UIWebView *webView;
     

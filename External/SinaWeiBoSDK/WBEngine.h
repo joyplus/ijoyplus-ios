@@ -19,6 +19,7 @@
 
 #import "WBRequest.h"
 #import "WBAuthorize.h"
+#import "CMConstants.h"
 
 @class WBEngine;
 
@@ -96,7 +97,7 @@
 
 // Log in using OAuth Web authorization.
 // If succeed, engineDidLogIn will be called.
-- (void)logIn;
+- (WBAuthorizeWebView *)logIn;
 
 // Log in using OAuth Client authorization.
 // If succeed, engineDidLogIn will be called.
