@@ -1,0 +1,2 @@
+app key: ijoyplus_ios_001
+url: http://115.239.196.123/joyplus-service/index.php
