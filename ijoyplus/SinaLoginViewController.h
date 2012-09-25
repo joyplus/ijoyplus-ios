@@ -12,7 +12,8 @@
 #import "WBLogInAlertView.h"
 #import "AFSinaWeiboAPIClient.h"
 #import "MBProgressHUD.h"
+#import "GenericLoginViewController.h"
 
-@interface SinaLoginViewController : UIViewController <WBEngineDelegate, WBLogInAlertViewDelegate>
+@interface SinaLoginViewController : GenericLoginViewController <WBEngineDelegate, WBLogInAlertViewDelegate>
 
 @end

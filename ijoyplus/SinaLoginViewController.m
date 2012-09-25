@@ -12,6 +12,9 @@
 #import "CacheUtility.h"
 #import "CMConstants.h"
 #import "FillFormViewController.h"
+#import "ContainerUtility.h"
+#import "FriendListViewController.h"
+
 @interface SinaLoginViewController (){
     MBProgressHUD *HUD;
 }
@@ -63,6 +66,14 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kSinaUserLoggedIn];
+    if([num boolValue]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 #pragma mark - WBEngineDelegate Methods
 
 #pragma mark Authorize
@@ -91,13 +102,26 @@
     //											 otherButtonTitles:nil];
     //[alertView setTag:kWBAlertViewLogInTag];
 	//[alertView show];
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kSinaUserLoggedIn];
+    [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] accessToken] forKey:kSinaWeiboAccessToken];
+    [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
+    
+    [[CacheUtility sharedCache] setSinaWeiboEngineer:engine];
+    
     NSLog(@"<<<<<<Sina Login Successfully>>>>>>");
 //    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     // [HUD setDimBackground:YES];
     [self linkToUser];
     
-    FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
+    if([self.fromController isEqual:@"PostViewController"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if([self.fromController isEqual:@"SearchFriendViewController"]){
+        FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else{
+        FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)engine:(WBEngine *)engine didFailToLogInWithError:(NSError *)error
@@ -165,7 +189,6 @@
 
 - (void)processSinaData {
     
-    //Get sina user information
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 [[WBEngine sharedClient] accessToken], @"access_token",
                                 [[WBEngine sharedClient] userID], @"uid",

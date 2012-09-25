@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "TencentOAuth.h"
+#import "GenericLoginViewController.h"
 
-@interface TecentViewController : UIViewController <TencentSessionDelegate>
+@interface TecentViewController : GenericLoginViewController <TencentSessionDelegate>
 
 
 @end

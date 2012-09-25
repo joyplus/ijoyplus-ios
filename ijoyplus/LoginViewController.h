@@ -17,7 +17,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *loginBtn;
 @property (strong, nonatomic) IBOutlet UsernameCell *usernameCell;
 @property (strong, nonatomic) IBOutlet LoginPasswordCell *loginPasswordCell;
-- (IBAction)forgotPassword:(id)sender;
 - (IBAction)loginAction:(id)sender;
 
 @end

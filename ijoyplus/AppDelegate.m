@@ -17,8 +17,6 @@
 @end
 
 @implementation AppDelegate
-@synthesize userLoggedIn;
-
 - (void)customizeAppearance
 {
     // Set the background image for *all* UINavigationBars
@@ -51,16 +49,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    UINavigationController *viewController;
-    self.userLoggedIn = NO;
-//    if(self.userLoggedIn){
-        detailViewController = [[BottomTabViewController alloc] init];
-        viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
-//    } else {
-//        PopularSegmentViewController *detailViewController = [[PopularSegmentViewController alloc]initWithNibName:@"PopularSegmentViewController" bundle:nil];
-//        detailViewController.navigationItem.titleView = [UIUtility customizeAppTitle];
-//        viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
-//    }
+    detailViewController = [[BottomTabViewController alloc] init];
+    UINavigationController *viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];

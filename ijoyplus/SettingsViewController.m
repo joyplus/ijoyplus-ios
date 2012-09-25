@@ -13,6 +13,8 @@
 #import "AppDelegate.h"
 #import "PopularSegmentViewController.h"
 #import "UIUtility.h"
+#import "CacheUtility.h"
+#import "ContainerUtility.h"
 
 @interface SettingsViewController ()
 
@@ -83,9 +85,10 @@
     
     [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
     [alert setDestructiveButtonWithTitle:NSLocalizedString(@"logout", nil) block:^{
+        [[CacheUtility sharedCache] clear];
+        [[ContainerUtility sharedInstance] clear];
         [self.navigationController popToRootViewControllerAnimated:YES];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        appDelegate.userLoggedIn = NO;
         [appDelegate refreshRootView];
     }];
     [alert show];

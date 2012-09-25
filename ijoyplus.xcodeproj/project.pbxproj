@@ -20,6 +20,19 @@
 		EB090B1D160860FD002F7E57 /* CustomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1C160860FD002F7E57 /* CustomTextField.m */; };
 		EB090B2016086498002F7E57 /* UsernameCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B1F16086498002F7E57 /* UsernameCell.m */; };
 		EB090B23160864D5002F7E57 /* LoginPasswordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB090B22160864D4002F7E57 /* LoginPasswordCell.m */; };
+		EB11D27D16114DFD00027F07 /* PostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D27B16114DFD00027F07 /* PostViewController.m */; };
+		EB11D27E16114DFD00027F07 /* PostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB11D27C16114DFD00027F07 /* PostViewController.xib */; };
+		EB11D2941611612100027F07 /* ContainerUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D2931611612100027F07 /* ContainerUtility.m */; };
+		EB11D29716117A2E00027F07 /* GenericLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D29616117A2E00027F07 /* GenericLoginViewController.m */; };
+		EB11D2AB1611998F00027F07 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D2A91611998D00027F07 /* CommentListViewController.m */; };
+		EB11D2AC1611998F00027F07 /* CommentListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB11D2AA1611998E00027F07 /* CommentListViewController.xib */; };
+		EB11D2B01611AE2100027F07 /* SearchFriendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D2AE1611AE2000027F07 /* SearchFriendViewController.m */; };
+		EB11D2B11611AE2100027F07 /* SearchFriendViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB11D2AF1611AE2000027F07 /* SearchFriendViewController.xib */; };
+		EB11D2B51611B29200027F07 /* FriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D2B31611B29200027F07 /* FriendListViewController.m */; };
+		EB11D2B61611B29200027F07 /* FriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB11D2B41611B29200027F07 /* FriendListViewController.xib */; };
+		EB11D2C11611BB0200027F07 /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D2C01611BB0200027F07 /* CustomColoredAccessory.m */; };
+		EB11D2CC1611BD6100027F07 /* FriendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */; };
+		EB11D2CD1611BD6100027F07 /* FriendDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */; };
 		EB1E2966160C58FE005048E5 /* u0_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EB1E2965160C58FE005048E5 /* u0_normal.png */; };
 		EB24CC87160AE49B009618C6 /* FollowedUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */; };
 		EB24CC88160AE49B009618C6 /* FollowedUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */; };
@@ -186,6 +199,27 @@
 		EB090B1F16086498002F7E57 /* UsernameCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UsernameCell.m; path = component/UsernameCell.m; sourceTree = "<group>"; };
 		EB090B21160864D4002F7E57 /* LoginPasswordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginPasswordCell.h; path = component/LoginPasswordCell.h; sourceTree = "<group>"; };
 		EB090B22160864D4002F7E57 /* LoginPasswordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginPasswordCell.m; path = component/LoginPasswordCell.m; sourceTree = "<group>"; };
+		EB11D27A16114DFD00027F07 /* PostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostViewController.h; sourceTree = "<group>"; };
+		EB11D27B16114DFD00027F07 /* PostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostViewController.m; sourceTree = "<group>"; };
+		EB11D27C16114DFD00027F07 /* PostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostViewController.xib; sourceTree = "<group>"; };
+		EB11D2921611612100027F07 /* ContainerUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainerUtility.h; sourceTree = "<group>"; };
+		EB11D2931611612100027F07 /* ContainerUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainerUtility.m; sourceTree = "<group>"; };
+		EB11D29516117A2E00027F07 /* GenericLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericLoginViewController.h; sourceTree = "<group>"; };
+		EB11D29616117A2E00027F07 /* GenericLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericLoginViewController.m; sourceTree = "<group>"; };
+		EB11D2A81611998D00027F07 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
+		EB11D2A91611998D00027F07 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
+		EB11D2AA1611998E00027F07 /* CommentListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentListViewController.xib; sourceTree = "<group>"; };
+		EB11D2AD1611AE2000027F07 /* SearchFriendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFriendViewController.h; sourceTree = "<group>"; };
+		EB11D2AE1611AE2000027F07 /* SearchFriendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFriendViewController.m; sourceTree = "<group>"; };
+		EB11D2AF1611AE2000027F07 /* SearchFriendViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchFriendViewController.xib; sourceTree = "<group>"; };
+		EB11D2B21611B29100027F07 /* FriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendListViewController.h; sourceTree = "<group>"; };
+		EB11D2B31611B29200027F07 /* FriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendListViewController.m; sourceTree = "<group>"; };
+		EB11D2B41611B29200027F07 /* FriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendListViewController.xib; sourceTree = "<group>"; };
+		EB11D2BF1611BB0200027F07 /* CustomColoredAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomColoredAccessory.h; sourceTree = "<group>"; };
+		EB11D2C01611BB0200027F07 /* CustomColoredAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomColoredAccessory.m; sourceTree = "<group>"; };
+		EB11D2C91611BD6000027F07 /* FriendDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailViewController.h; sourceTree = "<group>"; };
+		EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDetailViewController.m; sourceTree = "<group>"; };
+		EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendDetailViewController.xib; sourceTree = "<group>"; };
 		EB1E2965160C58FE005048E5 /* u0_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u0_normal.png; sourceTree = "<group>"; };
 		EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowedUserViewController.h; sourceTree = "<group>"; };
 		EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowedUserViewController.m; sourceTree = "<group>"; };
@@ -509,6 +543,8 @@
 		EB32BCF215F8873B00C878D5 /* component */ = {
 			isa = PBXGroup;
 			children = (
+				EB11D2BF1611BB0200027F07 /* CustomColoredAccessory.h */,
+				EB11D2C01611BB0200027F07 /* CustomColoredAccessory.m */,
 				EBE44B911609E993002BEB0C /* SelectedCellBackground.h */,
 				EBE44B921609E993002BEB0C /* SelectedCellBackground.m */,
 				EBE44B841609E8A4002BEB0C /* CustomCellBackground.h */,
@@ -630,6 +666,8 @@
 				EB7841CF160C70550003FB10 /* FillFormViewController.h */,
 				EB7841D0160C70550003FB10 /* FillFormViewController.m */,
 				EB7841D1160C70550003FB10 /* FillFormViewController.xib */,
+				EB11D29516117A2E00027F07 /* GenericLoginViewController.h */,
+				EB11D29616117A2E00027F07 /* GenericLoginViewController.m */,
 				EBB21F8A161010BE00A04376 /* SinaLoginViewController.h */,
 				EBB21F8B161010BE00A04376 /* SinaLoginViewController.m */,
 				EBD8AD94161053A200D79F62 /* TecentViewController.h */,
@@ -664,8 +702,14 @@
 				EBAED32315FED3D100192AE4 /* PlayViewController.h */,
 				EBAED32415FED3D100192AE4 /* PlayViewController.m */,
 				EBAED32515FED3D100192AE4 /* PlayViewController.xib */,
+				EB11D2A81611998D00027F07 /* CommentListViewController.h */,
+				EB11D2A91611998D00027F07 /* CommentListViewController.m */,
+				EB11D2AA1611998E00027F07 /* CommentListViewController.xib */,
 				EB090AFF16081E9D002F7E57 /* IntroductionView.h */,
 				EB090B0016081E9E002F7E57 /* IntroductionView.m */,
+				EB11D27A16114DFD00027F07 /* PostViewController.h */,
+				EB11D27B16114DFD00027F07 /* PostViewController.m */,
+				EB11D27C16114DFD00027F07 /* PostViewController.xib */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -675,6 +719,15 @@
 			children = (
 				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
 				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
+				EB11D2AD1611AE2000027F07 /* SearchFriendViewController.h */,
+				EB11D2AE1611AE2000027F07 /* SearchFriendViewController.m */,
+				EB11D2AF1611AE2000027F07 /* SearchFriendViewController.xib */,
+				EB11D2B21611B29100027F07 /* FriendListViewController.h */,
+				EB11D2B31611B29200027F07 /* FriendListViewController.m */,
+				EB11D2B41611B29200027F07 /* FriendListViewController.xib */,
+				EB11D2C91611BD6000027F07 /* FriendDetailViewController.h */,
+				EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */,
+				EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */,
 			);
 			name = friend;
 			sourceTree = "<group>";
@@ -750,6 +803,8 @@
 			isa = PBXGroup;
 			children = (
 				EBB1B3CD1601775400E04289 /* utility */,
+				EBE44B8D1609E8F6002BEB0C /* Common.h */,
+				EBE44B8E1609E8F6002BEB0C /* Common.m */,
 				EBAFBC3215F9DDC0007579D1 /* CMConstants.h */,
 				EBAFBC3315F9DDC0007579D1 /* CMConstants.m */,
 				EBAFBC4315F9E849007579D1 /* AnimationFactory.h */,
@@ -763,14 +818,14 @@
 			children = (
 				EBD8AD9E16105F1100D79F62 /* CacheUtility.h */,
 				EBD8AD9F16105F1100D79F62 /* CacheUtility.m */,
-				EBE44B8D1609E8F6002BEB0C /* Common.h */,
-				EBE44B8E1609E8F6002BEB0C /* Common.m */,
 				EBB06FA516080DA900AAA818 /* DateUtility.h */,
 				EBB06FA616080DA900AAA818 /* DateUtility.m */,
 				EBB06FA716080DA900AAA818 /* StringUtility.h */,
 				EBB06FA816080DA900AAA818 /* StringUtility.m */,
 				EBB1B3CF1601777900E04289 /* UIUtility.h */,
 				EBB1B3D01601777900E04289 /* UIUtility.m */,
+				EB11D2921611612100027F07 /* ContainerUtility.h */,
+				EB11D2931611612100027F07 /* ContainerUtility.m */,
 			);
 			name = utility;
 			sourceTree = "<group>";
@@ -1002,6 +1057,11 @@
 				EBB21F571610044700A04376 /* delete@2x.png in Resources */,
 				EBB21F581610044700A04376 /* logo.png in Resources */,
 				EBB21F591610044700A04376 /* logo@2x.png in Resources */,
+				EB11D27E16114DFD00027F07 /* PostViewController.xib in Resources */,
+				EB11D2AC1611998F00027F07 /* CommentListViewController.xib in Resources */,
+				EB11D2B11611AE2100027F07 /* SearchFriendViewController.xib in Resources */,
+				EB11D2B61611B29200027F07 /* FriendListViewController.xib in Resources */,
+				EB11D2CD1611BD6100027F07 /* FriendDetailViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1108,6 +1168,14 @@
 				EBD8AD8F1610521900D79F62 /* SBJsonWriter.m in Sources */,
 				EBD8AD96161053A200D79F62 /* TecentViewController.m in Sources */,
 				EBD8ADA016105F1100D79F62 /* CacheUtility.m in Sources */,
+				EB11D27D16114DFD00027F07 /* PostViewController.m in Sources */,
+				EB11D2941611612100027F07 /* ContainerUtility.m in Sources */,
+				EB11D29716117A2E00027F07 /* GenericLoginViewController.m in Sources */,
+				EB11D2AB1611998F00027F07 /* CommentListViewController.m in Sources */,
+				EB11D2B01611AE2100027F07 /* SearchFriendViewController.m in Sources */,
+				EB11D2B51611B29200027F07 /* FriendListViewController.m in Sources */,
+				EB11D2C11611BB0200027F07 /* CustomColoredAccessory.m in Sources */,
+				EB11D2CC1611BD6100027F07 /* FriendDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

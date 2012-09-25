@@ -10,6 +10,9 @@
 #import "CustomBackButton.h"
 #import "CustomBackButtonHolder.h"
 #import "FillFormViewController.h"
+#import "ContainerUtility.h"
+#import "CMConstants.h"
+#import "FriendListViewController.h"
 
 @interface TecentViewController (){
     TencentOAuth* _tencentOAuth;
@@ -60,10 +63,26 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
+    if([num boolValue]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
 - (void)tencentDidLogin
 {
-    FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kTencentUserLoggedIn];
+    if([self.fromController isEqual:@"PostViewController"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    } else if([self.fromController isEqual:@"SearchFriendViewController"]){
+        FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else{
+        FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)closeSelf

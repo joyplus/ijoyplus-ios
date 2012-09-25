@@ -12,6 +12,7 @@
 #import "PlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ContainerUtility.h"
 
 @interface FriendViewController (){
     WaterflowView *flowView;
@@ -24,20 +25,22 @@
 
 @implementation FriendViewController
 
+- (void)viewDidUnload
+{
+    flowView = nil;
+    imageUrls = nil;
+    [super viewDidUnload];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
     [self addContentView];
     UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
     downGesture.direction = UISwipeGestureRecognizerDirectionDown;
     [flowView addGestureRecognizer:downGesture];
-    
 }
 
 - (void)addContentView
@@ -47,9 +50,9 @@
     }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 10, self.view.bounds.size.width, self.view.bounds.size.height)];
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
-    if(appDelegate.userLoggedIn){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
         flag = @"1";
     }
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"friendVideoSelected",flag];

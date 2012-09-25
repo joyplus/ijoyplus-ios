@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "SinaLoginViewController.h"
 #import "TecentViewController.h"
+#import "ContainerUtility.h"
 
 #define FIELDS_COUNT 3
 
@@ -122,8 +123,8 @@
 
 - (void)registerAction
 {
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.userLoggedIn = YES;
     [appDelegate refreshRootView];
 }
 

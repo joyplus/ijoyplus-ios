@@ -17,6 +17,8 @@
 #import "CMConstants.h"
 #import "AppDelegate.h"
 #import "UIUtility.h"
+#import "ContainerUtility.h"
+
 @interface PopularSegmentViewController (){
     MovieViewController *movieController;
     DramaViewController *dramaController;
@@ -45,19 +47,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    movieController = nil;
-    dramaController = nil;
-    videoController = nil;
-    localController = nil;
-    selectedViewController = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     [UIUtility customizeNavigationBar:self.navigationController.navigationBar];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    if(appDelegate.userLoggedIn){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
     }
@@ -77,12 +70,16 @@
     [self addChildViewController:movieController];
     movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
     [self.view addSubview:movieController.view];
-    
 }
 
 - (void)viewDidUnload
 {
     [self setTopSegment:nil];
+    movieController = nil;
+    dramaController = nil;
+    videoController = nil;
+    localController = nil;
+    selectedViewController = nil;
     [super viewDidUnload];
     topSegment = nil;
     // Release any retained subviews of the main view.

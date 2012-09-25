@@ -14,4 +14,5 @@
 + (void)customizeToolbar:(UIToolbar *)toolbar;
 + (void)addTextShadow:(UILabel *)textLabel;
 + (UILabel *)customizeAppTitle;
++ (UIImage *) createImageWithColor: (UIColor *) color;
 @end

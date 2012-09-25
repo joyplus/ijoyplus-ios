@@ -14,6 +14,7 @@
 #import "FollowedUserViewController.h"
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
+#import "ContainerUtility.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -52,14 +53,10 @@
     }
     return self;
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -67,7 +64,6 @@
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
     [self addContentView];
-    
 }
 
 - (void)addContentView
@@ -77,9 +73,9 @@
     }
     flowView = [[WaterflowView alloc] initWithFrame:self.view.frame];
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
-    if(appDelegate.userLoggedIn){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
         flag = @"1";
     }
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",flag];
@@ -112,6 +108,8 @@
 
 - (void)viewDidUnload
 {
+    flowView = nil;
+    imageUrls = nil;
     [self setSegment:nil];
     [self setTopImageView:nil];
     [self setAvatarImageView:nil];

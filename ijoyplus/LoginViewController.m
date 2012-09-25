@@ -16,6 +16,7 @@
 #import "RegisterViewController.h"
 #import "SinaLoginViewController.h"
 #import "TecentViewController.h"
+#import "ContainerUtility.h"
 
 #define FIELDS_COUNT 2
 
@@ -166,6 +167,7 @@
         cell.textLabel.textColor = [UIColor blackColor];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
         return cell;
     } else if(indexPath.section == 1){
         if(indexPath.row == 0){
@@ -211,8 +213,7 @@
             SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
             [self.navigationController pushViewController:viewController animated:YES];
         } else if (indexPath.row == 1){
-            TecentViewController *viewController =
-            [[TecentViewController alloc] init];
+            TecentViewController *viewController = [[TecentViewController alloc] init];
 			[self.navigationController pushViewController:viewController animated:YES];
         }
     }
@@ -231,12 +232,9 @@
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (IBAction)forgotPassword:(id)sender {
-}
-
 - (IBAction)loginAction:(id)sender {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.userLoggedIn = YES;
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     [appDelegate refreshRootView];
 }
 

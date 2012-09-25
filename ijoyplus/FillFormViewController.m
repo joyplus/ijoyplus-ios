@@ -10,6 +10,8 @@
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "AppDelegate.h"
+#import "ContainerUtility.h"
+#import "CMConstants.h"
 
 #define FIELDS_COUNT 3
 
@@ -253,17 +255,17 @@
 
 - (void)animateView:(NSUInteger)tag
 {
-    CGRect rect = self.view.frame;
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3];
-    
-    if (tag > 5) {
-        rect.origin.y = -44.0f * 5 - 15;
-    } else {
-        rect.origin.y = -44.0f * 5;
-    }
-    self.view.frame = rect;
-    [UIView commitAnimations];
+//    CGRect rect = self.view.frame;
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:0.3];
+//    
+//    if (tag > 5) {
+//        rect.origin.y = -44.0f * 5 - 15;
+//    } else {
+//        rect.origin.y = -44.0f * 5;
+//    }
+//    self.view.frame = rect;
+//    [UIView commitAnimations];
 }
 
 - (void)animateBackView
@@ -301,8 +303,8 @@
 
 - (void)finishRegister
 {
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    appDelegate.userLoggedIn = YES;
     [appDelegate refreshRootView];
 }
 @end

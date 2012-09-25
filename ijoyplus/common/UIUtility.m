@@ -20,7 +20,7 @@
 
 + (void)customizeToolbar:(UIToolbar *)toolbar
 {
-    UIImage *toobarImage = [[UIImage imageNamed:@"tool_bar_bg"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    UIImage *toobarImage = [UIImage imageNamed:@"tool_bar_bg"];
     [toolbar setBackgroundImage:toobarImage forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
 }
 
@@ -42,5 +42,17 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [titleLabel sizeToFit];
     return titleLabel;
+}
++ (UIImage *) createImageWithColor: (UIColor *) color
+{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
 }
 @end

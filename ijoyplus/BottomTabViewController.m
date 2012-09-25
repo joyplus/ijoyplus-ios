@@ -39,6 +39,8 @@
 #import "CMConstants.h"
 #import "LoginViewController.h"
 #import "RegisterViewController.h"
+#import "ContainerUtility.h"
+#import "SearchFriendViewController.h"
 
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
@@ -90,8 +92,8 @@
     if(bottomToolbar == nil){
         [self initToolBar];
     }
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    if(appDelegate.userLoggedIn){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"popular", nil);
@@ -138,8 +140,8 @@
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
     if([viewController isKindOfClass:[PopularSegmentViewController class]]){
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        if(appDelegate.userLoggedIn){
+        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+        if([num boolValue]){
             UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
             self.navigationItem.rightBarButtonItem = rightButton;
             self.title = NSLocalizedString(@"popular", nil);
@@ -172,17 +174,24 @@
 - (void)settings
 {
     SettingsViewController *viewController = [[SettingsViewController alloc]initWithNibName:@"SettingsViewController" bundle:nil];
-//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+////    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
+////    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+//    [navController pushViewController:viewController animated:YES];
+    
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-//    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
-    [navController pushViewController:viewController animated:YES];
+    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
     
 }
 
 - (void)searchFriend
 {
-    
+    SearchFriendViewController *viewController = [[SearchFriendViewController alloc]initWithNibName:@"SearchFriendViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
 }
 
 - (void)message
@@ -218,7 +227,6 @@
     [loginBtn setBackgroundImage:[[UIImage imageNamed:@"log_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
     [loginBtn setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
     [loginBtn addTarget:self action:@selector(loginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [bottomToolbar addSubview:loginBtn];
     bottomToolbar.layer.zPosition = 1;
     [bottomToolbar addSubview:loginBtn];
 }

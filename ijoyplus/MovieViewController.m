@@ -4,6 +4,7 @@
 #import "PlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ContainerUtility.h"
 
 @interface MovieViewController(){
     WaterflowView *flowView;
@@ -35,9 +36,9 @@
     }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSString *flag = @"0";
-    if(appDelegate.userLoggedIn){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
         flag = @"1";
     }
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"movieSelected",flag];

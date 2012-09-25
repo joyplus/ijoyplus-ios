@@ -13,6 +13,10 @@
 #import "CMConstants.h"
 #import "DateUtility.h"
 #import "TTTTimeIntervalFormatter.h"
+#import "CommentListViewController.h"
+#import "ContainerUtility.h"
+#import "PostViewController.h"
+#import "HomeViewController.h"
 
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
@@ -100,6 +104,9 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    subviewController = nil;
+    playCell = nil;
+    commentArray = nil;
     pullToRefreshManager_ = nil;
 }
 
@@ -170,9 +177,7 @@
         NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
         [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         cell.avatarImageView.layer.cornerRadius = 25;
-        cell.avatarImageView.layer.masksToBounds = YES;
-//        cell.avatarImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-//        cell.avatarImageView.layer.borderWidth = 3;
+        cell.avatarImageView.layer.masksToBounds = YES; 
         cell.titleLabel.text = [commentDic objectForKey:@"username"];
         
         cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
@@ -188,6 +193,20 @@
         NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
         cell.thirdTitleLabel.text = timeDiff;
         
+        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+        if([num boolValue]){
+            UIButton *replyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            [replyBtn setFrame:CGRectMake(cell.thirdTitleLabel.frame.origin.x + 210, yPosition, 40, 20)];
+            [replyBtn setTitle:NSLocalizedString(@"reply", nil) forState:UIControlStateNormal];
+            [replyBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            [replyBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+            replyBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+            UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+            [replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateNormal];
+            [replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateHighlighted];
+            [replyBtn addTarget:self action:@selector(replyBtnClicked)forControlEvents:UIControlEventTouchUpInside];
+            [cell.contentView addSubview:replyBtn];
+        }
         [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
         return cell;
 
@@ -250,7 +269,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    if(indexPath.section > 0){
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -342,12 +365,19 @@
 
 - (void)avatarClicked
 {
-
+    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)playVideo
 {
     NSLog(@"play");
+}
+
+- (void)replyBtnClicked
+{
+    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

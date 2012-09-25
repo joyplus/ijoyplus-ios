@@ -19,56 +19,8 @@
 
 @synthesize table;
 
-#pragma mark -
-#pragma mark Memory management
-
-/**
- * Deallocates used memory
- */
-- (void)dealloc {
-    self.table = nil;
-    pullToRefreshManager_ = nil;
-}
-
-#pragma mark -
-#pragma mark View cycle
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    
-    self.table = nil;
-    pullToRefreshManager_ = nil;
-}
-
-#pragma mark -
-#pragma mark Aux view method
-- (void)loadTable {
-    
-    [self.table reloadData];
-    
-    [pullToRefreshManager_ tableViewReloadFinished];
-}
-
-- (void)notificatonCenter
-{
-    
-}
-- (void)settings
-{
-    
-}
-
-#pragma mark -
-#pragma mark UITableView methods
-
-
-- (void)viewWillAppear:(BOOL)animated
-{
     [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
     self.navigationItem.leftBarButtonItem = leftButton;
@@ -96,22 +48,48 @@
     NSMutableDictionary *itemDic3 = [[NSMutableDictionary alloc]initWithCapacity:10];
     [itemDic3 setValue:items3 forKey:@"2012-09-05"];
     
-//    NSMutableDictionary *itemDic4 = [[NSMutableDictionary alloc]initWithCapacity:10];
-//    [itemDic4 setValue:items1 forKey:@"2012-09-06"];
-//    
-//    NSMutableDictionary *itemDic5 = [[NSMutableDictionary alloc]initWithCapacity:10];
-//    [itemDic5 setValue:items1 forKey:@"2012-09-07"];
+    //    NSMutableDictionary *itemDic4 = [[NSMutableDictionary alloc]initWithCapacity:10];
+    //    [itemDic4 setValue:items1 forKey:@"2012-09-06"];
+    //
+    //    NSMutableDictionary *itemDic5 = [[NSMutableDictionary alloc]initWithCapacity:10];
+    //    [itemDic5 setValue:items1 forKey:@"2012-09-07"];
     
     itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
     [itemsArray addObject:itemDic1];
     [itemsArray addObject:itemDic2];
     [itemsArray addObject:itemDic3];
-//    [itemsArray addObject:itemDic4];
-//    [itemsArray addObject:itemDic5];
+    //    [itemsArray addObject:itemDic4];
+    //    [itemsArray addObject:itemDic5];
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table withClient:self];
     
     [self loadTable];
+    
+}
+
+- (void)viewDidUnload {
+    itemsArray = nil;
+    self.table = nil;
+    pullToRefreshManager_ = nil;
+    [super viewDidUnload];
+}
+
+#pragma mark -
+#pragma mark Aux view method
+- (void)loadTable {
+    
+    [self.table reloadData];
+    
+    [pullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)notificatonCenter
+{
+    
+}
+- (void)settings
+{
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
