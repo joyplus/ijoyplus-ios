@@ -123,6 +123,7 @@
 		EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E9160188D400E04289 /* MovieViewController.m */; };
 		EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3EB160188D400E04289 /* VideoViewController.m */; };
 		EBB1B3F5160190C600E04289 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F4160190C600E04289 /* TestView.m */; };
+		EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */; };
 		EBB21F4C1610044700A04376 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB21F2C1610044700A04376 /* bg.png */; };
 		EBB21F4D1610044700A04376 /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB21F2D1610044700A04376 /* bg@2x.png */; };
 		EBB21F4E1610044700A04376 /* bg_land.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB21F2E1610044700A04376 /* bg_land.png */; };
@@ -150,6 +151,20 @@
 		EBB21F7F161009D200A04376 /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F7E161009D200A04376 /* UIImage+RoundedCornerAdditions.m */; };
 		EBB21F8916100FA700A04376 /* AFSinaWeiboAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F8816100FA700A04376 /* AFSinaWeiboAPIClient.m */; };
 		EBB21F8C161010BF00A04376 /* SinaLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F8B161010BE00A04376 /* SinaLoginViewController.m */; };
+		EBB2FFBA161299B200E8D9A7 /* FriendPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */; };
+		EBB2FFBB161299B200E8D9A7 /* FriendPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */; };
+		EBB2FFBC161299B200E8D9A7 /* FriendPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */; };
+		EBB2FFBF1612A25000E8D9A7 /* FriendCellFactory.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFBE1612A25000E8D9A7 /* FriendCellFactory.xib */; };
+		EBB2FFC31612A28D00E8D9A7 /* LoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFC21612A28D00E8D9A7 /* LoadMoreCell.m */; };
+		EBB2FFC71612CF1000E8D9A7 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFC51612CF1000E8D9A7 /* MessageListViewController.m */; };
+		EBB2FFC81612CF1000E8D9A7 /* MessageListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFC61612CF1000E8D9A7 /* MessageListViewController.xib */; };
+		EBB2FFCA1612D23800E8D9A7 /* ListCellFactory.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFC91612D23800E8D9A7 /* ListCellFactory.xib */; };
+		EBB2FFCD1612D33F00E8D9A7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFCC1612D33F00E8D9A7 /* MessageCell.m */; };
+		EBB2FFD01612D57A00E8D9A7 /* MyCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */; };
+		EBB2FFE61612F8A100E8D9A7 /* DramaPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */; };
+		EBB2FFE71612F8A100E8D9A7 /* DramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */; };
+		EBB2FFE81612F8A100E8D9A7 /* DramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */; };
+		EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */; };
 		EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */; };
 		EBB40F471607102200A49CD9 /* CustomBackButtonHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */; };
 		EBD8AD8A1610521900D79F62 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD7F1610521900D79F62 /* NSObject+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -395,6 +410,30 @@
 		EBB21F8816100FA700A04376 /* AFSinaWeiboAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFSinaWeiboAPIClient.m; sourceTree = "<group>"; };
 		EBB21F8A161010BE00A04376 /* SinaLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SinaLoginViewController.h; sourceTree = "<group>"; };
 		EBB21F8B161010BE00A04376 /* SinaLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SinaLoginViewController.m; sourceTree = "<group>"; };
+		EBB2FFB5161299B200E8D9A7 /* FriendPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayRootViewController.h; sourceTree = "<group>"; };
+		EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendPlayRootViewController.m; sourceTree = "<group>"; };
+		EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayViewController.h; sourceTree = "<group>"; };
+		EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendPlayViewController.m; sourceTree = "<group>"; };
+		EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendPlayViewController.xib; sourceTree = "<group>"; };
+		EBB2FFBE1612A25000E8D9A7 /* FriendCellFactory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FriendCellFactory.xib; path = component/FriendCellFactory.xib; sourceTree = "<group>"; };
+		EBB2FFC11612A28D00E8D9A7 /* LoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadMoreCell.h; path = component/LoadMoreCell.h; sourceTree = "<group>"; };
+		EBB2FFC21612A28D00E8D9A7 /* LoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadMoreCell.m; path = component/LoadMoreCell.m; sourceTree = "<group>"; };
+		EBB2FFC41612CF1000E8D9A7 /* MessageListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageListViewController.h; sourceTree = "<group>"; };
+		EBB2FFC51612CF1000E8D9A7 /* MessageListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageListViewController.m; sourceTree = "<group>"; };
+		EBB2FFC61612CF1000E8D9A7 /* MessageListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageListViewController.xib; sourceTree = "<group>"; };
+		EBB2FFC91612D23800E8D9A7 /* ListCellFactory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ListCellFactory.xib; path = component/ListCellFactory.xib; sourceTree = "<group>"; };
+		EBB2FFCB1612D33F00E8D9A7 /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageCell.h; path = component/MessageCell.h; sourceTree = "<group>"; };
+		EBB2FFCC1612D33F00E8D9A7 /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageCell.m; path = component/MessageCell.m; sourceTree = "<group>"; };
+		EBB2FFCE1612D57A00E8D9A7 /* MyCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCommentView.h; path = component/MyCommentView.h; sourceTree = "<group>"; };
+		EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCommentView.m; path = component/MyCommentView.m; sourceTree = "<group>"; };
+		EBB2FFE11612F89F00E8D9A7 /* DramaPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayRootViewController.h; sourceTree = "<group>"; };
+		EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayRootViewController.m; sourceTree = "<group>"; };
+		EBB2FFE31612F8A000E8D9A7 /* DramaPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayViewController.h; sourceTree = "<group>"; };
+		EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayViewController.m; sourceTree = "<group>"; };
+		EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DramaPlayViewController.xib; sourceTree = "<group>"; };
+		EBB2FFE91612FB9800E8D9A7 /* DramaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DramaCell.h; path = component/DramaCell.h; sourceTree = "<group>"; };
+		EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DramaCell.m; path = component/DramaCell.m; sourceTree = "<group>"; };
+		EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
 		EBB40F19160707FB00A49CD9 /* CustomBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButton.h; sourceTree = "<group>"; };
 		EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBackButton.m; sourceTree = "<group>"; };
 		EBB40F451607102100A49CD9 /* CustomBackButtonHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButtonHolder.h; sourceTree = "<group>"; };
@@ -519,8 +558,8 @@
 				EBAED39215FF2D1A00192AE4 /* login */,
 				EBAF698415FD87FD00938FE3 /* popular */,
 				EBAF698515FD880E00938FE3 /* friend */,
-				EBAF69DC15FDC13D00938FE3 /* list */,
-				EBAF69E315FDC3C100938FE3 /* my */,
+				EBAF69E315FDC3C100938FE3 /* activity */,
+				EBAF69DC15FDC13D00938FE3 /* profile */,
 				EBAFBC3115F9DDC0007579D1 /* common */,
 				EB32BCF215F8873B00C878D5 /* component */,
 				EB32BCCD15F885EC00C878D5 /* Supporting Files */,
@@ -587,6 +626,7 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */,
 				EB1E2964160C58FE005048E5 /* temp */,
 				EB24CC98160B1908009618C6 /* unfocus@2x.png */,
 				EB24CC96160B178D009618C6 /* user_btn@2x.png */,
@@ -687,6 +727,11 @@
 				EBB1B3E9160188D400E04289 /* MovieViewController.m */,
 				EBB1B3E41601876A00E04289 /* DramaViewController.h */,
 				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
+				EBB2FFE11612F89F00E8D9A7 /* DramaPlayRootViewController.h */,
+				EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */,
+				EBB2FFE31612F8A000E8D9A7 /* DramaPlayViewController.h */,
+				EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */,
+				EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */,
 				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
 				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
 				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
@@ -717,6 +762,7 @@
 		EBAF698515FD880E00938FE3 /* friend */ = {
 			isa = PBXGroup;
 			children = (
+				EBB2FFC01612A25600E8D9A7 /* component */,
 				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
 				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
 				EB11D2AD1611AE2000027F07 /* SearchFriendViewController.h */,
@@ -728,6 +774,11 @@
 				EB11D2C91611BD6000027F07 /* FriendDetailViewController.h */,
 				EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */,
 				EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */,
+				EBB2FFB5161299B200E8D9A7 /* FriendPlayRootViewController.h */,
+				EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */,
+				EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */,
+				EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */,
+				EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */,
 			);
 			name = friend;
 			sourceTree = "<group>";
@@ -745,7 +796,7 @@
 			path = MNMBottomPullToRefresh;
 			sourceTree = "<group>";
 		};
-		EBAF69DC15FDC13D00938FE3 /* list */ = {
+		EBAF69DC15FDC13D00938FE3 /* profile */ = {
 			isa = PBXGroup;
 			children = (
 				EBB1B3F2160190AE00E04289 /* component */,
@@ -755,11 +806,14 @@
 				EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */,
 				EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */,
 				EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */,
+				EBB2FFC41612CF1000E8D9A7 /* MessageListViewController.h */,
+				EBB2FFC51612CF1000E8D9A7 /* MessageListViewController.m */,
+				EBB2FFC61612CF1000E8D9A7 /* MessageListViewController.xib */,
 			);
-			name = list;
+			name = profile;
 			sourceTree = "<group>";
 		};
-		EBAF69E315FDC3C100938FE3 /* my */ = {
+		EBAF69E315FDC3C100938FE3 /* activity */ = {
 			isa = PBXGroup;
 			children = (
 				EBAF69ED15FDCA6F00938FE3 /* component */,
@@ -770,7 +824,7 @@
 				EBAFAEC7160968A100649263 /* SettingsViewController.m */,
 				EBAFAEC8160968A100649263 /* SettingsViewController.xib */,
 			);
-			name = my;
+			name = activity;
 			sourceTree = "<group>";
 		};
 		EBAF69ED15FDCA6F00938FE3 /* component */ = {
@@ -795,6 +849,8 @@
 				EBAED32E15FED75700192AE4 /* PlayCell.m */,
 				EBAED33415FEDF1900192AE4 /* CommentCell.h */,
 				EBAED33515FEDF1900192AE4 /* CommentCell.m */,
+				EBB2FFE91612FB9800E8D9A7 /* DramaCell.h */,
+				EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */,
 			);
 			name = compoment;
 			sourceTree = "<group>";
@@ -835,6 +891,11 @@
 			children = (
 				EBB1B3F3160190C600E04289 /* TestView.h */,
 				EBB1B3F4160190C600E04289 /* TestView.m */,
+				EBB2FFC91612D23800E8D9A7 /* ListCellFactory.xib */,
+				EBB2FFCB1612D33F00E8D9A7 /* MessageCell.h */,
+				EBB2FFCC1612D33F00E8D9A7 /* MessageCell.m */,
+				EBB2FFCE1612D57A00E8D9A7 /* MyCommentView.h */,
+				EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */,
 			);
 			name = component;
 			sourceTree = "<group>";
@@ -914,6 +975,16 @@
 				EBB21F761610099400A04376 /* GTMDefines.h */,
 			);
 			path = CTMBase64;
+			sourceTree = "<group>";
+		};
+		EBB2FFC01612A25600E8D9A7 /* component */ = {
+			isa = PBXGroup;
+			children = (
+				EBB2FFBE1612A25000E8D9A7 /* FriendCellFactory.xib */,
+				EBB2FFC11612A28D00E8D9A7 /* LoadMoreCell.h */,
+				EBB2FFC21612A28D00E8D9A7 /* LoadMoreCell.m */,
+			);
+			name = component;
 			sourceTree = "<group>";
 		};
 		EBD8AD7C1610521900D79F62 /* JSON */ = {
@@ -1062,6 +1133,12 @@
 				EB11D2B11611AE2100027F07 /* SearchFriendViewController.xib in Resources */,
 				EB11D2B61611B29200027F07 /* FriendListViewController.xib in Resources */,
 				EB11D2CD1611BD6100027F07 /* FriendDetailViewController.xib in Resources */,
+				EBB2FFBC161299B200E8D9A7 /* FriendPlayViewController.xib in Resources */,
+				EBB2FFBF1612A25000E8D9A7 /* FriendCellFactory.xib in Resources */,
+				EBB2FFC81612CF1000E8D9A7 /* MessageListViewController.xib in Resources */,
+				EBB2FFCA1612D23800E8D9A7 /* ListCellFactory.xib in Resources */,
+				EBB2FFE81612F8A100E8D9A7 /* DramaPlayViewController.xib in Resources */,
+				EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1176,6 +1253,15 @@
 				EB11D2B51611B29200027F07 /* FriendListViewController.m in Sources */,
 				EB11D2C11611BB0200027F07 /* CustomColoredAccessory.m in Sources */,
 				EB11D2CC1611BD6100027F07 /* FriendDetailViewController.m in Sources */,
+				EBB2FFBA161299B200E8D9A7 /* FriendPlayRootViewController.m in Sources */,
+				EBB2FFBB161299B200E8D9A7 /* FriendPlayViewController.m in Sources */,
+				EBB2FFC31612A28D00E8D9A7 /* LoadMoreCell.m in Sources */,
+				EBB2FFC71612CF1000E8D9A7 /* MessageListViewController.m in Sources */,
+				EBB2FFCD1612D33F00E8D9A7 /* MessageCell.m in Sources */,
+				EBB2FFD01612D57A00E8D9A7 /* MyCommentView.m in Sources */,
+				EBB2FFE61612F8A100E8D9A7 /* DramaPlayRootViewController.m in Sources */,
+				EBB2FFE71612F8A100E8D9A7 /* DramaPlayViewController.m in Sources */,
+				EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

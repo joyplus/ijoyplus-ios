@@ -7,14 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MyCommentView.h"
 
-@interface CommentCell : UITableViewCell
+@interface MessageCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *thirdTitleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *avatarBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *separatorImageBottom;
-@property (strong, nonatomic) IBOutlet UIButton *replyBtn;
+@property (weak, nonatomic) IBOutlet UILabel *actionTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *actionDetailTitleLabel;
+@property (weak, nonatomic) IBOutlet MyCommentView *myCommentView;
+@property (weak, nonatomic) IBOutlet UILabel *myCommentViewName;
+@property (weak, nonatomic) IBOutlet UILabel *myCommentViewContent;
+@property (weak, nonatomic) IBOutlet UILabel *myCommentViewTime;
 
 @end

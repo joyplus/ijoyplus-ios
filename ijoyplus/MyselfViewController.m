@@ -9,8 +9,6 @@
     NSMutableArray *itemsArray;
 }
 
-- (void)notificatonCenter;
-- (void)settings;
 - (void)loadTable;
 
 @end
@@ -22,10 +20,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
-    self.navigationItem.leftBarButtonItem = leftButton;
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];
-    self.navigationItem.rightBarButtonItem = rightButton;
+//    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
+//    self.navigationItem.leftBarButtonItem = leftButton;
+//    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];
+//    self.navigationItem.rightBarButtonItem = rightButton;
     NSMutableArray *items1 = [[NSMutableArray alloc]initWithCapacity:20];
     [items1 addObject:@"First"];
     [items1 addObject:@"Second"];
@@ -81,15 +79,6 @@
     [self.table reloadData];
     
     [pullToRefreshManager_ tableViewReloadFinished];
-}
-
-- (void)notificatonCenter
-{
-    
-}
-- (void)settings
-{
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

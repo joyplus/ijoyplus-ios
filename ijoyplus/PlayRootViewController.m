@@ -20,9 +20,6 @@
 @interface PlayRootViewController (){
     UISwipeGestureRecognizer *leftGesture;
     UISwipeGestureRecognizer *rightGesture;
-    UIViewController *previousViewController;
-    UIViewController *nextViewController;
-    UIViewController *currentViewController;
     UIToolbar *bottomToolbar;
 }
 - (void)closeSelf;
@@ -40,20 +37,9 @@
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
-//    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-//    if(appDelegate.userLoggedIn){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"share", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(share)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-//    }
-    
-    
-	currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    [self addChildViewController:currentViewController];
-    currentViewController.view.frame = CGRectMake(0, 0, 320, 480);
-    [self.view addSubview:currentViewController.view];
-
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"share", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(share)];
+    self.navigationItem.rightBarButtonItem = rightButton;
+    [self initViewController];
     leftGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(nextAction)];
     leftGesture.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:leftGesture];
@@ -66,6 +52,16 @@
         [self initToolBar];
     }
     [self.view addSubview:bottomToolbar];
+}
+
+- (void)initViewController
+{
+    currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    [self addChildViewController:currentViewController];
+    currentViewController.view.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:currentViewController.view];
 }
 
 - (void)share
@@ -95,6 +91,7 @@
     }];
     [[self.view layer] addAnimation:animation forKey:@"animation"];
 }
+
 - (void)nextAction
 {
     previousViewController = currentViewController;

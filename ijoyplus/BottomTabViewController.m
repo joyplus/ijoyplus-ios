@@ -41,6 +41,7 @@
 #import "RegisterViewController.h"
 #import "ContainerUtility.h"
 #import "SearchFriendViewController.h"
+#import "MessageListViewController.h"
 
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
@@ -109,7 +110,7 @@
     }
     self.delegate = self;
     [self initTabControllers];
-    self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController3,detailController4, nil];
+    self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController4,detailController3, nil];
     [self setSelectedIndex:0];
     
 }
@@ -146,19 +147,19 @@
             self.navigationItem.rightBarButtonItem = rightButton;
             self.title = NSLocalizedString(@"popular", nil);
         }
-    } else if ([viewController isKindOfClass: [HomeViewController class]]){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"list", nil);
-    // Friend
     } else if ([viewController isKindOfClass: [FriendViewController class]]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemAction target:self action:@selector(searchFriend)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"friend", nil);
-    } else if ([viewController isKindOfClass: [MyselfViewController class]]){
+    } else if ([viewController isKindOfClass: [HomeViewController class]]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemAction target:self action:@selector(settings)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"myself", nil);
+    // Friend
+    } else if ([viewController isKindOfClass: [MyselfViewController class]]){
+        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
+        self.navigationItem.rightBarButtonItem = rightButton;
+        self.title = NSLocalizedString(@"list", nil);
     }
     return YES;
 }
@@ -196,7 +197,10 @@
 
 - (void)message
 {
-    
+    MessageListViewController *viewController = [[MessageListViewController alloc]initWithNibName:@"MessageListViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
 }
 
 - (void)initToolBar

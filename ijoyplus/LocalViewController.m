@@ -112,10 +112,7 @@
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
-    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page

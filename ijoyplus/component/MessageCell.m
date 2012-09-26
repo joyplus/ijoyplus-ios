@@ -6,16 +6,21 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "CommentCell.h"
+#import "MessageCell.h"
 
-@implementation CommentCell
+@implementation MessageCell
 @synthesize avatarImageView;
 @synthesize titleLabel;
 @synthesize subtitleLabel;
 @synthesize thirdTitleLabel;
 @synthesize avatarBtn;
 @synthesize separatorImageBottom;
-@synthesize replyBtn;
+@synthesize actionTitleLabel;
+@synthesize actionDetailTitleLabel;
+@synthesize myCommentView;
+@synthesize myCommentViewName;
+@synthesize myCommentViewContent;
+@synthesize myCommentViewTime;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

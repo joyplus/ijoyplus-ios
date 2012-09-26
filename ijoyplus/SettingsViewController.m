@@ -96,6 +96,6 @@
 
 - (void)closeSelf
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "CommentListViewController.h"
+#import "MessageListViewController.h"
 #import "DateUtility.h"
 #import "CommentCell.h"
 #import "CustomBackButtonHolder.h"
@@ -14,15 +14,15 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "UIImageView+WebCache.h"
 #import "CMConstants.h"
+#import "MessageCell.h"
 
-@interface CommentListViewController (){
+@interface MessageListViewController (){
     NSMutableArray *commentArray;
 }
 
 @end
 
-@implementation CommentListViewController
-@synthesize title;
+@implementation MessageListViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -36,7 +36,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = self.title;
+    self.title = NSLocalizedString(@"my_message", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
@@ -87,35 +87,66 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+    MessageCell *cell = (MessageCell*) [tableView dequeueReusableCellWithIdentifier:@"messageCell"];
     if (cell == nil) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-        cell = (CommentCell *)[nib objectAtIndex:2];
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ListCellFactory" owner:self options:nil];
+        cell = (MessageCell *)[nib objectAtIndex:0];
     }
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
     [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     cell.avatarImageView.layer.cornerRadius = 25;
     cell.avatarImageView.layer.masksToBounds = YES;
-    //        cell.avatarImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    //        cell.avatarImageView.layer.borderWidth = 3;
     cell.titleLabel.text = [commentDic objectForKey:@"username"];
+    [cell.titleLabel sizeToFit];
+    cell.actionTitleLabel.text = @"回复了";
+    [cell.actionTitleLabel sizeToFit];
+    cell.actionTitleLabel.frame = CGRectMake(cell.titleLabel.frame.origin.x + cell.titleLabel.frame.size.width + 5, cell.titleLabel.frame.origin.y, cell.actionTitleLabel.frame.size.width, cell.actionTitleLabel.frame.size.height);
+    NSMutableString *actionDetailString = [[NSMutableString alloc]initWithCapacity:20];
+    for (int i = 0; i < cell.titleLabel.text.length + cell.actionTitleLabel.text.length; i++) {
+        [actionDetailString appendString:@"   "];
+    }
+    [actionDetailString appendString:@"您在《萤火之森》中的评论。"];
+    cell.actionDetailTitleLabel.text = actionDetailString;
+    [cell.actionDetailTitleLabel setNumberOfLines:0];
+    CGSize constraint = CGSizeMake(cell.actionDetailTitleLabel.frame.size.width, 20000.0f);
+    CGSize size = [actionDetailString sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    [cell.actionDetailTitleLabel setFrame:CGRectMake(cell.actionDetailTitleLabel.frame.origin.x, cell.actionDetailTitleLabel.frame.origin.y, size.width, size.height)];
     
     cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
     [cell.subtitleLabel setNumberOfLines:0];
-    CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
-    CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    constraint = CGSizeMake(cell.subtitleLabel.frame.size.width, 20000.0f);
+    size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
-    
+
     NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
-    cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
-    
+    cell.myCommentViewContent.text = @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。";
     TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
-    NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
+    NSString *timeDiff;
+    if(cell.myCommentViewContent.text != nil){
+        cell.myCommentViewName.text = @"Joy+";
+        [cell.myCommentViewContent setNumberOfLines:0];
+        constraint = CGSizeMake(cell.myCommentViewContent.frame.size.width, 20000.0f);
+        size = [cell.myCommentViewContent.text sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+        [cell.myCommentViewContent setFrame:CGRectMake(cell.myCommentViewContent.frame.origin.x, cell.myCommentViewContent.frame.origin.y, size.width, size.height)];
+        cell.myCommentViewTime.frame = CGRectMake(cell.myCommentViewTime.frame.origin.x, size.height - 10, cell.myCommentViewContent.frame.size.width, cell.myCommentViewContent.frame.size.height);
+        timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
+        cell.myCommentViewTime.text = timeDiff;
+        cell.myCommentView.frame = CGRectMake(cell.myCommentView.frame.origin.x, yPosition, cell.myCommentView.frame.size.width, size.height + 50);
+        cell.myCommentView.backgroundColor = [UIColor clearColor];
+    } else{
+        cell.myCommentView.frame = CGRectZero;
+        cell.myCommentViewName = nil;
+        cell.myCommentViewContent = nil;
+        cell.myCommentViewTime = nil;
+    }
+    
+    yPosition = cell.subtitleLabel.frame.origin.y + cell.subtitleLabel.frame.size.height + cell.myCommentView.frame.size.height + 20;
+    cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
+    timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
     cell.thirdTitleLabel.text = timeDiff;
     
-    [cell.replyBtn setHidden:YES];
-    
     [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+    
     return cell;
 }
 
@@ -160,11 +191,26 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSString *myCommentString = @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。";
+    CGSize constraint;
+    CGSize size1;
+    if(myCommentString != nil) {
+        constraint = CGSizeMake(230, 20000.0f);
+        size1 = [myCommentString sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    } else {
+        size1 = CGSizeZero;
+    }
+    
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
     NSString *content = [commentDic objectForKey:@"content"];
-    CGSize constraint = CGSizeMake(232, 20000.0f);
-    CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    return 80 + size.height;
+    constraint = CGSizeMake(230, 20000.0f);
+    CGSize size2 = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    if(myCommentString == nil){
+        return size2.height + 110;
+    } else {
+        return size1.height + size2.height + 160;
+    }
+    
 }
 
 #pragma mark - Table view delegate
@@ -182,7 +228,7 @@
 
 - (void)closeSelf
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end

@@ -8,6 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PlayRootViewController : UIViewController
+@interface PlayRootViewController : UIViewController{
+    UIViewController *previousViewController;
+    UIViewController *nextViewController;
+    UIViewController *currentViewController;
+}
+
+- (void)initViewController;
+- (void)like;
+- (void)watch;
+- (void)collection;
+- (void)comment;
 
 @end

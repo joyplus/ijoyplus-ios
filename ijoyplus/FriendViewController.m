@@ -9,7 +9,7 @@
 #import "FriendViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
-#import "PlayRootViewController.h"
+#import "FriendPlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
@@ -142,7 +142,7 @@
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
+    FriendPlayRootViewController *viewController = [[FriendPlayRootViewController alloc]init];
     //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [navController pushViewController:viewController animated:YES];
 }

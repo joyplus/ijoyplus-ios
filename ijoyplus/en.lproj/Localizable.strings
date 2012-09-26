@@ -13,6 +13,7 @@ app_name = "悦+";
 previous = "前一项";
 next = "下一项";
 done = "完成";
+follow_success = "关注成功";
 
 login = "登录";
 register = "注册";
@@ -65,6 +66,8 @@ unjoined_friend = "邀请好友";
 watched_friend = "已关注的";
 friend_detail = "详细资料";
 sms_invite = "短信邀请";
+friend_comment = "观看的好友";
+drama_list = "剧集列表";
 
 list = "我的主页";
 watched = "看过的影片";
@@ -72,6 +75,7 @@ my_collection = "收藏的影片";
 cancel_follow = "取消关注";
 my_followed_people = "我关注的人";
 message = "消息";
+my_message = "我的消息";
 
 myself = "个人设置";
 notification_center = "通知中心";

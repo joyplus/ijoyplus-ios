@@ -15,6 +15,7 @@
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "ContainerUtility.h"
+#import "MBProgressHUD.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -24,6 +25,7 @@
     NSMutableArray *imageUrls;
     int currentPage;
     int tempCount;
+    MBProgressHUD *HUD;
 }
 
 - (void)addHeaderContent:(UIView *)view;
@@ -60,6 +62,9 @@
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.title = @"好友主页";
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
+    self.navigationItem.rightBarButtonItem = rightButton;
     
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
@@ -271,6 +276,18 @@
 - (IBAction)followUser:(id)sender {
     FollowedUserViewController *viewController = [[FollowedUserViewController alloc]initWithNibName:@"FollowedUserViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)follow
+{
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+	[self.navigationController.view addSubview:HUD];
+	HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = NSLocalizedString(@"follow_success", nil);
+    HUD.dimBackground = YES;
+    [HUD show:YES];
+	[HUD hide:YES afterDelay:2];
 }
 
 - (void)closeSelf
