@@ -132,7 +132,7 @@
         timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
         cell.myCommentViewTime.text = timeDiff;
         cell.myCommentView.frame = CGRectMake(cell.myCommentView.frame.origin.x, yPosition, cell.myCommentView.frame.size.width, size.height + 50);
-        cell.myCommentView.backgroundColor = [UIColor clearColor];
+//        cell.myCommentView.backgroundColor = [UIColor clearColor];
     } else{
         cell.myCommentView.frame = CGRectZero;
         cell.myCommentViewName = nil;

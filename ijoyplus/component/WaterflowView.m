@@ -267,7 +267,7 @@
 			cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay inSection:i];
 			cell.frame = CGRectMake(origin_x, origin_y, width, height);
 			[[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];
-            if(self.mergeCell && rowToDisplay == self.mergeRow){
+            if(self.mergeCell && cell.indexPath.row == self.mergeRow){
             if(i == 0){
                     cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 320, cell.frame.size.height);
                 } else{
@@ -309,7 +309,7 @@
             cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay > 0 ? (rowToDisplay - 1) : 0 inSection:i];
             cell.frame = CGRectMake(origin_x,origin_y , width, height);
             [[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];
-            if(self.mergeCell && rowToDisplay == self.mergeRow){
+            if(self.mergeCell && cell.indexPath.row == self.mergeRow){
                 if(i == 0){
                     cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 320, cell.frame.size.height);
                 } else{
@@ -359,7 +359,7 @@
             cell.indexPath = [NSIndexPath indexPathForRow:rowToDisplay + 1 inSection:i];
             cell.frame = CGRectMake(origin_x, origin_y, width, height);
             [[self.visibleCells objectAtIndex:i] addObject:cell];
-            if(self.mergeCell && rowToDisplay == self.mergeRow){
+            if(self.mergeCell && cell.indexPath.row == self.mergeRow){
                 if(i == 0){
                     cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, 320, cell.frame.size.height);
                 } else{

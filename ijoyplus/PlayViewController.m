@@ -17,6 +17,7 @@
 #import "ContainerUtility.h"
 #import "PostViewController.h"
 #import "HomeViewController.h"
+#import "CommentViewController.h"
 
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
@@ -272,7 +273,7 @@
 {
     if(indexPath.section > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
+        CommentViewController *viewController = [[CommentViewController alloc]init];
         viewController.title = @"评论回复";
         [self.navigationController pushViewController:viewController animated:YES];
     }
@@ -378,7 +379,9 @@
 
 - (void)replyBtnClicked
 {
-    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
+    CommentViewController *viewController = [[CommentViewController alloc]init];
+    viewController.title = @"评论回复";
+    viewController.openKeyBoard = YES;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

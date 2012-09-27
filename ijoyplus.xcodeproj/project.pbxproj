@@ -104,6 +104,19 @@
 		EBAFAEC1160961ED00649263 /* black_separator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFAEC0160961ED00649263 /* black_separator@2x.png */; };
 		EBAFAEC9160968A100649263 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFAEC7160968A100649263 /* SettingsViewController.m */; };
 		EBAFAECA160968A100649263 /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAFAEC8160968A100649263 /* SettingsViewController.xib */; };
+		EBAFB4F81613EFDE00C0263B /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFB4F51613EFDE00C0263B /* HPGrowingTextView.m */; };
+		EBAFB4F91613EFDE00C0263B /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFB4F71613EFDE00C0263B /* HPTextViewInternal.m */; };
+		EBAFB5021613EFF100C0263B /* MessageEntryBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB4FA1613EFF100C0263B /* MessageEntryBackground.png */; };
+		EBAFB5031613EFF100C0263B /* MessageEntryBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB4FB1613EFF100C0263B /* MessageEntryBackground@2x.png */; };
+		EBAFB5041613EFF100C0263B /* MessageEntryInputField.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB4FC1613EFF100C0263B /* MessageEntryInputField.png */; };
+		EBAFB5051613EFF100C0263B /* MessageEntryInputField@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB4FD1613EFF100C0263B /* MessageEntryInputField@2x.png */; };
+		EBAFB5061613EFF100C0263B /* MessageEntrySendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB4FE1613EFF100C0263B /* MessageEntrySendButton.png */; };
+		EBAFB5071613EFF100C0263B /* MessageEntrySendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB4FF1613EFF100C0263B /* MessageEntrySendButton@2x.png */; };
+		EBAFB5081613EFF100C0263B /* MessageEntrySendButtonPressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB5001613EFF100C0263B /* MessageEntrySendButtonPressed.png */; };
+		EBAFB5091613EFF100C0263B /* MessageEntrySendButtonPressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB5011613EFF100C0263B /* MessageEntrySendButtonPressed@2x.png */; };
+		EBAFB50C1613F5E000C0263B /* CommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFB50B1613F5E000C0263B /* CommentViewController.m */; };
+		EBAFB515161443DC00C0263B /* tab_btn_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFB514161443DC00C0263B /* tab_btn_bg@2x.png */; };
+		EBAFB517161447D700C0263B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBAFB516161447D700C0263B /* MobileCoreServices.framework */; };
 		EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3315F9DDC0007579D1 /* CMConstants.m */; };
 		EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC4415F9E849007579D1 /* AnimationFactory.m */; };
 		EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA616080DA900AAA818 /* DateUtility.m */; };
@@ -336,6 +349,22 @@
 		EBAFAEC6160968A100649263 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		EBAFAEC7160968A100649263 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		EBAFAEC8160968A100649263 /* SettingsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		EBAFB4F41613EFDE00C0263B /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPGrowingTextView.h; sourceTree = "<group>"; };
+		EBAFB4F51613EFDE00C0263B /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPGrowingTextView.m; sourceTree = "<group>"; };
+		EBAFB4F61613EFDE00C0263B /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTextViewInternal.h; sourceTree = "<group>"; };
+		EBAFB4F71613EFDE00C0263B /* HPTextViewInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTextViewInternal.m; sourceTree = "<group>"; };
+		EBAFB4FA1613EFF100C0263B /* MessageEntryBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageEntryBackground.png; sourceTree = "<group>"; };
+		EBAFB4FB1613EFF100C0263B /* MessageEntryBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageEntryBackground@2x.png"; sourceTree = "<group>"; };
+		EBAFB4FC1613EFF100C0263B /* MessageEntryInputField.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageEntryInputField.png; sourceTree = "<group>"; };
+		EBAFB4FD1613EFF100C0263B /* MessageEntryInputField@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageEntryInputField@2x.png"; sourceTree = "<group>"; };
+		EBAFB4FE1613EFF100C0263B /* MessageEntrySendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageEntrySendButton.png; sourceTree = "<group>"; };
+		EBAFB4FF1613EFF100C0263B /* MessageEntrySendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageEntrySendButton@2x.png"; sourceTree = "<group>"; };
+		EBAFB5001613EFF100C0263B /* MessageEntrySendButtonPressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MessageEntrySendButtonPressed.png; sourceTree = "<group>"; };
+		EBAFB5011613EFF100C0263B /* MessageEntrySendButtonPressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MessageEntrySendButtonPressed@2x.png"; sourceTree = "<group>"; };
+		EBAFB50A1613F5E000C0263B /* CommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentViewController.h; sourceTree = "<group>"; };
+		EBAFB50B1613F5E000C0263B /* CommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentViewController.m; sourceTree = "<group>"; };
+		EBAFB514161443DC00C0263B /* tab_btn_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_btn_bg@2x.png"; sourceTree = "<group>"; };
+		EBAFB516161447D700C0263B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieViewController.h; sourceTree = "<group>"; };
 		EBAFBC3215F9DDC0007579D1 /* CMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConstants.h; sourceTree = "<group>"; };
 		EBAFBC3315F9DDC0007579D1 /* CMConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConstants.m; sourceTree = "<group>"; };
@@ -477,6 +506,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBAFB517161447D700C0263B /* MobileCoreServices.framework in Frameworks */,
 				EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */,
 				EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */,
 				EB32BCC915F885EC00C878D5 /* Foundation.framework in Frameworks */,
@@ -510,6 +540,14 @@
 		EB1E2964160C58FE005048E5 /* temp */ = {
 			isa = PBXGroup;
 			children = (
+				EBAFB4FA1613EFF100C0263B /* MessageEntryBackground.png */,
+				EBAFB4FB1613EFF100C0263B /* MessageEntryBackground@2x.png */,
+				EBAFB4FC1613EFF100C0263B /* MessageEntryInputField.png */,
+				EBAFB4FD1613EFF100C0263B /* MessageEntryInputField@2x.png */,
+				EBAFB4FE1613EFF100C0263B /* MessageEntrySendButton.png */,
+				EBAFB4FF1613EFF100C0263B /* MessageEntrySendButton@2x.png */,
+				EBAFB5001613EFF100C0263B /* MessageEntrySendButtonPressed.png */,
+				EBAFB5011613EFF100C0263B /* MessageEntrySendButtonPressed@2x.png */,
 				EB1E2965160C58FE005048E5 /* u0_normal.png */,
 			);
 			path = temp;
@@ -539,6 +577,7 @@
 		EB32BCC515F885EC00C878D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EBAFB516161447D700C0263B /* MobileCoreServices.framework */,
 				EB32BD3715F888BD00C878D5 /* QuartzCore.framework */,
 				EB32BCC615F885EC00C878D5 /* UIKit.framework */,
 				EB32BCC815F885EC00C878D5 /* Foundation.framework */,
@@ -613,6 +652,7 @@
 		EB32BD0515F887A400C878D5 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				EBAFB4EC1613EF8000C0263B /* HPGrowingTextView */,
 				EBD8AD7C1610521900D79F62 /* JSON */,
 				EB932A0816104F84004A258D /* TencentOAuth */,
 				EBB21F681610099400A04376 /* Anypic */,
@@ -626,9 +666,10 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */,
+				EBAFB514161443DC00C0263B /* tab_btn_bg@2x.png */,
 				EB1E2964160C58FE005048E5 /* temp */,
 				EB24CC98160B1908009618C6 /* unfocus@2x.png */,
+				EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */,
 				EB24CC96160B178D009618C6 /* user_btn@2x.png */,
 				EB24CC90160B1155009618C6 /* line@2x.png */,
 				EB24CC8A160AFFD2009618C6 /* user_big@2x.png */,
@@ -747,6 +788,8 @@
 				EBAED32315FED3D100192AE4 /* PlayViewController.h */,
 				EBAED32415FED3D100192AE4 /* PlayViewController.m */,
 				EBAED32515FED3D100192AE4 /* PlayViewController.xib */,
+				EBAFB50A1613F5E000C0263B /* CommentViewController.h */,
+				EBAFB50B1613F5E000C0263B /* CommentViewController.m */,
 				EB11D2A81611998D00027F07 /* CommentListViewController.h */,
 				EB11D2A91611998D00027F07 /* CommentListViewController.m */,
 				EB11D2AA1611998E00027F07 /* CommentListViewController.xib */,
@@ -853,6 +896,17 @@
 				EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */,
 			);
 			name = compoment;
+			sourceTree = "<group>";
+		};
+		EBAFB4EC1613EF8000C0263B /* HPGrowingTextView */ = {
+			isa = PBXGroup;
+			children = (
+				EBAFB4F41613EFDE00C0263B /* HPGrowingTextView.h */,
+				EBAFB4F51613EFDE00C0263B /* HPGrowingTextView.m */,
+				EBAFB4F61613EFDE00C0263B /* HPTextViewInternal.h */,
+				EBAFB4F71613EFDE00C0263B /* HPTextViewInternal.m */,
+			);
+			path = HPGrowingTextView;
 			sourceTree = "<group>";
 		};
 		EBAFBC3115F9DDC0007579D1 /* common */ = {
@@ -1139,6 +1193,15 @@
 				EBB2FFCA1612D23800E8D9A7 /* ListCellFactory.xib in Resources */,
 				EBB2FFE81612F8A100E8D9A7 /* DramaPlayViewController.xib in Resources */,
 				EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */,
+				EBAFB5021613EFF100C0263B /* MessageEntryBackground.png in Resources */,
+				EBAFB5031613EFF100C0263B /* MessageEntryBackground@2x.png in Resources */,
+				EBAFB5041613EFF100C0263B /* MessageEntryInputField.png in Resources */,
+				EBAFB5051613EFF100C0263B /* MessageEntryInputField@2x.png in Resources */,
+				EBAFB5061613EFF100C0263B /* MessageEntrySendButton.png in Resources */,
+				EBAFB5071613EFF100C0263B /* MessageEntrySendButton@2x.png in Resources */,
+				EBAFB5081613EFF100C0263B /* MessageEntrySendButtonPressed.png in Resources */,
+				EBAFB5091613EFF100C0263B /* MessageEntrySendButtonPressed@2x.png in Resources */,
+				EBAFB515161443DC00C0263B /* tab_btn_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1262,6 +1325,9 @@
 				EBB2FFE61612F8A100E8D9A7 /* DramaPlayRootViewController.m in Sources */,
 				EBB2FFE71612F8A100E8D9A7 /* DramaPlayViewController.m in Sources */,
 				EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */,
+				EBAFB4F81613EFDE00C0263B /* HPGrowingTextView.m in Sources */,
+				EBAFB4F91613EFDE00C0263B /* HPTextViewInternal.m in Sources */,
+				EBAFB50C1613F5E000C0263B /* CommentViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

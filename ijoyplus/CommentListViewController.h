@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 @interface CommentListViewController : UITableViewController
-
-@property (nonatomic, strong)NSString *title;
 
 @end

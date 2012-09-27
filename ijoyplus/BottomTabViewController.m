@@ -124,10 +124,10 @@
     detailController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"friend", nil) image:[UIImage imageNamed:@"rec_tab"] tag:0];
     
     detailController3 = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
-    detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"list_tab"] tag:0];
+    detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"my_tab"] tag:0];
     
     detailController4 = [[MyselfViewController alloc]initWithNibName:@"MyselfViewController" bundle:nil];
-    detailController4.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"myself", nil) image:[UIImage imageNamed:@"my_tab"] tag:0];
+    detailController4.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"myself", nil) image:[UIImage imageNamed:@"list_tab"] tag:0];
 }
 
 -(UINavigationController*) addNavigation:(UIViewController*) rootViewController
@@ -154,12 +154,11 @@
     } else if ([viewController isKindOfClass: [HomeViewController class]]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemAction target:self action:@selector(settings)];
         self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"myself", nil);
-    // Friend
+        self.title = NSLocalizedString(@"list", nil);
     } else if ([viewController isKindOfClass: [MyselfViewController class]]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
         self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"list", nil);
+        self.title = NSLocalizedString(@"myself", nil);
     }
     return YES;
 }

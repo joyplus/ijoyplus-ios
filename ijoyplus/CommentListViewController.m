@@ -14,15 +14,20 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "UIImageView+WebCache.h"
 #import "CMConstants.h"
+#import "UIUtility.h"
 
 @interface CommentListViewController (){
     NSMutableArray *commentArray;
-}
 
+}
 @end
 
 @implementation CommentListViewController
-@synthesize title;
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -36,12 +41,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = self.title;
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
     NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [NSDate date], nil];
@@ -59,13 +59,7 @@
     [commentArray addObject:commentDic1];
     [commentArray addObject:commentDic2];
     [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    [commentArray addObject:commentDic];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -178,11 +172,6 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
-}
-
-- (void)closeSelf
-{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

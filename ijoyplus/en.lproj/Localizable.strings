@@ -52,6 +52,10 @@ introduction = "简介";
 share = "分享";
 post = "发布";
 tip_text = "已超出";
+recommand_toolbar = "推荐";
+watch_toolbar = "看过";
+collect_toolbar = "收藏";
+comment_toolbar = "评论";
 
 friend = "好友推荐";
 recommand_movie = "推荐的影片";
@@ -69,7 +73,7 @@ sms_invite = "短信邀请";
 friend_comment = "观看的好友";
 drama_list = "剧集列表";
 
-list = "我的主页";
+list = "个人主页";
 watched = "看过的影片";
 my_collection = "收藏的影片";
 cancel_follow = "取消关注";
@@ -77,7 +81,7 @@ my_followed_people = "我关注的人";
 message = "消息";
 my_message = "我的消息";
 
-myself = "个人设置";
+myself = "动态";
 notification_center = "通知中心";
 settings = "设置";
 my_followed = "我关注的";
