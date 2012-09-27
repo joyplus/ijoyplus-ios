@@ -30,7 +30,7 @@
     MBProgressHUD *HUD;
     UIImage *selectedImage;
     BOOL imageChanged;
-    UIButton *triggerBtn;
+    BOOL isAvatarImage;
     
 }
 - (void)addHeaderContent:(UIView *)view;
@@ -39,9 +39,9 @@
 @implementation HomeViewController
 @synthesize loveLabel;
 @synthesize watchedLabel;
-@synthesize bgImageViewBtn;
 @synthesize avatarImageViewBtn;
 @synthesize fansLabel;
+@synthesize bgView;
 @synthesize segment;
 @synthesize topImageView;
 @synthesize avatarImageView;
@@ -73,9 +73,8 @@
     [self setWatchedLabel:nil];
     [self setFansLabel:nil];
     selectedImage = nil;
-    triggerBtn = nil;
-    [self setBgImageViewBtn:nil];
     [self setAvatarImageViewBtn:nil];
+    [self setBgView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -140,13 +139,16 @@
     [self.loveLabel removeFromSuperview];
     [self.watchedLabel removeFromSuperview];
     [self.fansLabel removeFromSuperview];
+    [self.bgView removeFromSuperview];
+    [self.avatarImageViewBtn removeFromSuperview];
     [flowView reloadData];
     
 }
 
 - (void)addHeaderContent:(UIView *)view
 {
-    [view addSubview:self.topImageView];
+    [self.bgView addSubview:self.topImageView];
+    [view addSubview:self.bgView];
     self.avatarImageView.image = [UIImage imageNamed:@"u0_normal"];
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     self.avatarImageView.layer.cornerRadius = 27.5;
@@ -165,7 +167,12 @@
     self.username.text = @"Joyce";
     [view addSubview:self.username];
     [view addSubview:self.avatarImageViewBtn];
-    [view addSubview:self.bgImageViewBtn];
+    
+    UITapGestureRecognizer *tapgesture=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bgImageClicked:)];
+    tapgesture.delegate = self;
+    tapgesture.numberOfTapsRequired=1;  //轻按对象次数（1）触发此行为
+    tapgesture.numberOfTouchesRequired=1; //要求响应的手指数
+    [self.bgView addGestureRecognizer:tapgesture];
     
     self.segment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, TOP_IMAGE_HEIGHT + TOP_GAP, self.view.frame.size.width - MOVIE_LOGO_WIDTH_GAP * 2, SEGMENT_HEIGHT);
     self.segment.selectedSegmentIndex = self.segment.selectedSegmentIndex;
@@ -302,13 +309,13 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
-- (IBAction)bgImageClicked:(id)sender {
-    triggerBtn = (UIButton *)sender;
+- (void)bgImageClicked:(id)sender {
+    isAvatarImage = NO;
     [self photoCaptureButtonAction:sender];
 }
 
 - (IBAction)avatarImageClicked:(id)sender {
-    triggerBtn = (UIButton *)sender;
+    isAvatarImage = YES;
     [self photoCaptureButtonAction:sender];
 }
 
@@ -321,10 +328,10 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [self dismissModalViewControllerAnimated:NO];
     UIImage *originalImage = [info objectForKey:UIImagePickerControllerEditedImage];
-    if(triggerBtn.tag == 0){
-    UIImage *thumbnailImage = [originalImage thumbnailImage:60.0 transparentBorder:0.0f cornerRadius:10.0f interpolationQuality:kCGInterpolationDefault];
+    if(isAvatarImage){
+        UIImage *thumbnailImage = [originalImage thumbnailImage:60.0 transparentBorder:0.0f cornerRadius:10.0f interpolationQuality:kCGInterpolationDefault];
         selectedImage = originalImage;
-    self.avatarImageView.image = thumbnailImage;
+        self.avatarImageView.image = thumbnailImage;
     } else {
         UIImage *thumbnailImage = [originalImage resizedImage:CGSizeMake(self.view.frame.size.width, TOP_IMAGE_HEIGHT) interpolationQuality:kCGInterpolationDefault];
         selectedImage = originalImage;

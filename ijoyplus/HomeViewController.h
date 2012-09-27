@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WaterflowView.h"
 
-@interface HomeViewController : UIViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate,   UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate >
+@interface HomeViewController : UIViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate >
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segment;
 @property (strong, nonatomic) IBOutlet UIImageView *topImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *avatarImageView;
@@ -24,9 +24,9 @@
 - (IBAction)followUser:(id)sender;
 @property (strong, nonatomic) IBOutlet UILabel *loveLabel;
 @property (strong, nonatomic) IBOutlet UILabel *watchedLabel;
-@property (strong, nonatomic) IBOutlet UIButton *bgImageViewBtn;
 @property (strong, nonatomic) IBOutlet UIButton *avatarImageViewBtn;
 @property (strong, nonatomic) IBOutlet UILabel *fansLabel;
+@property (strong, nonatomic) IBOutlet UIView *bgView;
 - (IBAction)bgImageClicked:(id)sender;
 - (IBAction)avatarImageClicked:(id)sender;
 
