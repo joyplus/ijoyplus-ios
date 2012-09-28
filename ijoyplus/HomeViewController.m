@@ -37,7 +37,6 @@
 @end
 
 @implementation HomeViewController
-@synthesize loveLabel;
 @synthesize watchedLabel;
 @synthesize avatarImageViewBtn;
 @synthesize fansLabel;
@@ -46,10 +45,8 @@
 @synthesize topImageView;
 @synthesize avatarImageView;
 @synthesize roundImageView;
-@synthesize loveNumberLabel;
 @synthesize watchedNumberLabel;
 @synthesize fansNumberLabel;
-@synthesize loveBtn;
 @synthesize watchBtn;
 @synthesize collectionBtn;
 @synthesize username;
@@ -62,14 +59,11 @@
     [self setTopImageView:nil];
     [self setAvatarImageView:nil];
     [self setRoundImageView:nil];
-    [self setLoveNumberLabel:nil];
     [self setWatchedNumberLabel:nil];
     [self setFansNumberLabel:nil];
-    [self setLoveBtn:nil];
     [self setWatchBtn:nil];
     [self setCollectionBtn:nil];
     [self setUsername:nil];
-    [self setLoveLabel:nil];
     [self setWatchedLabel:nil];
     [self setFansLabel:nil];
     selectedImage = nil;
@@ -109,6 +103,7 @@
         [flowView removeFromSuperview];
     }
     flowView = [[WaterflowView alloc] initWithFrame:self.view.frame];
+    flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     NSString *flag = @"0";
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
@@ -128,15 +123,12 @@
     [self.topImageView removeFromSuperview];
     [self.avatarImageView removeFromSuperview];
     [self.roundImageView removeFromSuperview];
-    [self.loveBtn removeFromSuperview];
     [self.watchBtn removeFromSuperview];
     [self.collectionBtn removeFromSuperview];
-    [self.loveNumberLabel removeFromSuperview];
     [self.watchedNumberLabel removeFromSuperview];
     [self.fansNumberLabel removeFromSuperview];
     [self.segment removeFromSuperview];
     [self.username removeFromSuperview];
-    [self.loveLabel removeFromSuperview];
     [self.watchedLabel removeFromSuperview];
     [self.fansLabel removeFromSuperview];
     [self.bgView removeFromSuperview];
@@ -155,13 +147,10 @@
     self.avatarImageView.layer.masksToBounds = YES;
     [view addSubview:self.avatarImageView];
     [view addSubview:self.roundImageView];
-    [view addSubview:self.loveBtn];
     [view addSubview:self.watchBtn];
     [view addSubview:self.collectionBtn];
-    [view addSubview:self.loveNumberLabel];
     [view addSubview:self.watchedNumberLabel];
     [view addSubview:self.fansNumberLabel];
-    [view addSubview:self.loveLabel];
     [view addSubview:self.watchedLabel];
     [view addSubview:self.fansLabel];
     self.username.text = @"Joyce";

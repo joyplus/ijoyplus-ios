@@ -7,6 +7,8 @@
 
 @interface MyselfViewController(){
     NSMutableArray *itemsArray;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+	BOOL _reloading;
 }
 
 - (void)loadTable;
@@ -60,14 +62,24 @@
     //    [itemsArray addObject:itemDic5];
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table withClient:self];
-    
     [self loadTable];
+    
+    if (_refreshHeaderView == nil) {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.table.bounds.size.height, self.view.frame.size.width, self.table.bounds.size.height)];
+        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+		view.delegate = self;
+		[self.table addSubview:view];
+		_refreshHeaderView = view;
+		
+	}
+	[_refreshHeaderView refreshLastUpdatedDate];
     
 }
 
 - (void)viewDidUnload {
     itemsArray = nil;
     self.table = nil;
+    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
     [super viewDidUnload];
 }
@@ -170,6 +182,7 @@
  * @param scrollView: The scroll-view object in which the scrolling occurred.
  */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     [pullToRefreshManager_ tableViewScrolled];
 }
 
@@ -183,6 +196,7 @@
  * @param decelerate: YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     [pullToRefreshManager_ tableViewReleased];
 }
 
@@ -222,5 +236,48 @@
     [itemsArray addObject:itemDic3];
     [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
 }
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+	
+	//  should be calling your tableviews data source model to reload
+	//  put here just for demo
+	_reloading = YES;
+	
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.table];
+	
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+
 
 @end

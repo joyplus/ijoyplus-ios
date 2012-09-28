@@ -3,6 +3,7 @@
 "Loading..." = "努力加载中...";
 "Release to refresh..." = "松开可以刷新...";
 "Pull to load more" = "上拉加载更多...";
+"Last Updated: " = "更新于：%@";
 
 "MNM_BOTTOM_PTR_PULL_TEXT" = "上拉加载更多...";
 "MNM_BOTTOM_PTR_RELEASE_TEXT" = "松开加载!";

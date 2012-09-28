@@ -60,7 +60,7 @@
     previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     [self addChildViewController:currentViewController];
-    currentViewController.view.frame = CGRectMake(0, 0, 320, 480);
+    currentViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TAB_BAR_HEIGHT);
     [self.view addSubview:currentViewController.view];
 }
 

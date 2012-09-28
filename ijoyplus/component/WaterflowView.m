@@ -10,8 +10,10 @@
 #import "LoadingMoreFooterView.h"
 #import "EGORefreshTableHeaderView.h"
 #import "AppDelegate.h"
+#import "CMConstants.h"
+#import "ContainerUtility.h"
 
-#define LOADINGVIEW_HEIGHT 44
+#define LOADINGVIEW_HEIGHT 58
 #define REFRESHINGVIEW_HEIGHT 88
 
 @interface WaterflowView() <EGORefreshTableHeaderDelegate>{
@@ -38,6 +40,7 @@
 @synthesize cellSelectedNotificationName;
 @synthesize mergeRow;
 @synthesize mergeCell;
+@synthesize parentControllerName;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -46,7 +49,7 @@
         // Initialization code
 		self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
-		self.delegate = self;
+        self.delegate = self;
         if(self.cellSelectedNotificationName == nil){
             self.cellSelectedNotificationName = @"CellSelected";
         }
@@ -56,14 +59,50 @@
                                                    object:nil];
         
         
-        self.loadFooterView = [[LoadingMoreFooterView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44.f)];
+        self.loadFooterView = [[LoadingMoreFooterView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, TAB_BAR_HEIGHT)];
         self.loadingmore = NO;
         [self addSubview:self.loadFooterView];
         
         self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
         [self addSubview:self.refreshHeaderView];
         self.refreshHeaderView.delegate = self;
+        self.refreshHeaderView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
         self.isRefreshing = NO;
+        [self.refreshHeaderView refreshLastUpdatedDate];
+        
+        currentPage = 1;
+        [self initialize];
+    }
+    return self;
+}
+
+- (id)initWithFrameWithoutHeader:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+		self.showsHorizontalScrollIndicator = NO;
+        self.showsVerticalScrollIndicator = NO;
+        self.delegate = self;
+        if(self.cellSelectedNotificationName == nil){
+            self.cellSelectedNotificationName = @"CellSelected";
+        }
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(cellSelected:)
+                                                     name:self.cellSelectedNotificationName
+                                                   object:nil];
+        
+        
+        self.loadFooterView = [[LoadingMoreFooterView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, TAB_BAR_HEIGHT)];
+        self.loadingmore = NO;
+        [self addSubview:self.loadFooterView];
+        
+//        self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
+//        [self addSubview:self.refreshHeaderView];
+        self.refreshHeaderView.delegate = self;
+        self.refreshHeaderView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+        self.isRefreshing = NO;
+        [self.refreshHeaderView refreshLastUpdatedDate];
         
         currentPage = 1;
         [self initialize];
@@ -466,6 +505,18 @@
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view
 {
 	return self.isRefreshing; // should return if data source model is reloading
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+    NSDate *lastUpdateDate = (NSDate *)[[ContainerUtility sharedInstance]attributeForKey: [NSString stringWithFormat:@"%@%@", self.parentControllerName, @"lastUpdateDate"]];
+    if(lastUpdateDate == nil){
+        [[ContainerUtility sharedInstance]setAttribute:[NSDate date] forKey:[NSString stringWithFormat:@"%@%@", self.parentControllerName, @"lastUpdateDate"]];
+        return [NSDate date]; // should return date data source was last changed
+    } else {
+        return [NSDate date];
+    }
+	
 }
 
 @end

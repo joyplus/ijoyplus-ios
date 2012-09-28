@@ -1,11 +1,12 @@
 #import <Foundation/Foundation.h>
 #import "MNMBottomPullToRefreshManager.h"
 #import "MyProfileCell.h"
+#import "EGORefreshTableHeaderView.h"
 
 /**
  * View controller with the demo table
  */
-@interface MyselfViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient> {
+@interface MyselfViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient> {
 @private
     /**
      * Pull to refresh manager

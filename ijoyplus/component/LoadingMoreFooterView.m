@@ -32,6 +32,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down"]];
         self.showActivityIndicator = NO;
         self.enabled = YES;
         self.refreshing = NO;
@@ -39,7 +40,8 @@
         self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, frame.size.width, frame.size.height)];
         self.textLabel.textAlignment = UITextAlignmentCenter;
         self.textLabel.text = NSLocalizedString(@"Pull to load more", nil);
-        self.textLabel.textColor = [UIColor darkGrayColor];
+        self.textLabel.textColor = [UIColor whiteColor];
+        self.textLabel.font = [UIFont boldSystemFontOfSize:13];
         [self addSubview:self.textLabel];
         
         self.textLabel.backgroundColor = [UIColor clearColor];

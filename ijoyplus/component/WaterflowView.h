@@ -56,7 +56,7 @@
 }
 
 - (void)reloadData;
-
+- (id)initWithFrameWithoutHeader:(CGRect)frame;
 - (id)dequeueReusableCellWithIdentifier:(NSString *)identifier;
 
 @property (nonatomic, strong) NSMutableArray *cellHeight; //array of cells height arrays, count = numberofcolumns, and elements in each single child array represents is a total height from this cell to the top
@@ -67,4 +67,6 @@
 @property (nonatomic, strong) NSString *cellSelectedNotificationName;
 @property (nonatomic, assign) BOOL mergeCell;
 @property (nonatomic, assign) int mergeRow;
+@property (nonatomic, strong) NSString *parentControllerName;
+
 @end

@@ -38,7 +38,7 @@
 /**
  * Defines arrow image
  */
-#define MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE                               @"MNMBottomPullToRefreshArrow.png"
+#define MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE                               @"up"
 
 @implementation MNMBottomPullToRefreshView
 
@@ -69,7 +69,8 @@
     
     if (self = [super initWithFrame:frame]) {
         
-        self.backgroundColor = [UIColor colorWithWhite:0.75f alpha:1.0f];        
+//        self.backgroundColor = [UIColor colorWithWhite:0.75f alpha:1.0f];        
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down"]];
         
         UIImage *arrowImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE];
         
@@ -85,10 +86,10 @@
         
         [self addSubview:loadingActivityIndicator_];
         
-        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame) + 20.0f, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, CGRectGetHeight(frame) - 20.0f)];
+        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame) + 70.0f, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, CGRectGetHeight(frame) - 20.0f)];
         messageLabel_.backgroundColor = [UIColor clearColor];
         messageLabel_.textColor = [UIColor whiteColor];
-        
+        messageLabel_.font = [UIFont boldSystemFontOfSize:13.0f];
         [self addSubview:messageLabel_];
         
         rotateArrowWhileBecomingVisible_ = YES;
