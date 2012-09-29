@@ -38,9 +38,9 @@
     imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
     tempCount = imageUrls.count;
     [self addContentView];
-    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
-    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
-    [flowView addGestureRecognizer:downGesture];
+//    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
+//    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+//    [flowView addGestureRecognizer:downGesture];
 }
 
 - (void)addContentView
@@ -81,7 +81,7 @@
 
 - (NSInteger)flowView:(WaterflowView *)flowView numberOfRowsInColumn:(NSInteger)column
 {
-    return 10;
+    return 4;
 }
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath

@@ -75,7 +75,7 @@
     /**
      * Table view which p-t-r view will be added
      */
-    UITableView *table_;
+    UIScrollView *table_;
     
     /**
      * Client object that observes changes
@@ -90,7 +90,7 @@
  * @param table Table view to link pull-to-refresh view to 
  * @param client The client that will observe behavior
  */
-- (id)initWithPullToRefreshViewHeight:(CGFloat)height tableView:(UITableView *)table withClient:(id<MNMBottomPullToRefreshManagerClient>)client;
+- (id)initWithPullToRefreshViewHeight:(CGFloat)height tableView:(UIScrollView *)table withClient:(id<MNMBottomPullToRefreshManagerClient>)client;
 
 /**
  * Relocate pull-to-refresh view

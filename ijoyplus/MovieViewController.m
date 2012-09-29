@@ -24,9 +24,9 @@
     tempCount = imageUrls.count;
     [self addContentView];
     
-    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
-    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
-    [flowView addGestureRecognizer:downGesture];
+//    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
+//    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+//    [flowView addGestureRecognizer:downGesture];
 }
 
 - (void)addContentView
@@ -34,7 +34,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height- 80)];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-135)];
     flowView.parentControllerName = @"MovieViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     NSString *flag = @"0";
@@ -49,7 +49,7 @@
     [self.view addSubview:flowView];
     
     currentPage = 1;
-//    [flowView reloadData];
+    [flowView reloadData];
     
 }
 
@@ -127,7 +127,6 @@
 {
     [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
     tempCount = imageUrls.count;
-    [flowView reloadData];
 }
 
 @end

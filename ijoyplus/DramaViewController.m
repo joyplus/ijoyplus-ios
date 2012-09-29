@@ -24,9 +24,9 @@
     tempCount = imageUrls.count;
     [self addContentView];
     
-    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
-    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
-    [flowView addGestureRecognizer:downGesture];
+//    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
+//    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+//    [flowView addGestureRecognizer:downGesture];
 }
 
 - (void)addContentView

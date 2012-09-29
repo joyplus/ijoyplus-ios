@@ -7,25 +7,23 @@
 //
 
 #import "WaterflowView.h"
-#import "LoadingMoreFooterView.h"
 #import "EGORefreshTableHeaderView.h"
 #import "AppDelegate.h"
 #import "CMConstants.h"
 #import "ContainerUtility.h"
+#import "MNMBottomPullToRefreshManager.h"
 
-#define LOADINGVIEW_HEIGHT 58
 #define REFRESHINGVIEW_HEIGHT 88
 
-@interface WaterflowView() <EGORefreshTableHeaderDelegate>{
+@interface WaterflowView() <EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient>{
     CGPoint previousOffSet;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
 }
 - (void)initialize;
 - (void)recycleCellIntoReusableQueue:(WaterFlowCell*)cell;
 - (void)pageScroll;
 - (void)cellSelected:(NSNotification*)notification;
-
-@property(nonatomic,retain) LoadingMoreFooterView *loadFooterView; 
-@property(nonatomic,readwrite) BOOL loadingmore;
 
 @property(nonatomic, retain) EGORefreshTableHeaderView * refreshHeaderView;  //下拉刷新
 @property(nonatomic, readwrite) BOOL isRefreshing; 
@@ -35,7 +33,6 @@
 @synthesize cellHeight=_cellHeight,visibleCells=_visibleCells,reusableCells=_reusedCells;
 @synthesize flowdelegate=_flowdelegate;
 @synthesize flowdatasource=_flowdatasource;
-@synthesize loadFooterView=_loadFooterView,loadingmore=_loadingmore;
 @synthesize refreshHeaderView=_refreshHeaderView,isRefreshing=_isRefreshing;
 @synthesize cellSelectedNotificationName;
 @synthesize mergeRow;
@@ -57,12 +54,6 @@
                                                  selector:@selector(cellSelected:)
                                                      name:self.cellSelectedNotificationName
                                                    object:nil];
-        
-        
-        self.loadFooterView = [[LoadingMoreFooterView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, TAB_BAR_HEIGHT)];
-        self.loadingmore = NO;
-        [self addSubview:self.loadFooterView];
-        
         self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
         [self addSubview:self.refreshHeaderView];
         self.refreshHeaderView.delegate = self;
@@ -72,6 +63,8 @@
         
         currentPage = 1;
         [self initialize];
+        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self withClient:self];
+        [pullToRefreshManager_ tableViewReloadFinished];
     }
     return self;
 }
@@ -91,12 +84,6 @@
                                                  selector:@selector(cellSelected:)
                                                      name:self.cellSelectedNotificationName
                                                    object:nil];
-        
-        
-        self.loadFooterView = [[LoadingMoreFooterView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, TAB_BAR_HEIGHT)];
-        self.loadingmore = NO;
-        [self addSubview:self.loadFooterView];
-        
 //        self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
 //        [self addSubview:self.refreshHeaderView];
         self.refreshHeaderView.delegate = self;
@@ -130,7 +117,7 @@
     self.reusableCells = nil;
     self.flowdatasource = nil;
     self.flowdelegate = nil;
-    self.loadFooterView = nil;
+    pullToRefreshManager_ =nil;
 }
 
 - (void)setFlowdatasource:(id<WaterflowViewDatasource>)flowdatasource
@@ -229,10 +216,8 @@
         scrollHeight = (columHeight >= scrollHeight)?columHeight:scrollHeight;
     }
     
-    self.contentSize = CGSizeMake(self.frame.size.width, scrollHeight + LOADINGVIEW_HEIGHT);
-    
-    self.loadFooterView.frame = CGRectMake(0, scrollHeight, self.frame.size.width, LOADINGVIEW_HEIGHT);
-    
+    self.contentSize = CGSizeMake(self.frame.size.width, scrollHeight);
+       
     [self pageScroll];
     [self showNavigationBarAnimation];
     
@@ -251,11 +236,6 @@
         }
     }
     
-    if(self.loadingmore)
-    {
-        self.loadingmore = NO;
-        self.loadFooterView.showActivityIndicator = NO;
-    }
     if (self.isRefreshing)
     {
         self.isRefreshing = NO;
@@ -263,6 +243,14 @@
     }
 
     [self initialize];
+    [pullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    reloads_++;
+    currentPage ++;
+    [self.flowdelegate flowView:self willLoadData:currentPage];
+    [self performSelector:@selector(reloadData) withObject:nil afterDelay:2.0f];
 }
 
 - (void)pageScroll
@@ -444,33 +432,36 @@
         }
         oldIx = newx;
     }
+    
+    [pullToRefreshManager_ tableViewScrolled];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
 	[self.refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [pullToRefreshManager_ tableViewReleased];
 	
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    float bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
- 
-    if (bottomEdge >= scrollView.contentSize.height ) 
-    {
-        if (self.loadingmore) return;
-        
-        NSLog(@"load more");
-        self.loadingmore = YES;
-        self.loadFooterView.showActivityIndicator = YES;
-        
-        currentPage ++;
-        if ([self.flowdelegate respondsToSelector:@selector(flowView:willLoadData:)])
-        {
-            [self.flowdelegate flowView:self willLoadData:currentPage];  //在delegate中对flowview进行reloadData
-        }
+//    float bottomEdge = scrollView.contentOffset.y + scrollView.frame.size.height;
+// 
+//    if (bottomEdge >= scrollView.contentSize.height ) 
+//    {
+//        if (self.loadingmore) return;
+//        
+//        NSLog(@"load more");
+//        self.loadingmore = YES;
+//        self.loadFooterView.showActivityIndicator = YES;
+//        
+//        currentPage ++;
+//        if ([self.flowdelegate respondsToSelector:@selector(flowView:willLoadData:)])
+//        {
+//            [self.flowdelegate flowView:self willLoadData:currentPage];  //在delegate中对flowview进行reloadData
+//        }
 //        [self performSelector:@selector(reloadData) withObject:self afterDelay:1.0f]; //make a delay to show loading process for a while
-    }
+//    }
 }
 
 - (void)hideNavigationBarAnimation
