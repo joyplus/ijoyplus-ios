@@ -9,14 +9,30 @@
 #import "AppDelegate.h"
 #import "BottomTabViewController.h"
 #import "PopularSegmentViewController.h"
+#import "AFHTTPRequestOperationLogger.h"
+#import "Reachability.h"
+#import "ContainerUtility.h"
+#import "CMConstants.h"
+#import "SFHFKeychainUtils.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 @interface AppDelegate (){
     BottomTabViewController *detailViewController;
 }
+@property (nonatomic, strong) Reachability *hostReach;
+@property (nonatomic, strong) Reachability *internetReach;
+@property (nonatomic, readonly) int networkStatus;
+- (void)monitorReachability;
 
 @end
 
 @implementation AppDelegate
+@synthesize networkStatus;
+@synthesize hostReach;
+@synthesize internetReach;
+
 - (void)customizeAppearance
 {
     // Set the background image for *all* UINavigationBars
@@ -48,12 +64,33 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
+        NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserId andServiceName:@"login" error:nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    username, @"username",
+                                    password, @"password",
+                                    nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(![responseCode isEqualToString:kSuccessResCode]){
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+            }
+        }
+        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
     detailViewController = [[BottomTabViewController alloc] init];
     UINavigationController *viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];
+    [self monitorReachability];
     return YES;
 }
 
@@ -87,6 +124,26 @@
 - (void)refreshRootView
 {
     [detailViewController closeChild];
+}
+
+- (BOOL)isParseReachable {
+    return self.networkStatus != NotReachable;
+}
+- (void)monitorReachability {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
+    
+    self.hostReach = [Reachability reachabilityWithHostname: @"www.baidu.com"];
+    [self.hostReach startNotifier];
+    
+    self.internetReach = [Reachability reachabilityForInternetConnection];
+    [self.internetReach startNotifier];
+}
+//Called by Reachability whenever status changes.
+- (void)reachabilityChanged:(NSNotification* )note {
+    Reachability *curReach = (Reachability *)[note object];
+    NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    NSLog(@"Reachability changed: %@", curReach);
+    networkStatus = [curReach currentReachabilityStatus];
 }
 
 @end

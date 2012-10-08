@@ -20,7 +20,7 @@
 @implementation IntroductionView
 @synthesize delegate;
 #pragma mark - initialization & cleaning up
-- (id)initWithTitle:(NSString *)aTitle
+- (id)initWithTitle:(NSString *)aTitle content:(NSString *)content
 {
     CGRect rect = [[UIScreen mainScreen] applicationFrame];
     if (self = [super initWithFrame:rect])
@@ -31,11 +31,11 @@
         _textView = [[UITextView alloc] initWithFrame:CGRectMake(POPLISTVIEW_SCREENINSET, 
                                                                    POPLISTVIEW_SCREENINSET + POPLISTVIEW_HEADER_HEIGHT, 
                                                                    rect.size.width - 2 * POPLISTVIEW_SCREENINSET,
-                                                                   (rect.size.height - 2 * POPLISTVIEW_SCREENINSET - POPLISTVIEW_HEADER_HEIGHT - RADIUS)*0.85)];
+                                                                   (rect.size.height - 2 * POPLISTVIEW_SCREENINSET - POPLISTVIEW_HEADER_HEIGHT - RADIUS)*0.75)];
         _textView.backgroundColor = [UIColor clearColor];
         _textView.textColor = [UIColor whiteColor];
         _textView.editable = NO;
-        _textView.text = @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。";
+        _textView.text = content;
         [self addSubview:_textView];
 
     }

@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "MNMBottomPullToRefreshManager.h"
 #import "IntroductionView.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface PlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate> {
-@private
+@interface PlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate> {
     /**
      * Pull to refresh manager
      */
@@ -22,7 +22,7 @@
      */
     NSUInteger reloads_;
 }
-
+@property (nonatomic, strong) NSString *programId;
 @property (nonatomic, assign)int imageHeight;
 
 @end

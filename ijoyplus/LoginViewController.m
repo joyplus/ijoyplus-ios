@@ -17,12 +17,17 @@
 #import "SinaLoginViewController.h"
 #import "TecentViewController.h"
 #import "ContainerUtility.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "SFHFKeychainUtils.h"
 
 #define FIELDS_COUNT 2
 
 
 @interface LoginViewController (){
     UIToolbar *keyboardToolbar;
+    MBProgressHUD *HUD;
 }
 
 - (void)closeSelf;
@@ -39,6 +44,7 @@
 - (void)viewDidUnload
 {
     keyboardToolbar = nil;
+    HUD = nil;
     [self setScrollView:nil];
     [self setTable:nil];
     [self setUsernameCell:nil];
@@ -99,6 +105,10 @@
                                                                        target:self
                                                                        action:@selector(resignKeyboard:)];
         
+        [previousBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        [nextBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        [doneBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        
         [keyboardToolbar setItems:[NSArray arrayWithObjects:previousBarItem, nextBarItem, spaceBarItem, doneBarItem, nil]];
         
         usernameCell.titleField.tag = 1;
@@ -130,46 +140,18 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0){
-        return 4;
-    } else {
-        return 2;
-    }
+    return 2;
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section == 0){
-        static NSString *CellIdentifier = @"Cell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if(cell == nil){
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        }
-        UIImageView *lineView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"line"]];
-        lineView.frame = CGRectMake(0, cell.frame.size.height - 1, cell.frame.size.width - 20, 1);
-        if(indexPath.row == 0){
-            cell.textLabel.text = NSLocalizedString(@"sina_weibo", nil);
-            [cell.contentView addSubview:lineView];
-        } else if(indexPath.row == 1){
-            cell.textLabel.text = NSLocalizedString(@"tencent_weibo", nil);
-            [cell.contentView addSubview:lineView];
-        } else if(indexPath.row == 2){
-            cell.textLabel.text = NSLocalizedString(@"renren", nil);
-            [cell.contentView addSubview:lineView];
-        } else if(indexPath.row == 3){
-            cell.textLabel.text = NSLocalizedString(@"douban", nil);
-        }
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.textLabel.font = [UIFont systemFontOfSize:15];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        return cell;
-    } else if(indexPath.section == 1){
         if(indexPath.row == 0){
             usernameCell.titleField.placeholder = NSLocalizedString(@"username", nil);
             return usernameCell;
@@ -194,11 +176,7 @@
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, customView.frame.size.width, customView.frame.size.height)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:15];
-    if(section == 0){
-        headerLabel.text =  NSLocalizedString(@"auth_login", nil);
-    }else {
-        headerLabel.text =  NSLocalizedString(@"register_user", nil);
-    }
+    headerLabel.text =  NSLocalizedString(@"user_login", nil);
     headerLabel.textColor = [UIColor whiteColor];
     [headerLabel sizeToFit];
     [customView addSubview:headerLabel];
@@ -208,16 +186,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0){
-        if(indexPath.row == 0){
-            SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
-            [self.navigationController pushViewController:viewController animated:YES];
-        } else if (indexPath.row == 1){
-            TecentViewController *viewController = [[TecentViewController alloc] init];
-			[self.navigationController pushViewController:viewController animated:YES];
-        }
-    }
-    [self.table deselectRowAtIndexPath:indexPath animated:YES];
+//    [self.table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
@@ -233,9 +202,87 @@
 }
 
 - (IBAction)loginAction:(id)sender {
+    [self resignKeyboard:nil];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.minSize = CGSizeMake(135.f, 135.f);
+    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+        return;
+    }
+    HUD.labelText = NSLocalizedString(@"message.logginInProgress", nil);
+    [HUD showWhileExecuting:@selector(saveTask) onTarget:self withObject:nil animated:YES];
+}
+
+- (void)saveTask
+{
+    sleep(1);
+    NSString *strEmailId = usernameCell.titleField.text;
+    NSString *strPassword = loginPasswordCell.titleField.text;
+    
+    if ([self validateEmpty:NSLocalizedString(@"message.emailempty", nil) content:strEmailId] || ![self IsValidEmail:strEmailId] || [self validateEmpty:NSLocalizedString(@"message.passwordempty", nil) content:strPassword]) {
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                strEmailId, @"username",
+                                strPassword, @"password",
+                                nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD.mode = MBProgressHUDModeCustomView;
+        [self.view addSubview:HUD];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"complete.png"]];
+            HUD.labelText = NSLocalizedString(@"message.signinsuccess", nil);
+            [HUD showWhileExecuting:@selector(postLogin) onTarget:self withObject:nil animated:YES];
+        } else {
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+            HUD.labelText = NSLocalizedString(msg, nil);
+            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        [self.view addSubview:HUD];
+        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
+        HUD.minSize = CGSizeMake(135.f, 135.f);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+    }];   
+}
+
+- (void)showError
+{
+    sleep(2);
+}
+
+- (void)postLogin
+{
+    sleep(2);
+    [SFHFKeychainUtils storeUsername:kUserId andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
+    [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserId];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     [appDelegate refreshRootView];
+}
+
+- (IBAction)sinaLogin:(id)sender {
+    SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (IBAction)tecentLogin:(id)sender {
+    TecentViewController *viewController = [[TecentViewController alloc] init];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)resignKeyboard:(id)sender
@@ -291,11 +338,7 @@
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
     
-    if (tag > 1) {
-        rect.origin.y = -44.0f * 5 - 15;
-    } else {
-        rect.origin.y = -44.0f * 5;
-    }
+    rect.origin.y = -44.0f * 4;
     self.view.frame = rect;
     [UIView commitAnimations];
 }
@@ -330,7 +373,42 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
     [self resignKeyboard:nil];
     return YES;
+}
+
+- (BOOL) IsValidEmail:(NSString*) checkString {
+    NSString *stricterFilterString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    //NSString *laxString = @".+@.+\.[A-Za-z]{2}[A-Za-z]*";
+    //NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", stricterFilterString];
+    if(![emailTest evaluateWithObject:checkString]){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.invalidMailAddress", nil);
+        sleep(1);
+        return NO;
+    }else{
+        return YES;
+        
+    }
+    return YES;
+}
+
+- (BOOL) validateEmpty: (NSString *) title content:(NSString *)content{
+    if ([StringUtility stringIsEmpty:content]) {
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = title;
+        sleep(2);
+        return YES;
+    } else {
+        return NO;
+    }
 }
 @end

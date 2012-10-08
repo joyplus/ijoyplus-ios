@@ -20,7 +20,8 @@ login = "登录";
 register = "注册";
 sina_weibo = "新浪微博";
 sina_weibo_friend = "新浪微博好友";
-sina_weibo_login = "新浪微博登陆";
+sina_weibo_login = "新浪微博登录";
+tecent_login = "QQ账号登录";
 tencent_weibo = "腾讯QQ";
 tencent_weibo_friend = "腾讯QQ好友";
 renren = "人人网";
@@ -31,9 +32,10 @@ password = "密码";
 confirm_password = "重复密码";
 auth_login = "授权登录";
 register_user = "注册账号";
-username = "昵称/邮箱";
+username = "邮箱";
 fill_form = "激活悦+账号";
 fill_form_title = "补充个人资料";
+user_login = "账号登录";
 
 search = "搜索";
 search_history = "历史记录";
@@ -98,6 +100,27 @@ logout = "注销";
 logout_account = "注销当前账号";
 logout_message = "注销后您的社交化网络绑定也会同时解除，确定要注销吗？";
 
+msg_10021 = "网络错误，请重试一次。";
+msg_20001 = "邮箱地址不存在。";
+msg_20002 = "邮箱地址或密码不正确。";
+msg_20006 = "该邮箱地址已被使用。";
+msg_20008 = "会话已过期，请重新登陆";
+msg_20019 = "该昵称已被使用。";
+
+
+"message.registerInProgress" = "注册中...";
+"message.logginInProgress" = "登录中...";
+"message.invalidMailAddress"="邮箱地址格式不对";
+"message.duplicatedMailAddress"="邮箱地址已经被注册";
+"message.systemfailure" = "网络错误，请再试一次。";
+"message.nicknameempty" = "昵称不能为空。";
+"message.passwordempty" = "密码不能为空。";
+"message.emailempty" = "邮箱地址不能为空。";
+"message.networkError"="请检查网络信号！";
+"message.signupsuccess"="注册成功！";
+"message.signinsuccess"="登录成功！";
+"message.duplicatedNickname" = "昵称已被使用。";
+"message.duplicatedMailAddress" = "邮箱地址已被试用。";
 
 //FormatterKit
 "year" = "年";

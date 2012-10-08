@@ -38,6 +38,8 @@
 #define kSinaUserLoggedIn @"sinaUserLoggedIn"
 #define kTencentUserLoggedIn @"tencentUserLoggedIn"
 
+#define kUserId @"kUserId"
+
 
 
 @interface CMConstants : NSObject 

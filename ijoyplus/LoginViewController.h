@@ -18,5 +18,7 @@
 @property (strong, nonatomic) IBOutlet UsernameCell *usernameCell;
 @property (strong, nonatomic) IBOutlet LoginPasswordCell *loginPasswordCell;
 - (IBAction)loginAction:(id)sender;
+- (IBAction)sinaLogin:(id)sender;
+- (IBAction)tecentLogin:(id)sender;
 
 @end

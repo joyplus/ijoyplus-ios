@@ -1,0 +1,96 @@
+//
+//  ProgramViewController.m
+//  ijoyplus
+//
+//  Created by joyplus1 on 12-10-8.
+//  Copyright (c) 2012年 joyplus. All rights reserved.
+//
+
+#import "ProgramViewController.h"
+#import "CustomBackButtonHolder.h"
+#import "CustomBackButton.h"
+
+@interface ProgramViewController ()
+
+@end
+
+@implementation ProgramViewController
+@synthesize programUrl;
+@synthesize webView;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    [self.webView setBackgroundColor:[UIColor clearColor]];
+    [self hideGradientBackground:webView];
+    self.webView.delegate = self;
+    
+    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.programUrl]]];
+    [webView setScalesPageToFit:YES];
+}
+
+- (void)viewDidUnload
+{
+    self.webView = nil;
+    self.programUrl = nil;
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void) hideGradientBackground:(UIView*)theView
+{
+    for (UIView * subview in theView.subviews)
+    {
+        if ([subview isKindOfClass:[UIImageView class]])
+            subview.hidden = YES;
+        
+        [self hideGradientBackground:subview];
+    }
+}
+
+- (UIButton *)findButtonInView:(UIView *)view {
+    UIButton *button = nil;
+    
+    if ([view isMemberOfClass:[UIButton class]]) {
+        return (UIButton *)view;
+    }
+    
+    if (view.subviews && [view.subviews count] > 0) {
+        for (UIView *subview in view.subviews) {
+            button = [self findButtonInView:subview];
+            if (button) return button;
+        }
+    }
+    
+    return button;
+}
+
+- (void)webViewDidFinishLoad:(UIWebView *)_webView {
+//    UIButton *b = [self findButtonInView:_webView];
+//    [b sendActionsForControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)closeSelf
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+@end

@@ -381,7 +381,7 @@
 }
 
 - (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:@"电影名称"];
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:@"电影名称" content:@"Test"];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.9);
     lplv.center = CGPointMake(160, 210 + self.tableView.contentOffset.y);
     lplv.delegate = self;

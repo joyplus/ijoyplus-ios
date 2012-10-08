@@ -28,6 +28,16 @@
 
 @implementation PlayRootViewController
 
+
+- (void)viewDidUnload
+{
+    leftGesture = nil;
+    rightGesture = nil;
+    bottomToolbar = nil;
+    self.programId = nil;
+    [super viewDidUnload];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -57,8 +67,9 @@
 - (void)initViewController
 {
     currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    currentViewController.programId = self.programId;
+//    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+//    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     [self addChildViewController:currentViewController];
     currentViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TAB_BAR_HEIGHT);
     [self.view addSubview:currentViewController.view];
@@ -67,6 +78,7 @@
 - (void)share
 {
     PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
+    viewController.programId = self.programId;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -80,40 +92,31 @@
 
 - (void)previousAction
 {
-    nextViewController = currentViewController;
-    [currentViewController.view removeFromSuperview];
-    [currentViewController removeFromParentViewController];
-    currentViewController = previousViewController;
-    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    [self.view addSubview:currentViewController.view];
-    CATransition *animation = [AnimationFactory pushToLeftAnimation:^{
-        currentViewController.view.frame = self.view.bounds;
-    }];
-    [[self.view layer] addAnimation:animation forKey:@"animation"];
+//    nextViewController = currentViewController;
+//    [currentViewController.view removeFromSuperview];
+//    [currentViewController removeFromParentViewController];
+//    currentViewController = previousViewController;
+//    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+//    [self.view addSubview:currentViewController.view];
+//    CATransition *animation = [AnimationFactory pushToLeftAnimation:^{
+//        currentViewController.view.frame = self.view.bounds;
+//    }];
+//    [[self.view layer] addAnimation:animation forKey:@"animation"];
 }
 
 - (void)nextAction
 {
-    previousViewController = currentViewController;
-    [currentViewController.view removeFromSuperview];
-    [currentViewController removeFromParentViewController];
-    currentViewController = nextViewController;
-    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    [self.view addSubview:currentViewController.view];
-    CATransition *animation = [AnimationFactory pushToRightAnimation:^{
-        currentViewController.view.frame = self.view.bounds;
-    }];
-    [[self.view layer] addAnimation:animation forKey:@"animation"];
+//    previousViewController = currentViewController;
+//    [currentViewController.view removeFromSuperview];
+//    [currentViewController removeFromParentViewController];
+//    currentViewController = nextViewController;
+//    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+//    [self.view addSubview:currentViewController.view];
+//    CATransition *animation = [AnimationFactory pushToRightAnimation:^{
+//        currentViewController.view.frame = self.view.bounds;
+//    }];
+//    [[self.view layer] addAnimation:animation forKey:@"animation"];
 
-}
-
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    leftGesture = nil;
-    rightGesture = nil;
-    bottomToolbar = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -199,6 +202,7 @@
 - (void)comment
 {
     PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
+    viewController.programId = self.programId;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

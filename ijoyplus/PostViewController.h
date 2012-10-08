@@ -10,4 +10,5 @@
 
 @interface PostViewController : UIViewController <UITextViewDelegate>
 
+@property (nonatomic, strong)NSString *programId;
 @end

@@ -120,6 +120,7 @@
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
     PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
 //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    viewController.programId = @"6315";
     [navController pushViewController:viewController animated:YES];
 }
 

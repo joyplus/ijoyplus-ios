@@ -15,6 +15,7 @@
 #import "UIUtility.h"
 #import "CacheUtility.h"
 #import "ContainerUtility.h"
+#import "CMConstants.h"
 
 @interface SettingsViewController ()
 
@@ -51,7 +52,8 @@
     
     self.firstLabel.text = NSLocalizedString(@"your_account", nil);
     self.secondLabel.text = NSLocalizedString(@"other_settings", nil);
-    [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), @"username"] forState:UIControlStateNormal];
+    NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserId];
+    [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), username] forState:UIControlStateNormal];
     [self.searchFriendBtn setTitle:NSLocalizedString(@"search_add_friend", nil) forState:UIControlStateNormal];
     [self.commentBtn setTitle:NSLocalizedString(@"comment", nil) forState:UIControlStateNormal];
 

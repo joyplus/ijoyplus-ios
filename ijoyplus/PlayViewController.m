@@ -18,6 +18,11 @@
 #import "PostViewController.h"
 #import "HomeViewController.h"
 #import "CommentViewController.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "ProgramViewController.h"
+#import "EGORefreshTableHeaderView.h"
 
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
@@ -29,6 +34,9 @@
     NSMutableArray *commentArray;
     UIViewController *subviewController;//视图
     PlayCell *playCell;
+    NSDictionary *movie;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL _reloading;
 }
 - (void)avatarClicked;
 - (void)loadTable;
@@ -37,7 +45,21 @@
 @end
 
 @implementation PlayViewController
+@synthesize programId;
 @synthesize imageHeight;
+
+
+- (void)viewDidUnload
+{
+    _refreshHeaderView = nil;
+    subviewController = nil;
+    movie = nil;
+    playCell = nil;
+    commentArray = nil;
+    pullToRefreshManager_ = nil;
+    programId = nil;
+    [super viewDidUnload];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -53,7 +75,89 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     self.imageHeight = 160;
-    [self initPlayCell];
+    
+   [self initPlayCell];
+    [self getProgramView];
+    
+    if (_refreshHeaderView == nil) {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+		
+	}
+	[_refreshHeaderView refreshLastUpdatedDate];
+}
+
+- (void)getProgramView
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                              kAppKey, @"app_key",
+                              self.programId, @"prod_id",
+                              nil];
+    
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        //        HUD.mode = MBProgressHUDModeCustomView;
+        //        [self.view addSubview:HUD];
+        if(responseCode == nil){
+            movie = (NSDictionary *)[result objectForKey:@"movie"];
+            NSString *name = [movie objectForKey:@"name"];
+            CGSize constraint = CGSizeMake(290, 20000.0f);
+            CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+            playCell.filmTitleLabel.text = name;
+            [playCell.filmTitleLabel setNumberOfLines:0];
+            [playCell.publicLabel sizeToFit];
+            if(size.height < 30){
+                playCell.publicLabel.textAlignment = UITextAlignmentRight;
+            } else {
+                playCell.publicLabel.textAlignment = UITextAlignmentLeft;
+                playCell.frame = CGRectMake(0, 0, self.view.frame.size.width, self.imageHeight + size.height + 3 * ROW_HEIGHT + 20);
+                [playCell.filmTitleLabel setFrame:CGRectMake(playCell.filmTitleLabel.frame.origin.x, playCell.filmImageView.frame.origin.y + self.imageHeight + 10, size.width, size.height)];
+                playCell.publicLabel.frame = CGRectMake(10, self.imageHeight + size.height + 20, 260, playCell.publicLabel.frame.size.height);
+                playCell.introuctionBtn.center = CGPointMake(playCell.introuctionBtn.center.x, playCell.publicLabel.center.y);
+                playCell.scoreImageView.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreImageView.frame.size.width, playCell.scoreImageView.frame.size.height);
+                playCell.scoreLabel.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreLabel.frame.size.width, playCell.scoreLabel.frame.size.height);
+                
+                playCell.watchedImageView.frame = CGRectMake(playCell.watchedImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedImageView.frame.size.width, playCell.watchedImageView.frame.size.height);
+                playCell.watchedLabel.frame = CGRectMake(playCell.watchedLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedLabel.frame.size.width, playCell.watchedLabel.frame.size.height);
+                playCell.likeImageView.frame = CGRectMake(playCell.likeImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.likeImageView.frame.size.width, playCell.likeImageView.frame.size.height);
+                playCell.likeLabel.frame = CGRectMake(playCell.likeLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.likeLabel.frame.size.width, playCell.likeLabel.frame.size.height);
+                playCell.collectionImageView.frame = CGRectMake(playCell.collectionImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionImageView.frame.size.width, playCell.collectionImageView.frame.size.height);
+                playCell.collectionLabel.frame = CGRectMake(playCell.collectionLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionLabel.frame.size.width, playCell.collectionLabel.frame.size.height);
+                
+            }
+            
+            [playCell.filmImageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:nil];
+            playCell.scoreLabel.text = @"未知";
+            playCell.watchedLabel.text = [movie objectForKey:@"watch_num"];
+            playCell.collectionLabel.text = [movie objectForKey:@"favority_num"];
+            playCell.likeLabel.text = [movie objectForKey:@"like_num"];
+            
+            commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
+            if(commentArray == nil || commentArray.count == 0){
+                commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+            }
+            [self loadTable];
+            
+        } else {
+            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+            //            HUD.labelText = NSLocalizedString(msg, nil);
+            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        //        HUD.mode = MBProgressHUDModeCustomView;
+        //        [self.view addSubview:HUD];
+        //        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
+        //        HUD.minSize = CGSizeMake(135.f, 135.f);
+        //        [HUD show:YES];
+        //        [HUD hide:YES afterDelay:2];
+    }];
 }
 
 - (void)initPlayCell
@@ -62,53 +166,14 @@
     playCell = (PlayCell *)[nib objectAtIndex:3];
     playCell.filmImageView.frame = CGRectMake(0, 0, playCell.filmImageView.frame.size.width, self.imageHeight);
 //    [playCell.introuctionBtn setTitle: NSLocalizedString(@"introduction", nil) forState:UIControlStateNormal];
-    [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside];
-    playCell.scoreLabel.text = @"8.3";
-    playCell.watchedLabel.text = @"1024";
-    playCell.collectionLabel.text = @"2048";
-    playCell.likeLabel.text = @"3072";    
+    [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside]; 
     playCell.playBtn.center = CGPointMake(playCell.playBtn.center.x, self.imageHeight / 2);
     playCell.playImageView.center = CGPointMake(playCell.playImageView.center.x, self.imageHeight / 2);
     [playCell.playBtn setTitle:@"" forState:UIControlStateNormal];
     [playCell.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
 //    NSString *name = @"电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称1234567890";
-    NSString *name = @"电影";
-    CGSize constraint = CGSizeMake(290, 20000.0f);
-    CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    playCell.publicLabel.text = @"发布者名称";
-    playCell.filmTitleLabel.text = name;
-    [playCell.filmTitleLabel setNumberOfLines:0];
-    [playCell.publicLabel sizeToFit];
-    if(size.height < 30){
-        playCell.publicLabel.textAlignment = UITextAlignmentRight;
-        
-    } else {
-        playCell.publicLabel.textAlignment = UITextAlignmentLeft;
-        playCell.frame = CGRectMake(0, 0, self.view.frame.size.width, self.imageHeight + size.height + 3 * ROW_HEIGHT + 20);
-        [playCell.filmTitleLabel setFrame:CGRectMake(playCell.filmTitleLabel.frame.origin.x, playCell.filmImageView.frame.origin.y + self.imageHeight + 10, size.width, size.height)];
-        playCell.publicLabel.frame = CGRectMake(10, self.imageHeight + size.height + 20, 260, playCell.publicLabel.frame.size.height);
-        playCell.introuctionBtn.center = CGPointMake(playCell.introuctionBtn.center.x, playCell.publicLabel.center.y);
-        playCell.scoreImageView.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreImageView.frame.size.width, playCell.scoreImageView.frame.size.height);
-        playCell.scoreLabel.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreLabel.frame.size.width, playCell.scoreLabel.frame.size.height);
-        
-        playCell.watchedImageView.frame = CGRectMake(playCell.watchedImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedImageView.frame.size.width, playCell.watchedImageView.frame.size.height);
-        playCell.watchedLabel.frame = CGRectMake(playCell.watchedLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedLabel.frame.size.width, playCell.watchedLabel.frame.size.height);
-        playCell.likeImageView.frame = CGRectMake(playCell.likeImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.likeImageView.frame.size.width, playCell.likeImageView.frame.size.height);
-        playCell.likeLabel.frame = CGRectMake(playCell.likeLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.likeLabel.frame.size.width, playCell.likeLabel.frame.size.height);
-        playCell.collectionImageView.frame = CGRectMake(playCell.collectionImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionImageView.frame.size.width, playCell.collectionImageView.frame.size.height);
-        playCell.collectionLabel.frame = CGRectMake(playCell.collectionLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionLabel.frame.size.width, playCell.collectionLabel.frame.size.height);
-        
-    }
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    subviewController = nil;
-    playCell = nil;
-    commentArray = nil;
-    pullToRefreshManager_ = nil;
+//    playCell.publicLabel.text = @"发布者名称";    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -118,28 +183,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
-    NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [NSDate date], nil];
-    NSMutableDictionary *commentDic = [[NSMutableDictionary alloc]initWithObjects:values forKeys:keys];
-    
-    NSArray *keys1 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
-    NSArray *values1 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [DateUtility addMinutes:[NSDate date] minutes:10], nil];
-    NSMutableDictionary *commentDic1 = [[NSMutableDictionary alloc]initWithObjects:values1 forKeys:keys1];
-    
-    NSArray *keys2 = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
-    NSArray *values2 = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"顶。", [DateUtility dateWithDaysFromGivenDate:10 givenDate:[NSDate date]], nil];
-    NSMutableDictionary *commentDic2 = [[NSMutableDictionary alloc]initWithObjects:values2 forKeys:keys2];
-    
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic1];
-    [commentArray addObject:commentDic2];
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
-    
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
-    
-    [self loadTable];
 }
 
 - (void)loadTable {
@@ -167,7 +211,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section ==0) {        
+    if (indexPath.section ==0) {
         return playCell;
     } else {
         CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
@@ -176,10 +220,10 @@
             cell = (CommentCell *)[nib objectAtIndex:2];
         }
         NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"owner_pic_url"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         cell.avatarImageView.layer.cornerRadius = 25;
         cell.avatarImageView.layer.masksToBounds = YES; 
-        cell.titleLabel.text = [commentDic objectForKey:@"username"];
+        cell.titleLabel.text = [commentDic objectForKey:@"owner_name"];
         
         cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
         [cell.subtitleLabel setNumberOfLines:0];
@@ -191,7 +235,7 @@
         cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
         
         TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
-        NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
+        NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"create_date"]];
         cell.thirdTitleLabel.text = timeDiff;
         
         NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
@@ -318,6 +362,7 @@
  * @param scrollView: The scroll-view object in which the scrolling occurred.
  */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     [pullToRefreshManager_ tableViewScrolled];
 }
 
@@ -331,6 +376,7 @@
  * @param decelerate: YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     [pullToRefreshManager_ tableViewReleased];
 }
 
@@ -340,21 +386,30 @@
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     reloads_++;
-    NSArray *keys = [[NSArray alloc]initWithObjects:@"avatarUrl", @"username", @"content", @"date", nil];
-    NSArray *values = [[NSArray alloc]initWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg", @"Joy+", @"是夏日，葱绿的森林，四散的流光都会染上的透亮绿意。你戴着奇怪的面具，明明看不到眉目，却一眼就觉得是个可爱的人。", [DateUtility dateWithDaysFromNow:10], nil];
-    NSMutableDictionary *commentDic = [[NSMutableDictionary alloc]initWithObjects:values forKeys:keys];
-    
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
-    [commentArray addObject:commentDic];
-    [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", [NSNumber numberWithInt:reloads_ + 1 ], @"page_num",[NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *comArray = (NSMutableArray *)[result objectForKey:@"comments"];
+            if(comArray != nil && comArray.count > 0){
+                [commentArray addObjectsFromArray:comArray];
+            }
+            [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        } else {
+            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+            //            HUD.labelText = NSLocalizedString(msg, nil);
+            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+    }];
+
 }
 
 - (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:@"电影名称"];
-    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.9);
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[movie objectForKey:@"name"] content:[movie objectForKey:@"summary"]];
+    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
     lplv.center = CGPointMake(160, 210 + self.tableView.contentOffset.y);
     lplv.delegate = self;
     [lplv showInView:self.view animated:YES];
@@ -374,7 +429,9 @@
 
 - (void)playVideo
 {
-    NSLog(@"play");
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    viewController.programUrl = [[movie objectForKey:@"video_urls"] objectForKey:@"url"];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)replyBtnClicked
@@ -383,6 +440,47 @@
     viewController.title = @"评论回复";
     viewController.openKeyBoard = YES;
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+	
+	[self getProgramView];
+	_reloading = YES;
+	
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+	
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
 }
 
 @end

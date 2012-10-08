@@ -35,7 +35,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"sina_weibo_login", nil);
+    self.title = NSLocalizedString(@"tecent_login", nil);
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -46,7 +46,7 @@
 					  @"upload_pic",@"list_photo", @"add_album", @"check_page_fans",nil];
 	
 	
-	_tencentOAuth = [[TencentOAuth alloc] initWithAppId:@"100266567"
+	_tencentOAuth = [[TencentOAuth alloc] initWithAppId:@"100311436"
 											andDelegate:self];
 	_tencentOAuth.redirectURI = @"www.qq.com";
 	self.view = [_tencentOAuth authorize:_permissions inSafari:NO];
@@ -54,6 +54,8 @@
 
 - (void)viewDidUnload
 {
+    _tencentOAuth = nil;
+    _permissions = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

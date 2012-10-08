@@ -42,12 +42,14 @@
 
 - (void)clear {
     [self.cache removeAllObjects];
+//    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kPAPUserDefaultsCacheSinaFriendsKey];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 - (void)setSinaFriends:(NSArray *)friends {
     NSString *key = kPAPUserDefaultsCacheSinaFriendsKey;
     [self.cache setObject:friends forKey:key];
-    [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+//    [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSArray *)sinaFriends {

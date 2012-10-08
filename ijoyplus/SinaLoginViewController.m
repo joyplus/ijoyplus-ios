@@ -16,7 +16,8 @@
 #import "FriendListViewController.h"
 
 @interface SinaLoginViewController (){
-    MBProgressHUD *HUD;
+    WBAuthorizeWebView *webView;
+    WBEngine *webEngine;
 }
 
 - (void)linkToUser;
@@ -27,6 +28,13 @@
 @end
 
 @implementation SinaLoginViewController
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    webEngine = nil;
+    webView = nil;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -46,19 +54,16 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    WBEngine *engine = [[WBEngine sharedClient]initWithAppKey:kSinaWeiboAppKey appSecret:kSinaWeiboAppSecret];
-    [engine setRootViewController:self];
-    [engine setDelegate:self];
-    [engine setRedirectURI:@"http://"];
-    [engine setIsUserExclusive:NO];
-	WBAuthorizeWebView *webView = [[WBEngine sharedClient] logIn];
+    
+    webEngine = [[WBEngine sharedClient]initWithAppKey:kSinaWeiboAppKey appSecret:kSinaWeiboAppSecret];
+    [webEngine setRootViewController:self];
+    [webEngine setDelegate:self];
+    [webEngine setRedirectURI:@"http://"];
+    [webEngine setIsUserExclusive:NO];
+    
+    webView = [webEngine logIn];
     [self.view addSubview:webView];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    webView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -80,7 +85,7 @@
 
 - (void)engineAlreadyLoggedIn:(WBEngine *)engine
 {
-    
+    [engine logOut];
     if ([engine isUserExclusive])
     {
         UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
@@ -106,7 +111,7 @@
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] accessToken] forKey:kSinaWeiboAccessToken];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
     
-    [[CacheUtility sharedCache] setSinaWeiboEngineer:engine];
+//    [[CacheUtility sharedCache] setSinaWeiboEngineer:engine];
     
     NSLog(@"<<<<<<Sina Login Successfully>>>>>>");
 //    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -126,25 +131,12 @@
 
 - (void)engine:(WBEngine *)engine didFailToLogInWithError:(NSError *)error
 {
-    NSLog(@"didFailToLogInWithError: %@", error);
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-													   message:@"登录失败！"
-													  delegate:nil
-											 cancelButtonTitle:@"确定"
-											 otherButtonTitles:nil];
-	[alertView show];
-    
+    NSLog(@"didFailToLogInWithError: %@", error);    
 }
 
 - (void)engineDidLogOut:(WBEngine *)engine
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-													   message:@"登出成功！"
-													  delegate:self
-											 cancelButtonTitle:@"确定"
-											 otherButtonTitles:nil];
-    //[alertView setTag:kWBAlertViewLogOutTag];
-	[alertView show];
+    NSLog(@"engineLoggedout");
     
 }
 
@@ -155,22 +147,13 @@
 
 - (void)engineAuthorizeExpired:(WBEngine *)engine
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-													   message:@"请重新登录！"
-													  delegate:nil
-											 cancelButtonTitle:@"确定"
-											 otherButtonTitles:nil];
-	[alertView show];
+    NSLog(@"engineAuthorizeExpired");
     
 }
 
 #pragma mark - Handle sina response
 - (void) didFailToLogInWithError:(NSError *)error{
-    // [self.navController dismissModalViewControllerAnimated:YES];
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    [HUD setLabelText:NSLocalizedString(@"Please try again.", nil)];
-    
-    [HUD hide:YES afterDelay:3];
+
 }
 
 #pragma mark - Private Methods
@@ -180,10 +163,6 @@
 }
 - (void) didLogInUser{
     // user has logged in - we need to fetch all of their Facebook data before we let them in
-    [HUD setLabelText:NSLocalizedString(@"Login Successfully!", nil)];
-    
-    [HUD hide:YES afterDelay:3];
-    [MBProgressHUD hideHUDForView:self.view animated:NO];
     [self processSinaData];
 }
 
@@ -206,7 +185,7 @@
     
     [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
-        [self processSinaFriendData:responseObject];
+//        [self processSinaFriendData:responseObject];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"<<<<<<%@>>>>>", error);

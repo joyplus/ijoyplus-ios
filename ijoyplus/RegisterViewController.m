@@ -1,5 +1,5 @@
 //
-//  RegisterViewController.m
+//  LoginViewController.m
 //  ijoyplus
 //
 //  Created by joyplus1 on 12-9-18.
@@ -7,48 +7,58 @@
 //
 
 #import "RegisterViewController.h"
+#import "UIUtility.h"
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
-#import "UIUtility.h"
 #import "CMConstants.h"
+#import "BottomTabViewController.h"
 #import "AppDelegate.h"
+#import "RegisterViewController.h"
 #import "SinaLoginViewController.h"
 #import "TecentViewController.h"
 #import "ContainerUtility.h"
+#import "NetWorkUtility.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 #define FIELDS_COUNT 3
 
-@interface RegisterViewController () {
-    UIButton *registerBtn;
+
+@interface RegisterViewController (){
     UIToolbar *keyboardToolbar;
+    MBProgressHUD *HUD;
 }
 
 - (void)closeSelf;
-- (void)initRegisterBtn;
-- (void)registerAction;
-
 @end
 
 @implementation RegisterViewController
+@synthesize table;
+@synthesize scrollView;
+@synthesize loginBtn;
 @synthesize emailCell;
 @synthesize passwordCell;
 @synthesize nicknameCell;
 
 - (void)viewDidUnload
 {
+    HUD = nil;
+    keyboardToolbar = nil;
     [self setNicknameCell:nil];
     [self setEmailCell:nil];
     [self setPasswordCell:nil];
+    [self setScrollView:nil];
+    [self setTable:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
 }
@@ -57,14 +67,18 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"register", nil);
-    [self.tableView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
+    [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.separatorColor = [UIColor clearColor];
-    [self initRegisterBtn];
     
+    [self.scrollView setContentSize:CGSizeMake(self.view.frame.size.width, 480)];
+    [self initLoginBtn];
+    self.table.delegate = self;
+    self.table.dataSource = self;
+    self.table.backgroundColor = [UIColor yellowColor];
+    self.table.separatorColor = [UIColor clearColor];
+    self.table.backgroundColor = [UIColor clearColor];
     // Keyboard toolbar
     if (keyboardToolbar == nil) {
         keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 38.0f)];
@@ -88,6 +102,9 @@
                                                                         style:UIBarButtonItemStyleDone
                                                                        target:self
                                                                        action:@selector(resignKeyboard:)];
+        [previousBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        [nextBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        [doneBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
         
         [keyboardToolbar setItems:[NSArray arrayWithObjects:previousBarItem, nextBarItem, spaceBarItem, doneBarItem, nil]];
         
@@ -101,31 +118,19 @@
         passwordCell.titleLabel.inputAccessoryView = keyboardToolbar;
         passwordCell.titleLabel.delegate = self;
     }
-
 }
 
-- (void)initRegisterBtn
+- (void)initLoginBtn
 {
-    registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [registerBtn setFrame:CGRectMake(0, 0, self.view.frame.size.width - 20, 44)];
-    [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
-    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [UIUtility addTextShadow:registerBtn.titleLabel];
-    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [registerBtn addTarget:self action:@selector(registerAction)forControlEvents:UIControlEventTouchUpInside];
-    registerBtn.layer.cornerRadius = 10;
-    registerBtn.layer.masksToBounds = YES;
-}
-
-- (void)registerAction
-{
-    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate refreshRootView];
+    [self.loginBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
+    [self.loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.loginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [UIUtility addTextShadow:loginBtn.titleLabel];
+    [self.loginBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    [self.loginBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+    self.loginBtn.layer.cornerRadius = 10;
+    self.loginBtn.layer.masksToBounds = YES;
+    self.loginBtn.layer.zPosition = 1;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -133,51 +138,20 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - Table view data source
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 2){
-        return 1;
-    } else if (section == 1){
-        return 3;
-    } else{
-        return 4;
-    }
+    return 3;
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section == 0){
-        static NSString *CellIdentifier = @"Cell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if(cell == nil){
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        }
-        UIImageView *lineView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"line"]];
-        lineView.frame = CGRectMake(0, cell.frame.size.height - 1, cell.frame.size.width - 20, 1);
-        if(indexPath.row == 0){
-            cell.textLabel.text = NSLocalizedString(@"sina_weibo", nil);
-            [cell.contentView addSubview:lineView];
-        } else if(indexPath.row == 1){
-            cell.textLabel.text = NSLocalizedString(@"tencent_weibo", nil);
-            [cell.contentView addSubview:lineView];
-        } else if(indexPath.row == 2){
-            cell.textLabel.text = NSLocalizedString(@"renren", nil);
-            [cell.contentView addSubview:lineView];
-        } else if(indexPath.row == 3){
-            cell.textLabel.text = NSLocalizedString(@"douban", nil);
-        }
-        cell.textLabel.textColor = [UIColor blackColor];
-        cell.textLabel.font = [UIFont systemFontOfSize:15];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        return cell;
-    } else if(indexPath.section == 1){
         if(indexPath.row == 0){
             nicknameCell.titleLabel.placeholder = NSLocalizedString(@"nick_name", nil);
             return nicknameCell;
@@ -187,81 +161,25 @@
         } else if(indexPath.row == 2){
             passwordCell.titleLabel.placeholder = NSLocalizedString(@"password", nil);
             return passwordCell;
-        } 
-    } else {
-        UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"registerBtnCell"];
-        UIView *backView = [[UIView alloc] initWithFrame:CGRectZero];
-        backView.backgroundColor = [UIColor clearColor];
-        cell.backgroundView = backView;
-        [cell.contentView addSubview:registerBtn];
-        return cell;
+        }
     }
     return nil;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(section == 2){
-        return 5;
-    } else {
-        return 30;
-    }
+    return 30;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    if(section == 2){
-        return nil;
-    }
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,30)];
     customView.backgroundColor = [UIColor clearColor];
     
     //    // create the label objects
-    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 5, customView.frame.size.width, customView.frame.size.height)];
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, customView.frame.size.width, customView.frame.size.height)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:15];
-    if(section == 0){
-        headerLabel.text =  NSLocalizedString(@"auth_login", nil);
-    }else {
-        headerLabel.text =  NSLocalizedString(@"register_user", nil);
-    }
+    headerLabel.text =  NSLocalizedString(@"register_user", nil);
     headerLabel.textColor = [UIColor whiteColor];
     [headerLabel sizeToFit];
     [customView addSubview:headerLabel];
@@ -269,29 +187,106 @@
     return customView;
 }
 
-#pragma mark - Table view delegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0){
-        if(indexPath.row == 0){
-            SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
-            [self.navigationController pushViewController:viewController animated:YES];
-        } else if (indexPath.row == 1){
-            TecentViewController *viewController =
-            [[TecentViewController alloc] init];
-			[self.navigationController pushViewController:viewController animated:YES];
-        }
-    }
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [self.table deselectRowAtIndexPath:indexPath animated:YES];
 }
+
 
 - (void)closeSelf
 {
-    UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
-    if(viewController == nil){
-        [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)loginAction:(id)sender {
+    [self resignKeyboard:nil];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.minSize = CGSizeMake(135.f, 135.f);
+    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+        return;
     }
+    HUD.labelText = NSLocalizedString(@"message.registerInProgress", nil);
+    [HUD showWhileExecuting:@selector(saveTask) onTarget:self withObject:nil animated:YES];
+}
+
+- (void)saveTask
+{
+    sleep(1);
+    NSString *strEmailId = emailCell.titleLabel.text;
+    NSString *strPassword = passwordCell.titleLabel.text;
+    NSString *strNickname = nicknameCell.titleLabel.text;
+    
+    if ([self validateEmpty:NSLocalizedString(@"message.nicknameempty", nil) content:strNickname] || [self validateEmpty:NSLocalizedString(@"message.emailempty", nil) content:strEmailId] || ![self IsValidEmail:strEmailId] || [self validateEmpty:NSLocalizedString(@"message.passwordempty", nil) content:strPassword]) {
+        return;
+    }
+    
+    if(![self validateDuplicator:NSLocalizedString(@"message.duplicatedNickname", nil) content:strNickname] || ![self validateDuplicator:NSLocalizedString(@"message.duplicatedMailAddress", nil) content:strEmailId]){
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                strEmailId, @"username",
+                                strPassword, @"password",
+                                strNickname, @"nickname",
+                                nil];
+    
+    [[AFServiceAPIClient sharedClient] postPath:kPathAccountRegister parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD.mode = MBProgressHUDModeCustomView;
+        [self.view addSubview:HUD];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"complete.png"]];
+            HUD.labelText = NSLocalizedString(@"message.signupsuccess", nil);
+            [HUD showWhileExecuting:@selector(postRegister) onTarget:self withObject:nil animated:YES];
+        } else {
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+            HUD.labelText = NSLocalizedString(msg, nil);
+            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        [self.view addSubview:HUD];
+        HUD.labelText = @"Network error, please try again!";
+        HUD.minSize = CGSizeMake(135.f, 135.f);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+    }];
+}
+
+- (void)showError
+{
+    sleep(2);
+}
+
+
+- (void)postRegister
+{
+    sleep(2);
+    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserId];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+    [appDelegate refreshRootView];
+}
+
+- (IBAction)sinaLogin:(id)sender {
+    SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (IBAction)tecentLogin:(id)sender {
+    TecentViewController *viewController = [[TecentViewController alloc] init];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)resignKeyboard:(id)sender
@@ -311,7 +306,7 @@
         NSUInteger previousTag = tag == 1 ? 1 : tag - 1;
         [self checkBarButton:previousTag];
         [self animateView:previousTag];
-        UITextField *previousField = (UITextField *)[self.tableView viewWithTag:previousTag];
+        UITextField *previousField = (UITextField *)[self.table viewWithTag:previousTag];
         [previousField becomeFirstResponder];
     }
 }
@@ -324,7 +319,7 @@
         NSUInteger nextTag = tag == FIELDS_COUNT ? FIELDS_COUNT : tag + 1;
         [self checkBarButton:nextTag];
         [self animateView:nextTag];
-        UITextField *nextField = (UITextField *)[self.tableView viewWithTag:nextTag];
+        UITextField *nextField = (UITextField *)[self.table viewWithTag:nextTag];
         [nextField becomeFirstResponder];
     }
 }
@@ -352,7 +347,7 @@
     if (tag > 2) {
         rect.origin.y = -44.0f * 5 - 15;
     } else {
-        rect.origin.y = -44.0f * 5;
+        rect.origin.y = -44.0f * 4;
     }
     self.view.frame = rect;
     [UIView commitAnimations];
@@ -388,8 +383,60 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
     [self resignKeyboard:nil];
     return YES;
+}
+
+- (BOOL) IsValidEmail:(NSString*) checkString {
+    NSString *stricterFilterString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    //NSString *laxString = @".+@.+\.[A-Za-z]{2}[A-Za-z]*";
+    //NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", stricterFilterString];
+    if(![emailTest evaluateWithObject:checkString]){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.invalidMailAddress", nil);
+        sleep(1);
+        return NO;
+    }else{
+        return YES;
+        
+    }
+    return YES;
+}
+
+- (BOOL) validateDuplicator: (NSString *) title content:(NSString *)content{
+//    PFQuery *query = [PFQuery queryForUser];
+//    [query whereKey:@"email" equalTo:[userName lowercaseString]];
+//    NSArray *array = [query findObjects];
+//    if(array.count > 0){
+//        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+//        HUD.mode = MBProgressHUDModeCustomView;
+//        HUD.labelText = title;
+//        sleep(1);
+//        return NO;
+//    }else {
+//        return YES;
+//    }
+    return YES;
+}
+
+
+- (BOOL) validateEmpty: (NSString *) title content:(NSString *)content{
+    if ([StringUtility stringIsEmpty:content]) {
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = title;
+        sleep(2);
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end

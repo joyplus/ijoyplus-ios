@@ -12,6 +12,8 @@
 #import "AppDelegate.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
+#import "CacheUtility.h"
+#import "WBEngine.h"
 
 #define FIELDS_COUNT 3
 
@@ -42,10 +44,11 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"fill_form_title", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-
+//    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+//    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    [self.navigationItem setHidesBackButton:YES];
+    
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"done", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(finishRegister)];
     self.navigationItem.rightBarButtonItem = rightButton;
     
@@ -201,7 +204,10 @@
 
 - (void)closeSelf
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];    
+    [[CacheUtility sharedCache] clear];
+    [[ContainerUtility sharedInstance] clear];
+    [[WBEngine sharedClient]logOut];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)resignKeyboard:(id)sender
