@@ -11,17 +11,8 @@
 #import "IntroductionView.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface PlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate> {
-    /**
-     * Pull to refresh manager
-     */
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
-    
-    /**
-     * Reloads (for testing purposes)
-     */
-    NSUInteger reloads_;
-}
+@interface PlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate>
+
 @property (nonatomic, strong) NSString *programId;
 @property (nonatomic, assign)int imageHeight;
 

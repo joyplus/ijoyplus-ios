@@ -11,7 +11,7 @@
 #import "IntroductionView.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface DramaPlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate> 
+@interface LocalPlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate> 
  
 
 @property (nonatomic, assign)int imageHeight;

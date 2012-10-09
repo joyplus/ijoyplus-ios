@@ -262,12 +262,12 @@
 
 - (void)showError
 {
-    sleep(2);
+    sleep(1.5);
 }
 
 - (void)postLogin
 {
-    sleep(2);
+    sleep(1);
     [SFHFKeychainUtils storeUsername:kUserId andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
     [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserId];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

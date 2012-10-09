@@ -90,6 +90,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self initView];
+    
+    self.delegate = self;
+    [self initTabControllers];
+    self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController4,detailController3, nil];
+    [self setSelectedIndex:0];
+    
+}
+
+- (void) initView
+{
     if(bottomToolbar == nil){
         [self initToolBar];
     }
@@ -108,11 +119,7 @@
         [bottomToolbar setHidden:NO];
         [self.view addSubview:bottomToolbar];
     }
-    self.delegate = self;
-    [self initTabControllers];
-    self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController4,detailController3, nil];
     [self setSelectedIndex:0];
-    
 }
 
 - (void)initTabControllers
@@ -253,7 +260,7 @@
 - (void)closeChild
 {
     [self dismissModalViewControllerAnimated:YES];
-    [self viewDidLoad];
+    [self initView];
 }
 
 @end

@@ -23,6 +23,7 @@
 #define VIDEO_LOGO_HEIGHT 144 / 2
 #define LOG_BTN_WIDTH 296 / 2
 #define LOG_BTN_HEIGHT 76 / 2
+#define MAX_COMMENT_NUMBER 10
 
 
 #define kTencentAppKey @"801232108"

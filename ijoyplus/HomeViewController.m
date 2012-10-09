@@ -18,20 +18,23 @@
 #import "ContainerUtility.h"
 #import "MBProgressHUD.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
 
 @interface HomeViewController (){
     WaterflowView *flowView;
-    NSMutableArray *imageUrls;
     int currentPage;
-    int tempCount;
     MBProgressHUD *HUD;
     UIImage *selectedImage;
     BOOL imageChanged;
     BOOL isAvatarImage;
-    
+    NSString *theUserFollowed;
+    BOOL accessed;
+    NSArray *videoArray;
 }
 - (void)addHeaderContent:(UIView *)view;
 @end
@@ -50,11 +53,14 @@
 @synthesize watchBtn;
 @synthesize collectionBtn;
 @synthesize username;
+@synthesize userid;
 
 - (void)viewDidUnload
 {
     flowView = nil;
-    imageUrls = nil;
+    theUserFollowed = nil;
+    videoArray = nil;
+    self.userid = nil;
     [self setSegment:nil];
     [self setTopImageView:nil];
     [self setAvatarImageView:nil];
@@ -92,9 +98,24 @@
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
     self.navigationItem.rightBarButtonItem = rightButton;
     
-    imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
-    tempCount = imageUrls.count;
     [self addContentView];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.userid, @"userid",
+                                @"1", @"page_num", @"30", @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserWatchs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            videoArray = [result objectForKey:@"watchs"];
+            [flowView reloadData];
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+    
+
 }
 
 - (void)addContentView
@@ -139,10 +160,45 @@
 
 - (void)addHeaderContent:(UIView *)view
 {
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.userid, @"userid",
+                                nil];
+    if(!accessed){
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            accessed = YES;
+            id bgUrl = [result valueForKey:@"bg_url"];
+            if(bgUrl == [NSNull null]){
+                self.topImageView.image = [UIImage imageNamed:@"home_bg_image"];
+            } else {
+                [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"home_bg_image"]];
+            }
+            id myUrl = [result valueForKey:@"pic_url"];
+            if(myUrl == [NSNull null]){
+                self.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
+            } else {
+                [self.avatarImageView setImageWithURL:[NSURL URLWithString:[result valueForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
+            }
+            self.fansNumberLabel.text = [result valueForKey:@"fan_num"];
+            self.watchedNumberLabel.text = [result valueForKey:@"follow_num"];
+            theUserFollowed = [result valueForKey:@"isFollowed"];
+            self.username.text = [result valueForKey:@"nickname"];
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+    }
+    if(!accessed){
+        accessed = YES;
+    }
     [self.bgView addSubview:self.topImageView];
     [view addSubview:self.bgView];
     self.avatarImageView.image = [UIImage imageNamed:@"u0_normal"];
-    [self.avatarImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    
     self.avatarImageView.layer.cornerRadius = 27.5;
     self.avatarImageView.layer.masksToBounds = YES;
     [view addSubview:self.avatarImageView];
@@ -153,7 +209,6 @@
     [view addSubview:self.fansNumberLabel];
     [view addSubview:self.watchedLabel];
     [view addSubview:self.fansLabel];
-    self.username.text = @"Joyce";
     [view addSubview:self.username];
     [view addSubview:self.avatarImageViewBtn];
     
@@ -186,7 +241,26 @@
 
 - (NSInteger)flowView:(WaterflowView *)flowView numberOfRowsInColumn:(NSInteger)column
 {
-    return 10;
+    if(videoArray == nil || videoArray.count == 0){
+        return 1;
+    } else {
+    int rows = videoArray.count / 3 + 1;
+    if((videoArray.count  % 3) == 0){
+        return rows;
+    } else if((videoArray.count % 3) ==  1){
+        if(column == 0){
+            return rows + 1;
+        } else {
+            return rows;
+        }
+    } else{
+        if(column == 2){
+            return rows;
+        } else {
+            return rows + 1;
+        }
+    }
+    }
 }
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -209,7 +283,11 @@
         } else {
             imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         }
-        [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        if(indexPath.row + indexPath.section - 1 == videoArray.count){
+            return cell;
+        }
+        NSString *imageUrl = [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_pic_url"];
+        [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         imageView.layer.borderWidth = 1;
         imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         imageView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -218,7 +296,7 @@
         [cell addSubview:imageView];
         
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
-        titleLabel.text = [NSString stringWithFormat:@"%i, %i", indexPath.row, indexPath.section];
+        titleLabel.text =  [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_pic_url"];
         titleLabel.textAlignment = UITextAlignmentCenter;
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textColor = [UIColor whiteColor];
@@ -237,11 +315,16 @@
 	if(indexPath.row == 0) {
 		height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
         return height;
-    } else if(indexPath.section % 3 == 0) {
-        height = MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
-    } else if(indexPath.section % 3 == 1 || indexPath.section % 3 == 2) {
-        height = VIDEO_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
+    } else {
+        NSString *type = [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_type"];
+        if([type isEqualToString:@"1"]){
+            return MOVE_NAME_LABEL_HEIGHT + MOVIE_LOGO_HEIGHT;
+        } else {
+            return MOVE_NAME_LABEL_HEIGHT + VIDEO_LOGO_HEIGHT;
+        }
     }
+        
+        
     return height + MOVE_NAME_LABEL_HEIGHT;
 }
 
@@ -259,18 +342,11 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    tempCount = imageUrls.count;
+//    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
     [flowView reloadData];
 }
 
 - (void)segmentValueChanged:(id)sender {
-    [imageUrls removeAllObjects];
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    tempCount = imageUrls.count;
     [flowView reloadData];
 }
 

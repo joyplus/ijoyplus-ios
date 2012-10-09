@@ -5,6 +5,7 @@
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
+#import "LocalPlayRootViewController.h"
 
 @interface LocalViewController(){
     WaterflowView *flowView;
@@ -113,7 +114,12 @@
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
-
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
+    LocalPlayRootViewController *viewController = [[LocalPlayRootViewController alloc]init];
+    viewController.programId = @"13408";
+    //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [navController pushViewController:viewController animated:YES];
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page

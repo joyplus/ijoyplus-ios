@@ -45,6 +45,14 @@
     return [formatter stringFromDate:date];;
 }
 
++ (NSDate *)dateFromFormatString:(NSString *)dateString formatString: (NSString*) formatString
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    [formatter setDateFormat:formatString];
+    return [formatter dateFromString:dateString];;
+}
+
 + (NSDate *) addMinutes:(NSDate*) referenceDate minutes:(NSUInteger) dMinutes
 {
 	NSTimeInterval aTimeInterval = [referenceDate timeIntervalSinceReferenceDate] + D_MINUTE * dMinutes;

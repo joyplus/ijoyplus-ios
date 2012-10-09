@@ -15,7 +15,6 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "CommentListViewController.h"
 #import "ContainerUtility.h"
-#import "PostViewController.h"
 #import "HomeViewController.h"
 #import "CommentViewController.h"
 #import "StringUtility.h"
@@ -23,6 +22,7 @@
 #import "ServiceConstants.h"
 #import "ProgramViewController.h"
 #import "EGORefreshTableHeaderView.h"
+#import "NoRecordCell.h"
 
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
@@ -37,6 +37,9 @@
     NSDictionary *movie;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
+    NSInteger totalCommentNumber;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
 }
 - (void)avatarClicked;
 - (void)loadTable;
@@ -47,7 +50,6 @@
 @implementation PlayViewController
 @synthesize programId;
 @synthesize imageHeight;
-
 
 - (void)viewDidUnload
 {
@@ -141,7 +143,10 @@
                 commentArray = [[NSMutableArray alloc]initWithCapacity:10];
             }
             [self loadTable];
-            
+            totalCommentNumber = [[movie objectForKey:@"total_comment_number"] integerValue];
+            if(pullToRefreshManager_ == nil && commentArray.count > 0 && totalCommentNumber > MAX_COMMENT_NUMBER){
+                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+            }
         } else {
             //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
             //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
@@ -181,11 +186,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
-}
-
 - (void)loadTable {
     
     [self.tableView reloadData];
@@ -205,7 +205,11 @@
     if(section == 0){
         return 1;
     } else {
-        return commentArray.count;
+        if(commentArray == nil || commentArray.count == 0){
+            return 1;
+        } else {
+            return commentArray.count;
+        }
     }
 }
 
@@ -214,13 +218,23 @@
     if (indexPath.section ==0) {
         return playCell;
     } else {
+        if(commentArray == nil || commentArray.count == 0){
+            NoRecordCell *cell = [self displayNoRecordCell:tableView];
+            cell.textField.text = @"暂无评论";
+            return cell;
+        } else {
         CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
         if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
             cell = (CommentCell *)[nib objectAtIndex:2];
         }
         NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"owner_pic_url"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        id ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
+        if(ownerPicUrl == [NSNull null]){
+            cell.avatarImageView.image = [UIImage imageNamed:@"placeholder.png"];
+        } else {
+            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        }
         cell.avatarImageView.layer.cornerRadius = 25;
         cell.avatarImageView.layer.masksToBounds = YES; 
         cell.titleLabel.text = [commentDic objectForKey:@"owner_name"];
@@ -235,7 +249,9 @@
         cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
         
         TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
-        NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"create_date"]];
+        NSString *createDate = [commentDic valueForKey:@"create_date"];
+        NSDate *commentDate = [DateUtility dateFromFormatString:createDate formatString: @"yyyy-MM-dd HH:mm:ss"];
+        NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:commentDate];
         cell.thirdTitleLabel.text = timeDiff;
         
         NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
@@ -249,14 +265,24 @@
             UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateNormal];
             [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateHighlighted];
-            [cell.replyBtn addTarget:self action:@selector(replyBtnClicked)forControlEvents:UIControlEventTouchUpInside];
+            [cell.replyBtn addTarget:self action:@selector(replyBtnClicked:)forControlEvents:UIControlEventTouchUpInside];
         } else {
             [cell.replyBtn setHidden:YES];
         }
-        [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+            [cell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
         return cell;
-
+        }
     }
+}
+
+- (NoRecordCell *)displayNoRecordCell:(UITableView *)tableView
+{
+    NoRecordCell *cell = (NoRecordCell*) [tableView dequeueReusableCellWithIdentifier:@"noRecordCell"];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CommonCellFactory" owner:self options:nil];
+        cell = (NoRecordCell *)[nib objectAtIndex:0];
+    }
+    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -264,11 +290,15 @@
     if (indexPath.section == 0) {
         return playCell.frame.size.height;
     } else {
+        if(commentArray == nil || commentArray.count == 0){
+            return 44;
+        } else {
         NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
         NSString *content = [commentDic objectForKey:@"content"];
         CGSize constraint = CGSizeMake(232, 20000.0f);
         CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
         return 80 + size.height;
+        }
     }
 }
 
@@ -317,7 +347,8 @@
 {
     if(indexPath.section > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        CommentViewController *viewController = [[CommentViewController alloc]init];
+        CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+        viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
         viewController.title = @"评论回复";
         [self.navigationController pushViewController:viewController animated:YES];
     }
@@ -421,22 +452,36 @@
     self.tableView.scrollEnabled = YES;
 }
 
-- (void)avatarClicked
+- (void)avatarClicked:(id)sender
 {
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
+    
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+    viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)playVideo
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    viewController.programUrl = [[movie objectForKey:@"video_urls"] objectForKey:@"url"];
+    NSArray *urlArray = [movie objectForKey:@"video_urls"];
+    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    viewController.title = [movie objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (void)replyBtnClicked
+- (void)replyBtnClicked:(id)sender
 {
-    CommentViewController *viewController = [[CommentViewController alloc]init];
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
+    
+    CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+    viewController.threadId = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"id"];
     viewController.title = @"评论回复";
     viewController.openKeyBoard = YES;
     [self.navigationController pushViewController:viewController animated:YES];

@@ -16,6 +16,10 @@
 #import "AppDelegate.h"
 #import "UIUtility.h"
 #import "CMConstants.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "RecommandViewController.h"
 
 @interface PlayRootViewController (){
     UISwipeGestureRecognizer *leftGesture;
@@ -67,10 +71,10 @@
 - (void)initViewController
 {
     currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    currentViewController.programId = self.programId;
+    ((PlayViewController *)currentViewController).programId = self.programId;
 //    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
 //    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-    [self addChildViewController:currentViewController];
+//    [self addChildViewController:currentViewController];
     currentViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TAB_BAR_HEIGHT);
     [self.view addSubview:currentViewController.view];
 }
@@ -140,7 +144,7 @@
     UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     [btn1 setBackgroundImage:[UIImage imageNamed:@"tab_btn_bg"] forState:UIControlStateNormal];
     [btn1 setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
-    [btn1 addTarget:self action:@selector(like)forControlEvents:UIControlEventTouchUpInside];
+    [btn1 addTarget:self action:@selector(recommand)forControlEvents:UIControlEventTouchUpInside];
     [bottomToolbar addSubview:btn1];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -184,19 +188,46 @@
     [bottomToolbar addSubview:btn4];
 }
 
-- (void)like
+- (void)recommand
 {
-    
+    RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
+    viewController.programId = self.programId;
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)watch
 {
-    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.programId, @"prod_id",
+                                nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            
+        } else {
+
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+    }];
 }
 
 - (void)collection
 {
-    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.programId, @"prod_id",
+                                nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            
+        } else {
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+    }];
 }
 
 - (void)comment

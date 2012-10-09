@@ -27,4 +27,6 @@
 + (NSDate *) addMinutes:(NSDate*) referenceDate minutes:(NSUInteger) dMinutes;
 
 + (NSDate *) dateWithDaysFromNow: (NSUInteger) days;
+
++ (NSDate *)dateFromFormatString:(NSString *)dateString formatString: (NSString*) formatString;
 @end

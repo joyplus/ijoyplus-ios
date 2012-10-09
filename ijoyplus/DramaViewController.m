@@ -119,6 +119,7 @@
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
     DramaPlayRootViewController *viewController = [[DramaPlayRootViewController alloc]init];
+    viewController.programId = @"6274";
     //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [navController pushViewController:viewController animated:YES];
 }

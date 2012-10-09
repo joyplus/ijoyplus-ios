@@ -5,6 +5,10 @@
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "SFHFKeychainUtils.h"
 
 @interface MovieViewController(){
     WaterflowView *flowView;

@@ -9,4 +9,5 @@
 #import <UIKit/UIKit.h>
 @interface CommentListViewController : UITableViewController
 
+@property (nonatomic, strong)NSMutableArray *commentArray;
 @end

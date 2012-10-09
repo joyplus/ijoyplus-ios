@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1296</int>
-		<string key="IBDocument.SystemVersion">12B19</string>
+		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
-		<string key="IBDocument.AppKitVersion">1187</string>
-		<string key="IBDocument.HIToolboxVersion">624.00</string>
+		<string key="IBDocument.AppKitVersion">1187.34</string>
+		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">1498</string>
@@ -47,10 +47,6 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">u0_normal.png</string>
-						</object>
 					</object>
 					<object class="IBUIImageView" id="530347582">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -218,10 +214,9 @@
 					<object class="IBUILabel" id="885391912">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{73, 140}, {217, 21}}</string>
+						<string key="NSFrame">{{75, 140}, {217, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -621,16 +616,11 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="avatarImageClicked:">id</string>
-						<string key="bgImageClicked:">id</string>
 						<string key="followUser:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="avatarImageClicked:">
 							<string key="name">avatarImageClicked:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="bgImageClicked:">
-							<string key="name">bgImageClicked:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="followUser:">
@@ -645,9 +635,6 @@
 						<string key="collectionBtn">UIButton</string>
 						<string key="fansLabel">UILabel</string>
 						<string key="fansNumberLabel">UILabel</string>
-						<string key="loveBtn">UIButton</string>
-						<string key="loveLabel">UILabel</string>
-						<string key="loveNumberLabel">UILabel</string>
 						<string key="roundImageView">UIImageView</string>
 						<string key="segment">UISegmentedControl</string>
 						<string key="topImageView">UIImageView</string>
@@ -679,18 +666,6 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="fansNumberLabel">
 							<string key="name">fansNumberLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="loveBtn">
-							<string key="name">loveBtn</string>
-							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="loveLabel">
-							<string key="name">loveLabel</string>
-							<string key="candidateClassName">UILabel</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="loveNumberLabel">
-							<string key="name">loveNumberLabel</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="roundImageView">
@@ -738,7 +713,6 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="u0_normal.png">{320, 180}</string>
 			<string key="user_big@2x.png">{138, 138}</string>
 			<string key="user_btn@2x.png">{141, 40}</string>
 		</dictionary>

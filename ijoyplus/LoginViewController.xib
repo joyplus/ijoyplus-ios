@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1296</int>
-		<string key="IBDocument.SystemVersion">12B19</string>
+		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
-		<string key="IBDocument.AppKitVersion">1187</string>
-		<string key="IBDocument.HIToolboxVersion">624.00</string>
+		<string key="IBDocument.AppKitVersion">1187.34</string>
+		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			<string key="NS.object.0">1498</string>
@@ -188,7 +188,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<object class="IBUILabel" id="709431411">
 								<reference key="NSNextResponder" ref="506979136"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{24, 134}, {119, 21}}</string>
+								<string key="NSFrame">{{52, 135}, {65, 21}}</string>
 								<reference key="NSSuperview" ref="506979136"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="439420811"/>
@@ -198,7 +198,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">用新浪微博账号登陆</string>
+								<string key="IBUIText">微博登陆</string>
 								<reference key="IBUITextColor" ref="99397654"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -264,7 +264,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<object class="IBUILabel" id="416611502">
 								<reference key="NSNextResponder" ref="506979136"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{185, 135}, {93, 21}}</string>
+								<string key="NSFrame">{{201, 135}, {52, 21}}</string>
 								<reference key="NSSuperview" ref="506979136"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="103372496"/>
@@ -274,7 +274,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">用QQ账号登陆</string>
+								<string key="IBUIText">QQ登陆</string>
 								<reference key="IBUITextColor" ref="99397654"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -637,8 +637,8 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<reference ref="103372496"/>
 							<reference ref="1068709006"/>
 							<reference ref="439420811"/>
-							<reference ref="709431411"/>
 							<reference ref="248211436"/>
+							<reference ref="709431411"/>
 							<reference ref="416611502"/>
 						</array>
 						<reference key="parent" ref="191373211"/>

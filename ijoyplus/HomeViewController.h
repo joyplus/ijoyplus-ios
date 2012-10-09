@@ -26,5 +26,6 @@
 @property (strong, nonatomic) IBOutlet UIView *bgView;
 - (void)bgImageClicked:(id)sender;
 - (IBAction)avatarImageClicked:(id)sender;
+@property (strong, nonatomic)NSString *userid;
 
 @end

@@ -16,6 +16,9 @@
 #import "CacheUtility.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 @interface SettingsViewController ()
 
@@ -87,6 +90,13 @@
     
     [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
     [alert setDestructiveButtonWithTitle:NSLocalizedString(@"logout", nil) block:^{
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key", nil];
+        
+        [[AFServiceAPIClient sharedClient] getPath:kPathAccountLogout parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+        }];
         [[CacheUtility sharedCache] clear];
         [[ContainerUtility sharedInstance] clear];
         [self.navigationController popToRootViewControllerAnimated:YES];

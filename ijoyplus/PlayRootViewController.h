@@ -7,18 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "PlayViewController.h"
 
 @interface PlayRootViewController : UIViewController{
-    PlayViewController *previousViewController;
-    PlayViewController *nextViewController;
-    PlayViewController *currentViewController;
+    UIViewController *previousViewController;
+    UIViewController *nextViewController;
+    UIViewController *currentViewController;
 }
 
 @property (nonatomic, strong) NSString *programId;
 
 - (void)initViewController;
-- (void)like;
+- (void)recommand;
 - (void)watch;
 - (void)collection;
 - (void)comment;

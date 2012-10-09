@@ -6,8 +6,8 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "DramaPlayRootViewController.h"
-#import "DramaPlayViewController.h"
+#import "LocalPlayRootViewController.h"
+#import "LocalPlayViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AnimationFactory.h"
 #import "CustomBackButton.h"
@@ -21,11 +21,11 @@
 #import "ServiceConstants.h"
 #import "RecommandViewController.h"
 
-@interface DramaPlayRootViewController ()
+@interface LocalPlayRootViewController ()
 
 @end
 
-@implementation DramaPlayRootViewController
+@implementation LocalPlayRootViewController
 
 - (void)viewDidLoad
 {
@@ -35,8 +35,8 @@
 
 - (void)initViewController
 {
-    currentViewController = [[DramaPlayViewController alloc]initWithNibName:@"DramaPlayViewController" bundle:nil];
-    ((DramaPlayViewController *)currentViewController).programId = self.programId;
+    currentViewController = [[LocalPlayViewController alloc]initWithNibName:@"LocalPlayViewController" bundle:nil];
+    ((LocalPlayViewController *)currentViewController).programId = self.programId;
 //    previousViewController = [[DramaPlayViewController alloc]initWithNibName:@"DramaPlayViewController" bundle:nil];
 //    nextViewController = [[DramaPlayViewController alloc]initWithNibName:@"DramaPlayViewController" bundle:nil];
     [self addChildViewController:currentViewController];
