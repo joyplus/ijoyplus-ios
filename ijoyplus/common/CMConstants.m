@@ -35,7 +35,7 @@
 
 + (UIFont *)titleFont
 {
-    return [UIFont systemFontOfSize:15];
+    return [UIFont systemFontOfSize:13];
 }
 
 @end

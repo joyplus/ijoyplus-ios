@@ -26,7 +26,7 @@
 - (void)cellSelected:(NSNotification*)notification;
 
 @property(nonatomic, retain) EGORefreshTableHeaderView * refreshHeaderView;  //下拉刷新
-@property(nonatomic, readwrite) BOOL isRefreshing; 
+@property(nonatomic, readwrite) BOOL isRefreshing;
 @end
 
 @implementation WaterflowView
@@ -38,6 +38,7 @@
 @synthesize mergeRow;
 @synthesize mergeCell;
 @synthesize parentControllerName;
+@synthesize currentPage;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -47,13 +48,6 @@
 		self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.delegate = self;
-        if(self.cellSelectedNotificationName == nil){
-            self.cellSelectedNotificationName = @"CellSelected";
-        }
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(cellSelected:)
-                                                     name:self.cellSelectedNotificationName
-                                                   object:nil];
         self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
         [self addSubview:self.refreshHeaderView];
         self.refreshHeaderView.delegate = self;
@@ -77,13 +71,6 @@
 		self.showsHorizontalScrollIndicator = NO;
         self.showsVerticalScrollIndicator = NO;
         self.delegate = self;
-        if(self.cellSelectedNotificationName == nil){
-            self.cellSelectedNotificationName = @"CellSelected";
-        }
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(cellSelected:)
-                                                     name:self.cellSelectedNotificationName
-                                                   object:nil];
 //        self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
 //        [self addSubview:self.refreshHeaderView];
         self.refreshHeaderView.delegate = self;
@@ -104,6 +91,13 @@
                                              selector:@selector(cellSelected:)
                                                  name:self.cellSelectedNotificationName
                                                object:nil];
+}
+
+- (void)removeCellObserver
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:self.cellSelectedNotificationName
+                                                  object:nil];
 }
 
 - (void)dealloc
@@ -216,6 +210,9 @@
         scrollHeight = (columHeight >= scrollHeight)?columHeight:scrollHeight;
     }
     
+    if(scrollHeight <480){
+        scrollHeight = 480;
+    }
     self.contentSize = CGSizeMake(self.frame.size.width, scrollHeight);
        
     [self pageScroll];

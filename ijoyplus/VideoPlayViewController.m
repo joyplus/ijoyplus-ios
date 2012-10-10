@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "PlayViewController.h"
+#import "VideoPlayViewController.h"
 #import "PlayCell.h"
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
@@ -15,13 +15,15 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "CommentListViewController.h"
 #import "ContainerUtility.h"
+#import "PostViewController.h"
 #import "HomeViewController.h"
-#import "CommentViewController.h"
+#import "LoadMoreCell.h"
+#import "DramaCell.h"
+#import "UIUtility.h"
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "ProgramViewController.h"
-#import "EGORefreshTableHeaderView.h"
 #import "NoRecordCell.h"
 
 #define ANIMATION_DURATION 0.4
@@ -30,37 +32,39 @@
 #define ROW_HEIGHT 40
 #define PUBLISH_HEIGHT 15
 
-@interface PlayViewController (){
+@interface VideoPlayViewController (){
     NSMutableArray *commentArray;
     UIViewController *subviewController;//视图
     PlayCell *playCell;
-    NSDictionary *movie;
+    DramaCell *dramaCell;
+//    NSInteger totalDramaCount;
+    NSDictionary *show;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
-    NSInteger totalCommentNumber;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
+    NSInteger totalCommentNumber;
 }
 - (void)avatarClicked;
-- (void)loadTable;
 - (void)showIntroduction;
 - (void)playVideo;
+- (void)getProgramView;
 @end
 
-@implementation PlayViewController
-@synthesize programId;
+@implementation VideoPlayViewController
 @synthesize imageHeight;
+@synthesize programId;
 
 - (void)viewDidUnload
 {
-    _refreshHeaderView = nil;
-    subviewController = nil;
-    movie = nil;
-    playCell = nil;
-    commentArray = nil;
-    pullToRefreshManager_ = nil;
-    programId = nil;
     [super viewDidUnload];
+    subviewController = nil;
+    playCell = nil;
+    dramaCell = nil;
+    commentArray = nil;
+    programId = nil;
+    show = nil;
+    _refreshHeaderView = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -77,9 +81,10 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     self.imageHeight = 160;
-    
-   [self initPlayCell];
+    [self initPlayCell];
+//    totalDramaCount = 0;
     [self getProgramView];
+//    [self initDramaCell];
     
     if (_refreshHeaderView == nil) {
 		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
@@ -92,12 +97,29 @@
 	[_refreshHeaderView refreshLastUpdatedDate];
 }
 
+- (void)initPlayCell
+{
+    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+    playCell = (PlayCell *)[nib objectAtIndex:3];
+    playCell.filmImageView.frame = CGRectMake(0, 0, playCell.filmImageView.frame.size.width, self.imageHeight);
+    //    [playCell.introuctionBtn setTitle: NSLocalizedString(@"introduction", nil) forState:UIControlStateNormal];
+    [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside];
+    playCell.playBtn.center = CGPointMake(playCell.playBtn.center.x, self.imageHeight / 2);
+    playCell.playImageView.center = CGPointMake(playCell.playImageView.center.x, self.imageHeight / 2);
+    [playCell.playBtn setTitle:@"" forState:UIControlStateNormal];
+    [playCell.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    
+    //    NSString *name = @"电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称1234567890";
+    //    playCell.publicLabel.text = @"发布者名称";
+}
+
+
 - (void)getProgramView
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                              kAppKey, @"app_key",
-                              self.programId, @"prod_id",
-                              nil];
+                                kAppKey, @"app_key",
+                                self.programId, @"prod_id",
+                                nil];
     
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -105,23 +127,24 @@
         //        HUD.mode = MBProgressHUDModeCustomView;
         //        [self.view addSubview:HUD];
         if(responseCode == nil){
-            movie = (NSDictionary *)[result objectForKey:@"movie"];
-            NSString *name = [movie objectForKey:@"name"];
+            show = (NSDictionary *)[result objectForKey:@"video"];
+            NSString *name = [show objectForKey:@"name"];
             CGSize constraint = CGSizeMake(290, 20000.0f);
             CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
             playCell.filmTitleLabel.text = name;
             [playCell.filmTitleLabel setNumberOfLines:0];
             [playCell.publicLabel sizeToFit];
+//            totalDramaCount = [[show objectForKey:@"episodes_count"] integerValue];
             if(size.height < 30){
                 playCell.publicLabel.textAlignment = UITextAlignmentRight;
             } else {
                 playCell.publicLabel.textAlignment = UITextAlignmentLeft;
-                playCell.frame = CGRectMake(0, 0, self.view.frame.size.width, self.imageHeight + size.height + 3 * ROW_HEIGHT + 20);
+                playCell.frame = CGRectMake(0, 0, self.view.frame.size.width, self.imageHeight + size.height + 2 * ROW_HEIGHT + 20);
                 [playCell.filmTitleLabel setFrame:CGRectMake(playCell.filmTitleLabel.frame.origin.x, playCell.filmImageView.frame.origin.y + self.imageHeight + 10, size.width, size.height)];
                 playCell.publicLabel.frame = CGRectMake(10, self.imageHeight + size.height + 20, 260, playCell.publicLabel.frame.size.height);
-                playCell.introuctionBtn.center = CGPointMake(playCell.introuctionBtn.center.x, playCell.publicLabel.center.y);
-                playCell.scoreImageView.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreImageView.frame.size.width, playCell.scoreImageView.frame.size.height);
-                playCell.scoreLabel.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y + ROW_HEIGHT - 10, playCell.scoreLabel.frame.size.width, playCell.scoreLabel.frame.size.height);
+                playCell.scoreImageView.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y, playCell.scoreImageView.frame.size.width, playCell.scoreImageView.frame.size.height);
+                playCell.scoreLabel.frame = CGRectMake(playCell.publicLabel.frame.origin.x, playCell.publicLabel.frame.origin.y, playCell.scoreLabel.frame.size.width, playCell.scoreLabel.frame.size.height);
+                playCell.introuctionBtn.frame = CGRectMake(playCell.introuctionBtn.frame.origin.x, playCell.scoreImageView.frame.origin.y, playCell.introuctionBtn.frame.size.width, playCell.introuctionBtn.frame.size.height);
                 
                 playCell.watchedImageView.frame = CGRectMake(playCell.watchedImageView.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedImageView.frame.size.width, playCell.watchedImageView.frame.size.height);
                 playCell.watchedLabel.frame = CGRectMake(playCell.watchedLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.watchedLabel.frame.size.width, playCell.watchedLabel.frame.size.height);
@@ -132,20 +155,20 @@
                 
             }
             
-            [playCell.filmImageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:nil];
+            [playCell.filmImageView setImageWithURL:[NSURL URLWithString:[show objectForKey:@"poster"]] placeholderImage:nil];
             playCell.scoreLabel.text = @"未知";
-            playCell.watchedLabel.text = [movie objectForKey:@"watch_num"];
-            NSLog(@"%@", [movie objectForKey:@"favority_num"]);
-            playCell.collectionLabel.text = [movie objectForKey:@"favority_num"];
-            playCell.likeLabel.text = [movie objectForKey:@"like_num"];
+            playCell.watchedLabel.text = [show objectForKey:@"watch_num"];
+            playCell.collectionLabel.text = [show objectForKey:@"favority_num"];
+            playCell.likeLabel.text = [show objectForKey:@"like_num"];
             
             commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
             if(commentArray == nil || commentArray.count == 0){
                 commentArray = [[NSMutableArray alloc]initWithCapacity:10];
             }
+//            [self initDramaCell];
             [self loadTable];
-            totalCommentNumber = [[movie objectForKey:@"total_comment_number"] integerValue];
-            if(pullToRefreshManager_ == nil && commentArray.count > 0 && totalCommentNumber > MAX_COMMENT_NUMBER){
+//            totalCommentNumber = [[show objectForKey:@"total_comment_number"] integerValue];
+            if(pullToRefreshManager_ == nil && commentArray.count > 0){
                 pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
             }
         } else {
@@ -166,20 +189,33 @@
     }];
 }
 
-- (void)initPlayCell
+
+
+//- (void)initDramaCell
+//{
+//    dramaCell = [[DramaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dramaCell"];
+//    dramaCell.frame = CGRectMake(0, 0, self.view.frame.size.width, ceil(totalDramaCount / 5.0) * 35);
+//    dramaCell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    for (int i = 0; i < totalDramaCount; i++) {        
+//        UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        btn.tag = i+1;
+//        [btn setFrame:CGRectMake(10 + (i % 5) * 61, 5 + floor(i / 5.0) * 30, 59, 25)];
+//        [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
+//        [btn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+//        [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+//        [UIUtility addTextShadow:btn.titleLabel];
+//        btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+//        UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+//        [btn setBackgroundImage:[[UIImage imageNamed:@"unfocus"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+//        [btn setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
+//        [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
+//        [dramaCell.contentView addSubview:btn];
+//    }
+//}
+
+- (void)dramaPlay:(id)sender
 {
-    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-    playCell = (PlayCell *)[nib objectAtIndex:3];
-    playCell.filmImageView.frame = CGRectMake(0, 0, playCell.filmImageView.frame.size.width, self.imageHeight);
-//    [playCell.introuctionBtn setTitle: NSLocalizedString(@"introduction", nil) forState:UIControlStateNormal];
-    [playCell.introuctionBtn addTarget:self action:@selector(showIntroduction) forControlEvents:UIControlEventTouchUpInside]; 
-    playCell.playBtn.center = CGPointMake(playCell.playBtn.center.x, self.imageHeight / 2);
-    playCell.playImageView.center = CGPointMake(playCell.playImageView.center.x, self.imageHeight / 2);
-    [playCell.playBtn setTitle:@"" forState:UIControlStateNormal];
-    [playCell.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
-    
-//    NSString *name = @"电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称电影名称1234567890";
-//    playCell.publicLabel.text = @"发布者名称";    
+    [self playVideo];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -193,7 +229,6 @@
     
     [pullToRefreshManager_ tableViewReloadFinished];
 }
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -216,7 +251,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section ==0) {
+    if (indexPath.section == 0) {
         return playCell;
     } else {
         if(commentArray == nil || commentArray.count == 0){
@@ -224,59 +259,8 @@
             cell.textField.text = @"暂无评论";
             return cell;
         } else {
-        CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
-        if (cell == nil) {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-            cell = (CommentCell *)[nib objectAtIndex:2];
-        }
-        NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-        NSString *ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
-        if([StringUtility stringIsEmpty:ownerPicUrl]){
-            cell.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
-        } else {
-            [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
-        }
-        cell.avatarImageView.layer.cornerRadius = 25;
-        cell.avatarImageView.layer.masksToBounds = YES; 
-        cell.titleLabel.text = [commentDic objectForKey:@"owner_name"];
-        
-        CGSize size = CGSizeZero;
-        CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
-        if([StringUtility stringIsEmpty:[commentDic objectForKey:@"content"]]){
-            cell.subtitleLabel.text = @"";
-        } else {
-            cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
-            size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-        }
-        [cell.subtitleLabel setNumberOfLines:0];
-        [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
-        
-        NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
-        cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
-        
-        TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
-        NSString *createDate = [commentDic valueForKey:@"create_date"];
-        NSDate *commentDate = [DateUtility dateFromFormatString:createDate formatString: @"yyyy-MM-dd HH:mm:ss"];
-        NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:commentDate];
-        cell.thirdTitleLabel.text = timeDiff;
-        
-        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-        if([num boolValue]){
-            [cell.replyBtn setHidden:NO];
-            cell.replyBtn.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x + 210, yPosition, 40, 20);
-            [cell.replyBtn setTitle:NSLocalizedString(@"reply", nil) forState:UIControlStateNormal];
-            [cell.replyBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-            [cell.replyBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
-            cell.replyBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-            UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-            [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateNormal];
-            [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateHighlighted];
-            [cell.replyBtn addTarget:self action:@selector(replyBtnClicked:)forControlEvents:UIControlEventTouchUpInside];
-        } else {
-            [cell.replyBtn setHidden:YES];
-        }
-            [cell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
-        return cell;
+            CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
+            return cell;
         }
     }
 }
@@ -291,6 +275,51 @@
     return cell;
 }
 
+- (CommentCell *)displayCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier
+{
+    CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
+        cell = (CommentCell *)[nib objectAtIndex:2];
+    }
+    NSMutableDictionary *commentDic = [dataArray objectAtIndex:indexPath.row];
+    [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    cell.avatarImageView.layer.cornerRadius = 25;
+    cell.avatarImageView.layer.masksToBounds = YES;
+    cell.titleLabel.text = [commentDic objectForKey:@"username"];
+    
+    cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
+    [cell.subtitleLabel setNumberOfLines:0];
+    CGSize constraint = CGSizeMake(230, 20000.0f);
+    CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
+    
+    NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
+    cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
+    
+    TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
+    NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:(NSDate *)[commentDic valueForKey:@"date"]];
+    cell.thirdTitleLabel.text = timeDiff;
+    
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
+        [cell.replyBtn setHidden:NO];
+        cell.replyBtn.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x + 210, yPosition, 40, 20);
+        [cell.replyBtn setTitle:NSLocalizedString(@"reply", nil) forState:UIControlStateNormal];
+        [cell.replyBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [cell.replyBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+        cell.replyBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+        UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateNormal];
+        [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateHighlighted];
+        [cell.replyBtn addTarget:self action:@selector(replyBtnClicked)forControlEvents:UIControlEventTouchUpInside];
+    } else{
+        [cell.replyBtn setHidden:YES];
+    }
+    [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+    return cell;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
@@ -299,16 +328,19 @@
         if(commentArray == nil || commentArray.count == 0){
             return 44;
         } else {
-        NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-        NSString *content = [commentDic objectForKey:@"content"];
-        if([StringUtility stringIsEmpty:content]){
-            return 80;
-        }
-        CGSize constraint = CGSizeMake(232, 20000.0f);
-        CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-        return 80 + size.height;
+            CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];
+            return height;
         }
     }
+}
+
+- (CGFloat)caculateCommentCellHeight:(NSInteger)row dataArray:(NSArray *)dataArray
+{
+    NSMutableDictionary *commentDic = [dataArray objectAtIndex:row];
+    NSString *content = [commentDic objectForKey:@"content"];
+    CGSize constraint = CGSizeMake(230, 20000.0f);
+    CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    return 80 + size.height;
 }
 
 /*
@@ -354,12 +386,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 0){
+    if(indexPath.section > 1){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-        viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
+        CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
         viewController.title = @"评论回复";
-        id aaa = self.navigationController;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -390,6 +420,42 @@
     
     return customView;
 }
+
+- (void)showIntroduction{
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[show objectForKey:@"name"] content:[show objectForKey:@"summary"]];
+    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
+    lplv.center = CGPointMake(160, 210 + self.tableView.contentOffset.y);
+    lplv.delegate = self;
+    [lplv showInView:self.view animated:YES];
+    self.tableView.scrollEnabled = NO;
+}
+
+- (void)leveyPopListViewDidCancel
+{
+    self.tableView.scrollEnabled = YES;
+}
+
+- (void)avatarClicked
+{
+    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)playVideo
+{
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    NSArray *urlArray = [show objectForKey:@"video_urls"];
+    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    viewController.title = [show objectForKey:@"name"];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)replyBtnClicked
+{
+    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient
@@ -443,58 +509,9 @@
             //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
+        
     }];
-
-}
-
-- (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[movie objectForKey:@"name"] content:[movie objectForKey:@"summary"]];
-    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
-    lplv.center = CGPointMake(160, 210 + self.tableView.contentOffset.y);
-    lplv.delegate = self;
-    [lplv showInView:self.view animated:YES];
-    self.tableView.scrollEnabled = NO;
-}
-
-- (void)leveyPopListViewDidCancel
-{
-    self.tableView.scrollEnabled = YES;
-}
-
-- (void)avatarClicked:(id)sender
-{
-    UIButton *btn = (UIButton *)sender;
-    CGPoint point = btn.center;
-    point = [self.tableView convertPoint:point fromView:btn.superview];
-    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
     
-    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-    viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
-
-- (void)playVideo
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [movie objectForKey:@"video_urls"];
-    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [movie objectForKey:@"name"];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
-
-- (void)replyBtnClicked:(id)sender
-{
-    UIButton *btn = (UIButton *)sender;
-    CGPoint point = btn.center;
-    point = [self.tableView convertPoint:point fromView:btn.superview];
-    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
-    
-    CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-    viewController.threadId = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"id"];
-    viewController.title = @"评论回复";
-    viewController.openKeyBoard = YES;
-    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 #pragma mark -
@@ -537,5 +554,4 @@
 	return [NSDate date]; // should return date data source was last changed
 	
 }
-
 @end

@@ -410,8 +410,8 @@
         cell = (CommentCell *)[nib objectAtIndex:2];
     }
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
-    id ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
-    if(ownerPicUrl == [NSNull null]){
+    NSString *ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
+    if([StringUtility stringIsEmpty:ownerPicUrl]){
         cell.avatarImageView.image = [UIImage imageNamed:@"placeholder.png"];
     } else {
         [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];

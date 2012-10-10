@@ -10,6 +10,14 @@ extern NSString *const kAppKey;
 
 extern NSString *const kSuccessResCode;
 
+extern NSString *const kPathMovie;
+
+extern NSString *const kPathTV;
+
+extern NSString *const kPathShow;
+
+extern NSString *const kPathVideo;
+
 extern NSString *const kPathAccountRegister;
 
 extern NSString *const kPathAccountLogin;
@@ -50,6 +58,7 @@ extern NSString *const kPathUserWatchs;
 
 extern NSString *const kPathUserFavorities;
 
+extern NSString *const kPathUserRecommends;
 //Comments
 extern NSString *const kPathCommentReply;
 

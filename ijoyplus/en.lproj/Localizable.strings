@@ -80,12 +80,14 @@ drama_list = "剧集列表";
 list = "个人主页";
 watched = "看过的影片";
 my_collection = "收藏的影片";
+my_recommandation = "推荐的影片";
 cancel_follow = "取消关注";
 my_followed_people = "我关注的人";
+my_fans = "我的粉丝";
 message = "消息";
 my_message = "我的消息";
 
-myself = "动态";
+myself = "动态消息";
 notification_center = "通知中心";
 settings = "设置";
 my_followed = "我关注的";

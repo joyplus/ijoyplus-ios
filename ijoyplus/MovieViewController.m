@@ -12,25 +12,44 @@
 
 @interface MovieViewController(){
     WaterflowView *flowView;
-    NSMutableArray *imageUrls;
-    int currentPage;
-    int tempCount;
+    NSMutableArray *videoArray;
 }
 - (void)addContentView;
 @end
 
 @implementation MovieViewController
 
+- (void)viewDidUnload
+{
+    flowView = nil;
+    videoArray = nil;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    imageUrls = [NSMutableArray arrayWithObjects:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg",@"http://img1.douban.com/lpic/s11184513.jpg",@"http://img1.douban.com/lpic/s9127643.jpg",@"http://img3.douban.com/lpic/s6781186.jpg",@"http://img1.douban.com/mpic/s9039761.jpg",nil];
-    tempCount = imageUrls.count;
     [self addContentView];
     
 //    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
 //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
 //    [flowView addGestureRecognizer:downGesture];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", @"30", @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:@"movie"];
+            videoArray = [[NSMutableArray alloc]initWithCapacity:30];
+            if(videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+            }
+            [flowView reloadData];
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
 }
 
 - (void)addContentView
@@ -41,20 +60,12 @@
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-135)];
     flowView.parentControllerName = @"MovieViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    NSString *flag = @"0";
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-    if([num boolValue]){
-        flag = @"1";
-    }
-    flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"movieSelected",flag];
+    flowView.cellSelectedNotificationName = @"movieSelected";
     [flowView showsVerticalScrollIndicator];
     flowView.flowdatasource = self;
     flowView.flowdelegate = self;
     [self.view addSubview:flowView];
-    
-    currentPage = 1;
     [flowView reloadData];
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -80,6 +91,9 @@
 
     static NSString *CellIdentifier = @"movieCell";
 	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
+    if(indexPath.row * 3 + indexPath.section >= videoArray.count){
+        return cell;
+    }
     cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
     if(indexPath.section == 0){
@@ -89,7 +103,13 @@
     } else {        
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     }
-    [imageView setImageWithURL:[NSURL URLWithString:[imageUrls objectAtIndex:(indexPath.row + indexPath.section) % tempCount]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
+    NSString *url = [movie valueForKey:@"prod_pic_url"];
+    if([StringUtility stringIsEmpty:url]){
+        imageView.image = [UIImage imageNamed:@"video_placeholder"];
+    } else {
+        [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@""]];
+    }
     imageView.layer.borderWidth = 1;
     imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     imageView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -98,7 +118,12 @@
     [cell addSubview:imageView];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
-    titleLabel.text = [NSString stringWithFormat:@"%i, %i", indexPath.row, indexPath.section];
+    NSString *name = [movie valueForKey:@"prod_name"];
+    if([StringUtility stringIsEmpty:name]){
+        titleLabel.text = @"...";
+    } else {
+        titleLabel.text = name;
+    }
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = [UIColor whiteColor];
@@ -112,7 +137,9 @@
 #pragma mark- WaterflowDelegate
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if(indexPath.row * 3 + indexPath.section >= videoArray.count){
+        return 0;
+    }
 	return MOVIE_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT;
     
 }
@@ -124,14 +151,28 @@
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
     PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
 //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    viewController.programId = @"6315";
+    NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
+    viewController.programId = [movie objectForKey:@"prod_id"];
     [navController pushViewController:viewController animated:YES];
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
-    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    tempCount = imageUrls.count;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:@"movie"];
+            if(videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+            }
+            [flowView reloadData];
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
 }
 
 @end

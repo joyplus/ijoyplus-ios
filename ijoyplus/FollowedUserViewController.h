@@ -10,4 +10,8 @@
 
 @interface FollowedUserViewController : UITableViewController
 
+@property (nonatomic, strong)NSString *userid;
+@property (nonatomic, strong)NSString *type;
+@property (nonatomic, strong)NSString *nickname;
+
 @end

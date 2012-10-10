@@ -94,6 +94,7 @@
                                     kAppKey, @"app_key", nil];
         
         [[AFServiceAPIClient sharedClient] getPath:kPathAccountLogout parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
         }];

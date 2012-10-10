@@ -12,6 +12,14 @@ NSString *const kAppKey  = @"ijoyplus_ios_001";
 
 NSString *const kSuccessResCode  = @"00000";
 
+NSString *const kPathMovie = @"/joyplus-service/index.php/video_movies";
+
+NSString *const kPathTV = @"/joyplus-service/index.php/video_tvs";
+
+NSString *const kPathShow = @"/joyplus-service/index.php/video_shows";
+
+NSString *const kPathVideo = @"/joyplus-service/index.php/video_video";
+
 NSString *const kPathAccountRegister = @"/joyplus-service/index.php/account/register";
 
 NSString *const kPathAccountLogin = @"/joyplus-service/index.php/account/login";
@@ -51,6 +59,8 @@ NSString *const kPathUserPreGenThirdPartyUsers = @"/joyplus-service/index.php/us
 NSString *const kPathUserWatchs = @"/joyplus-service/index.php/user/watchs";
 
 NSString *const kPathUserFavorities = @"/joyplus-service/index.php/user/favorities";
+
+NSString *const kPathUserRecommends = @"/joyplus-service/index.php/user/recommends";
 
 //Comments
 NSString *const kPathCommentReply = @"/joyplus-service/index.php/comment/reply";

@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *collectionBtn;
 @property (strong, nonatomic) IBOutlet UILabel *username;
 - (IBAction)followUser:(id)sender;
+- (IBAction)fansUser:(id)sender;
 @property (strong, nonatomic) IBOutlet UILabel *watchedLabel;
 @property (strong, nonatomic) IBOutlet UIButton *avatarImageViewBtn;
 @property (strong, nonatomic) IBOutlet UILabel *fansLabel;

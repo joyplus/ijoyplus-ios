@@ -74,7 +74,7 @@
     ((PlayViewController *)currentViewController).programId = self.programId;
 //    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
 //    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-//    [self addChildViewController:currentViewController];
+    [self addChildViewController:currentViewController];
     currentViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TAB_BAR_HEIGHT);
     [self.view addSubview:currentViewController.view];
 }
@@ -203,7 +203,7 @@
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
+        if([responseCode isEqualToString:kSuccessResCode]){
             
         } else {
 
@@ -221,7 +221,7 @@
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
+        if([responseCode isEqualToString:kSuccessResCode]){
             
         } else {
         }

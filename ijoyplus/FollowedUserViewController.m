@@ -13,6 +13,10 @@
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "HomeViewController.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "ContainerUtility.h"
 
 #define LEFT_GAP 25
 #define AVATAR_IMAGE_WIDTH 60
@@ -26,6 +30,17 @@
 @end
 
 @implementation FollowedUserViewController
+@synthesize userid;
+@synthesize type;
+@synthesize nickname;
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    userArray = nil;
+    userid = nil;
+    type = nil;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -39,19 +54,53 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = NSLocalizedString(@"my_followed_people", nil);
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	[self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    userArray = [[NSMutableArray alloc]initWithObjects:@"Joyce", @"Steven", @"Scott", @"Zhou", nil ];
-}
+    userArray = [[NSMutableArray alloc]initWithCapacity:18];
+    if(self.userid == nil){// local user
+        if([type isEqualToString:@"1"]){
+            self.title = NSLocalizedString(@"my_followed_people", nil);
+        } else {
+            self.title = NSLocalizedString(@"my_fans", nil);
+        }
+        
+    } else {
+        if([type isEqualToString:@"1"]){
+            self.title = [NSString stringWithFormat:@"%@关注的人", self.nickname];
+        } else {
+            self.title = [NSString stringWithFormat:@"%@的粉丝", self.nickname];
+        }
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.userid, @"userid",
+                                @"1", @"page_num", @"18", @"page_size", nil];
+    NSString *serviceName;
+    NSString *key;
+    if([type isEqualToString:@"1"]){
+        serviceName = kPathUserFriends;
+        key = @"friends";
+    } else {
+        serviceName = kPathUserFans;
+        key = @"fans";
+    }
+    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *friends = [result objectForKey:key];
+            if(friends != nil && friends.count > 0){
+                [userArray addObjectsFromArray:friends];
+                [self.tableView reloadData];
+            }
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -85,7 +134,14 @@
     }
     for (int i = 0; i < num; i ++){
         UIImageView *avatarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, AVATAR_IMAGE_WIDTH, AVATAR_IMAGE_WIDTH)];
-        [avatarImageView setImageWithURL:[NSURL URLWithString:@"http://img5.douban.com/view/photo/thumb/public/p1686249659.jpg"] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        NSDictionary *user = [userArray objectAtIndex:indexPath.row * 3 + num - 1];
+        NSString *url = [user valueForKey:@"user_pic_url"];
+        if([StringUtility stringIsEmpty:url]){
+            avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
+        } else {
+            [avatarImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@""]];
+            
+        }
         avatarImageView.layer.cornerRadius = 27.5;
         avatarImageView.layer.masksToBounds = YES;
         if(i == 0){
@@ -108,7 +164,7 @@
         [cell.contentView addSubview:roundImageView];
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-        nameLabel.text = [userArray objectAtIndex:indexPath.row * 3 + num - 1];
+        nameLabel.text = [user objectForKey:@"nickname"];
         [nameLabel sizeToFit];
         nameLabel.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);
         nameLabel.textColor = [UIColor whiteColor];
@@ -119,10 +175,15 @@
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         btn.frame = CGRectMake(0, 0, 96, 25);
         btn.center = CGPointMake(avatarImageView.center.x, nameLabel.center.y + 27);
-        [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+        if([type isEqualToString:@"1"]){
+            [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+        } else {
+            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
+        }
+        [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
-        [btn addTarget:self action:@selector(cancelFollow) forControlEvents:UIControlEventTouchUpInside];
+        btn.tag = indexPath.row * 3 + num - 1;
         [cell.contentView addSubview:btn];
     }
     return cell;
@@ -186,11 +247,41 @@
 
 - (void)closeSelf
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)cancelFollow
+- (void)cancelFollow:(id)sender;
 {
+    UIButton *btn = (UIButton *)sender;
+    NSInteger tag = btn.tag;
+    NSString *friendId = [[userArray objectAtIndex:tag] objectForKey:@"id"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", friendId, @"friend_ids", nil];
+    if([btn.titleLabel.text isEqualToString:NSLocalizedString(@"follow", nil)]){
+        [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                
+                [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    } else {
+        [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
+                
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+        
+    }
     
 }
 

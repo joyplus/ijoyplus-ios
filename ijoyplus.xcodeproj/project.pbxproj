@@ -210,6 +210,9 @@
 		EBB5A14E1622754000F164F2 /* qq_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14A1622754000F164F2 /* qq_press.png */; };
 		EBB5A14F1622754000F164F2 /* sina_weibo_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */; };
 		EBB5A1501622754000F164F2 /* sina_weibo_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14C1622754000F164F2 /* sina_weibo_press.png */; };
+		EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */; };
+		EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */; };
+		EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */; };
 		EBD8AD8A1610521900D79F62 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD7F1610521900D79F62 /* NSObject+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBD8AD8B1610521900D79F62 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD811610521900D79F62 /* NSString+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBD8AD8C1610521900D79F62 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD831610521900D79F62 /* SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -536,6 +539,11 @@
 		EBB5A14A1622754000F164F2 /* qq_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq_press.png; sourceTree = "<group>"; };
 		EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_normal.png; sourceTree = "<group>"; };
 		EBB5A14C1622754000F164F2 /* sina_weibo_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_press.png; sourceTree = "<group>"; };
+		EBC23E1A16259AA9002BBD98 /* VideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayRootViewController.h; sourceTree = "<group>"; };
+		EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayRootViewController.m; sourceTree = "<group>"; };
+		EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayViewController.h; sourceTree = "<group>"; };
+		EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayViewController.m; sourceTree = "<group>"; };
+		EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoPlayViewController.xib; sourceTree = "<group>"; };
 		EBD8AD7D1610521900D79F62 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		EBD8AD7E1610521900D79F62 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		EBD8AD7F1610521900D79F62 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -872,6 +880,11 @@
 				EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */,
 				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
 				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
+				EBC23E1A16259AA9002BBD98 /* VideoPlayRootViewController.h */,
+				EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */,
+				EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */,
+				EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */,
+				EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */,
 				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
 				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
 				EB632F4316241D1B0003DDD3 /* LocalPlayRootViewController.h */,
@@ -1339,6 +1352,7 @@
 				EB632F42162417C80003DDD3 /* CommentListViewController.xib in Resources */,
 				EB632F4A16241D200003DDD3 /* LocalPlayViewController.xib in Resources */,
 				EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */,
+				EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1474,6 +1488,8 @@
 				EB632F41162417C80003DDD3 /* CommentListViewController.m in Sources */,
 				EB632F4816241D200003DDD3 /* LocalPlayRootViewController.m in Sources */,
 				EB632F4916241D200003DDD3 /* LocalPlayViewController.m in Sources */,
+				EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */,
+				EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

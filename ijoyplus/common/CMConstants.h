@@ -40,6 +40,7 @@
 #define kTencentUserLoggedIn @"tencentUserLoggedIn"
 
 #define kUserId @"kUserId"
+#define kSessionRenew @"kSessionRenew"
 
 
 

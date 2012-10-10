@@ -21,6 +21,8 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "LocalPlayRootViewController.h"
+#import "DramaPlayRootViewController.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -32,9 +34,11 @@
     UIImage *selectedImage;
     BOOL imageChanged;
     BOOL isAvatarImage;
-    NSString *theUserFollowed;
+    NSInteger theUserFollowed;
     BOOL accessed;
-    NSArray *videoArray;
+    NSMutableArray *videoArray;
+    NSString *key;
+    NSString *serviceName;
 }
 - (void)addHeaderContent:(UIView *)view;
 @end
@@ -58,8 +62,9 @@
 - (void)viewDidUnload
 {
     flowView = nil;
-    theUserFollowed = nil;
     videoArray = nil;
+    key = nil;
+    serviceName = nil;
     self.userid = nil;
     [self setSegment:nil];
     [self setTopImageView:nil];
@@ -95,18 +100,22 @@
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
-    self.navigationItem.rightBarButtonItem = rightButton;
     
     [self addContentView];
+    key = @"watchs";
+    serviceName = kPathUserWatchs;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.userid, @"userid",
                                 @"1", @"page_num", @"30", @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserWatchs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            videoArray = [result objectForKey:@"watchs"];
+            NSArray *videos = [result objectForKey:key];
+            videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+            if(videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+            }
             [flowView reloadData];
         } else {
             
@@ -164,41 +173,51 @@
                                 kAppKey, @"app_key",
                                 self.userid, @"userid",
                                 nil];
-    if(!accessed){
+//    if(!accessed){
     [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             accessed = YES;
-            id bgUrl = [result valueForKey:@"bg_url"];
-            if(bgUrl == [NSNull null]){
-                self.topImageView.image = [UIImage imageNamed:@"home_bg_image"];
+            NSString *bgUrl = [result valueForKey:@"bg_url"];
+            if([StringUtility stringIsEmpty:bgUrl]){
+                self.topImageView.image = [UIImage imageNamed:@"u0_normal"];
             } else {
-                [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"home_bg_image"]];
+                [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
             }
-            id myUrl = [result valueForKey:@"pic_url"];
-            if(myUrl == [NSNull null]){
+            NSString *myUrl = [result valueForKey:@"pic_url"];
+            if([StringUtility stringIsEmpty:myUrl]){
                 self.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
             } else {
                 [self.avatarImageView setImageWithURL:[NSURL URLWithString:[result valueForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
             }
             self.fansNumberLabel.text = [result valueForKey:@"fan_num"];
             self.watchedNumberLabel.text = [result valueForKey:@"follow_num"];
-            theUserFollowed = [result valueForKey:@"isFollowed"];
+            theUserFollowed = [[result valueForKey:@"isFollowed"] intValue];
+            if(theUserFollowed != 1){
+                UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
+                self.navigationItem.rightBarButtonItem = rightButton;
+            }
             self.username.text = [result valueForKey:@"nickname"];
+            
+            NSString *loginUserId = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserId];
+            if([loginUserId isEqualToString:self.userid]){
+                self.title = @"您的主页";
+            } else {
+                self.title = [NSString stringWithFormat:@"%@的主页", [result valueForKey:@"nickname"]];
+            }
+            self.tabBarItem.title = NSLocalizedString(@"list", nil);
         } else {
             
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
-    }
-    if(!accessed){
-        accessed = YES;
-    }
+//    }
+//    if(!accessed){
+//        accessed = YES;
+//    }
     [self.bgView addSubview:self.topImageView];
-    [view addSubview:self.bgView];
-    self.avatarImageView.image = [UIImage imageNamed:@"u0_normal"];
-    
+    [view addSubview:self.bgView];    
     self.avatarImageView.layer.cornerRadius = 27.5;
     self.avatarImageView.layer.masksToBounds = YES;
     [view addSubview:self.avatarImageView];
@@ -222,6 +241,7 @@
     self.segment.selectedSegmentIndex = self.segment.selectedSegmentIndex;
     [self.segment setTitle:NSLocalizedString(@"watched", nil) forSegmentAtIndex:0];
     [self.segment setTitle:NSLocalizedString(@"my_collection", nil) forSegmentAtIndex:1];
+    [self.segment setTitle:NSLocalizedString(@"my_recommandation", nil) forSegmentAtIndex:2];
     [self.segment addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
     [view addSubview:self.segment];
 }
@@ -241,26 +261,7 @@
 
 - (NSInteger)flowView:(WaterflowView *)flowView numberOfRowsInColumn:(NSInteger)column
 {
-    if(videoArray == nil || videoArray.count == 0){
-        return 1;
-    } else {
-    int rows = videoArray.count / 3 + 1;
-    if((videoArray.count  % 3) == 0){
-        return rows;
-    } else if((videoArray.count % 3) ==  1){
-        if(column == 0){
-            return rows + 1;
-        } else {
-            return rows;
-        }
-    } else{
-        if(column == 2){
-            return rows;
-        } else {
-            return rows + 1;
-        }
-    }
-    }
+    return 10;
 }
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -274,6 +275,9 @@
             [self addHeaderContent:cell];
         }
     } else {
+        if((indexPath.row-1) * 3 + indexPath.section >= videoArray.count){
+            return cell;
+        }
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
         float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
         if(indexPath.section == 0){
@@ -282,9 +286,6 @@
             imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         } else {
             imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
-        }
-        if(indexPath.row + indexPath.section - 1 == videoArray.count){
-            return cell;
         }
         NSString *imageUrl = [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_pic_url"];
         [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
@@ -296,11 +297,11 @@
         [cell addSubview:imageView];
         
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
-        titleLabel.text =  [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_pic_url"];
+        titleLabel.text =  [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_name"];
         titleLabel.textAlignment = UITextAlignmentCenter;
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textColor = [UIColor whiteColor];
-        titleLabel.font = CMConstants.titleFont;
+        titleLabel.font = [UIFont systemFontOfSize:13];
         [cell addSubview:titleLabel];
     }
     return cell;
@@ -316,55 +317,140 @@
 		height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
         return height;
     } else {
-        NSString *type = [[videoArray objectAtIndex:(indexPath.row + indexPath.section - 1)] objectForKey:@"content_type"];
+        if((indexPath.row-1) * 3 + indexPath.section >= videoArray.count){
+//            if((indexPath.row+1) % 10 == 0){
+//                return 120;
+//            }
+            return 0;
+        }
+        NSString *type = [[videoArray objectAtIndex:((indexPath.row-1) * 3 + indexPath.section)] objectForKey:@"content_type"];
         if([type isEqualToString:@"1"]){
             return MOVE_NAME_LABEL_HEIGHT + MOVIE_LOGO_HEIGHT;
         } else {
             return MOVE_NAME_LABEL_HEIGHT + VIDEO_LOGO_HEIGHT;
         }
     }
-        
-        
-    return height + MOVE_NAME_LABEL_HEIGHT;
 }
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"%i, %i", indexPath.row, indexPath.section);
     if(indexPath.row == 0){
         return;
     }
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
-    //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    [navController pushViewController:viewController animated:YES];
+    NSDictionary *program = [videoArray objectAtIndex:(indexPath.row-1) * 3 + indexPath.section];
+    NSString *type = [[videoArray objectAtIndex:((indexPath.row-1) * 3 + indexPath.section)] objectForKey:@"content_type"];
+    PlayRootViewController *viewController;
+    if([type isEqualToString:@"1"]){
+        viewController = [[PlayRootViewController alloc]init];
+    } else if([type isEqualToString:@"2"]){
+        viewController = [[DramaPlayRootViewController alloc]init];
+    } else if([type isEqualToString:@"3"]){
+        viewController = [[LocalPlayRootViewController alloc]init];
+    } else if([type isEqualToString:@"4"]){
+
+    }
+    viewController.programId = [program valueForKey:@"content_id"];
+    [self.navigationController pushViewController:viewController animated:YES];
+    
 }
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
-//    [imageUrls addObject:@"http://img5.douban.com/mpic/s10389149.jpg"];
-    [flowView reloadData];
+    currentPage++;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.userid, @"userid",
+                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                NSArray *videos = [result objectForKey:key];
+                if(videos != nil && videos.count > 0){
+                    [videoArray addObjectsFromArray:videos];
+                    [flowView reloadData];
+                }
+            } else {
+            
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+        }];
+    
 }
 
 - (void)segmentValueChanged:(id)sender {
-    [flowView reloadData];
+    if(self.segment.selectedSegmentIndex == 0){
+        serviceName = kPathUserWatchs;
+        key = @"watchs";
+    } else if(self.segment.selectedSegmentIndex == 1){
+        serviceName = kPathUserFavorities;
+        key = @"favorities";
+    } else {
+        serviceName = kPathUserRecommends;
+        key = @"recommends";
+    }
+    currentPage = 1;
+    flowView.currentPage = 1;
+    [videoArray removeAllObjects];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                self.userid, @"userid",
+                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:key];
+            if(videos != nil && videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+            }
+        } else {
+            
+        }
+        [flowView reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+        [flowView reloadData];
+    }];
 }
 
 - (IBAction)followUser:(id)sender {
     FollowedUserViewController *viewController = [[FollowedUserViewController alloc]initWithNibName:@"FollowedUserViewController" bundle:nil];
+    viewController.type = @"1";// 1 关注的
+    viewController.userid = self.userid;
+    viewController.nickname = self.username.text;
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (IBAction)fansUser:(id)sender {
+    FollowedUserViewController *viewController = [[FollowedUserViewController alloc]initWithNibName:@"FollowedUserViewController" bundle:nil];
+    viewController.type = @"2";// 2 粉丝
+    viewController.userid = self.userid;
+    viewController.nickname = self.username.text;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)follow
 {
-    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-	[self.navigationController.view addSubview:HUD];
-	HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.labelText = NSLocalizedString(@"follow_success", nil);
-    HUD.dimBackground = YES;
-    [HUD show:YES];
-	[HUD hide:YES afterDelay:2];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.userid, @"friend_ids", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+                [self.navigationController.view addSubview:HUD];
+                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+                HUD.mode = MBProgressHUDModeCustomView;
+                HUD.labelText = NSLocalizedString(@"follow_success", nil);
+                HUD.dimBackground = YES;
+                [HUD show:YES];
+                [HUD hide:YES afterDelay:1.5];
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+
 }
 
 - (void)closeSelf
@@ -375,13 +461,13 @@
     }
 }
 - (void)bgImageClicked:(id)sender {
-    isAvatarImage = NO;
-    [self photoCaptureButtonAction:sender];
+//    isAvatarImage = NO;
+//    [self photoCaptureButtonAction:sender];
 }
 
 - (IBAction)avatarImageClicked:(id)sender {
-    isAvatarImage = YES;
-    [self photoCaptureButtonAction:sender];
+//    isAvatarImage = YES;
+//    [self photoCaptureButtonAction:sender];
 }
 
 #pragma mark - UIImagePickerDelegate
