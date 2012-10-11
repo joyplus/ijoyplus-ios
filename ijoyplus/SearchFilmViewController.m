@@ -13,10 +13,18 @@
 #import "CustomTableViewCell.h"
 #import "CustomCellBackground.h"
 #import "CustomCellBlackBackground.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "ContainerUtility.h"
+#import "DateUtility.h"
+#import "NSDate-Utilities.h"
 
+#define LOCAL_KEYS_NUMBER 5
 
 @interface SearchFilmViewController (){
-    NSMutableArray *itemsArray;
+    NSMutableArray *historyArray;
+    NSMutableArray *hotKeyArray;
 }
 
 - (void)closeSelf;
@@ -25,6 +33,14 @@
 
 @implementation SearchFilmViewController
 @synthesize sBar;
+
+- (void)viewDidUnload
+{
+    [self setSBar:nil];
+    historyArray = nil;
+    hotKeyArray = nil;
+    [super viewDidUnload];
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -39,19 +55,17 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
+    [self.tableView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];   
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.sBar.delegate = self;
-    
     [self.tableView setBackgroundColor:[UIColor clearColor]];
-}
-
-- (void)viewDidUnload
-{
-    [self setSBar:nil];
-    [super viewDidUnload];
-    itemsArray = nil;
+    historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
+    if(historyArray == nil){
+        historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
+    }
+    hotKeyArray = [[NSMutableArray alloc]initWithCapacity:10];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -61,26 +75,35 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    NSArray *sortedArray = [historyArray sortedArrayUsingComparator:^(id a, id b) {
+        NSDate *first = [DateUtility dateFromFormatString:[(NSMutableDictionary*)a objectForKey:@"last_search_date"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
+        NSDate *second = [DateUtility dateFromFormatString:[(NSMutableDictionary*)b objectForKey:@"last_search_date"] formatString: @"yyyy-MM-dd HH:mm:ss"];
+        return [second compare:first];
+    }];
+    historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
+    for(NSDictionary *item in sortedArray){
+        NSMutableDictionary *cloneItem = [[NSMutableDictionary alloc]initWithDictionary:item];
+        [historyArray addObject:cloneItem];
+    }
     
-    NSMutableArray *items1 = [[NSMutableArray alloc]initWithCapacity:20];
-    [items1 addObject:@"北京青年"];
-    [items1 addObject:@"中国好声音"];
-    NSMutableDictionary *itemDic1 = [[NSMutableDictionary alloc]initWithCapacity:10];
-    [itemDic1 setValue:items1 forKey:@"search_history"];
-    [itemsArray addObject:itemDic1];
-    
-    NSMutableArray *items2 = [[NSMutableArray alloc]initWithCapacity:20];
-    [items2 addObject:@"爱情公寓3"];
-    [items2 addObject:@"快乐大本营"];
-    [items2 addObject:@"康熙来了"];
-    [items2 addObject:@"百变大咖秀"];
-    [items2 addObject:@"天天向上"];
-    [items2 addObject:@"海贼王"];
-    NSMutableDictionary *itemDic2 = [[NSMutableDictionary alloc]initWithCapacity:10];
-    [itemDic2 setValue:items2 forKey:@"hot_keys"];
-    
-    [itemsArray addObject:itemDic2];
+    if(hotKeyArray.count == 0){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", [NSNumber numberWithInt:10], @"num", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                NSArray *keyArray = (NSArray *)[result objectForKey:@"topKeywords"];
+                if(keyArray != nil && keyArray.count > 0){
+                    [hotKeyArray addObjectsFromArray:keyArray];
+                }
+                [self.tableView reloadData];
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+    [self.tableView reloadData];
 }
 
 - (void)closeSelf
@@ -92,16 +115,24 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return itemsArray.count;
+    if(historyArray.count > 0){
+        return 2;
+    } else {
+        return 1;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    NSMutableArray *array = [item objectForKey:key];
-    return array.count;
+    if(historyArray.count > 0){
+        if(section == 0){
+            return historyArray.count;
+        } else {
+            return hotKeyArray.count;
+        }
+    } else {
+        return hotKeyArray.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -119,10 +150,19 @@
     }
     [cell setBackgroundView:backgroundView];
     
-    NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSMutableArray *items = [item objectForKey:[keys nextObject]];
-    cell.textLabel.text = [items objectAtIndex:indexPath.row];
+    if(historyArray.count > 0){
+        if(indexPath.section == 0){
+            cell.textLabel.text = [[historyArray objectAtIndex:indexPath.row]valueForKey:@"content"];
+        } else {
+            if(hotKeyArray.count > 0){
+                cell.textLabel.text = [[hotKeyArray objectAtIndex:indexPath.row] valueForKey:@"content"];
+            }
+        }
+    } else {
+        if(hotKeyArray.count > 0){
+            cell.textLabel.text = [[hotKeyArray objectAtIndex:indexPath.row] valueForKey:@"content"];
+        }
+    }
     cell.textLabel.font = [UIFont systemFontOfSize:15];
     cell.textLabel.textColor = [UIColor whiteColor];
     return cell;
@@ -138,10 +178,15 @@
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    headerLabel.text =  NSLocalizedString(key, nil);
+    if(historyArray.count > 0){
+        if(section == 0){
+            headerLabel.text = NSLocalizedString(@"search_history", nil);
+        } else {
+            headerLabel.text = NSLocalizedString(@"hot_keys", nil);
+        }
+    } else {
+        headerLabel.text = NSLocalizedString(@"hot_keys", nil);
+    }
     headerLabel.textColor = [UIColor whiteColor];
     [headerLabel sizeToFit];
     headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
@@ -192,6 +237,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSString *key;
+    if(indexPath.section == 0){
+        key = [[historyArray objectAtIndex:indexPath.row] valueForKey:@"content"];
+        [self addKeyToLocalHistory:key];
+    } else {
+        key = [[hotKeyArray objectAtIndex:indexPath.row] valueForKey:@"content"];
+    }
+    self.sBar.text = key;
     [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     SearchFilmResultViewController *viewController = [[SearchFilmResultViewController alloc] initWithNibName:@"SearchFilmResultViewController" bundle:nil];
@@ -207,6 +260,7 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+    [self addKeyToLocalHistory:self.sBar.text];
     [searchBar resignFirstResponder];
     SearchFilmResultViewController *viewController = [[SearchFilmResultViewController alloc] initWithNibName:@"SearchFilmResultViewController" bundle:nil];
     viewController.keyword = self.sBar.text;
@@ -217,6 +271,41 @@
 {
     searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
+}
+
+- (void)addKeyToLocalHistory:(NSString *)key
+{
+    NSMutableDictionary *newItem;
+    for(NSMutableDictionary *item in historyArray){
+        NSString *content = [item objectForKey:@"content"];
+        if([content isEqualToString:key]){
+            newItem = item;
+            break;
+        }
+    }
+    NSString *currentDateString = [DateUtility formatDateWithString:[NSDate date] formatString: @"yyyy-MM-dd HH:mm:ss"];
+    if(newItem != nil){
+        [newItem setValue:currentDateString forKey:@"last_search_date"];
+    } else {
+        newItem = [[NSMutableDictionary alloc]initWithCapacity:2];
+        [newItem setValue:key forKey:@"content"];
+        [newItem setValue:currentDateString forKey:@"last_search_date"];
+        if(historyArray.count >= LOCAL_KEYS_NUMBER){
+            NSDate *minDate = [NSDate date];
+            NSMutableDictionary *minItem;
+            for(NSMutableDictionary *item in historyArray){
+                NSString *dateString = [item objectForKey:@"last_search_date"];
+                NSDate *date = [DateUtility dateFromFormatString:dateString formatString: @"yyyy-MM-dd HH:mm:ss"];
+                if([date isEarlierThanDate:minDate]){
+                    minDate = date;
+                    minItem = item;
+                }
+            }
+            [historyArray removeObject:minItem];
+        }
+        [historyArray addObject:newItem];
+    }
+    [[ContainerUtility sharedInstance]setAttribute:historyArray forKey:@"search_history"];
 }
 
 @end

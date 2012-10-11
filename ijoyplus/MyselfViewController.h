@@ -7,16 +7,6 @@
  * View controller with the demo table
  */
 @interface MyselfViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient> {
-@private
-    /**
-     * Pull to refresh manager
-     */
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
-    
-    /**
-     * Reloads (for testing purposes)
-     */
-    NSUInteger reloads_;
 }
 
 /**

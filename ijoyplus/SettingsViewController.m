@@ -19,6 +19,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "StringUtility.h"
 
 @interface SettingsViewController ()
 
@@ -56,6 +57,17 @@
     self.firstLabel.text = NSLocalizedString(@"your_account", nil);
     self.secondLabel.text = NSLocalizedString(@"other_settings", nil);
     NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserId];
+    if([StringUtility stringIsEmpty:username]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), [result objectForKey:@"username"]] forState:UIControlStateNormal];   
+            }
+         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"%@", error);
+         }];
+    }
     [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), username] forState:UIControlStateNormal];
     [self.searchFriendBtn setTitle:NSLocalizedString(@"search_add_friend", nil) forState:UIControlStateNormal];
     [self.commentBtn setTitle:NSLocalizedString(@"comment", nil) forState:UIControlStateNormal];

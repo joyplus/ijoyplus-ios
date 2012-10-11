@@ -177,8 +177,9 @@
 {
     SearchFilmViewController *viewController = [[SearchFilmViewController alloc]initWithNibName:@"SearchFilmViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+    [self presentViewController:navController animated:YES completion:nil];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
 }
 
 - (void)settings
@@ -216,21 +217,21 @@
 {
     bottomToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - NAVIGATION_BAR_HEIGHT - SEGMENT_HEIGHT + 9, self.view.frame.size.width, TAB_BAR_HEIGHT)];
     [UIUtility customizeToolbar:bottomToolbar];
-    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
-    [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
-    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [UIUtility addTextShadow:registerBtn.titleLabel];
-    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [registerBtn addTarget:self action:@selector(registerScreen)forControlEvents:UIControlEventTouchUpInside];
-    [bottomToolbar addSubview:registerBtn];
+//    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
+//    [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
+//    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+//    [UIUtility addTextShadow:registerBtn.titleLabel];
+//    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+//    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+//    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+//    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+//    [registerBtn addTarget:self action:@selector(registerScreen)forControlEvents:UIControlEventTouchUpInside];
+//    [bottomToolbar addSubview:registerBtn];
     
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [loginBtn setFrame:CGRectMake(self.view.frame.size.width/2 + MOVIE_LOGO_WIDTH_GAP/2, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
+    [loginBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH * 2, LOG_BTN_HEIGHT)];
     [loginBtn setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
     [loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [loginBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];

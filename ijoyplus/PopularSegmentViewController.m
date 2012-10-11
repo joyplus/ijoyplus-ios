@@ -28,7 +28,7 @@
 }
 @property (strong, nonatomic) IBOutlet CustomSegmentedControl *topSegment;
 - (void)segmentValueChanged:(id)sender;
-- (void)search;
+//- (void)search;
 @end
 
 @implementation PopularSegmentViewController
@@ -49,11 +49,11 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     [UIUtility customizeNavigationBar:self.navigationController.navigationBar];
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-    if([num boolValue]){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-    }
+//    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+//    if([num boolValue]){
+//        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+//        self.navigationItem.rightBarButtonItem = rightButton;
+//    }
     topSegment.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, SEGMENT_HEIGHT_GAP, SEGMENT_WIDTH, SEGMENT_HEIGHT);
     topSegment.selectedSegmentIndex = 0;
     [topSegment setTitle:NSLocalizedString(@"movie", nil) forSegmentAtIndex:0];
@@ -139,12 +139,12 @@
     }
 }
 
-- (void)search
-{
-    SearchFilmViewController *viewController = [[SearchFilmViewController alloc]initWithNibName:@"SearchFilmViewController" bundle:nil];
-    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
-}
+//- (void)search
+//{
+//    SearchFilmViewController *viewController = [[SearchFilmViewController alloc]initWithNibName:@"SearchFilmViewController" bundle:nil];
+//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+//}
 
 @end

@@ -18,6 +18,7 @@
 #import "ServiceConstants.h"
 #import "LocalPlayRootViewController.h"
 #import "DramaPlayRootViewController.h"
+#import "VideoPlayRootViewController.h"
 #import "CMConstants.h"
 
 @interface FriendViewController (){
@@ -175,7 +176,7 @@
     } else if([type isEqualToString:@"3"]){
         viewController = [[LocalPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"4"]){
-        
+        viewController = [[VideoPlayRootViewController alloc]init];
     }
     viewController.programId = [program valueForKey:@"content_id"];
     [self.navigationController pushViewController:viewController animated:YES];

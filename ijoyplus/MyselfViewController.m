@@ -9,6 +9,8 @@
     NSMutableArray *itemsArray;
     EGORefreshTableHeaderView *_refreshHeaderView;
 	BOOL _reloading;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
 }
 
 - (void)loadTable;

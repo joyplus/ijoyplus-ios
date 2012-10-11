@@ -359,7 +359,6 @@
         CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
         viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
         viewController.title = @"评论回复";
-        id aaa = self.navigationController;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }

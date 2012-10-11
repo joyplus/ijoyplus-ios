@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "FollowedUserViewController.h"
+#import "PopularUserViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "CMConstants.h"
@@ -22,7 +22,7 @@
 #define LEFT_GAP 25
 #define AVATAR_IMAGE_WIDTH 60
 
-@interface FollowedUserViewController (){
+@interface PopularUserViewController (){
     NSMutableArray *userArray;
     int pageSize;
     //    EGORefreshTableHeaderView *_refreshHeaderView;
@@ -30,22 +30,18 @@
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
 }
-- (void)closeSelf;
-- (void)cancelFollow;
-- (void)viewUser:(id)sender;
+- (void)cancelFollow:(id)sender;
+- (void)viewUser;
 @end
 
-@implementation FollowedUserViewController
-@synthesize userid;
-@synthesize type;
-@synthesize nickname;
+@implementation PopularUserViewController
 
+@synthesize fromController;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     userArray = nil;
-    userid = nil;
-    type = nil;
+    self.fromController = nil;
     //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
 }
@@ -62,41 +58,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	[self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
+    if([fromController isEqualToString:@"SearchFriendViewController"]){
+        CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+        CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    } else {
+        [self.navigationItem setHidesBackButton:YES];
+        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"done", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(finishRegister)];
+        self.navigationItem.rightBarButtonItem = rightButton;
+    }
     userArray = [[NSMutableArray alloc]initWithCapacity:18];
-    if(self.userid == nil){// local user
-        if([type isEqualToString:@"1"]){
-            self.title = NSLocalizedString(@"my_followed_people", nil);
-        } else {
-            self.title = NSLocalizedString(@"my_fans", nil);
-        }
-        
-    } else {
-        if([type isEqualToString:@"1"]){
-            self.title = [NSString stringWithFormat:@"%@关注的人", self.nickname];
-        } else {
-            self.title = [NSString stringWithFormat:@"%@的粉丝", self.nickname];
-        }
-    }
-    reloads_ = 1;
+    self.title = @"达人推荐";
     pageSize = 18;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
-    NSString *serviceName;
-    NSString *key;
-    if([type isEqualToString:@"1"]){
-        serviceName = kPathUserFriends;
-        key = @"friends";
-    } else {
-        serviceName = kPathUserFans;
-        key = @"fans";
-    }
-    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    reloads_ = 1;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
+                                nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *friends = [result objectForKey:key];
+            NSArray *friends = [result objectForKey:@"prestiges"];
             if(friends != nil && friends.count > 0){
                 [userArray addObjectsFromArray:friends];
                 pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
@@ -109,17 +92,12 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
-    
-    //    if (_refreshHeaderView == nil) {
-    //		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.table.bounds.size.height, self.view.frame.size.width, self.table.bounds.size.height)];
-    //        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
-    //		view.delegate = self;
-    //		[self.table addSubview:view];
-    //		_refreshHeaderView = view;
-    //
-    //	}
-    //	[_refreshHeaderView refreshLastUpdatedDate];
 
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 - (void)loadTable {
@@ -127,11 +105,6 @@
     [self.tableView reloadData];
     
     [pullToRefreshManager_ tableViewReloadFinished];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 #pragma mark - Table view data source
@@ -152,16 +125,15 @@
     static NSString *CellIdentifier = @"Cell";
     FriendCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
-//       cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        //       cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ListCellFactory" owner:self options:nil];
         cell = (FriendCell *)[nib objectAtIndex:1];
-
+        
     }
     int num = 3;
     if(userArray.count < (indexPath.row+1) * 3){
         num = userArray.count - indexPath.row * 3;
     }
-    NSLog(@"%i, %i", indexPath.row, indexPath.section);
     for (int i = 0; i < num; i ++){
         UIImageView *avatarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, AVATAR_IMAGE_WIDTH, AVATAR_IMAGE_WIDTH)];
         NSDictionary *user = [userArray objectAtIndex:indexPath.row * 3 + i];
@@ -216,16 +188,11 @@
             cell.nameLabel3.font = [UIFont systemFontOfSize:15];
             [cell.nameLabel3 setBackgroundColor:[UIColor clearColor]];
         }
-//        [cell.contentView addSubview:nameLabel];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         btn.frame = CGRectMake(0, 0, 96, 25);
         btn.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 45);
-        if([type isEqualToString:@"1"]){
-            [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
-        } else {
-            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
-        }
+        [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
@@ -341,6 +308,13 @@
     
 }
 
+- (void)finishRegister
+{
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+    [appDelegate refreshRootView];
+}
+
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient
@@ -377,20 +351,14 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
-    NSString *serviceName;
-    NSString *key;
-    if([type isEqualToString:@"1"]){
-        serviceName = kPathUserFriends;
-        key = @"friends";
-    } else {
-        serviceName = kPathUserFans;
-        key = @"fans";
-    }
-    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
+                                nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *friends = [result objectForKey:key];
+            NSArray *friends = [result objectForKey:@"prestiges"];
             if(friends != nil && friends.count > 0){
                 [userArray addObjectsFromArray:friends];
                 reloads_++;
@@ -402,7 +370,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
-       
+    
 }
 
 #pragma mark -
@@ -446,5 +414,6 @@
 	return [NSDate date]; // should return date data source was last changed
 	
 }
+
 
 @end

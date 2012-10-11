@@ -13,6 +13,7 @@
 #import "SinaLoginViewController.h"
 #import "TecentViewController.h"
 #import "ContainerUtility.h"
+#import "PopularUserViewController.h"
 
 @interface SearchFriendViewController ()
 
@@ -142,7 +143,8 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if(indexPath.section == 0){
-        FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+        PopularUserViewController *viewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
+        viewController.fromController = @"SearchFriendViewController";
         [self.navigationController pushViewController:viewController animated:YES];
     } else if(indexPath.section == 1){
         if(indexPath.row == 0){

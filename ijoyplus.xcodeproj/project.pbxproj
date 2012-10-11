@@ -210,6 +210,10 @@
 		EBB5A14E1622754000F164F2 /* qq_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14A1622754000F164F2 /* qq_press.png */; };
 		EBB5A14F1622754000F164F2 /* sina_weibo_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */; };
 		EBB5A1501622754000F164F2 /* sina_weibo_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14C1622754000F164F2 /* sina_weibo_press.png */; };
+		EBBEDE441626741C00A4B376 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBEDE431626741C00A4B376 /* NSDate-Utilities.m */; };
+		EBBEDE4916269E7A00A4B376 /* PopularUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */; };
+		EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */; };
+		EBBEDE511626C6DD00A4B376 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBEDE501626C6DD00A4B376 /* FriendCell.m */; };
 		EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */; };
 		EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */; };
 		EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */; };
@@ -539,6 +543,13 @@
 		EBB5A14A1622754000F164F2 /* qq_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq_press.png; sourceTree = "<group>"; };
 		EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_normal.png; sourceTree = "<group>"; };
 		EBB5A14C1622754000F164F2 /* sina_weibo_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_press.png; sourceTree = "<group>"; };
+		EBBEDE421626741C00A4B376 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
+		EBBEDE431626741C00A4B376 /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
+		EBBEDE4616269E7A00A4B376 /* PopularUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularUserViewController.h; sourceTree = "<group>"; };
+		EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopularUserViewController.m; sourceTree = "<group>"; };
+		EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopularUserViewController.xib; sourceTree = "<group>"; };
+		EBBEDE4F1626C6DD00A4B376 /* FriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendCell.h; path = component/FriendCell.h; sourceTree = "<group>"; };
+		EBBEDE501626C6DD00A4B376 /* FriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendCell.m; path = component/FriendCell.m; sourceTree = "<group>"; };
 		EBC23E1A16259AA9002BBD98 /* VideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayRootViewController.h; sourceTree = "<group>"; };
 		EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayRootViewController.m; sourceTree = "<group>"; };
 		EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayViewController.h; sourceTree = "<group>"; };
@@ -916,6 +927,9 @@
 		EBAF698515FD880E00938FE3 /* friend */ = {
 			isa = PBXGroup;
 			children = (
+				EBBEDE4616269E7A00A4B376 /* PopularUserViewController.h */,
+				EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */,
+				EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */,
 				EBB2FFC01612A25600E8D9A7 /* component */,
 				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
 				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
@@ -1053,6 +1067,8 @@
 		EBB1B3CD1601775400E04289 /* utility */ = {
 			isa = PBXGroup;
 			children = (
+				EBBEDE421626741C00A4B376 /* NSDate-Utilities.h */,
+				EBBEDE431626741C00A4B376 /* NSDate-Utilities.m */,
 				EB0761971622821800C9727C /* NetWorkUtility.h */,
 				EB0761981622821800C9727C /* NetWorkUtility.m */,
 				EBD8AD9E16105F1100D79F62 /* CacheUtility.h */,
@@ -1079,6 +1095,8 @@
 				EBB2FFCC1612D33F00E8D9A7 /* MessageCell.m */,
 				EBB2FFCE1612D57A00E8D9A7 /* MyCommentView.h */,
 				EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */,
+				EBBEDE4F1626C6DD00A4B376 /* FriendCell.h */,
+				EBBEDE501626C6DD00A4B376 /* FriendCell.m */,
 			);
 			name = component;
 			sourceTree = "<group>";
@@ -1353,6 +1371,7 @@
 				EB632F4A16241D200003DDD3 /* LocalPlayViewController.xib in Resources */,
 				EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */,
 				EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */,
+				EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1490,6 +1509,9 @@
 				EB632F4916241D200003DDD3 /* LocalPlayViewController.m in Sources */,
 				EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */,
 				EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */,
+				EBBEDE441626741C00A4B376 /* NSDate-Utilities.m in Sources */,
+				EBBEDE4916269E7A00A4B376 /* PopularUserViewController.m in Sources */,
+				EBBEDE511626C6DD00A4B376 /* FriendCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

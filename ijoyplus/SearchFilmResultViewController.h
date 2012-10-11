@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomSearchBar.h"
+#import "MNMBottomPullToRefreshManager.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface SearchFilmResultViewController : UITableViewController  <UISearchBarDelegate>
+@interface SearchFilmResultViewController : UITableViewController  <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient> 
+
 
 @property (nonatomic, strong)NSString *keyword;
 @property (strong, nonatomic) IBOutlet CustomSearchBar *sBar;

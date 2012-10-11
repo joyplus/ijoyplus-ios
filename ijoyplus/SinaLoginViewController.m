@@ -14,14 +14,16 @@
 #import "FillFormViewController.h"
 #import "ContainerUtility.h"
 #import "FriendListViewController.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "AppDelegate.h"
 
 @interface SinaLoginViewController (){
     WBAuthorizeWebView *webView;
     WBEngine *webEngine;
 }
 
-- (void)linkToUser;
-- (void) didLogInUser;
 - (void)processSinaData;
 - (void)processSinaFriendData:(id) responseObject;
 - (void)closeSelf;
@@ -100,13 +102,6 @@
 
 - (void)engineDidLogIn:(WBEngine *)engine
 {
-    //    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-    //													   message:@"登录成功！"
-    //													  delegate:self
-    //											 cancelButtonTitle:@"确定"
-    //											 otherButtonTitles:nil];
-    //[alertView setTag:kWBAlertViewLogInTag];
-	//[alertView show];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kSinaUserLoggedIn];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] accessToken] forKey:kSinaWeiboAccessToken];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
@@ -114,9 +109,7 @@
 //    [[CacheUtility sharedCache] setSinaWeiboEngineer:engine];
     
     NSLog(@"<<<<<<Sina Login Successfully>>>>>>");
-//    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    // [HUD setDimBackground:YES];
-    [self linkToUser];
+    [self processSinaData];
     
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];
@@ -124,8 +117,24 @@
         FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
         [self.navigationController pushViewController:viewController animated:YES];
     } else{
-        FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-        [self.navigationController pushViewController:viewController animated:YES];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                [appDelegate refreshRootView];
+            } else {
+                FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+                viewController.thirdPartyId = [[WBEngine sharedClient] userID];
+                viewController.thirdPartyType = @"1";
+                [self.navigationController pushViewController:viewController animated:YES];
+               
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+            NSLog(@"<<<<<<%@>>>>>", error);
+        }];
     }
 }
 
@@ -157,15 +166,6 @@
 }
 
 #pragma mark - Private Methods
-- (void)linkToUser {
-    [self didLogInUser];
-    //    [self didFailToLogInWithError:error];
-}
-- (void) didLogInUser{
-    // user has logged in - we need to fetch all of their Facebook data before we let them in
-    [self processSinaData];
-}
-
 - (void)processSinaData {
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:

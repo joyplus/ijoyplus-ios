@@ -16,5 +16,7 @@
 @property (strong, nonatomic) IBOutlet PasswordCell *passwordCell;
 @property (strong, nonatomic) IBOutlet EmailCell *emailCell;
 @property (strong, nonatomic) IBOutlet NicknameCell *nicknameCell;
+@property (strong, nonatomic) NSString *thirdPartyId;
+@property (strong, nonatomic) NSString *thirdPartyType;
 
 @end

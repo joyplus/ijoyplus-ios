@@ -14,14 +14,22 @@
 #import "CMConstants.h"
 #import "CacheUtility.h"
 #import "WBEngine.h"
+#import "PopularUserViewController.h"
+#import "MBProgressHUD.h"
+#import "NetWorkUtility.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 #define FIELDS_COUNT 3
 
 
 @interface FillFormViewController (){
     UIToolbar *keyboardToolbar;
+    MBProgressHUD *HUD;
 }
 
+- (void)finishRegister;
 - (void)closeSelf;
 @end
 
@@ -29,6 +37,20 @@
 @synthesize passwordCell;
 @synthesize emailCell;
 @synthesize nicknameCell;
+@synthesize thirdPartyType;
+@synthesize thirdPartyId;
+
+- (void)viewDidUnload
+{
+    keyboardToolbar = nil;
+    [self setPasswordCell:nil];
+    [self setEmailCell:nil];
+    [self setNicknameCell:nil];
+    HUD = nil;
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -44,12 +66,12 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"fill_form_title", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-//    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-//    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    //    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
+    //    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.navigationItem setHidesBackButton:YES];
     
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"done", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(finishRegister)];
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"next_step", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(finishRegister)];
     self.navigationItem.rightBarButtonItem = rightButton;
     
     // Keyboard toolbar
@@ -90,17 +112,6 @@
     }
 }
 
-- (void)viewDidUnload
-{
-    keyboardToolbar = nil;
-    [self setPasswordCell:nil];
-    [self setEmailCell:nil];
-    [self setNicknameCell:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -135,43 +146,43 @@
 }
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -261,17 +272,17 @@
 
 - (void)animateView:(NSUInteger)tag
 {
-//    CGRect rect = self.view.frame;
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.3];
-//    
-//    if (tag > 5) {
-//        rect.origin.y = -44.0f * 5 - 15;
-//    } else {
-//        rect.origin.y = -44.0f * 5;
-//    }
-//    self.view.frame = rect;
-//    [UIView commitAnimations];
+    //    CGRect rect = self.view.frame;
+    //    [UIView beginAnimations:nil context:NULL];
+    //    [UIView setAnimationDuration:0.3];
+    //
+    //    if (tag > 5) {
+    //        rect.origin.y = -44.0f * 5 - 15;
+    //    } else {
+    //        rect.origin.y = -44.0f * 5;
+    //    }
+    //    self.view.frame = rect;
+    //    [UIView commitAnimations];
 }
 
 - (void)animateBackView
@@ -306,11 +317,107 @@
 {
     return YES;
 }
+- (void)finishRegister {
+    [self resignFirstResponder];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.minSize = CGSizeMake(135.f, 135.f);
+    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+        return;
+    }
+    HUD.labelText = NSLocalizedString(@"message.registerInProgress", nil);
+    [HUD showWhileExecuting:@selector(saveTask) onTarget:self withObject:nil animated:YES];
+}
 
-- (void)finishRegister
+- (void)saveTask
 {
+    sleep(1);
+    NSString *strEmailId = emailCell.titleLabel.text;
+    NSString *strPassword = passwordCell.titleLabel.text;
+    NSString *strNickname = nicknameCell.titleLabel.text;
+    
+    if ([self validateEmpty:NSLocalizedString(@"message.nicknameempty", nil) content:strNickname] || [self validateEmpty:NSLocalizedString(@"message.emailempty", nil) content:strEmailId] || ![self IsValidEmail:strEmailId] || [self validateEmpty:NSLocalizedString(@"message.passwordempty", nil) content:strPassword]) {
+        return;
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", strEmailId, @"username", strPassword, @"password", strNickname, @"nickname", self.thirdPartyId, @"source_id", self.thirdPartyType, @"source_type", nil];
+    
+    [[AFServiceAPIClient sharedClient] postPath:kPathAccountUpdateProfile parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD.mode = MBProgressHUDModeCustomView;
+        [self.view addSubview:HUD];
+        if([responseCode isEqualToString:kSuccessResCode]){
+//            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"complete.png"]];
+//            HUD.labelText = NSLocalizedString(@"message.signupsuccess", nil);
+//            [HUD showWhileExecuting:@selector(postRegister) onTarget:self withObject:nil animated:YES];
+            [self postRegister];
+        } else {
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+            HUD.labelText = NSLocalizedString(msg, nil);
+            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        [self.view addSubview:HUD];
+        HUD.labelText = @"Network error, please try again!";
+        HUD.minSize = CGSizeMake(135.f, 135.f);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+    }];
+}
+
+- (void)showError
+{
+    sleep(2);
+}
+
+
+- (void)postRegister
+{
+    sleep(2);
+    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserId];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [appDelegate refreshRootView];
+    PopularUserViewController *viewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (BOOL) IsValidEmail:(NSString*) checkString {
+    NSString *stricterFilterString = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    //NSString *laxString = @".+@.+\.[A-Za-z]{2}[A-Za-z]*";
+    //NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", stricterFilterString];
+    if(![emailTest evaluateWithObject:checkString]){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.invalidMailAddress", nil);
+        sleep(1);
+        return NO;
+    }else{
+        return YES;
+        
+    }
+    return YES;
+}
+
+- (BOOL) validateEmpty: (NSString *) title content:(NSString *)content{
+    if ([StringUtility stringIsEmpty:content]) {
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = title;
+        sleep(2);
+        return YES;
+    } else {
+        return NO;
+    }
 }
 @end

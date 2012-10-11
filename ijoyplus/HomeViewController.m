@@ -106,8 +106,7 @@
     serviceName = kPathUserWatchs;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
-                                self.userid, @"userid",
-                                @"1", @"page_num", @"30", @"page_size", nil];
+                                @"1", @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -360,8 +359,7 @@
     currentPage++;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
-                                self.userid, @"userid",
-                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", nil];
+                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
@@ -395,8 +393,7 @@
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
-                                self.userid, @"userid",
-                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", nil];
+                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){

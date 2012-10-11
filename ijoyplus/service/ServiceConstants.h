@@ -59,6 +59,11 @@ extern NSString *const kPathUserWatchs;
 extern NSString *const kPathUserFavorities;
 
 extern NSString *const kPathUserRecommends;
+
+extern NSString *const kPathUserValidate;
+
+extern NSString *const kPathPopularUser;
+
 //Comments
 extern NSString *const kPathCommentReply;
 
@@ -89,3 +94,4 @@ extern NSString *const kPathProgramViewRecommend;
 
 //Search
 extern NSString *const kPathSearchTopKeywords;
+extern NSString *const kPathSearch;
