@@ -12,6 +12,7 @@
 @interface VideoViewController(){
     WaterflowView *flowView;
     NSMutableArray *videoArray;
+    int pageSize;
 }
 - (void)addContentView;
 @end
@@ -29,13 +30,13 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     [self addContentView];
-    
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", @"30", @"page_size", nil];
+    pageSize = 12;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathVideo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *videos = [result objectForKey:@"video"];
-            videoArray = [[NSMutableArray alloc]initWithCapacity:30];
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             if(videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
             }
@@ -155,7 +156,7 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathVideo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
