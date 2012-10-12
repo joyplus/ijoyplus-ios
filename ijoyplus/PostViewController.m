@@ -19,6 +19,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CustomPlaceHolderTextView.h"
 
 #define  TEXT_MAX_COUNT 140
 
@@ -29,10 +30,9 @@
     int btn2ClickedNum;
 }
 @property (strong, nonatomic) IBOutlet UILabel *textCount;
-
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
-@property (strong, nonatomic) IBOutlet UITextView *textView;
+@property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
 - (void)startObservingNotifications;
 - (void)stopObservingNotifications;
 - (void)didReceiveTextDidChangeNotification:(NSNotification*)notification;
@@ -66,7 +66,6 @@
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"post", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
     self.navigationItem.rightBarButtonItem = rightButton;
-    
     [self initToolBar];
 }
 
@@ -204,6 +203,7 @@
 
 - (void)post
 {
+    [self resignFirstResponder];
 //    if(btn1ClickedNum % 2 == 1){
 //        WBEngine *engineer = [[CacheUtility sharedCache] getSinaWeiboEngineer];
 //        [engineer sendWeiBoWithText:self.textView.text image:nil];
@@ -212,11 +212,17 @@
 //    if(btn2ClickedNum % 2 == 1){
 //        
 //    }
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", self.textView.text, @"content", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            
+            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+            [self.navigationController.view addSubview:HUD];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = NSLocalizedString(@"post_success", nil);
+            [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
         } else {
             //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
             //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
@@ -228,5 +234,11 @@
     }];
 
     
+}
+        
+- (void)postSuccess
+{
+    sleep(1.5);
+    [self performSelectorOnMainThread:@selector(closeSelf) withObject:nil waitUntilDone:YES];
 }
 @end

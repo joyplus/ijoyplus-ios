@@ -217,6 +217,10 @@
 		EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */; };
 		EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */; };
 		EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */; };
+		EBC756D81627DF3A00B9B14A /* ContactFriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC756D61627DF3A00B9B14A /* ContactFriendListViewController.m */; };
+		EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC756D71627DF3A00B9B14A /* ContactFriendListViewController.xib */; };
+		EBC756DC1627E48C00B9B14A /* PhoneNumberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC756DB1627E48C00B9B14A /* PhoneNumberCell.m */; };
+		EBC756EE1627FC5F00B9B14A /* CustomPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC756ED1627FC5F00B9B14A /* CustomPlaceHolderTextView.m */; };
 		EBD8AD8A1610521900D79F62 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD7F1610521900D79F62 /* NSObject+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBD8AD8B1610521900D79F62 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD811610521900D79F62 /* NSString+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBD8AD8C1610521900D79F62 /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD831610521900D79F62 /* SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -555,6 +559,13 @@
 		EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayViewController.h; sourceTree = "<group>"; };
 		EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayViewController.m; sourceTree = "<group>"; };
 		EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoPlayViewController.xib; sourceTree = "<group>"; };
+		EBC756D51627DF3A00B9B14A /* ContactFriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactFriendListViewController.h; sourceTree = "<group>"; };
+		EBC756D61627DF3A00B9B14A /* ContactFriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactFriendListViewController.m; sourceTree = "<group>"; };
+		EBC756D71627DF3A00B9B14A /* ContactFriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactFriendListViewController.xib; sourceTree = "<group>"; };
+		EBC756DA1627E48C00B9B14A /* PhoneNumberCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumberCell.h; sourceTree = "<group>"; };
+		EBC756DB1627E48C00B9B14A /* PhoneNumberCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhoneNumberCell.m; sourceTree = "<group>"; };
+		EBC756EC1627FC5F00B9B14A /* CustomPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPlaceHolderTextView.h; sourceTree = "<group>"; };
+		EBC756ED1627FC5F00B9B14A /* CustomPlaceHolderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomPlaceHolderTextView.m; sourceTree = "<group>"; };
 		EBD8AD7D1610521900D79F62 /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
 		EBD8AD7E1610521900D79F62 /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
 		EBD8AD7F1610521900D79F62 /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -734,6 +745,8 @@
 				EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */,
 				EB090B1B160860FD002F7E57 /* CustomTextField.h */,
 				EB090B1C160860FD002F7E57 /* CustomTextField.m */,
+				EBC756EC1627FC5F00B9B14A /* CustomPlaceHolderTextView.h */,
+				EBC756ED1627FC5F00B9B14A /* CustomPlaceHolderTextView.m */,
 				EB632F191623D01B0003DDD3 /* CommonCellFactory.xib */,
 				EB632F1C1623D0470003DDD3 /* NoRecordCell.h */,
 				EB632F1D1623D0470003DDD3 /* NoRecordCell.m */,
@@ -927,9 +940,6 @@
 		EBAF698515FD880E00938FE3 /* friend */ = {
 			isa = PBXGroup;
 			children = (
-				EBBEDE4616269E7A00A4B376 /* PopularUserViewController.h */,
-				EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */,
-				EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */,
 				EBB2FFC01612A25600E8D9A7 /* component */,
 				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
 				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
@@ -939,6 +949,9 @@
 				EB11D2B21611B29100027F07 /* FriendListViewController.h */,
 				EB11D2B31611B29200027F07 /* FriendListViewController.m */,
 				EB11D2B41611B29200027F07 /* FriendListViewController.xib */,
+				EBC756D51627DF3A00B9B14A /* ContactFriendListViewController.h */,
+				EBC756D61627DF3A00B9B14A /* ContactFriendListViewController.m */,
+				EBC756D71627DF3A00B9B14A /* ContactFriendListViewController.xib */,
 				EB11D2C91611BD6000027F07 /* FriendDetailViewController.h */,
 				EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */,
 				EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */,
@@ -950,6 +963,9 @@
 				EB632F3E162417C80003DDD3 /* CommentListViewController.h */,
 				EB632F3F162417C80003DDD3 /* CommentListViewController.m */,
 				EB632F40162417C80003DDD3 /* CommentListViewController.xib */,
+				EBBEDE4616269E7A00A4B376 /* PopularUserViewController.h */,
+				EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */,
+				EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */,
 			);
 			name = friend;
 			sourceTree = "<group>";
@@ -1184,6 +1200,8 @@
 				EBB2FFBE1612A25000E8D9A7 /* FriendCellFactory.xib */,
 				EBB2FFC11612A28D00E8D9A7 /* LoadMoreCell.h */,
 				EBB2FFC21612A28D00E8D9A7 /* LoadMoreCell.m */,
+				EBC756DA1627E48C00B9B14A /* PhoneNumberCell.h */,
+				EBC756DB1627E48C00B9B14A /* PhoneNumberCell.m */,
 			);
 			name = component;
 			sourceTree = "<group>";
@@ -1372,6 +1390,7 @@
 				EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */,
 				EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */,
 				EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */,
+				EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1512,6 +1531,9 @@
 				EBBEDE441626741C00A4B376 /* NSDate-Utilities.m in Sources */,
 				EBBEDE4916269E7A00A4B376 /* PopularUserViewController.m in Sources */,
 				EBBEDE511626C6DD00A4B376 /* FriendCell.m in Sources */,
+				EBC756D81627DF3A00B9B14A /* ContactFriendListViewController.m in Sources */,
+				EBC756DC1627E48C00B9B14A /* PhoneNumberCell.m in Sources */,
+				EBC756EE1627FC5F00B9B14A /* CustomPlaceHolderTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

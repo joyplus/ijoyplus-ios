@@ -268,6 +268,17 @@
 - (void)postLogin
 {
     sleep(1);
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserName];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+    }];
     [SFHFKeychainUtils storeUsername:kUserId andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
     [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserId];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

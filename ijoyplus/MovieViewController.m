@@ -84,7 +84,7 @@
 
 - (NSInteger)flowView:(WaterflowView *)flowView numberOfRowsInColumn:(NSInteger)column
 {
-    return 10;
+    return 4;
 }
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath

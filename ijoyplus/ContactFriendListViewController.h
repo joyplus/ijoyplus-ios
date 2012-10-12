@@ -8,10 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "CustomSearchBar.h"
-#import "MNMBottomPullToRefreshManager.h"
-#import "EGORefreshTableHeaderView.h"
 
-@interface FriendListViewController : UITableViewController  <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient>
+
+@interface ContactFriendListViewController : UITableViewController  <UISearchBarDelegate>
 
 
 @property (strong, nonatomic) NSString *keyword;

@@ -20,6 +20,7 @@
 #import "DramaPlayRootViewController.h"
 #import "VideoPlayRootViewController.h"
 #import "CMConstants.h"
+#import "FriendPlayRootViewController.h"
 
 @interface FriendViewController (){
     WaterflowView *flowView;
@@ -163,14 +164,11 @@
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 0){
-        return;
-    }
     NSDictionary *program = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
     NSString *type = [[videoArray objectAtIndex:(indexPath.row * 3 + indexPath.section)] objectForKey:@"content_type"];
     PlayRootViewController *viewController;
     if([type isEqualToString:@"1"]){
-        viewController = [[PlayRootViewController alloc]init];
+        viewController = [[FriendPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"2"]){
         viewController = [[DramaPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"3"]){

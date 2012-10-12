@@ -26,6 +26,7 @@ sina_weibo_login = "新浪微博登录";
 tecent_login = "QQ账号登录";
 tencent_weibo = "腾讯QQ";
 tencent_weibo_friend = "腾讯QQ好友";
+phone_contact_friend = "查找通讯录好友";
 renren = "人人网";
 douban = "豆瓣";
 nick_name = "昵称";
@@ -38,7 +39,7 @@ username = "邮箱";
 fill_form = "激活悦+账号";
 fill_form_title = "补充个人资料";
 user_login = "账号登录";
-
+mark_success = "标记成功";
 search = "搜索";
 search_history = "历史记录";
 hot_keys = "最热搜索";
@@ -46,6 +47,9 @@ go_back = "返回";
 cancel = "取消";
 related_film = "和 %@ 有关的电影";
 related_video = "和 %@ 有关的视频";
+post_success = "评论成功";
+collection_success = "收藏成功";
+recommand_success = "推荐成功";
 
 popular = "正在流行";
 movie = "电影";

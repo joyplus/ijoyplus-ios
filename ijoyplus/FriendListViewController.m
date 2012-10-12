@@ -15,9 +15,17 @@
 #import "CustomCellBackground.h"
 #import "CMConstants.h"
 #import "CustomColoredAccessory.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 @interface FriendListViewController (){
-     NSMutableArray *itemsArray;
+    NSMutableArray *itemsArray;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+	BOOL _reloading;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
+    int pageSize;
 }
 - (void)closeSelf;
 @end
@@ -26,12 +34,17 @@
 
 @synthesize keyword;
 @synthesize sBar;
+@synthesize sourceType;
 
 - (void)viewDidUnload
 {
-    [self setSBar:nil];
     [super viewDidUnload];
+    [self setSBar:nil];
     self.keyword = nil;
+    _refreshHeaderView = nil;
+    pullToRefreshManager_ = nil;
+    self.sourceType = nil;
+    itemsArray = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -47,6 +60,7 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -54,7 +68,37 @@
     [self.sBar setText:self.keyword];
     self.sBar.delegate = self;
     
-    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    pageSize = 10;
+    reloads_ = 1;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *item = [result objectForKey:@"users"];
+            itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            if(item.count > 0){
+                [itemsArray addObjectsFromArray:item];
+                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+                [self loadTable];
+                reloads_ ++;
+            }
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+    
+    
+    if (_refreshHeaderView == nil) {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+		view.delegate = self;
+		[self.tableView addSubview:view];
+		_refreshHeaderView = view;
+		
+	}
+	[_refreshHeaderView refreshLastUpdatedDate];
 }
 
 - (void)closeSelf
@@ -62,32 +106,12 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+- (void)loadTable {
     
-    NSMutableArray *items1 = [[NSMutableArray alloc]initWithCapacity:20];
-    [items1 addObject:@"用户名称"];
-    NSMutableDictionary *itemDic1 = [[NSMutableDictionary alloc]initWithCapacity:10];
-    [itemDic1 setValue:items1 forKey:@"joined_friend"];
-    [itemsArray addObject:itemDic1];
+    [self.tableView reloadData];
     
-    NSMutableArray *items2 = [[NSMutableArray alloc]initWithCapacity:20];
-    [items2 addObject:@"用户名称"];
-    [items2 addObject:@"用户名称"];
-    NSMutableDictionary *itemDic2 = [[NSMutableDictionary alloc]initWithCapacity:10];
-    [itemDic2 setValue:items2 forKey:@"unjoined_friend"];
-    [itemsArray addObject:itemDic2];
-    
-    NSMutableArray *items3 = [[NSMutableArray alloc]initWithCapacity:20];
-    [items3 addObject:@"用户名称"];
-    [items3 addObject:@"用户名称"];
-    NSMutableDictionary *itemDic3 = [[NSMutableDictionary alloc]initWithCapacity:10];
-    [itemDic3 setValue:items3 forKey:@"watched_friend"];
-    [itemsArray addObject:itemDic3];
-    
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -258,6 +282,103 @@
 {
     searchBar.showsCancelButton = NO;
     [searchBar resignFirstResponder];
+}
+
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManagerClient
+
+/**
+ * This is the same delegate method as UIScrollView but requiered on MNMBottomPullToRefreshManagerClient protocol
+ * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewScrolled]
+ *
+ * Tells the delegate when the user scrolls the content view within the receiver.
+ *
+ * @param scrollView: The scroll-view object in which the scrolling occurred.
+ */
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    [pullToRefreshManager_ tableViewScrolled];
+}
+
+/**
+ * This is the same delegate method as UIScrollView but requiered on MNMBottomPullToRefreshClient protocol
+ * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewReleased]
+ *
+ * Tells the delegate when dragging ended in the scroll view.
+ *
+ * @param scrollView: The scroll-view object that finished scrolling the content view.
+ * @param decelerate: YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
+ */
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+/**
+ * Tells client that can reload table.
+ * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
+ */
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *item = [result objectForKey:@"users"];
+            itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            if(item.count > 0){
+                [itemsArray addObjectsFromArray:item];
+                reloads_ ++;
+            }
+        } else {
+            
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
+
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
+
+- (void)reloadTableViewDataSource{
+	
+	//  should be calling your tableviews data source model to reload
+	//  put here just for demo
+	_reloading = YES;
+	
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+	
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
 }
 
 @end

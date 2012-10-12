@@ -19,6 +19,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CustomPlaceHolderTextView.h"
 
 #define  TEXT_MAX_COUNT 140
 
@@ -32,7 +33,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
 @property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
-@property (strong, nonatomic) IBOutlet UITextView *textView;
+@property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
 - (void)startObservingNotifications;
 - (void)stopObservingNotifications;
 - (void)didReceiveTextDidChangeNotification:(NSNotification*)notification;
@@ -68,6 +69,8 @@
     self.navigationItem.rightBarButtonItem = rightButton;
     
     [self initToolBar];
+    
+    textView.placeholder = @"请输入推荐理由";
 }
 
 - (void)viewDidUnload
@@ -214,18 +217,26 @@
 //    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
-                                self.textView.text, @"prod_id",
-                                @"aaa", @"reason",
+                                self.programId, @"prod_id",
+                                self.textView.text, @"reason",
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            
+        if([responseCode isEqualToString:kSuccessResCode]){
+            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+            [self.navigationController.view addSubview:HUD];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = NSLocalizedString(@"recommand_success", nil);
+            [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
         } else {
-            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
-            //            HUD.labelText = NSLocalizedString(msg, nil);
-            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+//            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+//            [self.navigationController.view addSubview:HUD];
+//            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+//            HUD.mode = MBProgressHUDModeCustomView;
+//            HUD.labelText = @"你已推荐过改影片！";
+//            [HUD show:YES];
+//            [HUD hide:YES afterDelay:2];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -237,7 +248,11 @@
         //        [HUD show:YES];
         //        [HUD hide:YES afterDelay:2];
     }];
-    [self.navigationController popViewControllerAnimated:YES];
-    
+}
+
+- (void)postSuccess
+{
+    sleep(1.5);
+    [self performSelectorOnMainThread:@selector(closeSelf) withObject:nil waitUntilDone:YES];
 }
 @end

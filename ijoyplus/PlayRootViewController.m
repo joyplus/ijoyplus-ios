@@ -20,6 +20,8 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "RecommandViewController.h"
+#import "MBProgressHUD.h"
+#import "ContainerUtility.h"
 
 @interface PlayRootViewController (){
     UISwipeGestureRecognizer *leftGesture;
@@ -190,9 +192,20 @@
 
 - (void)recommand
 {
+    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if([StringUtility stringIsEmpty:userid]){
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:HUD];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = @"请登陆！";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:2];
+    } else {
     RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
     viewController.programId = self.programId;
     [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)watch
@@ -204,7 +217,14 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            
+            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+            [self.navigationController.view addSubview:HUD];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = NSLocalizedString(@"mark_success", nil);
+            HUD.dimBackground = YES;
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:1.5];
         } else {
 
         }
@@ -222,7 +242,14 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            
+            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+            [self.navigationController.view addSubview:HUD];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = NSLocalizedString(@"collection_success", nil);
+            HUD.dimBackground = YES;
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:1.5];
         } else {
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

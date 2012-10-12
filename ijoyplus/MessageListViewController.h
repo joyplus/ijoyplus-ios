@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MNMBottomPullToRefreshManager.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface MessageListViewController : UITableViewController
+@interface MessageListViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient> {
+}
 
 @end

@@ -12,6 +12,9 @@
 @synthesize subtitleLabel;
 @synthesize thirdTitleLabel;
 @synthesize separatorImageBottom;
+@synthesize actionLabel;
+@synthesize avatarBtn;
+@synthesize filmImageBtn;
 @synthesize avatarImageView;
 @synthesize filmImageView;
 @synthesize titleLabel;

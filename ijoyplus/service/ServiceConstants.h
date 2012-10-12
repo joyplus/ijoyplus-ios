@@ -64,6 +64,8 @@ extern NSString *const kPathUserValidate;
 
 extern NSString *const kPathPopularUser;
 
+extern NSString *const kPathGenUserThirdPartyUsers;
+
 //Comments
 extern NSString *const kPathCommentReply;
 

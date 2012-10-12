@@ -14,6 +14,7 @@
 #import "TecentViewController.h"
 #import "ContainerUtility.h"
 #import "PopularUserViewController.h"
+#import "ContactFriendListViewController.h"
 
 @interface SearchFriendViewController ()
 
@@ -70,7 +71,7 @@
     if(section == 0){
         return 1;
     } else{
-        return 2;
+        return 3;
     }
 }
 
@@ -90,6 +91,9 @@
         [cell.contentView addSubview:lineView];
     } else if(indexPath.section == 1 && indexPath.row == 1){
         cell.textLabel.text = NSLocalizedString(@"tencent_weibo_friend", nil);
+        [cell.contentView addSubview:lineView];
+    } else if(indexPath.section == 1 && indexPath.row == 2){
+        cell.textLabel.text = NSLocalizedString(@"phone_contact_friend", nil);
     }
     cell.textLabel.textColor = [UIColor blackColor];
     cell.textLabel.font = [UIFont systemFontOfSize:15];
@@ -151,22 +155,27 @@
             NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kSinaUserLoggedIn];
             if([num boolValue]){
                 FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+                viewController.sourceType = @"1";
                 [self.navigationController pushViewController:viewController animated:YES];
             } else{
                 SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
                 viewController.fromController = @"SearchFriendViewController";
                 [self.navigationController pushViewController:viewController animated:YES];
             }
-        } else {
+        } else if(indexPath.row == 1){
             NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
             if([num boolValue]){
                 FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+                viewController.sourceType = @"2";
                 [self.navigationController pushViewController:viewController animated:YES];
             } else{
                 TecentViewController *viewController = [[TecentViewController alloc] init];
                 viewController.fromController = @"SearchFriendViewController";
                 [self.navigationController pushViewController:viewController animated:YES];
             }
+        } else {
+            ContactFriendListViewController *viewController = [[ContactFriendListViewController alloc]initWithNibName:@"ContactFriendListViewController" bundle:nil];
+            [self.navigationController pushViewController:viewController animated:YES];
         }
     }
 }
