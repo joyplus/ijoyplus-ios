@@ -26,10 +26,10 @@
 }
 
 - (void)avatarClicked;
-- (void)loadTable;
 - (void)showIntroduction;
 - (void)playVideo;
 - (void)getProgramView;
+- (void)loadTable;
 - (void)setPlayCellValue;
 - (CommentCell *)displayCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
 - (NoRecordCell *)displayNoRecordCell:(UITableView *)tableView;

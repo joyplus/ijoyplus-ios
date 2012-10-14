@@ -23,6 +23,7 @@
 #import "ServiceConstants.h"
 #import "LocalPlayRootViewController.h"
 #import "DramaPlayRootViewController.h"
+#import "VideoPlayRootViewController.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -278,7 +279,6 @@
         if(index >= videoArray.count){
             return cell;
         }
-        NSLog(@"%i, %i, %i", indexPath.row, indexPath.section, (indexPath.row-1) * 3 + indexPath.section);
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
         float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
         if(indexPath.section == 0){
@@ -323,7 +323,6 @@
             //            if((indexPath.row+1) % 10 == 0){
             //                return 120;
             //            }
-            NSLog(@"%i height: %i", index, 0);
             return 0;
         }
         NSString *type = [[videoArray objectAtIndex:index] objectForKey:@"content_type"];
@@ -337,7 +336,6 @@
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%i, %i", indexPath.row, indexPath.section);
     if(indexPath.row == 0){
         return;
     }
@@ -345,15 +343,27 @@
     NSDictionary *program = [videoArray objectAtIndex:index];
     NSString *type = [[videoArray objectAtIndex:index] objectForKey:@"content_type"];
     PlayRootViewController *viewController;
-    if([type isEqualToString:@"1"]){
-        viewController = [[PlayRootViewController alloc]init];
-    } else if([type isEqualToString:@"2"]){
-        viewController = [[DramaPlayRootViewController alloc]init];
-    } else if([type isEqualToString:@"3"]){
-        viewController = [[LocalPlayRootViewController alloc]init];
-    } else if([type isEqualToString:@"4"]){
-        
-    }
+    if(self.segment.selectedSegmentIndex == 2){
+        if([type isEqualToString:@"1"]){
+            viewController = [[PlayRootViewController alloc]init];
+        } else if([type isEqualToString:@"2"]){
+            viewController = [[DramaPlayRootViewController alloc]init];
+        } else if([type isEqualToString:@"3"]){
+            viewController = [[LocalPlayRootViewController alloc]init];
+        } else if([type isEqualToString:@"4"]){
+            viewController = [[VideoPlayRootViewController alloc]init];
+        }
+    } else {
+        if([type isEqualToString:@"1"]){
+            viewController = [[PlayRootViewController alloc]init];
+        } else if([type isEqualToString:@"2"]){
+            viewController = [[DramaPlayRootViewController alloc]init];
+        } else if([type isEqualToString:@"3"]){
+            viewController = [[LocalPlayRootViewController alloc]init];
+        } else if([type isEqualToString:@"4"]){
+            viewController = [[VideoPlayRootViewController alloc]init];
+        }
+    }    
     viewController.programId = [program valueForKey:@"content_id"];
     [self.navigationController pushViewController:viewController animated:YES];
     

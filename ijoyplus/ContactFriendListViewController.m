@@ -165,34 +165,34 @@
 }
 
 
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-//    if(section > 0){
-//    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-//    NSEnumerator *keys = item.keyEnumerator;
-//    NSString *key = [keys nextObject];
-//    NSArray *array = [item objectForKey:key];
-//    if(array.count > 0){
-//        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-//        customView.backgroundColor = [UIColor blackColor];
-//        UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
-//        imageView.frame = customView.frame;
-//        [customView addSubview:imageView];
-//        
-//        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-//        headerLabel.backgroundColor = [UIColor clearColor];
-//        headerLabel.font = [UIFont boldSystemFontOfSize:12];
-//        
-//        headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
-//        headerLabel.textColor = [UIColor lightGrayColor];
-//        [headerLabel sizeToFit];
-//        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
-//        [customView addSubview:headerLabel];
-//        return customView;
-//    } else {
-//        return nil;
-//    }
-//    }
-//}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(section > 0){
+    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
+    NSEnumerator *keys = item.keyEnumerator;
+    NSString *key = [keys nextObject];
+    NSArray *array = [item objectForKey:key];
+    if(array.count > 0){
+        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+        customView.backgroundColor = [UIColor blackColor];
+        UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
+        imageView.frame = customView.frame;
+        [customView addSubview:imageView];
+        
+        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        headerLabel.backgroundColor = [UIColor clearColor];
+        headerLabel.font = [UIFont boldSystemFontOfSize:12];
+        
+        headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
+        headerLabel.textColor = [UIColor lightGrayColor];
+        [headerLabel sizeToFit];
+        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+        [customView addSubview:headerLabel];
+        return customView;
+    } else {
+        return nil;
+    }
+    }
+}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

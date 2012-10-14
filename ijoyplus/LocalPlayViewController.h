@@ -10,10 +10,29 @@
 #import "MNMBottomPullToRefreshManager.h"
 #import "IntroductionView.h"
 #import "EGORefreshTableHeaderView.h"
+#import "CommentCell.h"
+#import "NoRecordCell.h"
+#import "PlayCell.h"
+#import "DramaCell.h"
 
-@interface LocalPlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate> 
+@interface LocalPlayViewController : UITableViewController<UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, EGORefreshTableHeaderDelegate> {
+    NSMutableArray *commentArray;
+    UIViewController *subviewController;//视图
+    PlayCell *playCell;
+    DramaCell *dramaCell;
+    NSInteger totalDramaCount;
+    NSDictionary *show;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL _reloading;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
+}
  
-
+- (void)loadTable;
+- (void)setPlayCellValue;
+- (CommentCell *)displayCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
+- (NoRecordCell *)displayNoRecordCell:(UITableView *)tableView;
+- (CGFloat)caculateCommentCellHeight:(NSInteger)row dataArray:(NSArray *)dataArray;
 @property (nonatomic, assign)int imageHeight;
 @property (nonatomic, strong) NSString *programId;
 @end

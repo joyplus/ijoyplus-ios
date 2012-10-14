@@ -17,7 +17,7 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "LocalPlayRootViewController.h"
-#import "DramaPlayRootViewController.h"
+#import "FriendDramaPlayRootViewController.h"
 #import "VideoPlayRootViewController.h"
 #import "CMConstants.h"
 #import "FriendPlayRootViewController.h"
@@ -172,7 +172,7 @@
     if([type isEqualToString:@"1"]){
         viewController = [[FriendPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"2"]){
-        viewController = [[DramaPlayRootViewController alloc]init];
+        viewController = [[FriendDramaPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"3"]){
         viewController = [[LocalPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"4"]){

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "FriendPlayViewController.h"
+#import "FriendDramaPlayViewController.h"
 #import "PlayCell.h"
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
@@ -14,32 +14,39 @@
 #import "DateUtility.h"
 #import "TTTTimeIntervalFormatter.h"
 #import "CommentListViewController.h"
-#import "CommentViewController.h"
 #import "ContainerUtility.h"
 #import "PostViewController.h"
 #import "HomeViewController.h"
 #import "LoadMoreCell.h"
+#import "DramaCell.h"
+#import "UIUtility.h"
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "ProgramViewController.h"
+#import "NoRecordCell.h"
+#import "CommentViewController.h"
 
 #define MAX_FRIEND_COMMENT_COUNT 10
 #define MAX_COMMENT_COUNT 10
 
-@interface FriendPlayViewController (){
-    NSMutableArray *friendCommentArray;
+@interface FriendDramaPlayViewController (){
+NSMutableArray *friendCommentArray;
 }
-- (void)avatarClicked;
-- (void)showIntroduction;
-- (void)playVideo;
 @end
 
-@implementation FriendPlayViewController
-@synthesize imageHeight;
+@implementation FriendDramaPlayViewController
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    subviewController = nil;
+    playCell = nil;
+    dramaCell = nil;
+    commentArray = nil;
+    self.programId = nil;
+    drama = nil;
+    _refreshHeaderView = nil;
     friendCommentArray = nil;
 }
 
@@ -54,7 +61,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+    [super viewDidLoad];    
 }
 
 - (void)getProgramView
@@ -66,32 +73,70 @@
     
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
+        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        //        HUD.mode = MBProgressHUDModeCustomView;
+        //        [self.view addSubview:HUD];
         if(responseCode == nil){
-            movie = (NSDictionary *)[result objectForKey:@"movie"];
+            drama = (NSDictionary *)[result objectForKey:@"tv"];
             [self setPlayCellValue];
             
             friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
             if(friendCommentArray == nil || friendCommentArray.count == 0){
                 friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
             }
-            
             commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
             if(commentArray == nil || commentArray.count == 0){
-                commentArray = [[NSMutableArray alloc]initWithCapacity:5];
+                commentArray = [[NSMutableArray alloc]initWithCapacity:10];
             }
-            [self.tableView reloadData];
+            [self initDramaCell];
+            [self loadTable];
+            if(pullToRefreshManager_ == nil){
+                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+            }
         } else {
-
+            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+            //            HUD.labelText = NSLocalizedString(msg, nil);
+            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
+        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        //        HUD.mode = MBProgressHUDModeCustomView;
+        //        [self.view addSubview:HUD];
+        //        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
+        //        HUD.minSize = CGSizeMake(135.f, 135.f);
+        //        [HUD show:YES];
+        //        [HUD hide:YES afterDelay:2];
     }];
 }
+- (void)initDramaCell
+{
+    dramaCell = [[DramaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dramaCell"];
+    dramaCell.frame = CGRectMake(0, 0, self.view.frame.size.width, ceil(totalDramaCount / 5.0) * 35);
+    dramaCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    for (int i = 0; i < totalDramaCount; i++) {        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        btn.tag = i+1;
+        [btn setFrame:CGRectMake(10 + (i % 5) * 61, 5 + floor(i / 5.0) * 30, 59, 25)];
+        [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+        [UIUtility addTextShadow:btn.titleLabel];
+        btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+        UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+        [btn setBackgroundImage:[[UIImage imageNamed:@"unfocus"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
+        [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
+        [dramaCell.contentView addSubview:btn];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -99,17 +144,15 @@
     if(section == 0){
         return 1;
     } else if(section == 1) {
-//        if(friendCommentArray.count > MAX_FRIEND_COMMENT_COUNT){
-//            return MAX_FRIEND_COMMENT_COUNT + 1;
-//        } else {
-            return friendCommentArray.count;
-//        }
-    }else {
-        if(commentArray.count > MAX_COMMENT_COUNT){
-            return MAX_COMMENT_COUNT + 1;
+        return 1;
+    }else if(section == 2){
+        return friendCommentArray.count;
+    } else {
+        if(commentArray == nil || commentArray.count == 0){
+            return 1;
         } else {
             return commentArray.count;
-        }       
+        }
     }
 }
 
@@ -118,16 +161,20 @@
     if (indexPath.section == 0) {
         return playCell;
     } else if (indexPath.section == 1){
-//        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
-//            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
-//            return cell;
-//        } else {
-            CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"friendCommentCell"];
+        return dramaCell;
+    } else if (indexPath.section == 2){
+        if(commentArray == nil || commentArray.count == 0){
+            NoRecordCell *cell = [self displayNoRecordCell:tableView];
+            cell.textField.text = @"暂无评论";
             return cell;
-//        }
+        } else {
+            CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
+            return cell;
+        }
     } else {
-        if(indexPath.row == MAX_COMMENT_COUNT){
-            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
+        if(commentArray == nil || commentArray.count == 0){
+            NoRecordCell *cell = [self displayNoRecordCell:tableView];
+            cell.textField.text = @"暂无评论";
             return cell;
         } else {
             CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
@@ -136,6 +183,15 @@
     }
 }
 
+- (NoRecordCell *)displayNoRecordCell:(UITableView *)tableView
+{
+    NoRecordCell *cell = (NoRecordCell*) [tableView dequeueReusableCellWithIdentifier:@"noRecordCell"];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CommonCellFactory" owner:self options:nil];
+        cell = (NoRecordCell *)[nib objectAtIndex:0];
+    }
+    return cell;
+}
 
 - (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier
 {
@@ -194,22 +250,24 @@
     if (indexPath.section == 0) {
         return playCell.frame.size.height;
     } else if(indexPath.section == 1){
-//        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
-//            return 44;
-//        } else {
+        return dramaCell.frame.size.height;
+    } else if(indexPath.section == 2){
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
+            return 0;
+        } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:friendCommentArray];
             return height;
-//        }
+        }
     } else {
-        if(indexPath.row == MAX_COMMENT_COUNT){
+        if(commentArray == nil || commentArray.count == 0){
             return 44;
         } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];
             return height;
         }
-
     }
 }
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -256,19 +314,7 @@
     if(indexPath.section > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         if(indexPath.section == 1) {
-//            if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
-//                CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
-//                viewController.programId = self.programId;
-//                viewController.title = @"全部好友评论";
-//                [self.navigationController pushViewController:viewController animated:YES];
-//                [self.navigationController pushViewController:viewController animated:YES];
-//            } else{
-//                CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-//                viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"thread_id"];
-//                [self.navigationController pushViewController:viewController animated:YES];
-//                viewController.title = @"好友评论回复";
-//                [self.navigationController pushViewController:viewController animated:YES];
-//            }
+            
         } else if (indexPath.section == 2) {
             if(indexPath.row == MAX_COMMENT_COUNT){
                 CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
@@ -306,6 +352,8 @@
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
     if(section == 1){
+        headerLabel.text =  NSLocalizedString(@"drama_list", nil);
+    } else if(section == 2){
         headerLabel.text =  NSLocalizedString(@"friend_comment", nil);
     } else {
         headerLabel.text =  NSLocalizedString(@"user_comment", nil);

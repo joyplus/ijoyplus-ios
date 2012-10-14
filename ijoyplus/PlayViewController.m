@@ -215,7 +215,7 @@
             cell.textField.text = @"暂无评论";
             return cell;
         } else {
-            CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"friendCommentCell"];
+            CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
             return cell;
         }
     }

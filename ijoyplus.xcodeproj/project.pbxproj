@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A21C162AB1EB0054D55D /* CommentListViewController.xib */; };
+		1478A232162B02180054D55D /* FriendDramaPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */; };
+		1478A233162B02180054D55D /* FriendDramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A230162B02170054D55D /* FriendDramaPlayViewController.m */; };
+		1478A234162B02180054D55D /* FriendDramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */; };
+		1478A23A162B07AC0054D55D /* FriendVideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */; };
+		1478A23B162B07AC0054D55D /* FriendVideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */; };
+		1478A23C162B07AC0054D55D /* FriendVideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */; };
+		1478A242162B0B6D0054D55D /* FriendLocalPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */; };
+		1478A243162B0B6D0054D55D /* FriendLocalPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */; };
+		1478A244162B0B6D0054D55D /* FriendLocalPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */; };
 		EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02B842160094E30027F31C /* CustomSegmentedControl.m */; };
 		EB07617F16227CB100C9727C /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB07617D16227CB100C9727C /* RegisterViewController.m */; };
 		EB07618016227CB100C9727C /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB07617E16227CB100C9727C /* RegisterViewController.xib */; };
@@ -244,6 +253,21 @@
 
 /* Begin PBXFileReference section */
 		1478A21C162AB1EB0054D55D /* CommentListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentListViewController.xib; sourceTree = "<group>"; };
+		1478A22D162B02160054D55D /* FriendDramaPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDramaPlayRootViewController.h; sourceTree = "<group>"; };
+		1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDramaPlayRootViewController.m; sourceTree = "<group>"; };
+		1478A22F162B02170054D55D /* FriendDramaPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDramaPlayViewController.h; sourceTree = "<group>"; };
+		1478A230162B02170054D55D /* FriendDramaPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDramaPlayViewController.m; sourceTree = "<group>"; };
+		1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendDramaPlayViewController.xib; sourceTree = "<group>"; };
+		1478A235162B07A90054D55D /* FriendVideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendVideoPlayRootViewController.h; sourceTree = "<group>"; };
+		1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendVideoPlayRootViewController.m; sourceTree = "<group>"; };
+		1478A237162B07AA0054D55D /* FriendVideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendVideoPlayViewController.h; sourceTree = "<group>"; };
+		1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendVideoPlayViewController.m; sourceTree = "<group>"; };
+		1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendVideoPlayViewController.xib; sourceTree = "<group>"; };
+		1478A23D162B0B6A0054D55D /* FriendLocalPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendLocalPlayRootViewController.h; sourceTree = "<group>"; };
+		1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendLocalPlayRootViewController.m; sourceTree = "<group>"; };
+		1478A23F162B0B6B0054D55D /* FriendLocalPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendLocalPlayViewController.h; sourceTree = "<group>"; };
+		1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendLocalPlayViewController.m; sourceTree = "<group>"; };
+		1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendLocalPlayViewController.xib; sourceTree = "<group>"; };
 		B94A1800965845D3B4A40881 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		DDF63B43DF6849BC89060EC7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB02B841160094E30027F31C /* CustomSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegmentedControl.h; sourceTree = "<group>"; };
@@ -960,6 +984,21 @@
 				EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */,
 				EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */,
 				EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */,
+				1478A22D162B02160054D55D /* FriendDramaPlayRootViewController.h */,
+				1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */,
+				1478A22F162B02170054D55D /* FriendDramaPlayViewController.h */,
+				1478A230162B02170054D55D /* FriendDramaPlayViewController.m */,
+				1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */,
+				1478A235162B07A90054D55D /* FriendVideoPlayRootViewController.h */,
+				1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */,
+				1478A237162B07AA0054D55D /* FriendVideoPlayViewController.h */,
+				1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */,
+				1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */,
+				1478A23D162B0B6A0054D55D /* FriendLocalPlayRootViewController.h */,
+				1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */,
+				1478A23F162B0B6B0054D55D /* FriendLocalPlayViewController.h */,
+				1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */,
+				1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */,
 				EB632F3E162417C80003DDD3 /* CommentListViewController.h */,
 				EB632F3F162417C80003DDD3 /* CommentListViewController.m */,
 				1478A21C162AB1EB0054D55D /* CommentListViewController.xib */,
@@ -1391,6 +1430,9 @@
 				EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */,
 				EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */,
 				1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */,
+				1478A234162B02180054D55D /* FriendDramaPlayViewController.xib in Resources */,
+				1478A23C162B07AC0054D55D /* FriendVideoPlayViewController.xib in Resources */,
+				1478A244162B0B6D0054D55D /* FriendLocalPlayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1534,6 +1576,12 @@
 				EBC756D81627DF3A00B9B14A /* ContactFriendListViewController.m in Sources */,
 				EBC756DC1627E48C00B9B14A /* PhoneNumberCell.m in Sources */,
 				EBC756EE1627FC5F00B9B14A /* CustomPlaceHolderTextView.m in Sources */,
+				1478A232162B02180054D55D /* FriendDramaPlayRootViewController.m in Sources */,
+				1478A233162B02180054D55D /* FriendDramaPlayViewController.m in Sources */,
+				1478A23A162B07AC0054D55D /* FriendVideoPlayRootViewController.m in Sources */,
+				1478A23B162B07AC0054D55D /* FriendVideoPlayViewController.m in Sources */,
+				1478A242162B0B6D0054D55D /* FriendLocalPlayRootViewController.m in Sources */,
+				1478A243162B0B6D0054D55D /* FriendLocalPlayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
