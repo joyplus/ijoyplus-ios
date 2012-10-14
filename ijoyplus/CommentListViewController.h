@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-@interface CommentListViewController : UITableViewController
+#import "MNMBottomPullToRefreshManager.h"
+#import "EGORefreshTableHeaderView.h"
 
-@property (nonatomic, strong)NSMutableArray *commentArray;
+@interface CommentListViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient> {
+    
+}
+
+@property (nonatomic, strong)NSString *programId;
+@property (nonatomic, readwrite, strong) IBOutlet UITableView *table;
 @end

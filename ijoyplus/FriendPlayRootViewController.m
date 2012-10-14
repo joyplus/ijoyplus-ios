@@ -32,33 +32,12 @@
 - (void)initViewController
 {
     currentViewController = [[FriendPlayViewController alloc]initWithNibName:@"FriendPlayViewController" bundle:nil];
-    previousViewController = [[FriendPlayViewController alloc]initWithNibName:@"FriendPlayViewController" bundle:nil];
-    nextViewController = [[FriendPlayViewController alloc]initWithNibName:@"FriendPlayViewController" bundle:nil];
+    ((FriendPlayViewController *)currentViewController).programId = self.programId;
+//    previousViewController = [[FriendPlayViewController alloc]initWithNibName:@"FriendPlayViewController" bundle:nil];
+//    nextViewController = [[FriendPlayViewController alloc]initWithNibName:@"FriendPlayViewController" bundle:nil];
     [self addChildViewController:currentViewController];
-    currentViewController.view.frame = CGRectMake(0, 0, 320, 480);
+    currentViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TAB_BAR_HEIGHT);
     [self.view addSubview:currentViewController.view];
-}
-
-
-- (void)like
-{
-    
-}
-
-- (void)watch
-{
-    
-}
-
-- (void)collection
-{
-    
-}
-
-- (void)comment
-{
-    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

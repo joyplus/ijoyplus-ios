@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A21C162AB1EB0054D55D /* CommentListViewController.xib */; };
 		EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02B842160094E30027F31C /* CustomSegmentedControl.m */; };
 		EB07617F16227CB100C9727C /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB07617D16227CB100C9727C /* RegisterViewController.m */; };
 		EB07618016227CB100C9727C /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB07617E16227CB100C9727C /* RegisterViewController.xib */; };
@@ -78,7 +79,6 @@
 		EB632F3B16240D9D0003DDD3 /* RecommandViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */; };
 		EB632F3D1624137C0003DDD3 /* CommentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F3C1624137B0003DDD3 /* CommentViewController.xib */; };
 		EB632F41162417C80003DDD3 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F3F162417C80003DDD3 /* CommentListViewController.m */; };
-		EB632F42162417C80003DDD3 /* CommentListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F40162417C80003DDD3 /* CommentListViewController.xib */; };
 		EB632F4816241D200003DDD3 /* LocalPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F4416241D1C0003DDD3 /* LocalPlayRootViewController.m */; };
 		EB632F4916241D200003DDD3 /* LocalPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F4616241D1E0003DDD3 /* LocalPlayViewController.m */; };
 		EB632F4A16241D200003DDD3 /* LocalPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F4716241D1F0003DDD3 /* LocalPlayViewController.xib */; };
@@ -243,6 +243,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1478A21C162AB1EB0054D55D /* CommentListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentListViewController.xib; sourceTree = "<group>"; };
 		B94A1800965845D3B4A40881 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		DDF63B43DF6849BC89060EC7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB02B841160094E30027F31C /* CustomSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegmentedControl.h; sourceTree = "<group>"; };
@@ -347,7 +348,6 @@
 		EB632F3C1624137B0003DDD3 /* CommentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentViewController.xib; sourceTree = "<group>"; };
 		EB632F3E162417C80003DDD3 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
 		EB632F3F162417C80003DDD3 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
-		EB632F40162417C80003DDD3 /* CommentListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentListViewController.xib; sourceTree = "<group>"; };
 		EB632F4316241D1B0003DDD3 /* LocalPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalPlayRootViewController.h; sourceTree = "<group>"; };
 		EB632F4416241D1C0003DDD3 /* LocalPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalPlayRootViewController.m; sourceTree = "<group>"; };
 		EB632F4516241D1D0003DDD3 /* LocalPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalPlayViewController.h; sourceTree = "<group>"; };
@@ -962,7 +962,7 @@
 				EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */,
 				EB632F3E162417C80003DDD3 /* CommentListViewController.h */,
 				EB632F3F162417C80003DDD3 /* CommentListViewController.m */,
-				EB632F40162417C80003DDD3 /* CommentListViewController.xib */,
+				1478A21C162AB1EB0054D55D /* CommentListViewController.xib */,
 				EBBEDE4616269E7A00A4B376 /* PopularUserViewController.h */,
 				EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */,
 				EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */,
@@ -1385,12 +1385,12 @@
 				EB632F2E1623DE110003DDD3 /* NotifyX@2x.png in Resources */,
 				EB632F3B16240D9D0003DDD3 /* RecommandViewController.xib in Resources */,
 				EB632F3D1624137C0003DDD3 /* CommentViewController.xib in Resources */,
-				EB632F42162417C80003DDD3 /* CommentListViewController.xib in Resources */,
 				EB632F4A16241D200003DDD3 /* LocalPlayViewController.xib in Resources */,
 				EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */,
 				EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */,
 				EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */,
 				EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */,
+				1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

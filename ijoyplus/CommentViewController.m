@@ -18,6 +18,7 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "UIImageView+WebCache.h"
 #import "DateUtility.h"
+#import "HomeViewController.h"
 
 @interface CommentViewController (){
     HPGrowingTextView *textView;
@@ -412,9 +413,9 @@
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
     NSString *ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
     if([StringUtility stringIsEmpty:ownerPicUrl]){
-        cell.avatarImageView.image = [UIImage imageNamed:@"placeholder.png"];
+        cell.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
     } else {
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
     }
     cell.avatarImageView.layer.cornerRadius = 25;
     cell.avatarImageView.layer.masksToBounds = YES;
@@ -422,10 +423,14 @@
     //        cell.avatarImageView.layer.borderWidth = 3;
     cell.titleLabel.text = [commentDic objectForKey:@"owner_name"];
     
-    cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
+    NSString *content = [commentDic objectForKey:@"content"];
+    if([StringUtility stringIsEmpty:content]){
+        content = @"";
+    }
+    cell.subtitleLabel.text = content;
     [cell.subtitleLabel setNumberOfLines:0];
     CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
-    CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
     
     NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
@@ -439,7 +444,7 @@
     
     [cell.replyBtn setHidden:YES];
     
-    [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+    [cell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -486,7 +491,7 @@
 {
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
     NSString *content = [commentDic objectForKey:@"content"];
-    if(content == nil){
+    if([StringUtility stringIsEmpty:content]){
         content = @"";
     }
     CGSize constraint = CGSizeMake(232, 20000.0f);
@@ -505,6 +510,18 @@
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
+}
+
+- (void)avatarClicked:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.table convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexpath = [self.table indexPathForRowAtPoint:point];
+    
+    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+    viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

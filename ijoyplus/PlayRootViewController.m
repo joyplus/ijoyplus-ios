@@ -200,7 +200,7 @@
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = @"请登陆！";
     [HUD show:YES];
-    [HUD hide:YES afterDelay:2];
+    [HUD hide:YES afterDelay:1.5];
     } else {
     RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
     viewController.programId = self.programId;
@@ -224,7 +224,7 @@
             HUD.labelText = NSLocalizedString(@"mark_success", nil);
             HUD.dimBackground = YES;
             [HUD show:YES];
-            [HUD hide:YES afterDelay:1.5];
+            [HUD hide:YES afterDelay:1];
         } else {
 
         }
@@ -249,7 +249,7 @@
             HUD.labelText = NSLocalizedString(@"collection_success", nil);
             HUD.dimBackground = YES;
             [HUD show:YES];
-            [HUD hide:YES afterDelay:1.5];
+            [HUD hide:YES afterDelay:1];
         } else {
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

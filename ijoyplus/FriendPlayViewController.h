@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "IntroductionView.h"
-
-@interface FriendPlayViewController : UITableViewController<UIScrollViewDelegate, IntroductionViewDelegate> 
+#import "PlayViewController.h"
+@interface FriendPlayViewController : PlayViewController
 
 @property (nonatomic, assign)int imageHeight;
 

@@ -131,7 +131,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:self.view.frame];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - TAB_BAR_HEIGHT - 44)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     NSString *flag = @"0";
@@ -274,10 +274,11 @@
             [self addHeaderContent:cell];
         }
     } else {
-        NSLog(@"%i, %i, %i", indexPath.row, indexPath.section, (indexPath.row-1) * 3 + indexPath.section);
-        if((indexPath.row-1) * 3 + indexPath.section >= videoArray.count){
+        int index = (indexPath.row-1) * 3 + indexPath.section;
+        if(index >= videoArray.count){
             return cell;
         }
+        NSLog(@"%i, %i, %i", indexPath.row, indexPath.section, (indexPath.row-1) * 3 + indexPath.section);
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
         float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
         if(indexPath.section == 0){
@@ -287,7 +288,7 @@
         } else {
             imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         }
-        NSString *imageUrl = [[videoArray objectAtIndex:((indexPath.row-1) * 3 + indexPath.section)] objectForKey:@"content_pic_url"];
+        NSString *imageUrl = [[videoArray objectAtIndex: index] objectForKey:@"content_pic_url"];
         [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
         imageView.layer.borderWidth = 1;
         imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
@@ -297,7 +298,7 @@
         [cell addSubview:imageView];
         
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
-        titleLabel.text =  [[videoArray objectAtIndex:((indexPath.row-1) * 3 + indexPath.section)] objectForKey:@"content_name"];
+        titleLabel.text =  [[videoArray objectAtIndex:index] objectForKey:@"content_name"];
         titleLabel.textAlignment = UITextAlignmentCenter;
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textColor = [UIColor whiteColor];
@@ -317,14 +318,16 @@
 		height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
         return height;
     } else {
-        if((indexPath.row-1) * 3 + indexPath.section >= videoArray.count){
+        int index = (indexPath.row-1) * 3 + indexPath.section;
+        if(index >= videoArray.count){
             //            if((indexPath.row+1) % 10 == 0){
             //                return 120;
             //            }
+            NSLog(@"%i height: %i", index, 0);
             return 0;
         }
-        NSString *type = [[videoArray objectAtIndex:((indexPath.row-1) * 3 + indexPath.section)] objectForKey:@"content_type"];
-        if([type isEqualToString:@"1"]){
+        NSString *type = [[videoArray objectAtIndex:index] objectForKey:@"content_type"];
+        if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
             return MOVE_NAME_LABEL_HEIGHT + MOVIE_LOGO_HEIGHT;
         } else {
             return MOVE_NAME_LABEL_HEIGHT + VIDEO_LOGO_HEIGHT;
@@ -338,8 +341,9 @@
     if(indexPath.row == 0){
         return;
     }
-    NSDictionary *program = [videoArray objectAtIndex:(indexPath.row-1) * 3 + indexPath.section];
-    NSString *type = [[videoArray objectAtIndex:((indexPath.row-1) * 3 + indexPath.section)] objectForKey:@"content_type"];
+    int index = (indexPath.row-1) * 3 + indexPath.section;
+    NSDictionary *program = [videoArray objectAtIndex:index];
+    NSString *type = [[videoArray objectAtIndex:index] objectForKey:@"content_type"];
     PlayRootViewController *viewController;
     if([type isEqualToString:@"1"]){
         viewController = [[PlayRootViewController alloc]init];
