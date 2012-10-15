@@ -36,7 +36,7 @@ NSString *const kPathUserView = @"/joyplus-service/index.php/user/view";
 
 NSString *const kPathUserThirdPartyUsers = @"/joyplus-service/index.php/user/thirdPartyUsers";
 
-NSString *const kPathGenUserThirdPartyUsers = @"/joyplus-service/index.php/user/preGenThirdPartUsers";
+NSString *const kPathGenUserThirdPartyUsers = @"/joyplus-service/index.php/user/preGenThirdPartyUsers";
 
 NSString *const kPathFriendFollow = @"/joyplus-service/index.php/friend/follow";
 

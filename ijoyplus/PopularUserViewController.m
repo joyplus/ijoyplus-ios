@@ -173,7 +173,7 @@
             cell.nameLabel1.textColor = [UIColor whiteColor];
             cell.nameLabel1.font = [UIFont systemFontOfSize:15];
             [cell.nameLabel1 setBackgroundColor:[UIColor clearColor]];
-        } else if(i == 0){
+        } else if(i == 1){
             cell.nameLabel2.text = [user objectForKey:@"nickname"];
             [cell.nameLabel2 sizeToFit];
             cell.nameLabel2.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);

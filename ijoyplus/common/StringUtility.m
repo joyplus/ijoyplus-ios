@@ -90,11 +90,4 @@
     }
 }
 
-+ (NSString*) generateChannelNameForMerchant:(NSString *) strMerchantObjId {
-    NSMutableString *channelName = [[NSMutableString alloc] init];
-    [channelName appendString:@"MERCHANT_"];
-    [channelName appendString:strMerchantObjId];
-    
-    return channelName;
-}
 @end

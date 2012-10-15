@@ -10,7 +10,7 @@
 #import "CustomSearchBar.h"
 
 
-@interface ContactFriendListViewController : UITableViewController  <UISearchBarDelegate>
+@interface ContactFriendListViewController : UITableViewController  <UISearchBarDelegate, UITextFieldDelegate>
 
 
 @property (strong, nonatomic) NSString *keyword;

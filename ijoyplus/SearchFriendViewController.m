@@ -7,6 +7,9 @@
 //
 
 #import "SearchFriendViewController.h"
+#import <Foundation/Foundation.h>
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "FriendListViewController.h"
@@ -18,6 +21,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CacheUtility.h"
 
 @interface SearchFriendViewController ()
 
@@ -37,7 +41,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
@@ -74,7 +78,7 @@
     if(section == 0){
         return 1;
     } else{
-        return 3;
+        return 2;
     }
 }
 
@@ -92,10 +96,10 @@
     } else if(indexPath.section == 1 && indexPath.row == 0){
         cell.textLabel.text = NSLocalizedString(@"sina_weibo_friend", nil);
         [cell.contentView addSubview:lineView];
+        //    } else if(indexPath.section == 1 && indexPath.row == 1){
+        //        cell.textLabel.text = NSLocalizedString(@"tencent_weibo_friend", nil);
+        //        [cell.contentView addSubview:lineView];
     } else if(indexPath.section == 1 && indexPath.row == 1){
-        cell.textLabel.text = NSLocalizedString(@"tencent_weibo_friend", nil);
-        [cell.contentView addSubview:lineView];
-    } else if(indexPath.section == 1 && indexPath.row == 2){
         cell.textLabel.text = NSLocalizedString(@"phone_contact_friend", nil);
     }
     cell.textLabel.textColor = [UIColor blackColor];
@@ -106,43 +110,43 @@
 }
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 
@@ -162,21 +166,19 @@
                 viewController.fromController = @"SearchFriendViewController";
                 [self.navigationController pushViewController:viewController animated:YES];
             }
-        } else if(indexPath.row == 1){
-            NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
-            if([num boolValue]){
-                FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-                viewController.sourceType = @"2";
-                [self.navigationController pushViewController:viewController animated:YES];
-            } else{
-                TecentViewController *viewController = [[TecentViewController alloc] init];
-                viewController.fromController = @"SearchFriendViewController";
-                [self.navigationController pushViewController:viewController animated:YES];
-            }
+            //        } else if(indexPath.row == 1){
+            //            NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
+            //            if([num boolValue]){
+            //                FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+            //                viewController.sourceType = @"2";
+            //                [self.navigationController pushViewController:viewController animated:YES];
+            //            } else{
+            //                TecentViewController *viewController = [[TecentViewController alloc] init];
+            //                viewController.fromController = @"SearchFriendViewController";
+            //                [self.navigationController pushViewController:viewController animated:YES];
+            //            }
         } else {
-            ContactFriendListViewController *viewController = [[ContactFriendListViewController alloc]initWithNibName:@"ContactFriendListViewController" bundle:nil];
-            viewController.sourceType = @"5";
-            [self.navigationController pushViewController:viewController animated:YES];
+            [self uploadAddressBook];
         }
     }
 }
@@ -184,6 +186,61 @@
 - (void)closeSelf
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)uploadAddressBook
+{
+    NSMutableArray *addressBookTemp = [NSMutableArray array];
+    ABAddressBookRef addressBooks = ABAddressBookCreate();
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBooks);
+    CFIndex nPeople = ABAddressBookGetPersonCount(addressBooks);
+
+    NSMutableString *friendIds = [[NSMutableString alloc]init];
+    for (NSInteger i = 0; i < nPeople; i++)
+    {
+        ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
+        CFStringRef abFullName = ABRecordCopyCompositeName(person);
+        ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+        if (ABMultiValueGetCount(phoneMulti) > 0) {
+            NSString *phoneNumber = (__bridge NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, 0);
+            NSString *validatedPhoneNumber = [self validatePhoneNumber:phoneNumber];
+            if(validatedPhoneNumber != nil){
+                [friendIds appendFormat:@"%@,", validatedPhoneNumber];
+                NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys: (__bridge NSString*)abFullName, @"name", validatedPhoneNumber, @"number", nil];
+                [addressBookTemp addObject:contact];
+            }
+        }
+    }
+    [friendIds appendString:@"0"];
+    [[ContainerUtility sharedInstance]setAttribute:addressBookTemp forKey:@"address_book"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"5", @"source_type", friendIds, @"source_ids", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            
+        } else {
+            
+        }
+        ContactFriendListViewController *viewController = [[ContactFriendListViewController alloc]initWithNibName:@"ContactFriendListViewController" bundle:nil];
+        viewController.sourceType = @"5";
+        [self.navigationController pushViewController:viewController animated:YES];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
+
+- (NSString *)validatePhoneNumber:(NSString *)phoneNumber
+{
+    
+    NSString *validatePhoneNumber = [[[phoneNumber stringByReplacingOccurrencesOfString:@" " withString:@""]
+                                                  stringByReplacingOccurrencesOfString:@"-" withString:@""]
+                                                  stringByReplacingOccurrencesOfString:@"+86" withString:@""];
+    NSRange range = {0, 1};
+    if(![[validatePhoneNumber substringWithRange:range] isEqualToString:@"0"] && [validatePhoneNumber length] == 11){
+        return validatePhoneNumber;
+    } else {
+        return nil;
+    }
 }
 
 - (void)processSinaData {
@@ -194,12 +251,12 @@
                                 nil];
     [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
+        [[CacheUtility sharedCache]setSinaFriends:sinaFriends];
         NSMutableString *friendIds = [[NSMutableString alloc]init];
         for (NSDictionary *friendData in sinaFriends) {
-            [friendIds appendFormat:@"%@, ", [[friendData objectForKey:@"id"] stringValue]];
+            [friendIds appendFormat:@"%@,", [[friendData objectForKey:@"id"] stringValue]];
         }
         [friendIds appendString:@"0"];
-        NSLog(@"%@", friendIds);
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];

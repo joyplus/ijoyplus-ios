@@ -18,9 +18,15 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CacheUtility.h"
+#import "HomeViewController.h"
+#import "WeiBoInviteViewController.h"
 
 @interface FriendListViewController (){
     NSMutableArray *itemsArray;
+    NSMutableArray *joinedFriendArray;
+    NSMutableArray *joinedFriendUserId;
+    NSMutableArray *unjoinedFriendArray;
     EGORefreshTableHeaderView *_refreshHeaderView;
 	BOOL _reloading;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
@@ -45,6 +51,8 @@
     pullToRefreshManager_ = nil;
     self.sourceType = nil;
     itemsArray = nil;
+    joinedFriendArray = nil;
+    unjoinedFriendArray = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -70,18 +78,35 @@
     
     pageSize = 10;
     reloads_ = 1;
+    NSArray *sinaFriends = [[CacheUtility sharedCache] sinaFriends];
+    joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
+    joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
+    unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *item = [result objectForKey:@"users"];
             itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-            if(item.count > 0){
-                [itemsArray addObjectsFromArray:item];
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
-                [self loadTable];
-                reloads_ ++;
+            [itemsArray addObjectsFromArray:item];
+            for(NSDictionary *friend in sinaFriends){
+                BOOL exists = NO;
+                for(NSDictionary *user in item){
+                    if([[user objectForKey:@"thirdpart_id"] isEqualToString:[friend objectForKey:@"idstr"]]){
+                        [joinedFriendUserId addObject:[user objectForKey:@"friend_id"]];
+                        exists = YES;
+                        break;
+                    }
+                }
+                if(exists){
+                    [joinedFriendArray addObject:friend];
+                } else {
+                    [unjoinedFriendArray addObject:friend];
+                }
             }
+            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+            [self loadTable];
+            reloads_ ++;
         } else {
             
         }
@@ -121,16 +146,16 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return itemsArray.count;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    NSMutableArray *array = [item objectForKey:key];
-    return array.count;
+    if(section == 0){
+        return joinedFriendArray.count;
+    } else {
+        return unjoinedFriendArray.count;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -140,30 +165,21 @@
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section];
     switch (indexPath.section) {
         case 0:
         {
-            NSArray *friendArray = [item objectForKey:@"joined_friend"];
-            cell.textLabel.text = [friendArray objectAtIndex:indexPath.row];
+            NSDictionary *friend = [joinedFriendArray objectAtIndex:indexPath.row];
+            cell.textLabel.text = [friend objectForKey:@"screen_name"];
             cell.detailTextLabel.text = @"+关注";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:6/255.0 green:131/255.0 blue:239/255.0 alpha:1.0];
             break;
         }
         case 1:
         {
-            NSArray *friendArray = [item objectForKey:@"unjoined_friend"];
-            cell.textLabel.text = [friendArray objectAtIndex:indexPath.row];
+            NSDictionary *friend = [unjoinedFriendArray objectAtIndex:indexPath.row];
+            cell.textLabel.text = [friend objectForKey:@"screen_name"];
             cell.detailTextLabel.text = @"邀请";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:10/255.0 green:126/255.0 blue:32/255.0 alpha:1.0];
-            break;
-        }
-        case 2:
-        {
-            NSArray *friendArray = [item objectForKey:@"watched_friend"];
-            cell.textLabel.text = [friendArray objectAtIndex:indexPath.row];
-            cell.detailTextLabel.text = @"已关注";
-            cell.detailTextLabel.textColor = [UIColor lightGrayColor];
             break;
         }
     }
@@ -185,32 +201,38 @@
     return cell;
 }
 
+- (NSDictionary *)findSinaFriend:(NSDictionary *)user
+{
+    NSArray *sinaFriends = [[CacheUtility sharedCache] sinaFriends];
+    for(NSDictionary *friend in sinaFriends){
+        if([[user objectForKey:@"thirdpart_id"] isEqualToString:[friend objectForKey:@"id"]]){
+            return friend;
+        }
+    }
+    return nil;
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    NSArray *array = [item objectForKey:key];
-    if(array.count > 0){
-        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-        customView.backgroundColor = [UIColor blackColor];
-        UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
-        imageView.frame = customView.frame;
-        [customView addSubview:imageView];
-        
-        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        headerLabel.backgroundColor = [UIColor clearColor];
-        headerLabel.font = [UIFont boldSystemFontOfSize:12];
-        
-        headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
-        headerLabel.textColor = [UIColor lightGrayColor];
-        [headerLabel sizeToFit];
-        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
-        [customView addSubview:headerLabel];
-        return customView;
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+    customView.backgroundColor = [UIColor blackColor];
+    UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
+    imageView.frame = customView.frame;
+    [customView addSubview:imageView];
+    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont boldSystemFontOfSize:14];
+    
+    if (section == 0) {
+        headerLabel.text =  @"好友列表";
     } else {
-        return nil;
+        headerLabel.text =  @"邀请好友";
     }
+    headerLabel.textColor = [UIColor lightGrayColor];
+    [headerLabel sizeToFit];
+    headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+    [customView addSubview:headerLabel];
+    return customView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -218,43 +240,43 @@
     return 44;
 }
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 
@@ -262,8 +284,15 @@
 {
     [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    FriendDetailViewController *viewController = [[FriendDetailViewController alloc]initWithNibName:@"FriendDetailViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
+    if(indexPath.section == 0){
+        HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+        viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        WeiBoInviteViewController *viewController = [[WeiBoInviteViewController alloc]initWithNibName:@"WeiBoInviteViewController" bundle:nil];
+        viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar

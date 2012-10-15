@@ -226,6 +226,11 @@
 		EBB33C5D162BD8DB0047B3E1 /* MyVideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */; };
 		EBB33C5E162BD8DB0047B3E1 /* MyVideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */; };
 		EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */; };
+		EBB33C66162C00CF0047B3E1 /* WeiBoInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C64162C00CC0047B3E1 /* WeiBoInviteViewController.m */; };
+		EBB33C67162C00CF0047B3E1 /* WeiBoInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C65162C00CE0047B3E1 /* WeiBoInviteViewController.xib */; };
+		EBB33C7C162C0EF80047B3E1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */; };
+		EBB33C7E162C0F000047B3E1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */; };
+		EBB33C83162C187B0047B3E1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C82162C18790047B3E1 /* MessageUI.framework */; };
 		EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */; };
 		EBB40F471607102200A49CD9 /* CustomBackButtonHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */; };
 		EBB5A14D1622754000F164F2 /* qq_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A1491622754000F164F2 /* qq_normal.png */; };
@@ -598,6 +603,12 @@
 		EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyVideoPlayViewController.xib; sourceTree = "<group>"; };
 		EBB33C60162BDB280047B3E1 /* RecommendReasonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendReasonCell.h; sourceTree = "<group>"; };
 		EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendReasonCell.m; sourceTree = "<group>"; };
+		EBB33C63162C00CB0047B3E1 /* WeiBoInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiBoInviteViewController.h; sourceTree = "<group>"; };
+		EBB33C64162C00CC0047B3E1 /* WeiBoInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeiBoInviteViewController.m; sourceTree = "<group>"; };
+		EBB33C65162C00CE0047B3E1 /* WeiBoInviteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WeiBoInviteViewController.xib; sourceTree = "<group>"; };
+		EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		EBB33C82162C18790047B3E1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		EBB40F19160707FB00A49CD9 /* CustomBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButton.h; sourceTree = "<group>"; };
 		EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBackButton.m; sourceTree = "<group>"; };
 		EBB40F451607102100A49CD9 /* CustomBackButtonHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButtonHolder.h; sourceTree = "<group>"; };
@@ -664,6 +675,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBB33C83162C187B0047B3E1 /* MessageUI.framework in Frameworks */,
+				EBB33C7E162C0F000047B3E1 /* AddressBookUI.framework in Frameworks */,
+				EBB33C7C162C0EF80047B3E1 /* AddressBook.framework in Frameworks */,
 				EBAFB517161447D700C0263B /* MobileCoreServices.framework in Frameworks */,
 				EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */,
 				EB32BCC715F885EC00C878D5 /* UIKit.framework in Frameworks */,
@@ -735,6 +749,9 @@
 		EB32BCC515F885EC00C878D5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EBB33C82162C18790047B3E1 /* MessageUI.framework */,
+				EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */,
+				EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */,
 				EBAFB516161447D700C0263B /* MobileCoreServices.framework */,
 				EB32BD3715F888BD00C878D5 /* QuartzCore.framework */,
 				EB32BCC615F885EC00C878D5 /* UIKit.framework */,
@@ -1040,6 +1057,9 @@
 				EBBEDE4616269E7A00A4B376 /* PopularUserViewController.h */,
 				EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */,
 				EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */,
+				EBB33C63162C00CB0047B3E1 /* WeiBoInviteViewController.h */,
+				EBB33C64162C00CC0047B3E1 /* WeiBoInviteViewController.m */,
+				EBB33C65162C00CE0047B3E1 /* WeiBoInviteViewController.xib */,
 			);
 			name = friend;
 			sourceTree = "<group>";
@@ -1494,6 +1514,7 @@
 				EBB33C58162BD8DB0047B3E1 /* MyLocalPlayViewController.xib in Resources */,
 				EBB33C5B162BD8DB0047B3E1 /* MyPlayViewController.xib in Resources */,
 				EBB33C5E162BD8DB0047B3E1 /* MyVideoPlayViewController.xib in Resources */,
+				EBB33C67162C00CF0047B3E1 /* WeiBoInviteViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1652,6 +1673,7 @@
 				EBB33C5C162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m in Sources */,
 				EBB33C5D162BD8DB0047B3E1 /* MyVideoPlayViewController.m in Sources */,
 				EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */,
+				EBB33C66162C00CF0047B3E1 /* WeiBoInviteViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

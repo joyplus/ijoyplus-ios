@@ -111,6 +111,7 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
         }];
+        [[WBEngine sharedClient] logOut];
         [[CacheUtility sharedCache] clear];
         [[ContainerUtility sharedInstance] clear];
         [self.navigationController popToRootViewControllerAnimated:YES];

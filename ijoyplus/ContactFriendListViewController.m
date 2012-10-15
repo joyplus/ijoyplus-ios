@@ -19,14 +19,15 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "PhoneNumberCell.h"
+#import "ContainerUtility.h"
+#import "HomeViewController.h"
 
 @interface ContactFriendListViewController (){
     NSMutableArray *itemsArray;
-    //    EGORefreshTableHeaderView *_refreshHeaderView;
-    //	BOOL _reloading;
-    //    MNMBottomPullToRefreshManager *pullToRefreshManager_;
-    //    NSUInteger reloads_;
-    //    int pageSize;
+    NSMutableArray *joinedFriendArray;
+    NSMutableArray *joinedFriendUserId;
+    NSMutableArray *unjoinedFriendArray;
+    UIToolbar *keyboardToolbar;
 }
 @property (strong, nonatomic) IBOutlet PhoneNumberCell *phoneNumberCell;
 - (void)closeSelf;
@@ -44,10 +45,12 @@
     [super viewDidUnload];
     [self setSBar:nil];
     self.keyword = nil;
-    //    _refreshHeaderView = nil;
-    //    pullToRefreshManager_ = nil;
+    itemsArray = nil;
+    joinedFriendArray = nil;
+    unjoinedFriendArray = nil;
     self.sourceType = nil;
     itemsArray = nil;
+    keyboardToolbar = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -71,16 +74,54 @@
     [self.sBar setText:self.keyword];
     self.sBar.delegate = self;
     
+    
+    if (keyboardToolbar == nil) {
+        keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 38.0f)];
+        keyboardToolbar.barStyle = UIBarStyleBlackTranslucent;
+        UIBarButtonItem *spaceBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                                                      target:nil
+                                                                                      action:nil];
+        
+        UIBarButtonItem *doneBarItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"done", @"")
+                                                                        style:UIBarButtonItemStyleDone
+                                                                       target:self
+                                                                       action:@selector(resignKeyboard:)];
+        [doneBarItem setBackgroundImage:nil forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+        
+        [keyboardToolbar setItems:[NSArray arrayWithObjects:spaceBarItem, doneBarItem, nil]];
+        
+        self.phoneNumberCell.inputField.tag = 1;
+        self.phoneNumberCell.inputField.inputAccessoryView = keyboardToolbar;
+    }
+    
+    
+    NSArray *contactArray = (NSArray *)[[ContainerUtility sharedInstance]attributeForKey:@"address_book"];
+    joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
+    joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
+    unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:100];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *item = [result objectForKey:@"users"];
-            itemsArray = [[NSMutableArray alloc]initWithCapacity:100];
-            if(item.count > 0){
-                [itemsArray addObjectsFromArray:item];
-                [self.tableView reloadData];
+            itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [itemsArray addObjectsFromArray:item];
+            for(NSDictionary *contact in contactArray){
+                BOOL exists = NO;
+                for(NSDictionary *user in item){
+                    if([[user objectForKey:@"thirdpart_id"] isEqualToString:[contact objectForKey:@"number"]]){
+                        [joinedFriendUserId addObject:[user objectForKey:@"friend_id"]];
+                        exists = YES;
+                        break;
+                    }
+                }
+                if(exists){
+                    [joinedFriendArray addObject:contact];
+                } else {
+                    [unjoinedFriendArray addObject:contact];
+                }
             }
+            [self.tableView reloadData];
         } else {
             
         }
@@ -91,6 +132,7 @@
 
 - (void)closeSelf
 {
+    [self uploadMyContactNumber];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -110,8 +152,10 @@
 {
     if(section == 0){
         return 1;
-    } else {
-        return 1;
+    } else if(section == 1){
+        return joinedFriendArray.count;
+    } else{
+        return unjoinedFriendArray.count;
     }
 }
 
@@ -122,7 +166,6 @@
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    NSMutableDictionary *item = [itemsArray objectAtIndex:indexPath.section];
     switch (indexPath.section) {
         case 0:
         {
@@ -131,16 +174,14 @@
         }
         case 1:
         {
-            NSArray *friendArray = [item objectForKey:@"joined_friend"];
-            cell.textLabel.text = [friendArray objectAtIndex:indexPath.row];
+            cell.textLabel.text = [[joinedFriendArray objectAtIndex:indexPath.row] valueForKey:@"name"];
             cell.detailTextLabel.text = @"+关注";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:6/255.0 green:131/255.0 blue:239/255.0 alpha:1.0];
             break;
         }
         case 2:
         {
-            NSArray *friendArray = [item objectForKey:@"unjoined_friend"];
-            cell.textLabel.text = [friendArray objectAtIndex:indexPath.row];
+            cell.textLabel.text = [[unjoinedFriendArray objectAtIndex:indexPath.row] valueForKey:@"name"];
             cell.detailTextLabel.text = @"邀请";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:10/255.0 green:126/255.0 blue:32/255.0 alpha:1.0];
             break;
@@ -164,46 +205,50 @@
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.section == 0){
+        return 80;
+    } else {
+        return 44;
+    }
+}
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if(section > 0){
-        NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-        NSEnumerator *keys = item.keyEnumerator;
-        NSString *key = [keys nextObject];
-        NSArray *array = [item objectForKey:key];
-        if(array.count > 0){
-            UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-            customView.backgroundColor = [UIColor blackColor];
-            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
-            imageView.frame = customView.frame;
-            [customView addSubview:imageView];
-            
-            UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-            headerLabel.backgroundColor = [UIColor clearColor];
-            headerLabel.font = [UIFont boldSystemFontOfSize:12];
-            
-            headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
-            headerLabel.textColor = [UIColor lightGrayColor];
-            [headerLabel sizeToFit];
-            headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
-            [customView addSubview:headerLabel];
-            return customView;
-        } else {
-            return nil;
-        }
+        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+        customView.backgroundColor = [UIColor blackColor];
+        UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
+        imageView.frame = customView.frame;
+        [customView addSubview:imageView];
         
+        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        headerLabel.backgroundColor = [UIColor clearColor];
+        headerLabel.font = [UIFont boldSystemFontOfSize:14];
+        
+        if(section == 1){
+            headerLabel.text = @"好友列表";
+        } else {
+            headerLabel.text = @"邀请好友";
+        }
+        headerLabel.textColor = [UIColor lightGrayColor];
+        [headerLabel sizeToFit];
+        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+        [customView addSubview:headerLabel];
+        return customView;
     } else {
         return nil;
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if(indexPath.section == 0){
+    if(section == 0){
         return 0;
     }
     return 24;
 }
+
 /*
  // Override to support conditional editing of the table view.
  - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -249,8 +294,15 @@
 {
     [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    FriendDetailViewController *viewController = [[FriendDetailViewController alloc]initWithNibName:@"FriendDetailViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
+    if(indexPath.section == 0){
+        HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+        viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        FriendDetailViewController *viewController = [[FriendDetailViewController alloc]initWithNibName:@"FriendDetailViewController" bundle:nil];
+        viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
@@ -271,5 +323,42 @@
     [searchBar resignFirstResponder];
 }
 
+
+- (void)resignKeyboard:(id)sender
+{
+    [self uploadMyContactNumber];
+    [self.phoneNumberCell.inputField resignFirstResponder];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self uploadMyContactNumber];
+    [self resignKeyboard:nil];
+    return YES;
+}
+
+- (void)uploadMyContactNumber
+{
+    if ([StringUtility stringIsEmpty:self.phoneNumberCell.inputField.text]){
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.phoneNumberCell.inputField.text, @"phone", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindPhone parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+    
+}
 
 @end

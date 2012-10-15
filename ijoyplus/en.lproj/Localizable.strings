@@ -80,8 +80,11 @@ unjoined_friend = "邀请好友";
 watched_friend = "已关注的";
 friend_detail = "详细资料";
 sms_invite = "短信邀请";
+weibo_invite = "微博邀请";
 friend_comment = "观看的好友";
 drama_list = "剧集列表";
+weibo_invite_template = "@%@ , 快来加入悦+吧！";
+register_sms_content = "快来加入悦+吧！";
 
 list = "个人主页";
 watched = "看过的影片";
@@ -92,6 +95,7 @@ my_followed_people = "我关注的人";
 my_fans = "我的粉丝";
 message = "消息";
 my_message = "我的消息";
+invite_success = "邀请发送成功！";
 
 myself = "动态消息";
 notification_center = "通知中心";
