@@ -22,11 +22,11 @@
 
 @interface ContactFriendListViewController (){
     NSMutableArray *itemsArray;
-//    EGORefreshTableHeaderView *_refreshHeaderView;
-//	BOOL _reloading;
-//    MNMBottomPullToRefreshManager *pullToRefreshManager_;
-//    NSUInteger reloads_;
-//    int pageSize;
+    //    EGORefreshTableHeaderView *_refreshHeaderView;
+    //	BOOL _reloading;
+    //    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    //    NSUInteger reloads_;
+    //    int pageSize;
 }
 @property (strong, nonatomic) IBOutlet PhoneNumberCell *phoneNumberCell;
 - (void)closeSelf;
@@ -44,8 +44,8 @@
     [super viewDidUnload];
     [self setSBar:nil];
     self.keyword = nil;
-//    _refreshHeaderView = nil;
-//    pullToRefreshManager_ = nil;
+    //    _refreshHeaderView = nil;
+    //    pullToRefreshManager_ = nil;
     self.sourceType = nil;
     itemsArray = nil;
 }
@@ -70,7 +70,7 @@
 	
     [self.sBar setText:self.keyword];
     self.sBar.delegate = self;
-
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -167,78 +167,81 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if(section > 0){
-    NSMutableDictionary *item = [itemsArray objectAtIndex:section];
-    NSEnumerator *keys = item.keyEnumerator;
-    NSString *key = [keys nextObject];
-    NSArray *array = [item objectForKey:key];
-    if(array.count > 0){
-        UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
-        customView.backgroundColor = [UIColor blackColor];
-        UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
-        imageView.frame = customView.frame;
-        [customView addSubview:imageView];
+        NSMutableDictionary *item = [itemsArray objectAtIndex:section];
+        NSEnumerator *keys = item.keyEnumerator;
+        NSString *key = [keys nextObject];
+        NSArray *array = [item objectForKey:key];
+        if(array.count > 0){
+            UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
+            customView.backgroundColor = [UIColor blackColor];
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"bgwithline"]];
+            imageView.frame = customView.frame;
+            [customView addSubview:imageView];
+            
+            UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+            headerLabel.backgroundColor = [UIColor clearColor];
+            headerLabel.font = [UIFont boldSystemFontOfSize:12];
+            
+            headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
+            headerLabel.textColor = [UIColor lightGrayColor];
+            [headerLabel sizeToFit];
+            headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
+            [customView addSubview:headerLabel];
+            return customView;
+        } else {
+            return nil;
+        }
         
-        UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        headerLabel.backgroundColor = [UIColor clearColor];
-        headerLabel.font = [UIFont boldSystemFontOfSize:12];
-        
-        headerLabel.text =  [NSString stringWithFormat:NSLocalizedString(key, nil), self.keyword, nil];
-        headerLabel.textColor = [UIColor lightGrayColor];
-        [headerLabel sizeToFit];
-        headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
-        [customView addSubview:headerLabel];
-        return customView;
     } else {
         return nil;
-    }
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section == 0){
-        return 80;
+        return 0;
     }
-    return 44;
+    return 24;
 }
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 

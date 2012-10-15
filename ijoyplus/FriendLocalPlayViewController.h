@@ -11,7 +11,12 @@
 #import "IntroductionView.h"
 #import "EGORefreshTableHeaderView.h"
 #import "LocalPlayViewController.h"
+#import "LoadMoreCell.h"
+@interface FriendLocalPlayViewController : LocalPlayViewController{
+    NSMutableArray *friendCommentArray;
+}
 
-@interface FriendLocalPlayViewController : LocalPlayViewController
-
+- (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
+- (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView;
+- (void)postInitialization:(NSDictionary *)result;
 @end

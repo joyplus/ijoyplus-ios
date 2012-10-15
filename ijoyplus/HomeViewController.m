@@ -24,6 +24,10 @@
 #import "LocalPlayRootViewController.h"
 #import "DramaPlayRootViewController.h"
 #import "VideoPlayRootViewController.h"
+#import "MyPlayRootViewController.h"
+#import "MyLocalPlayRootViewController.h"
+#import "MyDramaPlayRootViewController.h"
+#import "MyVideoPlayRootViewController.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -132,7 +136,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - TAB_BAR_HEIGHT - 44)];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 44)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     NSString *flag = @"0";
@@ -345,13 +349,13 @@
     PlayRootViewController *viewController;
     if(self.segment.selectedSegmentIndex == 2){
         if([type isEqualToString:@"1"]){
-            viewController = [[PlayRootViewController alloc]init];
+            viewController = [[MyPlayRootViewController alloc]init];
         } else if([type isEqualToString:@"2"]){
-            viewController = [[DramaPlayRootViewController alloc]init];
+            viewController = [[MyDramaPlayRootViewController alloc]init];
         } else if([type isEqualToString:@"3"]){
-            viewController = [[LocalPlayRootViewController alloc]init];
+            viewController = [[MyLocalPlayRootViewController alloc]init];
         } else if([type isEqualToString:@"4"]){
-            viewController = [[VideoPlayRootViewController alloc]init];
+            viewController = [[MyVideoPlayRootViewController alloc]init];
         }
     } else {
         if([type isEqualToString:@"1"]){

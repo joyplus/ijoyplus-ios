@@ -15,6 +15,9 @@
 #import "ContainerUtility.h"
 #import "PopularUserViewController.h"
 #import "ContactFriendListViewController.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 
 @interface SearchFriendViewController ()
 
@@ -152,11 +155,8 @@
         [self.navigationController pushViewController:viewController animated:YES];
     } else if(indexPath.section == 1){
         if(indexPath.row == 0){
-            NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kSinaUserLoggedIn];
-            if([num boolValue]){
-                FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-                viewController.sourceType = @"1";
-                [self.navigationController pushViewController:viewController animated:YES];
+            if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+                [self processSinaData];
             } else{
                 SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
                 viewController.fromController = @"SearchFriendViewController";
@@ -175,6 +175,7 @@
             }
         } else {
             ContactFriendListViewController *viewController = [[ContactFriendListViewController alloc]initWithNibName:@"ContactFriendListViewController" bundle:nil];
+            viewController.sourceType = @"5";
             [self.navigationController pushViewController:viewController animated:YES];
         }
     }
@@ -183,6 +184,40 @@
 - (void)closeSelf
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)processSinaData {
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                [[WBEngine sharedClient] accessToken], @"access_token",
+                                [[WBEngine sharedClient] userID], @"uid",
+                                nil];
+    [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
+        NSMutableString *friendIds = [[NSMutableString alloc]init];
+        for (NSDictionary *friendData in sinaFriends) {
+            [friendIds appendFormat:@"%@, ", [[friendData objectForKey:@"id"] stringValue]];
+        }
+        [friendIds appendString:@"0"];
+        NSLog(@"%@", friendIds);
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                
+            } else {
+                
+            }
+            FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+            viewController.sourceType = @"1";
+            [self.navigationController pushViewController:viewController animated:YES];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+    
 }
 
 @end

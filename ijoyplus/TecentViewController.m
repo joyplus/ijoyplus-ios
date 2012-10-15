@@ -16,7 +16,7 @@
 
 @interface TecentViewController (){
     TencentOAuth* _tencentOAuth;
-    NSMutableArray* _permissions; 
+    NSMutableArray* _permissions;
 }
 - (void)closeSelf;
 @end
@@ -42,8 +42,8 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
     _permissions =  [NSArray arrayWithObjects:
-					  @"get_user_info",@"add_share", @"add_topic",@"add_one_blog", @"list_album",
-					  @"upload_pic",@"list_photo", @"add_album", @"check_page_fans",nil];
+                     @"get_user_info",@"add_share", @"add_topic",@"add_one_blog", @"list_album",
+                     @"upload_pic",@"list_photo", @"add_album", @"check_page_fans", @"get_fanslist", nil];
 	
 	
 	_tencentOAuth = [[TencentOAuth alloc] initWithAppId:@"100311436"
@@ -75,6 +75,8 @@
 
 - (void)tencentDidLogin
 {
+    BOOL success = [_tencentOAuth getFansList];
+    NSLog(@"%i", success);
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kTencentUserLoggedIn];
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];

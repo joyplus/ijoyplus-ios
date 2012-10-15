@@ -13,13 +13,13 @@
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
+#import "CMConstants.h"
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
-#import "LocalPlayRootViewController.h"
+#import "FriendLocalPlayRootViewController.h"
 #import "FriendDramaPlayRootViewController.h"
-#import "VideoPlayRootViewController.h"
-#import "CMConstants.h"
+#import "FriendVideoPlayRootViewController.h"
 #import "FriendPlayRootViewController.h"
 
 @interface FriendViewController (){
@@ -117,12 +117,13 @@
         return cell;
     }
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+    float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
     if(indexPath.section == 0){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
     } else {
-        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
     }
     NSString *imageUrl = [[videoArray objectAtIndex:(indexPath.row * 3 + indexPath.section)] objectForKey:@"content_pic_url"];
     [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
@@ -133,7 +134,7 @@
     imageView.layer.shadowOpacity = 1;
     [cell addSubview:imageView];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
     titleLabel.text =  [[videoArray objectAtIndex:(indexPath.row  * 3+ indexPath.section)] objectForKey:@"content_name"];
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor clearColor];
@@ -167,16 +168,16 @@
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *program = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
-    NSString *type = [[videoArray objectAtIndex:(indexPath.row * 3 + indexPath.section)] objectForKey:@"content_type"];
+    NSString *type = [program objectForKey:@"content_type"];
     PlayRootViewController *viewController;
     if([type isEqualToString:@"1"]){
         viewController = [[FriendPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"2"]){
         viewController = [[FriendDramaPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"3"]){
-        viewController = [[LocalPlayRootViewController alloc]init];
+        viewController = [[FriendLocalPlayRootViewController alloc]init];
     } else if([type isEqualToString:@"4"]){
-        viewController = [[VideoPlayRootViewController alloc]init];
+        viewController = [[FriendVideoPlayRootViewController alloc]init];
     }
     viewController.programId = [program valueForKey:@"content_id"];
     [self.navigationController pushViewController:viewController animated:YES];

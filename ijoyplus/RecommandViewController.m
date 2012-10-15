@@ -207,6 +207,7 @@
 
 - (void)post
 {
+    [self resignFirstResponder];
 //    if(btn1ClickedNum % 2 == 1){
 //        WBEngine *engineer = [[CacheUtility sharedCache] getSinaWeiboEngineer];
 //        [engineer sendWeiBoWithText:self.textView.text image:nil];

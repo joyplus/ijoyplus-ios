@@ -9,8 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "IntroductionView.h"
 #import "PlayViewController.h"
-@interface FriendPlayViewController : PlayViewController
+#import "LoadMoreCell.h"
+@interface FriendPlayViewController : PlayViewController{
+    NSMutableArray *friendCommentArray;
+}
 
-@property (nonatomic, assign)int imageHeight;
-
+- (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
+- (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView;
+- (void)postInitialization:(NSDictionary *)result;
 @end

@@ -25,6 +25,7 @@
 #import "ServiceConstants.h"
 #import "ProgramViewController.h"
 #import "NoRecordCell.h"
+#import "CommentViewController.h"
 
 #define ANIMATION_DURATION 0.4
 #define ANIMATION_DELAY 0
@@ -35,7 +36,6 @@
 @interface LocalPlayViewController (){
 
 }
-- (void)avatarClicked;
 - (void)showIntroduction;
 - (void)playVideo;
 - (void)getProgramView;
@@ -276,15 +276,25 @@
         cell = (CommentCell *)[nib objectAtIndex:2];
     }
     NSMutableDictionary *commentDic = [dataArray objectAtIndex:indexPath.row];
-    [cell.avatarImageView setImageWithURL:[NSURL URLWithString:[commentDic valueForKey:@"avatarUrl"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+    NSString *ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
+    if([StringUtility stringIsEmpty:ownerPicUrl]){
+        cell.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
+    } else {
+        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
+    }
     cell.avatarImageView.layer.cornerRadius = 25;
     cell.avatarImageView.layer.masksToBounds = YES;
-    cell.titleLabel.text = [commentDic objectForKey:@"username"];
+    cell.titleLabel.text = [commentDic objectForKey:@"owner_name"];
     
-    cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
+    CGSize size = CGSizeZero;
+    CGSize constraint = CGSizeMake(cell.titleLabel.frame.size.width, 20000.0f);
+    if([StringUtility stringIsEmpty:[commentDic objectForKey:@"content"]]){
+        cell.subtitleLabel.text = @"";
+    } else {
+        cell.subtitleLabel.text = [commentDic objectForKey:@"content"];
+        size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    }
     [cell.subtitleLabel setNumberOfLines:0];
-    CGSize constraint = CGSizeMake(230, 20000.0f);
-    CGSize size = [[commentDic objectForKey:@"content"] sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     [cell.subtitleLabel setFrame:CGRectMake(cell.subtitleLabel.frame.origin.x, cell.subtitleLabel.frame.origin.y, size.width, size.height)];
     
     NSInteger yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
@@ -305,11 +315,11 @@
         UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
         [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateNormal];
         [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateHighlighted];
-        [cell.replyBtn addTarget:self action:@selector(replyBtnClicked)forControlEvents:UIControlEventTouchUpInside];
+        [cell.replyBtn addTarget:self action:@selector(replyBtnClicked:)forControlEvents:UIControlEventTouchUpInside];
     } else{
         [cell.replyBtn setHidden:YES];
     }
-    [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+    [cell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -331,6 +341,9 @@
 {
     NSMutableDictionary *commentDic = [dataArray objectAtIndex:row];
     NSString *content = [commentDic objectForKey:@"content"];
+    if([StringUtility stringIsEmpty:content]){
+        return 80;
+    }
     CGSize constraint = CGSizeMake(230, 20000.0f);
     CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     return 80 + size.height;
@@ -428,11 +441,33 @@
     self.tableView.scrollEnabled = YES;
 }
 
-- (void)avatarClicked
+- (void)avatarClicked:(id)sender
 {
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
+    
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+    viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
+
+
+- (void)replyBtnClicked:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
+    
+    CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+    viewController.threadId = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"id"];
+    viewController.title = @"评论回复";
+    viewController.openKeyBoard = YES;
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
 
 - (void)playVideo
 {
@@ -456,12 +491,6 @@
     } 
     viewController.programUrl = url;
     viewController.title = [show objectForKey:@"name"];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
-
-- (void)replyBtnClicked
-{
-    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 

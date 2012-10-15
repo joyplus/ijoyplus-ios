@@ -18,9 +18,6 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "AppDelegate.h"
-#import "StringUtility.h"
-#import "AFServiceAPIClient.h"
-#import "ServiceConstants.h"
 
 @interface SinaLoginViewController (){
     WBAuthorizeWebView *webView;
@@ -109,13 +106,11 @@
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] accessToken] forKey:kSinaWeiboAccessToken];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
     
-    [self processSinaData];
     
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
-        FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-        [self.navigationController pushViewController:viewController animated:YES];
+        [self processSinaData];
     } else{
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -184,39 +179,29 @@
 //    }];
     
     [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        [self processSinaFriendData:responseObject];
-        
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"<<<<<<%@>>>>>", error);
-    }];
-    
-}
-
-- (void)processSinaFriendData:(id) responseObject {
-    NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
-    NSMutableArray *sinaIDs = [[NSMutableArray alloc] initWithCapacity:[sinaFriends count]];
-    NSMutableString *friendIds = [[NSMutableString alloc]init];
-    for (NSDictionary *friendData in sinaFriends) {
-        NSLog(@"<<<<<<Find sina friends: %@>>>>>>", [friendData objectForKey:@"id"]);
-        [friendIds appendFormat:@"%@, ", [[friendData objectForKey:@"id"] stringValue]];
-        [sinaIDs addObject:[[friendData objectForKey:@"id"] stringValue]];
-    }
-    // cache friend data
-    [[CacheUtility sharedCache] setSinaFriends:sinaIDs];
-    [friendIds appendString:@"0"];
-    NSLog(@"%@", friendIds);
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            
-        } else {
-            
+        NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
+        NSMutableString *friendIds = [[NSMutableString alloc]init];
+        for (NSDictionary *friendData in sinaFriends) {
+            [friendIds appendFormat:@"%@, ", [[friendData objectForKey:@"id"] stringValue]];
         }
+        [friendIds appendString:@"0"];
+        NSLog(@"%@", friendIds);
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                
+            } else {
+                
+            }
+            FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+            [self.navigationController pushViewController:viewController animated:YES];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-    }];
+    }];    
 }
 
 - (void)closeSelf

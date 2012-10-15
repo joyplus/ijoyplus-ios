@@ -475,14 +475,6 @@
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (void)playVideo
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [movie objectForKey:@"video_urls"];
-    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [movie objectForKey:@"name"];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
 
 - (void)replyBtnClicked:(id)sender
 {
@@ -498,6 +490,14 @@
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
+- (void)playVideo
+{
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    NSArray *urlArray = [movie objectForKey:@"video_urls"];
+    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    viewController.title = [movie objectForKey:@"name"];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
 

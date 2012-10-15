@@ -729,4 +729,29 @@ redirectURI = _redirectURI;
 	NSLog(@"received didLoad success clientid=%@, openid=%@", client_id, openid);
 };
 
+- (BOOL)getFansList
+{
+	if (![self isSessionValid] || ![self isOpenIdValid]) {
+		return NO;
+	}
+	NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
+	APIBase *apiRequest = [[APIBase alloc] initWithTarget:self andSelector:@selector(getFansListResponse:) andHttpMethod:@"GET"];
+	NSString * fullURL = [kRestserverBaseURL stringByAppendingString:@"relation/get_fanslist"];
+	[apiRequest openUrl:fullURL token:_accessToken openid:_openId appid:_appId params:params];
+	[_apiRequests setObject:apiRequest forKey:[NSString stringWithFormat:@"%d", apiRequest.seq]];
+	return YES;
+}
+
+- (void)getFansListResponse:(APIResponse*) response
+{
+	if (!response)
+		return;
+	[self deleteAPIRequestBySeq:[NSString stringWithFormat:@"%d", response.seq]];
+	if ([self.sessionDelegate respondsToSelector:@selector(getFansListResponse:)])
+	{
+		[_sessionDelegate getListAlbumResponse:response];
+	}
+}
+
+
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "FriendPlayViewController.h"
+#import "MyPlayViewController.h"
 #import "PlayCell.h"
 #import "CommentCell.h"
 #import "UIImageView+WebCache.h"
@@ -22,21 +22,23 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "RecommendReasonCell.h"
 
 #define MAX_FRIEND_COMMENT_COUNT 10
 #define MAX_COMMENT_COUNT 10
 
-@interface FriendPlayViewController ()
+@interface MyPlayViewController ()
 
 @end
 
-@implementation FriendPlayViewController
-@synthesize imageHeight;
+@implementation MyPlayViewController
+@synthesize reasonCell;
 
 - (void)viewDidUnload
 {
+    [self setReasonCell:nil];
     [super viewDidUnload];
-    friendCommentArray = nil;
+    reasonCell = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -53,46 +55,18 @@
     [super viewDidLoad];
 }
 
-- (void)getProgramView
-{
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                self.programId, @"prod_id",
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            movie = (NSDictionary *)[result objectForKey:@"movie"];
-            [self setPlayCellValue];
-            [self postInitialization:result];
-            friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
-            if(friendCommentArray == nil || friendCommentArray.count == 0){
-                friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
-            }
-            
-            commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(commentArray == nil || commentArray.count == 0){
-                commentArray = [[NSMutableArray alloc]initWithCapacity:5];
-            }
-            [self.tableView reloadData];
-        } else {
-
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
-    }];
-}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if(section == 0){
+        return 1;
+    } else if(section == 1){
         return 1;
     } else if(section == 1) {
 //        if(friendCommentArray.count > MAX_FRIEND_COMMENT_COUNT){
@@ -114,6 +88,8 @@
     if (indexPath.section == 0) {
         return playCell;
     } else if (indexPath.section == 1){
+        return reasonCell;
+    } else if (indexPath.section == 2){
 //        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
 //            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
 //            return cell;
@@ -132,64 +108,14 @@
     }
 }
 
-
-- (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier
-{
-    CommentCell *cell = (CommentCell*) [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
-        cell = (CommentCell *)[nib objectAtIndex:2];
-    }
-    NSMutableDictionary *commentDic = [dataArray objectAtIndex:indexPath.row];
-    NSString *ownerPicUrl = [commentDic valueForKey:@"user_pic_url"];
-    if([StringUtility stringIsEmpty:ownerPicUrl]){
-        cell.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
-    } else {
-        [cell.avatarImageView setImageWithURL:[NSURL URLWithString:ownerPicUrl] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
-    }
-    cell.avatarImageView.layer.cornerRadius = 25;
-    cell.avatarImageView.layer.masksToBounds = YES;
-    cell.titleLabel.text = [commentDic objectForKey:@"user_name"];
-    
-    NSString *type = [commentDic objectForKey:@"type"];
-    if([type isEqualToString:@"comment"]){
-        cell.subtitleLabel.text = @"评论了该影片。";
-    } else if([type isEqualToString:@"favority"]){
-        cell.subtitleLabel.text = @"收藏了该影片。";
-    } else if([type isEqualToString:@"recommend"]){
-        cell.subtitleLabel.text = @"推荐了该影片。";
-    } else{
-        cell.subtitleLabel.text = @"看过该影片。";
-    }
-    
-    NSInteger yPosition = cell.subtitleLabel.frame.origin.y + 20;
-    cell.thirdTitleLabel.frame = CGRectMake(cell.thirdTitleLabel.frame.origin.x, yPosition, cell.thirdTitleLabel.frame.size.width, cell.thirdTitleLabel.frame.size.height);
-    
-    TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
-    NSString *createDate = [commentDic valueForKey:@"create_date"];
-    NSDate *commentDate = [DateUtility dateFromFormatString:createDate formatString: @"yyyy-MM-dd HH:mm:ss"];
-    NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:commentDate];
-    cell.thirdTitleLabel.text = timeDiff;
-    [cell.replyBtn setHidden:YES];
-    [cell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
-    return cell;
-}
-
-- (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView
-{
-    LoadMoreCell *cell = (LoadMoreCell*) [tableView dequeueReusableCellWithIdentifier:@"loadMoreCell"];
-    if (cell == nil) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"FriendCellFactory" owner:self options:nil];
-        cell = (LoadMoreCell *)[nib objectAtIndex:0];
-    }
-    return cell;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
         return playCell.frame.size.height;
     } else if(indexPath.section == 1){
+        return reasonCell.frame.size.height;
+    
+    } else if(indexPath.section == 2){
 //        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
 //            return 44;
 //        } else {
@@ -249,23 +175,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 0){
+    if(indexPath.section > 1){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        if(indexPath.section == 1) {
-//            if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
-//                CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
-//                viewController.programId = self.programId;
-//                viewController.title = @"全部好友评论";
-//                [self.navigationController pushViewController:viewController animated:YES];
-//                [self.navigationController pushViewController:viewController animated:YES];
-//            } else{
-//                CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-//                viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"thread_id"];
-//                [self.navigationController pushViewController:viewController animated:YES];
-//                viewController.title = @"好友评论回复";
-//                [self.navigationController pushViewController:viewController animated:YES];
-//            }
-        } else if (indexPath.section == 2) {
+        if(indexPath.section == 2) {
+
+        } else if (indexPath.section == 3) {
             if(indexPath.row == MAX_COMMENT_COUNT){
                 CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
                 viewController.programId = self.programId;
@@ -302,6 +216,8 @@
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
     if(section == 1){
+        headerLabel.text =  @"我的推荐理由";
+    } else if(section == 2){
         headerLabel.text =  NSLocalizedString(@"friend_comment", nil);
     } else {
         headerLabel.text =  NSLocalizedString(@"user_comment", nil);
@@ -320,17 +236,26 @@
     NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
     
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-    if(indexpath.section == 1){
+    if(indexpath.section == 2){
         viewController.userid = [[friendCommentArray objectAtIndex:indexpath.row] valueForKey:@"user_id"];
-    } else {
+    } else if(indexpath.section == 3){
         viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
         
     }
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (void)postInitialization:(NSDictionary *)result;
+- (void) postInitialization:(NSDictionary *)result;
 {
-    //interface for sub-class
+    NSString *content = [result objectForKey:@"reason"];
+    if([StringUtility stringIsEmpty:content]){
+        content = @"";
+    }
+    self.reasonCell.reasonContent.text = content;
+    [self.reasonCell.reasonContent setNumberOfLines:0];
+    CGSize constraint = CGSizeMake(self.reasonCell.reasonContent.frame.size.width, 20000.0f);
+    CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    [self.reasonCell.reasonContent setFrame:CGRectMake(self.reasonCell.reasonContent.frame.origin.x, self.reasonCell.reasonContent.frame.origin.y, size.width, size.height)];
 }
+
 @end

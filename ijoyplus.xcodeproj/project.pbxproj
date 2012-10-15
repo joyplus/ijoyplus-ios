@@ -213,6 +213,19 @@
 		EBB2FFE71612F8A100E8D9A7 /* DramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */; };
 		EBB2FFE81612F8A100E8D9A7 /* DramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */; };
 		EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */; };
+		EBB33C53162BD8DB0047B3E1 /* MyDramaPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C40162BD8D80047B3E1 /* MyDramaPlayRootViewController.m */; };
+		EBB33C54162BD8DB0047B3E1 /* MyDramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C42162BD8D80047B3E1 /* MyDramaPlayViewController.m */; };
+		EBB33C55162BD8DB0047B3E1 /* MyDramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C43162BD8D90047B3E1 /* MyDramaPlayViewController.xib */; };
+		EBB33C56162BD8DB0047B3E1 /* MyLocalPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C44162BD8D90047B3E1 /* MyLocalPlayRootViewController.m */; };
+		EBB33C57162BD8DB0047B3E1 /* MyLocalPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C48162BD8D90047B3E1 /* MyLocalPlayViewController.m */; };
+		EBB33C58162BD8DB0047B3E1 /* MyLocalPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C49162BD8D90047B3E1 /* MyLocalPlayViewController.xib */; };
+		EBB33C59162BD8DB0047B3E1 /* MyPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C4B162BD8DA0047B3E1 /* MyPlayRootViewController.m */; };
+		EBB33C5A162BD8DB0047B3E1 /* MyPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C4D162BD8DA0047B3E1 /* MyPlayViewController.m */; };
+		EBB33C5B162BD8DB0047B3E1 /* MyPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C4E162BD8DB0047B3E1 /* MyPlayViewController.xib */; };
+		EBB33C5C162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C50162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m */; };
+		EBB33C5D162BD8DB0047B3E1 /* MyVideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */; };
+		EBB33C5E162BD8DB0047B3E1 /* MyVideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */; };
+		EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */; };
 		EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */; };
 		EBB40F471607102200A49CD9 /* CustomBackButtonHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F461607102100A49CD9 /* CustomBackButtonHolder.m */; };
 		EBB5A14D1622754000F164F2 /* qq_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A1491622754000F164F2 /* qq_normal.png */; };
@@ -563,6 +576,28 @@
 		EBB2FFE91612FB9800E8D9A7 /* DramaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DramaCell.h; path = component/DramaCell.h; sourceTree = "<group>"; };
 		EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DramaCell.m; path = component/DramaCell.m; sourceTree = "<group>"; };
 		EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
+		EBB33C3F162BD8D80047B3E1 /* MyDramaPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDramaPlayRootViewController.h; sourceTree = "<group>"; };
+		EBB33C40162BD8D80047B3E1 /* MyDramaPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDramaPlayRootViewController.m; sourceTree = "<group>"; };
+		EBB33C41162BD8D80047B3E1 /* MyDramaPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDramaPlayViewController.h; sourceTree = "<group>"; };
+		EBB33C42162BD8D80047B3E1 /* MyDramaPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDramaPlayViewController.m; sourceTree = "<group>"; };
+		EBB33C43162BD8D90047B3E1 /* MyDramaPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyDramaPlayViewController.xib; sourceTree = "<group>"; };
+		EBB33C44162BD8D90047B3E1 /* MyLocalPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLocalPlayRootViewController.m; sourceTree = "<group>"; };
+		EBB33C45162BD8D90047B3E1 /* MyVideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoPlayViewController.h; sourceTree = "<group>"; };
+		EBB33C46162BD8D90047B3E1 /* MyLocalPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLocalPlayRootViewController.h; sourceTree = "<group>"; };
+		EBB33C47162BD8D90047B3E1 /* MyLocalPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLocalPlayViewController.h; sourceTree = "<group>"; };
+		EBB33C48162BD8D90047B3E1 /* MyLocalPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLocalPlayViewController.m; sourceTree = "<group>"; };
+		EBB33C49162BD8D90047B3E1 /* MyLocalPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyLocalPlayViewController.xib; sourceTree = "<group>"; };
+		EBB33C4A162BD8DA0047B3E1 /* MyPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPlayRootViewController.h; sourceTree = "<group>"; };
+		EBB33C4B162BD8DA0047B3E1 /* MyPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPlayRootViewController.m; sourceTree = "<group>"; };
+		EBB33C4C162BD8DA0047B3E1 /* MyPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPlayViewController.h; sourceTree = "<group>"; };
+		EBB33C4D162BD8DA0047B3E1 /* MyPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPlayViewController.m; sourceTree = "<group>"; };
+		EBB33C4E162BD8DB0047B3E1 /* MyPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPlayViewController.xib; sourceTree = "<group>"; };
+		EBB33C4F162BD8DB0047B3E1 /* MyVideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoPlayRootViewController.h; sourceTree = "<group>"; };
+		EBB33C50162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyVideoPlayRootViewController.m; sourceTree = "<group>"; };
+		EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyVideoPlayViewController.m; sourceTree = "<group>"; };
+		EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyVideoPlayViewController.xib; sourceTree = "<group>"; };
+		EBB33C60162BDB280047B3E1 /* RecommendReasonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendReasonCell.h; sourceTree = "<group>"; };
+		EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendReasonCell.m; sourceTree = "<group>"; };
 		EBB40F19160707FB00A49CD9 /* CustomBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButton.h; sourceTree = "<group>"; };
 		EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBackButton.m; sourceTree = "<group>"; };
 		EBB40F451607102100A49CD9 /* CustomBackButtonHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButtonHolder.h; sourceTree = "<group>"; };
@@ -1029,6 +1064,26 @@
 				EBB064D7160ABAB000BE685B /* HomeViewController.h */,
 				EBE44B641609A01E002BEB0C /* HomeViewController.m */,
 				EBE44B651609A01E002BEB0C /* HomeViewController.xib */,
+				EBB33C4A162BD8DA0047B3E1 /* MyPlayRootViewController.h */,
+				EBB33C4B162BD8DA0047B3E1 /* MyPlayRootViewController.m */,
+				EBB33C4C162BD8DA0047B3E1 /* MyPlayViewController.h */,
+				EBB33C4D162BD8DA0047B3E1 /* MyPlayViewController.m */,
+				EBB33C4E162BD8DB0047B3E1 /* MyPlayViewController.xib */,
+				EBB33C3F162BD8D80047B3E1 /* MyDramaPlayRootViewController.h */,
+				EBB33C40162BD8D80047B3E1 /* MyDramaPlayRootViewController.m */,
+				EBB33C41162BD8D80047B3E1 /* MyDramaPlayViewController.h */,
+				EBB33C42162BD8D80047B3E1 /* MyDramaPlayViewController.m */,
+				EBB33C43162BD8D90047B3E1 /* MyDramaPlayViewController.xib */,
+				EBB33C46162BD8D90047B3E1 /* MyLocalPlayRootViewController.h */,
+				EBB33C44162BD8D90047B3E1 /* MyLocalPlayRootViewController.m */,
+				EBB33C47162BD8D90047B3E1 /* MyLocalPlayViewController.h */,
+				EBB33C48162BD8D90047B3E1 /* MyLocalPlayViewController.m */,
+				EBB33C49162BD8D90047B3E1 /* MyLocalPlayViewController.xib */,
+				EBB33C4F162BD8DB0047B3E1 /* MyVideoPlayRootViewController.h */,
+				EBB33C50162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m */,
+				EBB33C45162BD8D90047B3E1 /* MyVideoPlayViewController.h */,
+				EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */,
+				EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */,
 				EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */,
 				EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */,
 				EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */,
@@ -1152,6 +1207,8 @@
 				EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */,
 				EBBEDE4F1626C6DD00A4B376 /* FriendCell.h */,
 				EBBEDE501626C6DD00A4B376 /* FriendCell.m */,
+				EBB33C60162BDB280047B3E1 /* RecommendReasonCell.h */,
+				EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */,
 			);
 			name = component;
 			sourceTree = "<group>";
@@ -1433,6 +1490,10 @@
 				1478A234162B02180054D55D /* FriendDramaPlayViewController.xib in Resources */,
 				1478A23C162B07AC0054D55D /* FriendVideoPlayViewController.xib in Resources */,
 				1478A244162B0B6D0054D55D /* FriendLocalPlayViewController.xib in Resources */,
+				EBB33C55162BD8DB0047B3E1 /* MyDramaPlayViewController.xib in Resources */,
+				EBB33C58162BD8DB0047B3E1 /* MyLocalPlayViewController.xib in Resources */,
+				EBB33C5B162BD8DB0047B3E1 /* MyPlayViewController.xib in Resources */,
+				EBB33C5E162BD8DB0047B3E1 /* MyVideoPlayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1582,6 +1643,15 @@
 				1478A23B162B07AC0054D55D /* FriendVideoPlayViewController.m in Sources */,
 				1478A242162B0B6D0054D55D /* FriendLocalPlayRootViewController.m in Sources */,
 				1478A243162B0B6D0054D55D /* FriendLocalPlayViewController.m in Sources */,
+				EBB33C53162BD8DB0047B3E1 /* MyDramaPlayRootViewController.m in Sources */,
+				EBB33C54162BD8DB0047B3E1 /* MyDramaPlayViewController.m in Sources */,
+				EBB33C56162BD8DB0047B3E1 /* MyLocalPlayRootViewController.m in Sources */,
+				EBB33C57162BD8DB0047B3E1 /* MyLocalPlayViewController.m in Sources */,
+				EBB33C59162BD8DB0047B3E1 /* MyPlayRootViewController.m in Sources */,
+				EBB33C5A162BD8DB0047B3E1 /* MyPlayViewController.m in Sources */,
+				EBB33C5C162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m in Sources */,
+				EBB33C5D162BD8DB0047B3E1 /* MyVideoPlayViewController.m in Sources */,
+				EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

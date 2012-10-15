@@ -30,9 +30,7 @@
 #define MAX_FRIEND_COMMENT_COUNT 10
 #define MAX_COMMENT_COUNT 10
 
-@interface FriendDramaPlayViewController (){
-NSMutableArray *friendCommentArray;
-}
+@interface FriendDramaPlayViewController ()
 @end
 
 @implementation FriendDramaPlayViewController
@@ -79,7 +77,7 @@ NSMutableArray *friendCommentArray;
         if(responseCode == nil){
             drama = (NSDictionary *)[result objectForKey:@"tv"];
             [self setPlayCellValue];
-            
+            [self postInitialization:result];
             friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
             if(friendCommentArray == nil || friendCommentArray.count == 0){
                 friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
@@ -201,7 +199,7 @@ NSMutableArray *friendCommentArray;
         cell = (CommentCell *)[nib objectAtIndex:2];
     }
     NSMutableDictionary *commentDic = [dataArray objectAtIndex:indexPath.row];
-    NSString *ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
+    NSString *ownerPicUrl = [commentDic valueForKey:@"user_pic_url"];
     if([StringUtility stringIsEmpty:ownerPicUrl]){
         cell.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
     } else {
@@ -364,4 +362,25 @@ NSMutableArray *friendCommentArray;
     return customView;
 }
 
+- (void)avatarClicked:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexpath = [self.tableView indexPathForRowAtPoint:point];
+    
+    HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+    if(indexpath.section == 1){
+        viewController.userid = [[friendCommentArray objectAtIndex:indexpath.row] valueForKey:@"user_id"];
+    } else {
+        viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
+        
+    }
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)postInitialization:(NSDictionary *)result;
+{
+    //interface for sub-class
+}
 @end

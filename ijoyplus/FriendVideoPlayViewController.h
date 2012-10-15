@@ -11,8 +11,12 @@
 #import "IntroductionView.h"
 #import "EGORefreshTableHeaderView.h"
 #import "VideoPlayViewController.h"
+#import "LoadMoreCell.h"
+@interface FriendVideoPlayViewController : VideoPlayViewController{
+    NSMutableArray *friendCommentArray;
+}
 
-@interface FriendVideoPlayViewController : VideoPlayViewController
- 
-
+- (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
+- (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView;
+- (void)postInitialization:(NSDictionary *)result;
 @end

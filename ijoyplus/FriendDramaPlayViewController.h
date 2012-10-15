@@ -11,7 +11,12 @@
 #import "IntroductionView.h"
 #import "EGORefreshTableHeaderView.h"
 #import "DramaPlayViewController.h"
+#import "LoadMoreCell.h"
 
-@interface FriendDramaPlayViewController : DramaPlayViewController 
-
+@interface FriendDramaPlayViewController : DramaPlayViewController {
+    NSMutableArray *friendCommentArray;
+}
+- (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
+- (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView;
+- (void)postInitialization:(NSDictionary *)result;
 @end
