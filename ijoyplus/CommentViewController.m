@@ -44,6 +44,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    containerView = nil;
     textView = nil;
     pullToRefreshManager_ = nil;
     _refreshHeaderView = nil;

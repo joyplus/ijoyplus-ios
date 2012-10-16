@@ -42,6 +42,9 @@
     rightGesture = nil;
     bottomToolbar = nil;
     self.programId = nil;
+    previousViewController = nil;
+    nextViewController = nil;
+    currentViewController = nil;
     [super viewDidUnload];
 }
 

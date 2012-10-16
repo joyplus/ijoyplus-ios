@@ -18,6 +18,15 @@
 @synthesize programUrl;
 @synthesize webView;
 
+- (void)viewDidUnload
+{
+    self.webView = nil;
+    self.programUrl = nil;
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -41,14 +50,6 @@
     [webView setScalesPageToFit:YES];
 }
 
-- (void)viewDidUnload
-{
-    self.webView = nil;
-    self.programUrl = nil;
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

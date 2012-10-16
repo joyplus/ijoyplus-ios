@@ -23,6 +23,14 @@
 
 @implementation TecentViewController
 
+- (void)viewDidUnload
+{
+    _tencentOAuth = nil;
+    _permissions = nil;
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -52,14 +60,6 @@
 	self.view = [_tencentOAuth authorize:_permissions inSafari:NO];
 }
 
-- (void)viewDidUnload
-{
-    _tencentOAuth = nil;
-    _permissions = nil;
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -75,8 +75,8 @@
 
 - (void)tencentDidLogin
 {
-    BOOL success = [_tencentOAuth getFansList];
-    NSLog(@"%i", success);
+//    BOOL success = [_tencentOAuth getFansList];
+//    NSLog(@"%i", success);
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kTencentUserLoggedIn];
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];

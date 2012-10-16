@@ -24,6 +24,7 @@
 {
     flowView = nil;
     videoArray = nil;
+    [super viewDidUnload];
 }
 
 - (void)viewDidLoad
@@ -55,9 +56,6 @@
 
 - (void)addContentView
 {
-    if(flowView != nil){
-        [flowView removeFromSuperview];
-    }
     flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-135)];
     flowView.parentControllerName = @"MovieViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
