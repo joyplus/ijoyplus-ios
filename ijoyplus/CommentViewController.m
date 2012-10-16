@@ -115,6 +115,8 @@
         if(openKeyBoard){
             [textView becomeFirstResponder];
         }
+    } else {
+        self.table.frame = CGRectMake(self.table.frame.origin.x, self.table.frame.origin.y, self.table.frame.size.width, 460);
     }
     
     if (_refreshHeaderView == nil) {
