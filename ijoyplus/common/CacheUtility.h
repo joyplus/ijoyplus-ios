@@ -1,4 +1,4 @@
-#import "WBEngine.h"
+
 
 @interface CacheUtility : NSObject
 
@@ -7,6 +7,6 @@
 - (void)clear;
 - (void)setSinaFriends:(NSArray *)friends;
 - (NSArray *)sinaFriends;
-- (void)setSinaWeiboEngineer:(WBEngine *)engineer;
-- (WBEngine *)getSinaWeiboEngineer;
+- (NSString *)sinaUID;
+- (void)setSinaUID:(NSString *)uid;
 @end

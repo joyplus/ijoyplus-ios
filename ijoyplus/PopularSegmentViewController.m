@@ -139,12 +139,4 @@
     }
 }
 
-//- (void)search
-//{
-//    SearchFilmViewController *viewController = [[SearchFilmViewController alloc]initWithNibName:@"SearchFilmViewController" bundle:nil];
-//    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
-//}
-
 @end

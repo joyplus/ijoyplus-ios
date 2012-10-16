@@ -10,5 +10,7 @@
 
 @interface PostViewController : UIViewController <UITextViewDelegate>
 
+@property (strong, nonatomic) IBOutlet UIButton *sinaBtn;
+@property (strong, nonatomic) IBOutlet UIButton *qqBtn;
 @property (nonatomic, strong)NSString *programId;
 @end

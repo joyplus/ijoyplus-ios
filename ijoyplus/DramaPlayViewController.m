@@ -175,7 +175,12 @@
     }
     
     [playCell.filmImageView setImageWithURL:[NSURL URLWithString:[drama objectForKey:@"poster"]] placeholderImage:nil];
-    playCell.scoreLabel.text = @"未知";
+    NSString *score = [drama objectForKey:@"score"];
+    if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
+        playCell.scoreLabel.text = score;
+    } else {
+        playCell.scoreLabel.text = @"未评分";
+    }
     playCell.watchedLabel.text = [drama objectForKey:@"watch_num"];
     playCell.collectionLabel.text = [drama objectForKey:@"favority_num"];
     playCell.likeLabel.text = [drama objectForKey:@"like_num"];

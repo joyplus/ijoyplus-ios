@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TencentOAuth.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

@@ -21,6 +21,7 @@
 #import "ServiceConstants.h"
 #import "StringUtility.h"
 #import "SearchFriendViewController.h"
+#import "UMFeedback.h"
 
 @interface SettingsViewController ()
 
@@ -111,7 +112,7 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
         }];
-        [[WBEngine sharedClient] logOut];
+//        [[WBEngine sharedClient] logOut];
         [[CacheUtility sharedCache] clear];
         [[ContainerUtility sharedInstance] clear];
         [self.navigationController popToRootViewControllerAnimated:YES];
@@ -124,6 +125,10 @@
 - (IBAction)searchFriend:(id)sender {
     SearchFriendViewController *viewController = [[SearchFriendViewController alloc]initWithNibName:@"SearchFriendViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (IBAction)commentBtnClicked:(id)sender {
+    [UMFeedback showFeedback:self withAppkey:umengAppKey];
 }
 
 - (void)closeSelf

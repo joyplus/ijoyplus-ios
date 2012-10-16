@@ -17,6 +17,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "MobClick.h"
 
 @interface AppDelegate (){
     BottomTabViewController *detailViewController;
@@ -65,6 +66,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if([num boolValue]){

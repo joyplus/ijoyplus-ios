@@ -8,7 +8,6 @@
 
 #import "CacheUtility.h"
 #import "CMConstants.h"
-#import "WBEngine.h"
 
 @interface CacheUtility()
 
@@ -63,27 +62,27 @@
     if (friends) {
         [self.cache setObject:friends forKey:key];
     }
-    
     return friends;
 }
 
-- (void)setSinaWeiboEngineer:(WBEngine *)engineer{
-    NSString *key = @"sinaWeiboEngineer";
-    [self.cache setObject:engineer forKey:key];
-    [[NSUserDefaults standardUserDefaults] setObject:engineer forKey:key];
+- (void)setSinaUID:(NSString *)uid {
+    NSString *key = kSinaUID;
+    [self.cache setObject:uid forKey:key];
+    [[NSUserDefaults standardUserDefaults] setObject:uid forKey:key];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-- (WBEngine *)getSinaWeiboEngineer {
-    NSString *key = @"sinaWeiboEngineer";
+- (NSString *)sinaUID {
+    NSString *key = kSinaUID;
     if ([self.cache objectForKey:key]) {
         return [self.cache objectForKey:key];
     }
-    WBEngine *engineer = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-    if (engineer) {
-        [self.cache setObject:engineer forKey:key];
+    NSString *uid = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if (uid) {
+        [self.cache setObject:uid forKey:key];
     }
-    
-    return engineer;
+    return uid;
 }
+
+
 @end

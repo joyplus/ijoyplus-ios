@@ -19,6 +19,7 @@
 #import "UIImageView+WebCache.h"
 #import "DateUtility.h"
 #import "HomeViewController.h"
+#import "ContainerUtility.h"
 
 @interface CommentViewController (){
     HPGrowingTextView *textView;
@@ -74,7 +75,7 @@
                                 kAppKey, @"app_key",
                                 threadId, @"thread_id",
                                 nil];
-    
+    reloads_ = 2;
     [[AFServiceAPIClient sharedClient] getPath:kPathCommentView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -108,9 +109,12 @@
         //        [HUD hide:YES afterDelay:2];
     }];
 
-    [self initInputBox];
-    if(openKeyBoard){
-        [textView becomeFirstResponder];
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if([num boolValue]){
+        [self initInputBox];
+        if(openKeyBoard){
+            [textView becomeFirstResponder];
+        }
     }
     
     if (_refreshHeaderView == nil) {
@@ -151,10 +155,10 @@
                                                object:nil];
     
     //    containerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 40, 320, 40)];
-    containerView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT, self.view.frame.size.width, TAB_BAR_HEIGHT)];
+    containerView = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - 40, self.view.frame.size.width, 40)];
     [UIUtility customizeToolbar:containerView];
     containerView.layer.zPosition = 10;
-	textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 3, 240, 40)];
+	textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(6, 3, 240, 20)];
     textView.contentInset = UIEdgeInsetsMake(0, 5, 0, 5);
     
 	textView.minNumberOfLines = 1;
@@ -163,20 +167,20 @@
 	textView.font = [UIFont systemFontOfSize:15.0f];
 	textView.delegate = self;
     textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
-    textView.backgroundColor = [UIColor whiteColor];
+    textView.backgroundColor = [UIColor clearColor];
     
     // textView.text = @"test\n\ntest";
 	// textView.animateHeightChange = NO; //turns off animation
     
     [self.view addSubview:containerView];
 	
-    UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageEntryInputField.png"];
+    UIImage *rawEntryBackground = [UIImage imageNamed:@"MessageEntryInputField"];
     UIImage *entryBackground = [rawEntryBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
     UIImageView *entryImageView = [[UIImageView alloc] initWithImage:entryBackground];
     entryImageView.frame = CGRectMake(5, 0, 248, 40);
     entryImageView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
-    UIImage *rawBackground = [UIImage imageNamed:@"MessageEntryBackground.png"];
+    UIImage *rawBackground = [UIImage imageNamed:@"tool_bar_bg"];
     UIImage *background = [rawBackground stretchableImageWithLeftCapWidth:13 topCapHeight:22];
     UIImageView *imageView = [[UIImageView alloc] initWithImage:background];
     imageView.frame = CGRectMake(0, 0, containerView.frame.size.width, containerView.frame.size.height);
@@ -186,16 +190,16 @@
     
     // view hierachy
     [containerView addSubview:imageView];
-    [containerView addSubview:textView];
     [containerView addSubview:entryImageView];
+    [containerView addSubview:textView];
     
-    UIImage *sendBtnBackground = [[UIImage imageNamed:@"MessageEntrySendButton.png"] stretchableImageWithLeftCapWidth:13 topCapHeight:0];
-    UIImage *selectedSendBtnBackground = [[UIImage imageNamed:@"MessageEntrySendButton.png"] stretchableImageWithLeftCapWidth:13 topCapHeight:0];
+    UIImage *sendBtnBackground = [[UIImage imageNamed:@"MessageEntrySendButton"] stretchableImageWithLeftCapWidth:13 topCapHeight:0];
+    UIImage *selectedSendBtnBackground = [[UIImage imageNamed:@"MessageEntrySendButton"] stretchableImageWithLeftCapWidth:13 topCapHeight:0];
     
 	UIButton *doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 	doneBtn.frame = CGRectMake(containerView.frame.size.width - 69, 8, 63, 27);
     doneBtn.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-	[doneBtn setTitle:@"Done" forState:UIControlStateNormal];
+	[doneBtn setTitle:@"回复" forState:UIControlStateNormal];
     
     [doneBtn setTitleShadowColor:[UIColor colorWithWhite:0 alpha:0.4] forState:UIControlStateNormal];
     doneBtn.titleLabel.shadowOffset = CGSizeMake (0.0, -1.0);
@@ -341,12 +345,21 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    
-    // Test loading
-    
-    reloads_++;
-    
-    [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.threadId, @"thread_id",[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathCommentReplies parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *comments = (NSArray *)[result objectForKey:@"replies"];
+            if(comments != nil && comments.count > 0){
+                [commentArray addObjectsFromArray:comments];
+                reloads_++;
+            }
+        } else {
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 #pragma mark -

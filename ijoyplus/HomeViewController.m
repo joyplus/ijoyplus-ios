@@ -184,9 +184,9 @@
             accessed = YES;
             NSString *bgUrl = [result valueForKey:@"bg_url"];
             if([StringUtility stringIsEmpty:bgUrl]){
-                self.topImageView.image = [UIImage imageNamed:@"u0_normal"];
+                self.topImageView.image = [UIImage imageNamed:@"user_picture.jpg"];
             } else {
-                [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
+                [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"user_picture.jpg"]];
             }
             NSString *myUrl = [result valueForKey:@"pic_url"];
             if([StringUtility stringIsEmpty:myUrl]){

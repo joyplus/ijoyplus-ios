@@ -20,18 +20,18 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "CustomPlaceHolderTextView.h"
+#import "AppDelegate.h"
 
 #define  TEXT_MAX_COUNT 140
 
 @interface PostViewController (){
     UIButton *btn1;
-    int btn1ClickedNum;
+    BOOL btn1Selected;
     UIButton *btn2;
-    int btn2ClickedNum;
+    BOOL btn2Selected;
 }
 @property (strong, nonatomic) IBOutlet UILabel *textCount;
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
-@property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
 - (void)startObservingNotifications;
 - (void)stopObservingNotifications;
@@ -42,8 +42,9 @@
 @implementation PostViewController
 @synthesize textCount;
 @synthesize tipLabel;
-@synthesize toolBar;
 @synthesize textView;
+@synthesize sinaBtn = btn1;
+@synthesize qqBtn = btn2;
 @synthesize programId;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -66,7 +67,12 @@
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"post", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
     self.navigationItem.rightBarButtonItem = rightButton;
-    [self initToolBar];
+    btn1Selected = YES;
+    [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_active"] forState:UIControlStateNormal];
+    [btn1 addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
+    [btn2 setHidden:YES];
+//    [btn2 setBackgroundImage:[UIImage imageNamed:@"qq_press"] forState:UIControlStateNormal];
+//    [btn2 addTarget:self action:@selector(tencentLoginScreen)forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewDidUnload
@@ -74,10 +80,11 @@
     btn1 = nil;
     btn2 = nil;
     [self setTextView:nil];
-    [self setToolBar:nil];
     [self setTextCount:nil];
     [self stopObservingNotifications];
     [self setTipLabel:nil];
+    [self setSinaBtn:nil];
+    [self setQqBtn:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -99,37 +106,6 @@
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)initToolBar
-{
-    UIImage *toobarImage = [UIUtility createImageWithColor:[UIColor blackColor]];
-    [self.toolBar setBackgroundImage:toobarImage forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    btn1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btn1 setFrame:CGRectMake(0, 0, 78, self.toolBar.frame.size.height)];
-    [btn1 setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
-    [btn1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [btn1.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [UIUtility addTextShadow:btn1.titleLabel];
-    btn1.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn1 setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [btn1 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [btn1 addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.toolBar addSubview:btn1];
-    
-    btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btn2 setFrame:CGRectMake(80, 0, 78, self.toolBar.frame.size.height)];
-    [btn2 setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
-    [btn2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [btn2.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [UIUtility addTextShadow:btn2.titleLabel];
-    btn2.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [btn2 addTarget:self action:@selector(tencentLoginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.toolBar addSubview:btn2];
 }
 
 - (void)startObservingNotifications
@@ -165,16 +141,13 @@
 
 - (void)sinaLoginScreen
 {
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kSinaUserLoggedIn];
-    if([num boolValue]){
-        if(btn1ClickedNum % 2 == 0){
-            [btn1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn1 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+//    btn1Selected = !btn1Selected;
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+        if(btn1Selected){
+            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_active"] forState:UIControlStateNormal];
         } else {
-            [btn1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn1 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
         }
-        btn1ClickedNum++;
     } else{
         SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
         viewController.fromController = @"PostViewController";
@@ -184,58 +157,76 @@
 
 - (void)tencentLoginScreen
 {
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
-    if([num boolValue]){
-        if(btn2ClickedNum % 2 == 1){
-            [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-        } else {
-            [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-        }
-        btn2ClickedNum++;
-    } else{
-        TecentViewController *viewController = [[TecentViewController alloc] init];
-        viewController.fromController = @"PostViewController";
-        [self.navigationController pushViewController:viewController animated:YES];
-    }
+//    btn2Selected = !btn2Selected;
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//	if([appDelegate._tencentOAuth isSessionValid]){
+//        if(btn2Selected){
+//            [btn2 setBackgroundImage:[UIImage imageNamed:@"qq_normal"] forState:UIControlStateNormal];
+//        } else {
+//            [btn2 setBackgroundImage:[UIImage imageNamed:@"qq_press"] forState:UIControlStateNormal];
+//        }
+//    } else{
+//        TecentViewController *viewController = [[TecentViewController alloc] init];
+//        viewController.fromController = @"PostViewController";
+//        [self.navigationController pushViewController:viewController animated:YES];
+//    }
 }
 
 - (void)post
 {
-    [self resignFirstResponder];
-//    if(btn1ClickedNum % 2 == 1){
-//        WBEngine *engineer = [[CacheUtility sharedCache] getSinaWeiboEngineer];
-//        [engineer sendWeiBoWithText:self.textView.text image:nil];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//    if(btn2ClickedNum % 2 == 1){
+    [self.textView resignFirstResponder];
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:HUD];
+    if(!btn1Selected && !btn2Selected){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"请选择分享地址！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:2];
+        return;
+    }
+    if(btn1Selected){
+        [[WBEngine sharedClient] sendWeiBoWithText:self.textView.text image:nil];
+    }
+//    if(btn2Selected){
+//        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //        
+//        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                       @"转自悦+", @"title",
+//                                       self.textView.text,@"summary",
+//                                       @"4",@"source",
+//                                       nil];
+//        
+//        [appDelegate._tencentOAuth addShareWithParams:params];
 //    }
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = NSLocalizedString(@"share_success", nil);
+    [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", self.textView.text, @"content", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if([responseCode isEqualToString:kSuccessResCode]){
-            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-            [self.navigationController.view addSubview:HUD];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = NSLocalizedString(@"post_success", nil);
-            [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
-        } else {
-            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
-            //            HUD.labelText = NSLocalizedString(msg, nil);
-            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
-    }];
-
+    //    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", self.textView.text, @"content", nil];
+    //    [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    //        NSString *responseCode = [result objectForKey:@"res_code"];
+    //        if([responseCode isEqualToString:kSuccessResCode]){
+    //            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    //            [self.navigationController.view addSubview:HUD];
+    //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    //            HUD.mode = MBProgressHUDModeCustomView;
+    //            HUD.labelText = NSLocalizedString(@"post_success", nil);
+    //            [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
+    //        } else {
+    //            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+    //            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+    //            //            HUD.labelText = NSLocalizedString(msg, nil);
+    //            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+    //        }
+    //    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    //
+    //    }];
+    
     
 }
-        
+
 - (void)postSuccess
 {
     sleep(1.5);

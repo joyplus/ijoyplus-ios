@@ -12,7 +12,7 @@
 #import "AnimationFactory.h"
 #import "CustomBackButton.h"
 #import "CustomBackButtonHolder.h"
-#import "PostViewController.h"
+#import "SendCommentViewController.h"
 #import "AppDelegate.h"
 #import "UIUtility.h"
 #import "CMConstants.h"
@@ -22,6 +22,7 @@
 #import "RecommandViewController.h"
 #import "MBProgressHUD.h"
 #import "ContainerUtility.h"
+#import "PostViewController.h"
 
 @interface PlayRootViewController (){
     UISwipeGestureRecognizer *leftGesture;
@@ -74,8 +75,8 @@
 {
     currentViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     ((PlayViewController *)currentViewController).programId = self.programId;
-//    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-//    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    //    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    //    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
     [self addChildViewController:currentViewController];
     currentViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TAB_BAR_HEIGHT);
     [self.view addSubview:currentViewController.view];
@@ -83,9 +84,20 @@
 
 - (void)share
 {
-    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
-    viewController.programId = self.programId;
-    [self.navigationController pushViewController:viewController animated:YES];
+    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if([StringUtility stringIsEmpty:userid]){
+        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"请登陆！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
+    } else {
+        PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
+        viewController.programId = self.programId;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)closeSelf
@@ -98,31 +110,31 @@
 
 - (void)previousAction
 {
-//    nextViewController = currentViewController;
-//    [currentViewController.view removeFromSuperview];
-//    [currentViewController removeFromParentViewController];
-//    currentViewController = previousViewController;
-//    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-//    [self.view addSubview:currentViewController.view];
-//    CATransition *animation = [AnimationFactory pushToLeftAnimation:^{
-//        currentViewController.view.frame = self.view.bounds;
-//    }];
-//    [[self.view layer] addAnimation:animation forKey:@"animation"];
+    //    nextViewController = currentViewController;
+    //    [currentViewController.view removeFromSuperview];
+    //    [currentViewController removeFromParentViewController];
+    //    currentViewController = previousViewController;
+    //    previousViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    //    [self.view addSubview:currentViewController.view];
+    //    CATransition *animation = [AnimationFactory pushToLeftAnimation:^{
+    //        currentViewController.view.frame = self.view.bounds;
+    //    }];
+    //    [[self.view layer] addAnimation:animation forKey:@"animation"];
 }
 
 - (void)nextAction
 {
-//    previousViewController = currentViewController;
-//    [currentViewController.view removeFromSuperview];
-//    [currentViewController removeFromParentViewController];
-//    currentViewController = nextViewController;
-//    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
-//    [self.view addSubview:currentViewController.view];
-//    CATransition *animation = [AnimationFactory pushToRightAnimation:^{
-//        currentViewController.view.frame = self.view.bounds;
-//    }];
-//    [[self.view layer] addAnimation:animation forKey:@"animation"];
-
+    //    previousViewController = currentViewController;
+    //    [currentViewController.view removeFromSuperview];
+    //    [currentViewController removeFromParentViewController];
+    //    currentViewController = nextViewController;
+    //    nextViewController = [[PlayViewController alloc]initWithNibName:@"PlayViewController" bundle:nil];
+    //    [self.view addSubview:currentViewController.view];
+    //    CATransition *animation = [AnimationFactory pushToRightAnimation:^{
+    //        currentViewController.view.frame = self.view.bounds;
+    //    }];
+    //    [[self.view layer] addAnimation:animation forKey:@"animation"];
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -135,7 +147,7 @@
     bottomToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - NAVIGATION_BAR_HEIGHT - 48, self.view.frame.size.width, TAB_BAR_HEIGHT)];
     UIImage *toobarImage = [UIUtility createImageWithColor:[UIColor blackColor]];
     [bottomToolbar setBackgroundImage:toobarImage forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-
+    
     UIButton *btn1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [btn1 setFrame:CGRectMake(0, 0, 78, TAB_BAR_HEIGHT)];
     [btn1 setTitle:NSLocalizedString(@"recommand_toolbar", nil) forState:UIControlStateNormal];
@@ -144,7 +156,7 @@
     [UIUtility addTextShadow:btn1.titleLabel];
     btn1.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
     UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn1 setBackgroundImage:[UIImage imageNamed:@"tab_btn_bg"] forState:UIControlStateNormal];
+    [btn1 setBackgroundImage:[UIImage imageNamed:@"tab1"] forState:UIControlStateNormal];
     [btn1 setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
     [btn1 addTarget:self action:@selector(recommand)forControlEvents:UIControlEventTouchUpInside];
     [bottomToolbar addSubview:btn1];
@@ -157,7 +169,7 @@
     [UIUtility addTextShadow:btn2.titleLabel];
     btn2.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
     UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn2 setBackgroundImage:[UIImage imageNamed:@"tab_btn_bg"] forState:UIControlStateNormal];
+    [btn2 setBackgroundImage:[UIImage imageNamed:@"tab2"] forState:UIControlStateNormal];
     [btn2 setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]]forState:UIControlStateHighlighted];
     [btn2 addTarget:self action:@selector(watch)forControlEvents:UIControlEventTouchUpInside];
     [bottomToolbar addSubview:btn2];
@@ -170,7 +182,7 @@
     [UIUtility addTextShadow:btn2.titleLabel];
     btn3.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
     UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn3 setBackgroundImage:[UIImage imageNamed:@"tab_btn_bg"] forState:UIControlStateNormal];
+    [btn3 setBackgroundImage:[UIImage imageNamed:@"tab3"] forState:UIControlStateNormal];
     [btn3 setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
     [btn3 addTarget:self action:@selector(collection)forControlEvents:UIControlEventTouchUpInside];
     [bottomToolbar addSubview:btn3];
@@ -183,7 +195,7 @@
     [UIUtility addTextShadow:btn2.titleLabel];
     btn4.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
     UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn4 setBackgroundImage:[UIImage imageNamed:@"tab_btn_bg"] forState:UIControlStateNormal];
+    [btn4 setBackgroundImage:[UIImage imageNamed:@"tab4"] forState:UIControlStateNormal];
     [btn4 setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
     [btn4 addTarget:self action:@selector(comment)forControlEvents:UIControlEventTouchUpInside];
     bottomToolbar.layer.zPosition = 1;
@@ -194,74 +206,109 @@
 {
     NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     if([StringUtility stringIsEmpty:userid]){
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.labelText = @"请登陆！";
-    [HUD show:YES];
-    [HUD hide:YES afterDelay:1.5];
+        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"请登陆！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
     } else {
-    RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
-    viewController.programId = self.programId;
-    [self.navigationController pushViewController:viewController animated:YES];
+        RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
+        viewController.programId = self.programId;
+        [self.navigationController pushViewController:viewController animated:YES];
     }
 }
 
 - (void)watch
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                self.programId, @"prod_id",
-                                nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if([responseCode isEqualToString:kSuccessResCode]){
-            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-            [self.navigationController.view addSubview:HUD];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = NSLocalizedString(@"mark_success", nil);
-            HUD.dimBackground = YES;
-            [HUD show:YES];
-            [HUD hide:YES afterDelay:1];
-        } else {
-
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
-    }];
+    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if([StringUtility stringIsEmpty:userid]){
+        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"请登陆！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    self.programId, @"prod_id",
+                                    nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+                [self.navigationController.view addSubview:HUD];
+                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+                HUD.mode = MBProgressHUDModeCustomView;
+                HUD.labelText = NSLocalizedString(@"mark_success", nil);
+                HUD.dimBackground = YES;
+                [HUD show:YES];
+                [HUD hide:YES afterDelay:1];
+                [self viewDidLoad];
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
 }
 
 - (void)collection
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                self.programId, @"prod_id",
-                                nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if([responseCode isEqualToString:kSuccessResCode]){
-            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-            [self.navigationController.view addSubview:HUD];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = NSLocalizedString(@"collection_success", nil);
-            HUD.dimBackground = YES;
-            [HUD show:YES];
-            [HUD hide:YES afterDelay:1];
-        } else {
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
-    }];
+    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if([StringUtility stringIsEmpty:userid]){
+        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"请登陆！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    self.programId, @"prod_id",
+                                    nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+                [self.navigationController.view addSubview:HUD];
+                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+                HUD.mode = MBProgressHUDModeCustomView;
+                HUD.labelText = NSLocalizedString(@"collection_success", nil);
+                HUD.dimBackground = YES;
+                [HUD show:YES];
+                [HUD hide:YES afterDelay:1];
+                [self viewDidLoad];
+            } else {
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
 }
 
 - (void)comment
 {
-    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
-    viewController.programId = self.programId;
-    [self.navigationController pushViewController:viewController animated:YES];
+    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if([StringUtility stringIsEmpty:userid]){
+        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = @"请登陆！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
+    } else {
+        SendCommentViewController *viewController = [[SendCommentViewController alloc]initWithNibName:@"SendCommentViewController" bundle:nil];
+        viewController.programId = self.programId;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 @end

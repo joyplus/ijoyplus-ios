@@ -177,7 +177,12 @@
     }
     
     [playCell.filmImageView setImageWithURL:[NSURL URLWithString:[show objectForKey:@"poster"]] placeholderImage:nil];
-    playCell.scoreLabel.text = @"未知";
+    NSString *score = [show objectForKey:@"score"];
+    if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
+        playCell.scoreLabel.text = score;
+    } else {
+        playCell.scoreLabel.text = @"未评分";
+    }
     playCell.watchedLabel.text = [show objectForKey:@"watch_num"];
     playCell.collectionLabel.text = [show objectForKey:@"favority_num"];
     playCell.likeLabel.text = [show objectForKey:@"like_num"];

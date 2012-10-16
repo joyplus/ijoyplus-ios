@@ -25,14 +25,11 @@
 
 @interface RecommandViewController (){
     UIButton *btn1;
-    int btn1ClickedNum;
-    UIButton *btn2;
-    int btn2ClickedNum;
+    BOOL btn1Selected;
 }
 @property (strong, nonatomic) IBOutlet UILabel *textCount;
 
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
-@property (strong, nonatomic) IBOutlet UIToolbar *toolBar;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
 - (void)startObservingNotifications;
 - (void)stopObservingNotifications;
@@ -43,9 +40,9 @@
 @implementation RecommandViewController
 @synthesize textCount;
 @synthesize tipLabel;
-@synthesize toolBar;
 @synthesize textView;
 @synthesize programId;
+@synthesize sinaBtn = btn1;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -68,20 +65,19 @@
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"submit", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
     self.navigationItem.rightBarButtonItem = rightButton;
     
-    [self initToolBar];
-    
+    [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"] forState:UIControlStateNormal];
+    [btn1 addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
     textView.placeholder = @"请输入推荐理由";
 }
 
 - (void)viewDidUnload
 {
     btn1 = nil;
-    btn2 = nil;
     [self setTextView:nil];
-    [self setToolBar:nil];
     [self setTextCount:nil];
     [self stopObservingNotifications];
     [self setTipLabel:nil];
+    [self setSinaBtn:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -103,37 +99,6 @@
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)initToolBar
-{
-    UIImage *toobarImage = [UIUtility createImageWithColor:[UIColor blackColor]];
-    [self.toolBar setBackgroundImage:toobarImage forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    btn1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btn1 setFrame:CGRectMake(0, 0, 78, self.toolBar.frame.size.height)];
-    [btn1 setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
-    [btn1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [btn1.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [UIUtility addTextShadow:btn1.titleLabel];
-    btn1.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn1 setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [btn1 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [btn1 addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.toolBar addSubview:btn1];
-    
-    btn2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [btn2 setFrame:CGRectMake(80, 0, 78, self.toolBar.frame.size.height)];
-    [btn2 setTitle:NSLocalizedString(@"login", nil) forState:UIControlStateNormal];
-    [btn2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    [btn2.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [UIUtility addTextShadow:btn2.titleLabel];
-    btn2.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [btn2 addTarget:self action:@selector(tencentLoginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.toolBar addSubview:btn2];
 }
 
 - (void)startObservingNotifications
@@ -169,16 +134,13 @@
 
 - (void)sinaLoginScreen
 {
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kSinaUserLoggedIn];
-    if([num boolValue]){
-        if(btn1ClickedNum % 2 == 0){
-            [btn1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn1 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    btn1Selected = !btn1Selected;
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+        if(btn1Selected){
+            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_active"] forState:UIControlStateNormal];
         } else {
-            [btn1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn1 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
         }
-        btn1ClickedNum++;
     } else{
         SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
         viewController.fromController = @"PostViewController";
@@ -186,36 +148,12 @@
     }
 }
 
-- (void)tencentLoginScreen
-{
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
-    if([num boolValue]){
-        if(btn2ClickedNum % 2 == 1){
-            [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-        } else {
-            [btn2 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn2 setBackgroundImage:[[UIImage imageNamed:@"log_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-        }
-        btn2ClickedNum++;
-    } else{
-        TecentViewController *viewController = [[TecentViewController alloc] init];
-        viewController.fromController = @"PostViewController";
-        [self.navigationController pushViewController:viewController animated:YES];
-    }
-}
-
 - (void)post
 {
-    [self resignFirstResponder];
-//    if(btn1ClickedNum % 2 == 1){
-//        WBEngine *engineer = [[CacheUtility sharedCache] getSinaWeiboEngineer];
-//        [engineer sendWeiBoWithText:self.textView.text image:nil];
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
-//    if(btn2ClickedNum % 2 == 1){
-//        
-//    }
+    [self.textView resignFirstResponder];
+    if(btn1Selected){
+        [[WBEngine sharedClient] sendWeiBoWithText:self.textView.text image:nil];
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.programId, @"prod_id",
@@ -231,23 +169,10 @@
             HUD.labelText = NSLocalizedString(@"recommand_success", nil);
             [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
         } else {
-//            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-//            [self.navigationController.view addSubview:HUD];
-//            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-//            HUD.mode = MBProgressHUDModeCustomView;
-//            HUD.labelText = @"你已推荐过改影片！";
-//            [HUD show:YES];
-//            [HUD hide:YES afterDelay:2];
+
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        //        HUD.mode = MBProgressHUDModeCustomView;
-        //        [self.view addSubview:HUD];
-        //        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
-        //        HUD.minSize = CGSizeMake(135.f, 135.f);
-        //        [HUD show:YES];
-        //        [HUD hide:YES afterDelay:2];
+
     }];
 }
 

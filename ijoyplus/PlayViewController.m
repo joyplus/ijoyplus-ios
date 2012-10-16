@@ -150,7 +150,12 @@
     }
     
     [playCell.filmImageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:nil];
-    playCell.scoreLabel.text = @"未知";
+    NSString *score = [movie objectForKey:@"score"];
+    if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
+        playCell.scoreLabel.text = score;
+    } else {
+        playCell.scoreLabel.text = @"未评分";
+    }
     playCell.watchedLabel.text = [movie objectForKey:@"watch_num"];
     NSLog(@"%@", [movie objectForKey:@"favority_num"]);
     playCell.collectionLabel.text = [movie objectForKey:@"favority_num"];
@@ -436,13 +441,9 @@
             if(comArray != nil && comArray.count > 0){
                 [commentArray addObjectsFromArray:comArray];
             }
-            [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         } else {
-            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
-            //            HUD.labelText = NSLocalizedString(msg, nil);
-            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
         }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
     }];

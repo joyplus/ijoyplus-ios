@@ -56,7 +56,7 @@
             itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             if(item.count > 0){
                 [itemsArray addObjectsFromArray:item];
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table withClient:self];
+                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
                 [self loadTable];
                 reloads_ ++;
             }

@@ -61,10 +61,10 @@ introduction = "简介";
 share = "分享";
 post = "发布";
 tip_text = "已超出";
-recommand_toolbar = "推荐";
-watch_toolbar = "看过";
-collect_toolbar = "收藏";
-comment_toolbar = "评论";
+recommand_toolbar = "     推荐";
+watch_toolbar = "    看过";
+collect_toolbar = "    收藏";
+comment_toolbar = "    评论";
 submit = "提交";
 
 friend = "好友推荐";
@@ -85,6 +85,7 @@ friend_comment = "观看的好友";
 drama_list = "剧集列表";
 weibo_invite_template = "@%@ , 快来加入悦+吧！";
 register_sms_content = "快来加入悦+吧！";
+send_comment = "评论";
 
 list = "个人主页";
 watched = "看过的影片";
@@ -96,6 +97,7 @@ my_fans = "我的粉丝";
 message = "消息";
 my_message = "我的消息";
 invite_success = "邀请发送成功！";
+share_sucess = "分享成功！";
 
 myself = "动态消息";
 notification_center = "通知中心";
@@ -112,6 +114,7 @@ score_app = "去App Store评分";
 logout = "注销";
 logout_account = "注销当前账号";
 logout_message = "注销后您的社交化网络绑定也会同时解除，确定要注销吗？";
+send_comment_success= "评论成功！";
 
 msg_10021 = "网络错误，请重试一次。";
 msg_20001 = "邮箱地址不存在。";

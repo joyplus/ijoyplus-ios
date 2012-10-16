@@ -18,5 +18,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *scoreBtn;
 - (IBAction)logout:(id)sender;
 - (IBAction)searchFriend:(id)sender;
+- (IBAction)commentBtnClicked:(id)sender;
 
 @end
