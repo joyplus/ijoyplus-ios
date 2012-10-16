@@ -85,6 +85,8 @@
         [self.navigationController pushViewController:viewController animated:YES];
     } else{
         FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+        viewController.thirdPartyId = @"12345";
+        viewController.thirdPartyType = @"2";
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }

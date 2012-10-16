@@ -124,6 +124,13 @@
     myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
     myCell.filmImageView.layer.shadowOpacity = 1;
     
+    NSString *type = [item objectForKey:@"prod_type"];
+    if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
+        myCell.filmImageView.frame = CGRectMake(myCell.filmImageView.frame.origin.x, myCell.filmImageView.frame.origin.y, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+    } else {
+        myCell.filmImageView.frame = CGRectMake(myCell.filmImageView.frame.origin.x, myCell.filmImageView.frame.origin.y, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
+    }
+    myCell.thirdTitleLabel.center = CGPointMake(110, myCell.filmImageView.frame.origin.y + myCell.filmImageView.frame.size.height + 20);
     myCell.subtitleLabel.text = [item objectForKey:@"prod_name"];
     if([@"favority" isEqualToString:actionType]){
         myCell.actionLabel.text = @"收藏了";
@@ -214,15 +221,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    int imageHeight = 135;
-    NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
+   NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
     NSString *type = [item objectForKey:@"prod_type"];
    if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
-       return imageHeight + 90;
+       return MOVIE_LOGO_HEIGHT + 90;
    } else if([type isEqualToString:@"3"] || [type isEqualToString:@"4"]){
-       return imageHeight + 90;
+       return VIDEO_LOGO_WIDTH + 70;
    } else {
-       return imageHeight;
+       return 135;
    }
 }
 
