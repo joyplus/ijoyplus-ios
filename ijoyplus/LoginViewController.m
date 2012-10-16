@@ -71,8 +71,8 @@
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
-    UIBarButtonItem *registerBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"register", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(registerAction)];
-    self.navigationItem.rightBarButtonItem = registerBtn;
+//    UIBarButtonItem *registerBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"register", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(registerAction)];
+//    self.navigationItem.rightBarButtonItem = registerBtn;
     
     [self.scrollView setContentSize:CGSizeMake(self.view.frame.size.width, 480)];
     [self initLoginBtn];
