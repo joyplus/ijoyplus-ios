@@ -98,6 +98,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self getResult];
+}
+
+- (void)getResult
+{
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.keyword, @"keyword", @"1", @"page_num", @"10", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -106,7 +111,9 @@
             if(searchResult != nil && searchResult.count > 0){
                 [itemsArray addObjectsFromArray:searchResult];
             }
-            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+            if(pullToRefreshManager_ == nil){
+                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+            }
             [self loadTable];
         } else {
             
@@ -317,6 +324,7 @@
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
+
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
     searchBar.showsCancelButton = YES;
@@ -325,8 +333,11 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+    [self addKeyToLocalHistory:self.sBar.text];
     [searchBar resignFirstResponder];
-    [self.tableView reloadData];
+    self.keyword = self.sBar.text;
+    [itemsArray removeAllObjects];
+    [self getResult];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
@@ -335,6 +346,44 @@
     [searchBar resignFirstResponder];
 }
 
+- (void)addKeyToLocalHistory:(NSString *)key
+{
+    NSMutableArray *historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
+    if(historyArray == nil){
+        historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
+    }
+    NSMutableDictionary *newItem;
+    for(NSMutableDictionary *item in historyArray){
+        NSString *content = [item objectForKey:@"content"];
+        if([content isEqualToString:key]){
+            newItem = item;
+            break;
+        }
+    }
+    NSString *currentDateString = [DateUtility formatDateWithString:[NSDate date] formatString: @"yyyy-MM-dd HH:mm:ss"];
+    if(newItem != nil){
+        [newItem setValue:currentDateString forKey:@"last_search_date"];
+    } else {
+        newItem = [[NSMutableDictionary alloc]initWithCapacity:2];
+        [newItem setValue:key forKey:@"content"];
+        [newItem setValue:currentDateString forKey:@"last_search_date"];
+        if(historyArray.count >= LOCAL_KEYS_NUMBER){
+            NSDate *minDate = [NSDate date];
+            NSMutableDictionary *minItem;
+            for(NSMutableDictionary *item in historyArray){
+                NSString *dateString = [item objectForKey:@"last_search_date"];
+                NSDate *date = [DateUtility dateFromFormatString:dateString formatString: @"yyyy-MM-dd HH:mm:ss"];
+                if([date isEarlierThanDate:minDate]){
+                    minDate = date;
+                    minItem = item;
+                }
+            }
+            [historyArray removeObject:minItem];
+        }
+        [historyArray addObject:newItem];
+    }
+    [[ContainerUtility sharedInstance]setAttribute:historyArray forKey:@"search_history"];
+}
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient

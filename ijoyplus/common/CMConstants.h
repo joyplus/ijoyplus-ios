@@ -36,16 +36,15 @@
 #define kSinaWeiboUID @"sinaUid"
 
 #define kUserLoggedIn @"userLoggedIn"
-#define kSinaUserLoggedIn @"sinaUserLoggedIn"
 #define kSinaUID @"kSinaUID"
 #define kTencentUserLoggedIn @"tencentUserLoggedIn"
 
 #define kUserId @"kUserId"
 #define kUserName @"kUserName"
 #define kSessionRenew @"kSessionRenew"
+#define kPhoneNumber @"kPhoneNumber"
 
-
-
+#define LOCAL_KEYS_NUMBER 5
 #define umengAppKey @"507cbb595270153d48000005"
 
 @interface CMConstants : NSObject 

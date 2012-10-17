@@ -13,6 +13,11 @@
 #import "ContainerUtility.h"
 #import "CMConstants.h"
 #import "FriendListViewController.h"
+#import "StringUtility.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "AppDelegate.h"
+#import "SFHFKeychainUtils.h"
 
 @interface TecentViewController (){
     TencentOAuth* _tencentOAuth;
@@ -81,13 +86,40 @@
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
-        FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-        [self.navigationController pushViewController:viewController animated:YES];
+//        [self processSinaData];
     } else{
-        FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-        viewController.thirdPartyId = @"12345";
-        viewController.thirdPartyType = @"2";
-        [self.navigationController pushViewController:viewController animated:YES];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", _tencentOAuth.openId, @"source_id", @"2", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            kAppKey, @"app_key",
+                                            nil];
+                [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if(responseCode == nil){
+                        [SFHFKeychainUtils storeUsername:kUserId andPassword:@"P@ssword9" forServiceName:@"login" updateExisting:YES error:nil];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserName];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserId];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
+                        [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate refreshRootView];
+                    }
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
+            } else {
+                FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+                viewController.thirdPartyId = _tencentOAuth.openId;
+                viewController.thirdPartyType = @"2";
+                [self.navigationController pushViewController:viewController animated:YES];
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+            NSLog(@"<<<<<<%@>>>>>", error);
+        }];
     }
 }
 

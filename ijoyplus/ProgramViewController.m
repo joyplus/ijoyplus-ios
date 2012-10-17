@@ -43,11 +43,11 @@
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.webView setBackgroundColor:[UIColor clearColor]];
-    [self hideGradientBackground:webView];
+    [self hideGradientBackground:self.webView];
     self.webView.delegate = self;
     
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.programUrl]]];
-    [webView setScalesPageToFit:YES];
+    [self.webView setScalesPageToFit:YES];
 }
 
 

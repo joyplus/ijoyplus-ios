@@ -18,6 +18,7 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "AppDelegate.h"
+#import "SFHFKeychainUtils.h"
 
 @interface SinaLoginViewController (){
     WBAuthorizeWebView *webView;
@@ -75,8 +76,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kSinaUserLoggedIn];
-    if([num boolValue]){
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -102,7 +102,6 @@
 
 - (void)engineDidLogIn:(WBEngine *)engine
 {
-    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kSinaUserLoggedIn];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] accessToken] forKey:kSinaWeiboAccessToken];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
@@ -116,9 +115,23 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
-                AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                [appDelegate refreshRootView];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                            kAppKey, @"app_key",
+                                            nil];
+                [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if(responseCode == nil){
+                        [SFHFKeychainUtils storeUsername:kUserId andPassword:@"P@ssword9" forServiceName:@"login" updateExisting:YES error:nil];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserName];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserId];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
+                        [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                        [appDelegate refreshRootView];
+                    }
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
             } else {
                 FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
                 viewController.thirdPartyId = [[WBEngine sharedClient] userID];

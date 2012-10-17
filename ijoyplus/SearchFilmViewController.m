@@ -19,8 +19,7 @@
 #import "ContainerUtility.h"
 #import "DateUtility.h"
 #import "NSDate-Utilities.h"
-
-#define LOCAL_KEYS_NUMBER 5
+#import "CMConstants.h"
 
 @interface SearchFilmViewController (){
     NSMutableArray *historyArray;
@@ -237,8 +236,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger sectionNum = [self numberOfSectionsInTableView:tableView];
     NSString *key;
-    if(indexPath.section == 0){
+    if(sectionNum > 1 && indexPath.section == 0){
         key = [[historyArray objectAtIndex:indexPath.row] valueForKey:@"content"];
         [self addKeyToLocalHistory:key];
     } else {

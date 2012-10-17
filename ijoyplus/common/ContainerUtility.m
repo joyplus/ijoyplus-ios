@@ -31,7 +31,6 @@
 }
 
 - (void)clear{
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kSinaUserLoggedIn];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kTencentUserLoggedIn];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserLoggedIn];
 }
