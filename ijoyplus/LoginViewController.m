@@ -274,14 +274,15 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserName];
+            [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
+            [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
             [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
     }];
-    [SFHFKeychainUtils storeUsername:kUserId andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
-    [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserId];
+    [SFHFKeychainUtils storeUsername:kUserName andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
+    [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserName];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [appDelegate refreshRootView];

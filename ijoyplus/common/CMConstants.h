@@ -41,6 +41,7 @@
 
 #define kUserId @"kUserId"
 #define kUserName @"kUserName"
+#define kUserNickName @"kUserNickName"
 #define kSessionRenew @"kSessionRenew"
 #define kPhoneNumber @"kPhoneNumber"
 

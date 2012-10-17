@@ -72,17 +72,29 @@
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-	
     [self.sBar setText:self.keyword];
     self.sBar.delegate = self;
-    
     pageSize = 10;
     reloads_ = 1;
+    [self getFriendData];
+//    if (_refreshHeaderView == nil) {
+//		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+//        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+//		view.delegate = self;
+//		[self.tableView addSubview:view];
+//		_refreshHeaderView = view;
+//		
+//	}
+//	[_refreshHeaderView refreshLastUpdatedDate];
+}
+
+- (void)getFriendData
+{
     NSArray *sinaFriends = [[CacheUtility sharedCache] sinaFriends];
     joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
     joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
     unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -104,7 +116,7 @@
                     [unjoinedFriendArray addObject:friend];
                 }
             }
-            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+            //            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
             [self loadTable];
             reloads_ ++;
         } else {
@@ -113,17 +125,6 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
-    
-    
-    if (_refreshHeaderView == nil) {
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
-		view.delegate = self;
-		[self.tableView addSubview:view];
-		_refreshHeaderView = view;
-		
-	}
-	[_refreshHeaderView refreshLastUpdatedDate];
 }
 
 - (void)closeSelf
@@ -371,10 +372,9 @@
 #pragma mark -
 #pragma mark Data Source Loading / Reloading Methods
 
-- (void)reloadTableViewDataSource{
-	
-	//  should be calling your tableviews data source model to reload
-	//  put here just for demo
+- (void)reloadTableViewDataSource
+{
+//	[self getFriendData];
 	_reloading = YES;
 	
 }

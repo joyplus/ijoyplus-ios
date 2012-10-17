@@ -385,7 +385,8 @@
 - (void)postRegister
 {
     sleep(2);
-    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserId];
+    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
+    [[ContainerUtility sharedInstance]setAttribute:nicknameCell.titleLabel.text forKey:kUserNickName];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     PopularUserViewController *viewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];

@@ -309,11 +309,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 0){
+    if(indexPath.section > 1){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        if(indexPath.section == 1) {
+        if(indexPath.section == 2) {
             
-        } else if (indexPath.section == 2) {
+        } else if (indexPath.section == 3 && commentArray.count > 0) {
             if(indexPath.row == MAX_COMMENT_COUNT){
                 CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
                 viewController.programId = self.programId;
@@ -321,7 +321,7 @@
                 [self.navigationController pushViewController:viewController animated:YES];
             } else{
                 CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-                viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"thread_id"];
+                viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"id"];
                 viewController.title = @"评论回复";
                 [self.navigationController pushViewController:viewController animated:YES];
             }

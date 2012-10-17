@@ -397,12 +397,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 1){
+    if(indexPath.section > 0 && commentArray.count > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
         viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
         viewController.title = @"评论回复";
-        viewController.openKeyBoard = YES;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }

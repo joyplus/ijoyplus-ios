@@ -70,8 +70,8 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if([num boolValue]){
-        NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-        NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserId andServiceName:@"login" error:nil];
+        NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
+        NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:@"login" error:nil];
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     kAppKey, @"app_key",
                                     username, @"username",

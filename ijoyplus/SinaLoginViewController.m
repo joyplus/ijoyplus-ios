@@ -122,8 +122,9 @@
                     NSString *responseCode = [result objectForKey:@"res_code"];
                     if(responseCode == nil){
                         [SFHFKeychainUtils storeUsername:kUserId andPassword:@"P@ssword9" forServiceName:@"login" updateExisting:YES error:nil];
-                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserName];
-                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserId];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
                         [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

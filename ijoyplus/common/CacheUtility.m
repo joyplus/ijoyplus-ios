@@ -42,6 +42,9 @@
 - (void)clear {
     [self.cache removeAllObjects];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserId];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserName];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserLoggedIn];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserNickName];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPAPUserDefaultsCacheSinaFriendsKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }

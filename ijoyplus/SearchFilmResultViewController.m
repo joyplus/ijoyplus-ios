@@ -348,9 +348,13 @@
 
 - (void)addKeyToLocalHistory:(NSString *)key
 {
-    NSMutableArray *historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
-    if(historyArray == nil){
-        historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
+    NSArray *array = (NSArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
+    NSMutableArray *historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
+    for(NSDictionary *item in array){
+        NSMutableDictionary *temp = [[NSMutableDictionary alloc]init];
+        [temp setValue:[item objectForKey:@"content"] forKey:@"content"];
+        [temp setValue:[item objectForKey:@"last_search_date"] forKey:@"last_search_date"];
+        [historyArray addObject:temp];
     }
     NSMutableDictionary *newItem;
     for(NSMutableDictionary *item in historyArray){

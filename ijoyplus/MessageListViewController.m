@@ -182,7 +182,7 @@
         yPosition = cell.subtitleLabel.frame.origin.y + size.height + 10;
         cell.myCommentViewContent.text = [commentDic objectForKey:@"thread_comment"];
         if(cell.myCommentViewContent.text != nil){
-            NSString *loginUserName = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
+            NSString *loginUserName = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
             cell.myCommentViewName.text = loginUserName;
             [cell.myCommentViewContent setNumberOfLines:0];
             constraint = CGSizeMake(cell.myCommentViewContent.frame.size.width, 20000.0f);

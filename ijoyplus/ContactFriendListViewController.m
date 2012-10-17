@@ -130,6 +130,24 @@
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSString *phoneNumber = [result valueForKey:@"phone"];
+            if(![StringUtility stringIsEmpty:phoneNumber]){
+                self.phoneNumberCell.inputField.text = phoneNumber;
+            }
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
 - (void)closeSelf
 {
     [self uploadMyContactNumber];
@@ -351,7 +369,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindPhone parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            
+            [[ContainerUtility sharedInstance]setAttribute:self.phoneNumberCell.inputField.text forKey:kPhoneNumber];
         } else {
             
         }

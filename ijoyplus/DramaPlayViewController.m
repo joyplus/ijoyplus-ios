@@ -331,11 +331,11 @@
         UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
         [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateNormal];
         [cell.replyBtn setBackgroundImage:[UIImage imageNamed:@"background"] forState:UIControlStateHighlighted];
-        [cell.replyBtn addTarget:self action:@selector(replyBtnClicked)forControlEvents:UIControlEventTouchUpInside];
+        [cell.replyBtn addTarget:self action:@selector(replyBtnClicked:)forControlEvents:UIControlEventTouchUpInside];
     } else{
         [cell.replyBtn setHidden:YES];
     }
-    [cell.avatarBtn addTarget:self action:@selector(avatarClicked) forControlEvents:UIControlEventTouchUpInside];
+    [cell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
     return cell;
 }
 
@@ -410,10 +410,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 1){
+    if(indexPath.section > 1 && commentArray.count > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-        viewController.userid = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"owner_id"];
+        CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+        viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
+        viewController.title = @"评论回复";
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -514,13 +515,6 @@
     viewController.title = [drama objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
-
-- (void)replyBtnClicked
-{
-    PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
-
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient
