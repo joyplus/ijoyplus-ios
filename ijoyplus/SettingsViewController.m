@@ -22,6 +22,8 @@
 #import "StringUtility.h"
 #import "SearchFriendViewController.h"
 #import "UMFeedback.h"
+#import "SFHFKeychainUtils.h"
+#import "WBEngine.h"
 
 @interface SettingsViewController ()
 
@@ -112,9 +114,12 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
         }];
-//        [[WBEngine sharedClient] logOut];
+        [[WBEngine sharedClient] logOut];
+        NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
+        [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
         [[CacheUtility sharedCache] clear];
         [[ContainerUtility sharedInstance] clear];
+                          
         [self.navigationController popToRootViewControllerAnimated:YES];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate refreshRootView];

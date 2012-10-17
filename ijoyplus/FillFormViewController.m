@@ -20,6 +20,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "SFHFKeychainUtils.h"
 
 #define FIELDS_COUNT 3
 
@@ -354,9 +355,10 @@
         HUD.mode = MBProgressHUDModeCustomView;
         [self.view addSubview:HUD];
         if([responseCode isEqualToString:kSuccessResCode]){
-//            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"complete.png"]];
-//            HUD.labelText = NSLocalizedString(@"message.signupsuccess", nil);
-//            [HUD showWhileExecuting:@selector(postRegister) onTarget:self withObject:nil animated:YES];
+            [SFHFKeychainUtils storeUsername:kUserName andPassword:passwordCell.titleLabel.text forServiceName:@"login" updateExisting:YES error:nil];
+            [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
+            [[ContainerUtility sharedInstance]setAttribute:nicknameCell.titleLabel.text forKey:kUserNickName];
+            [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
             [self postRegister];
         } else {
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
@@ -385,9 +387,6 @@
 - (void)postRegister
 {
     sleep(2);
-    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
-    [[ContainerUtility sharedInstance]setAttribute:nicknameCell.titleLabel.text forKey:kUserNickName];
-    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     PopularUserViewController *viewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];
 }

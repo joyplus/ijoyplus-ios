@@ -9,6 +9,7 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "SFHFKeychainUtils.h"
+#import "PlayDetailViewController.h"
 
 @interface MovieViewController(){
     WaterflowView *flowView;
@@ -148,7 +149,7 @@
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-    PlayRootViewController *viewController = [[PlayRootViewController alloc]init];
+    PlayDetailViewController *viewController = [[PlayDetailViewController alloc] initWithStretchImage];
 //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
     viewController.programId = [movie objectForKey:@"prod_id"];

@@ -203,12 +203,7 @@
             }
             self.username.text = [result valueForKey:@"nickname"];
             
-            NSString *loginUserId = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserId];
-            if([loginUserId isEqualToString:self.userid]){
-                self.title = @"您的主页";
-            } else {
-                self.title = [NSString stringWithFormat:@"%@的主页", [result valueForKey:@"nickname"]];
-            }
+            self.title = [NSString stringWithFormat:@"%@的主页", [result valueForKey:@"nickname"]];
             self.tabBarItem.title = NSLocalizedString(@"list", nil);
         } else {
             

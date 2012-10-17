@@ -273,7 +273,7 @@
 - (void)postRegister
 {
     sleep(2);
-    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserId];
+    [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     [appDelegate refreshRootView];

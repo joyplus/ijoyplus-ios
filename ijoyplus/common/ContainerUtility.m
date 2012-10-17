@@ -33,5 +33,7 @@
 - (void)clear{
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kTencentUserLoggedIn];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserLoggedIn];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserName];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserNickName];
 }
 @end

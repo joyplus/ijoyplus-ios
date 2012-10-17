@@ -87,8 +87,8 @@
 
 - (void)share
 {
-    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if([StringUtility stringIsEmpty:userid]){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
@@ -207,8 +207,8 @@
 
 - (void)recommand
 {
-    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if([StringUtility stringIsEmpty:userid]){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
@@ -225,8 +225,8 @@
 
 - (void)watch
 {
-    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if([StringUtility stringIsEmpty:userid]){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
@@ -262,8 +262,8 @@
 
 - (void)collection
 {
-    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if([StringUtility stringIsEmpty:userid]){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
@@ -298,8 +298,8 @@
 
 - (void)comment
 {
-    NSString *userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if([StringUtility stringIsEmpty:userid]){
+    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
         [self.navigationController.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];

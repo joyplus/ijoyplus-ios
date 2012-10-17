@@ -21,6 +21,10 @@
 #import "FriendDramaPlayRootViewController.h"
 #import "FriendVideoPlayRootViewController.h"
 #import "FriendPlayRootViewController.h"
+#import "FriendPlayDetailViewController.h"
+#import "FriendDramaPlayDetailViewController.h"
+#import "FriendVideoPlayDetailViewController.h"
+#import "FriendShowPlayDetailViewController.h"
 
 @interface FriendViewController (){
     WaterflowView *flowView;
@@ -169,15 +173,15 @@
 {
     NSDictionary *program = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
     NSString *type = [program objectForKey:@"content_type"];
-    PlayRootViewController *viewController;
+    PlayDetailViewController *viewController;
     if([type isEqualToString:@"1"]){
-        viewController = [[FriendPlayRootViewController alloc]init];
+        viewController = [[FriendPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"2"]){
-        viewController = [[FriendDramaPlayRootViewController alloc]init];
+        viewController = [[FriendDramaPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"3"]){
-        viewController = [[FriendLocalPlayRootViewController alloc]init];
+        viewController = [[FriendShowPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"4"]){
-        viewController = [[FriendVideoPlayRootViewController alloc]init];
+        viewController = [[FriendVideoPlayDetailViewController alloc]initWithStretchImage];
     }
     viewController.programId = [program valueForKey:@"content_id"];
     [self.navigationController pushViewController:viewController animated:YES];

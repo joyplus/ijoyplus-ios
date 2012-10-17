@@ -9,6 +9,7 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "ShowPlayDetailViewController.h"
 
 
 @interface LocalViewController(){
@@ -149,7 +150,7 @@
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-    LocalPlayRootViewController *viewController = [[LocalPlayRootViewController alloc]init];
+    ShowPlayDetailViewController *viewController = [[ShowPlayDetailViewController alloc]initWithStretchImage];
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
     viewController.programId = [movie objectForKey:@"prod_id"];
     //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];

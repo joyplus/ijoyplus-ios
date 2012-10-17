@@ -1,7 +1,7 @@
 #import "DramaViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
-#import "DramaPlayRootViewController.h"
+#import "DramaPlayDetailViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
@@ -150,7 +150,7 @@
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-    DramaPlayRootViewController *viewController = [[DramaPlayRootViewController alloc]init];
+    DramaPlayDetailViewController *viewController = [[DramaPlayDetailViewController alloc]initWithStretchImage];
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
     viewController.programId = [movie objectForKey:@"prod_id"];
     //    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];

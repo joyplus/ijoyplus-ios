@@ -108,8 +108,6 @@
 		EB94EAF41608888C009280FA /* watch_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF01608888C009280FA /* watch_icon@2x.png */; };
 		EB94EAF61608971C009280FA /* brief_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF51608971C009280FA /* brief_btn@2x.png */; };
 		EB94EAF816089B23009280FA /* play@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB94EAF716089B23009280FA /* play@2x.png */; };
-		EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32415FED3D100192AE4 /* PlayViewController.m */; };
-		EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBAED32515FED3D100192AE4 /* PlayViewController.xib */; };
 		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
 		EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED33515FEDF1900192AE4 /* CommentCell.m */; };
 		EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */; };
@@ -143,7 +141,6 @@
 		EBB018BB162267C2003AB094 /* ServiceConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB018B9162267C2003AB094 /* ServiceConstants.m */; };
 		EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA616080DA900AAA818 /* DateUtility.m */; };
 		EBB06FAA16080DA900AAA818 /* StringUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA816080DA900AAA818 /* StringUtility.m */; };
-		EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */; };
 		EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB0C953160073BB00A9B8F8 /* PopularSegmentViewController.m */; };
 		EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */; };
 		EBB1B3C91601749500E04289 /* nav_bar_bg_44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3C81601749500E04289 /* nav_bar_bg_44@2x.png */; };
@@ -167,6 +164,18 @@
 		EBB21F7B1610099400A04376 /* UIImage+ResizeAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F721610099400A04376 /* UIImage+ResizeAdditions.m */; };
 		EBB21F7C1610099400A04376 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F751610099400A04376 /* GTMBase64.m */; };
 		EBB21F7F161009D200A04376 /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F7E161009D200A04376 /* UIImage+RoundedCornerAdditions.m */; };
+		EBB24CC1162E8D1D008FDF04 /* PlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */; };
+		EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB24CC4162E8F3C008FDF04 /* u0_normal.png */; };
+		EBB24CD4162EC382008FDF04 /* DramaPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */; };
+		EBB24CD5162EC382008FDF04 /* PlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD0162EC381008FDF04 /* PlayRootViewController.m */; };
+		EBB24CD6162EC382008FDF04 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD2162EC381008FDF04 /* PlayViewController.m */; };
+		EBB24CD7162EC382008FDF04 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB24CD3162EC382008FDF04 /* PlayViewController.xib */; };
+		EBB24CDA162EDA0D008FDF04 /* VideoPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */; };
+		EBB24CE0162EDC09008FDF04 /* ShowPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */; };
+		EBB24CE3162EE07F008FDF04 /* FriendPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */; };
+		EBB24CE6162EE4A8008FDF04 /* FriendDramaPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */; };
+		EBB24CE9162EEC48008FDF04 /* FriendVideoPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */; };
+		EBB24CEF162EF1B0008FDF04 /* FriendShowPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */; };
 		EBB2FFBA161299B200E8D9A7 /* FriendPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */; };
 		EBB2FFBB161299B200E8D9A7 /* FriendPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */; };
 		EBB2FFBC161299B200E8D9A7 /* FriendPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */; };
@@ -428,9 +437,6 @@
 		EB94EAF01608888C009280FA /* watch_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "watch_icon@2x.png"; sourceTree = "<group>"; };
 		EB94EAF51608971C009280FA /* brief_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brief_btn@2x.png"; sourceTree = "<group>"; };
 		EB94EAF716089B23009280FA /* play@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play@2x.png"; sourceTree = "<group>"; };
-		EBAED32315FED3D100192AE4 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
-		EBAED32415FED3D100192AE4 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
-		EBAED32515FED3D100192AE4 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
 		EBAED32D15FED75700192AE4 /* PlayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayCell.h; path = component/PlayCell.h; sourceTree = "<group>"; };
 		EBAED32E15FED75700192AE4 /* PlayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayCell.m; path = component/PlayCell.m; sourceTree = "<group>"; };
 		EBAED33415FEDF1900192AE4 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentCell.h; path = component/CommentCell.h; sourceTree = "<group>"; };
@@ -488,8 +494,6 @@
 		EBB06FA616080DA900AAA818 /* DateUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateUtility.m; sourceTree = "<group>"; };
 		EBB06FA716080DA900AAA818 /* StringUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringUtility.h; sourceTree = "<group>"; };
 		EBB06FA816080DA900AAA818 /* StringUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StringUtility.m; sourceTree = "<group>"; };
-		EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayRootViewController.h; sourceTree = "<group>"; };
-		EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayRootViewController.m; sourceTree = "<group>"; };
 		EBB0C952160073BA00A9B8F8 /* PopularSegmentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopularSegmentViewController.h; sourceTree = "<group>"; };
 		EBB0C953160073BB00A9B8F8 /* PopularSegmentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopularSegmentViewController.m; sourceTree = "<group>"; };
 		EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopularSegmentViewController.xib; sourceTree = "<group>"; };
@@ -523,6 +527,28 @@
 		EBB21F761610099400A04376 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		EBB21F7D161009D200A04376 /* UIImage+RoundedCornerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCornerAdditions.h"; sourceTree = "<group>"; };
 		EBB21F7E161009D200A04376 /* UIImage+RoundedCornerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCornerAdditions.m"; sourceTree = "<group>"; };
+		EBB24CBE162E8D1D008FDF04 /* PlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CC4162E8F3C008FDF04 /* u0_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u0_normal.png; sourceTree = "<group>"; };
+		EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CCF162EC380008FDF04 /* PlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayRootViewController.h; sourceTree = "<group>"; };
+		EBB24CD0162EC381008FDF04 /* PlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayRootViewController.m; sourceTree = "<group>"; };
+		EBB24CD1162EC381008FDF04 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
+		EBB24CD2162EC381008FDF04 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
+		EBB24CD3162EC382008FDF04 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
+		EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CE1162EE07E008FDF04 /* FriendPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CE4162EE4A6008FDF04 /* FriendDramaPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDramaPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDramaPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CE7162EEC46008FDF04 /* FriendVideoPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendVideoPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendVideoPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBB24CED162EF189008FDF04 /* FriendShowPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendShowPlayDetailViewController.h; sourceTree = "<group>"; };
+		EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendShowPlayDetailViewController.m; sourceTree = "<group>"; };
 		EBB2FFB5161299B200E8D9A7 /* FriendPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayRootViewController.h; sourceTree = "<group>"; };
 		EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendPlayRootViewController.m; sourceTree = "<group>"; };
 		EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayViewController.h; sourceTree = "<group>"; };
@@ -858,6 +884,7 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBB24CC4162E8F3C008FDF04 /* u0_normal.png */,
 				EBBE215A162D5CCB00CC5026 /* line2@2x.png */,
 				EBBE2158162D5B0000CC5026 /* sina_active@2X.png */,
 				EBBE2155162D5AF300CC5026 /* sina_inactive@2x.png */,
@@ -984,11 +1011,13 @@
 				EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */,
 				EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */,
 				EBB1B3E9160188D400E04289 /* MovieViewController.m */,
-				EBB0C9101600422F00A9B8F8 /* PlayRootViewController.h */,
-				EBB0C9111600422F00A9B8F8 /* PlayRootViewController.m */,
-				EBAED32315FED3D100192AE4 /* PlayViewController.h */,
-				EBAED32415FED3D100192AE4 /* PlayViewController.m */,
-				EBAED32515FED3D100192AE4 /* PlayViewController.xib */,
+				EBB24CBE162E8D1D008FDF04 /* PlayDetailViewController.h */,
+				EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */,
+				EBB24CCF162EC380008FDF04 /* PlayRootViewController.h */,
+				EBB24CD0162EC381008FDF04 /* PlayRootViewController.m */,
+				EBB24CD1162EC381008FDF04 /* PlayViewController.h */,
+				EBB24CD2162EC381008FDF04 /* PlayViewController.m */,
+				EBB24CD3162EC382008FDF04 /* PlayViewController.xib */,
 				EBBE2160162D6B6000CC5026 /* SendCommentViewController.h */,
 				EBBE2161162D6B6000CC5026 /* SendCommentViewController.m */,
 				EBBE2162162D6B6100CC5026 /* SendCommentViewController.xib */,
@@ -997,6 +1026,8 @@
 				EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */,
 				EBB1B3E41601876A00E04289 /* DramaViewController.h */,
 				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
+				EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */,
+				EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */,
 				EBB2FFE11612F89F00E8D9A7 /* DramaPlayRootViewController.h */,
 				EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */,
 				EBB2FFE31612F8A000E8D9A7 /* DramaPlayViewController.h */,
@@ -1009,6 +1040,8 @@
 				EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */,
 				EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */,
 				EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */,
+				EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */,
+				EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */,
 				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
 				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
 				EB632F4316241D1B0003DDD3 /* LocalPlayRootViewController.h */,
@@ -1016,6 +1049,8 @@
 				EB632F4516241D1D0003DDD3 /* LocalPlayViewController.h */,
 				EB632F4616241D1E0003DDD3 /* LocalPlayViewController.m */,
 				EB632F4716241D1F0003DDD3 /* LocalPlayViewController.xib */,
+				EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */,
+				EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */,
 				EBAF6A3F15FDDBB300938FE3 /* SearchFilmViewController.h */,
 				EBAF6A4015FDDBB300938FE3 /* SearchFilmViewController.m */,
 				EBAF6A4115FDDBB400938FE3 /* SearchFilmViewController.xib */,
@@ -1060,21 +1095,29 @@
 				EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */,
 				EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */,
 				EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */,
+				EBB24CE1162EE07E008FDF04 /* FriendPlayDetailViewController.h */,
+				EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */,
 				1478A22D162B02160054D55D /* FriendDramaPlayRootViewController.h */,
 				1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */,
 				1478A22F162B02170054D55D /* FriendDramaPlayViewController.h */,
 				1478A230162B02170054D55D /* FriendDramaPlayViewController.m */,
 				1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */,
+				EBB24CE4162EE4A6008FDF04 /* FriendDramaPlayDetailViewController.h */,
+				EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */,
 				1478A235162B07A90054D55D /* FriendVideoPlayRootViewController.h */,
 				1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */,
 				1478A237162B07AA0054D55D /* FriendVideoPlayViewController.h */,
 				1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */,
 				1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */,
+				EBB24CE7162EEC46008FDF04 /* FriendVideoPlayDetailViewController.h */,
+				EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */,
 				1478A23D162B0B6A0054D55D /* FriendLocalPlayRootViewController.h */,
 				1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */,
 				1478A23F162B0B6B0054D55D /* FriendLocalPlayViewController.h */,
 				1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */,
 				1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */,
+				EBB24CED162EF189008FDF04 /* FriendShowPlayDetailViewController.h */,
+				EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */,
 				EB632F3E162417C80003DDD3 /* CommentListViewController.h */,
 				EB632F3F162417C80003DDD3 /* CommentListViewController.m */,
 				1478A21C162AB1EB0054D55D /* CommentListViewController.xib */,
@@ -1438,7 +1481,6 @@
 				EBAF6A4315FDDBB400938FE3 /* SearchFilmViewController.xib in Resources */,
 				EBAF6AAB15FDE9CF00938FE3 /* SearchFilmResultViewController.xib in Resources */,
 				EBAF6AAE15FDEA2900938FE3 /* PopularCellFactory.xib in Resources */,
-				EBAED32715FED3D100192AE4 /* PlayViewController.xib in Resources */,
 				EBB0C956160073BC00A9B8F8 /* PopularSegmentViewController.xib in Resources */,
 				EBB1B3C91601749500E04289 /* nav_bar_bg_44@2x.png in Resources */,
 				EBB1B3CC1601770D00E04289 /* tool_bar_bg@2x.png in Resources */,
@@ -1552,6 +1594,8 @@
 				EBBE2159162D5B0000CC5026 /* sina_active@2X.png in Resources */,
 				EBBE215B162D5CCB00CC5026 /* line2@2x.png in Resources */,
 				EBBE2164162D6B6200CC5026 /* SendCommentViewController.xib in Resources */,
+				EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */,
+				EBB24CD7162EC382008FDF04 /* PlayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1593,10 +1637,8 @@
 				EBAF6AAA15FDE9CF00938FE3 /* SearchFilmResultViewController.m in Sources */,
 				EBAF6AB115FDEB1C00938FE3 /* SearchFilmCell.m in Sources */,
 				EBAF6AB715FDF27300938FE3 /* SearchVideoCell.m in Sources */,
-				EBAED32615FED3D100192AE4 /* PlayViewController.m in Sources */,
 				EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */,
 				EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */,
-				EBB0C9121600422F00A9B8F8 /* PlayRootViewController.m in Sources */,
 				EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */,
 				EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */,
 				EBB1B3D11601777900E04289 /* UIUtility.m in Sources */,
@@ -1712,6 +1754,16 @@
 				EBBE2131162D157900CC5026 /* SinaLoginViewController.m in Sources */,
 				EBBE2134162D15FD00CC5026 /* AFSinaWeiboAPIClient.m in Sources */,
 				EBBE2163162D6B6200CC5026 /* SendCommentViewController.m in Sources */,
+				EBB24CC1162E8D1D008FDF04 /* PlayDetailViewController.m in Sources */,
+				EBB24CD4162EC382008FDF04 /* DramaPlayDetailViewController.m in Sources */,
+				EBB24CD5162EC382008FDF04 /* PlayRootViewController.m in Sources */,
+				EBB24CD6162EC382008FDF04 /* PlayViewController.m in Sources */,
+				EBB24CDA162EDA0D008FDF04 /* VideoPlayDetailViewController.m in Sources */,
+				EBB24CE0162EDC09008FDF04 /* ShowPlayDetailViewController.m in Sources */,
+				EBB24CE3162EE07F008FDF04 /* FriendPlayDetailViewController.m in Sources */,
+				EBB24CE6162EE4A8008FDF04 /* FriendDramaPlayDetailViewController.m in Sources */,
+				EBB24CE9162EEC48008FDF04 /* FriendVideoPlayDetailViewController.m in Sources */,
+				EBB24CEF162EF1B0008FDF04 /* FriendShowPlayDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

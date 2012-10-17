@@ -18,6 +18,11 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "MobClick.h"
+#import "WBEngine.h"
+#import "BlockAlertView.h"
+#import "FriendViewController.h"
+#import "HomeViewController.h"
+#import "MyselfViewController.h"
 
 @interface AppDelegate (){
     BottomTabViewController *detailViewController;
@@ -39,7 +44,7 @@
     // Set the background image for *all* UINavigationBars
     UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
-       
+    
     // Customize UIBarButtonItems
     UIImage *button30 = [[UIImage imageNamed:@"custom-button"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
     [[UIBarButtonItem appearance] setBackgroundImage:button30 forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
@@ -72,28 +77,61 @@
     if([num boolValue]){
         NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
         NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:@"login" error:nil];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
-                                    username, @"username",
-                                    password, @"password",
-                                    nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(![responseCode isEqualToString:kSuccessResCode]){
-                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+        if(![StringUtility stringIsEmpty:password]){
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        kAppKey, @"app_key",
+                                        username, @"username",
+                                        password, @"password",
+                                        nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(![responseCode isEqualToString:kSuccessResCode]){
+                    [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                }
             }
+            failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"<<<<<<%@>>>>>", error);
+            }];
+        } else {
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(![responseCode isEqualToString:kSuccessResCode]){
+                    [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"<<<<<<%@>>>>>", error);
+            }];
         }
-        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
+        
     }
     detailViewController = [[BottomTabViewController alloc] init];
+    detailViewController.delegate = self;
     UINavigationController *viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];
     [self monitorReachability];
     return YES;
+}
+
+#pragma mark - Tab bar delegate
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
+{
+    if ([viewController isKindOfClass: [FriendViewController class]] || [viewController isKindOfClass:[MyselfViewController class]] || [viewController isKindOfClass:[HomeViewController class]]) {
+        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+        if([num boolValue]){
+            return YES;
+        } else {
+            BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"会话已过期，请重新登陆！"];
+            [alert setDestructiveButtonWithTitle:@"确定" block:nil];
+            [alert show];
+            return NO;
+        }
+    } else {
+        return YES;
+    }
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -104,7 +142,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
