@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WaterflowView.h"
+#import "UIGenericViewController.h"
 
-@interface HomeViewController : UIViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate >
+@interface HomeViewController : UIGenericViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate >
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segment;
 @property (strong, nonatomic) IBOutlet UIImageView *topImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *avatarImageView;

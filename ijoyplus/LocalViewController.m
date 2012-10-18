@@ -24,6 +24,7 @@
 {
     flowView = nil;
     videoArray = nil;
+    [super viewDidUnload];
 }
 
 - (void)viewDidLoad
@@ -44,10 +45,19 @@
         } else {
             
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
     [self addContentView];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(videoArray == nil || videoArray.count == 0){
+        [self showProgressBar];
+    }
 }
 
 - (void)addContentView

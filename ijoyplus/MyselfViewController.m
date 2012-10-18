@@ -63,8 +63,10 @@
         } else {
             
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
     
     
@@ -78,6 +80,13 @@
 	}
 	[_refreshHeaderView refreshLastUpdatedDate];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(itemsArray == nil || itemsArray.count == 0){
+        [self showProgressBar];
+    }
 }
 
 - (void)loadTable {

@@ -124,11 +124,18 @@
         } else {
             
         }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
-    
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(videoArray == nil || videoArray.count == 0){
+        [self showProgressBar];
+    }
 }
 
 - (void)addContentView
@@ -392,6 +399,7 @@
 }
 
 - (void)segmentValueChanged:(id)sender {
+    [self showProgressBar];
     if(self.segment.selectedSegmentIndex == 0){
         serviceName = kPathUserWatchs;
         key = @"watchs";
@@ -419,9 +427,10 @@
             
         }
         [flowView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-        [flowView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
 }
 

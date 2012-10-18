@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "WaterflowView.h"
+#import "UIGenericViewController.h"
 
-@interface FriendViewController : UIViewController<WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate>{
+@interface FriendViewController : UIGenericViewController<WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate>{
 
 }
 @end

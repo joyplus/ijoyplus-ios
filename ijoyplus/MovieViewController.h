@@ -1,7 +1,8 @@
 #import <Foundation/Foundation.h>
 #import "WaterflowView.h"
+#import "UIGenericViewController.h"
 
-@interface MovieViewController : UIViewController <WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate>{
+@interface MovieViewController : UIGenericViewController <WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate>{
 
     
 }
