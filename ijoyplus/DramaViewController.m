@@ -107,9 +107,9 @@
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
     NSString *url = [movie valueForKey:@"prod_pic_url"];
     if([StringUtility stringIsEmpty:url]){
-        imageView.image = [UIImage imageNamed:@"video_placeholder"];
+        imageView.image = [UIImage imageNamed:@"movie_placeholder"];
     } else {
-        [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@""]];
+        [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
     }
     imageView.layer.borderWidth = 1;
     imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;

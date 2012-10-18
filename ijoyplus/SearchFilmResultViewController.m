@@ -152,9 +152,9 @@
         }
         NSString *url = [searchObject objectForKey:@"prod_pic_url"];
         if([StringUtility stringIsEmpty:url]){
-            cell.filmImageView.image = [UIImage imageNamed:@"video_placeholder"];
+            cell.filmImageView.image = [UIImage imageNamed:@"movie_placeholder"];
         } else {
-            [cell.filmImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.filmImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
         }
         cell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         cell.filmImageView.layer.borderWidth = 1;
@@ -200,9 +200,9 @@
         }
         NSString *url = [searchObject objectForKey:@"prod_pic_url"];
         if([StringUtility stringIsEmpty:url]){
-            cell.videoImageView.image = [UIImage imageNamed:@"video_placeholder"];
+            cell.videoImageView.image = [UIImage imageNamed:@"movie_placeholder"];
         } else {
-            [cell.videoImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.videoImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
         }
         NSString *name = [searchObject objectForKey:@"prod_name"];
         if([StringUtility stringIsEmpty:name]){

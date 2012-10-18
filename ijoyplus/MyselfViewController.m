@@ -111,13 +111,8 @@
 
     NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
     NSString *imageUrl = (NSString *)[item valueForKey:@"prod_poster"];
-    NSString *actionType = [item valueForKey:@"type"];
     NSString *avatarUrl = (NSString *)[item valueForKey:@"user_pic_url"];
-    if([StringUtility stringIsEmpty:imageUrl]){
-        myCell.filmImageView.image = [UIImage imageNamed:@"video_placeholder"];
-    } else{
-        [myCell.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-    }
+    NSString *actionType = [item valueForKey:@"type"];
     myCell.filmImageView.layer.borderWidth = 1;
     myCell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -126,8 +121,18 @@
     
     NSString *type = [item objectForKey:@"prod_type"];
     if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
+        if([StringUtility stringIsEmpty:imageUrl]){
+            myCell.filmImageView.image = [UIImage imageNamed:@"movie_placeholder"];
+        } else{
+            [myCell.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
+        }
         myCell.filmImageView.frame = CGRectMake(myCell.filmImageView.frame.origin.x, myCell.filmImageView.frame.origin.y, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     } else {
+        if([StringUtility stringIsEmpty:imageUrl]){
+            myCell.filmImageView.image = [UIImage imageNamed:@"video_placeholder"];
+        } else{
+            [myCell.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        }
         myCell.filmImageView.frame = CGRectMake(myCell.filmImageView.frame.origin.x, myCell.filmImageView.frame.origin.y, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     }
     myCell.thirdTitleLabel.center = CGPointMake(110, myCell.filmImageView.frame.origin.y + myCell.filmImageView.frame.size.height + 20);

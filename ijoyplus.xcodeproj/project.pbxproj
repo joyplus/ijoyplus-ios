@@ -100,6 +100,8 @@
 		EBACDF5F162F987600A665D5 /* MyPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBACDF59162F987600A665D5 /* MyPlayDetailViewController.m */; };
 		EBACDF60162F987600A665D5 /* MyShowPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBACDF5B162F987600A665D5 /* MyShowPlayDetailViewController.m */; };
 		EBACDF61162F987600A665D5 /* MyVideoPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBACDF5D162F987600A665D5 /* MyVideoPlayDetailViewController.m */; };
+		EBACDF65162FA64500A665D5 /* movie_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBACDF63162FA64500A665D5 /* movie_placeholder@2x.png */; };
+		EBACDF66162FA64500A665D5 /* video_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBACDF64162FA64500A665D5 /* video_placeholder@2x.png */; };
 		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
 		EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED33515FEDF1900192AE4 /* CommentCell.m */; };
 		EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */; };
@@ -393,6 +395,8 @@
 		EBACDF5B162F987600A665D5 /* MyShowPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyShowPlayDetailViewController.m; sourceTree = "<group>"; };
 		EBACDF5C162F987600A665D5 /* MyVideoPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoPlayDetailViewController.h; sourceTree = "<group>"; };
 		EBACDF5D162F987600A665D5 /* MyVideoPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyVideoPlayDetailViewController.m; sourceTree = "<group>"; };
+		EBACDF63162FA64500A665D5 /* movie_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "movie_placeholder@2x.png"; sourceTree = "<group>"; };
+		EBACDF64162FA64500A665D5 /* video_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_placeholder@2x.png"; sourceTree = "<group>"; };
 		EBAED32D15FED75700192AE4 /* PlayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayCell.h; path = component/PlayCell.h; sourceTree = "<group>"; };
 		EBAED32E15FED75700192AE4 /* PlayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayCell.m; path = component/PlayCell.m; sourceTree = "<group>"; };
 		EBAED33415FEDF1900192AE4 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentCell.h; path = component/CommentCell.h; sourceTree = "<group>"; };
@@ -800,6 +804,8 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBACDF63162FA64500A665D5 /* movie_placeholder@2x.png */,
+				EBACDF64162FA64500A665D5 /* video_placeholder@2x.png */,
 				EBB24CC4162E8F3C008FDF04 /* u0_normal.png */,
 				EBBE215A162D5CCB00CC5026 /* line2@2x.png */,
 				EBBE2158162D5B0000CC5026 /* sina_active@2X.png */,
@@ -1448,6 +1454,8 @@
 				EBBE215B162D5CCB00CC5026 /* line2@2x.png in Resources */,
 				EBBE2164162D6B6200CC5026 /* SendCommentViewController.xib in Resources */,
 				EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */,
+				EBACDF65162FA64500A665D5 /* movie_placeholder@2x.png in Resources */,
+				EBACDF66162FA64500A665D5 /* video_placeholder@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

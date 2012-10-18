@@ -106,7 +106,7 @@
     if([StringUtility stringIsEmpty:url]){
         imageView.image = [UIImage imageNamed:@"video_placeholder"];
     } else {
-        [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@""]];
+        [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     }
     imageView.layer.borderWidth = 1;
     imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
