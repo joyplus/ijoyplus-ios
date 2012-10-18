@@ -50,10 +50,11 @@
     reloads_ = 1;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *item = [result objectForKey:@"dynamics"];
-            itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             if(item.count > 0){
                 [itemsArray addObjectsFromArray:item];
                 pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
@@ -63,9 +64,9 @@
         } else {
             
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
     
@@ -84,7 +85,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(itemsArray == nil || itemsArray.count == 0){
+    if(itemsArray == nil){
         [self showProgressBar];
     }
 }

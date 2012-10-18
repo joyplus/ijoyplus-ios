@@ -113,10 +113,11 @@
                                 kAppKey, @"app_key",
                                 @"1", @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *videos = [result objectForKey:key];
-            videoArray = [[NSMutableArray alloc]initWithCapacity:10];
             if(videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
             }
@@ -124,16 +125,16 @@
         } else {
             
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        videoArray = [[NSMutableArray alloc]initWithCapacity:10];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(videoArray == nil || videoArray.count == 0){
+    if(videoArray == nil){
         [self showProgressBar];
     }
 }

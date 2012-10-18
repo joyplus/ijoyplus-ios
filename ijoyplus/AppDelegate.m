@@ -23,6 +23,7 @@
 #import "FriendViewController.h"
 #import "HomeViewController.h"
 #import "MyselfViewController.h"
+#import "CacheUtility.h"
 
 @interface AppDelegate (){
     BottomTabViewController *detailViewController;
@@ -87,6 +88,11 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if(![responseCode isEqualToString:kSuccessResCode]){
                     [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                    [[WBEngine sharedClient] logOut];
+                    [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
+                    [[CacheUtility sharedCache] clear];
+                    [[ContainerUtility sharedInstance] clear];
+                    [self refreshRootView];
                 }
             }
             failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -98,6 +104,7 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if(![responseCode isEqualToString:kSuccessResCode]){
                     [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                    [self refreshRootView];
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"<<<<<<%@>>>>>", error);

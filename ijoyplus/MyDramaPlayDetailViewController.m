@@ -63,10 +63,16 @@
     if(section < 4){
         return 1;
     } else if(section == 4){
-        return friendCommentArray.count;
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
+            return 1;
+        } else {
+            return friendCommentArray.count;
+        }
     } else {
         if(commentArray == nil || commentArray.count == 0){
             return 1;
+        } else if (commentArray.count >= MAX_COMMENT_COUNT){
+            return MAX_COMMENT_COUNT + 1;
         } else {
             return commentArray.count;
         }
@@ -84,7 +90,7 @@
     } else if (indexPath.section == 3){
         return reasonCell;
     }else if (indexPath.section == 4){
-        if(commentArray == nil || commentArray.count == 0){
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
             cell.textField.text = @"暂无评论";
             return cell;
@@ -96,6 +102,9 @@
         if(commentArray == nil || commentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
             cell.textField.text = @"暂无评论";
+            return cell;
+        } else if(indexPath.row == MAX_COMMENT_COUNT){
+            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
             return cell;
         } else {
             CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
@@ -116,7 +125,7 @@
         return reasonCell.frame.size.height;
     } else if(indexPath.section == 4){
         if(friendCommentArray == nil || friendCommentArray.count == 0){
-            return 0;
+            return 44;
         } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:friendCommentArray];
             return height;

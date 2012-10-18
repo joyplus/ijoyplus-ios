@@ -28,6 +28,7 @@
 	BOOL _reloading;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
+    MBProgressHUD *HUD;
 }
 
 @end
@@ -40,6 +41,9 @@
     commentArray = nil;
     _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
+    HUD = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"top_segment_clicked" object:nil];
+
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -59,15 +63,16 @@
     CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
     CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     pageSize = 10;
     reloads_++;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *comment = [result objectForKey:@"msgs"];
-            commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             if(comment.count > 0){
                 [commentArray addObjectsFromArray:comment];
                 if(comment.count == pageSize){
@@ -82,9 +87,25 @@
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
     
 }
+
+- (void) hideProgressBar
+{
+    [HUD hide:YES afterDelay:0.3];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:HUD];
+    HUD.opacity = 0;
+    [HUD show:YES];
+}
+
 - (void)loadTable {
     
     [self.tableView reloadData];

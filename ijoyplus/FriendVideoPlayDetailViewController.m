@@ -61,10 +61,7 @@
             if(commentArray == nil || commentArray.count == 0){
                 commentArray = [[NSMutableArray alloc]initWithCapacity:10];
             }
-            [self loadTable];
-            if(pullToRefreshManager_ == nil){
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
-            }
+            [_tableView reloadData];
         } else {
             
         }
@@ -91,6 +88,8 @@
     } else {
         if(commentArray == nil || commentArray.count == 0){
             return 1;
+        } else if (commentArray.count >= MAX_COMMENT_COUNT){
+            return MAX_COMMENT_COUNT + 1;
         } else {
             return commentArray.count;
         }
@@ -154,6 +153,9 @@
         if(commentArray == nil || commentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
             cell.textField.text = @"暂无评论";
+            return cell;
+        } else if(indexPath.row == MAX_COMMENT_COUNT){
+            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
             return cell;
         } else {
             CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];

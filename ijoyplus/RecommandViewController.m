@@ -150,7 +150,18 @@
 
 - (void)post
 {
-    [self.textView resignFirstResponder];
+    [self.textView resignFirstResponder];    
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    if([StringUtility stringIsEmpty:self.textView.text]){
+//        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeText;
+        [self.view addSubview:HUD];
+        HUD.labelText = @"推荐理由不能为空！";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
+        return;
+    }
+    
     if(btn1Selected){
         [[WBEngine sharedClient] sendWeiBoWithText:self.textView.text image:nil];
     }
@@ -162,7 +173,6 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
             [self.navigationController.view addSubview:HUD];
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
             HUD.mode = MBProgressHUDModeCustomView;

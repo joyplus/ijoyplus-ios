@@ -330,7 +330,6 @@
 
 - (void)reloadTableViewDataSource{
     reloads_ = 1;
-    [commentArray removeAllObjects];
 	NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.programId, @"prod_id",[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -338,6 +337,7 @@
             NSArray *comments = (NSArray *)[result objectForKey:@"comments"];
             if(comments != nil && comments.count > 0){
                 reloads_++;
+                [commentArray removeAllObjects];
                 [commentArray addObjectsFromArray:comments];
             }
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];

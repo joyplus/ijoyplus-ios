@@ -59,17 +59,19 @@
     if(section < 3){
         return 1;
     } else if(section == 3) {
-//        if(friendCommentArray.count > MAX_FRIEND_COMMENT_COUNT){
-//            return MAX_FRIEND_COMMENT_COUNT + 1;
-//        } else {
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
+            return 1;
+        } else {
             return friendCommentArray.count;
-//        }
+        }
     }else {
-        if(commentArray.count > MAX_COMMENT_COUNT){
+        if(commentArray == nil || commentArray.count == 0){
+            return 1;
+        } else if (commentArray.count >= MAX_COMMENT_COUNT){
             return MAX_COMMENT_COUNT + 1;
         } else {
             return commentArray.count;
-        }       
+        }
     }
 }
 
@@ -82,13 +84,14 @@
     } else if (indexPath.section == 2){
         return reasonCell;
     } else if (indexPath.section == 3){
-//        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
-//            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
-//            return cell;
-//        } else {
-            CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"friendCommentCell"];
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
+            NoRecordCell *cell = [self displayNoRecordCell:tableView];
+            cell.textField.text = @"暂无评论";
             return cell;
-//        }
+        } else {
+            CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
+            return cell;
+        }
     } else {
         if(indexPath.row == MAX_COMMENT_COUNT){
             LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
@@ -109,12 +112,12 @@
     } else if(indexPath.section == 2){
         return reasonCell.frame.size.height;
     } else if(indexPath.section == 3){
-//        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
-//            return 44;
-//        } else {
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
+            return 44;
+        } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:friendCommentArray];
             return height;
-//        }
+        }
     } else {
         if(indexPath.row == MAX_COMMENT_COUNT){
             return 44;

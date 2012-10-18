@@ -174,6 +174,16 @@
 - (void)post
 {
     [self.textView resignFirstResponder];
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    if([StringUtility stringIsEmpty:self.textView.text]){
+        //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
+        HUD.mode = MBProgressHUDModeText;
+        [self.view addSubview:HUD];
+        HUD.labelText = @"您想说点什么呢？";
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1.5];
+        return;
+    }
     if(btn1Selected){
         [[WBEngine sharedClient] sendWeiBoWithText:self.textView.text image:nil];
     }

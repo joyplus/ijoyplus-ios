@@ -212,10 +212,10 @@
 {
     [self deleteAuthorizeDataInKeychain];
     
-    if ([delegate respondsToSelector:@selector(engineDidLogOut:)])
-    {
-        [delegate engineDidLogOut:self];
-    }
+//    if ([delegate respondsToSelector:@selector(engineDidLogOut:)])
+//    {
+//        [delegate engineDidLogOut:self];
+//    }
 }
 
 - (BOOL)isLoggedIn

@@ -100,7 +100,7 @@
         
     }
     
-    [_imageView setImageWithURL:[NSURL URLWithString:[show objectForKey:@"poster"]] placeholderImage:nil];
+    [_imageView setImageWithURL:[NSURL URLWithString:[show objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
     NSString *score = [show objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;

@@ -67,7 +67,7 @@
         playImageView.image = [UIImage imageNamed:@"play"];
         playImageView.center = _imageView.center;
         [_imageView addSubview:playImageView];
-                       
+        
         _tableView = [[UITableView alloc] initWithFrame:self.view.frame];
         _tableView.backgroundColor              = [UIColor clearColor];
         _tableView.dataSource                   = self;
@@ -163,10 +163,10 @@
             }
             [self loadTable];
         } else {
-
+            
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
+        
     }];
 }
 
@@ -202,7 +202,7 @@
         playCell.collectionLabel.frame = CGRectMake(playCell.collectionLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionLabel.frame.size.width, playCell.collectionLabel.frame.size.height);
         
     }
-    [_imageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:nil];
+    [_imageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
     NSString *score = [movie objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;
@@ -337,7 +337,7 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
         cell = (CommentCell *)[nib objectAtIndex:2];
     }
-//    cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]];
+    //    cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]];
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
     NSString *ownerPicUrl = [commentDic valueForKey:@"owner_pic_url"];
     if([StringUtility stringIsEmpty:ownerPicUrl]){
@@ -462,13 +462,15 @@
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     }];
     
 }
 
 - (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[movie objectForKey:@"name"] content:[movie objectForKey:@"summary"]];
+    NSString *name = [movie objectForKey:@"name"];
+    NSString *summary = [movie objectForKey:@"summary"];
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:name content:summary];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
     lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
     lplv.delegate = self;

@@ -98,7 +98,6 @@
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];
                     if(responseCode == nil){
-                        [SFHFKeychainUtils storeUsername:kUserName andPassword:@"P@ssword9" forServiceName:@"login" updateExisting:YES error:nil];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];

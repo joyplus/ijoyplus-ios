@@ -78,7 +78,6 @@
 		EB632F3B16240D9D0003DDD3 /* RecommandViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */; };
 		EB632F3D1624137C0003DDD3 /* CommentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F3C1624137B0003DDD3 /* CommentViewController.xib */; };
 		EB632F41162417C80003DDD3 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F3F162417C80003DDD3 /* CommentListViewController.m */; };
-		EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EB632F4B16242F620003DDD3 /* u2_normal.png */; };
 		EB7841D2160C70550003FB10 /* FillFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7841D0160C70550003FB10 /* FillFormViewController.m */; };
 		EB7841D3160C70550003FB10 /* FillFormViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB7841D1160C70550003FB10 /* FillFormViewController.xib */; };
 		EB932A1616104F84004A258D /* APIBase.m in Sources */ = {isa = PBXBuildFile; fileRef = EB932A0B16104F84004A258D /* APIBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -103,6 +102,8 @@
 		EBACDF65162FA64500A665D5 /* movie_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBACDF63162FA64500A665D5 /* movie_placeholder@2x.png */; };
 		EBACDF66162FA64500A665D5 /* video_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBACDF64162FA64500A665D5 /* video_placeholder@2x.png */; };
 		EBACDF69162FACB900A665D5 /* UIGenericViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBACDF68162FACB800A665D5 /* UIGenericViewController.m */; };
+		EBACDF77162FD8BA00A665D5 /* u0_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBACDF76162FD8BA00A665D5 /* u0_normal@2x.png */; };
+		EBACDF79162FEF5A00A665D5 /* u2_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBACDF78162FEF5A00A665D5 /* u2_normal@2x.png */; };
 		EBAED32F15FED75700192AE4 /* PlayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED32E15FED75700192AE4 /* PlayCell.m */; };
 		EBAED33615FEDF1900192AE4 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAED33515FEDF1900192AE4 /* CommentCell.m */; };
 		EBAF69D315FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAF69CC15FDB78D00938FE3 /* MNMBottomPullToRefreshArrow.png */; };
@@ -160,7 +161,6 @@
 		EBB21F7C1610099400A04376 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F751610099400A04376 /* GTMBase64.m */; };
 		EBB21F7F161009D200A04376 /* UIImage+RoundedCornerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F7E161009D200A04376 /* UIImage+RoundedCornerAdditions.m */; };
 		EBB24CC1162E8D1D008FDF04 /* PlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */; };
-		EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB24CC4162E8F3C008FDF04 /* u0_normal.png */; };
 		EBB24CD4162EC382008FDF04 /* DramaPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */; };
 		EBB24CDA162EDA0D008FDF04 /* VideoPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */; };
 		EBB24CE0162EDC09008FDF04 /* ShowPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */; };
@@ -362,7 +362,6 @@
 		EB632F3C1624137B0003DDD3 /* CommentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentViewController.xib; sourceTree = "<group>"; };
 		EB632F3E162417C80003DDD3 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
 		EB632F3F162417C80003DDD3 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
-		EB632F4B16242F620003DDD3 /* u2_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u2_normal.png; sourceTree = "<group>"; };
 		EB7841CF160C70550003FB10 /* FillFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillFormViewController.h; sourceTree = "<group>"; };
 		EB7841D0160C70550003FB10 /* FillFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillFormViewController.m; sourceTree = "<group>"; };
 		EB7841D1160C70550003FB10 /* FillFormViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FillFormViewController.xib; sourceTree = "<group>"; };
@@ -400,6 +399,8 @@
 		EBACDF64162FA64500A665D5 /* video_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_placeholder@2x.png"; sourceTree = "<group>"; };
 		EBACDF67162FACB800A665D5 /* UIGenericViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIGenericViewController.h; path = ../UIGenericViewController.h; sourceTree = "<group>"; };
 		EBACDF68162FACB800A665D5 /* UIGenericViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIGenericViewController.m; path = ../UIGenericViewController.m; sourceTree = "<group>"; };
+		EBACDF76162FD8BA00A665D5 /* u0_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "u0_normal@2x.png"; sourceTree = "<group>"; };
+		EBACDF78162FEF5A00A665D5 /* u2_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "u2_normal@2x.png"; sourceTree = "<group>"; };
 		EBAED32D15FED75700192AE4 /* PlayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayCell.h; path = component/PlayCell.h; sourceTree = "<group>"; };
 		EBAED32E15FED75700192AE4 /* PlayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayCell.m; path = component/PlayCell.m; sourceTree = "<group>"; };
 		EBAED33415FEDF1900192AE4 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommentCell.h; path = component/CommentCell.h; sourceTree = "<group>"; };
@@ -492,7 +493,6 @@
 		EBB21F7E161009D200A04376 /* UIImage+RoundedCornerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCornerAdditions.m"; sourceTree = "<group>"; };
 		EBB24CBE162E8D1D008FDF04 /* PlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayDetailViewController.h; sourceTree = "<group>"; };
 		EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayDetailViewController.m; sourceTree = "<group>"; };
-		EBB24CC4162E8F3C008FDF04 /* u0_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u0_normal.png; sourceTree = "<group>"; };
 		EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayDetailViewController.h; sourceTree = "<group>"; };
 		EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayDetailViewController.m; sourceTree = "<group>"; };
 		EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayDetailViewController.h; sourceTree = "<group>"; };
@@ -807,9 +807,10 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBACDF78162FEF5A00A665D5 /* u2_normal@2x.png */,
+				EBACDF76162FD8BA00A665D5 /* u0_normal@2x.png */,
 				EBACDF63162FA64500A665D5 /* movie_placeholder@2x.png */,
 				EBACDF64162FA64500A665D5 /* video_placeholder@2x.png */,
-				EBB24CC4162E8F3C008FDF04 /* u0_normal.png */,
 				EBBE215A162D5CCB00CC5026 /* line2@2x.png */,
 				EBBE2158162D5B0000CC5026 /* sina_active@2X.png */,
 				EBBE2155162D5AF300CC5026 /* sina_inactive@2x.png */,
@@ -821,7 +822,6 @@
 				EBBE2140162D4CF700CC5026 /* tab3@2x.png */,
 				EBBE2141162D4CF700CC5026 /* tab4@2x.png */,
 				EBBE213C162D4B9D00CC5026 /* user_picture.jpg */,
-				EB632F4B16242F620003DDD3 /* u2_normal.png */,
 				EB632F271623DE110003DDD3 /* NotifyCheck.png */,
 				EB632F281623DE110003DDD3 /* NotifyCheck@2x.png */,
 				EB632F291623DE110003DDD3 /* NotifyX.png */,
@@ -936,26 +936,26 @@
 				EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */,
 				EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */,
 				EBB1B3E9160188D400E04289 /* MovieViewController.m */,
+				EBB1B3E41601876A00E04289 /* DramaViewController.h */,
+				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
+				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
+				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
+				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
+				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
 				EBB24CBE162E8D1D008FDF04 /* PlayDetailViewController.h */,
 				EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */,
+				EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */,
+				EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */,
+				EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */,
+				EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */,
+				EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */,
+				EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */,
 				EBBE2160162D6B6000CC5026 /* SendCommentViewController.h */,
 				EBBE2161162D6B6000CC5026 /* SendCommentViewController.m */,
 				EBBE2162162D6B6100CC5026 /* SendCommentViewController.xib */,
 				EB632F3716240D9A0003DDD3 /* RecommandViewController.h */,
 				EB632F3816240D9B0003DDD3 /* RecommandViewController.m */,
 				EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */,
-				EBB1B3E41601876A00E04289 /* DramaViewController.h */,
-				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
-				EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */,
-				EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */,
-				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
-				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
-				EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */,
-				EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */,
-				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
-				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
-				EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */,
-				EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */,
 				EBAF6A3F15FDDBB300938FE3 /* SearchFilmViewController.h */,
 				EBAF6A4015FDDBB300938FE3 /* SearchFilmViewController.m */,
 				EBAF6A4115FDDBB400938FE3 /* SearchFilmViewController.xib */,
@@ -983,6 +983,14 @@
 				EBB2FFC01612A25600E8D9A7 /* component */,
 				EB24CC9A160B232F009618C6 /* FriendViewController.h */,
 				EB24CC9B160B232F009618C6 /* FriendViewController.m */,
+				EBB24CE1162EE07E008FDF04 /* FriendPlayDetailViewController.h */,
+				EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */,
+				EBB24CE4162EE4A6008FDF04 /* FriendDramaPlayDetailViewController.h */,
+				EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */,
+				EBB24CE7162EEC46008FDF04 /* FriendVideoPlayDetailViewController.h */,
+				EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */,
+				EBB24CED162EF189008FDF04 /* FriendShowPlayDetailViewController.h */,
+				EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */,
 				EB11D2AD1611AE2000027F07 /* SearchFriendViewController.h */,
 				EB11D2AE1611AE2000027F07 /* SearchFriendViewController.m */,
 				EB11D2AF1611AE2000027F07 /* SearchFriendViewController.xib */,
@@ -995,14 +1003,6 @@
 				EB11D2C91611BD6000027F07 /* FriendDetailViewController.h */,
 				EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */,
 				EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */,
-				EBB24CE1162EE07E008FDF04 /* FriendPlayDetailViewController.h */,
-				EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */,
-				EBB24CE4162EE4A6008FDF04 /* FriendDramaPlayDetailViewController.h */,
-				EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */,
-				EBB24CE7162EEC46008FDF04 /* FriendVideoPlayDetailViewController.h */,
-				EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */,
-				EBB24CED162EF189008FDF04 /* FriendShowPlayDetailViewController.h */,
-				EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */,
 				EB632F3E162417C80003DDD3 /* CommentListViewController.h */,
 				EB632F3F162417C80003DDD3 /* CommentListViewController.m */,
 				1478A21C162AB1EB0054D55D /* CommentListViewController.xib */,
@@ -1036,14 +1036,14 @@
 				EBB064D7160ABAB000BE685B /* HomeViewController.h */,
 				EBE44B641609A01E002BEB0C /* HomeViewController.m */,
 				EBE44B651609A01E002BEB0C /* HomeViewController.xib */,
-				EBACDF56162F987600A665D5 /* MyDramaPlayDetailViewController.h */,
-				EBACDF57162F987600A665D5 /* MyDramaPlayDetailViewController.m */,
 				EBACDF58162F987600A665D5 /* MyPlayDetailViewController.h */,
 				EBACDF59162F987600A665D5 /* MyPlayDetailViewController.m */,
-				EBACDF5A162F987600A665D5 /* MyShowPlayDetailViewController.h */,
-				EBACDF5B162F987600A665D5 /* MyShowPlayDetailViewController.m */,
+				EBACDF56162F987600A665D5 /* MyDramaPlayDetailViewController.h */,
+				EBACDF57162F987600A665D5 /* MyDramaPlayDetailViewController.m */,
 				EBACDF5C162F987600A665D5 /* MyVideoPlayDetailViewController.h */,
 				EBACDF5D162F987600A665D5 /* MyVideoPlayDetailViewController.m */,
+				EBACDF5A162F987600A665D5 /* MyShowPlayDetailViewController.h */,
+				EBACDF5B162F987600A665D5 /* MyShowPlayDetailViewController.m */,
 				EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */,
 				EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */,
 				EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */,
@@ -1427,7 +1427,6 @@
 				EB632F2E1623DE110003DDD3 /* NotifyX@2x.png in Resources */,
 				EB632F3B16240D9D0003DDD3 /* RecommandViewController.xib in Resources */,
 				EB632F3D1624137C0003DDD3 /* CommentViewController.xib in Resources */,
-				EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */,
 				EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */,
 				EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */,
 				1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */,
@@ -1458,9 +1457,10 @@
 				EBBE2159162D5B0000CC5026 /* sina_active@2X.png in Resources */,
 				EBBE215B162D5CCB00CC5026 /* line2@2x.png in Resources */,
 				EBBE2164162D6B6200CC5026 /* SendCommentViewController.xib in Resources */,
-				EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */,
 				EBACDF65162FA64500A665D5 /* movie_placeholder@2x.png in Resources */,
 				EBACDF66162FA64500A665D5 /* video_placeholder@2x.png in Resources */,
+				EBACDF77162FD8BA00A665D5 /* u0_normal@2x.png in Resources */,
+				EBACDF79162FEF5A00A665D5 /* u2_normal@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

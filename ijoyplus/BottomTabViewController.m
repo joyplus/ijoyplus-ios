@@ -43,6 +43,10 @@
 #import "SearchFriendViewController.h"
 #import "MessageListViewController.h"
 #import "BlockAlertView.h"
+#import "WBEngine.h"
+#import "CacheUtility.h"
+#import "SFHFKeychainUtils.h"
+
 
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
@@ -154,8 +158,15 @@
     if ([viewController isKindOfClass: [FriendViewController class]] || [viewController isKindOfClass:[MyselfViewController class]] || [viewController isKindOfClass:[HomeViewController class]]) {
         NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
         if(![num boolValue]){
-            BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"会话已过期，请注销后重新登陆！"];
-            [alert setDestructiveButtonWithTitle:@"确定" block:nil];
+            BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"会话已过期，请重新登陆！"];
+            [alert setDestructiveButtonWithTitle:@"确定" block:^{
+                [[WBEngine sharedClient] logOut];
+                NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
+                [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
+                [[CacheUtility sharedCache] clear];
+                [[ContainerUtility sharedInstance] clear];
+                [self viewDidLoad];
+            }];
             [alert show];
             return NO;
         }

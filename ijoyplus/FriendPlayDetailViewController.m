@@ -65,7 +65,7 @@
             if(commentArray == nil || commentArray.count == 0){
                 commentArray = [[NSMutableArray alloc]initWithCapacity:5];
             }
-            [self loadTable];
+            [_tableView reloadData];
         } else {
 
         }
@@ -91,11 +91,13 @@
             return friendCommentArray.count;
 //        }
     }else {
-        if(commentArray.count > MAX_COMMENT_COUNT){
+        if(commentArray == nil || commentArray.count == 0){
+            return 1;
+        } else if (commentArray.count >= MAX_COMMENT_COUNT){
             return MAX_COMMENT_COUNT + 1;
         } else {
             return commentArray.count;
-        }       
+        }
     }
 }
 
@@ -114,7 +116,11 @@
             return cell;
 //        }
     } else {
-        if(indexPath.row == MAX_COMMENT_COUNT){
+        if(commentArray == nil || commentArray.count == 0){
+            NoRecordCell *cell = [self displayNoRecordCell:tableView];
+            cell.textField.text = @"暂无评论";
+            return cell;
+        } else if(indexPath.row == MAX_COMMENT_COUNT){
             LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
             return cell;
         } else {

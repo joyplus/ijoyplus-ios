@@ -142,7 +142,7 @@
         if([StringUtility stringIsEmpty:url]){
             avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
         } else {
-            [avatarImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@""]];
+            [avatarImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
             
         }
         avatarImageView.layer.cornerRadius = 27.5;

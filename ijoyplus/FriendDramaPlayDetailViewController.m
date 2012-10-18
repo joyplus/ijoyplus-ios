@@ -28,7 +28,7 @@
 #import "CommentViewController.h"
 
 #define MAX_FRIEND_COMMENT_COUNT 10
-#define MAX_COMMENT_COUNT 10
+#define MAX_COMMENT_COUNT 5
 
 @interface FriendDramaPlayDetailViewController () 
 @end
@@ -68,10 +68,7 @@
                 commentArray = [[NSMutableArray alloc]initWithCapacity:10];
             }
             [self initDramaCell];
-            if(pullToRefreshManager_ == nil){
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
-            }
-            [self loadTable];
+            [_tableView reloadData];
         } else {
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -94,6 +91,8 @@
     } else {
         if(commentArray == nil || commentArray.count == 0){
             return 1;
+        } else if (commentArray.count >= MAX_COMMENT_COUNT){
+            return MAX_COMMENT_COUNT + 1;
         } else {
             return commentArray.count;
         }
@@ -109,23 +108,21 @@
     } else if (indexPath.section == 2){
         return dramaCell;
     } else if (indexPath.section == 3){
-        if(commentArray == nil || commentArray.count == 0){
-            NoRecordCell *cell = [self displayNoRecordCell:tableView];
-            cell.textField.text = @"暂无评论";
-            return cell;
-        } else {
-            CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
-            return cell;
-        }
+         CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
+        return cell;
     } else {
         if(commentArray == nil || commentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
             cell.textField.text = @"暂无评论";
             return cell;
+        } else if(indexPath.row == MAX_COMMENT_COUNT){
+            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
+            return cell;
         } else {
             CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
             return cell;
         }
+
     }
 }
 

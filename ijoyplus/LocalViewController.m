@@ -34,10 +34,11 @@
     pageSize = 12;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *videos = [result objectForKey:@"show"];
-            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             if(videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
             }
@@ -45,9 +46,9 @@
         } else {
             
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
     [self addContentView];
@@ -55,7 +56,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(videoArray == nil || videoArray.count == 0){
+    if(videoArray == nil){
         [self showProgressBar];
     }
 }

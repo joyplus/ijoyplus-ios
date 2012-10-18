@@ -25,13 +25,15 @@
 #import "ShowPlayDetailViewController.h"
 #import "DramaPlayDetailViewController.h"
 #import "VideoPlayDetailViewController.h"
+#import "MBProgressHUD.h"
 
 @interface SearchFilmResultViewController (){
     NSMutableArray *itemsArray;
-//    EGORefreshTableHeaderView *_refreshHeaderView;
+    //    EGORefreshTableHeaderView *_refreshHeaderView;
 	BOOL _reloading;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
+    MBProgressHUD *HUD;
 }
 - (void)closeSelf;
 @end
@@ -47,8 +49,10 @@
     [self setSBar:nil];
     self.keyword = nil;
     itemsArray = nil;
-//    _refreshHeaderView = nil;
+    //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
+    HUD = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"top_segment_clicked" object:nil];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -70,18 +74,40 @@
 	
     [self.sBar setText:self.keyword];
     self.sBar.delegate = self;
-    itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
     [self.tableView setBackgroundColor:[UIColor clearColor]];
-    
-//    if (_refreshHeaderView == nil) {
-//		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.table.bounds.size.height, self.view.frame.size.width, self.table.bounds.size.height)];
-//        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
-//		view.delegate = self;
-//		[self.table addSubview:view];
-//		_refreshHeaderView = view;
-//		
-//	}
-//	[_refreshHeaderView refreshLastUpdatedDate];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
+
+    //    if (_refreshHeaderView == nil) {
+    //		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.table.bounds.size.height, self.view.frame.size.width, self.table.bounds.size.height)];
+    //        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+    //		view.delegate = self;
+    //		[self.table addSubview:view];
+    //		_refreshHeaderView = view;
+    //
+    //	}
+    //	[_refreshHeaderView refreshLastUpdatedDate];
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(itemsArray == nil){
+        [self showProgressBar];
+    }
+    [self getResult];
+}
+
+- (void)showProgressBar
+{
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:HUD];
+    HUD.opacity = 0;
+    [HUD show:YES];
+}
+
+- (void) hideProgressBar
+{
+    [HUD hide:YES afterDelay:0.3];
 }
 
 - (void)loadTable {
@@ -96,15 +122,12 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self getResult];
-}
-
 - (void)getResult
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.keyword, @"keyword", @"1", @"page_num", @"10", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *searchResult = [result objectForKey:@"results"];
@@ -119,7 +142,9 @@
             
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        NSLog(@"%@", error);
+        itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
 }
 
@@ -182,7 +207,7 @@
         CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeTailTruncation];
         cell.filmSubitleLabel.frame = CGRectMake(cell.filmSubitleLabel.frame.origin.x, cell.filmSubitleLabel.frame.origin.y, size.width, size.height);
         cell.filmSubitleLabel.text = content;
-    
+        
         UIView *backgroundView;
         if(indexPath.row % 2 == 0){
             backgroundView = [[CustomCellBlackBackground alloc]init];
@@ -261,7 +286,7 @@
     } else {
         return 110;
     }
-
+    
 }
 /*
  // Override to support conditional editing of the table view.
@@ -337,6 +362,7 @@
     [searchBar resignFirstResponder];
     self.keyword = self.sBar.text;
     [itemsArray removeAllObjects];
+    [self showProgressBar];
     [self getResult];
 }
 
@@ -401,7 +427,7 @@
  * @param scrollView: The scroll-view object in which the scrolling occurred.
  */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    //    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     [pullToRefreshManager_ tableViewScrolled];
 }
 
@@ -415,7 +441,7 @@
  * @param decelerate: YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-//    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    //    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     [pullToRefreshManager_ tableViewReleased];
 }
 
@@ -457,7 +483,7 @@
 	
 	//  model should call this when its done loading
 	_reloading = NO;
-//	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    //	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 	
 }
 
