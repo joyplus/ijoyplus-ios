@@ -10,7 +10,7 @@
 #import "SearchFilmCell.h"
 #import "UIImageView+WebCache.h"
 #import "SearchVideoCell.h"
-#import "PlayRootViewController.h"
+#import "PlayDetailViewController.h"
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "CustomCellBlackBackground.h"
@@ -22,9 +22,9 @@
 #import "ContainerUtility.h"
 #import "DateUtility.h"
 #import "NSDate-Utilities.h"
-#import "LocalPlayRootViewController.h"
-#import "DramaPlayRootViewController.h"
-#import "VideoPlayRootViewController.h"
+#import "ShowPlayDetailViewController.h"
+#import "DramaPlayDetailViewController.h"
+#import "VideoPlayDetailViewController.h"
 
 @interface SearchFilmResultViewController (){
     NSMutableArray *itemsArray;
@@ -310,15 +310,15 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *searchObject = [itemsArray objectAtIndex:indexPath.row];
     NSString *type = [searchObject objectForKey:@"prod_type"];
-    PlayRootViewController *viewController;
+    PlayDetailViewController *viewController;
     if([type isEqualToString:@"1"]){
-        viewController = [[PlayRootViewController alloc]init];
+        viewController = [[PlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"2"]){
-        viewController = [[DramaPlayRootViewController alloc]init];
+        viewController = [[DramaPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"3"]){
-        viewController = [[LocalPlayRootViewController alloc]init];
+        viewController = [[ShowPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"4"]){
-        viewController = [[VideoPlayRootViewController alloc]init];
+        viewController = [[VideoPlayDetailViewController alloc]initWithStretchImage];
     }
     viewController.programId = [searchObject valueForKey:@"prod_id"];
     [self.navigationController pushViewController:viewController animated:YES];

@@ -9,7 +9,6 @@
 #import "FriendViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
-#import "FriendPlayRootViewController.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
@@ -17,10 +16,6 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
-#import "FriendLocalPlayRootViewController.h"
-#import "FriendDramaPlayRootViewController.h"
-#import "FriendVideoPlayRootViewController.h"
-#import "FriendPlayRootViewController.h"
 #import "FriendPlayDetailViewController.h"
 #import "FriendDramaPlayDetailViewController.h"
 #import "FriendVideoPlayDetailViewController.h"

@@ -8,15 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A21C162AB1EB0054D55D /* CommentListViewController.xib */; };
-		1478A232162B02180054D55D /* FriendDramaPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */; };
-		1478A233162B02180054D55D /* FriendDramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A230162B02170054D55D /* FriendDramaPlayViewController.m */; };
-		1478A234162B02180054D55D /* FriendDramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */; };
-		1478A23A162B07AC0054D55D /* FriendVideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */; };
-		1478A23B162B07AC0054D55D /* FriendVideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */; };
-		1478A23C162B07AC0054D55D /* FriendVideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */; };
-		1478A242162B0B6D0054D55D /* FriendLocalPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */; };
-		1478A243162B0B6D0054D55D /* FriendLocalPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */; };
-		1478A244162B0B6D0054D55D /* FriendLocalPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */; };
 		EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02B842160094E30027F31C /* CustomSegmentedControl.m */; };
 		EB07617F16227CB100C9727C /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB07617D16227CB100C9727C /* RegisterViewController.m */; };
 		EB07618016227CB100C9727C /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB07617E16227CB100C9727C /* RegisterViewController.xib */; };
@@ -87,9 +78,6 @@
 		EB632F3B16240D9D0003DDD3 /* RecommandViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */; };
 		EB632F3D1624137C0003DDD3 /* CommentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F3C1624137B0003DDD3 /* CommentViewController.xib */; };
 		EB632F41162417C80003DDD3 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F3F162417C80003DDD3 /* CommentListViewController.m */; };
-		EB632F4816241D200003DDD3 /* LocalPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F4416241D1C0003DDD3 /* LocalPlayRootViewController.m */; };
-		EB632F4916241D200003DDD3 /* LocalPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB632F4616241D1E0003DDD3 /* LocalPlayViewController.m */; };
-		EB632F4A16241D200003DDD3 /* LocalPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB632F4716241D1F0003DDD3 /* LocalPlayViewController.xib */; };
 		EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EB632F4B16242F620003DDD3 /* u2_normal.png */; };
 		EB7841D2160C70550003FB10 /* FillFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7841D0160C70550003FB10 /* FillFormViewController.m */; };
 		EB7841D3160C70550003FB10 /* FillFormViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB7841D1160C70550003FB10 /* FillFormViewController.xib */; };
@@ -171,18 +159,12 @@
 		EBB24CC1162E8D1D008FDF04 /* PlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */; };
 		EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB24CC4162E8F3C008FDF04 /* u0_normal.png */; };
 		EBB24CD4162EC382008FDF04 /* DramaPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */; };
-		EBB24CD5162EC382008FDF04 /* PlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD0162EC381008FDF04 /* PlayRootViewController.m */; };
-		EBB24CD6162EC382008FDF04 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD2162EC381008FDF04 /* PlayViewController.m */; };
-		EBB24CD7162EC382008FDF04 /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB24CD3162EC382008FDF04 /* PlayViewController.xib */; };
 		EBB24CDA162EDA0D008FDF04 /* VideoPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */; };
 		EBB24CE0162EDC09008FDF04 /* ShowPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */; };
 		EBB24CE3162EE07F008FDF04 /* FriendPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */; };
 		EBB24CE6162EE4A8008FDF04 /* FriendDramaPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */; };
 		EBB24CE9162EEC48008FDF04 /* FriendVideoPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */; };
 		EBB24CEF162EF1B0008FDF04 /* FriendShowPlayDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */; };
-		EBB2FFBA161299B200E8D9A7 /* FriendPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */; };
-		EBB2FFBB161299B200E8D9A7 /* FriendPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */; };
-		EBB2FFBC161299B200E8D9A7 /* FriendPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */; };
 		EBB2FFBF1612A25000E8D9A7 /* FriendCellFactory.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFBE1612A25000E8D9A7 /* FriendCellFactory.xib */; };
 		EBB2FFC31612A28D00E8D9A7 /* LoadMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFC21612A28D00E8D9A7 /* LoadMoreCell.m */; };
 		EBB2FFC71612CF1000E8D9A7 /* MessageListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFC51612CF1000E8D9A7 /* MessageListViewController.m */; };
@@ -190,22 +172,7 @@
 		EBB2FFCA1612D23800E8D9A7 /* ListCellFactory.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFC91612D23800E8D9A7 /* ListCellFactory.xib */; };
 		EBB2FFCD1612D33F00E8D9A7 /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFCC1612D33F00E8D9A7 /* MessageCell.m */; };
 		EBB2FFD01612D57A00E8D9A7 /* MyCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */; };
-		EBB2FFE61612F8A100E8D9A7 /* DramaPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */; };
-		EBB2FFE71612F8A100E8D9A7 /* DramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */; };
-		EBB2FFE81612F8A100E8D9A7 /* DramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */; };
 		EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */; };
-		EBB33C53162BD8DB0047B3E1 /* MyDramaPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C40162BD8D80047B3E1 /* MyDramaPlayRootViewController.m */; };
-		EBB33C54162BD8DB0047B3E1 /* MyDramaPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C42162BD8D80047B3E1 /* MyDramaPlayViewController.m */; };
-		EBB33C55162BD8DB0047B3E1 /* MyDramaPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C43162BD8D90047B3E1 /* MyDramaPlayViewController.xib */; };
-		EBB33C56162BD8DB0047B3E1 /* MyLocalPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C44162BD8D90047B3E1 /* MyLocalPlayRootViewController.m */; };
-		EBB33C57162BD8DB0047B3E1 /* MyLocalPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C48162BD8D90047B3E1 /* MyLocalPlayViewController.m */; };
-		EBB33C58162BD8DB0047B3E1 /* MyLocalPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C49162BD8D90047B3E1 /* MyLocalPlayViewController.xib */; };
-		EBB33C59162BD8DB0047B3E1 /* MyPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C4B162BD8DA0047B3E1 /* MyPlayRootViewController.m */; };
-		EBB33C5A162BD8DB0047B3E1 /* MyPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C4D162BD8DA0047B3E1 /* MyPlayViewController.m */; };
-		EBB33C5B162BD8DB0047B3E1 /* MyPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C4E162BD8DB0047B3E1 /* MyPlayViewController.xib */; };
-		EBB33C5C162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C50162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m */; };
-		EBB33C5D162BD8DB0047B3E1 /* MyVideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */; };
-		EBB33C5E162BD8DB0047B3E1 /* MyVideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */; };
 		EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */; };
 		EBB33C66162C00CF0047B3E1 /* WeiBoInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C64162C00CC0047B3E1 /* WeiBoInviteViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB33C67162C00CF0047B3E1 /* WeiBoInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C65162C00CE0047B3E1 /* WeiBoInviteViewController.xib */; };
@@ -262,9 +229,6 @@
 		EBBEDE4916269E7A00A4B376 /* PopularUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBEDE4716269E7A00A4B376 /* PopularUserViewController.m */; };
 		EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */; };
 		EBBEDE511626C6DD00A4B376 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBEDE501626C6DD00A4B376 /* FriendCell.m */; };
-		EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */; };
-		EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */; };
-		EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */; };
 		EBC756D81627DF3A00B9B14A /* ContactFriendListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC756D61627DF3A00B9B14A /* ContactFriendListViewController.m */; };
 		EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBC756D71627DF3A00B9B14A /* ContactFriendListViewController.xib */; };
 		EBC756DC1627E48C00B9B14A /* PhoneNumberCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC756DB1627E48C00B9B14A /* PhoneNumberCell.m */; };
@@ -292,21 +256,6 @@
 
 /* Begin PBXFileReference section */
 		1478A21C162AB1EB0054D55D /* CommentListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentListViewController.xib; sourceTree = "<group>"; };
-		1478A22D162B02160054D55D /* FriendDramaPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDramaPlayRootViewController.h; sourceTree = "<group>"; };
-		1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDramaPlayRootViewController.m; sourceTree = "<group>"; };
-		1478A22F162B02170054D55D /* FriendDramaPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDramaPlayViewController.h; sourceTree = "<group>"; };
-		1478A230162B02170054D55D /* FriendDramaPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendDramaPlayViewController.m; sourceTree = "<group>"; };
-		1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendDramaPlayViewController.xib; sourceTree = "<group>"; };
-		1478A235162B07A90054D55D /* FriendVideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendVideoPlayRootViewController.h; sourceTree = "<group>"; };
-		1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendVideoPlayRootViewController.m; sourceTree = "<group>"; };
-		1478A237162B07AA0054D55D /* FriendVideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendVideoPlayViewController.h; sourceTree = "<group>"; };
-		1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendVideoPlayViewController.m; sourceTree = "<group>"; };
-		1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendVideoPlayViewController.xib; sourceTree = "<group>"; };
-		1478A23D162B0B6A0054D55D /* FriendLocalPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendLocalPlayRootViewController.h; sourceTree = "<group>"; };
-		1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendLocalPlayRootViewController.m; sourceTree = "<group>"; };
-		1478A23F162B0B6B0054D55D /* FriendLocalPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendLocalPlayViewController.h; sourceTree = "<group>"; };
-		1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendLocalPlayViewController.m; sourceTree = "<group>"; };
-		1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendLocalPlayViewController.xib; sourceTree = "<group>"; };
 		B94A1800965845D3B4A40881 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		DDF63B43DF6849BC89060EC7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB02B841160094E30027F31C /* CustomSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegmentedControl.h; sourceTree = "<group>"; };
@@ -410,11 +359,6 @@
 		EB632F3C1624137B0003DDD3 /* CommentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentViewController.xib; sourceTree = "<group>"; };
 		EB632F3E162417C80003DDD3 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
 		EB632F3F162417C80003DDD3 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
-		EB632F4316241D1B0003DDD3 /* LocalPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalPlayRootViewController.h; sourceTree = "<group>"; };
-		EB632F4416241D1C0003DDD3 /* LocalPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalPlayRootViewController.m; sourceTree = "<group>"; };
-		EB632F4516241D1D0003DDD3 /* LocalPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalPlayViewController.h; sourceTree = "<group>"; };
-		EB632F4616241D1E0003DDD3 /* LocalPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalPlayViewController.m; sourceTree = "<group>"; };
-		EB632F4716241D1F0003DDD3 /* LocalPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocalPlayViewController.xib; sourceTree = "<group>"; };
 		EB632F4B16242F620003DDD3 /* u2_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u2_normal.png; sourceTree = "<group>"; };
 		EB7841CF160C70550003FB10 /* FillFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FillFormViewController.h; sourceTree = "<group>"; };
 		EB7841D0160C70550003FB10 /* FillFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FillFormViewController.m; sourceTree = "<group>"; };
@@ -544,11 +488,6 @@
 		EBB24CC4162E8F3C008FDF04 /* u0_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = u0_normal.png; sourceTree = "<group>"; };
 		EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayDetailViewController.h; sourceTree = "<group>"; };
 		EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayDetailViewController.m; sourceTree = "<group>"; };
-		EBB24CCF162EC380008FDF04 /* PlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayRootViewController.h; sourceTree = "<group>"; };
-		EBB24CD0162EC381008FDF04 /* PlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayRootViewController.m; sourceTree = "<group>"; };
-		EBB24CD1162EC381008FDF04 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
-		EBB24CD2162EC381008FDF04 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
-		EBB24CD3162EC382008FDF04 /* PlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayViewController.xib; sourceTree = "<group>"; };
 		EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayDetailViewController.h; sourceTree = "<group>"; };
 		EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayDetailViewController.m; sourceTree = "<group>"; };
 		EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowPlayDetailViewController.h; sourceTree = "<group>"; };
@@ -561,11 +500,6 @@
 		EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendVideoPlayDetailViewController.m; sourceTree = "<group>"; };
 		EBB24CED162EF189008FDF04 /* FriendShowPlayDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendShowPlayDetailViewController.h; sourceTree = "<group>"; };
 		EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendShowPlayDetailViewController.m; sourceTree = "<group>"; };
-		EBB2FFB5161299B200E8D9A7 /* FriendPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayRootViewController.h; sourceTree = "<group>"; };
-		EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendPlayRootViewController.m; sourceTree = "<group>"; };
-		EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendPlayViewController.h; sourceTree = "<group>"; };
-		EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendPlayViewController.m; sourceTree = "<group>"; };
-		EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FriendPlayViewController.xib; sourceTree = "<group>"; };
 		EBB2FFBE1612A25000E8D9A7 /* FriendCellFactory.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = FriendCellFactory.xib; path = component/FriendCellFactory.xib; sourceTree = "<group>"; };
 		EBB2FFC11612A28D00E8D9A7 /* LoadMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoadMoreCell.h; path = component/LoadMoreCell.h; sourceTree = "<group>"; };
 		EBB2FFC21612A28D00E8D9A7 /* LoadMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoadMoreCell.m; path = component/LoadMoreCell.m; sourceTree = "<group>"; };
@@ -577,34 +511,9 @@
 		EBB2FFCC1612D33F00E8D9A7 /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MessageCell.m; path = component/MessageCell.m; sourceTree = "<group>"; };
 		EBB2FFCE1612D57A00E8D9A7 /* MyCommentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCommentView.h; path = component/MyCommentView.h; sourceTree = "<group>"; };
 		EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCommentView.m; path = component/MyCommentView.m; sourceTree = "<group>"; };
-		EBB2FFE11612F89F00E8D9A7 /* DramaPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayRootViewController.h; sourceTree = "<group>"; };
-		EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayRootViewController.m; sourceTree = "<group>"; };
-		EBB2FFE31612F8A000E8D9A7 /* DramaPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaPlayViewController.h; sourceTree = "<group>"; };
-		EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaPlayViewController.m; sourceTree = "<group>"; };
-		EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DramaPlayViewController.xib; sourceTree = "<group>"; };
 		EBB2FFE91612FB9800E8D9A7 /* DramaCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DramaCell.h; path = component/DramaCell.h; sourceTree = "<group>"; };
 		EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DramaCell.m; path = component/DramaCell.m; sourceTree = "<group>"; };
 		EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
-		EBB33C3F162BD8D80047B3E1 /* MyDramaPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDramaPlayRootViewController.h; sourceTree = "<group>"; };
-		EBB33C40162BD8D80047B3E1 /* MyDramaPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDramaPlayRootViewController.m; sourceTree = "<group>"; };
-		EBB33C41162BD8D80047B3E1 /* MyDramaPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDramaPlayViewController.h; sourceTree = "<group>"; };
-		EBB33C42162BD8D80047B3E1 /* MyDramaPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDramaPlayViewController.m; sourceTree = "<group>"; };
-		EBB33C43162BD8D90047B3E1 /* MyDramaPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyDramaPlayViewController.xib; sourceTree = "<group>"; };
-		EBB33C44162BD8D90047B3E1 /* MyLocalPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLocalPlayRootViewController.m; sourceTree = "<group>"; };
-		EBB33C45162BD8D90047B3E1 /* MyVideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoPlayViewController.h; sourceTree = "<group>"; };
-		EBB33C46162BD8D90047B3E1 /* MyLocalPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLocalPlayRootViewController.h; sourceTree = "<group>"; };
-		EBB33C47162BD8D90047B3E1 /* MyLocalPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLocalPlayViewController.h; sourceTree = "<group>"; };
-		EBB33C48162BD8D90047B3E1 /* MyLocalPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyLocalPlayViewController.m; sourceTree = "<group>"; };
-		EBB33C49162BD8D90047B3E1 /* MyLocalPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyLocalPlayViewController.xib; sourceTree = "<group>"; };
-		EBB33C4A162BD8DA0047B3E1 /* MyPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPlayRootViewController.h; sourceTree = "<group>"; };
-		EBB33C4B162BD8DA0047B3E1 /* MyPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPlayRootViewController.m; sourceTree = "<group>"; };
-		EBB33C4C162BD8DA0047B3E1 /* MyPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyPlayViewController.h; sourceTree = "<group>"; };
-		EBB33C4D162BD8DA0047B3E1 /* MyPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyPlayViewController.m; sourceTree = "<group>"; };
-		EBB33C4E162BD8DB0047B3E1 /* MyPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyPlayViewController.xib; sourceTree = "<group>"; };
-		EBB33C4F162BD8DB0047B3E1 /* MyVideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyVideoPlayRootViewController.h; sourceTree = "<group>"; };
-		EBB33C50162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyVideoPlayRootViewController.m; sourceTree = "<group>"; };
-		EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyVideoPlayViewController.m; sourceTree = "<group>"; };
-		EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyVideoPlayViewController.xib; sourceTree = "<group>"; };
 		EBB33C60162BDB280047B3E1 /* RecommendReasonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendReasonCell.h; sourceTree = "<group>"; };
 		EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendReasonCell.m; sourceTree = "<group>"; };
 		EBB33C63162C00CB0047B3E1 /* WeiBoInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiBoInviteViewController.h; sourceTree = "<group>"; };
@@ -681,11 +590,6 @@
 		EBBEDE4816269E7A00A4B376 /* PopularUserViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopularUserViewController.xib; sourceTree = "<group>"; };
 		EBBEDE4F1626C6DD00A4B376 /* FriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendCell.h; path = component/FriendCell.h; sourceTree = "<group>"; };
 		EBBEDE501626C6DD00A4B376 /* FriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendCell.m; path = component/FriendCell.m; sourceTree = "<group>"; };
-		EBC23E1A16259AA9002BBD98 /* VideoPlayRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayRootViewController.h; sourceTree = "<group>"; };
-		EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayRootViewController.m; sourceTree = "<group>"; };
-		EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoPlayViewController.h; sourceTree = "<group>"; };
-		EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoPlayViewController.m; sourceTree = "<group>"; };
-		EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoPlayViewController.xib; sourceTree = "<group>"; };
 		EBC756D51627DF3A00B9B14A /* ContactFriendListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactFriendListViewController.h; sourceTree = "<group>"; };
 		EBC756D61627DF3A00B9B14A /* ContactFriendListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactFriendListViewController.m; sourceTree = "<group>"; };
 		EBC756D71627DF3A00B9B14A /* ContactFriendListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContactFriendListViewController.xib; sourceTree = "<group>"; };
@@ -1025,11 +929,6 @@
 				EBB1B3E9160188D400E04289 /* MovieViewController.m */,
 				EBB24CBE162E8D1D008FDF04 /* PlayDetailViewController.h */,
 				EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */,
-				EBB24CCF162EC380008FDF04 /* PlayRootViewController.h */,
-				EBB24CD0162EC381008FDF04 /* PlayRootViewController.m */,
-				EBB24CD1162EC381008FDF04 /* PlayViewController.h */,
-				EBB24CD2162EC381008FDF04 /* PlayViewController.m */,
-				EBB24CD3162EC382008FDF04 /* PlayViewController.xib */,
 				EBBE2160162D6B6000CC5026 /* SendCommentViewController.h */,
 				EBBE2161162D6B6000CC5026 /* SendCommentViewController.m */,
 				EBBE2162162D6B6100CC5026 /* SendCommentViewController.xib */,
@@ -1040,27 +939,12 @@
 				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
 				EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */,
 				EBB24CCE162EC380008FDF04 /* DramaPlayDetailViewController.m */,
-				EBB2FFE11612F89F00E8D9A7 /* DramaPlayRootViewController.h */,
-				EBB2FFE21612F89F00E8D9A7 /* DramaPlayRootViewController.m */,
-				EBB2FFE31612F8A000E8D9A7 /* DramaPlayViewController.h */,
-				EBB2FFE41612F8A000E8D9A7 /* DramaPlayViewController.m */,
-				EBB2FFE51612F8A000E8D9A7 /* DramaPlayViewController.xib */,
 				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
 				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
-				EBC23E1A16259AA9002BBD98 /* VideoPlayRootViewController.h */,
-				EBC23E1B16259AAA002BBD98 /* VideoPlayRootViewController.m */,
-				EBC23E1C16259AAA002BBD98 /* VideoPlayViewController.h */,
-				EBC23E1D16259AAA002BBD98 /* VideoPlayViewController.m */,
-				EBC23E1E16259AAB002BBD98 /* VideoPlayViewController.xib */,
 				EBB24CD8162EDA0B008FDF04 /* VideoPlayDetailViewController.h */,
 				EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */,
 				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
 				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
-				EB632F4316241D1B0003DDD3 /* LocalPlayRootViewController.h */,
-				EB632F4416241D1C0003DDD3 /* LocalPlayRootViewController.m */,
-				EB632F4516241D1D0003DDD3 /* LocalPlayViewController.h */,
-				EB632F4616241D1E0003DDD3 /* LocalPlayViewController.m */,
-				EB632F4716241D1F0003DDD3 /* LocalPlayViewController.xib */,
 				EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */,
 				EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */,
 				EBAF6A3F15FDDBB300938FE3 /* SearchFilmViewController.h */,
@@ -1102,32 +986,12 @@
 				EB11D2C91611BD6000027F07 /* FriendDetailViewController.h */,
 				EB11D2CA1611BD6000027F07 /* FriendDetailViewController.m */,
 				EB11D2CB1611BD6000027F07 /* FriendDetailViewController.xib */,
-				EBB2FFB5161299B200E8D9A7 /* FriendPlayRootViewController.h */,
-				EBB2FFB6161299B200E8D9A7 /* FriendPlayRootViewController.m */,
-				EBB2FFB7161299B200E8D9A7 /* FriendPlayViewController.h */,
-				EBB2FFB8161299B200E8D9A7 /* FriendPlayViewController.m */,
-				EBB2FFB9161299B200E8D9A7 /* FriendPlayViewController.xib */,
 				EBB24CE1162EE07E008FDF04 /* FriendPlayDetailViewController.h */,
 				EBB24CE2162EE07E008FDF04 /* FriendPlayDetailViewController.m */,
-				1478A22D162B02160054D55D /* FriendDramaPlayRootViewController.h */,
-				1478A22E162B02160054D55D /* FriendDramaPlayRootViewController.m */,
-				1478A22F162B02170054D55D /* FriendDramaPlayViewController.h */,
-				1478A230162B02170054D55D /* FriendDramaPlayViewController.m */,
-				1478A231162B02180054D55D /* FriendDramaPlayViewController.xib */,
 				EBB24CE4162EE4A6008FDF04 /* FriendDramaPlayDetailViewController.h */,
 				EBB24CE5162EE4A7008FDF04 /* FriendDramaPlayDetailViewController.m */,
-				1478A235162B07A90054D55D /* FriendVideoPlayRootViewController.h */,
-				1478A236162B07A90054D55D /* FriendVideoPlayRootViewController.m */,
-				1478A237162B07AA0054D55D /* FriendVideoPlayViewController.h */,
-				1478A238162B07AA0054D55D /* FriendVideoPlayViewController.m */,
-				1478A239162B07AB0054D55D /* FriendVideoPlayViewController.xib */,
 				EBB24CE7162EEC46008FDF04 /* FriendVideoPlayDetailViewController.h */,
 				EBB24CE8162EEC47008FDF04 /* FriendVideoPlayDetailViewController.m */,
-				1478A23D162B0B6A0054D55D /* FriendLocalPlayRootViewController.h */,
-				1478A23E162B0B6B0054D55D /* FriendLocalPlayRootViewController.m */,
-				1478A23F162B0B6B0054D55D /* FriendLocalPlayViewController.h */,
-				1478A240162B0B6C0054D55D /* FriendLocalPlayViewController.m */,
-				1478A241162B0B6D0054D55D /* FriendLocalPlayViewController.xib */,
 				EBB24CED162EF189008FDF04 /* FriendShowPlayDetailViewController.h */,
 				EBB24CEE162EF1AE008FDF04 /* FriendShowPlayDetailViewController.m */,
 				EB632F3E162417C80003DDD3 /* CommentListViewController.h */,
@@ -1163,11 +1027,6 @@
 				EBB064D7160ABAB000BE685B /* HomeViewController.h */,
 				EBE44B641609A01E002BEB0C /* HomeViewController.m */,
 				EBE44B651609A01E002BEB0C /* HomeViewController.xib */,
-				EBB33C4A162BD8DA0047B3E1 /* MyPlayRootViewController.h */,
-				EBB33C4B162BD8DA0047B3E1 /* MyPlayRootViewController.m */,
-				EBB33C4C162BD8DA0047B3E1 /* MyPlayViewController.h */,
-				EBB33C4D162BD8DA0047B3E1 /* MyPlayViewController.m */,
-				EBB33C4E162BD8DB0047B3E1 /* MyPlayViewController.xib */,
 				EBACDF56162F987600A665D5 /* MyDramaPlayDetailViewController.h */,
 				EBACDF57162F987600A665D5 /* MyDramaPlayDetailViewController.m */,
 				EBACDF58162F987600A665D5 /* MyPlayDetailViewController.h */,
@@ -1176,21 +1035,6 @@
 				EBACDF5B162F987600A665D5 /* MyShowPlayDetailViewController.m */,
 				EBACDF5C162F987600A665D5 /* MyVideoPlayDetailViewController.h */,
 				EBACDF5D162F987600A665D5 /* MyVideoPlayDetailViewController.m */,
-				EBB33C3F162BD8D80047B3E1 /* MyDramaPlayRootViewController.h */,
-				EBB33C40162BD8D80047B3E1 /* MyDramaPlayRootViewController.m */,
-				EBB33C41162BD8D80047B3E1 /* MyDramaPlayViewController.h */,
-				EBB33C42162BD8D80047B3E1 /* MyDramaPlayViewController.m */,
-				EBB33C43162BD8D90047B3E1 /* MyDramaPlayViewController.xib */,
-				EBB33C46162BD8D90047B3E1 /* MyLocalPlayRootViewController.h */,
-				EBB33C44162BD8D90047B3E1 /* MyLocalPlayRootViewController.m */,
-				EBB33C47162BD8D90047B3E1 /* MyLocalPlayViewController.h */,
-				EBB33C48162BD8D90047B3E1 /* MyLocalPlayViewController.m */,
-				EBB33C49162BD8D90047B3E1 /* MyLocalPlayViewController.xib */,
-				EBB33C4F162BD8DB0047B3E1 /* MyVideoPlayRootViewController.h */,
-				EBB33C50162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m */,
-				EBB33C45162BD8D90047B3E1 /* MyVideoPlayViewController.h */,
-				EBB33C51162BD8DB0047B3E1 /* MyVideoPlayViewController.m */,
-				EBB33C52162BD8DB0047B3E1 /* MyVideoPlayViewController.xib */,
 				EB24CC84160AE49B009618C6 /* FollowedUserViewController.h */,
 				EB24CC85160AE49B009618C6 /* FollowedUserViewController.m */,
 				EB24CC86160AE49B009618C6 /* FollowedUserViewController.xib */,
@@ -1547,11 +1391,9 @@
 				EB11D2B11611AE2100027F07 /* SearchFriendViewController.xib in Resources */,
 				EB11D2B61611B29200027F07 /* FriendListViewController.xib in Resources */,
 				EB11D2CD1611BD6100027F07 /* FriendDetailViewController.xib in Resources */,
-				EBB2FFBC161299B200E8D9A7 /* FriendPlayViewController.xib in Resources */,
 				EBB2FFBF1612A25000E8D9A7 /* FriendCellFactory.xib in Resources */,
 				EBB2FFC81612CF1000E8D9A7 /* MessageListViewController.xib in Resources */,
 				EBB2FFCA1612D23800E8D9A7 /* ListCellFactory.xib in Resources */,
-				EBB2FFE81612F8A100E8D9A7 /* DramaPlayViewController.xib in Resources */,
 				EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */,
 				EBAFB515161443DC00C0263B /* tab_btn_bg@2x.png in Resources */,
 				EBB217D91615740900A931CA /* back_down@2x.png in Resources */,
@@ -1574,19 +1416,10 @@
 				EB632F2E1623DE110003DDD3 /* NotifyX@2x.png in Resources */,
 				EB632F3B16240D9D0003DDD3 /* RecommandViewController.xib in Resources */,
 				EB632F3D1624137C0003DDD3 /* CommentViewController.xib in Resources */,
-				EB632F4A16241D200003DDD3 /* LocalPlayViewController.xib in Resources */,
 				EB632F4C16242F620003DDD3 /* u2_normal.png in Resources */,
-				EBC23E2116259AAB002BBD98 /* VideoPlayViewController.xib in Resources */,
 				EBBEDE4A16269E7A00A4B376 /* PopularUserViewController.xib in Resources */,
 				EBC756D91627DF3A00B9B14A /* ContactFriendListViewController.xib in Resources */,
 				1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */,
-				1478A234162B02180054D55D /* FriendDramaPlayViewController.xib in Resources */,
-				1478A23C162B07AC0054D55D /* FriendVideoPlayViewController.xib in Resources */,
-				1478A244162B0B6D0054D55D /* FriendLocalPlayViewController.xib in Resources */,
-				EBB33C55162BD8DB0047B3E1 /* MyDramaPlayViewController.xib in Resources */,
-				EBB33C58162BD8DB0047B3E1 /* MyLocalPlayViewController.xib in Resources */,
-				EBB33C5B162BD8DB0047B3E1 /* MyPlayViewController.xib in Resources */,
-				EBB33C5E162BD8DB0047B3E1 /* MyVideoPlayViewController.xib in Resources */,
 				EBB33C67162C00CF0047B3E1 /* WeiBoInviteViewController.xib in Resources */,
 				EBBE211A162D156300CC5026 /* bg.png in Resources */,
 				EBBE211B162D156300CC5026 /* bg@2x.png in Resources */,
@@ -1615,7 +1448,6 @@
 				EBBE215B162D5CCB00CC5026 /* line2@2x.png in Resources */,
 				EBBE2164162D6B6200CC5026 /* SendCommentViewController.xib in Resources */,
 				EBB24CC5162E8F3C008FDF04 /* u0_normal.png in Resources */,
-				EBB24CD7162EC382008FDF04 /* PlayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1717,14 +1549,10 @@
 				EB11D2B51611B29200027F07 /* FriendListViewController.m in Sources */,
 				EB11D2C11611BB0200027F07 /* CustomColoredAccessory.m in Sources */,
 				EB11D2CC1611BD6100027F07 /* FriendDetailViewController.m in Sources */,
-				EBB2FFBA161299B200E8D9A7 /* FriendPlayRootViewController.m in Sources */,
-				EBB2FFBB161299B200E8D9A7 /* FriendPlayViewController.m in Sources */,
 				EBB2FFC31612A28D00E8D9A7 /* LoadMoreCell.m in Sources */,
 				EBB2FFC71612CF1000E8D9A7 /* MessageListViewController.m in Sources */,
 				EBB2FFCD1612D33F00E8D9A7 /* MessageCell.m in Sources */,
 				EBB2FFD01612D57A00E8D9A7 /* MyCommentView.m in Sources */,
-				EBB2FFE61612F8A100E8D9A7 /* DramaPlayRootViewController.m in Sources */,
-				EBB2FFE71612F8A100E8D9A7 /* DramaPlayViewController.m in Sources */,
 				EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */,
 				EBAFB4F81613EFDE00C0263B /* HPGrowingTextView.m in Sources */,
 				EBAFB4F91613EFDE00C0263B /* HPTextViewInternal.m in Sources */,
@@ -1738,30 +1566,12 @@
 				EB632F1E1623D0470003DDD3 /* NoRecordCell.m in Sources */,
 				EB632F3A16240D9D0003DDD3 /* RecommandViewController.m in Sources */,
 				EB632F41162417C80003DDD3 /* CommentListViewController.m in Sources */,
-				EB632F4816241D200003DDD3 /* LocalPlayRootViewController.m in Sources */,
-				EB632F4916241D200003DDD3 /* LocalPlayViewController.m in Sources */,
-				EBC23E1F16259AAB002BBD98 /* VideoPlayRootViewController.m in Sources */,
-				EBC23E2016259AAB002BBD98 /* VideoPlayViewController.m in Sources */,
 				EBBEDE441626741C00A4B376 /* NSDate-Utilities.m in Sources */,
 				EBBEDE4916269E7A00A4B376 /* PopularUserViewController.m in Sources */,
 				EBBEDE511626C6DD00A4B376 /* FriendCell.m in Sources */,
 				EBC756D81627DF3A00B9B14A /* ContactFriendListViewController.m in Sources */,
 				EBC756DC1627E48C00B9B14A /* PhoneNumberCell.m in Sources */,
 				EBC756EE1627FC5F00B9B14A /* CustomPlaceHolderTextView.m in Sources */,
-				1478A232162B02180054D55D /* FriendDramaPlayRootViewController.m in Sources */,
-				1478A233162B02180054D55D /* FriendDramaPlayViewController.m in Sources */,
-				1478A23A162B07AC0054D55D /* FriendVideoPlayRootViewController.m in Sources */,
-				1478A23B162B07AC0054D55D /* FriendVideoPlayViewController.m in Sources */,
-				1478A242162B0B6D0054D55D /* FriendLocalPlayRootViewController.m in Sources */,
-				1478A243162B0B6D0054D55D /* FriendLocalPlayViewController.m in Sources */,
-				EBB33C53162BD8DB0047B3E1 /* MyDramaPlayRootViewController.m in Sources */,
-				EBB33C54162BD8DB0047B3E1 /* MyDramaPlayViewController.m in Sources */,
-				EBB33C56162BD8DB0047B3E1 /* MyLocalPlayRootViewController.m in Sources */,
-				EBB33C57162BD8DB0047B3E1 /* MyLocalPlayViewController.m in Sources */,
-				EBB33C59162BD8DB0047B3E1 /* MyPlayRootViewController.m in Sources */,
-				EBB33C5A162BD8DB0047B3E1 /* MyPlayViewController.m in Sources */,
-				EBB33C5C162BD8DB0047B3E1 /* MyVideoPlayRootViewController.m in Sources */,
-				EBB33C5D162BD8DB0047B3E1 /* MyVideoPlayViewController.m in Sources */,
 				EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */,
 				EBB33C66162C00CF0047B3E1 /* WeiBoInviteViewController.m in Sources */,
 				EBBE2128162D156300CC5026 /* WBAuthorize.m in Sources */,
@@ -1776,8 +1586,6 @@
 				EBBE2163162D6B6200CC5026 /* SendCommentViewController.m in Sources */,
 				EBB24CC1162E8D1D008FDF04 /* PlayDetailViewController.m in Sources */,
 				EBB24CD4162EC382008FDF04 /* DramaPlayDetailViewController.m in Sources */,
-				EBB24CD5162EC382008FDF04 /* PlayRootViewController.m in Sources */,
-				EBB24CD6162EC382008FDF04 /* PlayViewController.m in Sources */,
 				EBB24CDA162EDA0D008FDF04 /* VideoPlayDetailViewController.m in Sources */,
 				EBB24CE0162EDC09008FDF04 /* ShowPlayDetailViewController.m in Sources */,
 				EBB24CE3162EE07F008FDF04 /* FriendPlayDetailViewController.m in Sources */,

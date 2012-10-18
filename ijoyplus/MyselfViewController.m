@@ -8,10 +8,10 @@
 #import "ServiceConstants.h"
 #import "DateUtility.h"
 #import "HomeViewController.h"
-#import "LocalPlayRootViewController.h"
-#import "DramaPlayRootViewController.h"
-#import "VideoPlayRootViewController.h"
-#import "PlayRootViewController.h"
+#import "ShowPlayDetailViewController.h"
+#import "DramaPlayDetailViewController.h"
+#import "VideoPlayDetailViewController.h"
+#import "PlayDetailViewController.h"
 
 @interface MyselfViewController(){
     NSMutableArray *itemsArray;
@@ -189,15 +189,15 @@
     UIButton *btn = (UIButton *)sender;
     NSDictionary *item = [itemsArray objectAtIndex:btn.tag];
     NSString *type = [item objectForKey:@"prod_type"];
-    PlayRootViewController *viewController;
+    PlayDetailViewController *viewController;
     if([type isEqualToString:@"1"]){
-        viewController = [[PlayRootViewController alloc]init];
+        viewController = [[PlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"2"]){
-        viewController = [[DramaPlayRootViewController alloc]init];
+        viewController = [[DramaPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"3"]){
-        viewController = [[LocalPlayRootViewController alloc]init];
+        viewController = [[ShowPlayDetailViewController alloc]initWithStretchImage];
     } else if([type isEqualToString:@"4"]){
-        viewController = [[VideoPlayRootViewController alloc]init];
+        viewController = [[VideoPlayDetailViewController alloc]initWithStretchImage];
     } else {
         HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
         viewController.userid = [[itemsArray objectAtIndex:btn.tag] valueForKey:@"friend_id"];
