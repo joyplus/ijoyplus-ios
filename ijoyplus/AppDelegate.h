@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TencentOAuth.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 - (void)refreshRootView;

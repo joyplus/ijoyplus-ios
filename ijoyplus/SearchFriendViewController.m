@@ -185,7 +185,10 @@
 
 - (void)closeSelf
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    UIViewController *viewController = [self.navigationController popViewControllerAnimated:YES];
+    if(viewController == nil){
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (void)uploadAddressBook

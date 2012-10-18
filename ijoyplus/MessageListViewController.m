@@ -360,15 +360,14 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *comment = [result objectForKey:@"msgs"];
-            commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             if(comment.count > 0){
                 [commentArray addObjectsFromArray:comment];
-                [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
                 reloads_ ++;
             }
         } else {
             
         }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];

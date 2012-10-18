@@ -42,6 +42,7 @@
 #import "ContainerUtility.h"
 #import "SearchFriendViewController.h"
 #import "MessageListViewController.h"
+#import "BlockAlertView.h"
 
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
@@ -150,6 +151,15 @@
 #pragma mark - Tab bar delegate
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
+    if ([viewController isKindOfClass: [FriendViewController class]] || [viewController isKindOfClass:[MyselfViewController class]] || [viewController isKindOfClass:[HomeViewController class]]) {
+        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+        if(![num boolValue]){
+            BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"会话已过期，请注销后重新登陆！"];
+            [alert setDestructiveButtonWithTitle:@"确定" block:nil];
+            [alert show];
+            return NO;
+        }
+    } 
     if([viewController isKindOfClass:[PopularSegmentViewController class]]){
         NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
         if([num boolValue]){

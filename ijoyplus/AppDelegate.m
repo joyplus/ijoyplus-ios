@@ -106,32 +106,12 @@
         
     }
     detailViewController = [[BottomTabViewController alloc] init];
-    detailViewController.delegate = self;
     UINavigationController *viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];
     [self monitorReachability];
     return YES;
-}
-
-#pragma mark - Tab bar delegate
-- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
-{
-    if ([viewController isKindOfClass: [FriendViewController class]] || [viewController isKindOfClass:[MyselfViewController class]] || [viewController isKindOfClass:[HomeViewController class]]) {
-        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-        if([num boolValue]){
-            return YES;
-        } else {
-            BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"会话已过期，请重新登陆！"];
-            [alert setDestructiveButtonWithTitle:@"确定" block:nil];
-            [alert show];
-            return NO;
-        }
-    } else {
-        return YES;
-    }
-    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

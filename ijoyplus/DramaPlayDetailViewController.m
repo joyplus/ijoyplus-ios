@@ -85,7 +85,7 @@
 - (void)setPlayCellValue
 {
     NSString *name = [drama objectForKey:@"name"];
-    CGSize constraint = CGSizeMake(290, 20000.0f);
+    CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
     [playCell.filmTitleLabel setNumberOfLines:0];
@@ -126,7 +126,7 @@
 
 - (void)initDramaCell
 {
-    dramaCell.frame = CGRectMake(0, 0, self.view.frame.size.width, ceil(totalDramaCount / 5.0) * 35);
+    dramaCell.frame = CGRectMake(0, 0, self.view.frame.size.width, ceil(totalDramaCount / 5.0) * 30 + 5);
     for (int i = 0; i < totalDramaCount; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         btn.tag = i+1;
