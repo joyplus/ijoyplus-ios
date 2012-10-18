@@ -37,6 +37,7 @@
 @implementation PopularUserViewController
 
 @synthesize fromController;
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -192,10 +193,14 @@
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         btn.frame = CGRectMake(0, 0, 96, 25);
         btn.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 45);
-        [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
         [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
+        if([fromController isEqualToString:@"SearchFriendViewController"]){
+            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
+        } else {
+            [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+        }
         btn.tag = indexPath.row * 3 + i;
         [cell.contentView addSubview:btn];
     }
