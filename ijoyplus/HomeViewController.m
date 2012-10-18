@@ -11,7 +11,7 @@
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "CMConstants.h"
-#import "PlayRootViewController.h"
+#import "PlayDetailViewController.h"
 #import "FollowedUserViewController.h"
 #import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
@@ -21,13 +21,13 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
-#import "LocalPlayRootViewController.h"
-#import "DramaPlayRootViewController.h"
-#import "VideoPlayRootViewController.h"
-#import "MyPlayRootViewController.h"
-#import "MyLocalPlayRootViewController.h"
-#import "MyDramaPlayRootViewController.h"
-#import "MyVideoPlayRootViewController.h"
+#import "ShowPlayDetailViewController.h"
+#import "DramaPlayDetailViewController.h"
+#import "VideoPlayDetailViewController.h"
+#import "MyPlayDetailViewController.h"
+#import "MyShowPlayDetailViewController.h"
+#import "MyDramaPlayDetailViewController.h"
+#import "MyVideoPlayDetailViewController.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -341,26 +341,26 @@
     int index = (indexPath.row-1) * 3 + indexPath.section;
     NSDictionary *program = [videoArray objectAtIndex:index];
     NSString *type = [[videoArray objectAtIndex:index] objectForKey:@"content_type"];
-    PlayRootViewController *viewController;
+    PlayDetailViewController *viewController;
     if(self.segment.selectedSegmentIndex == 2){
         if([type isEqualToString:@"1"]){
-            viewController = [[MyPlayRootViewController alloc]init];
+            viewController = [[MyPlayDetailViewController alloc]initWithStretchImage];
         } else if([type isEqualToString:@"2"]){
-            viewController = [[MyDramaPlayRootViewController alloc]init];
+            viewController = [[MyDramaPlayDetailViewController alloc]initWithStretchImage];
         } else if([type isEqualToString:@"3"]){
-            viewController = [[MyLocalPlayRootViewController alloc]init];
+            viewController = [[MyShowPlayDetailViewController alloc]initWithStretchImage];
         } else if([type isEqualToString:@"4"]){
-            viewController = [[MyVideoPlayRootViewController alloc]init];
+            viewController = [[MyVideoPlayDetailViewController alloc]initWithStretchImage];
         }
     } else {
         if([type isEqualToString:@"1"]){
-            viewController = [[PlayRootViewController alloc]init];
+            viewController = [[PlayDetailViewController alloc]initWithStretchImage];
         } else if([type isEqualToString:@"2"]){
-            viewController = [[DramaPlayRootViewController alloc]init];
+            viewController = [[DramaPlayDetailViewController alloc]initWithStretchImage];
         } else if([type isEqualToString:@"3"]){
-            viewController = [[LocalPlayRootViewController alloc]init];
+            viewController = [[ShowPlayDetailViewController alloc]initWithStretchImage];
         } else if([type isEqualToString:@"4"]){
-            viewController = [[VideoPlayRootViewController alloc]init];
+            viewController = [[VideoPlayDetailViewController alloc]initWithStretchImage];
         }
     }    
     viewController.programId = [program valueForKey:@"content_id"];
