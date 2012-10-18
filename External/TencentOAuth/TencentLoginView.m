@@ -427,7 +427,7 @@ params   = _params;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-	NSString *ss=[webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"];	
+//	NSString *ss=[webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"];
 	[_spinner stopAnimating];
 	_spinner.hidden = YES;
 	

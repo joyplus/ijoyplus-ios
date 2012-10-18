@@ -12,9 +12,7 @@
 + (BOOL ) stringIsEmpty:(NSString *) aString;
 + (BOOL ) stringIsEmpty:(NSString *) aString shouldCleanWhiteSpace:(BOOL)cleanWhileSpace;
 + (NSString*) nullToEmpty:(NSString *) aString;
-+ (NSString*) generateClassStudentStatusKey:(NSString *) studentId classInfoObjectId:(NSString*) classInfoObjectId;
 + (BOOL ) isNotEqualToNull:(NSObject *) param;
 + (BOOL) IsValidEmail:(NSString*) checkString;
 
-+ (NSString*) generateChannelNameForMerchant:(NSString *) strMerchantObjId;
 @end

@@ -313,8 +313,6 @@
  @param      response response
  */
 - (void)checkPageFansResponse:(APIResponse*) response;
-
-/**
  
  /**
  * Called when the add_share has response.

@@ -247,15 +247,15 @@
     if (animated)
     {
 //        [panelView setAlpha:0];
-        CGAffineTransform transform = CGAffineTransformIdentity;
+//        CGAffineTransform transform = CGAffineTransformIdentity;
 //        [panelView setTransform:CGAffineTransformScale(transform, 0.3, 0.3)];
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.2];
-        [UIView setAnimationDelegate:self];
-        [UIView setAnimationDidStopSelector:@selector(bounceOutAnimationStopped)];
+//        [UIView beginAnimations:nil context:nil];
+//        [UIView setAnimationDuration:0.2];
+//        [UIView setAnimationDelegate:self];
+//        [UIView setAnimationDidStopSelector:@selector(bounceOutAnimationStopped)];
 //        [panelView setAlpha:0.5];
 //        [panelView setTransform:CGAffineTransformScale(transform, 1.1, 1.1)];
-        [UIView commitAnimations];
+//        [UIView commitAnimations];
     }
     else
     {
