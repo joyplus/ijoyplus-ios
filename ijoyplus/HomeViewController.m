@@ -143,7 +143,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 44)];
+    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 44)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",self];
@@ -391,6 +391,11 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
+    
+}
+
+- (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
+{
     
 }
 

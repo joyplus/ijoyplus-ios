@@ -29,8 +29,8 @@
 #define kTencentAppKey @"801232108"
 #define kTencentAppSecret @"c041e953e68e7fea950b7edd769e7e21"
 
-#define kSinaWeiboAppKey  @"3399718976"
-#define kSinaWeiboAppSecret  @"236f8a7ae87ec82e0c536d168cb5ca24"
+#define kSinaWeiboAppKey  @"1490285522"
+#define kSinaWeiboAppSecret  @"f9ebc3ca95991b6dfce2c1608687e92b"
 #define kPAPUserDefaultsCacheSinaFriendsKey @"sinaFriendKey"
 #define kSinaWeiboAccessToken @"sinaAccessToken"
 #define kSinaWeiboUID @"sinaUid"
@@ -45,7 +45,7 @@
 #define kPhoneNumber @"kPhoneNumber"
 
 #define LOCAL_KEYS_NUMBER 5
-#define umengAppKey @"507cbb595270153d48000005"
+#define umengAppKey @"5074db485270155fcd000093"
 
 @interface CMConstants : NSObject 
     extern NSString * const MyString;

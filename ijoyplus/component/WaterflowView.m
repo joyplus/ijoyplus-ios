@@ -25,20 +25,20 @@
 - (void)pageScroll;
 - (void)cellSelected:(NSNotification*)notification;
 
-@property(nonatomic, retain) EGORefreshTableHeaderView * refreshHeaderView;  //下拉刷新
 @property(nonatomic, readwrite) BOOL isRefreshing;
 @end
 
 @implementation WaterflowView
 @synthesize cellHeight=_cellHeight,visibleCells=_visibleCells,reusableCells=_reusedCells;
-@synthesize flowdelegate=_flowdelegate;
-@synthesize flowdatasource=_flowdatasource;
+@synthesize flowdelegate;
+@synthesize flowdatasource;
 @synthesize refreshHeaderView=_refreshHeaderView,isRefreshing=_isRefreshing;
 @synthesize cellSelectedNotificationName;
 @synthesize mergeRow;
 @synthesize mergeCell;
 @synthesize parentControllerName;
 @synthesize currentPage;
+@synthesize defaultScrollViewHeight;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -111,19 +111,10 @@
     self.reusableCells = nil;
     self.flowdatasource = nil;
     self.flowdelegate = nil;
+    self.cellSelectedNotificationName = nil;
+    self.parentControllerName = nil;
+    self.refreshHeaderView = nil;
     pullToRefreshManager_ =nil;
-}
-
-- (void)setFlowdatasource:(id<WaterflowViewDatasource>)flowdatasource
-{
-    _flowdatasource = flowdatasource;
-    [self initialize];
-}
-
-- (void)setFlowdelegate:(id<WaterflowViewDelegate>)flowdelegate
-{
-    _flowdelegate = flowdelegate;
-    [self initialize];
 }
 
 #pragma mark-
@@ -196,12 +187,12 @@
         [self.visibleCells addObject:[NSMutableArray array]]; 
         
         NSMutableArray *cellHeightInOneColume = [NSMutableArray array];
-        NSInteger rows = [_flowdatasource flowView:self numberOfRowsInColumn:i] * currentPage;
+        NSInteger rows = [self.flowdatasource flowView:self numberOfRowsInColumn:i] * currentPage;
         
         CGFloat columHeight = 0.f;
         for (int j =0; j < rows; j++)
         {
-            CGFloat height = [_flowdelegate flowView:self heightForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:i]];
+            CGFloat height = [self.flowdelegate flowView:self heightForRowAtIndexPath:[NSIndexPath indexPathForRow:j inSection:i]];
             columHeight += height;
             [cellHeightInOneColume addObject:[NSNumber numberWithFloat:columHeight]];
         }
@@ -209,10 +200,14 @@
         [self.cellHeight addObject:cellHeightInOneColume];
         scrollHeight = (columHeight >= scrollHeight)?columHeight:scrollHeight;
     }
-    
-    if(scrollHeight <480){
+    if(self.defaultScrollViewHeight != 0){
+        scrollHeight = self.defaultScrollViewHeight;
+        self.defaultScrollViewHeight = 0;
+    }
+    if(scrollHeight < 480){
         scrollHeight = 480;
     }
+    
     self.contentSize = CGSizeMake(self.frame.size.width, scrollHeight);
        
     [self pageScroll];
@@ -287,7 +282,7 @@
 				height  = [[[self.cellHeight objectAtIndex:i] objectAtIndex:rowToDisplay ] floatValue] - origin_y;
 			}
 			
-			cell = [_flowdatasource flowView:self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:rowToDisplay inSection:i]];
+			cell = [self.flowdatasource flowView:self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:rowToDisplay inSection:i]];
 			cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay inSection:i];
 			cell.frame = CGRectMake(origin_x, origin_y, width, height);
 			[[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];

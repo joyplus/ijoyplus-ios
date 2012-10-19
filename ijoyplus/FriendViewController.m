@@ -208,4 +208,28 @@
     }];
     
 }
+
+- (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
+{
+    [videoArray removeAllObjects];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:@"recommends"];
+            if(videos != nil && videos.count > 0){
+                //                for(int i = 0; i < 20; i++)
+                [videoArray addObjectsFromArray:videos];
+                [flowView reloadData];
+            }
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+
+}
 @end

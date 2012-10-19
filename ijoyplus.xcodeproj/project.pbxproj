@@ -58,6 +58,8 @@
 		EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCFE15F8873B00C878D5 /* WaterflowView.m */; };
 		EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BD3715F888BD00C878D5 /* QuartzCore.framework */; };
 		EB32BD3F15F8948400C878D5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB32BD3D15F8948400C878D5 /* Localizable.strings */; };
+		EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3CB81316315C4B00142AD0 /* 图标57.png */; };
+		EB3CB81716315C5100142AD0 /* 图标114.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3CB81616315C5100142AD0 /* 图标114.png */; };
 		EB3F0A4E1601C4F7005D97F8 /* segcontrol_sel-uns@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A491601C4F7005D97F8 /* segcontrol_sel-uns@2x.png */; };
 		EB3F0A4F1601C4F7005D97F8 /* segcontrol_sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A4A1601C4F7005D97F8 /* segcontrol_sel@2x.png */; };
 		EB3F0A501601C4F7005D97F8 /* segcontrol_uns-sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A4B1601C4F7005D97F8 /* segcontrol_uns-sel@2x.png */; };
@@ -338,6 +340,8 @@
 		EB32BCFE15F8873B00C878D5 /* WaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterflowView.m; sourceTree = "<group>"; };
 		EB32BD3715F888BD00C878D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EB32BD3E15F8948400C878D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EB3CB81316315C4B00142AD0 /* 图标57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图标57.png"; sourceTree = "<group>"; };
+		EB3CB81616315C5100142AD0 /* 图标114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图标114.png"; sourceTree = "<group>"; };
 		EB3F0A491601C4F7005D97F8 /* segcontrol_sel-uns@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "segcontrol_sel-uns@2x.png"; sourceTree = "<group>"; };
 		EB3F0A4A1601C4F7005D97F8 /* segcontrol_sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "segcontrol_sel@2x.png"; sourceTree = "<group>"; };
 		EB3F0A4B1601C4F7005D97F8 /* segcontrol_uns-sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "segcontrol_uns-sel@2x.png"; sourceTree = "<group>"; };
@@ -680,6 +684,8 @@
 		EB32BCB715F885EC00C878D5 = {
 			isa = PBXGroup;
 			children = (
+				EB3CB81616315C5100142AD0 /* 图标114.png */,
+				EB3CB81316315C4B00142AD0 /* 图标57.png */,
 				EB24CC92160B159F009618C6 /* Default@2x.png */,
 				EB32BCCC15F885EC00C878D5 /* ijoyplus */,
 				EB32BD0515F887A400C878D5 /* External */,
@@ -1456,6 +1462,8 @@
 				EB4F80BF16310A7E006DBADB /* sina_normal.png in Resources */,
 				EB4F80C21631232F006DBADB /* search_bg@2x.png in Resources */,
 				EB4F80C31631232F006DBADB /* search_btn@2x.png in Resources */,
+				EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */,
+				EB3CB81716315C5100142AD0 /* 图标114.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1637,6 +1645,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1652,6 +1661,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1664,6 +1674,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1673,6 +1684,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

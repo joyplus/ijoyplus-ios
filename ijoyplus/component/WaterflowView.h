@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "EGORefreshTableHeaderView.h"
 @class WaterflowView;
 
 ////TableCell for WaterFlow
@@ -51,9 +51,6 @@
 	NSMutableArray *_cellHeight; 
 	NSMutableArray *_visibleCells; 
 	NSMutableDictionary *_reusedCells; 
-	
-	id <WaterflowViewDelegate> _flowdelegate;
-    id <WaterflowViewDatasource> _flowdatasource;
 }
 
 - (void)reloadData;
@@ -64,12 +61,13 @@
 @property (nonatomic, strong) NSMutableArray *cellHeight; //array of cells height arrays, count = numberofcolumns, and elements in each single child array represents is a total height from this cell to the top
 @property (nonatomic, strong) NSMutableArray *visibleCells;  //array of visible cell arrays, count = numberofcolumns
 @property (nonatomic, strong) NSMutableDictionary *reusableCells;  //key- identifier, value- array of cells
-@property (nonatomic, strong) id <WaterflowViewDelegate> flowdelegate;
-@property (nonatomic, strong) id <WaterflowViewDatasource> flowdatasource;
+@property (nonatomic, weak) id <WaterflowViewDelegate> flowdelegate;
+@property (nonatomic, weak) id <WaterflowViewDatasource> flowdatasource;
 @property (nonatomic, strong) NSString *cellSelectedNotificationName;
 @property (nonatomic, assign) BOOL mergeCell;
 @property (nonatomic, assign) int mergeRow;
 @property (nonatomic, strong) NSString *parentControllerName;
 @property (nonatomic, assign) NSInteger currentPage;
-
+@property (nonatomic, assign) int defaultScrollViewHeight;
+@property(nonatomic, retain) EGORefreshTableHeaderView * refreshHeaderView;  //下拉刷新
 @end

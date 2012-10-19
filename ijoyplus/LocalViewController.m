@@ -31,7 +31,7 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
-    pageSize = 12;
+    pageSize = 15;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
@@ -66,8 +66,9 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-135)];
     flowView.parentControllerName = @"LocalViewController";
+    flowView.defaultScrollViewHeight = (VIDEO_LOGO_HEIGHT + MOVE_NAME_LABEL_HEIGHT) * (pageSize/3);
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = @"localSelected";
     [flowView showsVerticalScrollIndicator];
@@ -93,7 +94,7 @@
 
 - (NSInteger)flowView:(WaterflowView *)flowView numberOfRowsInColumn:(NSInteger)column
 {
-    return 4;
+    return pageSize/3;
 }
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
