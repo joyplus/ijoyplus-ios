@@ -369,7 +369,7 @@
             
             if(rowToDisplay == [[self.cellHeight objectAtIndex:i] count] - 1)
 			{
-				origin_y = 0;
+//				origin_y = 0;
 				cell = nil;
 				break;;
 			}

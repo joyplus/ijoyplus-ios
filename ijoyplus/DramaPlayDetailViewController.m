@@ -24,7 +24,6 @@
 #import "EGORefreshTableHeaderView.h"
 #import "NoRecordCell.h"
 #import "UIUtility.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "MBProgressHUD.h"
 #import "RecommandViewController.h"

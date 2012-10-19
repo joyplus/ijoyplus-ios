@@ -7,7 +7,6 @@
 //
 
 #import "FillFormViewController.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "AppDelegate.h"
 #import "ContainerUtility.h"
@@ -67,9 +66,6 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"fill_form_title", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    //    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    //    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-    //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.navigationItem setHidesBackButton:YES];
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"next_step", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(finishRegister)];

@@ -11,7 +11,6 @@
 #import "UIImageView+WebCache.h"
 #import "SearchVideoCell.h"
 #import "PlayDetailViewController.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "CustomCellBlackBackground.h"
 #import "CustomCellBackground.h"
@@ -68,8 +67,8 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	
     [self.sBar setText:self.keyword];

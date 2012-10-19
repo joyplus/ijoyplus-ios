@@ -10,7 +10,6 @@
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "FriendListViewController.h"
 #import "SinaLoginViewController.h"
@@ -43,8 +42,8 @@
     [super viewDidLoad];
     
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.tableView.separatorColor = [UIColor clearColor];
 }
@@ -199,22 +198,30 @@
     CFIndex nPeople = ABAddressBookGetPersonCount(addressBooks);
 
     NSMutableString *friendIds = [[NSMutableString alloc]init];
-    for (NSInteger i = 0; i < nPeople; i++)
+    for (int i = 0; i < nPeople; i++)
     {
         ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
         CFStringRef abFullName = ABRecordCopyCompositeName(person);
         ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
         if (ABMultiValueGetCount(phoneMulti) > 0) {
-            NSString *phoneNumber = (__bridge NSString*)ABMultiValueCopyValueAtIndex(phoneMulti, 0);
+            CFStringRef cfString = ABMultiValueCopyValueAtIndex(phoneMulti, 0);
+            NSString *phoneNumber = (__bridge NSString*)cfString;
             NSString *validatedPhoneNumber = [self validatePhoneNumber:phoneNumber];
             if(validatedPhoneNumber != nil){
                 [friendIds appendFormat:@"%@,", validatedPhoneNumber];
                 NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys: (__bridge NSString*)abFullName, @"name", validatedPhoneNumber, @"number", nil];
                 [addressBookTemp addObject:contact];
             }
+            validatedPhoneNumber = nil;
+            phoneNumber = nil;
+            CFRelease(cfString);
         }
+        CFRelease(phoneMulti);
+        CFRelease(abFullName);
     }
     [friendIds appendString:@"0"];
+    CFRelease(allPeople);
+    CFRelease(addressBooks);
     [[ContainerUtility sharedInstance]setAttribute:addressBookTemp forKey:@"address_book"];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"5", @"source_type", friendIds, @"source_ids", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

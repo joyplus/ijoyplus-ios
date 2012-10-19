@@ -27,6 +27,7 @@ void drawLinearGradient(CGContextRef context, CGRect rect, CGFloat colors[]) {
     CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
     CGContextRestoreGState(context);
     
+    CGColorSpaceRelease(colorSpace);
     CGGradientRelease(gradient);
 }
 

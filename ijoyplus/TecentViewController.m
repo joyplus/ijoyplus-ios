@@ -8,7 +8,6 @@
 
 #import "TecentViewController.h"
 #import "CustomBackButton.h"
-#import "CustomBackButtonHolder.h"
 #import "FillFormViewController.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
@@ -49,8 +48,8 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"tecent_login", nil);
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     

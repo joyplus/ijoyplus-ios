@@ -7,7 +7,6 @@
 //
 
 #import "WeiBoInviteViewController.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "UIImageView+WebCache.h"
 #import "UIUtility.h"
@@ -15,7 +14,10 @@
 #import "WBEngine.h"
 #import "MBProgressHUD.h"
 
-@interface WeiBoInviteViewController ()
+@interface WeiBoInviteViewController (){
+    CustomBackButton *backButton;
+    MBProgressHUD *HUD;
+}
 
 @end
 
@@ -30,6 +32,8 @@
 
 - (void)viewDidUnload
 {
+    backButton = nil;
+    HUD = nil;
     [self setAvatarImageView:nil];
     [self setTitleLabel:nil];
     [self setSubtitleNameLabel:nil];
@@ -61,8 +65,8 @@
     self.avatarImageView.layer.cornerRadius = 27.5;
     self.avatarImageView.layer.masksToBounds = YES;
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.submitBtn setTitle:NSLocalizedString(@"weibo_invite", nil) forState:UIControlStateNormal];
     [self.submitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -87,9 +91,9 @@
 
 - (IBAction)submitBtnClicked:(id)sender {
     [[WBEngine sharedClient] sendWeiBoWithText: [NSString stringWithFormat: NSLocalizedString(@"weibo_invite_template", nil), [friendInfo objectForKey:@"screen_name"]] image:nil];
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"invite_success", nil);
     [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];

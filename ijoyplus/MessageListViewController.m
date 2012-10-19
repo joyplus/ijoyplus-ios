@@ -9,7 +9,6 @@
 #import "MessageListViewController.h"
 #import "DateUtility.h"
 #import "CommentCell.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "TTTTimeIntervalFormatter.h"
 #import "UIImageView+WebCache.h"
@@ -60,9 +59,8 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"my_message", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     pageSize = 10;
     reloads_++;

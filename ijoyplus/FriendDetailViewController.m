@@ -7,7 +7,6 @@
 //
 
 #import "FriendDetailViewController.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "UIImageView+WebCache.h"
 #import "UIUtility.h"
@@ -50,8 +49,8 @@
     self.avatarImageView.layer.cornerRadius = 27.5;
     self.avatarImageView.layer.masksToBounds = YES;
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.submitBtn setTitle:NSLocalizedString(@"sms_invite", nil) forState:UIControlStateNormal];
     [self.submitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

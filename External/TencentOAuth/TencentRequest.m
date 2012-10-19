@@ -209,7 +209,7 @@ responseText = _responseText;
 	}
 	NSLog(@"%@",[[NSString alloc]initWithData:data encoding:enc]);
 	
-	NSLog(@"%@",responseString);
+//	NSLog(@"%@",responseString);
 	SBJSON *jsonParser = [[SBJSON new] autorelease];
 	if ([responseString isEqualToString:@"true"]) {
 		return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];

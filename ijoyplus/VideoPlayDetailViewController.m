@@ -24,7 +24,6 @@
 #import "EGORefreshTableHeaderView.h"
 #import "NoRecordCell.h"
 #import "UIUtility.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "MBProgressHUD.h"
 #import "RecommandViewController.h"
@@ -119,6 +118,15 @@
     playCell.watchedLabel.text = [show objectForKey:@"watch_num"];
     playCell.collectionLabel.text = [show objectForKey:@"favority_num"];
     playCell.likeLabel.text = [show objectForKey:@"like_num"];
+}
+
+- (void)playVideo
+{
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    NSArray *urlArray = [show objectForKey:@"video_urls"];
+    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    viewController.title = [show objectForKey:@"name"];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

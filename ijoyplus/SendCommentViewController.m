@@ -7,7 +7,6 @@
 //
 
 #import "SendCommentViewController.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "UIUtility.h"
 #import "CMConstants.h"
@@ -61,8 +60,8 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"send_comment", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"post", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
@@ -143,7 +142,7 @@
     btn1Selected = !btn1Selected;
     if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
         if(btn1Selected){
-            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_active"] forState:UIControlStateNormal];
+            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_normal"] forState:UIControlStateNormal];
         } else {
             [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
         }

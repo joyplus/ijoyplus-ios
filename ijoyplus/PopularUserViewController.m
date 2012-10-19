@@ -10,7 +10,6 @@
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "CMConstants.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "HomeViewController.h"
 #import "StringUtility.h"
@@ -61,8 +60,8 @@
     [super viewDidLoad];
 	[self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     if([fromController isEqualToString:@"SearchFriendViewController"]){
-        CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-        CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+        CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+        [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     } else {
         [self.navigationItem setHidesBackButton:YES];

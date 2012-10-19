@@ -24,7 +24,6 @@
 #import "EGORefreshTableHeaderView.h"
 #import "NoRecordCell.h"
 #import "UIUtility.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "MBProgressHUD.h"
 #import "RecommandViewController.h"
@@ -113,5 +112,29 @@
     
 }
 
+- (void)playVideo
+{
+    [self gotoWebsite:1];
+}
+
+- (void)gotoWebsite:(NSInteger)num
+{
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    NSArray *episodeArray = [show objectForKey:@"episodes"];
+    NSString *url = nil;
+    for(NSDictionary *episode in episodeArray){
+        if([[episode objectForKey:@"name"]integerValue] == num){
+            NSArray *urlArray = [episode objectForKey:@"video_urls"];
+            url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+            break;
+        }
+    }
+    if(url == nil){
+        url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
+    }
+    viewController.programUrl = url;
+    viewController.title = [show objectForKey:@"name"];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
 
 @end

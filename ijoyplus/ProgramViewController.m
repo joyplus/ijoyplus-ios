@@ -7,7 +7,6 @@
 //
 
 #import "ProgramViewController.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 
 @interface ProgramViewController ()
@@ -20,9 +19,9 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     self.webView = nil;
     self.programUrl = nil;
-    [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -39,12 +38,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.webView setBackgroundColor:[UIColor clearColor]];
     [self hideGradientBackground:self.webView];
-    self.webView.delegate = self;
+//    self.webView.delegate = self;
     
     [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.programUrl]]];
     [self.webView setScalesPageToFit:YES];

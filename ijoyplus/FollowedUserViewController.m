@@ -10,7 +10,6 @@
 #import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "CMConstants.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "HomeViewController.h"
 #import "StringUtility.h"
@@ -62,8 +61,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	[self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     userArray = [[NSMutableArray alloc]initWithCapacity:18];

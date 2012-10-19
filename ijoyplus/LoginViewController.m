@@ -8,7 +8,6 @@
 
 #import "LoginViewController.h"
 #import "UIUtility.h"
-#import "CustomBackButtonHolder.h"
 #import "CustomBackButton.h"
 #import "CMConstants.h"
 #import "BottomTabViewController.h"
@@ -67,8 +66,8 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"login", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButtonHolder *backButtonHolder = [[CustomBackButtonHolder alloc]initWithViewController:self];
-    CustomBackButton* backButton = [backButtonHolder getBackButton:NSLocalizedString(@"go_back", nil)];
+    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
 //    UIBarButtonItem *registerBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"register", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(registerAction)];

@@ -48,7 +48,7 @@
         [self setBackgroundImage:buttonImage forState:UIControlStateNormal];
         [self setBackgroundImage:buttonHighlightImage forState:UIControlStateHighlighted];
         [self setBackgroundImage:buttonHighlightImage forState:UIControlStateSelected];
-        
+        self.titleLabel.textColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1];
         // Add an action for going back
 //        [self addTarget:hDelegate action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     }
