@@ -98,7 +98,7 @@
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
     static NSString *CellIdentifier = @"Cell";
 	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
     if(indexPath.row * 3 + indexPath.section >= videoArray.count){
@@ -110,7 +110,7 @@
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
-    } else {        
+    } else {
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     }
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
@@ -128,12 +128,12 @@
     [cell addSubview:imageView];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, VIDEO_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
-        NSString *name = [movie valueForKey:@"prod_name"];
-        if([StringUtility stringIsEmpty:name]){
-            titleLabel.text = @"...";
-        } else {
-            titleLabel.text = name;
-        }
+    NSString *name = [movie valueForKey:@"prod_name"];
+    if([StringUtility stringIsEmpty:name]){
+        titleLabel.text = @"...";
+    } else {
+        titleLabel.text = name;
+    }
     titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = [UIColor whiteColor];
@@ -166,23 +166,41 @@
     [navController pushViewController:viewController animated:YES];
 }
 
-    - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
-    {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
-                NSArray *videos = [result objectForKey:@"show"];
-                if(videos.count > 0){
-                    [videoArray addObjectsFromArray:videos];
-                }
-                [flowView reloadData];
-            } else {
-                
+- (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:@"show"];
+            if(videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
             }
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
-    }
+            [flowView reloadData];
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
 
+- (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
+{
+    [videoArray removeAllObjects];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:@"show"];
+            if(videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+            }
+        } else {            
+        }
+        [flowView reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
 @end

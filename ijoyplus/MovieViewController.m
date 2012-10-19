@@ -175,10 +175,30 @@
             if(videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
             }
-            [flowView reloadData];
         } else {
             
         }
+        [flowView reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
+
+- (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
+{
+    [videoArray removeAllObjects];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *videos = [result objectForKey:@"movie"];
+            if(videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+            }
+        } else {
+            
+        }
+        [flowView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];

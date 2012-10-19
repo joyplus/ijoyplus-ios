@@ -34,7 +34,7 @@
 
 @implementation PlayDetailViewController
 @synthesize programId;
-
+@synthesize userId;
 - (void)viewDidUnload
 {
     _imageView = nil;
@@ -48,6 +48,8 @@
     playButton = nil;
     bottomToolbar = nil;
     pictureCell = nil;
+    userId = nil;
+    [super viewDidUnload];
 }
 
 - (id)initWithStretchImage {
@@ -93,6 +95,7 @@
     self.navigationItem.rightBarButtonItem = rightButton;
     
     pageSize = 10;
+    reload = 2;
 }
 
 #pragma mark - View lifecycle
@@ -403,7 +406,7 @@
     if(dataArray == nil || dataArray.count == 0){
         return 44;
     } else {
-        NSMutableDictionary *commentDic = [dataArray objectAtIndex:row];
+        NSDictionary *commentDic = [dataArray objectAtIndex:row];
         NSString *content = [commentDic objectForKey:@"content"];
         if([StringUtility stringIsEmpty:content]){
             return 80;
@@ -448,14 +451,14 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    int pageNum = floor(commentArray.count / pageSize) + 2;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", [NSNumber numberWithInt:pageNum], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", [NSNumber numberWithInt:reload], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *comArray = (NSMutableArray *)[result objectForKey:@"comments"];
             if(comArray != nil && comArray.count > 0){
                 [commentArray addObjectsFromArray:comArray];
+                reload++;
             }
         } else {
         }

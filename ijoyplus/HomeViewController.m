@@ -364,7 +364,8 @@
         } else if([type isEqualToString:@"4"]){
             viewController = [[VideoPlayDetailViewController alloc]initWithStretchImage];
         }
-    }    
+    }
+    viewController.userId = self.userid;
     viewController.programId = [program valueForKey:@"content_id"];
     [self.navigationController pushViewController:viewController animated:YES];
     

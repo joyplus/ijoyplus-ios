@@ -45,9 +45,10 @@
 
 - (void)getProgramView
 {
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
-                                self.programId, @"prod_id",
+                                self.programId, @"prod_id", self.userId, @"user_id", 
                                 nil];
     
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -61,9 +62,9 @@
                 friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
             }
             
-            commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(commentArray == nil || commentArray.count == 0){
-                commentArray = [[NSMutableArray alloc]initWithCapacity:5];
+            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+            if(tempArray != nil && tempArray.count > 0){
+                [commentArray addObjectsFromArray:tempArray];
             }
             [_tableView reloadData];
         } else {
@@ -144,7 +145,7 @@
             return height;
 //        }
     } else {
-        if(indexPath.row == MAX_COMMENT_COUNT){
+        if(commentArray == nil || commentArray.count == 0 || indexPath.row == MAX_COMMENT_COUNT){
             return 44;
         } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];
@@ -317,6 +318,5 @@
     }
     [self.navigationController pushViewController:viewController animated:YES];
 }
-
 
 @end

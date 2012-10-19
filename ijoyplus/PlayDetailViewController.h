@@ -30,6 +30,7 @@
     int pageSize;
     CGFloat WindowHeight;
     CGFloat ImageHeight;
+    int reload;
 }
 
 - (void)avatarClicked;
@@ -51,4 +52,5 @@
 - (void)layoutImage;
 - (void)updateOffsets;
 @property (nonatomic, strong) NSString *programId;
+@property (nonatomic, strong)NSString *userId;
 @end;

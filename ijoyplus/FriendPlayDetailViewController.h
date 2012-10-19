@@ -14,4 +14,5 @@
 @interface FriendPlayDetailViewController : PlayDetailViewController{
     NSMutableArray *friendCommentArray;
 }
+
 @end

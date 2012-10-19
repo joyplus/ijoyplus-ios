@@ -458,6 +458,7 @@
             if(searchResult != nil && searchResult.count > 0){
                 [itemsArray addObjectsFromArray:searchResult];
             }
+            searchResult = nil;
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         } else {
             

@@ -45,6 +45,7 @@
 
 - (void)getProgramView
 {
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.programId, @"prod_id",
@@ -56,9 +57,9 @@
             show = (NSDictionary *)[result objectForKey:@"show"];
             [self setPlayCellValue];
             
-            commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(commentArray == nil || commentArray.count == 0){
-                commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+            if(tempArray != nil && tempArray.count > 0){
+                [commentArray addObjectsFromArray:tempArray];
             }
             if(pullToRefreshManager_ == nil && commentArray.count > 0){
                 pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
@@ -135,6 +136,15 @@
     viewController.programUrl = url;
     viewController.title = [show objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)showIntroduction{
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[show objectForKey:@"name"] content:[show objectForKey:@"summary"]];
+    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
+    lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
+    lplv.delegate = self;
+    [lplv showInView:self.view animated:YES];
+    _tableView.scrollEnabled = NO;
 }
 
 @end

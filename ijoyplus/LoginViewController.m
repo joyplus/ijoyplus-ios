@@ -70,8 +70,8 @@
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
-//    UIBarButtonItem *registerBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"register", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(registerAction)];
-//    self.navigationItem.rightBarButtonItem = registerBtn;
+    //    UIBarButtonItem *registerBtn = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"register", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(registerAction)];
+    //    self.navigationItem.rightBarButtonItem = registerBtn;
     
     [self.scrollView setContentSize:CGSizeMake(self.view.frame.size.width, 480)];
     [self initLoginBtn];
@@ -145,7 +145,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 2;
-
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -185,7 +185,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    [self.table deselectRowAtIndexPath:indexPath animated:YES];
+    //    [self.table deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
@@ -256,7 +256,7 @@
         HUD.minSize = CGSizeMake(135.f, 135.f);
         [HUD show:YES];
         [HUD hide:YES afterDelay:2];
-    }];   
+    }];
 }
 
 - (void)showError
@@ -277,7 +277,7 @@
             [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
+        
     }];
     [SFHFKeychainUtils storeUsername:kUserName andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
     [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserName];
@@ -287,13 +287,35 @@
 }
 
 - (IBAction)sinaLogin:(id)sender {
-    SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
-    [self.navigationController pushViewController:viewController animated:YES];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1];
+    }
 }
 
 - (IBAction)tecentLogin:(id)sender {
-    TecentViewController *viewController = [[TecentViewController alloc] init];
-    [self.navigationController pushViewController:viewController animated:YES];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        TecentViewController *viewController = [[TecentViewController alloc] init];
+        [self.navigationController pushViewController:viewController animated:YES];
+    } else {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1];
+    }
 }
 
 - (void)resignKeyboard:(id)sender

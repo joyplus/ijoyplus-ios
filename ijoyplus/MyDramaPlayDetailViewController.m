@@ -92,7 +92,7 @@
     }else if (indexPath.section == 4){
         if(friendCommentArray == nil || friendCommentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
-            cell.textField.text = @"暂无评论";
+            cell.textField.text = @"暂无观看好友";
             return cell;
         } else {
             CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
@@ -131,7 +131,7 @@
             return height;
         }
     } else {
-        if(commentArray == nil || commentArray.count == 0){
+        if(commentArray == nil || commentArray.count == 0 || indexPath.row == MAX_COMMENT_COUNT){
             return 44;
         } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];
@@ -222,7 +222,7 @@
     if(section == 2){
         headerLabel.text =  NSLocalizedString(@"drama_list", nil);
     } else if(section == 3){
-        headerLabel.text =  @"我的推荐理由";
+        headerLabel.text =  NSLocalizedString(@"recommend_reason", nil);
     } else if(section == 4){
         headerLabel.text =  NSLocalizedString(@"friend_comment", nil);
     } else {

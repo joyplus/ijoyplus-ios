@@ -487,6 +487,7 @@
     self.isRefreshing = YES;
     
     currentPage = 1;
+    [self.flowdelegate flowView:self refreshData:currentPage];
     [self performSelector:@selector(reloadData) withObject:self afterDelay:1.0f];  //make a delay to show loading process for a while
 }
 

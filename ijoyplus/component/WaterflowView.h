@@ -39,6 +39,7 @@
 @optional
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)flowView:(WaterflowView *)flowView willLoadData:(int)page;
+- (void)flowView:(WaterflowView *)flowView refreshData:(int)page;
 @end
 
 ////Waterflow View

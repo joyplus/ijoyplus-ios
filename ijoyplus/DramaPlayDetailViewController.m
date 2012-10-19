@@ -56,6 +56,7 @@
 
 - (void)getProgramView
 {
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.programId, @"prod_id",
@@ -66,9 +67,9 @@
         if(responseCode == nil){
             drama = (NSDictionary *)[result objectForKey:@"tv"];
             [self setPlayCellValue];
-            commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(commentArray == nil || commentArray.count == 0){
-                commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+            if(tempArray != nil && tempArray.count > 0){
+                [commentArray addObjectsFromArray:tempArray];
             }
             [self initDramaCell];
             if(pullToRefreshManager_ == nil && commentArray.count > 0){
@@ -313,6 +314,15 @@
     viewController.programUrl = url;
     viewController.title = [drama objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)showIntroduction{
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[drama objectForKey:@"name"] content:[drama objectForKey:@"summary"]];
+    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
+    lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
+    lplv.delegate = self;
+    [lplv showInView:self.view animated:YES];
+    _tableView.scrollEnabled = NO;
 }
 
 @end

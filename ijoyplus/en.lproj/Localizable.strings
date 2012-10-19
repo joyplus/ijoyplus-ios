@@ -87,6 +87,7 @@ weibo_invite_template = "@%@ , 快来加入悦+吧！";
 register_sms_content = "快来加入悦+吧！";
 send_comment = "评论";
 share_success = "分享成功！";
+recommend_reason = "推荐理由";
 
 list = "个人主页";
 watched = "看过的影片";

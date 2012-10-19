@@ -98,10 +98,12 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:HUD];
-    HUD.opacity = 0;
-    [HUD show:YES];
+    if(commentArray == nil){
+        HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+        [self.navigationController.view addSubview:HUD];
+        HUD.opacity = 0;
+        [HUD show:YES];
+    }
 }
 
 - (void)loadTable {

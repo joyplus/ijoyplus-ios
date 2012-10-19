@@ -119,8 +119,8 @@
     
     // Draw the title and the separator with shadow
     CGContextSetShadowWithColor(ctx, CGSizeMake(0, 1), 0.5f, [UIColor blackColor].CGColor);
-    [[UIColor colorWithRed:0.020 green:0.549 blue:0.961 alpha:1.] setFill];
-    [_title drawInRect:titleRect withFont:[UIFont systemFontOfSize:16.]];
+    [[UIColor colorWithRed:46/255.0 green:112/255.0 blue:156/255.0 alpha:1.] setFill];
+    [_title drawInRect:titleRect withFont:[UIFont boldSystemFontOfSize:15.]];
     CGContextFillRect(ctx, separatorRect);
 }
 

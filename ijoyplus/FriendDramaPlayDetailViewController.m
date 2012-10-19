@@ -28,7 +28,7 @@
 #import "CommentViewController.h"
 
 #define MAX_FRIEND_COMMENT_COUNT 10
-#define MAX_COMMENT_COUNT 5
+#define MAX_COMMENT_COUNT 10
 
 @interface FriendDramaPlayDetailViewController () 
 @end
@@ -48,9 +48,10 @@
 
 - (void)getProgramView
 {
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
-                                self.programId, @"prod_id",
+                                self.programId, @"prod_id", self.userId, @"user_id", 
                                 nil];
     
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -63,9 +64,9 @@
             if(friendCommentArray == nil || friendCommentArray.count == 0){
                 friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
             }
-            commentArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(commentArray == nil || commentArray.count == 0){
-                commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+            NSArray *tempArray = (NSArray *)[result objectForKey:@"comments"];
+            if(tempArray != nil && tempArray.count > 0){
+                [commentArray addObjectsFromArray:tempArray];
             }
             [self initDramaCell];
             [_tableView reloadData];
@@ -142,7 +143,7 @@
             return height;
         }
     } else {
-        if(commentArray == nil || commentArray.count == 0){
+        if(commentArray == nil || commentArray.count == 0 || indexPath.row == MAX_COMMENT_COUNT){
             return 44;
         } else {
             CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];

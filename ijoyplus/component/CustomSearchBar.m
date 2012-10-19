@@ -24,7 +24,7 @@
     for (UIView *subview in self.subviews) {
         if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])  {
             UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
-            bg.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"cell_background"]];
+            bg.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"search_bg"]];
             [self insertSubview:bg aboveSubview:subview];
             [subview removeFromSuperview];
             break;
@@ -41,8 +41,9 @@
         } else if([subview isKindOfClass:[UIButton class]]){
             cancelButton = (UIButton *)subview;
             [cancelButton setTitle:NSLocalizedString(@"cancel", nil)  forState:UIControlStateNormal];
-            [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [cancelButton setTintColor:CMConstants.greyColor];
+//            [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [cancelButton setBackgroundImage:[UIImage imageNamed:@"search_btn"] forState:UIControlStateNormal];
+//            [cancelButton setTintColor:CMConstants.greyColor];
         }
     }
     [self clearSearchBarBg];

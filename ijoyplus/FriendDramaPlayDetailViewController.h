@@ -17,5 +17,4 @@
 @interface FriendDramaPlayDetailViewController : DramaPlayDetailViewController {
     NSMutableArray *friendCommentArray;
 }
-
 @end
