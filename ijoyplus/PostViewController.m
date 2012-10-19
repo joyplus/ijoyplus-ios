@@ -199,7 +199,7 @@
 //        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //        
 //        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-//                                       @"转自悦+", @"title",
+//                                       @"转自悦视频", @"title",
 //                                       self.textView.text,@"summary",
 //                                       @"4",@"source",
 //                                       nil];

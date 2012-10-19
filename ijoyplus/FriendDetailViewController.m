@@ -44,7 +44,7 @@
     self.titleLabel.text = [friendInfo valueForKey:@"name"];
     self.subtitleNameLabel.text = @"号 码：";
     self.subtitleLabel.text = [friendInfo valueForKey:@"number"];
-    self.descriptionLabel.text = [NSString stringWithFormat:@"您的好友 %@ 还未加入悦+，您可以：", [friendInfo objectForKey:@"name"]];
+    self.descriptionLabel.text = [NSString stringWithFormat:@"您的好友 %@ 还未加入悦视频，您可以：", [friendInfo objectForKey:@"name"]];
     [self.avatarImageView setImage:[UIImage imageNamed:@"u2_normal"]];
     self.avatarImageView.layer.cornerRadius = 27.5;
     self.avatarImageView.layer.masksToBounds = YES;

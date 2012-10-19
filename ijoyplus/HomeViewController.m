@@ -62,6 +62,7 @@
 @synthesize collectionBtn;
 @synthesize username;
 @synthesize userid;
+@synthesize offsety;
 
 - (void)viewDidUnload
 {
@@ -143,7 +144,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 44)];
+    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",self];
@@ -328,10 +329,11 @@
         }
         NSString *type = [[videoArray objectAtIndex:index] objectForKey:@"content_type"];
         if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
-            return MOVE_NAME_LABEL_HEIGHT + MOVIE_LOGO_HEIGHT;
+            height = MOVE_NAME_LABEL_HEIGHT + MOVIE_LOGO_HEIGHT;
         } else {
-            return MOVE_NAME_LABEL_HEIGHT + VIDEO_LOGO_HEIGHT;
+            height = MOVE_NAME_LABEL_HEIGHT + VIDEO_LOGO_HEIGHT;
         }
+        return height;
     }
 }
 

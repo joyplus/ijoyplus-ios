@@ -60,7 +60,7 @@
     self.titleNameLabel.text = @"昵称：";
     self.titleLabel.text = [friendInfo objectForKey:@"screen_name"];
     self.subtitleNameLabel.text = [friendInfo objectForKey:@"description"];
-    self.descriptionLabel.text = [NSString stringWithFormat:@"您的好友 %@ 还未加入悦+，您可以：", [friendInfo objectForKey:@"screen_name"]];
+    self.descriptionLabel.text = [NSString stringWithFormat:@"您的好友 %@ 还未加入悦视频，您可以：", [friendInfo objectForKey:@"screen_name"]];
     [self.avatarImageView setImageWithURL:[NSURL URLWithString:[friendInfo objectForKey:@"profile_image_url"]] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
     self.avatarImageView.layer.cornerRadius = 27.5;
     self.avatarImageView.layer.masksToBounds = YES;

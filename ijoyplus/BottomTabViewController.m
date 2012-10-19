@@ -139,6 +139,7 @@
     detailController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"friend", nil) image:[UIImage imageNamed:@"rec_tab"] tag:1];
     
     detailController3 = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+    detailController3.offsety = NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT;
     detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"my_tab"] tag:2];
     
     detailController4 = [[MyselfViewController alloc]initWithNibName:@"MyselfViewController" bundle:nil];

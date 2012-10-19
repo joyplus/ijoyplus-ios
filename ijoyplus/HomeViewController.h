@@ -29,5 +29,5 @@
 - (void)bgImageClicked:(id)sender;
 - (IBAction)avatarImageClicked:(id)sender;
 @property (strong, nonatomic)NSString *userid;
-
+@property (assign, nonatomic)int offsety;
 @end

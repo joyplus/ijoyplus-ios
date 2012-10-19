@@ -9,7 +9,7 @@
 "MNM_BOTTOM_PTR_RELEASE_TEXT" = "松开加载!";
 "MNM_BOTTOM_PTR_LOADING_TEXT" = "努力加载中...";
 
-app_name = "悦+";
+app_name = "悦视频";
 
 previous = "前一项";
 next = "下一项";
@@ -36,7 +36,7 @@ confirm_password = "重复密码";
 auth_login = "授权登录";
 register_user = "注册账号";
 username = "邮箱";
-fill_form = "激活悦+账号";
+fill_form = "激活悦视频账号";
 fill_form_title = "补充个人资料";
 user_login = "账号登录";
 mark_success = "标记成功";
@@ -83,8 +83,8 @@ sms_invite = "短信邀请";
 weibo_invite = "微博邀请";
 friend_comment = "观看的好友";
 drama_list = "剧集列表";
-weibo_invite_template = "@%@ , 快来加入悦+吧！";
-register_sms_content = "快来加入悦+吧！";
+weibo_invite_template = "@%@ , 快来加入悦视频吧！";
+register_sms_content = "快来加入悦视频吧！";
 send_comment = "评论";
 share_success = "分享成功！";
 recommend_reason = "推荐理由";
