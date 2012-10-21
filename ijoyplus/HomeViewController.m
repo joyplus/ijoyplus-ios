@@ -27,6 +27,7 @@
 #import "MyShowPlayDetailViewController.h"
 #import "MyDramaPlayDetailViewController.h"
 #import "MyVideoPlayDetailViewController.h"
+#import "CacheUtility.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -109,28 +110,43 @@
     [self addContentView];
     key = @"watchs";
     serviceName = kPathUserWatchs;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                @"1", @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
-    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *videos = [result objectForKey:key];
-            if(videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    @"1", @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
+        [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
             [flowView reloadData];
-        } else {
-            
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
+            [[CacheUtility sharedCache] putInCache:@"DramaViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
 }
+
+
+- (void)parseData:(id)result
+{
+    videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *videos = [result objectForKey:key];
+        if(videos.count > 0){
+            [videoArray addObjectsFromArray:videos];
+        }
+        [flowView reloadData];
+    } else {
+        
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {

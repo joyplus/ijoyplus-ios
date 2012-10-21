@@ -8,6 +8,8 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
 
 @interface DramaViewController(){
     WaterflowView *flowView;
@@ -29,31 +31,42 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self addContentView];
-    
-//    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
-//    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
-//    [flowView addGestureRecognizer:downGesture];
+        [self addContentView];
+    //    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
+    //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
+    //    [flowView addGestureRecognizer:downGesture];
     pageSize = 12;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathTV parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *videos = [result objectForKey:@"tv"];
-            if(videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"DramaViewController"];
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathTV parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
             [flowView reloadData];
-        } else {
-            
+            [[CacheUtility sharedCache] putInCache:@"DramaViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *videos = [result objectForKey:@"tv"];
+        if(videos.count > 0){
+            [videoArray addObjectsFromArray:videos];
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
+    } else {
+        
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -170,6 +183,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTV parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -189,6 +206,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTV parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

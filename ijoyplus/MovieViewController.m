@@ -9,6 +9,9 @@
 #import "ServiceConstants.h"
 #import "SFHFKeychainUtils.h"
 #import "PlayDetailViewController.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
+#import "Reachability.h"
 
 @interface MovieViewController(){
     WaterflowView *flowView;
@@ -36,25 +39,39 @@
 //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
 //    [flowView addGestureRecognizer:downGesture];
     pageSize = 12;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *videos = [result objectForKey:@"movie"];
-            if(videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
+    Reachability *hostReach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
+    if([hostReach currentReachabilityStatus] == NotReachable) {    
+        [UIUtility showNetWorkError:self.view];
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MovieViewController"];
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
             [flowView reloadData];
-        } else {
-            
+            [[CacheUtility sharedCache] putInCache:@"MovieViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *videos = [result objectForKey:@"movie"];
+        if(videos.count > 0){
+            [videoArray addObjectsFromArray:videos];
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
+    } else {
+        
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -155,6 +172,10 @@
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
@@ -167,6 +188,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -186,6 +211,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

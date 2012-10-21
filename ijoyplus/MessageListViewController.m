@@ -19,6 +19,7 @@
 #import "ServiceConstants.h"
 #import "ContainerUtility.h"
 #import "HomeViewController.h"
+#import "CacheUtility.h"
 
 @interface MessageListViewController (){
     NSMutableArray *commentArray;
@@ -42,7 +43,7 @@
     pullToRefreshManager_ = nil;
     HUD = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"top_segment_clicked" object:nil];
-
+    
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -64,31 +65,39 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     pageSize = 10;
     reloads_++;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *comment = [result objectForKey:@"msgs"];
-            if(comment.count > 0){
-                [commentArray addObjectsFromArray:comment];
-                if(comment.count == pageSize){
-                    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
-                }
-                [self loadTable];
-                reloads_ ++;
-                
-            }
-        } else {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
+        [self parseData:cacheResult];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+            [[CacheUtility sharedCache] putInCache:@"MessageListViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+}
+
+- (void)parseData:(id)result
+{
+    commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *comment = [result objectForKey:@"msgs"];
+        if(comment.count > 0){
+            [commentArray addObjectsFromArray:comment];
+            [self loadTable];
+            reloads_ ++;
             
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
-    
+    } else {
+        
+    }
 }
 
 - (void) hideProgressBar

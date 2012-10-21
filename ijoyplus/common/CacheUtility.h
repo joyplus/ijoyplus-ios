@@ -9,4 +9,6 @@
 - (NSArray *)sinaFriends;
 - (NSString *)sinaUID;
 - (void)setSinaUID:(NSString *)uid;
+- (id)loadFromCache:(NSString *)cacheKey;
+- (void)putInCache:(NSString *)cacheKey result:(id)result;
 @end

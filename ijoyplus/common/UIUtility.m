@@ -8,6 +8,7 @@
 
 #import "UIUtility.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MBProgressHUD.h"
 
 @implementation UIUtility
 
@@ -54,5 +55,15 @@
     UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return theImage;
+}
++ (void)showNetWorkError:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:2];
 }
 @end

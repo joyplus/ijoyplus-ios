@@ -47,8 +47,8 @@
 - (void)setSinaFriends:(NSArray *)friends {
     NSString *key = kPAPUserDefaultsCacheSinaFriendsKey;
     [self.cache setObject:friends forKey:key];
-//    [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults] setObject:friends forKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (NSArray *)sinaFriends {
@@ -82,5 +82,20 @@
     return uid;
 }
 
+- (id)loadFromCache:(NSString *)cacheKey{
+   if ([self.cache objectForKey:cacheKey]) {
+        return [self.cache objectForKey:cacheKey];
+    }
+    id result = [[NSUserDefaults standardUserDefaults] objectForKey:cacheKey];
+    if (result) {
+        [self.cache setObject:result forKey:cacheKey];
+    }
+    return result;
+}
+- (void)putInCache:(NSString *)cacheKey result:(id)result{
+    [self.cache setObject:result forKey:cacheKey];
+    [[NSUserDefaults standardUserDefaults] setObject:result forKey:cacheKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
 
 @end

@@ -8,6 +8,8 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "ShowPlayDetailViewController.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
 
 
 @interface LocalViewController(){
@@ -32,26 +34,39 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     pageSize = 15;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *videos = [result objectForKey:@"show"];
-            if(videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
-            [flowView reloadData];
-        } else {
-            
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
     [self addContentView];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"LocalViewController"];
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+            [flowView reloadData];
+            [[CacheUtility sharedCache] putInCache:@"LocalViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+
+}
+
+- (void)parseData:(id)result
+{
+    videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *videos = [result objectForKey:@"show"];
+        if(videos.count > 0){
+            [videoArray addObjectsFromArray:videos];
+        }
+    } else {
+        
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -169,6 +184,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -188,6 +207,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -197,7 +220,7 @@
             if(videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
             }
-        } else {            
+        } else {
         }
         [flowView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

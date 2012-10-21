@@ -15,4 +15,5 @@
 + (void)addTextShadow:(UILabel *)textLabel;
 + (UILabel *)customizeAppTitle;
 + (UIImage *) createImageWithColor: (UIColor *) color;
++ (void)showNetWorkError:(UIView *)view;
 @end

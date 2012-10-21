@@ -8,6 +8,8 @@
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
 
 @interface VideoViewController(){
     WaterflowView *flowView;
@@ -32,25 +34,37 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     pageSize = 15;
     [self addContentView];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathVideo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *videos = [result objectForKey:@"video"];
-            if(videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"VideoViewController"];
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathVideo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
             [flowView reloadData];
-        } else {
-            
+            [[CacheUtility sharedCache] putInCache:@"VideoViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *videos = [result objectForKey:@"video"];
+        if(videos.count > 0){
+            [videoArray addObjectsFromArray:videos];
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
+    } else {
+        
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -98,7 +112,7 @@
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
     static NSString *CellIdentifier = @"Cell";
 	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
     if(indexPath.row * 3 + indexPath.section >= videoArray.count){
@@ -110,7 +124,7 @@
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
-    } else {        
+    } else {
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     }
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
@@ -168,6 +182,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", page], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathVideo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -187,6 +205,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSString stringWithFormat:@"%i", 1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathVideo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

@@ -202,18 +202,14 @@
 
 - (IBAction)loginAction:(id)sender {
     [self resignKeyboard:nil];
+    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
     HUD.minSize = CGSizeMake(135.f, 135.f);
-    
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:2];
-        return;
-    }
     HUD.labelText = NSLocalizedString(@"message.logginInProgress", nil);
     [HUD showWhileExecuting:@selector(saveTask) onTarget:self withObject:nil animated:YES];
 }
@@ -287,35 +283,22 @@
 }
 
 - (IBAction)sinaLogin:(id)sender {
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
     }
+    SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (IBAction)tecentLogin:(id)sender {
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        TecentViewController *viewController = [[TecentViewController alloc] init];
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else {
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
     }
+    TecentViewController *viewController = [[TecentViewController alloc] init];
+    [self.navigationController pushViewController:viewController animated:YES];
+    
 }
 
 - (void)resignKeyboard:(id)sender

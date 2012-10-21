@@ -12,6 +12,8 @@
 #import "DramaPlayDetailViewController.h"
 #import "VideoPlayDetailViewController.h"
 #import "PlayDetailViewController.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
 
 @interface MyselfViewController(){
     NSMutableArray *itemsArray;
@@ -41,35 +43,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-//    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
-//    self.navigationItem.leftBarButtonItem = leftButton;
-//    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];
-//    self.navigationItem.rightBarButtonItem = rightButton;
+    //    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"notification_center", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(notificatonCenter)];
+    //    self.navigationItem.leftBarButtonItem = leftButton;
+    //    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(settings)];
+    //    self.navigationItem.rightBarButtonItem = rightButton;
     
     pageSize = 10;
     reloads_ = 1;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *item = [result objectForKey:@"dynamics"];
-            if(item.count > 0){
-                [itemsArray addObjectsFromArray:item];
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-                [self loadTable];
-                reloads_ ++;
-            }
-        } else {
-            
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
-    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MyselfViewController"];
+        [self parseData:cacheResult];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+            [[CacheUtility sharedCache] putInCache:@"MyselfViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60 tableView:table withClient:self];
     
     if (_refreshHeaderView == nil) {
 		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.table.bounds.size.height, self.view.frame.size.width, self.table.bounds.size.height)];
@@ -81,6 +76,23 @@
 	}
 	[_refreshHeaderView refreshLastUpdatedDate];
     
+}
+
+- (void)parseData:(id)result
+{
+    itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *item = [result objectForKey:@"dynamics"];
+        if(item.count > 0){
+            [itemsArray addObjectsFromArray:item];
+            [self loadTable];
+            reloads_ ++;
+        }
+    } else {
+        
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -118,7 +130,7 @@
 {
     NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MyCellFactory" owner:self options:nil];
     MyProfileCell *myCell = (MyProfileCell *)[nib objectAtIndex:0];
-
+    
     NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
     NSString *imageUrl = (NSString *)[item valueForKey:@"prod_poster"];
     NSString *avatarUrl = (NSString *)[item valueForKey:@"user_pic_url"];
@@ -236,15 +248,15 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
+    NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
     NSString *type = [item objectForKey:@"prod_type"];
-   if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
-       return MOVIE_LOGO_HEIGHT + 90;
-   } else if([type isEqualToString:@"3"] || [type isEqualToString:@"4"]){
-       return VIDEO_LOGO_WIDTH + 70;
-   } else {
-       return 135;
-   }
+    if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
+        return MOVIE_LOGO_HEIGHT + 90;
+    } else if([type isEqualToString:@"3"] || [type isEqualToString:@"4"]){
+        return VIDEO_LOGO_WIDTH + 70;
+    } else {
+        return 135;
+    }
 }
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -255,7 +267,7 @@
 //- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
 //    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width,24)];
 //    customView.backgroundColor = [UIColor blackColor];
-//    
+//
 //    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectZero];
 //    headerLabel.backgroundColor = [UIColor clearColor];
 //    headerLabel.font = [UIFont boldSystemFontOfSize:12];

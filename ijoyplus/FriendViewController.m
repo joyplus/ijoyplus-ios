@@ -20,6 +20,8 @@
 #import "FriendDramaPlayDetailViewController.h"
 #import "FriendVideoPlayDetailViewController.h"
 #import "FriendShowPlayDetailViewController.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
 
 @interface FriendViewController (){
     WaterflowView *flowView;
@@ -54,24 +56,36 @@
     if(videoArray == nil){
         [self showProgressBar];
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", @"30", @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        if(responseCode == nil){
-            NSArray *videos = [result objectForKey:@"recommends"];
-            if(videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"FriendViewController"];
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", @"30", @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
             [flowView reloadData];
-        } else {
-            
+            [[CacheUtility sharedCache] putInCache:@"FriendViewController" result:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    if(responseCode == nil){
+        NSArray *videos = [result objectForKey:@"recommends"];
+        if(videos.count > 0){
+            [videoArray addObjectsFromArray:videos];
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }];
+    } else {
+        
+    }
 }
 
 - (void)addContentView
@@ -230,6 +244,6 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
-
+    
 }
 @end

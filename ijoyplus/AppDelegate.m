@@ -20,9 +20,6 @@
 #import "MobClick.h"
 #import "WBEngine.h"
 #import "BlockAlertView.h"
-#import "FriendViewController.h"
-#import "HomeViewController.h"
-#import "MyselfViewController.h"
 #import "CacheUtility.h"
 
 @interface AppDelegate (){
@@ -72,7 +69,9 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];;
+    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
+    [self monitorReachability];
+    [self isParseReachable];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if([num boolValue]){
@@ -117,7 +116,6 @@
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];
-    [self monitorReachability];
     return YES;
 }
 
