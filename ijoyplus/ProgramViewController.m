@@ -8,22 +8,21 @@
 
 #import "ProgramViewController.h"
 #import "CustomBackButton.h"
+#import "ProgramView.h"
 
 
 @interface ProgramViewController (){
-
+    ProgramView *view;
 }
 
 @end
 
 @implementation ProgramViewController
 @synthesize programUrl;
-@synthesize webView;
 
 - (void)viewDidUnload
 {
-    self.webView.delegate = nil;
-    self.webView = nil;
+    view = nil;
     self.programUrl = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -45,12 +44,9 @@
     CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    [self.webView setBackgroundColor:[UIColor clearColor]];
-    [self hideGradientBackground:self.webView];
-//    self.webView.delegate = self;
     
-    [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.programUrl]]];
-    [self.webView setScalesPageToFit:YES];
+     view = [[ProgramView alloc]initWithUrl:self.programUrl];
+    [self.view addSubview:view];
 }
 
 
@@ -87,13 +83,15 @@
     return button;
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)_webView {
+//- (void)webViewDidFinishLoad:(UIWebView *)_webView {
 //    [self hideProgressBar];
-}
+//}
 
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
+
+
 
 @end

@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIGenericViewController.h"
 
-@interface ProgramViewController : UIViewController<UIWebViewDelegate>
-
-@property (nonatomic, strong) IBOutlet UIWebView* webView;
+@interface ProgramViewController : UIViewController
 
 @property (nonatomic, strong) NSString *programUrl;
 
