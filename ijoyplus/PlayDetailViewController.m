@@ -29,6 +29,7 @@
 #import "RecommandViewController.h"
 #import "SendCommentViewController.h"
 #import "PostViewController.h"
+#import "CacheUtility.h"
 
 #define ROW_HEIGHT 40
 
@@ -102,6 +103,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+    }
     [self initPictureCell];
     [self initPlayCell];
     [self getProgramView];
@@ -146,30 +150,43 @@
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                self.programId, @"prod_id",
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            movie = (NSDictionary *)[result objectForKey:@"movie"];
-            [self setPlayCellValue];
-            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray addObjectsFromArray:tempArray];
-            }
-            if(pullToRefreshManager_ == nil && commentArray.count > 0){
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
-            }
-            [self loadTable];
-        } else {
-            
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", self.programId];
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+        [self parseData:cacheResult];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    self.programId, @"prod_id",
+                                    nil];
         
-    }];
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", self.programId];
+            [[CacheUtility sharedCache] putInCache:key result:result];
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        movie = (NSDictionary *)[result objectForKey:@"movie"];
+        [self setPlayCellValue];
+        NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+        if(tempArray != nil && tempArray.count > 0){
+            [commentArray addObjectsFromArray:tempArray];
+        }
+        if(pullToRefreshManager_ == nil && commentArray.count > 0){
+            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
+        }
+        [self loadTable];
+    } else {
+        
+    }
 }
 
 - (void)loadTable {
@@ -620,6 +637,10 @@
 
 - (void)watch
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
@@ -657,6 +678,10 @@
 
 - (void)collection
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
         MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];

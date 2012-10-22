@@ -9,7 +9,10 @@
 #import "ProgramViewController.h"
 #import "CustomBackButton.h"
 
-@interface ProgramViewController ()
+
+@interface ProgramViewController (){
+
+}
 
 @end
 
@@ -19,9 +22,10 @@
 
 - (void)viewDidUnload
 {
-    [super viewDidUnload];
+    self.webView.delegate = nil;
     self.webView = nil;
     self.programUrl = nil;
+    [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -84,8 +88,7 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)_webView {
-//    UIButton *b = [self findButtonInView:_webView];
-//    [b sendActionsForControlEvents:UIControlEventTouchUpInside];
+//    [self hideProgressBar];
 }
 
 - (void)closeSelf

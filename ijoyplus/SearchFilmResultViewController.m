@@ -182,7 +182,12 @@
         }
         cell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         cell.filmImageView.layer.borderWidth = 1;
-        
+        NSString *score = [searchObject objectForKey:@"score"];
+        if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
+            cell.scoreLabel.text = [NSString stringWithFormat:@"评分：%@", score];
+        } else {
+            cell.scoreLabel.text = @"评分：暂无";
+        }
         NSString *name = [searchObject objectForKey:@"prod_name"];
         if([StringUtility stringIsEmpty:name]){
             cell.filmTitleLabel.text = @"...";
@@ -233,6 +238,12 @@
             cell.videoTitleLabel.text = @"...";
         } else {
             cell.videoTitleLabel.text = name;
+        }
+        NSString *score = [searchObject objectForKey:@"score"];
+        if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
+            cell.scoreLabel.text = [NSString stringWithFormat:@"评分：%@", score];
+        } else {
+            cell.scoreLabel.text = @"评分：暂无";
         }
         NSString *actor = [searchObject objectForKey:@"star"];
         if([StringUtility stringIsEmpty:actor]){

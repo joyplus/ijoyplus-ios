@@ -35,5 +35,6 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserLoggedIn];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserName];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserNickName];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserId];
 }
 @end

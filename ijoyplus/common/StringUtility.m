@@ -15,6 +15,9 @@
     if ((NSNull *) aString == [NSNull null]) {
         return YES;
     }
+    if ([aString isEqualToString:@"EMPTY"]){
+        return YES;
+    }
     
     if (aString == nil) {
         return YES;

@@ -28,6 +28,7 @@
 #import "MyDramaPlayDetailViewController.h"
 #import "MyVideoPlayDetailViewController.h"
 #import "CacheUtility.h"
+#import "UIUtility.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define TOP_GAP 40
@@ -111,7 +112,7 @@
     key = @"watchs";
     serviceName = kPathUserWatchs;
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeViewController"];
         [self parseData:cacheResult];
         [flowView reloadData];
     } else {
@@ -121,7 +122,7 @@
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [flowView reloadData];
-            [[CacheUtility sharedCache] putInCache:@"DramaViewController" result:result];
+            [[CacheUtility sharedCache] putInCache:@"HomeViewController" result:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             videoArray = [[NSMutableArray alloc]initWithCapacity:10];
@@ -160,7 +161,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
+    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",self];
@@ -192,44 +193,22 @@
 
 - (void)addHeaderContent:(UIView *)view
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                self.userid, @"userid",
-                                nil];
-    //    if(!accessed){
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            accessed = YES;
-            NSString *bgUrl = [result valueForKey:@"bg_url"];
-            if([StringUtility stringIsEmpty:bgUrl]){
-                self.topImageView.image = [UIImage imageNamed:@"user_picture.jpg"];
-            } else {
-                [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"user_picture.jpg"]];
-            }
-            NSString *myUrl = [result valueForKey:@"pic_url"];
-            if([StringUtility stringIsEmpty:myUrl]){
-                self.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
-            } else {
-                [self.avatarImageView setImageWithURL:[NSURL URLWithString:[result valueForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
-            }
-            self.fansNumberLabel.text = [result valueForKey:@"fan_num"];
-            self.watchedNumberLabel.text = [result valueForKey:@"follow_num"];
-            theUserFollowed = [[result valueForKey:@"isFollowed"] intValue];
-            if(theUserFollowed != 1){
-                UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
-                self.navigationItem.rightBarButtonItem = rightButton;
-            }
-            self.username.text = [result valueForKey:@"nickname"];
-            
-            self.title = [NSString stringWithFormat:@"%@的主页", [result valueForKey:@"nickname"]];
-            self.tabBarItem.title = NSLocalizedString(@"list", nil);
-        } else {
-            
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeHeaderContent"];
+        [self parseHeaderData:cacheResult];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    self.userid, @"userid",
+                                    nil];
+        //    if(!accessed){
+        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[CacheUtility sharedCache] putInCache:@"HomeHeaderContent" result:result];
+            [self parseHeaderData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
     //    }
     //    if(!accessed){
     //        accessed = YES;
@@ -262,6 +241,39 @@
     [self.segment setTitle:NSLocalizedString(@"my_recommandation", nil) forSegmentAtIndex:2];
     [self.segment addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
     [view addSubview:self.segment];
+}
+
+- (void)parseHeaderData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        accessed = YES;
+        NSString *bgUrl = [result valueForKey:@"bg_url"];
+        if([StringUtility stringIsEmpty:bgUrl]){
+            self.topImageView.image = [UIImage imageNamed:@"user_picture.jpg"];
+        } else {
+            [self.topImageView setImageWithURL:[NSURL URLWithString:bgUrl] placeholderImage:[UIImage imageNamed:@"user_picture.jpg"]];
+        }
+        NSString *myUrl = [result valueForKey:@"pic_url"];
+        if([StringUtility stringIsEmpty:myUrl]){
+            self.avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
+        } else {
+            [self.avatarImageView setImageWithURL:[NSURL URLWithString:[result valueForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
+        }
+        self.fansNumberLabel.text = [result valueForKey:@"fan_num"];
+        self.watchedNumberLabel.text = [result valueForKey:@"follow_num"];
+        theUserFollowed = [[result valueForKey:@"isFollowed"] intValue];
+        if(theUserFollowed != 1){
+            UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
+            self.navigationItem.rightBarButtonItem = rightButton;
+        }
+        self.username.text = [result valueForKey:@"nickname"];
+        
+        self.title = [NSString stringWithFormat:@"%@的主页", [result valueForKey:@"nickname"]];
+        self.tabBarItem.title = NSLocalizedString(@"list", nil);
+    } else {
+        
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -391,6 +403,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     currentPage++;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
@@ -414,10 +430,36 @@
 
 - (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
 {
-    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    currentPage = 1;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                kAppKey, @"app_key",
+                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
+    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            [videoArray removeAllObjects];
+            NSArray *videos = [result objectForKey:key];
+            if(videos != nil && videos.count > 0){
+                [videoArray addObjectsFromArray:videos];
+                [flowView reloadData];
+            }
+        } else {
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
 }
 
 - (void)segmentValueChanged:(id)sender {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self showProgressBar];
     if(self.segment.selectedSegmentIndex == 0){
         serviceName = kPathUserWatchs;

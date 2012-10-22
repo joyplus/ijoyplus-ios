@@ -114,17 +114,17 @@
     if([num boolValue]){
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"popular", nil);
+//        self.title = NSLocalizedString(@"popular", nil);
         [self.tabBar setHidden:NO];
         [bottomToolbar setHidden:YES];
         [bottomToolbar removeFromSuperview];
     } else {
         self.navigationItem.rightBarButtonItem = nil;
-        self.title = NSLocalizedString(@"app_name", nil);
         [self.tabBar setHidden:YES];
         [bottomToolbar setHidden:NO];
         [self.view addSubview:bottomToolbar];
     }
+    self.title = NSLocalizedString(@"app_name", nil);
     [self setSelectedIndex:0];
 }
 
@@ -139,6 +139,7 @@
     detailController2.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"friend", nil) image:[UIImage imageNamed:@"rec_tab"] tag:1];
     
     detailController3 = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+    detailController3.userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     detailController3.offsety = NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT;
     detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"my_tab"] tag:2];
     

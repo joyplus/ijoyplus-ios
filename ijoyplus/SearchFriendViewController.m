@@ -21,6 +21,7 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "CacheUtility.h"
+#import "UIUtility.h"
 
 @interface SearchFriendViewController ()
 
@@ -157,6 +158,10 @@
         viewController.fromController = @"SearchFriendViewController";
         [self.navigationController pushViewController:viewController animated:YES];
     } else if(indexPath.section == 1){
+        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+            [UIUtility showNetWorkError:self.view];
+            return;
+        }
         if(indexPath.row == 0){
             if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
                 [self processSinaData];
@@ -177,6 +182,10 @@
             //                [self.navigationController pushViewController:viewController animated:YES];
             //            }
         } else {
+            if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+                [UIUtility showNetWorkError:self.view];
+                return;
+            }
             [self uploadAddressBook];
         }
     }

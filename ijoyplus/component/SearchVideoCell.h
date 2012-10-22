@@ -12,5 +12,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *videoImageView;
 @property (weak, nonatomic) IBOutlet UILabel *videoTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *videoSubtitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 
 @end

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1280</int>
+		<int key="IBDocument.SystemTarget">1296</int>
 		<string key="IBDocument.SystemVersion">12C60</string>
 		<string key="IBDocument.InterfaceBuilderVersion">2549</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
@@ -147,7 +147,7 @@
 							<object class="IBUILabel" id="664051487">
 								<reference key="NSNextResponder" ref="905433465"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{118, 27}, {136, 21}}</string>
+								<string key="NSFrame">{{118, 27}, {192, 21}}</string>
 								<reference key="NSSuperview" ref="905433465"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="178105632"/>
@@ -157,7 +157,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">评分：暂无</string>
+								<string key="IBUIText"/>
 								<reference key="IBUITextColor" ref="497730630"/>
 								<reference key="IBUIHighlightedColor" ref="771081482"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -507,7 +507,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">u0_normal.png</string>
+									<string key="NSResourceName">u0_normal</string>
 								</object>
 							</object>
 							<object class="IBUILabel" id="155369920">
@@ -940,6 +940,7 @@
 						<string key="NSFrameSize">{320, 122}</string>
 						<reference key="NSSuperview" ref="136725822"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="597387079"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<reference key="IBUIBackgroundColor" ref="736978465"/>
 						<bool key="IBUIOpaque">NO</bool>
@@ -996,6 +997,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">scoreLabel</string>
+						<reference key="source" ref="653734578"/>
+						<reference key="destination" ref="664051487"/>
+					</object>
+					<int key="connectionID">110</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">videoImageView</string>
 						<reference key="source" ref="1048934431"/>
 						<reference key="destination" ref="490156195"/>
@@ -1017,6 +1026,14 @@
 						<reference key="destination" ref="161794668"/>
 					</object>
 					<int key="connectionID">83</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">scoreLabel</string>
+						<reference key="source" ref="1048934431"/>
+						<reference key="destination" ref="789815418"/>
+					</object>
+					<int key="connectionID">111</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -1584,7 +1601,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">108</int>
+			<int key="maxID">111</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1725,6 +1742,7 @@
 						<string key="filmSubitleLabel">UILabel</string>
 						<string key="filmThirdTitleLabel">UILabel</string>
 						<string key="filmTitleLabel">UILabel</string>
+						<string key="scoreLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="filmImageView">
@@ -1743,6 +1761,10 @@
 							<string key="name">filmTitleLabel</string>
 							<string key="candidateClassName">UILabel</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="scoreLabel">
+							<string key="name">scoreLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1753,11 +1775,16 @@
 					<string key="className">SearchVideoCell</string>
 					<string key="superclassName">UITableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="scoreLabel">UILabel</string>
 						<string key="videoImageView">UIImageView</string>
 						<string key="videoSubtitleLabel">UILabel</string>
 						<string key="videoTitleLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="scoreLabel">
+							<string key="name">scoreLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="videoImageView">
 							<string key="name">videoImageView</string>
 							<string key="candidateClassName">UIImageView</string>
@@ -1780,6 +1807,10 @@
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
+		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
+			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
+			<real value="1296" key="NS.object.0"/>
+		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
@@ -1787,7 +1818,7 @@
 			<string key="collection_icon@2x.png">{291, 60}</string>
 			<string key="play@2x.png">{130, 130}</string>
 			<string key="score_icon@2x.png">{192, 60}</string>
-			<string key="u0_normal.png">{640, 373}</string>
+			<string key="u0_normal">{16, 16}</string>
 			<string key="user_small@2x.png">{86, 86}</string>
 			<string key="watch_icon@2x.png">{291, 60}</string>
 		</dictionary>

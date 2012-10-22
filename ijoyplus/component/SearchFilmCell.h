@@ -13,5 +13,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *filmTitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *filmSubitleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *filmThirdTitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 
 @end

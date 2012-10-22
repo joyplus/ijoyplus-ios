@@ -75,41 +75,7 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if([num boolValue]){
-        NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
-        NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:@"login" error:nil];
-        if(![StringUtility stringIsEmpty:password]){
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        kAppKey, @"app_key",
-                                        username, @"username",
-                                        password, @"password",
-                                        nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if(![responseCode isEqualToString:kSuccessResCode]){
-                    [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
-                    [[WBEngine sharedClient] logOut];
-                    [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
-                    [[CacheUtility sharedCache] clear];
-                    [[ContainerUtility sharedInstance] clear];
-                    [self refreshRootView];
-                }
-            }
-            failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"<<<<<<%@>>>>>", error);
-            }];
-        } else {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if(![responseCode isEqualToString:kSuccessResCode]){
-                    [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
-                    [self refreshRootView];
-                }
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"<<<<<<%@>>>>>", error);
-            }];
-        }
-        
+        [self renewSession];
     }
     detailViewController = [[BottomTabViewController alloc] init];
     UINavigationController *viewController = [[UINavigationController alloc]initWithRootViewController:detailViewController];
@@ -117,6 +83,44 @@
     [self.window makeKeyAndVisible];
     [self customizeAppearance];
     return YES;
+}
+
+- (void)renewSession
+{
+    NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
+    NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:@"login" error:nil];
+    if(![StringUtility stringIsEmpty:password]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    username, @"username",
+                                    password, @"password",
+                                    nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(![responseCode isEqualToString:kSuccessResCode]){
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                [[WBEngine sharedClient] logOut];
+                [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
+                [[CacheUtility sharedCache] clear];
+                [[ContainerUtility sharedInstance] clear];
+                [self refreshRootView];
+            }
+        }
+                                            failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                                                NSLog(@"<<<<<<%@>>>>>", error);
+                                            }];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(![responseCode isEqualToString:kSuccessResCode]){
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                [self refreshRootView];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"<<<<<<%@>>>>>", error);
+        }];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -169,6 +173,9 @@
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
     NSLog(@"Reachability changed: %@", curReach);
     networkStatus = [curReach currentReachabilityStatus];
+    if(self.networkStatus != NotReachable){
+        [self renewSession];
+    }
 }
 
 @end

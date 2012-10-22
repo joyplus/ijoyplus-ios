@@ -352,6 +352,7 @@
         [self.view addSubview:HUD];
         if([responseCode isEqualToString:kSuccessResCode]){
             [SFHFKeychainUtils storeUsername:kUserName andPassword:passwordCell.titleLabel.text forServiceName:@"login" updateExisting:YES error:nil];
+            [[ContainerUtility sharedInstance]setAttribute:@"id" forKey:kUserId];
             [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
             [[ContainerUtility sharedInstance]setAttribute:nicknameCell.titleLabel.text forKey:kUserNickName];
             [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];

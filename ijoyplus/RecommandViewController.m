@@ -149,7 +149,11 @@
 
 - (void)post
 {
-    [self.textView resignFirstResponder];    
+    [self.textView resignFirstResponder];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     if([StringUtility stringIsEmpty:self.textView.text]){
 //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];

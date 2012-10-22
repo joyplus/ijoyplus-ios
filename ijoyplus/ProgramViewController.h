@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIGenericViewController.h"
 
 @interface ProgramViewController : UIViewController<UIWebViewDelegate>
 

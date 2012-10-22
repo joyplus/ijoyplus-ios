@@ -39,6 +39,7 @@
 #define kSinaUID @"kSinaUID"
 #define kTencentUserLoggedIn @"tencentUserLoggedIn"
 
+#define kUserId @"kUserId"
 #define kUserName @"kUserName"
 #define kUserNickName @"kUserNickName"
 #define kSessionRenew @"kSessionRenew"

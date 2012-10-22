@@ -10,6 +10,7 @@
 
 @implementation SearchFilmCell
 @synthesize filmThirdTitleLabel;
+@synthesize scoreLabel;
 @synthesize filmImageView;
 @synthesize filmSubitleLabel;
 @synthesize filmTitleLabel;

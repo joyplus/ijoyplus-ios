@@ -26,6 +26,7 @@
 #import "ProgramViewController.h"
 #import "NoRecordCell.h"
 #import "CommentViewController.h"
+#import "CacheUtility.h"
 
 #define MAX_FRIEND_COMMENT_COUNT 10
 #define MAX_COMMENT_COUNT 10
@@ -49,31 +50,44 @@
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"frienddrama", self.programId, self.userId];
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+        [self parseData:cacheResult];
+    } else {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.programId, @"prod_id", self.userId, @"user_id", 
                                 nil];
     
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            drama = (NSDictionary *)[result objectForKey:@"tv"];
-            [self setPlayCellValue];
-            [self postInitialization:result];
-            friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
-            if(friendCommentArray == nil || friendCommentArray.count == 0){
-                friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
-            }
-            NSArray *tempArray = (NSArray *)[result objectForKey:@"comments"];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray addObjectsFromArray:tempArray];
-            }
-            [self initDramaCell];
-            [_tableView reloadData];
-        } else {
-        }
+        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"frienddrama", self.programId, self.userId];
+        [[CacheUtility sharedCache] putInCache:key result:result];
+        [self parseData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
     }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        drama = (NSDictionary *)[result objectForKey:@"tv"];
+        [self setPlayCellValue];
+        [self postInitialization:result];
+        friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
+        if(friendCommentArray == nil || friendCommentArray.count == 0){
+            friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
+        }
+        NSArray *tempArray = (NSArray *)[result objectForKey:@"comments"];
+        if(tempArray != nil && tempArray.count > 0){
+            [commentArray addObjectsFromArray:tempArray];
+        }
+        [self initDramaCell];
+        [_tableView reloadData];
+    } else {
+    }
 }
 
 #pragma mark - Table view data source

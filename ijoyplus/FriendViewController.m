@@ -76,8 +76,8 @@
 - (void)parseData:(id)result
 {
     videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-    NSString *responseCode = [result objectForKey:@"res_code"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+    NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         NSArray *videos = [result objectForKey:@"recommends"];
         if(videos.count > 0){
@@ -202,6 +202,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView willLoadData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 [NSString stringWithFormat:@"%i", page], @"page_num", @"30", @"page_size", nil];
@@ -225,6 +229,10 @@
 
 - (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",

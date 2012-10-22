@@ -19,6 +19,7 @@
 #import "DateUtility.h"
 #import "NSDate-Utilities.h"
 #import "CMConstants.h"
+#import "UIUtility.h"
 
 @interface SearchFilmViewController (){
     NSMutableArray *historyArray;
@@ -235,6 +236,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self.sBar resignFirstResponder];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSInteger sectionNum = [self numberOfSectionsInTableView:tableView];
     NSString *key;
     if(sectionNum > 1 && indexPath.section == 0){
@@ -244,7 +250,6 @@
         key = [[hotKeyArray objectAtIndex:indexPath.row] valueForKey:@"content"];
     }
     self.sBar.text = key;
-    [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     SearchFilmResultViewController *viewController = [[SearchFilmResultViewController alloc] initWithNibName:@"SearchFilmResultViewController" bundle:nil];
     viewController.keyword = self.sBar.text;
@@ -259,8 +264,12 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    [self addKeyToLocalHistory:self.sBar.text];
     [searchBar resignFirstResponder];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    [self addKeyToLocalHistory:self.sBar.text];
     SearchFilmResultViewController *viewController = [[SearchFilmResultViewController alloc] initWithNibName:@"SearchFilmResultViewController" bundle:nil];
     viewController.keyword = self.sBar.text;
     [self.navigationController pushViewController:viewController animated:YES];   

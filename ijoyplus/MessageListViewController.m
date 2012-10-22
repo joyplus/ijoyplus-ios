@@ -20,6 +20,7 @@
 #import "ContainerUtility.h"
 #import "HomeViewController.h"
 #import "CacheUtility.h"
+#import "UIUtility.h"
 
 @interface MessageListViewController (){
     NSMutableArray *commentArray;
@@ -68,11 +69,14 @@
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
         [self parseData:cacheResult];
+        [self loadTable];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseData:result];
             [[CacheUtility sharedCache] putInCache:@"MessageListViewController" result:result];
+            [self parseData:result];
+            [self loadTable];
+            reloads_ ++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
@@ -90,10 +94,7 @@
     if(responseCode == nil){
         NSArray *comment = [result objectForKey:@"msgs"];
         if(comment.count > 0){
-            [commentArray addObjectsFromArray:comment];
-            [self loadTable];
-            reloads_ ++;
-            
+            [commentArray addObjectsFromArray:comment];           
         }
     } else {
         
@@ -385,6 +386,11 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

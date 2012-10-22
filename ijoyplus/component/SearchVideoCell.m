@@ -12,6 +12,7 @@
 @synthesize videoImageView;
 @synthesize videoTitleLabel;
 @synthesize videoSubtitleLabel;
+@synthesize scoreLabel;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

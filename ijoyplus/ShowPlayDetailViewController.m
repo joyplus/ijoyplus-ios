@@ -29,6 +29,8 @@
 #import "RecommandViewController.h"
 #import "SendCommentViewController.h"
 #import "PostViewController.h"
+#import "CacheUtility.h"
+
 
 #define ROW_HEIGHT 40
 
@@ -46,29 +48,42 @@
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.programId];
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+        [self parseData:cacheResult];
+    } else {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.programId, @"prod_id",
                                 nil];
     
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            show = (NSDictionary *)[result objectForKey:@"show"];
-            [self setPlayCellValue];
-            
-            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray addObjectsFromArray:tempArray];
-            }
-            if(pullToRefreshManager_ == nil && commentArray.count > 0){
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
-            }
-            [self loadTable];
-        } else {
-        }
+        NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.programId];
+        [[CacheUtility sharedCache] putInCache:key result:result];
+        [self parseData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
     }];
+    }
+}
+
+- (void)parseData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        show = (NSDictionary *)[result objectForKey:@"show"];
+        [self setPlayCellValue];
+        
+        NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+        if(tempArray != nil && tempArray.count > 0){
+            [commentArray addObjectsFromArray:tempArray];
+        }
+        if(pullToRefreshManager_ == nil && commentArray.count > 0){
+            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
+        }
+        [self loadTable];
+    } else {
+    }
 }
 
 - (void)setPlayCellValue

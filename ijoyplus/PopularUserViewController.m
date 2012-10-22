@@ -17,6 +17,8 @@
 #import "ServiceConstants.h"
 #import "ContainerUtility.h"
 #import "FriendCell.h"
+#import "UIUtility.h"
+#import "CacheUtility.h"
 
 #define LEFT_GAP 25
 #define AVATAR_IMAGE_WIDTH 60
@@ -72,27 +74,40 @@
     self.title = @"达人推荐";
     pageSize = 18;
     reloads_ = 1;
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PopularUserViewController"];
+        [self parseData:cacheResult];
+        [self loadTable];
+    } else {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
                                 nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *friends = [result objectForKey:@"prestiges"];
-            if(friends != nil && friends.count > 0){
-                [userArray addObjectsFromArray:friends];
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
-                [self loadTable];
-                reloads_++;
-            }
-        } else {
-            
-        }
+         [[CacheUtility sharedCache] putInCache:@"PopularUserViewController" result:result];
+        [self parseData:result];
+        [self loadTable];
+        reloads_++;
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
+    }
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.tableView withClient:self];
+    [self loadTable];
 
+}
+
+- (void)parseData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *friends = [result objectForKey:@"prestiges"];
+        if(friends != nil && friends.count > 0){
+            [userArray addObjectsFromArray:friends];            
+        }
+    } else {
+        
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -355,6 +370,11 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
