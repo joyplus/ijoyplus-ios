@@ -164,7 +164,7 @@
             [alert setDestructiveButtonWithTitle:@"确定" block:^{
                 [[WBEngine sharedClient] logOut];
                 NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
-                [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
+                [SFHFKeychainUtils deleteItemForUsername:username andServiceName:kUserLoginService error:nil];
                 [[CacheUtility sharedCache] clear];
                 [[ContainerUtility sharedInstance] clear];
                 [self viewDidLoad];

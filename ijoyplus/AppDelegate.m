@@ -88,7 +88,7 @@
 - (void)renewSession
 {
     NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
-    NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:@"login" error:nil];
+    NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:kUserLoginService error:nil];
     NSString *tecentOpenId = [SFHFKeychainUtils getPasswordForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
     if(![StringUtility stringIsEmpty:password] && ![StringUtility stringIsEmpty:username]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:

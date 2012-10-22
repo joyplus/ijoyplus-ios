@@ -28,6 +28,7 @@
     BOOL btn1Selected;
     UIButton *btn2;
     BOOL btn2Selected;
+    SinaLoginViewController *viewController;
 }
 @property (strong, nonatomic) IBOutlet UILabel *textCount;
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
@@ -78,6 +79,7 @@
 {
     btn1 = nil;
     btn2 = nil;
+    viewController = nil;
     self.programId = nil;
     self.programName = nil;
     [self setTextView:nil];
@@ -150,7 +152,7 @@
             [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
         }
     } else{
-        SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+        viewController = [[SinaLoginViewController alloc]init];
         viewController.fromController = @"PostViewController";
         [self.navigationController pushViewController:viewController animated:YES];
     }

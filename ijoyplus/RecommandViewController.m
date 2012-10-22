@@ -25,6 +25,7 @@
 @interface RecommandViewController (){
     UIButton *btn1;
     BOOL btn1Selected;
+    SinaLoginViewController *viewController;
 }
 @property (strong, nonatomic) IBOutlet UILabel *textCount;
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
@@ -55,6 +56,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    viewController = nil;
     self.title = NSLocalizedString(@"recommand_toolbar", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
@@ -143,7 +145,7 @@
             [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
         }
     } else{
-        SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
+        viewController = [[SinaLoginViewController alloc]init];
         viewController.fromController = @"PostViewController";
         [self.navigationController pushViewController:viewController animated:YES];
     }

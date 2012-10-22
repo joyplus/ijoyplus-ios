@@ -276,7 +276,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         
     }];
-    [SFHFKeychainUtils storeUsername:kUserName andPassword:loginPasswordCell.titleField.text forServiceName:@"login" updateExisting:YES error:nil];
+    [SFHFKeychainUtils storeUsername:kUserName andPassword:loginPasswordCell.titleField.text forServiceName:kUserLoginService updateExisting:YES error:nil];
     [[ContainerUtility sharedInstance]setAttribute:usernameCell.titleField.text forKey:kUserName];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
