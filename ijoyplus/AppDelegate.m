@@ -106,10 +106,10 @@
                 [self refreshRootView];
             }
         }
-                                            failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                                                NSLog(@"<<<<<<%@>>>>>", error);
-                                            }];
-    } else {
+        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"<<<<<<%@>>>>>", error);
+        }];
+    } else if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
@@ -120,6 +120,8 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"<<<<<<%@>>>>>", error);
         }];
+    } else {
+        
     }
 }
 

@@ -45,6 +45,7 @@
 @synthesize sinaBtn = btn1;
 @synthesize qqBtn = btn2;
 @synthesize programId;
+@synthesize programName;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,6 +78,8 @@
 {
     btn1 = nil;
     btn2 = nil;
+    self.programId = nil;
+    self.programName = nil;
     [self setTextView:nil];
     [self setTextCount:nil];
     [self stopObservingNotifications];
@@ -188,7 +191,8 @@
         return;
     }
     if(btn1Selected){
-        [[WBEngine sharedClient] sendWeiBoWithText:self.textView.text image:nil];
+        NSString *content = [NSString stringWithFormat:@"#%@# %@", self.programName, self.textView.text];
+        [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
     }
     //    if(btn2Selected){
     //        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;

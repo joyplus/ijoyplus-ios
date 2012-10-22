@@ -31,6 +31,7 @@
     CGFloat WindowHeight;
     CGFloat ImageHeight;
     int reload;
+    NSString *name;
 }
 
 - (void)avatarClicked;

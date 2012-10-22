@@ -13,4 +13,5 @@
 @property (strong, nonatomic) IBOutlet UIButton *sinaBtn;
 @property (strong, nonatomic) IBOutlet UIButton *qqBtn;
 @property (nonatomic, strong)NSString *programId;
+@property (nonatomic, strong)NSString *programName;
 @end

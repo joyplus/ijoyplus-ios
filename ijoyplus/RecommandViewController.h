@@ -11,5 +11,6 @@
 @interface RecommandViewController : UIViewController <UITextViewDelegate>
 
 @property (nonatomic, strong)NSString *programId;
+@property (nonatomic, strong)NSString *programName;
 @property (strong, nonatomic) IBOutlet UIButton *sinaBtn;
 @end

@@ -27,7 +27,6 @@
     BOOL btn1Selected;
 }
 @property (strong, nonatomic) IBOutlet UILabel *textCount;
-
 @property (strong, nonatomic) IBOutlet UILabel *tipLabel;
 @property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
 - (void)startObservingNotifications;
@@ -41,6 +40,7 @@
 @synthesize tipLabel;
 @synthesize textView;
 @synthesize programId;
+@synthesize programName;
 @synthesize sinaBtn = btn1;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -72,6 +72,8 @@
 - (void)viewDidUnload
 {
     btn1 = nil;
+    self.programId = nil;
+    self.programName = nil;
     [self setTextView:nil];
     [self setTextCount:nil];
     [self stopObservingNotifications];
@@ -166,7 +168,8 @@
     }
     
     if(btn1Selected){
-        [[WBEngine sharedClient] sendWeiBoWithText:self.textView.text image:nil];
+        NSString *content = [NSString stringWithFormat:@"#%@# %@", self.programName, self.textView.text];
+        [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
     }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",

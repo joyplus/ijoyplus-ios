@@ -351,8 +351,18 @@
         HUD.mode = MBProgressHUDModeCustomView;
         [self.view addSubview:HUD];
         if([responseCode isEqualToString:kSuccessResCode]){
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                        kAppKey, @"app_key",
+                                        nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(responseCode == nil){
+                    [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
             [SFHFKeychainUtils storeUsername:kUserName andPassword:passwordCell.titleLabel.text forServiceName:@"login" updateExisting:YES error:nil];
-            [[ContainerUtility sharedInstance]setAttribute:@"id" forKey:kUserId];
             [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
             [[ContainerUtility sharedInstance]setAttribute:nicknameCell.titleLabel.text forKey:kUserNickName];
             [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];

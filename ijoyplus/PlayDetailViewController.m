@@ -50,6 +50,7 @@
     bottomToolbar = nil;
     pictureCell = nil;
     userId = nil;
+    name = nil;
     [super viewDidUnload];
 }
 
@@ -196,7 +197,7 @@
 
 - (void)setPlayCellValue
 {
-    NSString *name = [movie objectForKey:@"name"];
+    name = [movie objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
@@ -487,7 +488,6 @@
 }
 
 - (void)showIntroduction{
-    NSString *name = [movie objectForKey:@"name"];
     NSString *summary = [movie objectForKey:@"summary"];
     IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:name content:summary];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
@@ -613,6 +613,7 @@
     } else {
         PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
         viewController.programId = self.programId;
+        viewController.programName = name;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -631,6 +632,7 @@
     } else {
         RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
         viewController.programId = self.programId;
+        viewController.programName = name;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -730,6 +732,7 @@
     } else {
         SendCommentViewController *viewController = [[SendCommentViewController alloc]initWithNibName:@"SendCommentViewController" bundle:nil];
         viewController.programId = self.programId;
+        viewController.programName = name;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }

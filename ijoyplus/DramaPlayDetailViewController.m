@@ -98,7 +98,7 @@
 
 - (void)setPlayCellValue
 {
-    NSString *name = [drama objectForKey:@"name"];
+    name = [drama objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
