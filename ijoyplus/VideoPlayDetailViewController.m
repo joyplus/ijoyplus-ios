@@ -52,6 +52,31 @@
     [super viewDidLoad];
 }
 
+- (void)initPictureCell{
+    [super initPictureCell];
+    _imageView.frame = pictureCell.frame;
+    playImageView.center = CGPointMake(pictureCell.center.x, WindowHeight/2);
+    [pictureCell setBackgroundView:_imageView];
+}
+
+#pragma mark - View lifecycle
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    _imageScroller.frame        = CGRectZero;
+}
+
+#pragma mark - Parallax effect
+
+- (void)updateOffsets {
+
+}
+
+#pragma mark - View Layout
+- (void)layoutImage {
+    
+}
+
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];

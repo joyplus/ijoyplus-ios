@@ -41,6 +41,7 @@
 - (void)loadTable;
 - (void)setPlayCellValue;
 - (void)initPlayCell;
+- (void)initPictureCell;
 - (CommentCell *)displayCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
 - (NoRecordCell *)displayNoRecordCell:(UITableView *)tableView;
 - (CGFloat)caculateCommentCellHeight:(NSInteger)row dataArray:(NSArray *)dataArray;
