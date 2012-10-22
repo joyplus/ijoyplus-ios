@@ -115,6 +115,9 @@
         if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
             [[WBEngine sharedClient] logOut];
         }
+        [SFHFKeychainUtils deleteItemForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
+        [SFHFKeychainUtils deleteItemForUsername:@"tecentAccessToken" andServiceName:@"tecentlogin" error:nil];
+        
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
         [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
         [[CacheUtility sharedCache] clear];

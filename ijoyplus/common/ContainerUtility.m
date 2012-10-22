@@ -36,5 +36,6 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserName];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserNickName];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserId];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end

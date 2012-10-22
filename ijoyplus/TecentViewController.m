@@ -79,8 +79,7 @@
 
 - (void)tencentDidLogin
 {
-//    BOOL success = [_tencentOAuth getFansList];
-//    NSLog(@"%i", success);
+    [self saveAuthorizeDataToKeychain];    
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kTencentUserLoggedIn];
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];
@@ -125,6 +124,13 @@
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)saveAuthorizeDataToKeychain
+{
+    [SFHFKeychainUtils storeUsername:@"tecentOpenId" andPassword:_tencentOAuth.openId forServiceName:@"tecentlogin" updateExisting:YES error:nil];
+	[SFHFKeychainUtils storeUsername:@"tecentAccessToken" andPassword:_tencentOAuth.accessToken forServiceName:@"tecentlogin" updateExisting:YES error:nil];
+//	[SFHFKeychainUtils storeUsername:kWBKeychainExpireTime andPassword:[NSString stringWithFormat:@"%lf", expireTime] forServiceName:@"tecentlogin" updateExisting:YES error:nil];
 }
 
 @end

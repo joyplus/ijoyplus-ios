@@ -89,7 +89,8 @@
 {
     NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
     NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:@"login" error:nil];
-    if(![StringUtility stringIsEmpty:password]){
+    NSString *tecentOpenId = [SFHFKeychainUtils getPasswordForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
+    if(![StringUtility stringIsEmpty:password] && ![StringUtility stringIsEmpty:username]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     kAppKey, @"app_key",
                                     username, @"username",
@@ -120,8 +121,17 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"<<<<<<%@>>>>>", error);
         }];
-    } else {
-        
+    } else if(![StringUtility stringIsEmpty:tecentOpenId]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", tecentOpenId, @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(![responseCode isEqualToString:kSuccessResCode]){
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
+                [self refreshRootView];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"<<<<<<%@>>>>>", error);
+        }];
     }
 }
 

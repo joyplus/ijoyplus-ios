@@ -301,6 +301,10 @@
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">u2_normal@2x.png</string>
+						</object>
 					</object>
 					<object class="IBUIButton" id="557682414">
 						<reference key="NSNextResponder" ref="191373211"/>
@@ -631,7 +635,7 @@
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">HomeViewController</string>
-					<string key="superclassName">UIViewController</string>
+					<string key="superclassName">UIGenericViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="avatarImageClicked:">id</string>
 						<string key="fansUser:">id</string>
@@ -725,6 +729,14 @@
 						<string key="minorKey">./Classes/HomeViewController.h</string>
 					</object>
 				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">UIGenericViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/UIGenericViewController.h</string>
+					</object>
+				</object>
 			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
@@ -736,6 +748,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="u2_normal@2x.png">{512, 512}</string>
 			<string key="user_big@2x.png">{138, 138}</string>
 			<string key="user_btn@2x.png">{141, 40}</string>
 			<string key="user_picture.jpg">{640, 373}</string>
