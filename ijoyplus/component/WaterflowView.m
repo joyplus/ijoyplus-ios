@@ -51,7 +51,7 @@
         self.refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f,  -REFRESHINGVIEW_HEIGHT, self.frame.size.width,REFRESHINGVIEW_HEIGHT)];
         [self addSubview:self.refreshHeaderView];
         self.refreshHeaderView.delegate = self;
-        self.refreshHeaderView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+        self.refreshHeaderView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up2"]];
         self.isRefreshing = NO;
         [self.refreshHeaderView refreshLastUpdatedDate];
         

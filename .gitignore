@@ -18,3 +18,4 @@ Resources/Configuration/Private.xcconfig
 .pid_file
 .sass-cache
 .svn
+ijoyplus/service/AFServiceAPIClient.m

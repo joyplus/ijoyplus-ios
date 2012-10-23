@@ -23,7 +23,8 @@
 #import "AFServiceAPIClient.h"
 #import "AFJSONRequestOperation.h"
 
-NSString * const kABaseURLString = @"http://112.64.18.12/";
+//NSString * const kABaseURLString = @"http://112.64.18.12/";
+NSString * const kABaseURLString = @"http://api.joyplus.tv/";
 
 @implementation AFServiceAPIClient
 

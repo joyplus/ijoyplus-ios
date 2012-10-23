@@ -32,7 +32,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down"]];
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down2"]];
         self.showActivityIndicator = NO;
         self.enabled = YES;
         self.refreshing = NO;

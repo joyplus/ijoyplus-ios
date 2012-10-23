@@ -157,8 +157,8 @@
 		EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3EB160188D400E04289 /* VideoViewController.m */; };
 		EBB1B3F5160190C600E04289 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F4160190C600E04289 /* TestView.m */; };
 		EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */; };
-		EBB217D91615740900A931CA /* back_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217D71615740900A931CA /* back_down@2x.png */; };
-		EBB217DA1615740900A931CA /* back_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217D81615740900A931CA /* back_up@2x.png */; };
+		EBB217D91615740900A931CA /* back_down2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217D71615740900A931CA /* back_down2@2x.png */; };
+		EBB217DA1615740900A931CA /* back_up2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217D81615740900A931CA /* back_up2@2x.png */; };
 		EBB217DD161575FE00A931CA /* down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217DC161575FE00A931CA /* down@2x.png */; };
 		EBB217E6161588A000A931CA /* up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217E5161588A000A931CA /* up@2x.png */; };
 		EBB21F7A1610099400A04376 /* UIImage+AlphaAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB21F701610099400A04376 /* UIImage+AlphaAdditions.m */; };
@@ -486,8 +486,8 @@
 		EBB1B3EB160188D400E04289 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		EBB1B3F3160190C600E04289 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestView.h; path = component/TestView.h; sourceTree = "<group>"; };
 		EBB1B3F4160190C600E04289 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestView.m; path = component/TestView.m; sourceTree = "<group>"; };
-		EBB217D71615740900A931CA /* back_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_down@2x.png"; sourceTree = "<group>"; };
-		EBB217D81615740900A931CA /* back_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_up@2x.png"; sourceTree = "<group>"; };
+		EBB217D71615740900A931CA /* back_down2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_down2@2x.png"; sourceTree = "<group>"; };
+		EBB217D81615740900A931CA /* back_up2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_up2@2x.png"; sourceTree = "<group>"; };
 		EBB217DC161575FE00A931CA /* down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "down@2x.png"; sourceTree = "<group>"; };
 		EBB217E5161588A000A931CA /* up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "up@2x.png"; sourceTree = "<group>"; };
 		EBB21F6F1610099400A04376 /* UIImage+AlphaAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AlphaAdditions.h"; sourceTree = "<group>"; };
@@ -844,8 +844,8 @@
 				EBB5A14C1622754000F164F2 /* sina_weibo_press.png */,
 				EBB217E5161588A000A931CA /* up@2x.png */,
 				EBB217DC161575FE00A931CA /* down@2x.png */,
-				EBB217D71615740900A931CA /* back_down@2x.png */,
-				EBB217D81615740900A931CA /* back_up@2x.png */,
+				EBB217D71615740900A931CA /* back_down2@2x.png */,
+				EBB217D81615740900A931CA /* back_up2@2x.png */,
 				EBAFB514161443DC00C0263B /* tab_btn_bg@2x.png */,
 				EB24CC98160B1908009618C6 /* unfocus@2x.png */,
 				EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */,
@@ -1414,8 +1414,8 @@
 				EBB2FFCA1612D23800E8D9A7 /* ListCellFactory.xib in Resources */,
 				EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */,
 				EBAFB515161443DC00C0263B /* tab_btn_bg@2x.png in Resources */,
-				EBB217D91615740900A931CA /* back_down@2x.png in Resources */,
-				EBB217DA1615740900A931CA /* back_up@2x.png in Resources */,
+				EBB217D91615740900A931CA /* back_down2@2x.png in Resources */,
+				EBB217DA1615740900A931CA /* back_up2@2x.png in Resources */,
 				EBB217DD161575FE00A931CA /* down@2x.png in Resources */,
 				EBB217E6161588A000A931CA /* up@2x.png in Resources */,
 				EBB5A14D1622754000F164F2 /* qq_normal.png in Resources */,
@@ -1723,8 +1723,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B94A1800965845D3B4A40881 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ijoyplus/ijoyplus-Prefix.pch";
 				INFOPLIST_FILE = "ijoyplus/ijoyplus-Info.plist";
@@ -1733,8 +1733,8 @@
 					"\"$(SRCROOT)/External/umeng\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "F10EE385-AE0B-4ED2-988B-B719D70B3123";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F10EE385-AE0B-4ED2-988B-B719D70B3123";
 				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
 			};
