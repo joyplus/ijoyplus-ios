@@ -195,10 +195,10 @@
             if(videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
             }
-            [flowView reloadData];
         } else {
             
         }
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:2.0];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
@@ -221,7 +221,7 @@
             }
         } else {
         }
-        [flowView reloadData];
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:2.0];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];

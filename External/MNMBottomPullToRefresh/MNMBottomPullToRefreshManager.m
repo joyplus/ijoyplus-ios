@@ -141,7 +141,7 @@
     if (!pullToRefreshView_.hidden && !pullToRefreshView_.isLoading) {
         
         CGFloat offset = [self tableScrollOffset];
-        CGFloat height = -CGRectGetHeight(pullToRefreshView_.frame);
+        CGFloat height = -MM_FOOTER_VIEW_HEIGHT;
         
         if (offset <= 0.0f && offset >= height) {
                 
@@ -162,7 +162,7 @@
     if (!pullToRefreshView_.hidden && !pullToRefreshView_.isLoading) {
         
         CGFloat offset = [self tableScrollOffset];
-        CGFloat height = -CGRectGetHeight(pullToRefreshView_.frame);
+        CGFloat height = -MM_FOOTER_VIEW_HEIGHT;
         
         if (offset <= 0.0f && offset < height) {
             

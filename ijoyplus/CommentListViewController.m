@@ -77,7 +77,7 @@
             if(comments != nil && comments.count > 0){
                 [commentArray addObjectsFromArray:comments];
                 reloads_++;
-                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.table withClient:self];
+                pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.table withClient:self];
             }
             [self loadTable];
         } else {

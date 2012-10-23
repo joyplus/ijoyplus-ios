@@ -23,6 +23,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define MM_FOOTER_VIEW_HEIGHT 60
+
 /**
  * Enumerates control state
  */

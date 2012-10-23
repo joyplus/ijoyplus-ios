@@ -90,7 +90,7 @@
             [commentArray addObject:commentDic];
             [commentArray addObjectsFromArray:[currentComment valueForKey:@"replies"]];
             
-            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self.table withClient:self];
+            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.table withClient:self];
             [self loadTable];
         } else {
             //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];

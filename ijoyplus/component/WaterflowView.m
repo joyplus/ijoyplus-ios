@@ -57,7 +57,7 @@
         
         currentPage = 1;
         [self initialize];
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self withClient:self];
+        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self withClient:self];
         [pullToRefreshManager_ tableViewReloadFinished];
     }
     return self;
@@ -80,7 +80,7 @@
         
         currentPage = 1;
         [self initialize];
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:self withClient:self];
+        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self withClient:self];
         [pullToRefreshManager_ tableViewReloadFinished];
     }
     return self;

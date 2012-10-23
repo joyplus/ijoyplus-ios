@@ -109,7 +109,7 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         if(pullToRefreshManager_ == nil && commentArray.count > 0){
-            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:_tableView withClient:self];
+            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableView withClient:self];
         }
         [self loadTable];
     } else {

@@ -70,11 +70,11 @@
     if (self = [super initWithFrame:frame]) {
         
 //        self.backgroundColor = [UIColor colorWithWhite:0.75f alpha:1.0f];        
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down"]];
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down2"]];
         
         UIImage *arrowImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE];
         
-        arrowImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(30.0f, round(CGRectGetHeight(frame) / 2.0f) - round(arrowImage.size.height / 2.0f), arrowImage.size.width, arrowImage.size.height)];
+        arrowImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(30.0f, round(MM_FOOTER_VIEW_HEIGHT / 2.0f) - round(arrowImage.size.height / 2.0f), arrowImage.size.width, arrowImage.size.height)];
         arrowImageView_.contentMode = UIViewContentModeCenter;
         arrowImageView_.image = arrowImage;
         
@@ -86,7 +86,7 @@
         
         [self addSubview:loadingActivityIndicator_];
         
-        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame) + 70.0f, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, CGRectGetHeight(frame) - 20.0f)];
+        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame) + 70.0f, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, MM_FOOTER_VIEW_HEIGHT - 20.0f)];
         messageLabel_.backgroundColor = [UIColor clearColor];
         messageLabel_.textColor = [UIColor whiteColor];
         messageLabel_.font = [UIFont boldSystemFontOfSize:13.0f];
@@ -127,7 +127,7 @@
             
             if (rotateArrowWhileBecomingVisible_) {
             
-                CGFloat angle = (-offset * M_PI) / CGRectGetHeight(self.frame);
+                CGFloat angle = (-offset * M_PI) / MM_FOOTER_VIEW_HEIGHT;
                 
                 arrowImageView_.transform = CGAffineTransformRotate(CGAffineTransformIdentity, angle);
                 
