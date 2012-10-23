@@ -11,7 +11,6 @@
 #import "FillFormViewController.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
-#import "FriendListViewController.h"
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
@@ -21,6 +20,8 @@
 @interface TecentViewController (){
     TencentOAuth* _tencentOAuth;
     NSMutableArray* _permissions;
+    FillFormViewController *fillFormViewController;
+    CustomBackButton *backButton;
 }
 - (void)closeSelf;
 @end
@@ -29,10 +30,11 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     _tencentOAuth = nil;
     _permissions = nil;
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    fillFormViewController = nil;
+    backButton = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,7 +50,7 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"tecent_login", nil);
-    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -100,7 +102,7 @@
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
-                        [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+                        [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate refreshRootView];
                     }
@@ -108,10 +110,10 @@
                     
                 }];
             } else {
-                FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-                viewController.thirdPartyId = _tencentOAuth.openId;
-                viewController.thirdPartyType = @"2";
-                [self.navigationController pushViewController:viewController animated:YES];
+                fillFormViewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+                fillFormViewController.thirdPartyId = _tencentOAuth.openId;
+                fillFormViewController.thirdPartyType = @"2";
+                [self.navigationController pushViewController:fillFormViewController animated:YES];
                 
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

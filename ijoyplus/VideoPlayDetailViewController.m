@@ -50,6 +50,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    WindowHeight = 220;
 }
 
 - (void)initPictureCell{

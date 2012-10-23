@@ -51,7 +51,7 @@
 }
 - (void) hideProgressBar
 {
-    [HUD hide:YES afterDelay:0.3];
+    [HUD hide:YES afterDelay:0.2];
 }
 
 

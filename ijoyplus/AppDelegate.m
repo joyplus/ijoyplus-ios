@@ -74,6 +74,7 @@
     [self isParseReachable];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+    NSLog(@"%i", num);
     if([num boolValue]){
         [self renewSession];
     }
@@ -122,7 +123,8 @@
             NSLog(@"<<<<<<%@>>>>>", error);
         }];
     } else if(![StringUtility stringIsEmpty:tecentOpenId]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", tecentOpenId, @"source_id", @"1", @"source_type", nil];
+        NSLog(@"%@", tecentOpenId);
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", tecentOpenId, @"source_id", @"2", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(![responseCode isEqualToString:kSuccessResCode]){
@@ -186,7 +188,10 @@
     NSLog(@"Reachability changed: %@", curReach);
     networkStatus = [curReach currentReachabilityStatus];
     if(self.networkStatus != NotReachable){
-        [self renewSession];
+        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+        if([num boolValue]){
+            [self renewSession];
+        }
     }
 }
 

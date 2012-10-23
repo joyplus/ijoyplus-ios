@@ -44,6 +44,13 @@
     [super viewDidUnload];
     show = nil;
 }
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    WindowHeight = 220;
+}
+
 - (void)initPictureCell{
     [super initPictureCell];
     _imageView.frame = pictureCell.frame;

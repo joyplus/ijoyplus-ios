@@ -22,6 +22,9 @@
 @interface SinaLoginViewController (){
     WBAuthorizeWebView *webView;
     WBEngine *webEngine;
+    FillFormViewController *fillFormViewController;
+    CustomBackButton *backButton;
+    FriendListViewController *friendListViewController;
 }
 
 - (void)processSinaData;
@@ -36,6 +39,9 @@
     [super viewDidUnload];
     webEngine = nil;
     webView = nil;
+    backButton = nil;
+    fillFormViewController = nil;
+    friendListViewController = nil;;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,7 +57,7 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"sina_weibo_login", nil);
-    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 
@@ -124,7 +130,7 @@
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
-                        [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+                        [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
                         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
                         [appDelegate refreshRootView];
                     }
@@ -132,10 +138,10 @@
                     
                 }];
             } else {
-                FillFormViewController *viewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-                viewController.thirdPartyId = [[WBEngine sharedClient] userID];
-                viewController.thirdPartyType = @"1";
-                [self.navigationController pushViewController:viewController animated:YES];
+                fillFormViewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
+                fillFormViewController.thirdPartyId = [[WBEngine sharedClient] userID];
+                fillFormViewController.thirdPartyType = @"1";
+                [self.navigationController pushViewController:fillFormViewController animated:YES];
                
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -206,9 +212,9 @@
             } else {
                 
             }
-            FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-            viewController.sourceType = @"1";
-            [self.navigationController pushViewController:viewController animated:YES];
+            friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+            friendListViewController.sourceType = @"1";
+            [self.navigationController pushViewController:friendListViewController animated:YES];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];

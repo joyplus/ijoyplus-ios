@@ -27,6 +27,8 @@
 @interface LoginViewController (){
     UIToolbar *keyboardToolbar;
     MBProgressHUD *HUD;
+    TecentViewController *tecentViewController;
+    SinaLoginViewController *sinaViewController;
 }
 
 - (void)closeSelf;
@@ -43,6 +45,8 @@
 - (void)viewDidUnload
 {
     keyboardToolbar = nil;
+    tecentViewController = nil;
+    sinaViewController = nil;
     HUD = nil;
     [self setScrollView:nil];
     [self setTable:nil];
@@ -288,8 +292,8 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
-    [self.navigationController pushViewController:viewController animated:YES];
+    sinaViewController = [[SinaLoginViewController alloc]init];
+    [self.navigationController pushViewController:sinaViewController animated:YES];
 }
 
 - (IBAction)tecentLogin:(id)sender {
@@ -297,8 +301,8 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    TecentViewController *viewController = [[TecentViewController alloc] init];
-    [self.navigationController pushViewController:viewController animated:YES];
+    tecentViewController = [[TecentViewController alloc] init];
+    [self.navigationController pushViewController:tecentViewController animated:YES];
     
 }
 
