@@ -69,7 +69,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    [AFHTTPRequestOperationLogger sharedLogger].level = AFLoggerLevelError;
+//    [AFHTTPRequestOperationLogger sharedLogger].level = AFLoggerLevelError;
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
     [self monitorReachability];
     [self isParseReachable];

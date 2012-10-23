@@ -8,11 +8,11 @@
 
 #import "ProgramViewController.h"
 #import "CustomBackButton.h"
-#import "ProgramView.h"
 
 
 @interface ProgramViewController (){
-    ProgramView *view;
+    UIWebView *webView;
+    MBProgressHUD *HUD;
 }
 
 @end
@@ -22,11 +22,10 @@
 
 - (void)viewDidUnload
 {
-    view = nil;
-    self.programUrl = nil;
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    webView = nil;
+    HUD = nil;
+    self.programUrl = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -45,10 +44,21 @@
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
-     view = [[ProgramView alloc]initWithUrl:self.programUrl];
-    [self.view addSubview:view];
+//    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+//    [self.view addSubview:HUD];
+    //    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"joplus_logo"]];
+    //    HUD.mode = MBProgressHUDModeCustomView;
+    //    HUD.dimBackground = YES;
+//    HUD.opacity = 1;
+//    [HUD show:YES];
+//    [HUD hide:YES afterDelay:1];
+    
+    webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    [webView setBackgroundColor:[UIColor whiteColor]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.programUrl]]];
+    [webView setScalesPageToFit:YES];
+    [self.view addSubview:webView];
 }
-
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -66,32 +76,26 @@
     }
 }
 
-- (UIButton *)findButtonInView:(UIView *)view {
-    UIButton *button = nil;
-    
-    if ([view isMemberOfClass:[UIButton class]]) {
-        return (UIButton *)view;
-    }
-    
-    if (view.subviews && [view.subviews count] > 0) {
-        for (UIView *subview in view.subviews) {
-            button = [self findButtonInView:subview];
-            if (button) return button;
-        }
-    }
-    
-    return button;
-}
-
-//- (void)webViewDidFinishLoad:(UIWebView *)_webView {
-//    [self hideProgressBar];
-//}
-
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-
+//- (UIButton *)findButtonInView:(UIView *)view {
+//    UIButton *button = nil;
+//    
+//    if ([view isMemberOfClass:[UIButton class]]) {
+//        return (UIButton *)view;
+//    }
+//    
+//    if (view.subviews && [view.subviews count] > 0) {
+//        for (UIView *subview in view.subviews) {
+//            button = [self findButtonInView:subview];
+//            if (button) return button;
+//        }
+//    }
+//    
+//    return button;
+//}
 
 @end

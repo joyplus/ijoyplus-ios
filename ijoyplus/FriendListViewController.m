@@ -20,6 +20,8 @@
 #import "CacheUtility.h"
 #import "HomeViewController.h"
 #import "WeiBoInviteViewController.h"
+#import "AFSinaWeiboAPIClient.h"
+#import "WBEngine.h"
 
 @interface FriendListViewController (){
     NSMutableArray *itemsArray;
@@ -76,54 +78,76 @@
     pageSize = 10;
     reloads_ = 1;
     [self getFriendData];
-//    if (_refreshHeaderView == nil) {
-//		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-//        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
-//		view.delegate = self;
-//		[self.tableView addSubview:view];
-//		_refreshHeaderView = view;
-//		
-//	}
-//	[_refreshHeaderView refreshLastUpdatedDate];
+    //    if (_refreshHeaderView == nil) {
+    //		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
+    //        view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up"]];
+    //		view.delegate = self;
+    //		[self.tableView addSubview:view];
+    //		_refreshHeaderView = view;
+    //
+    //	}
+    //	[_refreshHeaderView refreshLastUpdatedDate];
 }
 
 - (void)getFriendData
 {
-    NSArray *sinaFriends = [[CacheUtility sharedCache] sinaFriends];
-    joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
-    joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
-    unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *item = [result objectForKey:@"users"];
-            itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-            [itemsArray addObjectsFromArray:item];
-            for(NSDictionary *friend in sinaFriends){
-                BOOL exists = NO;
-                for(NSDictionary *user in item){
-                    if([[user objectForKey:@"thirdpart_id"] isEqualToString:[friend objectForKey:@"idstr"]]){
-                        [joinedFriendUserId addObject:[user objectForKey:@"friend_id"]];
-                        exists = YES;
-                        break;
-                    }
-                }
-                if(exists){
-                    [joinedFriendArray addObject:friend];
-                } else {
-                    [unjoinedFriendArray addObject:friend];
-                }
-            }
-            //            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
-            [self loadTable];
-            reloads_ ++;
-        } else {
-            
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                [[WBEngine sharedClient] accessToken], @"access_token",
+                                [[WBEngine sharedClient] userID], @"uid", [NSNumber numberWithInt:1], @"page", [NSNumber numberWithInt:200], @"count",
+                                nil];
+    // get friend list from Sina
+    [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
+        NSMutableString *friendIds = [[NSMutableString alloc]init];
+        for (NSDictionary *friendData in sinaFriends) {
+            [friendIds appendFormat:@"%@,", [[friendData objectForKey:@"id"] stringValue]];
         }
+        [friendIds appendString:@"0"];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
+        // upload sina friends to our server
+        [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
+            joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
+            unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
+            // get use list from our server
+            [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(responseCode == nil){
+                    NSArray *item = [result objectForKey:@"users"];
+                    itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+                    [itemsArray addObjectsFromArray:item];
+                    for(NSDictionary *friend in sinaFriends){
+                        BOOL exists = NO;
+                        for(NSDictionary *user in item){
+                            if([[user objectForKey:@"thirdpart_id"] isEqualToString:[friend objectForKey:@"idstr"]]){
+                                [joinedFriendUserId addObject:[user objectForKey:@"friend_id"]];
+                                exists = YES;
+                                break;
+                            }
+                        }
+                        if(exists){
+                            [joinedFriendArray addObject:friend];
+                        } else {
+                            [unjoinedFriendArray addObject:friend];
+                        }
+                    }
+                    //            pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
+                    [self loadTable];
+                    reloads_ ++;
+                } else {
+                    
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+            }];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
+    
 }
 
 - (void)closeSelf
@@ -146,13 +170,21 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    if(joinedFriendArray.count > 0){
+        return 2;
+    } else {
+        return 1;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if(section == 0){
-        return joinedFriendArray.count;
+        if(joinedFriendArray.count > 0){
+            return joinedFriendArray.count;
+        } else {
+            return unjoinedFriendArray.count;
+        }
     } else {
         return unjoinedFriendArray.count;
     }
@@ -165,24 +197,25 @@
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    switch (indexPath.section) {
-        case 0:
-        {
+    if(joinedFriendArray.count > 0) {
+        if(indexPath.section == 0)        {
             NSDictionary *friend = [joinedFriendArray objectAtIndex:indexPath.row];
             cell.textLabel.text = [friend objectForKey:@"screen_name"];
             cell.detailTextLabel.text = @"+关注";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:6/255.0 green:131/255.0 blue:239/255.0 alpha:1.0];
-            break;
-        }
-        case 1:
-        {
+        }else {
             NSDictionary *friend = [unjoinedFriendArray objectAtIndex:indexPath.row];
             cell.textLabel.text = [friend objectForKey:@"screen_name"];
             cell.detailTextLabel.text = @"邀请";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:10/255.0 green:126/255.0 blue:32/255.0 alpha:1.0];
-            break;
         }
+    } else {
+        NSDictionary *friend = [unjoinedFriendArray objectAtIndex:indexPath.row];
+        cell.textLabel.text = [friend objectForKey:@"screen_name"];
+        cell.detailTextLabel.text = @"邀请";
+        cell.detailTextLabel.textColor = [UIColor colorWithRed:10/255.0 green:126/255.0 blue:32/255.0 alpha:1.0];
     }
+    
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.font = [UIFont systemFontOfSize:15];
@@ -223,11 +256,14 @@
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:14];
     
-    if (section == 0) {
-        headerLabel.text =  @"好友列表";
-    } else {
-        headerLabel.text =  @"邀请好友";
-    }
+    if (joinedFriendArray.count > 0){
+        if (section == 0) {
+            headerLabel.text =  @"好友列表";
+        } else {
+            headerLabel.text =  @"邀请好友";
+        } } else {
+            headerLabel.text =  @"邀请好友";
+        }
     headerLabel.textColor = [UIColor lightGrayColor];
     [headerLabel sizeToFit];
     headerLabel.center = CGPointMake(headerLabel.frame.size.width/2 + 10, customView.frame.size.height/2);
@@ -284,10 +320,16 @@
 {
     [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(indexPath.section == 0){
-        HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-        viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:viewController animated:YES];
+    if (joinedFriendArray.count > 0){
+        if(indexPath.section == 0){
+            HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+            viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else {
+            WeiBoInviteViewController *viewController = [[WeiBoInviteViewController alloc]initWithNibName:@"WeiBoInviteViewController" bundle:nil];
+            viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];
+            [self.navigationController pushViewController:viewController animated:YES];
+        }
     } else {
         WeiBoInviteViewController *viewController = [[WeiBoInviteViewController alloc]initWithNibName:@"WeiBoInviteViewController" bundle:nil];
         viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];
@@ -373,7 +415,7 @@
 
 - (void)reloadTableViewDataSource
 {
-//	[self getFriendData];
+    //	[self getFriendData];
 	_reloading = YES;
 	
 }

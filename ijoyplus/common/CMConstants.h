@@ -26,8 +26,8 @@
 #define MAX_COMMENT_NUMBER 10
 
 
-#define kTencentAppKey @"801232108"
-#define kTencentAppSecret @"c041e953e68e7fea950b7edd769e7e21"
+#define kTencentAppKey @"100666407"
+#define kTencentAppSecret @"2a35faffc945dc9f5e432167cc4a1b5a"
 
 #define kSinaWeiboAppKey  @"1490285522"
 #define kSinaWeiboAppSecret  @"f9ebc3ca95991b6dfce2c1608687e92b"

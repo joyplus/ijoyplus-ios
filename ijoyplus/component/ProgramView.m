@@ -9,7 +9,6 @@
 #import "ProgramView.h"
 
 @interface ProgramView (){
-    UIActivityIndicatorView *indicatorView;
 	UIWebView *webView;
 }
 
@@ -21,8 +20,10 @@
 {
     self = [super init];
     if (self) {
+
+        
         webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-        [webView setDelegate:self];
+//        [webView setDelegate:self];
         [webView setBackgroundColor:[UIColor whiteColor]];
         //    [self hideGradientBackground:webView];
         //    self.webView.delegate = self;
@@ -31,9 +32,9 @@
         [webView setScalesPageToFit:YES];
         [self addSubview:webView];
         
-        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [indicatorView setCenter:CGPointMake(160, 240)];
-        [self addSubview:indicatorView];
+//        indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//        [indicatorView setCenter:CGPointMake(160, 240)];
+//        [self addSubview:indicatorView];
     }
     return self;
 }
@@ -48,19 +49,19 @@
 */
 
 
-- (void)webViewDidStartLoad:(UIWebView *)aWebView
-{
-	[indicatorView startAnimating];
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)aWebView
-{
-	[indicatorView stopAnimating];
-}
-
-- (void)webView:(UIWebView *)aWebView didFailLoadWithError:(NSError *)error
-{
-    [indicatorView stopAnimating];
-}
+//- (void)webViewDidStartLoad:(UIWebView *)aWebView
+//{
+//	[indicatorView startAnimating];
+//}
+//
+//- (void)webViewDidFinishLoad:(UIWebView *)aWebView
+//{
+//	[indicatorView stopAnimating];
+//}
+//
+//- (void)webView:(UIWebView *)aWebView didFailLoadWithError:(NSError *)error
+//{
+//    [indicatorView stopAnimating];
+//}
 
 @end

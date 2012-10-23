@@ -23,8 +23,9 @@
 #import "CacheUtility.h"
 #import "UIUtility.h"
 
-@interface SearchFriendViewController ()
-
+@interface SearchFriendViewController (){
+    FriendListViewController *friendListViewController;
+}
 @end
 
 @implementation SearchFriendViewController
@@ -52,8 +53,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    friendListViewController = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -263,37 +263,9 @@
 }
 
 - (void)processSinaData {
-    
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [[WBEngine sharedClient] accessToken], @"access_token",
-                                [[WBEngine sharedClient] userID], @"uid",
-                                nil];
-    [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
-        [[CacheUtility sharedCache]setSinaFriends:sinaFriends];
-        NSMutableString *friendIds = [[NSMutableString alloc]init];
-        for (NSDictionary *friendData in sinaFriends) {
-            [friendIds appendFormat:@"%@,", [[friendData objectForKey:@"id"] stringValue]];
-        }
-        [friendIds appendString:@"0"];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
-                
-            } else {
-                
-            }
-            FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-            viewController.sourceType = @"1";
-            [self.navigationController pushViewController:viewController animated:YES];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];
-    
+    friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+    friendListViewController.sourceType = @"1";
+    [self.navigationController pushViewController:friendListViewController animated:YES];
 }
 
 @end

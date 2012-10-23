@@ -256,6 +256,7 @@
 		EBE44B8C1609E8A4002BEB0C /* CustomTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B891609E8A4002BEB0C /* CustomTableViewCell.m */; };
 		EBE44B8F1609E8F6002BEB0C /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B8E1609E8F6002BEB0C /* Common.m */; };
 		EBE44B931609E993002BEB0C /* SelectedCellBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B921609E993002BEB0C /* SelectedCellBackground.m */; };
+		EBE4DA8E163684FD00249156 /* joplus_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = EBE4DA8D163684FD00249156 /* joplus_logo.png */; };
 		F08E79464D5B418D93D509A6 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDF63B43DF6849BC89060EC7 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -640,6 +641,7 @@
 		EBE44B901609E993002BEB0C /* CustomCellBlackBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCellBlackBackground.h; sourceTree = "<group>"; };
 		EBE44B911609E993002BEB0C /* SelectedCellBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectedCellBackground.h; sourceTree = "<group>"; };
 		EBE44B921609E993002BEB0C /* SelectedCellBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectedCellBackground.m; sourceTree = "<group>"; };
+		EBE4DA8D163684FD00249156 /* joplus_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = joplus_logo.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -811,6 +813,7 @@
 		EB32BD1C15F887A400C878D5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				EBE4DA8D163684FD00249156 /* joplus_logo.png */,
 				EB4F80C01631232E006DBADB /* search_bg@2x.png */,
 				EB4F80C11631232E006DBADB /* search_btn@2x.png */,
 				EB4F80BE16310A7E006DBADB /* sina_normal.png */,
@@ -1469,6 +1472,7 @@
 				EB4F80C31631232F006DBADB /* search_btn@2x.png in Resources */,
 				EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */,
 				EB3CB81716315C5100142AD0 /* 图标114.png in Resources */,
+				EBE4DA8E163684FD00249156 /* joplus_logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1719,8 +1723,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B94A1800965845D3B4A40881 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ijoyplus/ijoyplus-Prefix.pch";
 				INFOPLIST_FILE = "ijoyplus/ijoyplus-Info.plist";
@@ -1729,6 +1733,7 @@
 					"\"$(SRCROOT)/External/umeng\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SKIP_INSTALL = NO;
 				WRAPPER_EXTENSION = app;
