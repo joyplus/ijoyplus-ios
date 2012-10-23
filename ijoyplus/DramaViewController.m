@@ -171,7 +171,6 @@
 
 - (void)flowView:(WaterflowView *)flowView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"did select at %i %i in %@",indexPath.row, indexPath.section, self.class);
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
     DramaPlayDetailViewController *viewController = [[DramaPlayDetailViewController alloc]initWithStretchImage];

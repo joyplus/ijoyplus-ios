@@ -320,7 +320,6 @@
 - (void)viewUser:(id)sender
 {
     UIButton *btn = (UIButton *)sender;
-    NSLog(@"%i", btn.tag);
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
     viewController.userid = [[userArray objectAtIndex:btn.tag - 1000] valueForKey:@"id"];
     [self.navigationController pushViewController:viewController animated:YES];

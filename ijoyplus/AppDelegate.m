@@ -69,12 +69,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    [AFHTTPRequestOperationLogger sharedLogger].level = AFLoggerLevelError;
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
     [self monitorReachability];
     [self isParseReachable];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-    NSLog(@"%i", num);
     if([num boolValue]){
         [self renewSession];
     }
@@ -123,7 +123,6 @@
             NSLog(@"<<<<<<%@>>>>>", error);
         }];
     } else if(![StringUtility stringIsEmpty:tecentOpenId]){
-        NSLog(@"%@", tecentOpenId);
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", tecentOpenId, @"source_id", @"2", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];

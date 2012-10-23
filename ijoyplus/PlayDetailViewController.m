@@ -230,7 +230,6 @@
         playCell.scoreLabel.text = @"未评分";
     }
     playCell.watchedLabel.text = [movie objectForKey:@"watch_num"];
-    NSLog(@"%@", [movie objectForKey:@"favority_num"]);
     playCell.collectionLabel.text = [movie objectForKey:@"favority_num"];
     playCell.likeLabel.text = [movie objectForKey:@"like_num"];
 }
