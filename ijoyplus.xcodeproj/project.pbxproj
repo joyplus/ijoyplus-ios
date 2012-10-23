@@ -138,7 +138,6 @@
 		EBAFB517161447D700C0263B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBAFB516161447D700C0263B /* MobileCoreServices.framework */; };
 		EBAFBC3415F9DDC0007579D1 /* CMConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC3315F9DDC0007579D1 /* CMConstants.m */; };
 		EBAFBC4515F9E849007579D1 /* AnimationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAFBC4415F9E849007579D1 /* AnimationFactory.m */; };
-		EBAFFC1716363F3E009917BA /* back_down2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBAFFC1616363F3D009917BA /* back_down2@2x.png */; };
 		EBB018BA162267C2003AB094 /* AFServiceAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB018B7162267C2003AB094 /* AFServiceAPIClient.m */; };
 		EBB018BB162267C2003AB094 /* ServiceConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB018B9162267C2003AB094 /* ServiceConstants.m */; };
 		EBB06FA916080DA900AAA818 /* DateUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB06FA616080DA900AAA818 /* DateUtility.m */; };
@@ -457,7 +456,6 @@
 		EBAFBC3315F9DDC0007579D1 /* CMConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConstants.m; sourceTree = "<group>"; };
 		EBAFBC4315F9E849007579D1 /* AnimationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationFactory.h; sourceTree = "<group>"; };
 		EBAFBC4415F9E849007579D1 /* AnimationFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimationFactory.m; sourceTree = "<group>"; };
-		EBAFFC1616363F3D009917BA /* back_down2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_down2@2x.png"; sourceTree = "<group>"; };
 		EBB018B6162267C2003AB094 /* AFServiceAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFServiceAPIClient.h; sourceTree = "<group>"; };
 		EBB018B7162267C2003AB094 /* AFServiceAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFServiceAPIClient.m; sourceTree = "<group>"; };
 		EBB018B8162267C2003AB094 /* ServiceConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceConstants.h; sourceTree = "<group>"; };
@@ -850,7 +848,6 @@
 				EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */,
 				EB24CC96160B178D009618C6 /* user_btn@2x.png */,
 				EB24CC90160B1155009618C6 /* line@2x.png */,
-				EBAFFC1616363F3D009917BA /* back_down2@2x.png */,
 				EB24CC8A160AFFD2009618C6 /* user_big@2x.png */,
 				EB24CC8B160AFFD2009618C6 /* user_small@2x.png */,
 				EBE44B701609E645002BEB0C /* bgwithline@2X.png */,
@@ -1472,7 +1469,6 @@
 				EB4F80C31631232F006DBADB /* search_btn@2x.png in Resources */,
 				EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */,
 				EB3CB81716315C5100142AD0 /* 图标114.png in Resources */,
-				EBAFFC1716363F3E009917BA /* back_down2@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

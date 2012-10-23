@@ -13,7 +13,7 @@
 #import "ContainerUtility.h"
 #import "MNMBottomPullToRefreshManager.h"
 
-#define REFRESHINGVIEW_HEIGHT 88
+#define REFRESHINGVIEW_HEIGHT 480
 
 @interface WaterflowView() <EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient>{
     CGPoint previousOffSet;

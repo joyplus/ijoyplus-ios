@@ -70,7 +70,7 @@
     if (self = [super initWithFrame:frame]) {
         
 //        self.backgroundColor = [UIColor colorWithWhite:0.75f alpha:1.0f];        
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down2"]];
+        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_down"]];
         
         UIImage *arrowImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE];
         
