@@ -14,4 +14,5 @@
 @property (strong, nonatomic) UIWindow *window;
 - (void)refreshRootView;
 - (BOOL)isParseReachable;
+- (BOOL)isWifiReachable;
 @end

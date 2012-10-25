@@ -30,6 +30,7 @@
 #import "SendCommentViewController.h"
 #import "PostViewController.h"
 #import "CacheUtility.h"
+#import "BlockAlertView.h"
 
 #define ROW_HEIGHT 40
 
@@ -528,6 +529,26 @@
 }
 
 - (void)playVideo
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
+        [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
+        [alert setDestructiveButtonWithTitle:@"确定" block:^{
+            [self showPlayWebPage];
+        }];
+        [alert show];
+    } else {
+        [self showPlayWebPage];
+    }
+    
+
+}
+
+- (void)showPlayWebPage
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
     NSArray *urlArray = [movie objectForKey:@"video_urls"];

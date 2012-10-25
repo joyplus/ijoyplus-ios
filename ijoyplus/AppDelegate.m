@@ -27,6 +27,7 @@
 }
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;
+@property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, readonly) int networkStatus;
 - (void)monitorReachability;
 
@@ -36,6 +37,7 @@
 @synthesize networkStatus;
 @synthesize hostReach;
 @synthesize internetReach;
+@synthesize wifiReach;
 
 - (void)customizeAppearance
 {
@@ -171,6 +173,9 @@
 - (BOOL)isParseReachable {
     return self.networkStatus != NotReachable;
 }
+- (BOOL)isWifiReachable {
+    return self.networkStatus == ReachableViaWiFi;
+}
 - (void)monitorReachability {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
     
@@ -179,6 +184,9 @@
     
     self.internetReach = [Reachability reachabilityForInternetConnection];
     [self.internetReach startNotifier];
+    
+    self.wifiReach = [Reachability reachabilityForLocalWiFi];
+    [self.wifiReach startNotifier];
 }
 //Called by Reachability whenever status changes.
 - (void)reachabilityChanged:(NSNotification* )note {
