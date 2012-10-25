@@ -12,7 +12,7 @@
 
 @interface ProgramViewController (){
     UIWebView *webView;
-    MBProgressHUD *HUD;
+//    MBProgressHUD *HUD;
 }
 
 @end
@@ -24,7 +24,7 @@
 {
     [super viewDidUnload];
     webView = nil;
-    HUD = nil;
+//    HUD = nil;
     self.programUrl = nil;
 }
 

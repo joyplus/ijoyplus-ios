@@ -223,9 +223,12 @@
     for (int i = 0; i < numberOfColumns; i++)
     {
         NSMutableArray *array = [self.visibleCells objectAtIndex:i];
-        for (id cell in array)
+        for (WaterFlowCell *cell in array)
         {
-            [self recycleCellIntoReusableQueue:(WaterFlowCell*)cell];
+            [self recycleCellIntoReusableQueue:cell];
+            for(UIView *subview in cell.subviews){
+                [subview removeFromSuperview];
+            }
             [cell removeFromSuperview];
         }
     }
@@ -285,6 +288,7 @@
 			}
 			
 			cell = [self.flowdatasource flowView:self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:rowToDisplay inSection:i]];
+            if(cell == nil)continue;
 			cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay inSection:i];
 			cell.frame = CGRectMake(origin_x, origin_y, width, height);
 			[[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];
@@ -327,6 +331,7 @@
             }
             
             cell = [self.flowdatasource flowView:self cellForRowAtIndexPath:[NSIndexPath indexPathForRow: rowToDisplay > 0 ? (rowToDisplay  - 1) : 0 inSection:i]];
+            if(cell == nil)continue;
             cell.indexPath = [NSIndexPath indexPathForRow: rowToDisplay > 0 ? (rowToDisplay - 1) : 0 inSection:i];
             cell.frame = CGRectMake(origin_x,origin_y , width, height);
             [[self.visibleCells objectAtIndex:i] insertObject:cell atIndex:0];
@@ -377,6 +382,7 @@
             }
             
             cell = [self.flowdatasource flowView:self cellForRowAtIndexPath:[NSIndexPath indexPathForRow:rowToDisplay + 1 inSection:i]];
+            if(cell == nil)continue;
             cell.indexPath = [NSIndexPath indexPathForRow:rowToDisplay + 1 inSection:i];
             cell.frame = CGRectMake(origin_x, origin_y, width, height);
             [[self.visibleCells objectAtIndex:i] addObject:cell];

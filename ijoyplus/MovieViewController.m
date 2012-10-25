@@ -23,6 +23,11 @@
 
 @implementation MovieViewController
 
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"receive memory warning in %@", self.class);
+}
+
 - (void)viewDidUnload
 {
     flowView = nil;
@@ -115,18 +120,37 @@
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    static NSString *CellIdentifier = @"movieCell";
-	WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
     if(indexPath.row * 3 + indexPath.section >= videoArray.count){
-        return cell;
+        return nil;
     }
-    cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+    static NSString *CellIdentifier = @"movieCell";
+    WaterFlowCell *cell = [flowView_ dequeueReusableCellWithIdentifier:CellIdentifier];
+	if(cell == nil){
+		cell  = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
+        cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        imageView.layer.borderWidth = 1;
+        imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+        imageView.layer.shadowOffset = CGSizeMake(1, 1);
+        imageView.layer.shadowOpacity = 1;
+        imageView.tag = 1001;
+        [cell addSubview:imageView];
+        
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+        titleLabel.textAlignment = UITextAlignmentCenter;
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.textColor = [UIColor whiteColor];
+        titleLabel.font = CMConstants.titleFont;
+        titleLabel.tag = 1002;
+        [cell addSubview:titleLabel];
+    }
+    UIImageView *imageView  = (UIImageView *)[cell viewWithTag:1001];
     if(indexPath.section == 0){
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     } else if(indexPath.section == NUMBER_OF_COLUMNS - 1){
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
-    } else {        
+    } else {
         imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     }
     NSDictionary *movie = [videoArray objectAtIndex:indexPath.row * 3 + indexPath.section];
@@ -136,25 +160,15 @@
     } else {
         [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
     }
-    imageView.layer.borderWidth = 1;
-    imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-    imageView.layer.shadowOffset = CGSizeMake(1, 1);
-    imageView.layer.shadowOpacity = 1;
-    [cell addSubview:imageView];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+    UILabel *titleLabel = (UILabel *)[cell viewWithTag:1002];
+    titleLabel.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, MOVIE_LOGO_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT);
     NSString *name = [movie valueForKey:@"prod_name"];
     if([StringUtility stringIsEmpty:name]){
         titleLabel.text = @"...";
     } else {
         titleLabel.text = name;
     }
-    titleLabel.textAlignment = UITextAlignmentCenter;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.font = CMConstants.titleFont;
-    [cell addSubview:titleLabel];
     return cell;
     
 }

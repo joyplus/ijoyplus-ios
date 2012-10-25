@@ -195,26 +195,6 @@
 
 - (void)addHeaderContent:(UIView *)view
 {
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeHeaderContent"];
-        [self parseHeaderData:cacheResult];
-    } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
-                                    self.userid, @"userid",
-                                    nil];
-        //    if(!accessed){
-        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[CacheUtility sharedCache] putInCache:@"HomeHeaderContent" result:result];
-            [self parseHeaderData:result];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
-    }
-    //    }
-    //    if(!accessed){
-    //        accessed = YES;
-    //    }
     [self.bgView addSubview:self.topImageView];
     [view addSubview:self.bgView];
     self.avatarImageView.layer.cornerRadius = 27.5;
@@ -243,6 +223,26 @@
     [self.segment setTitle:NSLocalizedString(@"my_recommandation", nil) forSegmentAtIndex:2];
     [self.segment addTarget:self action:@selector(segmentValueChanged:) forControlEvents:UIControlEventValueChanged];
     [view addSubview:self.segment];
+}
+
+- (void)parseHeaderData
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeHeaderContent"];
+        [self parseHeaderData:cacheResult];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    self.userid, @"userid",
+                                    nil];
+        //    if(!accessed){
+        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[CacheUtility sharedCache] putInCache:@"HomeHeaderContent" result:result];
+            [self parseHeaderData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
 }
 
 - (void)parseHeaderData:(id)result
@@ -298,20 +298,51 @@
 
 - (WaterFlowCell*)flowView:(WaterflowView *)flowView_ cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    static NSString *CellIdentifier = @"movieCell";
-    WaterFlowCell *cell = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
-    cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
     if(indexPath.row == 0){
-        if(indexPath.section == 0){
-            [self addHeaderContent:cell];
+        NSString *CellIdentifier = [NSString stringWithFormat:@"myProfileCell%i", indexPath.section];
+        WaterFlowCell *cell = [flowView_ dequeueReusableCellWithIdentifier:CellIdentifier];
+        if(cell == nil){
+            cell  = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
+            if(indexPath.section == 0){
+                [self addHeaderContent:cell];
+            }
         }
+        if(indexPath.section == 0){
+            [self parseHeaderData];
+        } else {
+            cell.frame = CGRectZero;
+        }
+        if(indexPath.section == 2)cell.backgroundColor = [UIColor redColor];
+        return cell;
     } else {
         int index = (indexPath.row-1) * 3 + indexPath.section;
         if(index >= videoArray.count){
-            return cell;
+            return nil;
         }
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+        static NSString *CellIdentifier = @"myMovieCell";
+        WaterFlowCell *cell = [flowView_ dequeueReusableCellWithIdentifier:CellIdentifier];
+        if(cell == nil){
+            cell  = [[WaterFlowCell alloc] initWithReuseIdentifier:CellIdentifier];
+            cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
+            imageView.layer.borderWidth = 1;
+            imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+            imageView.layer.shadowColor = [UIColor blackColor].CGColor;
+            imageView.layer.shadowOffset = CGSizeMake(1, 1);
+            imageView.layer.shadowOpacity = 1;
+            imageView.tag = 6001;
+            [cell addSubview:imageView];
+            
+            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectZero];
+            titleLabel.textAlignment = UITextAlignmentCenter;
+            titleLabel.backgroundColor = [UIColor clearColor];
+            titleLabel.textColor = [UIColor whiteColor];
+            titleLabel.font = [UIFont systemFontOfSize:13];
+            titleLabel.tag = 6002;
+            [cell addSubview:titleLabel];
+        }
+        
+        UIImageView *imageView  = (UIImageView *)[cell viewWithTag:6001];
         float height = [self flowView:nil heightForRowAtIndexPath:indexPath];
         if(indexPath.section == 0){
             imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
@@ -322,26 +353,14 @@
         }
         NSString *imageUrl = [[videoArray objectAtIndex: index] objectForKey:@"content_pic_url"];
         [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
-        imageView.layer.borderWidth = 1;
-        imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        imageView.layer.shadowColor = [UIColor blackColor].CGColor;
-        imageView.layer.shadowOffset = CGSizeMake(1, 1);
-        imageView.layer.shadowOpacity = 1;
-        [cell addSubview:imageView];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT)];
+        
+        UILabel *titleLabel = (UILabel *)[cell viewWithTag:6002];
+        titleLabel.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP, height - MOVE_NAME_LABEL_HEIGHT, MOVE_NAME_LABEL_WIDTH, MOVE_NAME_LABEL_HEIGHT);
         titleLabel.text =  [[videoArray objectAtIndex:index] objectForKey:@"content_name"];
-        titleLabel.textAlignment = UITextAlignmentCenter;
-        titleLabel.backgroundColor = [UIColor clearColor];
-        titleLabel.textColor = [UIColor whiteColor];
-        titleLabel.font = [UIFont systemFontOfSize:13];
-        [cell addSubview:titleLabel];
+        return cell;
         
-        imageView = nil;
-        titleLabel = nil;
     }
-    return cell;
-    
 }
 
 #pragma mark-
@@ -349,8 +368,8 @@
 -(CGFloat)flowView:(WaterflowView *)flowView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     float height = 0;
-	if(indexPath.row == 0) {
-		height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
+    if(indexPath.row == 0) {
+        height = TOP_IMAGE_HEIGHT + SEGMENT_HEIGHT + TOP_GAP + 8;
         return height;
     } else {
         int index = (indexPath.row-1) * 3 + indexPath.section;
