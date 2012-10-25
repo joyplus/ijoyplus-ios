@@ -79,22 +79,22 @@
         [self parseData:cacheResult];
         [self loadTable];
     } else {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
-                                nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-         [[CacheUtility sharedCache] putInCache:@"PopularUserViewController" result:result];
-        [self parseData:result];
-        [self loadTable];
-        reloads_++;
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
+                                    nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[CacheUtility sharedCache] putInCache:@"PopularUserViewController" result:result];
+            [self parseData:result];
+            [self loadTable];
+            reloads_++;
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
     }
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
     [self loadTable];
-
+    
 }
 
 - (void)parseData:(id)result
@@ -103,7 +103,7 @@
     if(responseCode == nil){
         NSArray *friends = [result objectForKey:@"prestiges"];
         if(friends != nil && friends.count > 0){
-            [userArray addObjectsFromArray:friends];            
+            [userArray addObjectsFromArray:friends];
         }
     } else {
         
@@ -210,10 +210,12 @@
         [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
-        if([fromController isEqualToString:@"SearchFriendViewController"]){
-            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
-        } else {
+        NSString *isFollowed = [NSString stringWithFormat:@"%@", [user objectForKey:@"is_follow"]];
+        if([isFollowed isEqualToString:@"1"]){
             [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+            
+        } else {
+            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
         }
         btn.tag = indexPath.row * 3 + i;
         [cell.contentView addSubview:btn];
@@ -226,43 +228,43 @@
 }
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 

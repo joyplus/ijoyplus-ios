@@ -60,8 +60,7 @@
                      @"upload_pic",@"list_photo", @"add_album", @"check_page_fans", @"get_fanslist", nil];
 	
 	
-	_tencentOAuth = [[TencentOAuth alloc] initWithAppId:@"100311436"
-											andDelegate:self];
+	_tencentOAuth = [[TencentOAuth alloc] initWithAppId:kTecentAppId andDelegate:self];
 	_tencentOAuth.redirectURI = @"www.qq.com";
 	self.view = [_tencentOAuth authorize:_permissions inSafari:NO];
 }

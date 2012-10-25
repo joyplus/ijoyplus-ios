@@ -25,6 +25,7 @@
 #define LOG_BTN_HEIGHT 76 / 2
 #define MAX_COMMENT_NUMBER 10
 
+#define kTecentAppId @"100317415"   // for login
 
 #define kTencentAppKey @"100666407"
 #define kTencentAppSecret @"2a35faffc945dc9f5e432167cc4a1b5a"
