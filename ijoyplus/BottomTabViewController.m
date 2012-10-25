@@ -33,7 +33,6 @@
 #import "PopularSegmentViewController.h"
 #import "SearchFilmViewController.h"
 #import "SettingsViewController.h"
-#import "HomeViewController.h"
 #import "AppDelegate.h"
 #import "UIUtility.h"
 #import "CMConstants.h"
@@ -54,6 +53,7 @@
     HomeViewController *detailController3;
     MyselfViewController *detailController4;
     UIToolbar *bottomToolbar;
+    UIBarButtonItem *rightButton;
 }
 - (void)initTabControllers;
 - (void)search;
@@ -70,6 +70,7 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+    rightButton = nil;
     detailController1 = nil;
     detailController2 = nil;
     detailController3 = nil;
@@ -176,20 +177,20 @@
     if([viewController isKindOfClass:[PopularSegmentViewController class]]){
         NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
         if([num boolValue]){
-            UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+            rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
             self.navigationItem.rightBarButtonItem = rightButton;
             self.title = NSLocalizedString(@"popular", nil);
         }
     } else if ([viewController isKindOfClass: [FriendViewController class]]){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemAction target:self action:@selector(searchFriend)];
+        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemAction target:self action:@selector(searchFriend)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"friend", nil);
     } else if ([viewController isKindOfClass: [HomeViewController class]]){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemAction target:self action:@selector(settings)];
+        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemAction target:self action:@selector(settings)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"list", nil);
     } else if ([viewController isKindOfClass: [MyselfViewController class]]){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
+        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
         self.navigationItem.rightBarButtonItem = rightButton;
         self.title = NSLocalizedString(@"myself", nil);
     }

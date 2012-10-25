@@ -33,11 +33,11 @@
 @synthesize table;
 
 - (void)viewDidUnload {
+    [super viewDidUnload];
     itemsArray = nil;
     self.table = nil;
     _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
-    [super viewDidUnload];
 }
 
 - (void)viewDidLoad {

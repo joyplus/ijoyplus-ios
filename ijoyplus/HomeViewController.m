@@ -68,6 +68,7 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     flowView = nil;
     videoArray = nil;
     key = nil;
@@ -87,9 +88,11 @@
     selectedImage = nil;
     [self setAvatarImageViewBtn:nil];
     [self setBgView:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+}
+
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"receive memory warning in %@", self.class);
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -318,7 +321,7 @@
             imageView.frame = CGRectMake(MOVIE_LOGO_WIDTH_GAP/2, 0, MOVIE_LOGO_WIDTH, height - MOVE_NAME_LABEL_HEIGHT);
         }
         NSString *imageUrl = [[videoArray objectAtIndex: index] objectForKey:@"content_pic_url"];
-        [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"placeholder.png"]];
+        [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
         imageView.layer.borderWidth = 1;
         imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
         imageView.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -333,6 +336,9 @@
         titleLabel.textColor = [UIColor whiteColor];
         titleLabel.font = [UIFont systemFontOfSize:13];
         [cell addSubview:titleLabel];
+        
+        imageView = nil;
+        titleLabel = nil;
     }
     return cell;
     
