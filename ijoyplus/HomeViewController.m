@@ -142,7 +142,6 @@
         if(videos.count > 0){
             [videoArray addObjectsFromArray:videos];
         }
-        [flowView reloadData];
     } else {
         
     }
