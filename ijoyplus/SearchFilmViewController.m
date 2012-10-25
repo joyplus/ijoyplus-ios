@@ -140,14 +140,15 @@
     CustomTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[CustomTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        UIView *backgroundView;
+        if(indexPath.row % 2 == 0){
+            backgroundView = [[CustomCellBlackBackground alloc]init];
+        } else {
+            backgroundView = [[CustomCellBackground alloc]init];
+        }
+        [cell setBackgroundView:backgroundView];
     }
-    UIView *backgroundView;
-    if(indexPath.row % 2 == 0){
-        backgroundView = [[CustomCellBlackBackground alloc]init];
-    } else {
-        backgroundView = [[CustomCellBackground alloc]init];
-    }
-    [cell setBackgroundView:backgroundView];
+
     
     if(historyArray.count > 0){
         if(indexPath.section == 0){

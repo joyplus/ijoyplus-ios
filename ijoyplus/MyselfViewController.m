@@ -128,19 +128,22 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MyCellFactory" owner:self options:nil];
-    MyProfileCell *myCell = (MyProfileCell *)[nib objectAtIndex:0];
+    static NSString *cellIdentifier = @"cellIdentifier";
+    MyProfileCell *myCell = (MyProfileCell*) [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if(myCell == nil){
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MyCellFactory" owner:self options:nil];
+        myCell = (MyProfileCell *)[nib objectAtIndex:0];
+        myCell.filmImageView.layer.borderWidth = 1;
+        myCell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
+        myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
+        myCell.filmImageView.layer.shadowOpacity = 1;
+    }
     
     NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
     NSString *imageUrl = (NSString *)[item valueForKey:@"prod_poster"];
     NSString *avatarUrl = (NSString *)[item valueForKey:@"user_pic_url"];
     NSString *actionType = [item valueForKey:@"type"];
-    myCell.filmImageView.layer.borderWidth = 1;
-    myCell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
-    myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
-    myCell.filmImageView.layer.shadowOpacity = 1;
-    
     NSString *type = [item objectForKey:@"prod_type"];
     if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
         if([StringUtility stringIsEmpty:imageUrl]){

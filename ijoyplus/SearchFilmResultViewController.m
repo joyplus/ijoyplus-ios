@@ -173,6 +173,13 @@
         if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
             cell = (SearchFilmCell *)[nib objectAtIndex:0];
+            UIView *backgroundView;
+            if(indexPath.row % 2 == 0){
+                backgroundView = [[CustomCellBlackBackground alloc]init];
+            } else {
+                backgroundView = [[CustomCellBackground alloc]init];
+            }
+            [cell setBackgroundView:backgroundView];
         }
         NSString *url = [searchObject objectForKey:@"prod_pic_url"];
         if([StringUtility stringIsEmpty:url]){
@@ -210,22 +217,20 @@
         CGSize constraint = CGSizeMake(182, 70);
         CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeTailTruncation];
         cell.filmSubitleLabel.frame = CGRectMake(cell.filmSubitleLabel.frame.origin.x, cell.filmSubitleLabel.frame.origin.y, size.width, size.height);
-        cell.filmSubitleLabel.text = content;
-        
-        UIView *backgroundView;
-        if(indexPath.row % 2 == 0){
-            backgroundView = [[CustomCellBlackBackground alloc]init];
-        } else {
-            backgroundView = [[CustomCellBackground alloc]init];
-        }
-        [cell setBackgroundView:backgroundView];
-        
+        cell.filmSubitleLabel.text = content;        
         return cell;
     } else {
         SearchVideoCell *cell = (SearchVideoCell*) [tableView dequeueReusableCellWithIdentifier:@"searchVideoCell"];
         if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PopularCellFactory" owner:self options:nil];
             cell = (SearchVideoCell *)[nib objectAtIndex:1];
+            UIView *backgroundView;
+            if(indexPath.row % 2 == 0){
+                backgroundView = [[CustomCellBlackBackground alloc]init];
+            } else {
+                backgroundView = [[CustomCellBackground alloc]init];
+            }
+            [cell setBackgroundView:backgroundView];
         }
         NSString *url = [searchObject objectForKey:@"prod_pic_url"];
         if([StringUtility stringIsEmpty:url]){
@@ -233,6 +238,8 @@
         } else {
             [cell.videoImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
         }
+        cell.videoImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        cell.videoImageView.layer.borderWidth = 1;
         NSString *name = [searchObject objectForKey:@"prod_name"];
         if([StringUtility stringIsEmpty:name]){
             cell.videoTitleLabel.text = @"...";
@@ -251,16 +258,6 @@
         } else {
             cell.videoSubtitleLabel.text = [NSString stringWithFormat:@"主演：%@", actor];
         }
-        cell.videoImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        cell.videoImageView.layer.borderWidth = 1;
-        
-        UIView *backgroundView;
-        if(indexPath.row % 2 == 0){
-            backgroundView = [[CustomCellBlackBackground alloc]init];
-        } else {
-            backgroundView = [[CustomCellBackground alloc]init];
-        }
-        [cell setBackgroundView:backgroundView];
         return cell;
     }
 }
