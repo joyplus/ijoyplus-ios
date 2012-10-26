@@ -9,6 +9,6 @@
  */
 @interface MyselfViewController : UIGenericViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient, UIGestureRecognizerDelegate> {
 }
-@property (nonatomic, readwrite, retain) IBOutlet UITableView *table;
+@property (nonatomic, weak) IBOutlet UITableView *table;
 
 @end

@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface SettingsViewController : UIViewController
-@property (strong, nonatomic) IBOutlet UILabel *firstLabel;
-@property (strong, nonatomic) IBOutlet UILabel *secondLabel;
-@property (strong, nonatomic) IBOutlet UIButton *logoutBtn;
-@property (strong, nonatomic) IBOutlet UIButton *searchFriendBtn;
-@property (strong, nonatomic) IBOutlet UIButton *commentBtn;
-@property (strong, nonatomic) IBOutlet UIButton *aboutUsBtn;
-@property (strong, nonatomic) IBOutlet UIButton *scoreBtn;
+@property (weak, nonatomic) IBOutlet UILabel *firstLabel;
+@property (weak, nonatomic) IBOutlet UILabel *secondLabel;
+@property (weak, nonatomic) IBOutlet UIButton *logoutBtn;
+@property (weak, nonatomic) IBOutlet UIButton *searchFriendBtn;
+@property (weak, nonatomic) IBOutlet UIButton *commentBtn;
+@property (weak, nonatomic) IBOutlet UIButton *aboutUsBtn;
+@property (weak, nonatomic) IBOutlet UIButton *scoreBtn;
 - (IBAction)logout:(id)sender;
 - (IBAction)searchFriend:(id)sender;
 - (IBAction)commentBtnClicked:(id)sender;

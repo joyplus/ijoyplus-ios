@@ -11,21 +11,21 @@
 #import "UIGenericViewController.h"
 
 @interface HomeViewController : UIGenericViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate >
-@property (strong, nonatomic) IBOutlet UISegmentedControl *segment;
-@property (strong, nonatomic) IBOutlet UIImageView *topImageView;
-@property (strong, nonatomic) IBOutlet UIImageView *avatarImageView;
-@property (strong, nonatomic) IBOutlet UIImageView *roundImageView;
-@property (strong, nonatomic) IBOutlet UILabel *watchedNumberLabel;
-@property (strong, nonatomic) IBOutlet UILabel *fansNumberLabel;
-@property (strong, nonatomic) IBOutlet UIButton *watchBtn;
-@property (strong, nonatomic) IBOutlet UIButton *collectionBtn;
-@property (strong, nonatomic) IBOutlet UILabel *username;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *segment;
+@property (weak, nonatomic) IBOutlet UIImageView *topImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *roundImageView;
+@property (weak, nonatomic) IBOutlet UILabel *watchedNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *fansNumberLabel;
+@property (weak, nonatomic) IBOutlet UIButton *watchBtn;
+@property (weak, nonatomic) IBOutlet UIButton *collectionBtn;
+@property (weak, nonatomic) IBOutlet UILabel *username;
 - (IBAction)followUser:(id)sender;
 - (IBAction)fansUser:(id)sender;
-@property (strong, nonatomic) IBOutlet UILabel *watchedLabel;
-@property (strong, nonatomic) IBOutlet UIButton *avatarImageViewBtn;
-@property (strong, nonatomic) IBOutlet UILabel *fansLabel;
-@property (strong, nonatomic) IBOutlet UIView *bgView;
+@property (weak, nonatomic) IBOutlet UILabel *watchedLabel;
+@property (weak, nonatomic) IBOutlet UIButton *avatarImageViewBtn;
+@property (weak, nonatomic) IBOutlet UILabel *fansLabel;
+@property (weak, nonatomic) IBOutlet UIView *bgView;
 - (void)bgImageClicked:(id)sender;
 - (IBAction)avatarImageClicked:(id)sender;
 @property (strong, nonatomic)NSString *userid;
