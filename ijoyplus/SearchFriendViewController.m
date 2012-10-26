@@ -8,8 +8,6 @@
 
 #import "SearchFriendViewController.h"
 #import <Foundation/Foundation.h>
-#import <AddressBook/AddressBook.h>
-#import <AddressBookUI/AddressBookUI.h>
 #import "CustomBackButton.h"
 #import "FriendListViewController.h"
 #import "SinaLoginViewController.h"
@@ -164,7 +162,9 @@
         }
         if(indexPath.row == 0){
             if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
-                [self processSinaData];
+                friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+                friendListViewController.sourceType = @"1";
+                [self.navigationController pushViewController:friendListViewController animated:YES];
             } else{
                 SinaLoginViewController *viewController = [[SinaLoginViewController alloc]init];
                 viewController.fromController = @"SearchFriendViewController";
@@ -186,7 +186,9 @@
                 [UIUtility showNetWorkError:self.view];
                 return;
             }
-            [self uploadAddressBook];
+            ContactFriendListViewController *viewController = [[ContactFriendListViewController alloc]initWithNibName:@"ContactFriendListViewController" bundle:nil];
+            viewController.sourceType = @"5";
+            [self.navigationController pushViewController:viewController animated:YES];
         }
     }
 }
@@ -197,75 +199,6 @@
     if(viewController == nil){
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-}
-
-- (void)uploadAddressBook
-{
-    NSMutableArray *addressBookTemp = [NSMutableArray array];
-    ABAddressBookRef addressBooks = ABAddressBookCreate();
-    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBooks);
-    CFIndex nPeople = ABAddressBookGetPersonCount(addressBooks);
-
-    NSMutableString *friendIds = [[NSMutableString alloc]init];
-    for (int i = 0; i < nPeople; i++)
-    {
-        ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
-        CFStringRef abFullName = ABRecordCopyCompositeName(person);
-        ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
-        if (ABMultiValueGetCount(phoneMulti) > 0) {
-            CFStringRef cfString = ABMultiValueCopyValueAtIndex(phoneMulti, 0);
-            NSString *phoneNumber = (__bridge NSString*)cfString;
-            NSString *validatedPhoneNumber = [self validatePhoneNumber:phoneNumber];
-            if(validatedPhoneNumber != nil){
-                [friendIds appendFormat:@"%@,", validatedPhoneNumber];
-                NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys: (__bridge NSString*)abFullName, @"name", validatedPhoneNumber, @"number", nil];
-                [addressBookTemp addObject:contact];
-            }
-            validatedPhoneNumber = nil;
-            phoneNumber = nil;
-            CFRelease(cfString);
-        }
-        CFRelease(phoneMulti);
-        CFRelease(abFullName);
-    }
-    [friendIds appendString:@"0"];
-    CFRelease(allPeople);
-    CFRelease(addressBooks);
-    [[ContainerUtility sharedInstance]setAttribute:addressBookTemp forKey:@"address_book"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"5", @"source_type", friendIds, @"source_ids", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            
-        } else {
-            
-        }
-        ContactFriendListViewController *viewController = [[ContactFriendListViewController alloc]initWithNibName:@"ContactFriendListViewController" bundle:nil];
-        viewController.sourceType = @"5";
-        [self.navigationController pushViewController:viewController animated:YES];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];
-}
-
-- (NSString *)validatePhoneNumber:(NSString *)phoneNumber
-{
-    
-    NSString *validatePhoneNumber = [[[phoneNumber stringByReplacingOccurrencesOfString:@" " withString:@""]
-                                                  stringByReplacingOccurrencesOfString:@"-" withString:@""]
-                                                  stringByReplacingOccurrencesOfString:@"+86" withString:@""];
-    NSRange range = {0, 1};
-    if(![[validatePhoneNumber substringWithRange:range] isEqualToString:@"0"] && [validatePhoneNumber length] == 11){
-        return validatePhoneNumber;
-    } else {
-        return nil;
-    }
-}
-
-- (void)processSinaData {
-    friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-    friendListViewController.sourceType = @"1";
-    [self.navigationController pushViewController:friendListViewController animated:YES];
 }
 
 @end

@@ -34,6 +34,11 @@
 @implementation PopularSegmentViewController
 @synthesize topSegment;
 
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"receive memory warning in %@", self.class);
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

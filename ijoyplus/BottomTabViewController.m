@@ -68,6 +68,11 @@
 
 @implementation BottomTabViewController
 
+- (void)didReceiveMemoryWarning
+{
+    NSLog(@"receive memory warning in %@", self.class);
+}
+
 - (void)viewDidUnload {
     [super viewDidUnload];
     rightButton = nil;
@@ -83,10 +88,6 @@
     }
     self.delegate = self;
     return self;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -113,7 +114,7 @@
     }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if([num boolValue]){
-        UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
         self.navigationItem.rightBarButtonItem = rightButton;
 //        self.title = NSLocalizedString(@"popular", nil);
         [self.tabBar setHidden:NO];

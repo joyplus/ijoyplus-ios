@@ -152,7 +152,7 @@
 
 - (void)closeSelf
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)loadTable {
@@ -192,10 +192,25 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"friendListCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor lightGrayColor]];
+        accessory.highlightedColor = [UIColor whiteColor];
+        cell.accessoryView = accessory;
+        UIView *backgroundView;
+        if(indexPath.row % 2 == 0){
+            backgroundView = [[CustomCellBlackBackground alloc]init];
+        } else {
+            backgroundView = [[CustomCellBackground alloc]init];
+        }
+        [cell setBackgroundView:backgroundView];
     }
     if(joinedFriendArray.count > 0) {
         if(indexPath.section == 0)        {
@@ -215,22 +230,6 @@
         cell.detailTextLabel.text = @"邀请";
         cell.detailTextLabel.textColor = [UIColor colorWithRed:10/255.0 green:126/255.0 blue:32/255.0 alpha:1.0];
     }
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.font = [UIFont systemFontOfSize:15];
-    cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor lightGrayColor]];
-    accessory.highlightedColor = [UIColor whiteColor];
-    cell.accessoryView = accessory;
-    UIView *backgroundView;
-    if(indexPath.row % 2 == 0){
-        backgroundView = [[CustomCellBlackBackground alloc]init];
-    } else {
-        backgroundView = [[CustomCellBackground alloc]init];
-    }
-    [cell setBackgroundView:backgroundView];
     return cell;
 }
 

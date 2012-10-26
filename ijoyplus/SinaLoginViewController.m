@@ -71,7 +71,6 @@
     
     webView = [webEngine logIn];
     [self.view addSubview:webView];
-    webView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -114,7 +113,9 @@
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
-        [self processSinaData];
+        friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
+        friendListViewController.sourceType = @"1";
+        [self.navigationController pushViewController:friendListViewController animated:YES];
     } else{
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -176,51 +177,6 @@
 #pragma mark - Handle sina response
 - (void) didFailToLogInWithError:(NSError *)error{
 
-}
-
-#pragma mark - Private Methods
-- (void)processSinaData {
-    
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [[WBEngine sharedClient] accessToken], @"access_token",
-                                [[WBEngine sharedClient] userID], @"uid",
-                                nil];
-    
-//    [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//        
-//        NSString *displayName = [result objectForKey:@"screen_name"];
-//        NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
-//        NSString *description = [result objectForKey:@"description"];
-//
-//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"<<<<<<%@>>>>>", error);
-//    }];
-    
-    [[AFSinaWeiboAPIClient sharedClient] getPath:@"friendships/friends/bilateral.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *sinaFriends = [responseObject valueForKeyPath:@"users"];
-        [[CacheUtility sharedCache]setSinaFriends:sinaFriends];
-        NSMutableString *friendIds = [[NSMutableString alloc]init];
-        for (NSDictionary *friendData in sinaFriends) {
-            [friendIds appendFormat:@"%@,", [[friendData objectForKey:@"id"] stringValue]];
-        }
-        [friendIds appendString:@"0"];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
-                
-            } else {
-                
-            }
-            friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
-            friendListViewController.sourceType = @"1";
-            [self.navigationController pushViewController:friendListViewController animated:YES];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-        }];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];    
 }
 
 - (void)closeSelf

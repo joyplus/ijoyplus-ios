@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "BottomTabViewController.h"
-#import "PopularSegmentViewController.h"
 #import "AFHTTPRequestOperationLogger.h"
 #import "Reachability.h"
 #import "ContainerUtility.h"

@@ -20,6 +20,8 @@
 #import "PhoneNumberCell.h"
 #import "ContainerUtility.h"
 #import "HomeViewController.h"
+#import <AddressBook/AddressBook.h>
+#import <AddressBookUI/AddressBookUI.h>
 
 @interface ContactFriendListViewController (){
     NSMutableArray *itemsArray;
@@ -93,41 +95,101 @@
         self.phoneNumberCell.inputField.inputAccessoryView = keyboardToolbar;
     }
     
+    [self uploadAddressBook];
+}
+
+
+- (void)uploadAddressBook
+{
+    NSMutableArray *addressBookTemp = [NSMutableArray array];
+    ABAddressBookRef addressBooks = ABAddressBookCreate();
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBooks);
+    CFIndex nPeople = ABAddressBookGetPersonCount(addressBooks);
     
-    NSArray *contactArray = (NSArray *)[[ContainerUtility sharedInstance]attributeForKey:@"address_book"];
-    joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
-    joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
-    unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:100];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *item = [result objectForKey:@"users"];
-            itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            [itemsArray addObjectsFromArray:item];
-            for(NSDictionary *contact in contactArray){
-                BOOL exists = NO;
-                for(NSDictionary *user in item){
-                    if([[user objectForKey:@"thirdpart_id"] isEqualToString:[contact objectForKey:@"number"]]){
-                        [joinedFriendUserId addObject:[user objectForKey:@"friend_id"]];
-                        exists = YES;
-                        break;
-                    }
-                }
-                if(exists){
-                    [joinedFriendArray addObject:contact];
-                } else {
-                    [unjoinedFriendArray addObject:contact];
-                }
+    NSMutableString *friendIds = [[NSMutableString alloc]init];
+    for (int i = 0; i < nPeople; i++)
+    {
+        ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
+        CFStringRef abFullName = ABRecordCopyCompositeName(person);
+        ABMutableMultiValueRef phoneMulti = ABRecordCopyValue(person, kABPersonPhoneProperty);
+        if (ABMultiValueGetCount(phoneMulti) > 0) {
+            CFStringRef cfString = ABMultiValueCopyValueAtIndex(phoneMulti, 0);
+            NSString *phoneNumber = (__bridge NSString*)cfString;
+            NSString *validatedPhoneNumber = [self validatePhoneNumber:phoneNumber];
+            if(validatedPhoneNumber != nil){
+                [friendIds appendFormat:@"%@,", validatedPhoneNumber];
+                NSDictionary *contact = [NSDictionary dictionaryWithObjectsAndKeys: (__bridge NSString*)abFullName, @"name", validatedPhoneNumber, @"number", nil];
+                [addressBookTemp addObject:contact];
             }
-            [self.tableView reloadData];
+            validatedPhoneNumber = nil;
+            phoneNumber = nil;
+            CFRelease(cfString);
+        }
+        CFRelease(phoneMulti);
+        CFRelease(abFullName);
+    }
+    [friendIds appendString:@"0"];
+    CFRelease(allPeople);
+    CFRelease(addressBooks);
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"5", @"source_type", friendIds, @"source_ids", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
+            joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
+            unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:100];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(responseCode == nil){
+                    NSArray *item = [result objectForKey:@"users"];
+                    itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
+                    [itemsArray addObjectsFromArray:item];
+                    for(NSDictionary *contact in addressBookTemp){
+                        BOOL exists = NO;
+                        for(NSDictionary *user in item){
+                            if([[user objectForKey:@"thirdpart_id"] isEqualToString:[contact objectForKey:@"number"]]){
+                                [joinedFriendUserId addObject:[user objectForKey:@"friend_id"]];
+                                exists = YES;
+                                break;
+                            }
+                        }
+                        if(exists){
+                            [joinedFriendArray addObject:contact];
+                        } else {
+                            [unjoinedFriendArray addObject:contact];
+                        }
+                    }
+                    [self.tableView reloadData];
+                } else {
+                    
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+            }];
         } else {
             
         }
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
 }
+
+- (NSString *)validatePhoneNumber:(NSString *)phoneNumber
+{
+    
+    NSString *validatePhoneNumber = [[[phoneNumber stringByReplacingOccurrencesOfString:@" " withString:@""]
+                                      stringByReplacingOccurrencesOfString:@"-" withString:@""]
+                                     stringByReplacingOccurrencesOfString:@"+86" withString:@""];
+    NSRange range = {0, 1};
+    if(![[validatePhoneNumber substringWithRange:range] isEqualToString:@"0"] && [validatePhoneNumber length] == 11){
+        return validatePhoneNumber;
+    } else {
+        return nil;
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -178,10 +240,25 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"contactListCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.textLabel.textColor = [UIColor whiteColor];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor lightGrayColor]];
+        accessory.highlightedColor = [UIColor whiteColor];
+        cell.accessoryView = accessory;
+        UIView *backgroundView;
+        if(indexPath.row % 2 == 0){
+            backgroundView = [[CustomCellBlackBackground alloc]init];
+        } else {
+            backgroundView = [[CustomCellBackground alloc]init];
+        }
+        [cell setBackgroundView:backgroundView];
     }
     switch (indexPath.section) {
         case 0:
@@ -204,21 +281,6 @@
             break;
         }
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
-    cell.textLabel.textColor = [UIColor whiteColor];
-    cell.textLabel.font = [UIFont systemFontOfSize:15];
-    cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor lightGrayColor]];
-    accessory.highlightedColor = [UIColor whiteColor];
-    cell.accessoryView = accessory;
-    UIView *backgroundView;
-    if(indexPath.row % 2 == 0){
-        backgroundView = [[CustomCellBlackBackground alloc]init];
-    } else {
-        backgroundView = [[CustomCellBackground alloc]init];
-    }
-    [cell setBackgroundView:backgroundView];
     return cell;
 }
 
