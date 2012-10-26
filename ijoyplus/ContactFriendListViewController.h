@@ -14,7 +14,7 @@
 
 
 @property (strong, nonatomic) NSString *keyword;
-@property (strong, nonatomic) IBOutlet CustomSearchBar *sBar;
+@property (weak, nonatomic) IBOutlet CustomSearchBar *sBar;
 @property (strong, nonatomic) NSString *sourceType;//1 sina 2 tecent
 
 @end

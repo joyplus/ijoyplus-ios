@@ -197,7 +197,7 @@
     
     myCell.titleLabel.text = [item objectForKey:@"user_name"];
     [myCell.titleLabel sizeToFit];
-    myCell.titleLabel.center = CGPointMake(myCell.avatarImageView.center.x, myCell.titleLabel.frame.origin.y);
+    myCell.titleLabel.center = CGPointMake(myCell.avatarImageView.center.x, myCell.avatarImageView.frame.origin.y + 60);
     
     TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
     NSString *dateString = [item valueForKey:@"create_date"];

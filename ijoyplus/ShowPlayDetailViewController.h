@@ -13,6 +13,8 @@
 @interface ShowPlayDetailViewController : PlayDetailViewController{
     NSDictionary *show;
     NSInteger totalDramaCount;
+    NSArray *episodeArray;
 }
-
+- (UITableViewCell *)displayEpisodeCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath cellIdentifier:(NSString *)cellIdentifie;
+- (void)gotoWebsite:(NSInteger)num;
 @end;

@@ -27,9 +27,9 @@
     BOOL btn1Selected;
     SinaLoginViewController *viewController;
 }
-@property (strong, nonatomic) IBOutlet UILabel *textCount;
-@property (strong, nonatomic) IBOutlet UILabel *tipLabel;
-@property (strong, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
+@property (weak, nonatomic) IBOutlet UILabel *textCount;
+@property (weak, nonatomic) IBOutlet UILabel *tipLabel;
+@property (weak, nonatomic) IBOutlet CustomPlaceHolderTextView *textView;
 - (void)startObservingNotifications;
 - (void)stopObservingNotifications;
 - (void)didReceiveTextDidChangeNotification:(NSNotification*)notification;

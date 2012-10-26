@@ -33,6 +33,7 @@
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
     MBProgressHUD *HUD;
+    CustomBackButton *backButton;
 }
 - (void)closeSelf;
 @end
@@ -51,6 +52,7 @@
     //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
     HUD = nil;
+    backButton = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"top_segment_clicked" object:nil];
 }
 
@@ -67,7 +69,7 @@
 {
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
-    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	

@@ -44,7 +44,7 @@
 //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
 //    [flowView addGestureRecognizer:downGesture];
     pageSize = 12;
-    Reachability *hostReach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {    
         [UIUtility showNetWorkError:self.view];
         id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MovieViewController"];

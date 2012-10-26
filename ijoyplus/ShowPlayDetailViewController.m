@@ -43,6 +43,7 @@
 {
     [super viewDidUnload];
     show = nil;
+    episodeArray = nil;
 }
 
 - (void)viewDidLoad
@@ -83,17 +84,17 @@
         id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
         [self parseData:cacheResult];
     } else {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                self.programId, @"prod_id",
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.programId];
-        [[CacheUtility sharedCache] putInCache:key result:result];
-        [self parseData:result];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    kAppKey, @"app_key",
+                                    self.programId, @"prod_id",
+                                    nil];
+        
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.programId];
+            [[CacheUtility sharedCache] putInCache:key result:result];
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
     }
 }
 
@@ -108,6 +109,7 @@
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];
         }
+        episodeArray = [show objectForKey:@"episodes"];
         if(pullToRefreshManager_ == nil && commentArray.count > 0){
             pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableView withClient:self];
         }
@@ -160,23 +162,16 @@
 
 - (void)playVideo
 {
-    [self gotoWebsite:1];
+    [self gotoWebsite:0];
 }
 
 - (void)gotoWebsite:(NSInteger)num
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *episodeArray = [show objectForKey:@"episodes"];
-    NSString *url = nil;
-    for(NSDictionary *episode in episodeArray){
-        if([[episode objectForKey:@"name"]integerValue] == num){
-            NSArray *urlArray = [episode objectForKey:@"video_urls"];
-            url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-            break;
-        }
-    }
-    if(url == nil){
-        url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
+    NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
+    NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    if([StringUtility stringIsEmpty:url]){
+        url = @"";
     }
     viewController.programUrl = url;
     viewController.title = [show objectForKey:@"name"];
@@ -191,5 +186,190 @@
     [lplv showInView:self.view animated:YES];
     _tableView.scrollEnabled = NO;
 }
+
+#pragma mark - Table View Datasource
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 4;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if(section < 2){
+        return 1;
+    } else if (section == 2) {
+        return episodeArray.count;
+    } else {
+        if(commentArray == nil || commentArray.count == 0){
+            return 1;
+        } else {
+            return commentArray.count;
+        }
+    }
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0) {
+        return pictureCell;
+    } else if (indexPath.section == 1) {
+        return playCell;
+    } else if (indexPath.section == 2){
+        UITableViewCell *cell = [self displayEpisodeCell:tableView cellForRowAtIndexPath:indexPath cellIdentifier:@"episodeCell"];
+        return cell;
+    } else {
+        if(commentArray == nil || commentArray.count == 0){
+            NoRecordCell *cell = [self displayNoRecordCell:tableView];
+            cell.textField.text = @"暂无评论";
+            return cell;
+        } else {
+            CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
+            return cell;
+        }
+    }
+}
+
+
+- (UITableViewCell *)displayEpisodeCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath cellIdentifier:(NSString *)cellIdentifier
+{
+    UITableViewCell *cell = (UITableViewCell*) [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.textLabel.textColor = [UIColor lightGrayColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        if (episodeArray.count > 1){
+            UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"black_separator"]];
+            imageView.frame = CGRectMake(0, cell.frame.size.height - 2, cell.frame.size.width, 2);
+            [cell.contentView addSubview:imageView];
+        }
+    }
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:indexPath.row] objectForKey:@"name"]];
+    return cell;
+}
+
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.section == 0){
+        return WindowHeight;
+    } else if (indexPath.section == 1) {
+        return playCell.frame.size.height;
+    } else if(indexPath.section == 2){
+        if(episodeArray.count > 1){
+            return 44;
+        } else {
+            return 0;
+        }
+    } else {
+        if(commentArray == nil || commentArray.count == 0){
+            return 44;
+        } else {
+            CGFloat height = [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];
+            return height;
+        }
+    }
+}
+
+/*
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
+
+/*
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
+
+/*
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
+
+/*
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.section == 2 && episodeArray.count > 1){
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [self gotoWebsite:indexPath.row];
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    } else if (indexPath.section > 2 && commentArray.count > 0){
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+        viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
+        viewController.title = @"评论回复";
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section < 2) {
+        return 0;
+    } else if (section == 2) {
+        if(episodeArray.count > 1){
+            return 24;
+        } else {
+            return 0;
+        }
+    } else {
+        return 24;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    if(section < 2){
+        return nil;
+    }
+    if (section == 2) {
+        if(episodeArray.count > 1
+           ){
+        } else {
+            return nil;
+        }
+    }
+    UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 24)];
+    customView.backgroundColor = [UIColor blackColor];
+    
+    // create the label objects
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width-10, 24)];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.font = [UIFont boldSystemFontOfSize:12];
+    if(section == 2){
+        headerLabel.text =  NSLocalizedString(@"show_list", nil);
+    } else {
+        headerLabel.text =  NSLocalizedString(@"user_comment", nil);
+    }
+    headerLabel.textColor = [UIColor whiteColor];
+    [customView addSubview:headerLabel];
+    
+    return customView;
+}
+
 
 @end

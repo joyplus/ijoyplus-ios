@@ -51,6 +51,7 @@ related_video = "和 %@ 有关的视频";
 post_success = "评论成功";
 collection_success = "收藏成功";
 recommand_success = "推荐成功";
+show_list = "综艺列表";
 
 popular = "正在流行";
 movie = "电影";

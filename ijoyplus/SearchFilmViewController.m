@@ -24,6 +24,7 @@
 @interface SearchFilmViewController (){
     NSMutableArray *historyArray;
     NSMutableArray *hotKeyArray;
+    CustomBackButton *backButton;
 }
 
 - (void)closeSelf;
@@ -35,10 +36,11 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     [self setSBar:nil];
     historyArray = nil;
     hotKeyArray = nil;
-    [super viewDidUnload];
+    backButton = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -55,7 +57,7 @@
     [super viewDidLoad];
     self.title = NSLocalizedString(@"search", nil);
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
+    backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.sBar.delegate = self;
