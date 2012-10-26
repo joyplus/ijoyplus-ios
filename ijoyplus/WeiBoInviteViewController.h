@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface WeiBoInviteViewController : UIViewController
-@property (strong, nonatomic) IBOutlet UIImageView *avatarImageView;
-@property (strong, nonatomic) IBOutlet UILabel *titleLabel;
-@property (strong, nonatomic) IBOutlet UILabel *subtitleNameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *titleNameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (strong, nonatomic) IBOutlet UIButton *submitBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subtitleNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *submitBtn;
 - (IBAction)submitBtnClicked:(id)sender;
 
 @property (strong, nonatomic) NSDictionary *friendInfo;

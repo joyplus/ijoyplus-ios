@@ -10,13 +10,13 @@
 #import <MessageUI/MessageUI.h>
 
 @interface FriendDetailViewController : UIViewController <MFMessageComposeViewControllerDelegate>
-@property (strong, nonatomic) IBOutlet UIImageView *avatarImageView;
-@property (strong, nonatomic) IBOutlet UILabel *titleLabel;
-@property (strong, nonatomic) IBOutlet UILabel *subtitleLabel;
-@property (strong, nonatomic) IBOutlet UILabel *subtitleNameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *titleNameLabel;
-@property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (strong, nonatomic) IBOutlet UIButton *submitBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subtitleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subtitleNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *submitBtn;
 @property (strong, nonatomic) NSDictionary *friendInfo;
 - (IBAction)submitBtnClicked:(id)sender;
 @end

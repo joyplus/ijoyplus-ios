@@ -15,5 +15,5 @@
 }
 
 @property (nonatomic, strong)NSString *programId;
-@property (nonatomic, readwrite, strong) IBOutlet UITableView *table;
+@property (nonatomic, weak) IBOutlet UITableView *table;
 @end

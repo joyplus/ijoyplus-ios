@@ -69,5 +69,5 @@
 @property (nonatomic, strong) NSString *parentControllerName;
 @property (nonatomic, assign) NSInteger currentPage;
 @property (nonatomic, assign) int defaultScrollViewHeight;
-@property(nonatomic, retain) EGORefreshTableHeaderView * refreshHeaderView;  //下拉刷新
+@property(nonatomic, strong) EGORefreshTableHeaderView * refreshHeaderView;  //下拉刷新
 @end

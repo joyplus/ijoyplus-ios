@@ -26,7 +26,7 @@
     LocalViewController *localController;
     UIViewController *selectedViewController;
 }
-@property (strong, nonatomic) IBOutlet CustomSegmentedControl *topSegment;
+@property (weak, nonatomic) IBOutlet CustomSegmentedControl *topSegment;
 - (void)segmentValueChanged:(id)sender;
 //- (void)search;
 @end

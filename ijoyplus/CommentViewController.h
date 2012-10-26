@@ -17,5 +17,5 @@
 
 @property (nonatomic, strong)NSString *threadId;
 @property (assign, nonatomic)BOOL openKeyBoard;
-@property (nonatomic, readwrite, retain) IBOutlet UITableView *table;
+@property (nonatomic, weak) IBOutlet UITableView *table;
 @end

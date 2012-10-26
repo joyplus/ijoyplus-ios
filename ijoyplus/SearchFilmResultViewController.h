@@ -15,6 +15,6 @@
 
 
 @property (nonatomic, strong)NSString *keyword;
-@property (strong, nonatomic) IBOutlet CustomSearchBar *sBar;
+@property (weak, nonatomic) IBOutlet CustomSearchBar *sBar;
 
 @end

@@ -182,7 +182,7 @@
 		EBB2FFD01612D57A00E8D9A7 /* MyCommentView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFCF1612D57A00E8D9A7 /* MyCommentView.m */; };
 		EBB2FFEB1612FB9800E8D9A7 /* DramaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB2FFEA1612FB9800E8D9A7 /* DramaCell.m */; };
 		EBB33C62162BDB280047B3E1 /* RecommendReasonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C61162BDB280047B3E1 /* RecommendReasonCell.m */; };
-		EBB33C66162C00CF0047B3E1 /* WeiBoInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C64162C00CC0047B3E1 /* WeiBoInviteViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBB33C66162C00CF0047B3E1 /* WeiBoInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB33C64162C00CC0047B3E1 /* WeiBoInviteViewController.m */; };
 		EBB33C67162C00CF0047B3E1 /* WeiBoInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB33C65162C00CE0047B3E1 /* WeiBoInviteViewController.xib */; };
 		EBB33C7C162C0EF80047B3E1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */; };
 		EBB33C7E162C0F000047B3E1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */; };

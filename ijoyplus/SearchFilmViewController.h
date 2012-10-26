@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SearchFilmViewController : UITableViewController <UISearchBarDelegate>
-@property (strong, nonatomic) IBOutlet UISearchBar *sBar;
+@property (weak, nonatomic) IBOutlet UISearchBar *sBar;
 
 @end

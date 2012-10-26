@@ -31,9 +31,6 @@
     int pageSize;
 }
 -(void)resignTextView;
-
-
-
 @end
 
 @implementation CommentListViewController
