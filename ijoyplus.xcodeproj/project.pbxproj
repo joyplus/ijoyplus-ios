@@ -188,6 +188,10 @@
 		EBB33C7E162C0F000047B3E1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */; };
 		EBB33C83162C187B0047B3E1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C82162C18790047B3E1 /* MessageUI.framework */; };
 		EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */; };
+		EBB4FA29163E8884009AFCDA /* SBDoubleSidedLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4FA22163E8884009AFCDA /* SBDoubleSidedLayer.m */; };
+		EBB4FA2A163E8884009AFCDA /* SBGradientOverlayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4FA24163E8884009AFCDA /* SBGradientOverlayLayer.m */; };
+		EBB4FA2B163E8884009AFCDA /* SBTickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4FA26163E8884009AFCDA /* SBTickerView.m */; };
+		EBB4FA2C163E8884009AFCDA /* UIView+SBExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4FA28163E8884009AFCDA /* UIView+SBExtras.m */; };
 		EBB5A14D1622754000F164F2 /* qq_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A1491622754000F164F2 /* qq_normal.png */; };
 		EBB5A14E1622754000F164F2 /* qq_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14A1622754000F164F2 /* qq_press.png */; };
 		EBB5A14F1622754000F164F2 /* sina_weibo_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */; };
@@ -539,6 +543,14 @@
 		EBB33C82162C18790047B3E1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		EBB40F19160707FB00A49CD9 /* CustomBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButton.h; sourceTree = "<group>"; };
 		EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBackButton.m; sourceTree = "<group>"; };
+		EBB4FA21163E8884009AFCDA /* SBDoubleSidedLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBDoubleSidedLayer.h; sourceTree = "<group>"; };
+		EBB4FA22163E8884009AFCDA /* SBDoubleSidedLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBDoubleSidedLayer.m; sourceTree = "<group>"; };
+		EBB4FA23163E8884009AFCDA /* SBGradientOverlayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBGradientOverlayLayer.h; sourceTree = "<group>"; };
+		EBB4FA24163E8884009AFCDA /* SBGradientOverlayLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBGradientOverlayLayer.m; sourceTree = "<group>"; };
+		EBB4FA25163E8884009AFCDA /* SBTickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTickerView.h; sourceTree = "<group>"; };
+		EBB4FA26163E8884009AFCDA /* SBTickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBTickerView.m; sourceTree = "<group>"; };
+		EBB4FA27163E8884009AFCDA /* UIView+SBExtras.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SBExtras.h"; sourceTree = "<group>"; };
+		EBB4FA28163E8884009AFCDA /* UIView+SBExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SBExtras.m"; sourceTree = "<group>"; };
 		EBB5A1491622754000F164F2 /* qq_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq_normal.png; sourceTree = "<group>"; };
 		EBB5A14A1622754000F164F2 /* qq_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq_press.png; sourceTree = "<group>"; };
 		EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_normal.png; sourceTree = "<group>"; };
@@ -798,6 +810,7 @@
 		EB32BD0515F887A400C878D5 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				EBB4FA20163E8884009AFCDA /* SBTickerView */,
 				EBC0C65D163532FE000CC6A8 /* JSON */,
 				EBBE20FA162D156300CC5026 /* SinaWeiBoSDK */,
 				EBBE202E162CF50000CC5026 /* umeng */,
@@ -1221,6 +1234,21 @@
 			name = component;
 			sourceTree = "<group>";
 		};
+		EBB4FA20163E8884009AFCDA /* SBTickerView */ = {
+			isa = PBXGroup;
+			children = (
+				EBB4FA21163E8884009AFCDA /* SBDoubleSidedLayer.h */,
+				EBB4FA22163E8884009AFCDA /* SBDoubleSidedLayer.m */,
+				EBB4FA23163E8884009AFCDA /* SBGradientOverlayLayer.h */,
+				EBB4FA24163E8884009AFCDA /* SBGradientOverlayLayer.m */,
+				EBB4FA25163E8884009AFCDA /* SBTickerView.h */,
+				EBB4FA26163E8884009AFCDA /* SBTickerView.m */,
+				EBB4FA27163E8884009AFCDA /* UIView+SBExtras.h */,
+				EBB4FA28163E8884009AFCDA /* UIView+SBExtras.m */,
+			);
+			path = SBTickerView;
+			sourceTree = "<group>";
+		};
 		EBBE202E162CF50000CC5026 /* umeng */ = {
 			isa = PBXGroup;
 			children = (
@@ -1622,6 +1650,10 @@
 				EBC0C66F163532FF000CC6A8 /* SBJsonParser.m in Sources */,
 				EBC0C670163532FF000CC6A8 /* SBJsonWriter.m in Sources */,
 				EBC0C67316353831000CC6A8 /* ProgramView.m in Sources */,
+				EBB4FA29163E8884009AFCDA /* SBDoubleSidedLayer.m in Sources */,
+				EBB4FA2A163E8884009AFCDA /* SBGradientOverlayLayer.m in Sources */,
+				EBB4FA2B163E8884009AFCDA /* SBTickerView.m in Sources */,
+				EBB4FA2C163E8884009AFCDA /* UIView+SBExtras.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
