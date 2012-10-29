@@ -12,92 +12,92 @@ NSString *const kAppKey  = @"ijoyplus_ios_001";
 
 NSString *const kSuccessResCode  = @"00000";
 
-NSString *const kPathMovie = @"/joyplus-service/index.php/video_movies";
+NSString *const kPathMovie = @"/test/index.php/video_movies";
 
-NSString *const kPathTV = @"/joyplus-service/index.php/video_tvs";
+NSString *const kPathTV = @"/test/index.php/video_tvs";
 
-NSString *const kPathShow = @"/joyplus-service/index.php/video_shows";
+NSString *const kPathShow = @"/test/index.php/video_shows";
 
-NSString *const kPathVideo = @"/joyplus-service/index.php/video_video";
+NSString *const kPathVideo = @"/test/index.php/video_video";
 
-NSString *const kPathAccountRegister = @"/joyplus-service/index.php/account/register";
+NSString *const kPathAccountRegister = @"/test/index.php/account/register";
 
-NSString *const kPathAccountLogin = @"/joyplus-service/index.php/account/login";
+NSString *const kPathAccountLogin = @"/test/index.php/account/login";
 
-NSString *const kPathAccountUpdateProfile = @"/joyplus-service/index.php/account/updateProfile";
+NSString *const kPathAccountUpdateProfile = @"/test/index.php/account/updateProfile";
 
-NSString *const kPathAccountLogout = @"/joyplus-service/index.php/account/logout";
+NSString *const kPathAccountLogout = @"/test/index.php/account/logout";
 
-NSString *const kPathAccountBindAccount = @"/joyplus-service/index.php/account/bindAccount";
+NSString *const kPathAccountBindAccount = @"/test/index.php/account/bindAccount";
 
-NSString *const kPathAccountBindPhone = @"/joyplus-service/index.php/account/bindPhone";
+NSString *const kPathAccountBindPhone = @"/test/index.php/account/bindPhone";
 
-NSString *const kPathUserView = @"/joyplus-service/index.php/user/view";
+NSString *const kPathUserView = @"/test/index.php/user/view";
 
-NSString *const kPathUserThirdPartyUsers = @"/joyplus-service/index.php/user/thirdPartyUsers";
+NSString *const kPathUserThirdPartyUsers = @"/test/index.php/user/thirdPartyUsers";
 
-NSString *const kPathGenUserThirdPartyUsers = @"/joyplus-service/index.php/user/preGenThirdPartyUsers";
+NSString *const kPathGenUserThirdPartyUsers = @"/test/index.php/user/preGenThirdPartyUsers";
 
-NSString *const kPathFriendFollow = @"/joyplus-service/index.php/friend/follow";
+NSString *const kPathFriendFollow = @"/test/index.php/friend/follow";
 
-NSString *const kPathFriendDestory = @"/joyplus-service/index.php/friend/destory";
+NSString *const kPathFriendDestory = @"/test/index.php/friend/destory";
 
-NSString *const kPathUserFriends = @"/joyplus-service/index.php/user/friends";
+NSString *const kPathUserFriends = @"/test/index.php/user/friends";
 
-NSString *const kPathUserFans = @"/joyplus-service/index.php/user/fans";
+NSString *const kPathUserFans = @"/test/index.php/user/fans";
 
-NSString *const kPathFriendRecommends = @"/joyplus-service/index.php/friend/recommends";
+NSString *const kPathFriendRecommends = @"/test/index.php/friend/recommends";
 
-NSString *const kPathUserFriendDynamics = @"/joyplus-service/index.php/user/friendDynamics";
+NSString *const kPathUserFriendDynamics = @"/test/index.php/user/friendDynamics";
 
-NSString *const kPathUserMsgs = @"/joyplus-service/index.php/user/msgs";
+NSString *const kPathUserMsgs = @"/test/index.php/user/msgs";
 
-NSString *const kPathUserUpdatePicUrl = @"/joyplus-service/index.php/user/updatePicUrl";
+NSString *const kPathUserUpdatePicUrl = @"/test/index.php/user/updatePicUrl";
 
-NSString *const kPathUserUpdateBGPUrl = @"/joyplus-service/index.php/user/updateBGPicUrl";
+NSString *const kPathUserUpdateBGPUrl = @"/test/index.php/user/updateBGPicUrl";
 
-NSString *const kPathUserPreGenThirdPartyUsers = @"/joyplus-service/index.php/user/preGenThirdPartyUsers";
+NSString *const kPathUserPreGenThirdPartyUsers = @"/test/index.php/user/preGenThirdPartyUsers";
 
-NSString *const kPathUserWatchs = @"/joyplus-service/index.php/user/watchs";
+NSString *const kPathUserWatchs = @"/test/index.php/user/watchs";
 
-NSString *const kPathUserFavorities = @"/joyplus-service/index.php/user/favorities";
+NSString *const kPathUserFavorities = @"/test/index.php/user/favorities";
 
-NSString *const kPathUserRecommends = @"/joyplus-service/index.php/user/recommends";
+NSString *const kPathUserRecommends = @"/test/index.php/user/recommends";
 
-NSString *const kPathUserValidate = @"/joyplus-service/index.php/account/validateThirdParty";
+NSString *const kPathUserValidate = @"/test/index.php/account/validateThirdParty";
 
-NSString *const kPathPopularUser = @"/joyplus-service/index.php/user/prestiges";
+NSString *const kPathPopularUser = @"/test/index.php/user/prestiges";
 
 //Comments
-NSString *const kPathCommentReply = @"/joyplus-service/index.php/comment/reply";
+NSString *const kPathCommentReply = @"/test/index.php/comment/reply";
 
-NSString *const kPathCommentReplies = @"/joyplus-service/index.php/comment/replies";
+NSString *const kPathCommentReplies = @"/test/index.php/comment/replies";
 
-NSString *const kPathCommentView= @"/joyplus-service/index.php/comment/view";
+NSString *const kPathCommentView= @"/test/index.php/comment/view";
 
 //Program
 
-NSString *const kPathProgramFavority = @"/joyplus-service/index.php/program/favority";
+NSString *const kPathProgramFavority = @"/test/index.php/program/favority";
 
-NSString *const kPathProgramUnfavority = @"/joyplus-service/index.php/program/unfavority";
+NSString *const kPathProgramUnfavority = @"/test/index.php/program/unfavority";
 
-NSString *const kPathProgramComment = @"/joyplus-service/index.php/program/comment";
+NSString *const kPathProgramComment = @"/test/index.php/program/comment";
 
-NSString *const kPathProgramComments = @"/joyplus-service/index.php/program/comments";
+NSString *const kPathProgramComments = @"/test/index.php/program/comments";
 
-NSString *const kPathProgramWatch = @"/joyplus-service/index.php/program/watch";
+NSString *const kPathProgramWatch = @"/test/index.php/program/watch";
 
-NSString *const kPathProgramRecommend = @"/joyplus-service/index.php/program/recommend";
+NSString *const kPathProgramRecommend = @"/test/index.php/program/recommend";
 
-NSString *const kPathProgramHiddenRecommend = @"/joyplus-service/index.php/program/hiddenRecommend";
+NSString *const kPathProgramHiddenRecommend = @"/test/index.php/program/hiddenRecommend";
 
-NSString *const kPathProgramHiddenWatch = @"/joyplus-service/index.php/program/hiddenWatch";
+NSString *const kPathProgramHiddenWatch = @"/test/index.php/program/hiddenWatch";
 
-NSString *const kPathProgramView = @"/joyplus-service/index.php/program/view";
+NSString *const kPathProgramView = @"/test/index.php/program/view";
 
-NSString *const kPathProgramViewRecommend = @"/joyplus-service/index.php/program/viewRecommend";
+NSString *const kPathProgramViewRecommend = @"/test/index.php/program/viewRecommend";
 
 //Search
-NSString *const kPathSearchTopKeywords = @"/joyplus-service/index.php/search/topKeywords";
-NSString *const kPathSearch = @"/joyplus-service/index.php/search";
+NSString *const kPathSearchTopKeywords = @"/test/index.php/search/topKeywords";
+NSString *const kPathSearch = @"/test/index.php/search";
 
