@@ -93,11 +93,10 @@
         serviceName = kPathUserFans;
         key = @"fans";
     }
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key]];
-        [self parseData:cacheResult key:key];
-        [self loadTable];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key]];
+    [self parseData:cacheResult key:key];
+    [self loadTable];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key] result:result];
@@ -115,6 +114,7 @@
 - (void) parseData:(id)result key:(NSString *)key
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
+    [userArray removeAllObjects];
     if(responseCode == nil){
         NSArray *friends = [result objectForKey:key];
         if(friends != nil && friends.count > 0){

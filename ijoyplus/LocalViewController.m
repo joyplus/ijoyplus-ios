@@ -40,11 +40,10 @@
     [self.view setBackgroundColor:[UIColor whiteColor]];
     pageSize = 15;
     [self addContentView];
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"LocalViewController"];
-        [self parseData:cacheResult];
-        [flowView reloadData];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"LocalViewController"];
+    [self parseData:cacheResult];
+    [flowView reloadData];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];

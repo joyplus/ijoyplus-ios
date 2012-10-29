@@ -61,11 +61,10 @@
     if(videoArray == nil){
         [self showProgressBar];
     }
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"FriendViewController"];
-        [self parseData:cacheResult];
-        [flowView reloadData];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"FriendViewController"];
+    [self parseData:cacheResult];
+    [flowView reloadData];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", @"30", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];

@@ -50,10 +50,9 @@
     
     pageSize = 10;
     reloads_ = 1;
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MyselfViewController"];
-        [self parseData:cacheResult];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MyselfViewController"];
+    [self parseData:cacheResult];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];

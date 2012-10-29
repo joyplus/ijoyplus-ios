@@ -50,11 +50,10 @@
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendshow", self.programId, self.userId];
         id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
         [self parseData:cacheResult];
-    } else {
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 kAppKey, @"app_key",
                                 self.programId, @"prod_id",
@@ -84,6 +83,7 @@
             friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
         }
         episodeArray = [show objectForKey:@"episodes"];
+        [commentArray removeAllObjects];
         NSArray *tempArray = (NSArray *)[result objectForKey:@"comments"];
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];

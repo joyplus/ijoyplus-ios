@@ -1,11 +1,11 @@
 #import "MovieViewController.h"
-#import "UIImageView+WebCache.h"
 #import "AppDelegate.h"
 #import "CMConstants.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
 #import "StringUtility.h"
 #import "AFServiceAPIClient.h"
+#import "UIImageView+WebCache.h"
 #import "ServiceConstants.h"
 #import "SFHFKeychainUtils.h"
 #import "PlayDetailViewController.h"
@@ -45,11 +45,11 @@
 //    [flowView addGestureRecognizer:downGesture];
     pageSize = 12;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {    
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MovieViewController"];
+    [self parseData:cacheResult];
+    [flowView reloadData];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MovieViewController"];
-        [self parseData:cacheResult];
-        [flowView reloadData];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

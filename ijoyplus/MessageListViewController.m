@@ -66,11 +66,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     pageSize = 10;
     reloads_++;
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
-        [self parseData:cacheResult];
-        [self loadTable];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
+    [self parseData:cacheResult];
+    [self loadTable];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [[CacheUtility sharedCache] putInCache:@"MessageListViewController" result:result];

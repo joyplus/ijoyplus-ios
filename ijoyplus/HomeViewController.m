@@ -114,11 +114,10 @@
     [self addContentView];
     key = @"watchs";
     serviceName = kPathUserWatchs;
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeViewController"];
-        [self parseData:cacheResult];
-        [flowView reloadData];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeViewController"];
+    [self parseData:cacheResult];
+    [flowView reloadData];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     kAppKey, @"app_key",
                                     @"1", @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
@@ -227,10 +226,9 @@
 
 - (void)parseHeaderData
 {
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeHeaderContent"];
-        [self parseHeaderData:cacheResult];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeHeaderContent"];
+    [self parseHeaderData:cacheResult];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     kAppKey, @"app_key",
                                     self.userid, @"userid",

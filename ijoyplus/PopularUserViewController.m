@@ -74,11 +74,10 @@
     self.title = @"达人推荐";
     pageSize = 18;
     reloads_ = 1;
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PopularUserViewController"];
-        [self parseData:cacheResult];
-        [self loadTable];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PopularUserViewController"];
+    [self parseData:cacheResult];
+    [self loadTable];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     kAppKey, @"app_key",
                                     [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
@@ -102,6 +101,7 @@
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         NSArray *friends = [result objectForKey:@"prestiges"];
+        [userArray removeAllObjects];
         if(friends != nil && friends.count > 0){
             [userArray addObjectsFromArray:friends];
         }

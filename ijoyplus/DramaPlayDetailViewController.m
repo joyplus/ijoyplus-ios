@@ -58,11 +58,10 @@
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.programId];
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
-        [self parseData:cacheResult];
-    } else {
+    NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.programId];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+    [self parseData:cacheResult];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     kAppKey, @"app_key",
                                     self.programId, @"prod_id",
@@ -85,6 +84,7 @@
         drama = (NSDictionary *)[result objectForKey:@"tv"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+        [commentArray removeAllObjects];
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];
         }
