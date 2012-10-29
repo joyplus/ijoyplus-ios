@@ -105,6 +105,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [self showProgressBar];
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
     }
@@ -175,6 +176,7 @@
 - (void)parseData:(id)result
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     if(responseCode == nil){
         movie = (NSDictionary *)[result objectForKey:@"movie"];
         [self setPlayCellValue];
@@ -623,7 +625,7 @@
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -642,7 +644,7 @@
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -665,7 +667,7 @@
     }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -680,7 +682,7 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                HUD = [[MBProgressHUD alloc] initWithView:self.view];
                 [self.view addSubview:HUD];
                 HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
                 HUD.mode = MBProgressHUDModeCustomView;
@@ -706,7 +708,7 @@
     }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -721,7 +723,7 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                HUD = [[MBProgressHUD alloc] initWithView:self.view];
                 [self.view addSubview:HUD];
                 HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
                 HUD.mode = MBProgressHUDModeCustomView;
@@ -742,7 +744,7 @@
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
         HUD.mode = MBProgressHUDModeCustomView;

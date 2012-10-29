@@ -13,8 +13,9 @@
 #import "CommentCell.h"
 #import "NoRecordCell.h"
 #import "LoadMoreCell.h"
+#import "UIGenericViewController.h"
 
-@interface PlayDetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, UIGestureRecognizerDelegate> {
+@interface PlayDetailViewController : UIGenericViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, UIGestureRecognizerDelegate> {
     UIImageView     *_imageView;
     UIScrollView    *_imageScroller;
     UITableView     *_tableView;

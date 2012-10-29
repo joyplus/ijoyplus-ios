@@ -80,6 +80,7 @@
 - (void)parseData:(id)result
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     if(responseCode == nil){
         drama = (NSDictionary *)[result objectForKey:@"tv"];
         [self setPlayCellValue];
