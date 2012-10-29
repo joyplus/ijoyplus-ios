@@ -27,7 +27,6 @@
 #import "CustomBackButton.h"
 #import "MBProgressHUD.h"
 #import "RecommandViewController.h"
-#import "SendCommentViewController.h"
 #import "PostViewController.h"
 #import "CacheUtility.h"
 
@@ -63,7 +62,6 @@
     [self parseData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     self.programId, @"prod_id",
                                     nil];
         

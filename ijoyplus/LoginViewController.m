@@ -228,7 +228,6 @@
         return;
     }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 strEmailId, @"username",
                                 strPassword, @"password",
                                 nil];
@@ -268,7 +267,6 @@
 {
     sleep(1);
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

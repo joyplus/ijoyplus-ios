@@ -79,7 +79,6 @@
     [self loadTable];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
                                     nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -289,7 +288,7 @@
     UIButton *btn = (UIButton *)sender;
     NSInteger tag = btn.tag;
     NSString *friendId = [[userArray objectAtIndex:tag] objectForKey:@"id"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", friendId, @"friend_ids", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:friendId, @"friend_ids", nil];
     if([btn.titleLabel.text isEqualToString:NSLocalizedString(@"follow", nil)]){
         [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
@@ -377,7 +376,6 @@
         return;
     }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
                                 nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

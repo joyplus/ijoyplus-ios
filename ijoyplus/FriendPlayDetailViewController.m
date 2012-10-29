@@ -52,7 +52,6 @@
     [self parseData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 self.programId, @"prod_id", self.userId, @"user_id", 
                                 nil];
     

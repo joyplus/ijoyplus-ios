@@ -87,12 +87,11 @@
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
 //        [self processSinaData];
     } else{
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", _tencentOAuth.openId, @"source_id", @"2", @"source_type", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: _tencentOAuth.openId, @"source_id", @"2", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            kAppKey, @"app_key",
                                             nil];
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];

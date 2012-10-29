@@ -125,7 +125,7 @@
 
 - (void)getResult
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.keyword, @"keyword", @"1", @"page_num", @"10", @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", @"10", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         itemsArray = [[NSMutableArray alloc]initWithCapacity:10];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
@@ -460,7 +460,7 @@
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     reloads_++;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.keyword, @"keyword", [NSNumber numberWithInt:reloads_+1], @"page_num", @"10", @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_+1], @"page_num", @"10", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){

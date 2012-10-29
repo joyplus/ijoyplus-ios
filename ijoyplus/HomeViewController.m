@@ -119,7 +119,6 @@
     [flowView reloadData];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     @"1", @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
@@ -230,7 +229,6 @@
     [self parseHeaderData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     self.userid, @"userid",
                                     nil];
         //    if(!accessed){
@@ -431,7 +429,6 @@
     }
     currentPage++;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -458,7 +455,6 @@
     }
     currentPage = 1;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -497,7 +493,6 @@
     flowView.currentPage = 1;
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -535,7 +530,7 @@
 
 - (void)follow
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.userid, @"friend_ids", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.userid, @"friend_ids", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){

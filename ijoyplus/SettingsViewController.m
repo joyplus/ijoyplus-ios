@@ -61,7 +61,7 @@
     NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
     [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), username] forState:UIControlStateNormal];
 //    if([StringUtility stringIsEmpty:username]){
-//        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", nil];
+//        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
 //        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 //            NSString *responseCode = [result objectForKey:@"res_code"];
 //            if(responseCode == nil){
@@ -105,7 +105,7 @@
     [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
     [alert setDestructiveButtonWithTitle:NSLocalizedString(@"logout", nil) block:^{
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key", nil];
+                                    nil];
         
         [[AFServiceAPIClient sharedClient] getPath:kPathAccountLogout parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             

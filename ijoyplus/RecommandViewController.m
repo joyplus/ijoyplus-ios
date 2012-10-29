@@ -174,7 +174,6 @@
         [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
     }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 self.programId, @"prod_id",
                                 self.textView.text, @"reason",
                                 nil];

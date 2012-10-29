@@ -65,7 +65,7 @@
     [self parseData:cacheResult];
     [flowView reloadData];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"page_num", @"30", @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", @"30", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [flowView reloadData];
@@ -221,7 +221,6 @@
         return;
     }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 [NSString stringWithFormat:@"%i", page], @"page_num", @"30", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -249,7 +248,6 @@
     }
     [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

@@ -131,14 +131,14 @@
     [friendIds appendString:@"0"];
     CFRelease(allPeople);
     CFRelease(addressBooks);
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"5", @"source_type", friendIds, @"source_ids", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"5", @"source_type", friendIds, @"source_ids", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
             joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
             unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:100];
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.sourceType, @"source_type", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if(responseCode == nil){
@@ -194,7 +194,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -426,7 +425,7 @@
     if ([StringUtility stringIsEmpty:self.phoneNumberCell.inputField.text]){
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.phoneNumberCell.inputField.text, @"phone", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.phoneNumberCell.inputField.text, @"phone", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindPhone parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){

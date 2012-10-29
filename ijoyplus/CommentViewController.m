@@ -72,7 +72,6 @@
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 threadId, @"thread_id",
                                 nil];
     reloads_ = 2;
@@ -218,11 +217,7 @@
 -(void)resignTextView
 {
 	[textView resignFirstResponder];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
-                                threadId, @"thread_id",
-                                textView.text, @"content",
-                                nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: threadId, @"thread_id", textView.text, @"content",[StringUtility createUUID], @"token", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathCommentReply parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
@@ -347,7 +342,7 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.threadId, @"thread_id",[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.threadId, @"thread_id",[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathCommentReplies parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){

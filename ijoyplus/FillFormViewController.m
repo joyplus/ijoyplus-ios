@@ -343,7 +343,7 @@
         return;
     }
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", strEmailId, @"username", strPassword, @"password", strNickname, @"nickname", self.thirdPartyId, @"source_id", self.thirdPartyType, @"source_type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: strEmailId, @"username", strPassword, @"password", strNickname, @"nickname", self.thirdPartyId, @"source_id", self.thirdPartyType, @"source_type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathAccountUpdateProfile parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -352,7 +352,6 @@
         [self.view addSubview:HUD];
         if([responseCode isEqualToString:kSuccessResCode]){
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                        kAppKey, @"app_key",
                                         nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];

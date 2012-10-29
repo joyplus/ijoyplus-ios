@@ -228,7 +228,7 @@
     HUD.labelText = NSLocalizedString(@"share_success", nil);
     [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
     
-    //    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", self.textView.text, @"content", nil];
+    //    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.programId, @"prod_id", self.textView.text, @"content", nil];
     //    [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
     //        NSString *responseCode = [result objectForKey:@"res_code"];
     //        if([responseCode isEqualToString:kSuccessResCode]){

@@ -158,7 +158,6 @@
     [self parseData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     self.programId, @"prod_id",
                                     nil];
         
@@ -471,7 +470,7 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", [NSNumber numberWithInt:reload], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.programId, @"prod_id", [NSNumber numberWithInt:reload], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -676,7 +675,6 @@
         [HUD hide:YES afterDelay:1.5];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     self.programId, @"prod_id",
                                     nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -717,7 +715,6 @@
         [HUD hide:YES afterDelay:1.5];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    kAppKey, @"app_key",
                                     self.programId, @"prod_id",
                                     nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

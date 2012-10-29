@@ -97,7 +97,7 @@
     [self parseData:cacheResult key:key];
     [self loadTable];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key] result:result];
             [self parseData:result key:key];
@@ -308,7 +308,7 @@
     UIButton *btn = (UIButton *)sender;
     NSInteger tag = btn.tag;
     NSString *friendId = [[userArray objectAtIndex:tag] objectForKey:@"id"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", friendId, @"friend_ids", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:friendId, @"friend_ids", nil];
     if([btn.titleLabel.text isEqualToString:NSLocalizedString(@"follow", nil)]){
         [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
@@ -393,7 +393,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
     NSString *serviceName;
     NSString *key;
     if([type isEqualToString:@"1"]){

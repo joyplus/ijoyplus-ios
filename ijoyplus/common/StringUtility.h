@@ -14,5 +14,5 @@
 + (NSString*) nullToEmpty:(NSString *) aString;
 + (BOOL ) isNotEqualToNull:(NSObject *) param;
 + (BOOL) IsValidEmail:(NSString*) checkString;
-
++ (NSString *)createUUID;
 @end

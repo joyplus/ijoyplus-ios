@@ -117,12 +117,11 @@
         friendListViewController.sourceType = @"1";
         [self.navigationController pushViewController:friendListViewController animated:YES];
     } else{
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            kAppKey, @"app_key",
                                             nil];
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];

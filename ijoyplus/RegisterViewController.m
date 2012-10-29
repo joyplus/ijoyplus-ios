@@ -230,7 +230,6 @@
         return;
     }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                kAppKey, @"app_key",
                                 strEmailId, @"username",
                                 strPassword, @"password",
                                 strNickname, @"nickname",

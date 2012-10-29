@@ -77,6 +77,7 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     btn1 = nil;
     btn2 = nil;
     viewController = nil;
@@ -88,9 +89,6 @@
     [self setTipLabel:nil];
     [self setSinaBtn:nil];
     [self setQqBtn:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -208,7 +206,7 @@
     //        [appDelegate._tencentOAuth addShareWithParams:params];
     //    }
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey, @"app_key", self.programId, @"prod_id", self.textView.text, @"content", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.programId, @"prod_id", self.textView.text, @"content", [StringUtility createUUID], @"token", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){

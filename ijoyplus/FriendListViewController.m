@@ -103,13 +103,13 @@
             [friendIds appendFormat:@"%@,", [[friendData objectForKey:@"id"] stringValue]];
         }
         [friendIds appendString:@"0"];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", @"1", @"source_type", friendIds, @"source_ids", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"source_type", friendIds, @"source_ids", nil];
         // upload sina friends to our server
         [[AFServiceAPIClient sharedClient] postPath:kPathGenUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             joinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
             joinedFriendUserId  = [[NSMutableArray alloc]initWithCapacity:10];
             unjoinedFriendArray  = [[NSMutableArray alloc]initWithCapacity:10];
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.sourceType, @"source_type", nil];
             // get use list from our server
             [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
@@ -390,7 +390,7 @@
  * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
  */
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: kAppKey, @"app_key", self.sourceType, @"source_type", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.sourceType, @"source_type", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserThirdPartyUsers parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
