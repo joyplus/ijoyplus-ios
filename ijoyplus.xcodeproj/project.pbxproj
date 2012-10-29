@@ -1709,6 +1709,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ijoyplus/ijoyplus-Prefix.pch";
 				INFOPLIST_FILE = "ijoyplus/ijoyplus-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/umeng\"",
@@ -1728,6 +1729,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ijoyplus/ijoyplus-Prefix.pch";
 				INFOPLIST_FILE = "ijoyplus/ijoyplus-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/External/umeng\"",

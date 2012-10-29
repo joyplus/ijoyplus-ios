@@ -72,6 +72,7 @@
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
 //    [AFHTTPRequestOperationLogger sharedLogger].level = AFLoggerLevelError;
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
+    [MobClick checkUpdate];
     [self monitorReachability];
     [self isParseReachable];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
