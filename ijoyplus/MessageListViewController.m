@@ -109,8 +109,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     if(commentArray == nil){
-        HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-        [self.navigationController.view addSubview:HUD];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
         HUD.opacity = 0;
         [HUD show:YES];
     }

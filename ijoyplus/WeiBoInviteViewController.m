@@ -91,8 +91,8 @@
 
 - (IBAction)submitBtnClicked:(id)sender {
     [[WBEngine sharedClient] sendWeiBoWithText: [NSString stringWithFormat: NSLocalizedString(@"weibo_invite_template", nil), [friendInfo objectForKey:@"screen_name"]] image:nil];
-    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    [self.navigationController.view addSubview:HUD];
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
     HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"invite_success", nil);

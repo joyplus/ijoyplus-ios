@@ -182,7 +182,7 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
     if([StringUtility stringIsEmpty:self.textView.text]){
         //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
         HUD.mode = MBProgressHUDModeText;
@@ -212,8 +212,8 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-            [self.navigationController.view addSubview:HUD];
+            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:HUD];
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
             HUD.mode = MBProgressHUDModeCustomView;
             HUD.labelText = NSLocalizedString(@"send_comment_success", nil);

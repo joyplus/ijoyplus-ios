@@ -182,17 +182,16 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
     if([StringUtility stringIsEmpty:self.textView.text]){
         //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning.png"]];
         HUD.mode = MBProgressHUDModeText;
-        [self.view addSubview:HUD];
         HUD.labelText = @"您想说点什么呢？";
         [HUD show:YES];
         [HUD hide:YES afterDelay:1.5];
         return;
     }
-    [self.navigationController.view addSubview:HUD];
     if(!btn1Selected && !btn2Selected){
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -202,8 +201,16 @@
         return;
     }
     if(btn1Selected){
-        NSString *content = [NSString stringWithFormat:@"#%@# %@", self.programName, self.textView.text];
-        [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
+        if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+            NSString *content = [NSString stringWithFormat:@"#%@# %@", self.programName, self.textView.text];
+            [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
+        } else {
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = @"请点击新浪图标，登陆微博！";
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:2];
+            return;
+        }
     }
 //    if(btn2Selected){
 //        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -225,8 +232,8 @@
     //    [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
     //        NSString *responseCode = [result objectForKey:@"res_code"];
     //        if([responseCode isEqualToString:kSuccessResCode]){
-    //            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
-    //            [self.navigationController.view addSubview:HUD];
+    //            MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    //            [self.view addSubview:HUD];
     //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
     //            HUD.mode = MBProgressHUDModeCustomView;
     //            HUD.labelText = NSLocalizedString(@"post_success", nil);
