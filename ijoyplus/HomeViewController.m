@@ -308,7 +308,6 @@
         } else {
             cell.frame = CGRectZero;
         }
-        if(indexPath.section == 2)cell.backgroundColor = [UIColor redColor];
         return cell;
     } else {
         int index = (indexPath.row-1) * 3 + indexPath.section;
@@ -436,11 +435,11 @@
             NSArray *videos = [result objectForKey:key];
             if(videos != nil && videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
-                [flowView reloadData];
             }
         } else {
             
         }
+        [flowView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];
@@ -463,11 +462,11 @@
             NSArray *videos = [result objectForKey:key];
             if(videos != nil && videos.count > 0){
                 [videoArray addObjectsFromArray:videos];
-                [flowView reloadData];
             }
         } else {
             
         }
+        [flowView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
     }];

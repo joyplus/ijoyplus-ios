@@ -41,11 +41,10 @@
     //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
     //    [flowView addGestureRecognizer:downGesture];
     pageSize = 12;
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"DramaViewController"];
-        [self parseData:cacheResult];
-        [flowView reloadData];
-    } else {
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"DramaViewController"];
+    [self parseData:cacheResult];
+    [flowView reloadData];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTV parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
@@ -211,9 +210,10 @@
         } else {
             
         }
-        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:2.0];
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     }];
 }
 
@@ -235,9 +235,10 @@
         } else {
             
         }
-        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:2.0];
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     }];
 }
 

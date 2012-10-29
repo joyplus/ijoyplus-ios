@@ -210,9 +210,10 @@
         } else {
             
         }
-        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:2.0];
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     }];
 }
 
@@ -233,9 +234,10 @@
             }
         } else {
         }
-        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:2.0];
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [flowView performSelector:@selector(reloadData) withObject:nil afterDelay:1.0];
     }];
 }
 @end
