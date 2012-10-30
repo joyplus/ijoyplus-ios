@@ -339,6 +339,13 @@
     if(section == 0){
         return 0;
     }
+    if(section == 1){
+        if (joinedFriendArray.count > 0){
+            return 24;
+        } else {
+            return 0;
+        }
+    }
     return 24;
 }
 
@@ -388,11 +395,11 @@
     [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (joinedFriendArray.count > 0){
-        if(indexPath.section == 0){
+        if(indexPath.section == 1){
             HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
             viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
             [self.navigationController pushViewController:viewController animated:YES];
-        } else {
+        } else if(indexPath.section == 2){
             FriendDetailViewController *viewController = [[FriendDetailViewController alloc]initWithNibName:@"FriendDetailViewController" bundle:nil];
             viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];
             [self.navigationController pushViewController:viewController animated:YES];
