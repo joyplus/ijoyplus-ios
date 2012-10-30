@@ -29,6 +29,7 @@
     NSMutableArray *joinedFriendUserId;
     NSMutableArray *unjoinedFriendArray;
     UIToolbar *keyboardToolbar;
+    MBProgressHUD *HUD;
 }
 @property (strong, nonatomic) IBOutlet PhoneNumberCell *phoneNumberCell;
 - (void)closeSelf;
@@ -52,6 +53,7 @@
     self.sourceType = nil;
     itemsArray = nil;
     keyboardToolbar = nil;
+    HUD = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -94,7 +96,7 @@
         self.phoneNumberCell.inputField.tag = 1;
         self.phoneNumberCell.inputField.inputAccessoryView = keyboardToolbar;
     }
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     [self uploadAddressBook];
 }
 
@@ -164,16 +166,24 @@
                 } else {
                     
                 }
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"%@", error);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             }];
         } else {
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
+}
+
+- (void) hideProgressBar
+{
+    [HUD hide:YES afterDelay:0.3];
 }
 
 - (NSString *)validatePhoneNumber:(NSString *)phoneNumber
@@ -193,8 +203,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -206,6 +215,12 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         
     }];
+    if(itemsArray == nil){
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.opacity = 0;
+        [HUD show:YES];
+    }
 }
 
 - (void)closeSelf
@@ -372,10 +387,16 @@
 {
     [self.sBar resignFirstResponder];
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(indexPath.section == 0){
-        HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-        viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:viewController animated:YES];
+    if (joinedFriendArray.count > 0){
+        if(indexPath.section == 0){
+            HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
+            viewController.userid = [joinedFriendUserId objectAtIndex:indexPath.row];
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else {
+            FriendDetailViewController *viewController = [[FriendDetailViewController alloc]initWithNibName:@"FriendDetailViewController" bundle:nil];
+            viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];
+            [self.navigationController pushViewController:viewController animated:YES];
+        }
     } else {
         FriendDetailViewController *viewController = [[FriendDetailViewController alloc]initWithNibName:@"FriendDetailViewController" bundle:nil];
         viewController.friendInfo = [unjoinedFriendArray objectAtIndex:indexPath.row];

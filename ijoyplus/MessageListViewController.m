@@ -166,12 +166,15 @@
     TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
     NSString *timeDiff;
     if([@"follow" isEqualToString:type]){
-        cell.actionTitleLabel.text = @"关注了您！11";
+        cell.actionTitleLabel.text = @"关注了您！";
         [cell.actionTitleLabel sizeToFit];
         yPosition = cell.actionTitleLabel.frame.origin.y + 35;
         cell.myCommentView.frame = CGRectZero;
+        cell.subtitleLabel.text = @"";
+        cell.actionDetailTitleLabel.text = @"";
         cell.myCommentViewName = nil;
         cell.myCommentViewContent = nil;
+        cell.myCommentViewContent.text = @"";
         cell.myCommentViewTime = nil;
     } else if([@"comment" isEqualToString:type]){
         cell.myCommentView.frame = CGRectZero;
@@ -320,17 +323,17 @@
         CGSize constraint;
         CGSize size1;
         if(myCommentString != nil) {
-            constraint = CGSizeMake(230, 20000.0f);
+            constraint = CGSizeMake(220, 20000.0f);
             size1 = [myCommentString sizeWithFont:[UIFont systemFontOfSize:12.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
         } else {
             size1 = CGSizeZero;
         }
         
         NSString *content = [commentDic objectForKey:@"thread_comment"];
-        constraint = CGSizeMake(230, 20000.0f);
+        constraint = CGSizeMake(220, 20000.0f);
         CGSize size2 = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
         if(content == nil){
-            return size1.height + 100;
+            return size1.height + 110;
         } else {
             return size1.height + size2.height + 160;
         }

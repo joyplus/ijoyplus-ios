@@ -33,6 +33,7 @@
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
+    MBProgressHUD *HUD;
 }
 - (void)closeSelf;
 @end
@@ -54,6 +55,7 @@
     itemsArray = nil;
     joinedFriendArray = nil;
     unjoinedFriendArray = nil;
+    HUD = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -72,6 +74,7 @@
     [self.tableView setBackgroundColor:[UIColor clearColor]];
     CustomBackButton *backButton = [[CustomBackButton alloc] initWith:[UIImage imageNamed:@"back-button"] highlight:[UIImage imageNamed:@"back-button"] leftCapWidth:14.0 text:NSLocalizedString(@"back", nil)];
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     [self.sBar setText:self.keyword];
     self.sBar.delegate = self;
@@ -138,17 +141,37 @@
                 } else {
                     
                 }
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"%@", error);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             }];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         }];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
     
 }
+
+- (void) hideProgressBar
+{
+    [HUD hide:YES afterDelay:0.3];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(itemsArray == nil){
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.opacity = 0;
+        [HUD show:YES];
+    }
+}
+
 
 - (void)closeSelf
 {

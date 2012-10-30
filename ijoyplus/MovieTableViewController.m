@@ -40,25 +40,6 @@
     [super viewDidLoad];
     [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];   
     pageSize = 30;
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MovieViewController"];
-    if(cacheResult != nil){
-        [self parseData:cacheResult];
-    }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        [UIUtility showNetWorkError:self.view];
-    } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseData:result];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        }];
-    }
-//    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
 }
 
 
@@ -82,9 +63,28 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(videoArray == nil && HUD == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(videoArray == nil && HUD == nil && [hostReach currentReachabilityStatus] != NotReachable){
         [self showProgressBar];
     }
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MovieViewController"];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathMovie parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    }
+    //    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -39,24 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self.table setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];   
-    pageSize = 30;
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"LocalViewController"];
-    if(cacheResult != nil){
-        [self parseData:cacheResult];
-    }
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseData:result];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-        }];
-    } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
-    }
-    
+    pageSize = 30;    
 }
 
 - (void)parseData:(id)result
@@ -81,6 +64,22 @@
 {
     if(videoArray == nil && HUD == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [self showProgressBar];
+    }
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"LocalViewController"];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathShow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
