@@ -55,9 +55,10 @@
         [self parseData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
+            reloads_++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
@@ -90,7 +91,6 @@
         if(item.count > 0){
             [itemsArray addObjectsFromArray:item];
             [self loadTable];
-            reloads_ ++;
         }
     } else {
         
