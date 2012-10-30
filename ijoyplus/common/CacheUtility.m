@@ -43,6 +43,8 @@
     [self.cache removeAllObjects];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kSinaUID];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 }
 - (void)setSinaFriends:(NSArray *)friends {
     NSString *key = kPAPUserDefaultsCacheSinaFriendsKey;

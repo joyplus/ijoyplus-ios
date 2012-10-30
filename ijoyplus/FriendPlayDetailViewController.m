@@ -58,7 +58,6 @@
                                     nil];
         
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendmovie", self.programId, self.userId];
             [self parseData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             

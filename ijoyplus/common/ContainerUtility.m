@@ -37,5 +37,7 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserNickName];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserId];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 }
 @end
