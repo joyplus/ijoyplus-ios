@@ -12,5 +12,5 @@
 @interface ProgramViewController : UIViewController
 
 @property (nonatomic, strong) NSString *programUrl;
-
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
 @end

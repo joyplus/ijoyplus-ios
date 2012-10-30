@@ -23,7 +23,6 @@
 #define  TEXT_MAX_COUNT 140
 
 @interface RecommandViewController (){
-    UIButton *btn1;
     BOOL btn1Selected;
     SinaLoginViewController *viewController;
 }
@@ -42,7 +41,7 @@
 @synthesize textView;
 @synthesize programId;
 @synthesize programName;
-@synthesize sinaBtn = btn1;
+@synthesize sinaBtn;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -66,14 +65,15 @@
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"submit", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
     self.navigationItem.rightBarButtonItem = rightButton;
     
-    [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"] forState:UIControlStateNormal];
-    [btn1 addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
+    [self.sinaBtn setBackgroundImage:[UIImage imageNamed:@"sina_inactive"] forState:UIControlStateNormal];
+    [self.sinaBtn addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
     textView.placeholder = @"请输入推荐理由";
 }
 
 - (void)viewDidUnload
 {
-    btn1 = nil;
+    [super viewDidUnload];
+    self.sinaBtn = nil;
     self.programId = nil;
     self.programName = nil;
     [self setTextView:nil];
@@ -81,7 +81,6 @@
     [self stopObservingNotifications];
     [self setTipLabel:nil];
     [self setSinaBtn:nil];
-    [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -140,9 +139,9 @@
     btn1Selected = !btn1Selected;
     if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
         if(btn1Selected){
-            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_normal"] forState:UIControlStateNormal];
+            [self.sinaBtn setBackgroundImage:[UIImage imageNamed:@"sina_normal"] forState:UIControlStateNormal];
         } else {
-            [btn1 setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
+            [self.sinaBtn setBackgroundImage:[UIImage imageNamed:@"sina_inactive"]forState:UIControlStateNormal];
         }
     } else{
         viewController = [[SinaLoginViewController alloc]init];

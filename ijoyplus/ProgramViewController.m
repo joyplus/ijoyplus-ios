@@ -11,7 +11,6 @@
 
 
 @interface ProgramViewController (){
-    UIWebView *webView;
 //    MBProgressHUD *HUD;
 }
 
@@ -19,11 +18,13 @@
 
 @implementation ProgramViewController
 @synthesize programUrl;
+@synthesize webView;
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    webView = nil;
+    [self.webView loadRequest: nil];
+    self.webView = nil;
 //    HUD = nil;
     self.programUrl = nil;
 }
@@ -53,11 +54,9 @@
 //    [HUD show:YES];
 //    [HUD hide:YES afterDelay:1];
     
-    webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    [webView setBackgroundColor:[UIColor whiteColor]];
-    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.programUrl]]];
-    [webView setScalesPageToFit:YES];
-    [self.view addSubview:webView];
+    NSURL *url = [NSURL URLWithString:self.programUrl];
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:requestObj];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -79,6 +78,18 @@
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (self.webView.loading) {
+        [self.webView stopLoading];
+    }
+    [self.webView loadRequest: nil];
+    [self.webView removeFromSuperview];
+    self.webView = nil;
+    // further logic ...
 }
 
 //- (UIButton *)findButtonInView:(UIView *)view {

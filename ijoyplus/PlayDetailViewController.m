@@ -39,6 +39,7 @@
 @synthesize userId;
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     _imageView = nil;
     _imageScroller = nil;
     _tableView = nil;
@@ -52,7 +53,6 @@
     pictureCell = nil;
     userId = nil;
     name = nil;
-    [super viewDidUnload];
 }
 
 - (id)initWithStretchImage {
