@@ -51,17 +51,20 @@
     pageSize = 10;
     reloads_ = 1;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MyselfViewController"];
-    [self parseData:cacheResult];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
-            [[CacheUtility sharedCache] putInCache:@"MyselfViewController" result:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     
@@ -80,9 +83,9 @@
 - (void)parseData:(id)result
 {
     itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"MyselfViewController" result:result];
         NSArray *item = [result objectForKey:@"dynamics"];
         if(item.count > 0){
             [itemsArray addObjectsFromArray:item];
@@ -92,11 +95,12 @@
     } else {
         
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(itemsArray == nil){
+    if(itemsArray == nil && HUD == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [self showProgressBar];
     }
 }
@@ -133,7 +137,7 @@
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MyCellFactory" owner:self options:nil];
         myCell = (MyProfileCell *)[nib objectAtIndex:0];
         myCell.filmImageView.layer.borderWidth = 1;
-        myCell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        myCell.filmImageView.layer.borderColor = CMConstants.imageBorderColor.CGColor;
         myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
         myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
         myCell.filmImageView.layer.shadowOpacity = 1;

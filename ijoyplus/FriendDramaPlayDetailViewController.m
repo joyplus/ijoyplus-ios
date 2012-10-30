@@ -30,7 +30,7 @@
 #define MAX_FRIEND_COMMENT_COUNT 10
 #define MAX_COMMENT_COUNT 10
 
-@interface FriendDramaPlayDetailViewController () 
+@interface FriendDramaPlayDetailViewController ()
 @end
 
 @implementation FriendDramaPlayDetailViewController
@@ -51,26 +51,27 @@
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *key = [NSString stringWithFormat:@"%@%@%@", @"frienddrama", self.programId, self.userId];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
-    [self parseData:cacheResult];
+    if(cacheResult != nil)[self parseData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.programId, @"prod_id", self.userId, @"user_id", 
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"frienddrama", self.programId, self.userId];
-        [[CacheUtility sharedCache] putInCache:key result:result];
-        [self parseData:result];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    self.programId, @"prod_id", self.userId, @"user_id",
+                                    nil];
+        
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+           [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
 - (void)parseData:(id)result
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     if(responseCode == nil){
+        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"frienddrama", self.programId, self.userId];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         drama = (NSDictionary *)[result objectForKey:@"tv"];
         [self setPlayCellValue];
         [self postInitialization:result];
@@ -85,7 +86,9 @@
         }
         [self initDramaCell];
         [_tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
@@ -122,7 +125,7 @@
     } else if (indexPath.section == 2){
         return dramaCell;
     } else if (indexPath.section == 3){
-         CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
+        CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"commentCell"];
         return cell;
     } else {
         if(commentArray == nil || commentArray.count == 0){
@@ -136,7 +139,7 @@
             CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
             return cell;
         }
-
+        
     }
 }
 
@@ -211,64 +214,64 @@
 
 
 /*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+ // Override to support conditional editing of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the specified item to be editable.
+ return YES;
+ }
+ */
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+ // Override to support editing the table view.
+ - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ if (editingStyle == UITableViewCellEditingStyleDelete) {
+ // Delete the row from the data source
+ [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+ }
+ else if (editingStyle == UITableViewCellEditingStyleInsert) {
+ // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+ }
+ }
+ */
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        if(indexPath.section == 3) {
-            
-        } else if (indexPath.section == 4 && commentArray.count > 0) {
-            if(indexPath.row == MAX_COMMENT_COUNT){
-                CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
-                viewController.programId = self.programId;
-                viewController.title = @"全部评论";
-                [self.navigationController pushViewController:viewController animated:YES];
-            } else{
-                CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-                viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"id"];
-                viewController.title = @"评论回复";
-                [self.navigationController pushViewController:viewController animated:YES];
-            }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if(indexPath.section == 3) {
+        
+    } else if (indexPath.section == 4 && commentArray.count > 0) {
+        if(indexPath.row == MAX_COMMENT_COUNT){
+            CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
+            viewController.programId = self.programId;
+            viewController.title = @"全部评论";
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else{
+            CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+            viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"id"];
+            viewController.title = @"评论回复";
+            [self.navigationController pushViewController:viewController animated:YES];
         }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

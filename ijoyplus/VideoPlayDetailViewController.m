@@ -69,7 +69,7 @@
 #pragma mark - Parallax effect
 
 - (void)updateOffsets {
-
+    
 }
 
 #pragma mark - View Layout
@@ -82,27 +82,30 @@
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *key = [NSString stringWithFormat:@"%@%@", @"video", self.programId];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
-    [self parseData:cacheResult];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.programId, @"prod_id",
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *key = [NSString stringWithFormat:@"%@%@", @"video", self.programId];
-        [[CacheUtility sharedCache] putInCache:key result:result];
-        [self parseData:result];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
-    }];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    self.programId, @"prod_id",
+                                    nil];
+        
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
 - (void)parseData:(id)result
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     if(responseCode == nil){
+        NSString *key = [NSString stringWithFormat:@"%@%@", @"video", self.programId];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         show = (NSDictionary *)[result objectForKey:@"video"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
@@ -114,8 +117,9 @@
             pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableView withClient:self];
         }
         [self loadTable];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 

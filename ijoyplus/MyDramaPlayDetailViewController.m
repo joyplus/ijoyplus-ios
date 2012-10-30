@@ -29,7 +29,10 @@
 #define MAX_FRIEND_COMMENT_COUNT 10
 #define MAX_COMMENT_COUNT 10
 
-@interface MyDramaPlayDetailViewController ()
+@interface MyDramaPlayDetailViewController (){
+    CGSize reasonSize;
+}
+
 
 @end
 
@@ -121,7 +124,7 @@
     } else if(indexPath.section == 2){
         return dramaCell.frame.size.height;
     } else if(indexPath.section == 3){
-        return reasonCell.frame.size.height;
+        return reasonSize.height + 20;
     } else if(indexPath.section == 4){
         if(friendCommentArray == nil || friendCommentArray.count == 0){
             return 44;
@@ -259,8 +262,8 @@
     reasonCell.reasonContent.text = content;
     [reasonCell.reasonContent setNumberOfLines:0];
     CGSize constraint = CGSizeMake(reasonCell.reasonContent.frame.size.width, 20000.0f);
-    CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    [reasonCell.reasonContent setFrame:CGRectMake(reasonCell.reasonContent.frame.origin.x, reasonCell.reasonContent.frame.origin.y, size.width, size.height)];
+    reasonSize = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    [reasonCell.reasonContent setFrame:CGRectMake(reasonCell.reasonContent.frame.origin.x, 10, reasonCell.reasonContent.frame.size.width, reasonSize.height)];
 }
 
 @end

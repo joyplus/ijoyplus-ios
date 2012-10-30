@@ -67,20 +67,21 @@
     pageSize = 10;
     reloads_++;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
-    [self parseData:cacheResult];
-    [self loadTable];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[CacheUtility sharedCache] putInCache:@"MessageListViewController" result:result];
             [self parseData:result];
-            [self loadTable];
             reloads_ ++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 }
@@ -88,16 +89,18 @@
 - (void)parseData:(id)result
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"MessageListViewController" result:result];
         NSArray *comment = [result objectForKey:@"msgs"];
         if(comment.count > 0){
-            [commentArray addObjectsFromArray:comment];           
+            [commentArray addObjectsFromArray:comment];
+            [self loadTable];
         }
     } else {
         
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
 - (void) hideProgressBar
@@ -157,16 +160,19 @@
     cell.avatarImageView.layer.masksToBounds = YES;
     cell.titleLabel.text = [commentDic objectForKey:@"user_name"];
     [cell.titleLabel sizeToFit];
-    cell.titleLabel.center = CGPointMake(cell.avatarImageView.center.x, cell.titleLabel.frame.origin.y);
+    cell.titleLabel.center = CGPointMake(cell.avatarImageView.center.x, cell.avatarImageView.frame.origin.y + 60);
     NSString *type = [commentDic valueForKey:@"type"];
     NSInteger yPosition;
     TTTTimeIntervalFormatter *timeFormatter = [[TTTTimeIntervalFormatter alloc]init];
     NSString *timeDiff;
     if([@"follow" isEqualToString:type]){
-        cell.actionTitleLabel.text = @"关注了您！";
+        cell.actionTitleLabel.text = @"关注了您！11";
         [cell.actionTitleLabel sizeToFit];
         yPosition = cell.actionTitleLabel.frame.origin.y + 35;
         cell.myCommentView.frame = CGRectZero;
+        cell.myCommentViewName = nil;
+        cell.myCommentViewContent = nil;
+        cell.myCommentViewTime = nil;
     } else if([@"comment" isEqualToString:type]){
         cell.myCommentView.frame = CGRectZero;
         cell.actionTitleLabel.text = @"评论了";

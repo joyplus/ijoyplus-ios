@@ -38,4 +38,9 @@
     return [UIFont systemFontOfSize:13];
 }
 
++ (UIColor *)imageBorderColor
+{
+    return [UIColor colorWithRed:64/255.0 green:64/255.0 blue:64/255.0 alpha:1];
+}
+
 @end

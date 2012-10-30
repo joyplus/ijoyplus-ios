@@ -22,7 +22,7 @@
 
 + (id)sharedCache {
     static dispatch_once_t pred = 0;
-    __strong static id _sharedObject = nil;
+    __strong static CacheUtility *_sharedObject = nil;
     dispatch_once(&pred, ^{
         _sharedObject = [[self alloc] init];
     });

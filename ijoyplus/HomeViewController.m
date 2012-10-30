@@ -114,8 +114,10 @@
     [self addContentView];
     key = @"watchs";
     serviceName = kPathUserWatchs;
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeViewController"];
-    [self parseData:cacheResult];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"HomeViewController%@", self.userid]];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
     [flowView reloadData];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -123,12 +125,13 @@
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [flowView reloadData];
-            [[CacheUtility sharedCache] putInCache:@"HomeViewController" result:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             videoArray = [[NSMutableArray alloc]initWithCapacity:10];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
@@ -136,9 +139,9 @@
 - (void)parseData:(id)result
 {
     videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"HomeViewController%@", self.userid] result:result];
         NSArray *videos = [result objectForKey:key];
         if(videos.count > 0){
             [videoArray addObjectsFromArray:videos];
@@ -146,12 +149,13 @@
     } else {
         
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(videoArray == nil){
+    if(videoArray == nil && HUD == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [self showProgressBar];
     }
 }
@@ -225,15 +229,16 @@
 
 - (void)parseHeaderData
 {
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"HomeHeaderContent"];
-    [self parseHeaderData:cacheResult];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"HomeHeaderContent%@", self.userid]];
+    if(cacheResult != nil){
+        [self parseHeaderData:cacheResult];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     self.userid, @"userid",
                                     nil];
         //    if(!accessed){
         [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[CacheUtility sharedCache] putInCache:@"HomeHeaderContent" result:result];
             [self parseHeaderData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
@@ -245,6 +250,7 @@
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"HomeHeaderContent%@", self.userid] result:result];
         accessed = YES;
         NSString *bgUrl = [result valueForKey:@"bg_url"];
         if([StringUtility stringIsEmpty:bgUrl]){
@@ -321,7 +327,7 @@
             cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
             UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
             imageView.layer.borderWidth = 1;
-            imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+            imageView.layer.borderColor = CMConstants.imageBorderColor.CGColor;
             imageView.layer.shadowColor = [UIColor blackColor].CGColor;
             imageView.layer.shadowOffset = CGSizeMake(1, 1);
             imageView.layer.shadowOpacity = 1;
@@ -490,7 +496,6 @@
     }
     currentPage = 1;
     flowView.currentPage = 1;
-    [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -498,6 +503,7 @@
         if(responseCode == nil){
             NSArray *videos = [result objectForKey:key];
             if(videos != nil && videos.count > 0){
+                [videoArray removeAllObjects];
                 [videoArray addObjectsFromArray:videos];
             }
         } else {

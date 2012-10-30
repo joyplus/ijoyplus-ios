@@ -7,23 +7,23 @@
 //
 
 #import "PopularSegmentViewController.h"
-#import "MovieViewController.h"
 #import "AnimationFactory.h"
 #import "SearchFilmViewController.h"
 #import "CustomSegmentedControl.h"
-#import "DramaViewController.h"
-#import "VideoViewController.h"
-#import "LocalViewController.h"
 #import "CMConstants.h"
 #import "AppDelegate.h"
 #import "UIUtility.h"
 #import "ContainerUtility.h"
+#import "MovieTableViewController.h"
+#import "DramaTableViewController.h"
+#import "VideoTableViewController.h"
+#import "ShowTableViewController.h"
 
 @interface PopularSegmentViewController (){
-    MovieViewController *movieController;
-    DramaViewController *dramaController;
-    VideoViewController *videoController;
-    LocalViewController *localController;
+    MovieTableViewController *movieController;
+    DramaTableViewController *dramaController;
+    VideoTableViewController *videoController;
+    ShowTableViewController  *showController;
     UIViewController *selectedViewController;
 }
 @property (weak, nonatomic) IBOutlet CustomSegmentedControl *topSegment;
@@ -70,7 +70,7 @@
     topSegment.layer.shadowOffset = CGSizeMake(0, 1);
     topSegment.layer.shadowOpacity = 1;
     [self.view addSubview:topSegment];
-    movieController = [[MovieViewController alloc] init];
+    movieController = [[MovieTableViewController alloc] initWithNibName:@"MovieTableViewController" bundle:nil];
     selectedViewController = movieController;
     [self addChildViewController:movieController];
     movieController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
@@ -83,7 +83,7 @@
     movieController = nil;
     dramaController = nil;
     videoController = nil;
-    localController = nil;
+    showController = nil;
     selectedViewController = nil;
     [super viewDidUnload];
     topSegment = nil;
@@ -102,7 +102,7 @@
         [selectedViewController removeFromParentViewController];
         selectedViewController = nil;
         if(movieController == nil){
-            movieController = [[MovieViewController alloc] init];
+            movieController =  [[MovieTableViewController alloc] initWithNibName:@"MovieTableViewController" bundle:nil];
         }
         selectedViewController = movieController;
         [self addChildViewController:movieController];
@@ -113,7 +113,7 @@
         [selectedViewController removeFromParentViewController];
         selectedViewController = nil;
         if(dramaController == nil){
-            dramaController = [[DramaViewController alloc] init];
+            dramaController = [[DramaTableViewController alloc] initWithNibName:@"DramaTableViewController" bundle:nil];
         }
         selectedViewController = dramaController;
         [self addChildViewController:dramaController];
@@ -124,7 +124,7 @@
         [selectedViewController removeFromParentViewController];
         selectedViewController = nil;
         if(videoController == nil){
-            videoController = [[VideoViewController alloc] init];
+            videoController = [[VideoTableViewController alloc] initWithNibName:@"VideoTableViewController" bundle:nil];
         }
         selectedViewController = videoController;
         [self addChildViewController:videoController];
@@ -134,13 +134,13 @@
         [selectedViewController.view removeFromSuperview];
         [selectedViewController removeFromParentViewController];
         selectedViewController = nil;
-        if(localController == nil){
-            localController = [[LocalViewController alloc] init];
+        if(showController == nil){
+            showController = [[ShowTableViewController alloc] initWithNibName:@"ShowTableViewController" bundle:nil];
         }
-        selectedViewController = localController;
-        [self addChildViewController:localController];
-        localController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
-        [self.view addSubview:localController.view];
+        selectedViewController = showController;
+        [self addChildViewController:showController];
+        showController.view.frame = CGRectMake(0, SEGMENT_HEIGHT + SEGMENT_HEIGHT_GAP * 2, self.view.bounds.size.width, self.view.bounds.size.height - SEGMENT_HEIGHT - SEGMENT_HEIGHT_GAP * 2);
+        [self.view addSubview:showController.view];
     }
 }
 

@@ -151,10 +151,6 @@
 		EBB1B3DE16017FBD00E04289 /* log_btn_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */; };
 		EBB1B3DF16017FBD00E04289 /* reg_btn_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */; };
 		EBB1B3E016017FBD00E04289 /* reg_btn_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */; };
-		EBB1B3E61601876B00E04289 /* DramaViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E51601876B00E04289 /* DramaViewController.m */; };
-		EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E8160188D400E04289 /* LocalViewController.m */; };
-		EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3E9160188D400E04289 /* MovieViewController.m */; };
-		EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3EB160188D400E04289 /* VideoViewController.m */; };
 		EBB1B3F5160190C600E04289 /* TestView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB1B3F4160190C600E04289 /* TestView.m */; };
 		EBB200001613267500E8D9A7 /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB2FFFF1613267500E8D9A7 /* 37x-Checkmark.png */; };
 		EBB217D91615740900A931CA /* back_down2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB217D71615740900A931CA /* back_down2@2x.png */; };
@@ -187,6 +183,14 @@
 		EBB33C7C162C0EF80047B3E1 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */; };
 		EBB33C7E162C0F000047B3E1 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */; };
 		EBB33C83162C187B0047B3E1 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB33C82162C18790047B3E1 /* MessageUI.framework */; };
+		EBB3DE55163F68AF006EAF80 /* MovieTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB3DE52163F68AF006EAF80 /* MovieTableViewController.xib */; };
+		EBB3DE56163F68AF006EAF80 /* MovieTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB3DE53163F68AF006EAF80 /* MovieTableViewController.m */; };
+		EBB3DE61163F7F0E006EAF80 /* ShowTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB3DE58163F7F0D006EAF80 /* ShowTableViewController.xib */; };
+		EBB3DE62163F7F0E006EAF80 /* ShowTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB3DE59163F7F0D006EAF80 /* ShowTableViewController.m */; };
+		EBB3DE63163F7F0E006EAF80 /* DramaTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB3DE5B163F7F0D006EAF80 /* DramaTableViewController.xib */; };
+		EBB3DE64163F7F0E006EAF80 /* DramaTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB3DE5C163F7F0D006EAF80 /* DramaTableViewController.m */; };
+		EBB3DE65163F7F0E006EAF80 /* VideoTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB3DE5E163F7F0D006EAF80 /* VideoTableViewController.xib */; };
+		EBB3DE66163F7F0E006EAF80 /* VideoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB3DE5F163F7F0D006EAF80 /* VideoTableViewController.m */; };
 		EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */; };
 		EBB4FA29163E8884009AFCDA /* SBDoubleSidedLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4FA22163E8884009AFCDA /* SBDoubleSidedLayer.m */; };
 		EBB4FA2A163E8884009AFCDA /* SBGradientOverlayLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB4FA24163E8884009AFCDA /* SBGradientOverlayLayer.m */; };
@@ -456,7 +460,6 @@
 		EBAFB50B1613F5E000C0263B /* CommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentViewController.m; sourceTree = "<group>"; };
 		EBAFB514161443DC00C0263B /* tab_btn_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tab_btn_bg@2x.png"; sourceTree = "<group>"; };
 		EBAFB516161447D700C0263B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieViewController.h; sourceTree = "<group>"; };
 		EBAFBC3215F9DDC0007579D1 /* CMConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMConstants.h; sourceTree = "<group>"; };
 		EBAFBC3315F9DDC0007579D1 /* CMConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMConstants.m; sourceTree = "<group>"; };
 		EBAFBC4315F9E849007579D1 /* AnimationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationFactory.h; sourceTree = "<group>"; };
@@ -481,13 +484,6 @@
 		EBB1B3DA16017FBD00E04289 /* log_btn_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "log_btn_normal@2x.png"; sourceTree = "<group>"; };
 		EBB1B3DB16017FBD00E04289 /* reg_btn_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reg_btn_active@2x.png"; sourceTree = "<group>"; };
 		EBB1B3DC16017FBD00E04289 /* reg_btn_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reg_btn_normal@2x.png"; sourceTree = "<group>"; };
-		EBB1B3E41601876A00E04289 /* DramaViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaViewController.h; sourceTree = "<group>"; };
-		EBB1B3E51601876B00E04289 /* DramaViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaViewController.m; sourceTree = "<group>"; };
-		EBB1B3E7160188D400E04289 /* LocalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalViewController.h; sourceTree = "<group>"; };
-		EBB1B3E8160188D400E04289 /* LocalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocalViewController.m; sourceTree = "<group>"; };
-		EBB1B3E9160188D400E04289 /* MovieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieViewController.m; sourceTree = "<group>"; };
-		EBB1B3EA160188D400E04289 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
-		EBB1B3EB160188D400E04289 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		EBB1B3F3160190C600E04289 /* TestView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestView.h; path = component/TestView.h; sourceTree = "<group>"; };
 		EBB1B3F4160190C600E04289 /* TestView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestView.m; path = component/TestView.m; sourceTree = "<group>"; };
 		EBB217D71615740900A931CA /* back_down2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_down2@2x.png"; sourceTree = "<group>"; };
@@ -541,6 +537,18 @@
 		EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		EBB33C82162C18790047B3E1 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		EBB3DE52163F68AF006EAF80 /* MovieTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieTableViewController.xib; sourceTree = "<group>"; };
+		EBB3DE53163F68AF006EAF80 /* MovieTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MovieTableViewController.m; sourceTree = "<group>"; };
+		EBB3DE54163F68AF006EAF80 /* MovieTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovieTableViewController.h; sourceTree = "<group>"; };
+		EBB3DE58163F7F0D006EAF80 /* ShowTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowTableViewController.xib; sourceTree = "<group>"; };
+		EBB3DE59163F7F0D006EAF80 /* ShowTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowTableViewController.m; sourceTree = "<group>"; };
+		EBB3DE5A163F7F0D006EAF80 /* ShowTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowTableViewController.h; sourceTree = "<group>"; };
+		EBB3DE5B163F7F0D006EAF80 /* DramaTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DramaTableViewController.xib; sourceTree = "<group>"; };
+		EBB3DE5C163F7F0D006EAF80 /* DramaTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaTableViewController.m; sourceTree = "<group>"; };
+		EBB3DE5D163F7F0D006EAF80 /* DramaTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaTableViewController.h; sourceTree = "<group>"; };
+		EBB3DE5E163F7F0D006EAF80 /* VideoTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VideoTableViewController.xib; sourceTree = "<group>"; };
+		EBB3DE5F163F7F0D006EAF80 /* VideoTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTableViewController.m; sourceTree = "<group>"; };
+		EBB3DE60163F7F0D006EAF80 /* VideoTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTableViewController.h; sourceTree = "<group>"; };
 		EBB40F19160707FB00A49CD9 /* CustomBackButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBackButton.h; sourceTree = "<group>"; };
 		EBB40F1A160707FB00A49CD9 /* CustomBackButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBackButton.m; sourceTree = "<group>"; };
 		EBB4FA21163E8884009AFCDA /* SBDoubleSidedLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBDoubleSidedLayer.h; sourceTree = "<group>"; };
@@ -954,14 +962,18 @@
 				EBB0C952160073BA00A9B8F8 /* PopularSegmentViewController.h */,
 				EBB0C953160073BB00A9B8F8 /* PopularSegmentViewController.m */,
 				EBB0C954160073BB00A9B8F8 /* PopularSegmentViewController.xib */,
-				EBAFBC1D15F9BFFF007579D1 /* MovieViewController.h */,
-				EBB1B3E9160188D400E04289 /* MovieViewController.m */,
-				EBB1B3E41601876A00E04289 /* DramaViewController.h */,
-				EBB1B3E51601876B00E04289 /* DramaViewController.m */,
-				EBB1B3EA160188D400E04289 /* VideoViewController.h */,
-				EBB1B3EB160188D400E04289 /* VideoViewController.m */,
-				EBB1B3E7160188D400E04289 /* LocalViewController.h */,
-				EBB1B3E8160188D400E04289 /* LocalViewController.m */,
+				EBB3DE54163F68AF006EAF80 /* MovieTableViewController.h */,
+				EBB3DE53163F68AF006EAF80 /* MovieTableViewController.m */,
+				EBB3DE52163F68AF006EAF80 /* MovieTableViewController.xib */,
+				EBB3DE5D163F7F0D006EAF80 /* DramaTableViewController.h */,
+				EBB3DE5C163F7F0D006EAF80 /* DramaTableViewController.m */,
+				EBB3DE5B163F7F0D006EAF80 /* DramaTableViewController.xib */,
+				EBB3DE60163F7F0D006EAF80 /* VideoTableViewController.h */,
+				EBB3DE5F163F7F0D006EAF80 /* VideoTableViewController.m */,
+				EBB3DE5E163F7F0D006EAF80 /* VideoTableViewController.xib */,
+				EBB3DE5A163F7F0D006EAF80 /* ShowTableViewController.h */,
+				EBB3DE59163F7F0D006EAF80 /* ShowTableViewController.m */,
+				EBB3DE58163F7F0D006EAF80 /* ShowTableViewController.xib */,
 				EBB24CBE162E8D1D008FDF04 /* PlayDetailViewController.h */,
 				EBB24CBF162E8D1D008FDF04 /* PlayDetailViewController.m */,
 				EBB24CCD162EC380008FDF04 /* DramaPlayDetailViewController.h */,
@@ -1501,6 +1513,10 @@
 				EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */,
 				EB3CB81716315C5100142AD0 /* 图标114.png in Resources */,
 				EBE4DA8E163684FD00249156 /* joplus_logo.png in Resources */,
+				EBB3DE55163F68AF006EAF80 /* MovieTableViewController.xib in Resources */,
+				EBB3DE61163F7F0E006EAF80 /* ShowTableViewController.xib in Resources */,
+				EBB3DE63163F7F0E006EAF80 /* DramaTableViewController.xib in Resources */,
+				EBB3DE65163F7F0E006EAF80 /* VideoTableViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1547,10 +1563,6 @@
 				EBB0C955160073BC00A9B8F8 /* PopularSegmentViewController.m in Sources */,
 				EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */,
 				EBB1B3D11601777900E04289 /* UIUtility.m in Sources */,
-				EBB1B3E61601876B00E04289 /* DramaViewController.m in Sources */,
-				EBB1B3EC160188D400E04289 /* LocalViewController.m in Sources */,
-				EBB1B3ED160188D400E04289 /* MovieViewController.m in Sources */,
-				EBB1B3EE160188D400E04289 /* VideoViewController.m in Sources */,
 				EBB1B3F5160190C600E04289 /* TestView.m in Sources */,
 				EBAF939E1602C89600929013 /* BottomTabViewController.m in Sources */,
 				EBB40F1B160707FB00A49CD9 /* CustomBackButton.m in Sources */,
@@ -1654,6 +1666,10 @@
 				EBB4FA2A163E8884009AFCDA /* SBGradientOverlayLayer.m in Sources */,
 				EBB4FA2B163E8884009AFCDA /* SBTickerView.m in Sources */,
 				EBB4FA2C163E8884009AFCDA /* UIView+SBExtras.m in Sources */,
+				EBB3DE56163F68AF006EAF80 /* MovieTableViewController.m in Sources */,
+				EBB3DE62163F7F0E006EAF80 /* ShowTableViewController.m in Sources */,
+				EBB3DE64163F7F0E006EAF80 /* DramaTableViewController.m in Sources */,
+				EBB3DE66163F7F0E006EAF80 /* VideoTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

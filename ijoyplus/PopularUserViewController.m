@@ -30,6 +30,7 @@
 	BOOL _reloading;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
+    MBProgressHUD *HUD;
 }
 - (void)cancelFollow:(id)sender;
 - (void)viewUser;
@@ -46,6 +47,7 @@
     self.fromController = nil;
     //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
+    HUD = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -70,25 +72,28 @@
         UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"done", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(finishRegister)];
         self.navigationItem.rightBarButtonItem = rightButton;
     }
-    userArray = [[NSMutableArray alloc]initWithCapacity:18];
     self.title = @"达人推荐";
     pageSize = 18;
     reloads_ = 1;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PopularUserViewController"];
-    [self parseData:cacheResult];
-    [self loadTable];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+        [self loadTable];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     [NSNumber numberWithInt:reloads_], @"page_num",[NSNumber numberWithInt:pageSize], @"page_size",
                                     nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathPopularUser parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[CacheUtility sharedCache] putInCache:@"PopularUserViewController" result:result];
             [self parseData:result];
             [self loadTable];
             reloads_++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
         }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
     [self loadTable];
@@ -97,8 +102,10 @@
 
 - (void)parseData:(id)result
 {
+    userArray = [[NSMutableArray alloc]initWithCapacity:18];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"PopularUserViewController" result:result];
         NSArray *friends = [result objectForKey:@"prestiges"];
         [userArray removeAllObjects];
         if(friends != nil && friends.count > 0){
@@ -107,8 +114,15 @@
     } else {
         
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(userArray == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [self showProgressBar];
+    }
+}
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -119,6 +133,18 @@
     [self.tableView reloadData];
     
     [pullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)showProgressBar
+{
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.opacity = 0;
+    [HUD show:YES];
+}
+- (void) hideProgressBar
+{
+    [HUD hide:YES afterDelay:0.2];
 }
 
 #pragma mark - Table view data source
@@ -290,11 +316,10 @@
     NSString *friendId = [[userArray objectAtIndex:tag] objectForKey:@"id"];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:friendId, @"friend_ids", nil];
     if([btn.titleLabel.text isEqualToString:NSLocalizedString(@"follow", nil)]){
+        [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
         [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                
-                [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
             } else {
                 
             }
@@ -302,10 +327,10 @@
             NSLog(@"%@", error);
         }];
     } else {
+        [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
         [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
                 
             } else {
                 

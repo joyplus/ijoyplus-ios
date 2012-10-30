@@ -40,10 +40,10 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     flowView = nil;
     imageUrls = nil;
     videoArray = nil;
-    [super viewDidUnload];
 }
 
 - (void)viewDidLoad
@@ -53,36 +53,28 @@
     //    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
     //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
     //    [flowView addGestureRecognizer:downGesture];
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    if(videoArray == nil){
-        [self showProgressBar];
-    }
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"FriendViewController"];
-    [self parseData:cacheResult];
-    [flowView reloadData];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", @"30", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [flowView reloadData];
-            [[CacheUtility sharedCache] putInCache:@"FriendViewController" result:result];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
+
 
 - (void)parseData:(id)result
 {
     videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"FriendViewController" result:result];
         NSArray *videos = [result objectForKey:@"recommends"];
         if(videos.count > 0){
             [videoArray addObjectsFromArray:videos];
@@ -92,6 +84,12 @@
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(videoArray == nil && HUD == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [self showProgressBar];
+    }
+}
 - (void)addContentView
 {
     if(flowView != nil){
@@ -139,7 +137,7 @@
         cell.cellSelectedNotificationName = flowView.cellSelectedNotificationName;
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
         imageView.layer.borderWidth = 1;
-        imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        imageView.layer.borderColor = CMConstants.imageBorderColor.CGColor;
         imageView.layer.shadowColor = [UIColor blackColor].CGColor;
         imageView.layer.shadowOffset = CGSizeMake(1, 1);
         imageView.layer.shadowOpacity = 1;
@@ -246,7 +244,6 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    [videoArray removeAllObjects];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -254,7 +251,7 @@
         if(responseCode == nil){
             NSArray *videos = [result objectForKey:@"recommends"];
             if(videos != nil && videos.count > 0){
-                //                for(int i = 0; i < 20; i++)
+                [videoArray removeAllObjects];
                 [videoArray addObjectsFromArray:videos];
                 [flowView reloadData];
             }

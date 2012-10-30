@@ -50,30 +50,31 @@
 - (void)getProgramView
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendshow", self.programId, self.userId];
-        id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
-        [self parseData:cacheResult];
+    NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendshow", self.programId, self.userId];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+    if(cacheResult != nil)[self parseData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.programId, @"prod_id",
-                                self.userId, @"user_id", 
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendshow", self.programId, self.userId];
-        [[CacheUtility sharedCache] putInCache:key result:result];
-        [self parseData:result];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
-    }];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    self.programId, @"prod_id",
+                                    self.userId, @"user_id",
+                                    nil];
+        
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
 - (void)parseData:(id)result
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     if(responseCode == nil){
+        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendshow", self.programId, self.userId];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         show = (NSDictionary *)[result objectForKey:@"show"];
         [self setPlayCellValue];
         [self postInitialization:result];
@@ -89,8 +90,9 @@
         }
         //            [self initDramaCell];
         [_tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
@@ -130,8 +132,8 @@
         UITableViewCell *cell = [self displayEpisodeCell:tableView cellForRowAtIndexPath:indexPath cellIdentifier:@"episodeCell"];
         return cell;
     } else if (indexPath.section == 3) {
-       CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"friendCommentCell"];
-            return cell;
+        CommentCell *cell = [self displayFriendCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:friendCommentArray cellIdentifier:@"friendCommentCell"];
+        return cell;
     }else {
         if(commentArray == nil || commentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
@@ -144,7 +146,7 @@
             CommentCell *cell = [self displayCommentCell:tableView cellForRowAtIndexPath:indexPath commentArray:commentArray cellIdentifier:@"commentCell"];
             return cell;
         }
-
+        
     }
 }
 
@@ -266,19 +268,19 @@
         [self gotoWebsite:indexPath.row];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if (indexPath.section == 4 && commentArray.count > 0) {
-            if(indexPath.row == MAX_COMMENT_COUNT){
-                CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
-                viewController.programId = self.programId;
-                viewController.title = @"全部评论";
-                [self.navigationController pushViewController:viewController animated:YES];
-            } else{
-                CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
-                viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"id"];
-                viewController.title = @"评论回复";
-                [self.navigationController pushViewController:viewController animated:YES];
-            }
+        if(indexPath.row == MAX_COMMENT_COUNT){
+            CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
+            viewController.programId = self.programId;
+            viewController.title = @"全部评论";
+            [self.navigationController pushViewController:viewController animated:YES];
+        } else{
+            CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
+            viewController.threadId = [[commentArray objectAtIndex:indexPath.row] objectForKey:@"id"];
+            viewController.title = @"评论回复";
+            [self.navigationController pushViewController:viewController animated:YES];
         }
-
+    }
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

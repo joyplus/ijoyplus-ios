@@ -189,7 +189,7 @@
         } else {
             [cell.filmImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
         }
-        cell.filmImageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        cell.filmImageView.layer.borderColor = CMConstants.imageBorderColor.CGColor;
         cell.filmImageView.layer.borderWidth = 1;
         NSString *score = [searchObject objectForKey:@"score"];
         if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){

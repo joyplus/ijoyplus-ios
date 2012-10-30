@@ -30,6 +30,7 @@
 	BOOL _reloading;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
+    MBProgressHUD *HUD;
 }
 - (void)closeSelf;
 - (void)cancelFollow;
@@ -49,6 +50,7 @@
     type = nil;
     //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
+    HUD = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -67,7 +69,6 @@
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 	[self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
-    userArray = [[NSMutableArray alloc]initWithCapacity:18];
     if(self.userid == nil){// local user
         if([type isEqualToString:@"1"]){
             self.title = NSLocalizedString(@"my_followed_people", nil);
@@ -93,13 +94,15 @@
         serviceName = kPathUserFans;
         key = @"fans";
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key]];
-    [self parseData:cacheResult key:key];
-    [self loadTable];
+    if(cacheResult != nil){
+        [self parseData:cacheResult key:key];
+        [self loadTable];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key] result:result];
             [self parseData:result key:key];
             [self loadTable];
             reloads_++;
@@ -113,9 +116,11 @@
 
 - (void) parseData:(id)result key:(NSString *)key
 {
+    userArray = [[NSMutableArray alloc]initWithCapacity:18];
     NSString *responseCode = [result objectForKey:@"res_code"];
     [userArray removeAllObjects];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key] result:result];
         NSArray *friends = [result objectForKey:key];
         if(friends != nil && friends.count > 0){
             [userArray addObjectsFromArray:friends];
@@ -123,6 +128,26 @@
     } else {
         
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    if(userArray == nil && [[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [self showProgressBar];
+    }
+}
+
+- (void)showProgressBar
+{
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.opacity = 0;
+    [HUD show:YES];
+}
+- (void) hideProgressBar
+{
+    [HUD hide:YES afterDelay:0.2];
 }
 
 - (void)loadTable {

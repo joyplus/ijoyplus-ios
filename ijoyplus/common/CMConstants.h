@@ -65,4 +65,6 @@
 
 + (UIFont *)titleFont;
 
++ (UIColor *)imageBorderColor;
+
 @end

@@ -45,27 +45,28 @@
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendvideo", self.programId, self.userId];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
-    [self parseData:cacheResult];
+    if(cacheResult != nil)[self parseData:cacheResult];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.programId, @"prod_id", self.userId, @"user_id", 
-                                nil];
-    
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendvideo", self.programId, self.userId];
-        [[CacheUtility sharedCache] putInCache:key result:result];
-        [self parseData:result];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    self.programId, @"prod_id", self.userId, @"user_id",
+                                    nil];
         
-    }];
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    } else {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 
 - (void)parseData:(id)result
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     if(responseCode == nil){
+        NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendvideo", self.programId, self.userId];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         show = (NSDictionary *)[result objectForKey:@"video"];
         [self setPlayCellValue];
         [self postInitialization:result];
@@ -80,8 +81,9 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         [_tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }
 

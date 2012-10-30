@@ -180,16 +180,16 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = NSLocalizedString(@"recommand_success", nil);
-            [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
         } else {
 
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
     }];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = NSLocalizedString(@"recommand_success", nil);
+    [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
 }
 
 - (void)postSuccess
