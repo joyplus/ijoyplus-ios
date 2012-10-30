@@ -53,6 +53,11 @@
     //    UISwipeGestureRecognizer *downGesture = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(hideNavigationBarAnimation)];
     //    downGesture.direction = UISwipeGestureRecognizerDirectionDown;
     //    [flowView addGestureRecognizer:downGesture];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"FriendViewController"];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+        [flowView reloadData];
+    }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", @"30", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathFriendRecommends parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
