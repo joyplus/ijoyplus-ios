@@ -362,6 +362,7 @@
         if(responseCode == nil){
             NSArray *item = [result objectForKey:@"dynamics"];
             if(item.count > 0){
+                [itemsArray removeAllObjects];
                 [itemsArray addObjectsFromArray:item];
                 reloads_ ++;
             }
