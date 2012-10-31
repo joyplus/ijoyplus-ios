@@ -38,7 +38,9 @@
 {
     [super viewDidUnload];
     [self setSBar:nil];
+    [historyArray removeAllObjects];
     historyArray = nil;
+    [hotKeyArray removeAllObjects];
     hotKeyArray = nil;
     backButton = nil;
 }

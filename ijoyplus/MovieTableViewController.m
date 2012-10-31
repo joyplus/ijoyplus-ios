@@ -29,10 +29,17 @@
 
 @synthesize table;
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"receive memory warning in %@", self.class);
+}
+
 - (void)viewDidUnload {
     [super viewDidUnload];
     self.table = nil;
     pullToRefreshManager_ = nil;
+    [videoArray removeAllObjects];
     videoArray = nil;
 }
 

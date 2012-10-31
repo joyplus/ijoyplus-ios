@@ -42,9 +42,9 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     drama = nil;
     dramaCell = nil;
-    [super viewDidUnload];
 }
 
 - (void)viewDidLoad

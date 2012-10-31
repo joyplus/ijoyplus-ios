@@ -34,6 +34,7 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+    [itemsArray removeAllObjects];
     itemsArray = nil;
     self.table = nil;
     _refreshHeaderView = nil;

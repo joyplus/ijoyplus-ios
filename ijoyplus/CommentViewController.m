@@ -47,6 +47,7 @@
     textView = nil;
     pullToRefreshManager_ = nil;
     _refreshHeaderView = nil;
+    [commentArray removeAllObjects];
     commentArray = nil;
     self.threadId = nil;
     self.table = nil;

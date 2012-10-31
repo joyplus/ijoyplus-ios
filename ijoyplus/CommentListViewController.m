@@ -41,6 +41,7 @@
     [super viewDidUnload];
     pullToRefreshManager_ = nil;
     _refreshHeaderView = nil;
+    [commentArray removeAllObjects];
     commentArray = nil;
     self.programId = nil;
     self.table = nil;

@@ -70,6 +70,7 @@
 {
     [super viewDidUnload];
     flowView = nil;
+    [videoArray removeAllObjects];
     videoArray = nil;
     key = nil;
     serviceName = nil;
@@ -92,6 +93,7 @@
 
 - (void)didReceiveMemoryWarning
 {
+    [super didReceiveMemoryWarning];
     NSLog(@"receive memory warning in %@", self.class);
 }
 

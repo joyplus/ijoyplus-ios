@@ -65,6 +65,7 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     [self setAvatarImageView:nil];
     [self setTitleLabel:nil];
     [self setSubtitleLabel:nil];
@@ -72,9 +73,6 @@
     [self setTitleNameLabel:nil];
     [self setDescriptionLabel:nil];
     [self setSubmitBtn:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

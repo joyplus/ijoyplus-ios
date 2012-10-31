@@ -82,6 +82,7 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     [self setFirstLabel:nil];
     [self setSecondLabel:nil];
     [self setLogoutBtn:nil];
@@ -89,7 +90,6 @@
     [self setCommentBtn:nil];
     [self setAboutUsBtn:nil];
     [self setScoreBtn:nil];
-    [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }

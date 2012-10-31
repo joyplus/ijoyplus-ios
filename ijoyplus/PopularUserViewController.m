@@ -43,11 +43,13 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [userArray removeAllObjects];
     userArray = nil;
     self.fromController = nil;
     //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;
     HUD = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"top_segment_clicked" object:nil];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style

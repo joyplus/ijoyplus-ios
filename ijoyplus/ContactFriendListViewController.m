@@ -48,12 +48,16 @@
     [self setSBar:nil];
     self.keyword = nil;
     itemsArray = nil;
+    [joinedFriendArray removeAllObjects];
     joinedFriendArray = nil;
+    [unjoinedFriendArray removeAllObjects];
     unjoinedFriendArray = nil;
     self.sourceType = nil;
+    [itemsArray removeAllObjects];
     itemsArray = nil;
     keyboardToolbar = nil;
     HUD = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"top_segment_clicked" object:nil];
 }
 
 - (id)initWithStyle:(UITableViewStyle)style

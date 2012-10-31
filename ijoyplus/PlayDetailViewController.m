@@ -37,12 +37,20 @@
 @implementation PlayDetailViewController
 @synthesize programId;
 @synthesize userId;
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"receive memory warning in %@", self.class);
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     _imageView = nil;
     _imageScroller = nil;
     _tableView = nil;
+    [commentArray removeAllObjects];
     commentArray = nil;
     playCell = nil;
     movie = nil;
@@ -683,19 +691,19 @@
                                     nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramWatch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
+            HUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:HUD];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.dimBackground = YES;
             if([responseCode isEqualToString:kSuccessResCode]){
-                HUD = [[MBProgressHUD alloc] initWithView:self.view];
-                [self.view addSubview:HUD];
-                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-                HUD.mode = MBProgressHUDModeCustomView;
                 HUD.labelText = NSLocalizedString(@"mark_success", nil);
-                HUD.dimBackground = YES;
-                [HUD show:YES];
-                [HUD hide:YES afterDelay:1];
-                [self getProgramView];
+                playCell.watchedLabel.text = [NSString stringWithFormat:@"%i", [playCell.watchedLabel.text intValue] + 1 ];
             } else {
-                
+                HUD.labelText = @"已看过。";
             }
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:1];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
         }];
@@ -723,18 +731,19 @@
                                     nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
+            HUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:HUD];
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.dimBackground = YES;
             if([responseCode isEqualToString:kSuccessResCode]){
-                HUD = [[MBProgressHUD alloc] initWithView:self.view];
-                [self.view addSubview:HUD];
-                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-                HUD.mode = MBProgressHUDModeCustomView;
                 HUD.labelText = NSLocalizedString(@"collection_success", nil);
-                HUD.dimBackground = YES;
-                [HUD show:YES];
-                [HUD hide:YES afterDelay:1];
-                [self getProgramView];
+                playCell.collectionLabel.text = [NSString stringWithFormat:@"%i", [playCell.collectionLabel.text intValue] + 1 ];
             } else {
+                HUD.labelText = @"已收藏！";
             }
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:1];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
         }];

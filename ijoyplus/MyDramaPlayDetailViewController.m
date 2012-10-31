@@ -40,8 +40,8 @@
 
 - (void)viewDidUnload
 {
-    reasonCell = nil;
     [super viewDidUnload];
+    reasonCell = nil;
     
 }
 

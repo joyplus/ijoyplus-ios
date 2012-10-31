@@ -35,6 +35,7 @@
 
 - (void)didReceiveMemoryWarning
 {
+    [super didReceiveMemoryWarning];
     NSLog(@"receive memory warning in %@", self.class);
 }
 
@@ -42,7 +43,9 @@
 {
     [super viewDidUnload];
     flowView = nil;
+    [imageUrls removeAllObjects];
     imageUrls = nil;
+    [videoArray removeAllObjects];
     videoArray = nil;
 }
 

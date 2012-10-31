@@ -32,6 +32,7 @@
 {
     [super viewDidUnload];
     _tencentOAuth = nil;
+    [_permissions removeAllObjects];
     _permissions = nil;
     fillFormViewController = nil;
     backButton = nil;

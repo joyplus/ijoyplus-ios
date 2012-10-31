@@ -39,6 +39,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [commentArray removeAllObjects];
     commentArray = nil;
     _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;

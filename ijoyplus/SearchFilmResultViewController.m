@@ -48,6 +48,7 @@
     [super viewDidUnload];
     [self setSBar:nil];
     self.keyword = nil;
+    [itemsArray removeAllObjects];
     itemsArray = nil;
     //    _refreshHeaderView = nil;
     pullToRefreshManager_ = nil;

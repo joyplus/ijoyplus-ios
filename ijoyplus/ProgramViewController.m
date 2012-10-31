@@ -20,6 +20,12 @@
 @synthesize programUrl;
 @synthesize webView;
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    NSLog(@"receive memory warning in %@", self.class);
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];

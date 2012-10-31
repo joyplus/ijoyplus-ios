@@ -38,6 +38,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [friendCommentArray removeAllObjects];
     friendCommentArray = nil;
 }
 

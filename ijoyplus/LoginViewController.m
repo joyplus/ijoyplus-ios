@@ -44,6 +44,7 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     keyboardToolbar = nil;
     tecentViewController = nil;
     sinaViewController = nil;
@@ -52,9 +53,6 @@
     [self setTable:nil];
     [self setUsernameCell:nil];
     [self setLoginPasswordCell:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

@@ -32,6 +32,7 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     backButton = nil;
     HUD = nil;
     [self setAvatarImageView:nil];
@@ -41,7 +42,6 @@
     [self setDescriptionLabel:nil];
     [self setSubmitBtn:nil];
     self.friendInfo = nil;
-    [super viewDidUnload];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

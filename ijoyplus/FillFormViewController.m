@@ -42,14 +42,12 @@
 
 - (void)viewDidUnload
 {
+    [super viewDidUnload];
     keyboardToolbar = nil;
     [self setPasswordCell:nil];
     [self setEmailCell:nil];
     [self setNicknameCell:nil];
     HUD = nil;
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
