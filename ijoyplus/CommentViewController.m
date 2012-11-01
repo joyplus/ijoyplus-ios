@@ -93,20 +93,8 @@
             pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.table withClient:self];
             [self loadTable];
         } else {
-            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
-            //            HUD.labelText = NSLocalizedString(msg, nil);
-            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        //        HUD.mode = MBProgressHUDModeCustomView;
-        //        [self.view addSubview:HUD];
-        //        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
-        //        HUD.minSize = CGSizeMake(135.f, 135.f);
-        //        [HUD show:YES];
-        //        [HUD hide:YES afterDelay:2];
     }];
 
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
@@ -224,20 +212,10 @@
         if([responseCode isEqualToString:kSuccessResCode]){
             
         } else {
-            //            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-            //            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
-            //            HUD.labelText = NSLocalizedString(msg, nil);
-            //            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        //        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        //        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        //        HUD.mode = MBProgressHUDModeCustomView;
-        //        [self.view addSubview:HUD];
-        //        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
-        //        HUD.minSize = CGSizeMake(135.f, 135.f);
-        //        [HUD show:YES];
-        //        [HUD hide:YES afterDelay:2];
+        
     }];
     textView.text = @"";
 //    [commentListViewController.tableView reloadData];
@@ -356,7 +334,7 @@
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     }];
 }
 

@@ -42,7 +42,7 @@
 
 - (void)viewDidUnload
 {
-    show = nil;
+    movie = nil;
     [super viewDidUnload];
 }
 
@@ -93,7 +93,8 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
@@ -106,7 +107,7 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@", @"video", self.programId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        show = (NSDictionary *)[result objectForKey:@"video"];
+        movie = (NSDictionary *)[result objectForKey:@"video"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -120,12 +121,13 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showSystemError:self.view];
     }
 }
 
 - (void)setPlayCellValue
 {
-    name = [show objectForKey:@"name"];
+    name = [movie objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
@@ -152,34 +154,16 @@
         
     }
     
-    [_imageView setImageWithURL:[NSURL URLWithString:[show objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
-    NSString *score = [show objectForKey:@"score"];
+    [_imageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
+    NSString *score = [movie objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [show objectForKey:@"watch_num"];
-    playCell.collectionLabel.text = [show objectForKey:@"favority_num"];
-    playCell.likeLabel.text = [show objectForKey:@"like_num"];
-}
-
-- (void)playVideo
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [show objectForKey:@"video_urls"];
-    viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [show objectForKey:@"name"];
-    [self.navigationController pushViewController:viewController animated:YES];
-}
-
-- (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[show objectForKey:@"name"] content:[show objectForKey:@"summary"]];
-    lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
-    lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
-    lplv.delegate = self;
-    [lplv showInView:self.view animated:YES];
-    _tableView.scrollEnabled = NO;
+    playCell.watchedLabel.text = [movie objectForKey:@"watch_num"];
+    playCell.collectionLabel.text = [movie objectForKey:@"favority_num"];
+    playCell.likeLabel.text = [movie objectForKey:@"like_num"];
 }
 
 @end

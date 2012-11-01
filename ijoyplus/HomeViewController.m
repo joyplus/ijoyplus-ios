@@ -127,6 +127,7 @@
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [flowView reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             videoArray = [[NSMutableArray alloc]initWithCapacity:10];
@@ -134,6 +135,7 @@
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
     }
 }
 
@@ -149,9 +151,7 @@
             [videoArray addObjectsFromArray:videos];
         }
     } else {
-        
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
 
@@ -244,6 +244,7 @@
             [self parseHeaderData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [UIUtility showSystemError:self.view];
         }];
     }
 }
@@ -278,7 +279,7 @@
         self.title = [NSString stringWithFormat:@"%@的主页", [result valueForKey:@"nickname"]];
         self.tabBarItem.title = NSLocalizedString(@"list", nil);
     } else {
-        
+        [UIUtility showSystemError:self.view];
     }
 }
 

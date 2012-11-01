@@ -38,6 +38,7 @@
 {
     [super viewDidUnload];
     webEngine = nil;
+    [webView removeFromSuperview];
     webView = nil;
     backButton = nil;
     fillFormViewController = nil;
@@ -111,12 +112,14 @@
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     
     if([self.fromController isEqual:@"PostViewController"]){
+        [self uploadAvatarUrl];
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
+        [self uploadAvatarUrl];
         friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
         friendListViewController.sourceType = @"1";
         [self.navigationController pushViewController:friendListViewController animated:YES];
-    } else{
+    } else{        
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
@@ -126,6 +129,7 @@
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];
                     if(responseCode == nil){
+                        [self uploadAvatarUrl];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserName];
@@ -149,6 +153,25 @@
             NSLog(@"<<<<<<%@>>>>>", error);
         }];
     }
+}
+
+- (void)uploadAvatarUrl
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                [[WBEngine sharedClient] accessToken], @"access_token",
+                                [[WBEngine sharedClient] userID], @"uid",
+                                nil];
+    
+    [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: largeAvatarURL, @"url", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"<<<<<<%@>>>>>", error);
+    }];
 }
 
 - (void)engine:(WBEngine *)engine didFailToLogInWithError:(NSError *)error

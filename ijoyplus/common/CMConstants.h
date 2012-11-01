@@ -50,6 +50,16 @@
 #define LOCAL_KEYS_NUMBER 5
 #define umengAppKey @"5074db485270155fcd000093"
 
+#define YOU_KU @"youku"
+#define TU_DOU @"tudou"
+#define PPTV @"pptv"
+#define LETV @"letv"
+
+#define GAO_QING @"mp4"
+#define BIAO_QING @"flv"
+#define CHAO_QING @"hd2"
+#define LIU_CHANG @"3gp"
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

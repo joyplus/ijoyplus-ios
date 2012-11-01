@@ -22,6 +22,7 @@
 #import "WeiBoInviteViewController.h"
 #import "AFSinaWeiboAPIClient.h"
 #import "WBEngine.h"
+#import "UIUtility.h"
 
 @interface FriendListViewController (){
     NSMutableArray *itemsArray;
@@ -143,20 +144,23 @@
                     [self loadTable];
                     reloads_ ++;
                 } else {
-                    
+                    [UIUtility showSystemError:self.view];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"%@", error);
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+                [UIUtility showSystemError:self.view];
             }];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showSystemError:self.view];
     }];
     
 }

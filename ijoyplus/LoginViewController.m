@@ -239,20 +239,10 @@
             HUD.labelText = NSLocalizedString(@"message.signinsuccess", nil);
             [HUD showWhileExecuting:@selector(postLogin) onTarget:self withObject:nil animated:YES];
         } else {
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-            NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
-            HUD.labelText = NSLocalizedString(msg, nil);
-            [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+            [UIUtility showSystemError:self.view];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        [self.view addSubview:HUD];
-        HUD.labelText = NSLocalizedString(@"message.systemfailure", nil);
-        HUD.minSize = CGSizeMake(135.f, 135.f);
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:2];
+        [UIUtility showSystemError:self.view];
     }];
 }
 

@@ -20,6 +20,8 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "SFHFKeychainUtils.h"
+#import "AFSinaWeiboAPIClient.h"
+#import "UIUtility.h"
 
 #define FIELDS_COUNT 3
 
@@ -371,14 +373,7 @@
             [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        [self.view addSubview:HUD];
-        HUD.labelText = @"Network error, please try again!";
-        HUD.minSize = CGSizeMake(135.f, 135.f);
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:2];
+        [UIUtility showSystemError:self.view];
     }];
 }
 
@@ -390,9 +385,31 @@
 
 - (void)postRegister
 {
+    [self uploadAvatarUrl];
     sleep(2);
     PopularUserViewController *viewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (void)uploadAvatarUrl
+{
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [[WBEngine sharedClient] accessToken], @"access_token",
+                                    [[WBEngine sharedClient] userID], @"uid",
+                                    nil];
+        
+        [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: largeAvatarURL, @"url", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            }];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"<<<<<<%@>>>>>", error);
+        }];
+    }
 }
 
 - (BOOL) IsValidEmail:(NSString*) checkString {

@@ -55,7 +55,8 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
@@ -68,7 +69,7 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendvideo", self.programId, self.userId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        show = (NSDictionary *)[result objectForKey:@"video"];
+        movie = (NSDictionary *)[result objectForKey:@"video"];
         [self setPlayCellValue];
         [self postInitialization:result];
         friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
@@ -84,6 +85,7 @@
         [_tableView reloadData];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
+        [UIUtility showSystemError:self.view];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }
 }

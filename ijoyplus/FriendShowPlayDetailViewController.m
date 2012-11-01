@@ -63,7 +63,8 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramViewRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
@@ -91,10 +92,10 @@
         }
         //            [self initDramaCell];
         [_tableView reloadData];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showSystemError:self.view];
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
 #pragma mark - Table view data source

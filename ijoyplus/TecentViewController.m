@@ -63,6 +63,7 @@
 	
 	_tencentOAuth = [[TencentOAuth alloc] initWithAppId:kTecentAppId andDelegate:self];
 	_tencentOAuth.redirectURI = @"www.qq.com";
+    _tencentOAuth.sessionDelegate = self;
 	self.view = [_tencentOAuth authorize:_permissions inSafari:NO];
 }
 
@@ -81,7 +82,13 @@
 
 - (void)tencentDidLogin
 {
-    [self saveAuthorizeDataToKeychain];    
+    [self saveAuthorizeDataToKeychain];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: _tencentOAuth.openId, @"source_id", @"2", @"source_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [_tencentOAuth getUserInfo];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"<<<<<<%@>>>>>", error);
+    }];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kTencentUserLoggedIn];
     if([self.fromController isEqual:@"PostViewController"]){
         [self.navigationController popViewControllerAnimated:YES];
@@ -123,6 +130,18 @@
         }];
     }
 }
+
+
+- (void)getUserInfoResponse:(APIResponse*) response
+{
+    NSString *url = [response.jsonResponse objectForKey:@"figureurl_1"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: url, @"url", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+}
+
 
 - (void)closeSelf
 {

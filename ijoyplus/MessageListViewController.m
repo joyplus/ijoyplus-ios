@@ -83,6 +83,7 @@
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
     }
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 }
@@ -99,7 +100,7 @@
             [self loadTable];
         }
     } else {
-        
+
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
@@ -145,11 +146,8 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MessageCell *cell = (MessageCell*) [tableView dequeueReusableCellWithIdentifier:@"messageCell"];
-    if (cell == nil) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ListCellFactory" owner:self options:nil];
-        cell = (MessageCell *)[nib objectAtIndex:0];
-    }
+    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ListCellFactory" owner:self options:nil];
+    MessageCell *cell = (MessageCell *)[nib objectAtIndex:0];
     NSMutableDictionary *commentDic = [commentArray objectAtIndex:indexPath.row];
     NSString *avatarUrl = (NSString *)[commentDic valueForKey:@"user_pic_url"];
     if([StringUtility stringIsEmpty:avatarUrl]){
