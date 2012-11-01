@@ -10,7 +10,6 @@
 #import "PlayDetailViewController.h"
 #import "DramaCell.h"
 
-@interface VideoPlayDetailViewController : PlayDetailViewController{
-    NSDictionary *show;
-}
+@interface VideoPlayDetailViewController : PlayDetailViewController
+
 @end;

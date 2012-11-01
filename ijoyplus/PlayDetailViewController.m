@@ -31,8 +31,16 @@
 #import "PostViewController.h"
 #import "CacheUtility.h"
 #import "BlockAlertView.h"
+#import "MediaPlayerViewController.h"
+
 
 #define ROW_HEIGHT 40
+
+@interface PlayDetailViewController (){
+    
+}
+
+@end
 
 @implementation PlayDetailViewController
 @synthesize programId;
@@ -174,7 +182,8 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
@@ -197,11 +206,12 @@
         if(pullToRefreshManager_ == nil && commentArray.count > 0){
             pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableView withClient:self];
         }
-        [self loadTable];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showSystemError:self.view];
     }
+    [self loadTable];
 }
 
 - (void)loadTable {
@@ -555,10 +565,71 @@
         }];
         [alert show];
     } else {
-        [self showPlayWebPage];
+        NSArray *videoUrlArray = [movie objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            NSString *videoUrl = nil;
+            for(NSDictionary *video in videoUrlArray){
+                if([LETV isEqualToString:[video objectForKey:@"source"]]){
+                    videoUrl = [self parseVideoUrl:video];
+                    break;
+                }
+            }
+            if(videoUrl == nil){
+                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+            }
+            if(videoUrl == nil){
+                [self showPlayWebPage];
+            } else {
+                MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+                viewController.videoUrl = videoUrl;
+                [self presentModalViewController:viewController animated:YES];
+            }
+        }else {
+            [self showPlayWebPage];
+        }
     }
-    
+}
 
+- (NSString *)parseVideoUrl:(NSDictionary *)video
+{
+    NSString *videoUrl;
+    NSArray *urlArray =  [video objectForKey:@"urls"];
+    for(NSDictionary *url in urlArray){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]){
+            videoUrl = [url objectForKey:@"url"];
+            break;
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        if(urlArray.count > 0){
+            videoUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+        }
+    }
+    return videoUrl;
 }
 
 - (void)showPlayWebPage

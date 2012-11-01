@@ -16,4 +16,5 @@
 + (UILabel *)customizeAppTitle;
 + (UIImage *) createImageWithColor: (UIColor *) color;
 + (void)showNetWorkError:(UIView *)view;
++ (void)showSystemError:(UIView *)view;
 @end

@@ -22,6 +22,7 @@
 #import "HomeViewController.h"
 #import <AddressBook/AddressBook.h>
 #import <AddressBookUI/AddressBookUI.h>
+#import "UIUtility.h"
 
 @interface ContactFriendListViewController (){
     NSMutableArray *itemsArray;
@@ -166,22 +167,29 @@
                             [unjoinedFriendArray addObject:contact];
                         }
                     }
+//                    NSArray *sortedArray = [joinedFriendArray sortedArrayUsingComparator:^(id a, id b) {
+//                        NSString *first = [a objectForKey:@"name"];
+//                        NSString *second = [b objectForKey:@"name"];
+//                        return [second compare:first];
+//                    }];
                     [self.tableView reloadData];
                 } else {
-                    
+                    [UIUtility showNetWorkError:self.view];           
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"%@", error);
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+                [UIUtility showSystemError:self.view];
             }];
         } else {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }
-        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showSystemError:self.view];
     }];
 }
 

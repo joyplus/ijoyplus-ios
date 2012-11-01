@@ -45,7 +45,6 @@
 - (void)parseData:(id)result
 {
     videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"LocalViewController" result:result];
@@ -58,6 +57,7 @@
     } else {
         
     }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
