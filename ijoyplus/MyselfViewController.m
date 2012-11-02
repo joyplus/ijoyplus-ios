@@ -14,6 +14,7 @@
 #import "PlayDetailViewController.h"
 #import "CacheUtility.h"
 #import "UIUtility.h"
+#import "ContainerUtility.h"
 
 @interface MyselfViewController(){
     NSMutableArray *itemsArray;
@@ -51,14 +52,15 @@
     
     pageSize = 10;
     reloads_ = 1;
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MyselfViewController"];
+    NSString *key = [NSString stringWithFormat:@"MyselfViewController%@", (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
-        [self parseData:cacheResult];
+        [self parseData:cacheResult key:key];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserFriendDynamics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseData:result];
+            [self parseData:result key:key];
             reloads_++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
@@ -82,12 +84,12 @@
     
 }
 
-- (void)parseData:(id)result
+- (void)parseData:(id)result key:(NSString *)key
 {
     itemsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:@"MyselfViewController" result:result];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         NSArray *item = [result objectForKey:@"dynamics"];
         if(item.count > 0){
             [itemsArray addObjectsFromArray:item];

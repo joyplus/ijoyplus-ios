@@ -41,6 +41,7 @@
 @synthesize userid;
 @synthesize type;
 @synthesize nickname;
+@synthesize delegate;
 
 - (void)viewDidUnload
 {
@@ -97,15 +98,16 @@
         key = @"fans";
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key]];
+    NSString *cacheKey = [NSString stringWithFormat:@"FollowedUserViewController%@", (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:cacheKey];
     if(cacheResult != nil){
-        [self parseData:cacheResult key:key];
+        [self parseData:cacheResult cacheKey:cacheKey key:key];
         [self loadTable];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.userid, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseData:result key:key];
+            [self parseData:result cacheKey:cacheKey key:key];
             [self loadTable];
             reloads_++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -117,13 +119,13 @@
     [self loadTable];
 }
 
-- (void) parseData:(id)result key:(NSString *)key
+- (void) parseData:(id)result cacheKey:(NSString *)cacheKey key:(NSString *)key
 {
     userArray = [[NSMutableArray alloc]initWithCapacity:18];
     NSString *responseCode = [result objectForKey:@"res_code"];
     [userArray removeAllObjects];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@%@", @"FollowedUserViewController", key] result:result];
+        [[CacheUtility sharedCache]putInCache:cacheKey result:result];
         NSArray *friends = [result objectForKey:key];
         if(friends != nil && friends.count > 0){
             [userArray addObjectsFromArray:friends];
@@ -255,7 +257,12 @@
         if([type isEqualToString:@"1"]){
             [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
         } else {
-            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
+            NSString *isFollowed = [NSString stringWithFormat:@"%@", [user objectForKey:@"is_follow"]];
+            if([isFollowed isEqualToString:@"1"]){
+                [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+            } else {
+                [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
+            }
         }
         [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -324,7 +331,7 @@
 
 - (void)closeSelf
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    [delegate refreshContent];
 }
 
 - (void)cancelFollow:(id)sender;

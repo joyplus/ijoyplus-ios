@@ -67,14 +67,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:@"top_segment_clicked" object:nil];
     pageSize = 10;
     reloads_++;
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"MessageListViewController"];
+    NSString *key = [NSString stringWithFormat:@"MessageListViewController%@", (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
-        [self parseData:cacheResult];
+        [self parseData:cacheResult key:key];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserMsgs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseData:result];
+            [self parseData:result key:key];
             reloads_ ++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
@@ -88,12 +89,12 @@
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 }
 
-- (void)parseData:(id)result
+- (void)parseData:(id)result key:(NSString *)key
 {
     commentArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:@"MessageListViewController" result:result];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         NSArray *comment = [result objectForKey:@"msgs"];
         if(comment.count > 0){
             [commentArray addObjectsFromArray:comment];

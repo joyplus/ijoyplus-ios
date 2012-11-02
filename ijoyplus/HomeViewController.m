@@ -167,7 +167,7 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
+    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",self];
@@ -270,8 +270,15 @@
         self.fansNumberLabel.text = [result valueForKey:@"fan_num"];
         self.watchedNumberLabel.text = [result valueForKey:@"follow_num"];
         theUserFollowed = [[result valueForKey:@"isFollowed"] intValue];
+        NSString *kUserIdString = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        if (self.userid == nil || ![self.userid isEqualToString:kUserIdString]) {
+            NSString *btnTitle;
         if(theUserFollowed != 1){
-            UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"follow", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(follow)];
+            btnTitle = NSLocalizedString(@"follow", nil);
+        } else {
+            btnTitle = NSLocalizedString(@"cancel_follow", nil);
+        }
+            UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:btnTitle style:UIBarButtonSystemItemSearch target:self action:@selector(cancelFollow:)];
             self.navigationItem.rightBarButtonItem = rightButton;
         }
         self.username.text = [result valueForKey:@"nickname"];
@@ -455,32 +462,6 @@
     
 }
 
-- (void)flowView:(WaterflowView *)_flowView refreshData:(int)page
-{
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    currentPage = 1;
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
-    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            [videoArray removeAllObjects];
-            NSArray *videos = [result objectForKey:key];
-            if(videos != nil && videos.count > 0){
-                [videoArray addObjectsFromArray:videos];
-            }
-        } else {
-            
-        }
-        [flowView reloadData];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-    }];
-}
-
 - (void)segmentValueChanged:(id)sender {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
@@ -522,6 +503,7 @@
 
 - (IBAction)followUser:(id)sender {
     FollowedUserViewController *viewController = [[FollowedUserViewController alloc]initWithNibName:@"FollowedUserViewController" bundle:nil];
+    viewController.delegate = self;
     viewController.type = @"1";// 1 关注的
     viewController.userid = self.userid;
     viewController.nickname = self.username.text;
@@ -530,33 +512,70 @@
 
 - (IBAction)fansUser:(id)sender {
     FollowedUserViewController *viewController = [[FollowedUserViewController alloc]initWithNibName:@"FollowedUserViewController" bundle:nil];
+    viewController.delegate = self;
     viewController.type = @"2";// 2 粉丝
     viewController.userid = self.userid;
     viewController.nickname = self.username.text;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
-- (void)follow
+- (void)cancelFollow:(id)sender
 {
+    UIBarButtonItem *btn = (UIBarButtonItem *)sender;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.userid, @"friend_ids", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    if([btn.title isEqualToString:NSLocalizedString(@"follow", nil)]){
+        [btn setTitle:NSLocalizedString(@"cancel_follow", nil)];
+        [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                btn.title = NSLocalizedString(@"cancel_follow", nil);
+                HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:HUD];
+                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+                HUD.mode = MBProgressHUDModeCustomView;
+                HUD.labelText = NSLocalizedString(@"follow_success", nil);
+                HUD.dimBackground = YES;
+                [HUD show:YES];
+                [HUD hide:YES afterDelay:1.5];
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    } else {
+         [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                btn.title = NSLocalizedString(@"follow", nil);
+                HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:HUD];
+                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+                HUD.mode = MBProgressHUDModeCustomView;
+                HUD.labelText = NSLocalizedString(@"cancel_follow_success", nil);
+                HUD.dimBackground = YES;
+                [HUD show:YES];
+                [HUD hide:YES afterDelay:1.5];
+            } else {
+                
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+        
+    }
+
+    
+    [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            HUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:HUD];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = NSLocalizedString(@"follow_success", nil);
-            HUD.dimBackground = YES;
-            [HUD show:YES];
-            [HUD hide:YES afterDelay:1.5];
+
         } else {
             
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-    }];
-    
+    }];   
 }
 
 - (void)closeSelf
@@ -701,4 +720,17 @@
     
     return YES;
 }
+
+- (void)refreshContent
+{
+    [self.navigationController popViewControllerAnimated:YES];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
+    [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [flowView reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
+}
+
 @end

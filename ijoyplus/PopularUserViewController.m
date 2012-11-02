@@ -241,7 +241,6 @@
         NSString *isFollowed = [NSString stringWithFormat:@"%@", [user objectForKey:@"is_follow"]];
         if([isFollowed isEqualToString:@"1"]){
             [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
-            
         } else {
             [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
         }

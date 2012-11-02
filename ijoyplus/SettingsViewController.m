@@ -23,6 +23,7 @@
 #import "UMFeedback.h"
 #import "SFHFKeychainUtils.h"
 #import "WBEngine.h"
+#import "AFSinaWeiboAPIClient.h"
 
 @interface SettingsViewController ()
 
@@ -113,7 +114,12 @@
 
         }];
         if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
-            [[WBEngine sharedClient] logOut];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [[WBEngine sharedClient] accessToken], @"access_token", kSinaWeiboAppKey, @"source", nil];
+            [[AFSinaWeiboAPIClient sharedClient] getPath:@"account/end_session.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                [[WBEngine sharedClient] logOut];
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                [[WBEngine sharedClient] logOut];
+            }];
         }
         [SFHFKeychainUtils deleteItemForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
         [SFHFKeychainUtils deleteItemForUsername:@"tecentAccessToken" andServiceName:@"tecentlogin" error:nil];

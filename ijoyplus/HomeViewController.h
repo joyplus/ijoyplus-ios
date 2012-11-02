@@ -10,7 +10,13 @@
 #import "WaterflowView.h"
 #import "UIGenericViewController.h"
 
-@interface HomeViewController : UIGenericViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate >
+@protocol HomeViewControllerDelegate <NSObject>
+
+- (void)refreshContent;
+
+@end
+
+@interface HomeViewController : UIGenericViewController< WaterflowViewDelegate,WaterflowViewDatasource,UIScrollViewDelegate, UIPickerViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, HomeViewControllerDelegate>
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segment;
 @property (strong, nonatomic) IBOutlet UIImageView *topImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *avatarImageView;

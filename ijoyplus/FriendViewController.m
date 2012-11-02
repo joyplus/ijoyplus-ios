@@ -81,7 +81,8 @@
     videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:@"FriendViewController" result:result];
+        NSString *key = [NSString stringWithFormat:@"FriendViewController%@", (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+        [[CacheUtility sharedCache] putInCache:key result:result];
         NSArray *videos = [result objectForKey:@"recommends"];
         if(videos.count > 0){
             [videoArray addObjectsFromArray:videos];

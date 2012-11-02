@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "MNMBottomPullToRefreshManager.h"
 #import "EGORefreshTableHeaderView.h"
+#import "HomeViewController.h"
 
 @interface FollowedUserViewController : UITableViewController <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, MNMBottomPullToRefreshManagerClient>
 
-
+@property (nonatomic, weak)id <HomeViewControllerDelegate>delegate;
 @property (nonatomic, strong)NSString *userid;
 @property (nonatomic, strong)NSString *type;
 @property (nonatomic, strong)NSString *nickname;
