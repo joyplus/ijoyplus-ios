@@ -295,7 +295,7 @@
         case 1:
         {
             cell.textLabel.text = [[joinedFriendArray objectAtIndex:indexPath.row] valueForKey:@"name"];
-            cell.detailTextLabel.text = @"+关注";
+            cell.detailTextLabel.text = @"详情";
             cell.detailTextLabel.textColor = [UIColor colorWithRed:6/255.0 green:131/255.0 blue:239/255.0 alpha:1.0];
             break;
         }
