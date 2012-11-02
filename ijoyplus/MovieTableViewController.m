@@ -63,7 +63,7 @@
             reloads_ ++;
         }
     } else {
-        
+        [UIUtility showSystemError:self.view];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
@@ -89,6 +89,7 @@
             NSLog(@"%@", error);
             videoArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     }
     //    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];

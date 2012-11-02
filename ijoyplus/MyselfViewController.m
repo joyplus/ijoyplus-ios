@@ -137,11 +137,6 @@
     if(myCell == nil){
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MyCellFactory" owner:self options:nil];
         myCell = (MyProfileCell *)[nib objectAtIndex:0];
-        myCell.filmImageView.layer.borderWidth = 1;
-        myCell.filmImageView.layer.borderColor = CMConstants.imageBorderColor.CGColor;
-        myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
-        myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
-        myCell.filmImageView.layer.shadowOpacity = 1;
     }
     
     NSDictionary *item = [itemsArray objectAtIndex:indexPath.row];
@@ -155,20 +150,27 @@
         } else{
             [myCell.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
         }
-        myCell.filmImageView.frame = CGRectMake(myCell.filmImageView.frame.origin.x, myCell.filmImageView.frame.origin.y, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
+        myCell.filmImageView.frame = CGRectMake(90, myCell.filmImageView.frame.origin.y, MOVIE_LOGO_WIDTH, MOVIE_LOGO_HEIGHT);
     } else {
         if([StringUtility stringIsEmpty:imageUrl]){
             myCell.filmImageView.image = [UIImage imageNamed:@"video_placeholder"];
         } else{
             [myCell.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         }
-        myCell.filmImageView.frame = CGRectMake(myCell.filmImageView.frame.origin.x, myCell.filmImageView.frame.origin.y, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
+        myCell.filmImageView.frame = CGRectMake(90, myCell.filmImageView.frame.origin.y, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
     }
+    myCell.filmImageView.layer.borderWidth = 1;
+    myCell.filmImageView.layer.borderColor = CMConstants.imageBorderColor.CGColor;
+    myCell.filmImageView.layer.shadowColor = [UIColor blackColor].CGColor;
+    myCell.filmImageView.layer.shadowOffset = CGSizeMake(1, 1);
+    myCell.filmImageView.layer.shadowOpacity = 1;
+    myCell.filmImageView.layer.cornerRadius = 0;
+    myCell.filmImageView.layer.masksToBounds = NO;
     myCell.thirdTitleLabel.center = CGPointMake(110, myCell.filmImageView.frame.origin.y + myCell.filmImageView.frame.size.height + 20);
     myCell.subtitleLabel.text = [item objectForKey:@"prod_name"];
     if([@"favority" isEqualToString:actionType]){
         myCell.actionLabel.text = @"收藏了";
-        myCell.subtitleLabel.text = [item objectForKey:@"prod_name"];
+        myCell.subtitleLabel.text = [item objectForKey:@"prod_name"];        
     } else if([@"follow" isEqualToString:actionType]){
         myCell.actionLabel.text = @"关注了";
         myCell.subtitleLabel.text = [item objectForKey:@"friend_name"];
@@ -210,6 +212,7 @@
         date = [DateUtility dateFromFormatString:dateString formatString:@"yyyy-MM-dd HH:mm:ss"];
     }
     NSString *timeDiff = [timeFormatter stringForTimeIntervalFromDate:[NSDate date] toDate:date];
+    myCell.thirdTitleLabel.frame = CGRectMake(myCell.actionLabel.frame.origin.x, myCell.filmImageView.frame.origin.y + myCell.filmImageView.frame.size.height+5, 230, 20);
     myCell.thirdTitleLabel.text = timeDiff;
     
     myCell.filmImageBtn.tag = indexPath.row;

@@ -29,6 +29,8 @@
 #import "RecommandViewController.h"
 #import "PostViewController.h"
 #import "CacheUtility.h"
+#import "BlockAlertView.h"
+#import "MediaPlayerViewController.h"
 
 
 #define ROW_HEIGHT 40
@@ -91,6 +93,8 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
         }];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
@@ -118,6 +122,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
+        [UIUtility showSystemError:self.view];
     }
 }
 
@@ -165,8 +170,50 @@
 
 - (void)playVideo
 {
-    [self gotoWebsite:0];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    [self playVideo:0];
 }
+
+- (void)playVideo:(NSInteger)num
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
+        [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
+        [alert setDestructiveButtonWithTitle:@"确定" block:^{
+            [self gotoWebsite:num];
+        }];
+        [alert show];
+    } else {
+        NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            NSString *videoUrl = nil;
+            for(NSDictionary *video in videoUrlArray){
+                if([LETV isEqualToString:[video objectForKey:@"source"]]){
+                    videoUrl = [self parseVideoUrl:video];
+                    break;
+                }
+            }
+            if(videoUrl == nil){
+                if (videoUrlArray.count > 0) {
+                    videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+                }
+            }
+            if(videoUrl == nil){
+                [self gotoWebsite:num];
+            } else {
+                MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+                viewController.videoUrl = videoUrl;
+                [self presentModalViewController:viewController animated:YES];
+            }
+        }else {
+            [self gotoWebsite:num];
+        }
+    }
+}
+
 
 - (void)gotoWebsite:(NSInteger)num
 {
@@ -319,7 +366,7 @@
 {
     if(indexPath.section == 2 && episodeArray.count > 1){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
-        [self gotoWebsite:indexPath.row];
+        [self playVideo:indexPath.row];
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
     } else if (indexPath.section > 2 && commentArray.count > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];

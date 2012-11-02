@@ -66,4 +66,14 @@
     [HUD show:YES];
     [HUD hide:YES afterDelay:1];
 }
++ (void)showSystemError:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = NSLocalizedString(@"message.systemError", nil);
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:1];
+}
 @end

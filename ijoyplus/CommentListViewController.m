@@ -79,9 +79,10 @@
             }
             [self loadTable];
         } else {
+
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+
     }];
     
     if (_refreshHeaderView == nil) {
@@ -313,11 +314,11 @@
                 reloads_++;
                 [commentArray addObjectsFromArray:comments];
             }
-            [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         } else {
         }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     }];
     
 }
@@ -337,11 +338,11 @@
                 [commentArray removeAllObjects];
                 [commentArray addObjectsFromArray:comments];
             }
-            [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         } else {
         }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
     }];
 	_reloading = YES;
 	

@@ -50,7 +50,7 @@
 - (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
 - (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView;
 - (void)postInitialization:(NSDictionary *)result;
-
+- (NSString *)parseVideoUrl:(NSDictionary *)video;
 - (id)initWithStretchImage;
 - (void)layoutImage;
 - (void)updateOffsets;

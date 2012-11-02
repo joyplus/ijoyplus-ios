@@ -200,6 +200,9 @@
 		EBB5A14E1622754000F164F2 /* qq_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14A1622754000F164F2 /* qq_press.png */; };
 		EBB5A14F1622754000F164F2 /* sina_weibo_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */; };
 		EBB5A1501622754000F164F2 /* sina_weibo_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14C1622754000F164F2 /* sina_weibo_press.png */; };
+		EBBCF055164106BA006F8D0B /* MediaPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBCF053164106BA006F8D0B /* MediaPlayerViewController.m */; };
+		EBBCF056164106BA006F8D0B /* MediaPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBBCF054164106BA006F8D0B /* MediaPlayerViewController.xib */; };
+		EBBCF05816410709006F8D0B /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBCF05716410709006F8D0B /* MediaPlayer.framework */; };
 		EBBE202C162CF4E800CC5026 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBE202B162CF4E800CC5026 /* libz.dylib */; };
 		EBBE205B162CFF3A00CC5026 /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBE2059162CFF3A00CC5026 /* libMobClickLibrary.a */; };
 		EBBE20DA162D012500CC5026 /* libUMFeedback.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBE20D9162D012500CC5026 /* libUMFeedback.a */; };
@@ -563,6 +566,11 @@
 		EBB5A14A1622754000F164F2 /* qq_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq_press.png; sourceTree = "<group>"; };
 		EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_normal.png; sourceTree = "<group>"; };
 		EBB5A14C1622754000F164F2 /* sina_weibo_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_press.png; sourceTree = "<group>"; };
+		EBBCF052164106BA006F8D0B /* MediaPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaPlayerViewController.h; sourceTree = "<group>"; };
+		EBBCF053164106BA006F8D0B /* MediaPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaPlayerViewController.m; sourceTree = "<group>"; };
+		EBBCF054164106BA006F8D0B /* MediaPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaPlayerViewController.xib; sourceTree = "<group>"; };
+		EBBCF05716410709006F8D0B /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		EBBCF06B16425CE4006F8D0B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EBBE202B162CF4E800CC5026 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EBBE2030162CF50000CC5026 /* MobClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClick.h; sourceTree = "<group>"; };
 		EBBE2059162CFF3A00CC5026 /* libMobClickLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMobClickLibrary.a; path = External/umeng/libMobClickLibrary.a; sourceTree = "<group>"; };
@@ -669,6 +677,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBBCF05816410709006F8D0B /* MediaPlayer.framework in Frameworks */,
 				EBBE20DA162D012500CC5026 /* libUMFeedback.a in Frameworks */,
 				EBBE205B162CFF3A00CC5026 /* libMobClickLibrary.a in Frameworks */,
 				EBBE202C162CF4E800CC5026 /* libz.dylib in Frameworks */,
@@ -734,6 +743,7 @@
 			children = (
 				EBBE20D9162D012500CC5026 /* libUMFeedback.a */,
 				EBBE2059162CFF3A00CC5026 /* libMobClickLibrary.a */,
+				EBBCF05716410709006F8D0B /* MediaPlayer.framework */,
 				EBB33C82162C18790047B3E1 /* MessageUI.framework */,
 				EBB33C7D162C0EFE0047B3E1 /* AddressBookUI.framework */,
 				EBB33C7B162C0EF60047B3E1 /* AddressBook.framework */,
@@ -1005,6 +1015,9 @@
 				EB0761C01622EF0300C9727C /* ProgramViewController.h */,
 				EB0761C11622EF0400C9727C /* ProgramViewController.m */,
 				EB0761C21622EF0700C9727C /* ProgramViewController.xib */,
+				EBBCF052164106BA006F8D0B /* MediaPlayerViewController.h */,
+				EBBCF053164106BA006F8D0B /* MediaPlayerViewController.m */,
+				EBBCF054164106BA006F8D0B /* MediaPlayerViewController.xib */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -1517,6 +1530,7 @@
 				EBB3DE61163F7F0E006EAF80 /* ShowTableViewController.xib in Resources */,
 				EBB3DE63163F7F0E006EAF80 /* DramaTableViewController.xib in Resources */,
 				EBB3DE65163F7F0E006EAF80 /* VideoTableViewController.xib in Resources */,
+				EBBCF056164106BA006F8D0B /* MediaPlayerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1670,6 +1684,7 @@
 				EBB3DE62163F7F0E006EAF80 /* ShowTableViewController.m in Sources */,
 				EBB3DE64163F7F0E006EAF80 /* DramaTableViewController.m in Sources */,
 				EBB3DE66163F7F0E006EAF80 /* VideoTableViewController.m in Sources */,
+				EBBCF055164106BA006F8D0B /* MediaPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1688,6 +1703,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				EB32BD3E15F8948400C878D5 /* en */,
+				EBBCF06B16425CE4006F8D0B /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

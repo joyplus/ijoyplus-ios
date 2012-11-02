@@ -110,6 +110,7 @@
             reloads_++;
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [UIUtility showSystemError:self.view];
         }];
     }
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
@@ -128,7 +129,7 @@
             [userArray addObjectsFromArray:friends];
         }
     } else {
-        
+        [UIUtility showSystemError:self.view];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
 }
@@ -340,25 +341,25 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathFriendFollow parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                
                 [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
             } else {
-                
+                [UIUtility showSystemError:self.view];
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [UIUtility showSystemError:self.view];
         }];
     } else {
         [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
                 [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
-                
             } else {
-                
+                [UIUtility showSystemError:self.view];
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [UIUtility showSystemError:self.view];
         }];
         
     }
