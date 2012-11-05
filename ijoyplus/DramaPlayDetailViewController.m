@@ -141,9 +141,9 @@
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [drama objectForKey:@"watch_num"];
-    playCell.collectionLabel.text = [drama objectForKey:@"favority_num"];
-    playCell.likeLabel.text = [drama objectForKey:@"like_num"];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [drama objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [drama objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [drama objectForKey:@"like_num"]];
     
 }
 

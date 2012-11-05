@@ -162,9 +162,9 @@
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [movie objectForKey:@"watch_num"];
-    playCell.collectionLabel.text = [movie objectForKey:@"favority_num"];
-    playCell.likeLabel.text = [movie objectForKey:@"like_num"];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"like_num"]];
 }
 
 @end

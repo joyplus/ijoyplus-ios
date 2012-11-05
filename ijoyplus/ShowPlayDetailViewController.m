@@ -163,9 +163,9 @@
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [show objectForKey:@"watch_num"];
-    playCell.collectionLabel.text = [show objectForKey:@"favority_num"];
-    playCell.likeLabel.text = [show objectForKey:@"like_num"];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [show objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [show objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [show objectForKey:@"like_num"]];
     
 }
 
