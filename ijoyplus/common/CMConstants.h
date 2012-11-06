@@ -25,6 +25,7 @@
 #define LOG_BTN_HEIGHT 76 / 2
 #define MAX_COMMENT_NUMBER 10
 
+#define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kTecentAppId @"100317415"   // for login
 
 #define kTencentAppKey @"100666407"

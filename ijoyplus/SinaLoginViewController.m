@@ -117,10 +117,8 @@
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     if([self.fromController isEqual:@"PostViewController"]){
-        [self uploadAvatarUrl];
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
-        [self uploadAvatarUrl];
         friendListViewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
         friendListViewController.sourceType = @"1";
         [self.navigationController pushViewController:friendListViewController animated:YES];
@@ -129,6 +127,7 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
+                [self dismissViewControllerAnimated:YES completion:nil];
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];
@@ -141,7 +140,6 @@
                             [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
                         }
                         [self uploadAvatarUrl];
-                        [self dismissViewControllerAnimated:YES completion:nil];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                     
@@ -182,6 +180,7 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [[WBEngine sharedClient] accessToken], @"access_token", [[WBEngine sharedClient] userID], @"uid", nil];
     [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *nickname = [result objectForKey:@"screen_name"];
+        NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
         NSString *email = [NSString stringWithFormat:@"%@@sina.com", [[WBEngine sharedClient] userID]];
         NSString *sourceId = [[WBEngine sharedClient] userID];
         NSDictionary *newparameters = [NSDictionary dictionaryWithObjectsAndKeys: email, @"username", @"P@ssword1", @"password", nickname, @"nickname", sourceId, @"source_id", @"1", @"source_type", nil];
@@ -200,7 +199,6 @@
                     
                 }];
                 
-                NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
                 parameters = [NSDictionary dictionaryWithObjectsAndKeys: largeAvatarURL, @"url", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     

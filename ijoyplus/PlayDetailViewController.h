@@ -22,7 +22,7 @@
     NSMutableArray *commentArray;
     PlayCell *playCell;
     UITableViewCell *pictureCell;
-    NSDictionary *movie;
+    NSDictionary *video;
     BOOL _reloading;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     UIImageView *playImageView;

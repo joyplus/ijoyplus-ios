@@ -167,7 +167,8 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
+    CGRect getFrame = [[UIScreen mainScreen]applicationFrame];
+    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, getFrame.size.width, getFrame.size.height - NAVIGATION_BAR_HEIGHT - self.offsety)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",self];

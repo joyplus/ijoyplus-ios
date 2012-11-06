@@ -64,7 +64,7 @@
     [commentArray removeAllObjects];
     commentArray = nil;
     playCell = nil;
-    movie = nil;
+    video = nil;
     pullToRefreshManager_ = nil;
     playImageView = nil;
     playButton = nil;
@@ -199,7 +199,7 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", self.programId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        movie = (NSDictionary *)[result objectForKey:@"movie"];
+        video = (NSDictionary *)[result objectForKey:@"movie"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -224,7 +224,7 @@
 
 - (void)setPlayCellValue
 {
-    name = [movie objectForKey:@"name"];
+    name = [video objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
@@ -250,16 +250,16 @@
         playCell.collectionLabel.frame = CGRectMake(playCell.collectionLabel.frame.origin.x, playCell.scoreImageView.frame.origin.y + ROW_HEIGHT, playCell.collectionLabel.frame.size.width, playCell.collectionLabel.frame.size.height);
         
     }
-    [_imageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
-    NSString *score = [movie objectForKey:@"score"];
+    [_imageView setImageWithURL:[NSURL URLWithString:[video objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
+    NSString *score = [video objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"watch_num"]];
-    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"favority_num"]];
-    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"like_num"]];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"like_num"]];
 }
 
 - (void)initPlayCell
@@ -515,7 +515,7 @@
 }
 
 - (void)showIntroduction{
-    NSString *summary = [movie objectForKey:@"summary"];
+    NSString *summary = [video objectForKey:@"summary"];
     IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:name content:summary];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
     lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
@@ -565,39 +565,44 @@
         BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
         [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
         [alert setDestructiveButtonWithTitle:@"确定" block:^{
-            [self showPlayWebPage];
+            [self willPlayVideo];
         }];
         [alert show];
     } else {
-        NSArray *videoUrlArray = [movie objectForKey:@"down_urls"];
-        if(videoUrlArray.count > 0){
-            NSString *videoUrl = nil;
-            for(NSDictionary *video in videoUrlArray){
-                if([LETV isEqualToString:[video objectForKey:@"source"]]){
-                    videoUrl = [self parseVideoUrl:video];
-                    break;
-                }
-            }
-            if(videoUrl == nil){
-                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-            }
-            if(videoUrl == nil){
-                [self showPlayWebPage];
-            } else {
-                MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-                viewController.videoUrl = videoUrl;
-                [self presentModalViewController:viewController animated:YES];
-            }
-        }else {
-            [self showPlayWebPage];
-        }
+        [self willPlayVideo];
     }
 }
 
-- (NSString *)parseVideoUrl:(NSDictionary *)video
+- (void)willPlayVideo
+{
+    NSArray *videoUrlArray = [video objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        NSString *videoUrl = nil;
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[video objectForKey:@"source"]]){
+                videoUrl = [self parseVideoUrl:tempVideo];
+                break;
+            }
+        }
+        if(videoUrl == nil){
+            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+        }
+        if(videoUrl == nil){
+            [self showPlayWebPage];
+        } else {
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = videoUrl;
+            [self presentModalViewController:viewController animated:YES];
+        }
+    }else {
+        [self showPlayWebPage];
+    }
+}
+
+- (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
 {
     NSString *videoUrl;
-    NSArray *urlArray =  [video objectForKey:@"urls"];
+    NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]){
             videoUrl = [url objectForKey:@"url"];
@@ -639,9 +644,9 @@
 - (void)showPlayWebPage
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [movie objectForKey:@"video_urls"];
+    NSArray *urlArray = [video objectForKey:@"video_urls"];
     viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [movie objectForKey:@"name"];
+    viewController.title = [video objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -726,8 +731,7 @@
         [self loginScreen];
     } else {
         PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
-        viewController.programId = self.programId;
-        viewController.programName = name;
+        viewController.program = video;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -739,8 +743,7 @@
         [self loginScreen];
     } else {
         RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
-        viewController.programId = self.programId;
-        viewController.programName = name;
+        viewController.program = video;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -820,8 +823,7 @@
        [self loginScreen];
     } else {
         SendCommentViewController *viewController = [[SendCommentViewController alloc]initWithNibName:@"SendCommentViewController" bundle:nil];
-        viewController.programId = self.programId;
-        viewController.programName = name;
+        viewController.program = video;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }

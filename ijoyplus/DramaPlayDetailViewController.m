@@ -45,7 +45,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    drama = nil;
     dramaCell = nil;
 }
 
@@ -86,7 +85,7 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.programId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        drama = (NSDictionary *)[result objectForKey:@"tv"];
+        video = (NSDictionary *)[result objectForKey:@"tv"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -106,13 +105,13 @@
 
 - (void)setPlayCellValue
 {
-    name = [drama objectForKey:@"name"];
+    name = [video objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
     [playCell.filmTitleLabel setNumberOfLines:0];
     [playCell.publicLabel sizeToFit];
-    totalDramaCount = [[drama objectForKey:@"episodes_count"] integerValue];
+    totalDramaCount = [[video objectForKey:@"episodes_count"] integerValue];
     if(size.height < 30){
         playCell.publicLabel.textAlignment = UITextAlignmentRight;
         playCell.introuctionBtn.frame = CGRectMake(260, playCell.scoreImageView.frame.origin.y, 47, 30);
@@ -134,16 +133,16 @@
         
     }
     
-    [_imageView setImageWithURL:[NSURL URLWithString:[drama objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
-    NSString *score = [drama objectForKey:@"score"];
+    [_imageView setImageWithURL:[NSURL URLWithString:[video objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
+    NSString *score = [video objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [drama objectForKey:@"watch_num"]];
-    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [drama objectForKey:@"favority_num"]];
-    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [drama objectForKey:@"like_num"]];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"like_num"]];
     
 }
 
@@ -329,48 +328,53 @@
         BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
         [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
         [alert setDestructiveButtonWithTitle:@"确定" block:^{
-            [self gotoWebsite:num];
+            [self willPlayVideo:num];
         }];
         [alert show];
     } else {
-        NSArray *episodeArray = [drama objectForKey:@"episodes"] ;
-        NSArray *videoUrlArray = [[episodeArray objectAtIndex:0] objectForKey:@"down_urls"];
-        for(NSDictionary *episode in episodeArray){
-            if([[episode objectForKey:@"name"]integerValue] == num){
-                videoUrlArray = [episode objectForKey:@"down_urls"];
+        [self willPlayVideo:num];
+    }
+}
+
+- (void)willPlayVideo:(NSInteger)num
+{
+    NSArray *episodeArray = [video objectForKey:@"episodes"] ;
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:0] objectForKey:@"down_urls"];
+    for(NSDictionary *episode in episodeArray){
+        if([[episode objectForKey:@"name"]integerValue] == num){
+            videoUrlArray = [episode objectForKey:@"down_urls"];
+            break;
+        }
+    }
+    if(videoUrlArray.count > 0){
+        NSString *videoUrl = nil;
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[video objectForKey:@"source"]]){
+                videoUrl = [self parseVideoUrl:tempVideo];
                 break;
             }
         }
-        if(videoUrlArray.count > 0){
-            NSString *videoUrl = nil;
-            for(NSDictionary *video in videoUrlArray){
-                if([LETV isEqualToString:[video objectForKey:@"source"]]){
-                    videoUrl = [self parseVideoUrl:video];
-                    break;
-                }
+        if(videoUrl == nil){
+            if (videoUrlArray.count > 0) {
+                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
             }
-            if(videoUrl == nil){
-                if (videoUrlArray.count > 0) {
-                    videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-                }
-            }
-            if(videoUrl == nil){
-                [self gotoWebsite:num];
-            } else {
-                MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-                viewController.videoUrl = videoUrl;
-                [self presentModalViewController:viewController animated:YES];
-            }
-        }else {
-            [self gotoWebsite:num];
         }
+        if(videoUrl == nil){
+            [self gotoWebsite:num];
+        } else {
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = videoUrl;
+            [self presentModalViewController:viewController animated:YES];
+        }
+    }else {
+        [self gotoWebsite:num];
     }
 }
 
 - (void)gotoWebsite:(NSInteger)num
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *episodeArray = [drama objectForKey:@"episodes"];
+    NSArray *episodeArray = [video objectForKey:@"episodes"];
     NSString *url = nil;
     for(NSDictionary *episode in episodeArray){
         if([[episode objectForKey:@"name"]integerValue] == num){
@@ -383,12 +387,12 @@
         url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
     }
     viewController.programUrl = url;
-    viewController.title = [drama objectForKey:@"name"];
+    viewController.title = [video objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[drama objectForKey:@"name"] content:[drama objectForKey:@"summary"]];
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[video objectForKey:@"name"] content:[video objectForKey:@"summary"]];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
     lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
     lplv.delegate = self;

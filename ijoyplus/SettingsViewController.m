@@ -123,6 +123,7 @@
         }
         [SFHFKeychainUtils deleteItemForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
         [SFHFKeychainUtils deleteItemForUsername:@"tecentAccessToken" andServiceName:@"tecentlogin" error:nil];
+        [SFHFKeychainUtils deleteItemForUsername:@"tecentExpireTime" andServiceName:@"tecentlogin" error:nil];
         
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
         [SFHFKeychainUtils deleteItemForUsername:username andServiceName:kUserLoginService error:nil];

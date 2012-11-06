@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TencentOAuth.h"
+#import "WBEngine.h"
 
-@interface SendCommentViewController : UIViewController <UITextViewDelegate>
+@interface SendCommentViewController : UIViewController <UITextViewDelegate, TencentSessionDelegate, WBEngineDelegate>
 
 @property (strong, nonatomic) IBOutlet UIButton *sinaBtn;
 @property (strong, nonatomic) IBOutlet UIButton *qqBtn;
-@property (nonatomic, strong)NSString *programId;
-@property (nonatomic, strong)NSString *programName;
+@property (nonatomic, strong)NSDictionary *program;
 @end

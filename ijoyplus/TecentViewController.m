@@ -85,13 +85,7 @@
 
 - (void)getUserInfoResponse:(APIResponse*) response
 {
-    NSString *url = [response.jsonResponse objectForKey:@"figureurl_1"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: url, @"url", nil];
     if([self.fromController isEqual:@"PostViewController"]){
-        //update url
-        [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        }];
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
         //        [self processSinaData];
@@ -112,6 +106,8 @@
                             [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
                         }                        
                         //update url
+                        NSString *url = [response.jsonResponse objectForKey:@"figureurl_1"];
+                        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: url, @"url", nil];                        
                         [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                         }];

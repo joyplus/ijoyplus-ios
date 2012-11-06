@@ -12,7 +12,6 @@
 
 @interface DramaPlayDetailViewController : PlayDetailViewController{
     DramaCell *dramaCell;
-    NSDictionary *drama;
 }
 
 - (void)initDramaCell;

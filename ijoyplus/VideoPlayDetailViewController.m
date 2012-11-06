@@ -42,7 +42,6 @@
 
 - (void)viewDidUnload
 {
-    movie = nil;
     [super viewDidUnload];
 }
 
@@ -107,7 +106,7 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@", @"video", self.programId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        movie = (NSDictionary *)[result objectForKey:@"video"];
+        video = (NSDictionary *)[result objectForKey:@"video"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -127,7 +126,7 @@
 
 - (void)setPlayCellValue
 {
-    name = [movie objectForKey:@"name"];
+    name = [video objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
@@ -155,16 +154,16 @@
         
     }
     
-    [_imageView setImageWithURL:[NSURL URLWithString:[movie objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
-    NSString *score = [movie objectForKey:@"score"];
+    [_imageView setImageWithURL:[NSURL URLWithString:[video objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
+    NSString *score = [video objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"watch_num"]];
-    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"favority_num"]];
-    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [movie objectForKey:@"like_num"]];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"like_num"]];
 }
 
 @end
