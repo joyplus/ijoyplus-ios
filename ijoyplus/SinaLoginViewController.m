@@ -18,6 +18,8 @@
 #import "ServiceConstants.h"
 #import "AppDelegate.h"
 #import "SFHFKeychainUtils.h"
+#import "PopularUserViewController.h"
+#import "UIUtility.h"
 
 @interface SinaLoginViewController (){
     WBAuthorizeWebView *webView;
@@ -25,6 +27,8 @@
     FillFormViewController *fillFormViewController;
     CustomBackButton *backButton;
     FriendListViewController *friendListViewController;
+    PopularUserViewController *viewController;
+    MBProgressHUD *HUD;
 }
 
 - (void)processSinaData;
@@ -42,7 +46,9 @@
     webView = nil;
     backButton = nil;
     fillFormViewController = nil;
-    friendListViewController = nil;;
+    friendListViewController = nil;
+    viewController = nil;
+    HUD = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -110,7 +116,6 @@
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] accessToken] forKey:kSinaWeiboAccessToken];
     [[ContainerUtility sharedInstance]setAttribute:[[WBEngine sharedClient] userID] forKey:kSinaWeiboUID];
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
-    
     if([self.fromController isEqual:@"PostViewController"]){
         [self uploadAvatarUrl];
         [self.navigationController popViewControllerAnimated:YES];
@@ -124,12 +129,10 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            nil];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];
                     if(responseCode == nil){
-                        [self uploadAvatarUrl];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"nickname"] forKey:kUserNickName];
                         [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"username"] forKey:kUserName];
@@ -137,18 +140,14 @@
                         if(![StringUtility stringIsEmpty:[result valueForKey:@"phone"]]){
                             [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
                         }
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate refreshRootView];
+                        [self uploadAvatarUrl];
+                        [self dismissViewControllerAnimated:YES completion:nil];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                     
                 }];
             } else {
-                fillFormViewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-                fillFormViewController.thirdPartyId = [[WBEngine sharedClient] userID];
-                fillFormViewController.thirdPartyType = @"1";
-                [self.navigationController pushViewController:fillFormViewController animated:YES];
-               
+                [self createNewUser];
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
@@ -159,21 +158,84 @@
 
 - (void)uploadAvatarUrl
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                [[WBEngine sharedClient] accessToken], @"access_token",
-                                [[WBEngine sharedClient] userID], @"uid",
-                                nil];
-    
-    [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: largeAvatarURL, @"url", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [[WBEngine sharedClient] accessToken], @"access_token",
+                                    [[WBEngine sharedClient] userID], @"uid",
+                                    nil];
+        
+        [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: largeAvatarURL, @"url", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            }];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"<<<<<<%@>>>>>", error);
         }];
+    }
+}
+
+- (void)createNewUser
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [[WBEngine sharedClient] accessToken], @"access_token", [[WBEngine sharedClient] userID], @"uid", nil];
+    [[AFSinaWeiboAPIClient sharedClient] getPath:@"users/show.json" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *nickname = [result objectForKey:@"screen_name"];
+        NSString *email = [NSString stringWithFormat:@"%@@sina.com", [[WBEngine sharedClient] userID]];
+        NSString *sourceId = [[WBEngine sharedClient] userID];
+        NSDictionary *newparameters = [NSDictionary dictionaryWithObjectsAndKeys: email, @"username", @"P@ssword1", @"password", nickname, @"nickname", sourceId, @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAccountUpdateProfile parameters:newparameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                // login success
+                [self performSelectorOnMainThread:@selector(postRegister) withObject:nil waitUntilDone:NO];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
+                [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if(responseCode == nil){
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
+                    }
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
+                
+                NSString *largeAvatarURL = [result objectForKey:@"avatar_large"];
+                parameters = [NSDictionary dictionaryWithObjectsAndKeys: largeAvatarURL, @"url", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                [[ContainerUtility sharedInstance]setAttribute:nickname forKey:kUserNickName];
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+            } else {               
+                HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                HUD.mode = MBProgressHUDModeCustomView;
+                [self.view addSubview:HUD];
+                HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+                NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
+                HUD.labelText = NSLocalizedString(msg, nil);
+                [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [UIUtility showSystemError:self.view];
+        }];
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"<<<<<<%@>>>>>", error);
+        [UIUtility showSystemError:self.view];
     }];
+}
+
+- (void)postRegister
+{
+    PopularUserViewController *popularUserViewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
+    [self.navigationController pushViewController:popularUserViewController animated:YES];
+}
+
+- (void)showError
+{
+    sleep(2);
 }
 
 - (void)engine:(WBEngine *)engine didFailToLogInWithError:(NSError *)error

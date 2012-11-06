@@ -32,6 +32,9 @@
 #import "CacheUtility.h"
 #import "BlockAlertView.h"
 #import "MediaPlayerViewController.h"
+#import "LoginViewController.h"
+#import "SFHFKeychainUtils.h"
+#import "WBEngine.h"
 
 
 #define ROW_HEIGHT 40
@@ -704,17 +707,23 @@
     [self.view addSubview:bottomToolbar];
 }
 
+- (void)loginScreen
+{
+    [[WBEngine sharedClient] logOut];
+    NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
+    [SFHFKeychainUtils deleteItemForUsername:username andServiceName:kUserLoginService error:nil];
+    [[CacheUtility sharedCache] clear];
+    [[ContainerUtility sharedInstance] clear];
+    LoginViewController *viewController = [[LoginViewController alloc]initWithNibName:@"LoginViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [self.navigationController presentViewController:navController animated:YES completion:nil];
+}
+
 - (void)share
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = @"请登陆！";
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1.5];
+        [self loginScreen];
     } else {
         PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
         viewController.programId = self.programId;
@@ -727,13 +736,7 @@
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = @"请登陆！";
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1.5];
+        [self loginScreen];
     } else {
         RecommandViewController *viewController = [[RecommandViewController alloc]initWithNibName:@"RecommandViewController" bundle:nil];
         viewController.programId = self.programId;
@@ -750,13 +753,7 @@
     }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = @"请登陆！";
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1.5];
+        [self loginScreen];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     self.programId, @"prod_id",
@@ -790,13 +787,7 @@
     }
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = @"请登陆！";
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1.5];
+        [self loginScreen];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                     self.programId, @"prod_id",
@@ -826,13 +817,7 @@
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = @"请登陆！";
-        [HUD show:YES];
-        [HUD hide:YES afterDelay:1.5];
+       [self loginScreen];
     } else {
         SendCommentViewController *viewController = [[SendCommentViewController alloc]initWithNibName:@"SendCommentViewController" bundle:nil];
         viewController.programId = self.programId;

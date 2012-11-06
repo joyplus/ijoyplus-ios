@@ -16,12 +16,16 @@
 #import "ServiceConstants.h"
 #import "AppDelegate.h"
 #import "SFHFKeychainUtils.h"
+#import "UIUtility.h"
+#import "MBProgressHUD.h"
+#import "PopularUserViewController.h"
 
 @interface TecentViewController (){
     TencentOAuth* _tencentOAuth;
     NSMutableArray* _permissions;
     FillFormViewController *fillFormViewController;
     CustomBackButton *backButton;
+    MBProgressHUD *HUD;
 }
 - (void)closeSelf;
 @end
@@ -36,6 +40,7 @@
     _permissions = nil;
     fillFormViewController = nil;
     backButton = nil;
+    HUD = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -72,35 +77,30 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
-    if([num boolValue]){
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-
 - (void)tencentDidLogin
 {
     [self saveAuthorizeDataToKeychain];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: _tencentOAuth.openId, @"source_id", @"2", @"source_type", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [_tencentOAuth getUserInfo];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"<<<<<<%@>>>>>", error);
-    }];
-    [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kTencentUserLoggedIn];
+    [_tencentOAuth getUserInfo];
+}
+
+- (void)getUserInfoResponse:(APIResponse*) response
+{
+    NSString *url = [response.jsonResponse objectForKey:@"figureurl_1"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: url, @"url", nil];
     if([self.fromController isEqual:@"PostViewController"]){
+        //update url
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
         [self.navigationController popViewControllerAnimated:YES];
     } else if([self.fromController isEqual:@"SearchFriendViewController"]){
-//        [self processSinaData];
+        //        [self processSinaData];
     } else{
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: _tencentOAuth.openId, @"source_id", @"2", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
-                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                            nil];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
                 [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     NSString *responseCode = [result objectForKey:@"res_code"];
                     if(responseCode == nil){
@@ -110,20 +110,18 @@
                         [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
                         if(![StringUtility stringIsEmpty:[result valueForKey:@"phone"]]){
                             [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"phone"] forKey:kPhoneNumber];
-                        }
-                        _tencentOAuth.accessToken = nil;
-                        _tencentOAuth = nil;
-                        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-                        [appDelegate refreshRootView];
+                        }                        
+                        //update url
+                        [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                        }];
+                        [self dismissViewControllerAnimated:YES completion:nil];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                     
                 }];
             } else {
-                fillFormViewController = [[FillFormViewController alloc]initWithNibName:@"FillFormViewController" bundle:nil];
-                fillFormViewController.thirdPartyId = _tencentOAuth.openId;
-                fillFormViewController.thirdPartyType = @"2";
-                [self.navigationController pushViewController:fillFormViewController animated:YES];
+                [self createNewUser:response.jsonResponse];
                 
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -133,15 +131,50 @@
     }
 }
 
-
-- (void)getUserInfoResponse:(APIResponse*) response
+- (void)createNewUser:(NSDictionary *)userDict
 {
-    NSString *url = [response.jsonResponse objectForKey:@"figureurl_1"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: url, @"url", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+        NSString *nickname = [userDict objectForKey:@"nickname"];
+        NSString *email = [NSString stringWithFormat:@"%@@qq.com", _tencentOAuth.openId];
+        NSString *sourceId = _tencentOAuth.openId;
+        NSDictionary *newparameters = [NSDictionary dictionaryWithObjectsAndKeys: email, @"username", @"P@ssword1", @"password", nickname, @"nickname", sourceId, @"source_id", @"2", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAccountUpdateProfile parameters:newparameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                // login success
+                [self performSelectorOnMainThread:@selector(postRegister) withObject:nil waitUntilDone:NO];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
+                [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if(responseCode == nil){
+                        [[ContainerUtility sharedInstance]setAttribute:[result valueForKey:@"id"] forKey:kUserId];
+                    }
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                
+                NSString *url = [userDict objectForKey:@"figureurl_1"];
+                parameters = [NSDictionary dictionaryWithObjectsAndKeys: url, @"url", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathUserUpdatePicUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                [[ContainerUtility sharedInstance]setAttribute:nickname forKey:kUserNickName];
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
+            } else {
+                [self performSelectorOnMainThread:@selector(showError) withObject:nil waitUntilDone:NO];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [UIUtility showSystemError:self.view];
+        }];
+}
+
+- (void)postRegister
+{
+    PopularUserViewController *popularUserViewController = [[PopularUserViewController alloc]initWithNibName:@"PopularUserViewController" bundle:nil];
+    [self.navigationController pushViewController:popularUserViewController animated:YES];
+}
+
+- (void)showError
+{
+    [UIUtility showSystemError:self.view];
 }
 
 
@@ -154,7 +187,7 @@
 {
     [SFHFKeychainUtils storeUsername:@"tecentOpenId" andPassword:_tencentOAuth.openId forServiceName:@"tecentlogin" updateExisting:YES error:nil];
 	[SFHFKeychainUtils storeUsername:@"tecentAccessToken" andPassword:_tencentOAuth.accessToken forServiceName:@"tecentlogin" updateExisting:YES error:nil];
-//	[SFHFKeychainUtils storeUsername:kWBKeychainExpireTime andPassword:[NSString stringWithFormat:@"%lf", expireTime] forServiceName:@"tecentlogin" updateExisting:YES error:nil];
+	[SFHFKeychainUtils storeUsername:@"tecentExpireTime" andPassword:[NSString stringWithFormat:@"%f", [_tencentOAuth.expirationDate timeIntervalSince1970]] forServiceName:@"tecentlogin" updateExisting:YES error:nil];
 }
 
 @end

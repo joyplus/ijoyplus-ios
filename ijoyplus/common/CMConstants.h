@@ -38,7 +38,6 @@
 
 #define kUserLoggedIn @"userLoggedIn"
 #define kSinaUID @"kSinaUID"
-#define kTencentUserLoggedIn @"tencentUserLoggedIn"
 
 #define kUserLoginService @"joypluslogin"
 #define kUserId @"kUserId"
