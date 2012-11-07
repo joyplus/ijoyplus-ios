@@ -30,6 +30,7 @@
 {
     [super viewDidUnload];
     [self.webView loadRequest: nil];
+    [self.webView removeFromSuperview];
     self.webView = nil;
 //    HUD = nil;
     self.programUrl = nil;
@@ -84,18 +85,6 @@
 - (void)closeSelf
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    if (self.webView.loading) {
-        [self.webView stopLoading];
-    }
-    [self.webView loadRequest: nil];
-    [self.webView removeFromSuperview];
-    self.webView = nil;
-    // further logic ...
 }
 
 //- (UIButton *)findButtonInView:(UIView *)view {
