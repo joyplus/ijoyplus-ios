@@ -19,9 +19,9 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "CustomPlaceHolderTextView.h"
-#import "AppDelegate.h"
 #import "TecentViewController.h"
 #import "SFHFKeychainUtils.h"
+#import "AFHTTPClient.h"
 
 #define  TEXT_MAX_COUNT 140
 
@@ -56,7 +56,6 @@
     _tencentOAuth = nil;
     tecentViewController = nil;
     viewController = nil;
-    [WBEngine sharedClient].delegate = nil;
     self.program = nil;
     [self setTextView:nil];
     [self setTextCount:nil];
@@ -89,8 +88,6 @@
     [self.sinaBtn addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
     [self.qqBtn setFrame: CGRectMake(101, 129, 24, 23)];
     [self.qqBtn addTarget:self action:@selector(tencentLoginScreen)forControlEvents:UIControlEventTouchUpInside];
-    
-    [WBEngine sharedClient].delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -216,7 +213,12 @@
     if(btn1Selected){
         if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
             NSString *content = [NSString stringWithFormat:@"#%@# %@", [program objectForKey:@"name"], self.textView.text];
-            [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
+            AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:[NSURL URLWithString:kSinaWeiboBaseUrl]];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", nil];
+            [client postPath:kSinaWeiboUpdateUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            }];
         } else {
             HUD.mode = MBProgressHUDModeCustomView;
             HUD.labelText = @"请点击新浪图标，登陆微博！";
@@ -227,15 +229,13 @@
     }
     if(btn2Selected){
         if([self checkTencentAuth]){
-            NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                           @"转自悦视频", @"title",
-                                           kJoyplusWebSite, @"url",
-                                           [program objectForKey:@"name"],@"comment",
-                                           self.textView.text,@"summary",
-                                           [program objectForKey:@"poster"],@"images",
-                                           @"4",@"source",
-                                           nil];
-            [_tencentOAuth addShareWithParams:params];
+            AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:[NSURL URLWithString:kTecentBaseURL]];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:_tencentOAuth.accessToken, @"access_token", kTecentAppId, @"oauth_consumer_key", _tencentOAuth.openId, @"openid", @"json", @"format", @"转自悦视频", @"title",kJoyplusWebSite, @"url", [program objectForKey:@"name"],@"comment", self.textView.text,@"summary", [program objectForKey:@"poster"],@"images", @"4",@"source", nil];
+            [client postPath:kTecentAddShare parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
         } else {
             HUD.mode = MBProgressHUDModeCustomView;
             HUD.labelText = @"请点击腾讯图标登陆！";
@@ -244,6 +244,10 @@
             return;
         }        
     }
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.labelText = NSLocalizedString(@"share_success", nil);
+    [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
 }
 
 - (void)postSuccess
@@ -268,20 +272,6 @@
 	} else {
         return YES;
     }
-}
-
-- (void)engine:(WBEngine *)engine requestDidFailWithError:(NSError *)error
-{
-    [UIUtility showSystemError:self.view];
-}
-- (void)engine:(WBEngine *)engine requestDidSucceedWithResult:(id)result
-{
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.labelText = NSLocalizedString(@"share_success", nil);
-    [HUD showWhileExecuting:@selector(postSuccess) onTarget:self withObject:nil animated:YES];
 }
 
 @end

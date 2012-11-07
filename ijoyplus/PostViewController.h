@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "TencentOAuth.h"
-#import "WBEngine.h"
 
-@interface PostViewController : UIViewController <UITextViewDelegate, TencentSessionDelegate, WBEngineDelegate>
+@interface PostViewController : UIViewController <UITextViewDelegate, TencentSessionDelegate>
 
 @property (strong, nonatomic) IBOutlet UIButton *sinaBtn;
 @property (strong, nonatomic) IBOutlet UIButton *qqBtn;

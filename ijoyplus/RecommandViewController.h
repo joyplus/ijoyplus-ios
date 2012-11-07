@@ -8,9 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "TencentOAuth.h"
-#import "WBEngine.h"
 
-@interface RecommandViewController : UIViewController <UITextViewDelegate, TencentSessionDelegate, WBEngineDelegate>
+@interface RecommandViewController : UIViewController <UITextViewDelegate, TencentSessionDelegate>
 @property (strong, nonatomic) IBOutlet UIButton *qqBtn;
 
 @property (nonatomic, strong)NSDictionary *program;
