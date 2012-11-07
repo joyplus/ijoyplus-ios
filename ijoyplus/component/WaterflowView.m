@@ -226,8 +226,10 @@
         for (WaterFlowCell *cell in array)
         {
             [self recycleCellIntoReusableQueue:cell];
-            for(UIView *subview in cell.subviews){
-                [subview removeFromSuperview];
+            if(cell.subviews != nil && cell.subviews.count > 0){
+                for(UIView *subview in cell.subviews){
+                    [subview removeFromSuperview];
+                }
             }
             [cell removeFromSuperview];
         }

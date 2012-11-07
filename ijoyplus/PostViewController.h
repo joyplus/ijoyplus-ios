@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TencentOAuth.h"
 
-@interface PostViewController : UIViewController <UITextViewDelegate>
+@interface PostViewController : UIViewController <UITextViewDelegate, TencentSessionDelegate>
 
 @property (strong, nonatomic) IBOutlet UIButton *sinaBtn;
 @property (strong, nonatomic) IBOutlet UIButton *qqBtn;
-@property (nonatomic, strong)NSString *programId;
-@property (nonatomic, strong)NSString *programName;
+@property (nonatomic, strong)NSDictionary *program;
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "MediaPlayerViewController.h"
 #import "BottomTabViewController.h"
 #import "AFHTTPRequestOperationLogger.h"
 #import "Reachability.h"
@@ -90,29 +91,10 @@
 
 - (void)renewSession
 {
-    NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
-    NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:kUserLoginService error:nil];
+//    NSString *username = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserName];
+//    NSString *password = [SFHFKeychainUtils getPasswordForUsername:kUserName andServiceName:kUserLoginService error:nil];
     NSString *tecentOpenId = [SFHFKeychainUtils getPasswordForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
-    if(![StringUtility stringIsEmpty:password] && ![StringUtility stringIsEmpty:username]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    username, @"username",
-                                    password, @"password",
-                                    nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(![responseCode isEqualToString:kSuccessResCode]){
-                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO] forKey:kUserLoggedIn];
-                [[WBEngine sharedClient] logOut];
-                [SFHFKeychainUtils deleteItemForUsername:username andServiceName:@"login" error:nil];
-                [[CacheUtility sharedCache] clear];
-                [[ContainerUtility sharedInstance] clear];
-                [self refreshRootView];
-            }
-        }
-        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"<<<<<<%@>>>>>", error);
-        }];
-    } else if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [[WBEngine sharedClient] userID], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
@@ -163,6 +145,14 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+//- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+//    if([detailViewController.modalViewController isKindOfClass:MediaPlayerViewController.class ]){
+//        return UIInterfaceOrientationMaskLandscape;
+//    } else {
+//        return UIInterfaceOrientationMaskPortrait;
+//    }
+//}
 
 - (void)refreshRootView
 {

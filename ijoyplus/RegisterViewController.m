@@ -272,9 +272,9 @@
 {
     sleep(2);
     [[ContainerUtility sharedInstance]setAttribute:emailCell.titleLabel.text forKey:kUserName];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
-    [appDelegate refreshRootView];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate refreshRootView];
 }
 
 - (IBAction)sinaLogin:(id)sender {

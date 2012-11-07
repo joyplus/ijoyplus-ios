@@ -11,7 +11,6 @@
 #import "DramaCell.h"
 
 @interface ShowPlayDetailViewController : PlayDetailViewController{
-    NSDictionary *show;
     NSInteger totalDramaCount;
     NSArray *episodeArray;
 }

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1478A21D162AB1EB0054D55D /* CommentListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1478A21C162AB1EB0054D55D /* CommentListViewController.xib */; };
-		220C086E1643DF080014EB9D /* Default1136@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220C086D1643DF080014EB9D /* Default1136@2x.png */; };
 		EB02B843160094E30027F31C /* CustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02B842160094E30027F31C /* CustomSegmentedControl.m */; };
 		EB07617F16227CB100C9727C /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB07617D16227CB100C9727C /* RegisterViewController.m */; };
 		EB07618016227CB100C9727C /* RegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB07617E16227CB100C9727C /* RegisterViewController.xib */; };
@@ -260,6 +259,7 @@
 		EBC756EE1627FC5F00B9B14A /* CustomPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC756ED1627FC5F00B9B14A /* CustomPlaceHolderTextView.m */; };
 		EBD8AD96161053A200D79F62 /* TecentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD95161053A200D79F62 /* TecentViewController.m */; };
 		EBD8ADA016105F1100D79F62 /* CacheUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBD8AD9F16105F1100D79F62 /* CacheUtility.m */; };
+		EBE387D116474D3100843CEE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBE387D016474D3100843CEE /* Default-568h@2x.png */; };
 		EBE44B661609A01E002BEB0C /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE44B641609A01E002BEB0C /* HomeViewController.m */; };
 		EBE44B671609A01E002BEB0C /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B651609A01E002BEB0C /* HomeViewController.xib */; };
 		EBE44B731609E645002BEB0C /* bgwithline@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = EBE44B701609E645002BEB0C /* bgwithline@2X.png */; };
@@ -274,7 +274,6 @@
 
 /* Begin PBXFileReference section */
 		1478A21C162AB1EB0054D55D /* CommentListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentListViewController.xib; sourceTree = "<group>"; };
-		220C086D1643DF080014EB9D /* Default1136@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default1136@2x.png"; sourceTree = "<group>"; };
 		B94A1800965845D3B4A40881 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		DDF63B43DF6849BC89060EC7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB02B841160094E30027F31C /* CustomSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSegmentedControl.h; sourceTree = "<group>"; };
@@ -658,6 +657,7 @@
 		EBD8AD95161053A200D79F62 /* TecentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TecentViewController.m; sourceTree = "<group>"; };
 		EBD8AD9E16105F1100D79F62 /* CacheUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheUtility.h; sourceTree = "<group>"; };
 		EBD8AD9F16105F1100D79F62 /* CacheUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheUtility.m; sourceTree = "<group>"; };
+		EBE387D016474D3100843CEE /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		EBE44B641609A01E002BEB0C /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		EBE44B651609A01E002BEB0C /* HomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		EBE44B701609E645002BEB0C /* bgwithline@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bgwithline@2X.png"; sourceTree = "<group>"; };
@@ -720,10 +720,10 @@
 		EB32BCB715F885EC00C878D5 = {
 			isa = PBXGroup;
 			children = (
+				EBE387D016474D3100843CEE /* Default-568h@2x.png */,
 				EB3CB81616315C5100142AD0 /* 图标114.png */,
 				EB3CB81316315C4B00142AD0 /* 图标57.png */,
 				EB24CC92160B159F009618C6 /* Default@2x.png */,
-				220C086D1643DF080014EB9D /* Default1136@2x.png */,
 				EB32BCCC15F885EC00C878D5 /* ijoyplus */,
 				EB32BD0515F887A400C878D5 /* External */,
 				EB32BD1C15F887A400C878D5 /* Resources */,
@@ -995,12 +995,6 @@
 				EBB24CD9162EDA0B008FDF04 /* VideoPlayDetailViewController.m */,
 				EBB24CDE162EDC06008FDF04 /* ShowPlayDetailViewController.h */,
 				EBB24CDF162EDC07008FDF04 /* ShowPlayDetailViewController.m */,
-				EBBE2160162D6B6000CC5026 /* SendCommentViewController.h */,
-				EBBE2161162D6B6000CC5026 /* SendCommentViewController.m */,
-				EBBE2162162D6B6100CC5026 /* SendCommentViewController.xib */,
-				EB632F3716240D9A0003DDD3 /* RecommandViewController.h */,
-				EB632F3816240D9B0003DDD3 /* RecommandViewController.m */,
-				EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */,
 				EBAF6A3F15FDDBB300938FE3 /* SearchFilmViewController.h */,
 				EBAF6A4015FDDBB300938FE3 /* SearchFilmViewController.m */,
 				EBAF6A4115FDDBB400938FE3 /* SearchFilmViewController.xib */,
@@ -1010,11 +1004,15 @@
 				EBAFB50A1613F5E000C0263B /* CommentViewController.h */,
 				EBAFB50B1613F5E000C0263B /* CommentViewController.m */,
 				EB632F3C1624137B0003DDD3 /* CommentViewController.xib */,
-				EB090AFF16081E9D002F7E57 /* IntroductionView.h */,
-				EB090B0016081E9E002F7E57 /* IntroductionView.m */,
 				EB11D27A16114DFD00027F07 /* PostViewController.h */,
 				EB11D27B16114DFD00027F07 /* PostViewController.m */,
 				EB11D27C16114DFD00027F07 /* PostViewController.xib */,
+				EBBE2160162D6B6000CC5026 /* SendCommentViewController.h */,
+				EBBE2161162D6B6000CC5026 /* SendCommentViewController.m */,
+				EBBE2162162D6B6100CC5026 /* SendCommentViewController.xib */,
+				EB632F3716240D9A0003DDD3 /* RecommandViewController.h */,
+				EB632F3816240D9B0003DDD3 /* RecommandViewController.m */,
+				EB632F3916240D9C0003DDD3 /* RecommandViewController.xib */,
 				EB0761C01622EF0300C9727C /* ProgramViewController.h */,
 				EB0761C11622EF0400C9727C /* ProgramViewController.m */,
 				EB0761C21622EF0700C9727C /* ProgramViewController.xib */,
@@ -1129,6 +1127,8 @@
 		EBAF6AAC15FDE9F700938FE3 /* compoment */ = {
 			isa = PBXGroup;
 			children = (
+				EB090AFF16081E9D002F7E57 /* IntroductionView.h */,
+				EB090B0016081E9E002F7E57 /* IntroductionView.m */,
 				EBAF6AAD15FDEA2900938FE3 /* PopularCellFactory.xib */,
 				EBAF6AAF15FDEB1C00938FE3 /* SearchFilmCell.h */,
 				EBAF6AB015FDEB1C00938FE3 /* SearchFilmCell.m */,
@@ -1534,7 +1534,7 @@
 				EBB3DE63163F7F0E006EAF80 /* DramaTableViewController.xib in Resources */,
 				EBB3DE65163F7F0E006EAF80 /* VideoTableViewController.xib in Resources */,
 				EBBCF056164106BA006F8D0B /* MediaPlayerViewController.xib in Resources */,
-				220C086E1643DF080014EB9D /* Default1136@2x.png in Resources */,
+				EBE387D116474D3100843CEE /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

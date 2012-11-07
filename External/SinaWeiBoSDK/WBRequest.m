@@ -158,7 +158,7 @@
 	if (error) 
 	{
 		[self failedWithError:error];
-	} 
+	}
 	else 
 	{
         if ([delegate respondsToSelector:@selector(request:didFinishLoadingWithResult:)])

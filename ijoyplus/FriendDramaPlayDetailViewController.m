@@ -75,7 +75,7 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@%@", @"frienddrama", self.programId, self.userId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        drama = (NSDictionary *)[result objectForKey:@"tv"];
+        video = (NSDictionary *)[result objectForKey:@"tv"];
         [self setPlayCellValue];
         [self postInitialization:result];
         friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];

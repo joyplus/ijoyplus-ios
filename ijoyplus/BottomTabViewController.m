@@ -5,17 +5,17 @@
 //  Created by Peter Boctor on 12/15/10.
 //
 // Copyright (c) 2011 Peter Boctor
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -95,13 +95,11 @@
     return (toInterfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self initView];
-    
     self.delegate = self;
+    [self initView];
     [self initTabControllers];
     self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController4,detailController3, nil];
     [self setSelectedIndex:0];
@@ -110,23 +108,9 @@
 
 - (void) initView
 {
-    if(bottomToolbar == nil){
-        [self initToolBar];
-    }
-    NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-    if([num boolValue]){
-        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-//        self.title = NSLocalizedString(@"popular", nil);
-        [self.tabBar setHidden:NO];
-        [bottomToolbar setHidden:YES];
-        [bottomToolbar removeFromSuperview];
-    } else {
-        self.navigationItem.rightBarButtonItem = nil;
-        [self.tabBar setHidden:YES];
-        [bottomToolbar setHidden:NO];
-        [self.view addSubview:bottomToolbar];
-    }
+    rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+    self.navigationItem.rightBarButtonItem = rightButton;
+    [self.tabBar setHidden:NO];
     self.title = NSLocalizedString(@"app_name", nil);
     [self setSelectedIndex:0];
 }
@@ -143,7 +127,7 @@
     
     detailController3 = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
     detailController3.userid = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    detailController3.offsety = NAVIGATION_BAR_HEIGHT + TAB_BAR_HEIGHT;
+    detailController3.offsety = TAB_BAR_HEIGHT;
     detailController3.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"list", nil) image:[UIImage imageNamed:@"my_tab"] tag:2];
     
     detailController4 = [[MyselfViewController alloc]initWithNibName:@"MyselfViewController" bundle:nil];
@@ -163,38 +147,36 @@
     if ([viewController isKindOfClass: [FriendViewController class]] || [viewController isKindOfClass:[MyselfViewController class]] || [viewController isKindOfClass:[HomeViewController class]]) {
         NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
         if(![num boolValue]){
-            BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"会话已过期，请重新登陆！"];
-            [alert setDestructiveButtonWithTitle:@"确定" block:^{
-                [[WBEngine sharedClient] logOut];
-                NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
-                [SFHFKeychainUtils deleteItemForUsername:username andServiceName:kUserLoginService error:nil];
-                [[CacheUtility sharedCache] clear];
-                [[ContainerUtility sharedInstance] clear];
-                [self viewDidLoad];
-            }];
-            [alert show];
+            [[WBEngine sharedClient] logOut];
+            NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
+            [SFHFKeychainUtils deleteItemForUsername:username andServiceName:kUserLoginService error:nil];
+            [[CacheUtility sharedCache] clear];
+            [[ContainerUtility sharedInstance] clear];
+        }
+    }
+    if([viewController isKindOfClass:[PopularSegmentViewController class]]){
+        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+        self.navigationItem.rightBarButtonItem = rightButton;
+        self.title = NSLocalizedString(@"app_name", nil);
+    } else {
+        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
+        if(![num boolValue]){
+            [self loginScreen];
             return NO;
         }
-    } 
-    if([viewController isKindOfClass:[PopularSegmentViewController class]]){
-        NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
-        if([num boolValue]){
-            rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
+        if ([viewController isKindOfClass: [FriendViewController class]]){
+            rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemAction target:self action:@selector(searchFriend)];
             self.navigationItem.rightBarButtonItem = rightButton;
-            self.title = NSLocalizedString(@"popular", nil);
+            self.title = NSLocalizedString(@"friend", nil);
+        } else if ([viewController isKindOfClass: [HomeViewController class]]){
+            rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemAction target:self action:@selector(settings)];
+            self.navigationItem.rightBarButtonItem = rightButton;
+            self.title = NSLocalizedString(@"list", nil);
+        } else if ([viewController isKindOfClass: [MyselfViewController class]]){
+            rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
+            self.navigationItem.rightBarButtonItem = rightButton;
+            self.title = NSLocalizedString(@"myself", nil);
         }
-    } else if ([viewController isKindOfClass: [FriendViewController class]]){
-        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search_friend", nil) style:UIBarButtonSystemItemAction target:self action:@selector(searchFriend)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"friend", nil);
-    } else if ([viewController isKindOfClass: [HomeViewController class]]){
-        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"settings", nil) style:UIBarButtonSystemItemAction target:self action:@selector(settings)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"list", nil);
-    } else if ([viewController isKindOfClass: [MyselfViewController class]]){
-        rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"message", nil) style:UIBarButtonSystemItemAction target:self action:@selector(message)];
-        self.navigationItem.rightBarButtonItem = rightButton;
-        self.title = NSLocalizedString(@"myself", nil);
     }
     return YES;
 }
@@ -204,18 +186,18 @@
     SearchFilmViewController *viewController = [[SearchFilmViewController alloc]initWithNibName:@"SearchFilmViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     [self presentViewController:navController animated:YES completion:nil];
-//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+    //    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
 }
 
 - (void)settings
 {
     SettingsViewController *viewController = [[SettingsViewController alloc]initWithNibName:@"SettingsViewController" bundle:nil];
-////    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
-//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
-////    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
-//    [navController pushViewController:viewController animated:YES];
+    ////    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    //    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //    UINavigationController *navController = (UINavigationController *)appDelegate.window.rootViewController;
+    ////    [appDelegate.window.rootViewController presentModalViewController:navController animated:YES];
+    //    [navController pushViewController:viewController animated:YES];
     
     UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -243,18 +225,18 @@
 {
     bottomToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - TAB_BAR_HEIGHT - NAVIGATION_BAR_HEIGHT - SEGMENT_HEIGHT + 9, self.view.frame.size.width, TAB_BAR_HEIGHT)];
     [UIUtility customizeToolbar:bottomToolbar];
-//    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
-//    [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
-//    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-//    [UIUtility addTextShadow:registerBtn.titleLabel];
-//    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-//    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-//    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-//    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-//    [registerBtn addTarget:self action:@selector(registerScreen)forControlEvents:UIControlEventTouchUpInside];
-//    [bottomToolbar addSubview:registerBtn];
+    //    UIButton *registerBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    //    [registerBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH, LOG_BTN_HEIGHT)];
+    //    [registerBtn setTitle:NSLocalizedString(@"register", nil) forState:UIControlStateNormal];
+    //    [registerBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    //    [registerBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    //    [UIUtility addTextShadow:registerBtn.titleLabel];
+    //    registerBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+    //    UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    //    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_normal"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+    //    [registerBtn setBackgroundImage:[[UIImage imageNamed:@"reg_btn_active"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+    //    [registerBtn addTarget:self action:@selector(registerScreen)forControlEvents:UIControlEventTouchUpInside];
+    //    [bottomToolbar addSubview:registerBtn];
     
     UIButton *loginBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [loginBtn setFrame:CGRectMake(MOVIE_LOGO_WIDTH_GAP, 5, LOG_BTN_WIDTH * 2, LOG_BTN_HEIGHT)];
@@ -290,7 +272,10 @@
 - (void)closeChild
 {
     [self dismissModalViewControllerAnimated:YES];
-    [self viewDidLoad];
+    [self initView];
+    [self initTabControllers];
+    self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController4,detailController3, nil];
+    [self setSelectedIndex:0];
 }
 
 @end

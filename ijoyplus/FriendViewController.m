@@ -13,7 +13,6 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ContainerUtility.h"
 #import "CMConstants.h"
-#import "StringUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "FriendPlayDetailViewController.h"
