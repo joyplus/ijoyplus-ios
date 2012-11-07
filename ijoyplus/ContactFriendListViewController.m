@@ -109,7 +109,20 @@
 - (void)uploadAddressBook
 {
     NSMutableArray *addressBookTemp = [NSMutableArray array];
-    ABAddressBookRef addressBooks = ABAddressBookCreate();
+    ABAddressBookRef addressBooks = nil;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 6.0){
+        addressBooks = ABAddressBookCreateWithOptions(NULL, NULL);
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
+        ABAddressBookRequestAccessWithCompletion(addressBooks, ^(bool granted, CFErrorRef error)
+                                                 {
+                                                     dispatch_semaphore_signal(sema);
+                                                 });
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER);
+        dispatch_release(sema);
+    } else {
+        addressBooks = ABAddressBookCreate();
+    }
+    
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBooks);
     CFIndex nPeople = ABAddressBookGetPersonCount(addressBooks);
     
@@ -167,14 +180,14 @@
                             [unjoinedFriendArray addObject:contact];
                         }
                     }
-//                    NSArray *sortedArray = [joinedFriendArray sortedArrayUsingComparator:^(id a, id b) {
-//                        NSString *first = [a objectForKey:@"name"];
-//                        NSString *second = [b objectForKey:@"name"];
-//                        return [second compare:first];
-//                    }];
+                    //                    NSArray *sortedArray = [joinedFriendArray sortedArrayUsingComparator:^(id a, id b) {
+                    //                        NSString *first = [a objectForKey:@"name"];
+                    //                        NSString *second = [b objectForKey:@"name"];
+                    //                        return [second compare:first];
+                    //                    }];
                     [self.tableView reloadData];
                 } else {
-                    [UIUtility showNetWorkError:self.view];           
+                    [UIUtility showNetWorkError:self.view];
                 }
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
