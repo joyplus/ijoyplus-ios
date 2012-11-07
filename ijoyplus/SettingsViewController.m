@@ -59,8 +59,8 @@
     
     self.firstLabel.text = NSLocalizedString(@"your_account", nil);
     self.secondLabel.text = NSLocalizedString(@"other_settings", nil);
-    NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
-    [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), username] forState:UIControlStateNormal];
+    NSString *nickname = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
+    [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), nickname] forState:UIControlStateNormal];
 //    if([StringUtility stringIsEmpty:username]){
 //        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
 //        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -71,7 +71,7 @@
 //             NSLog(@"%@", error);
 //         }];
 //    }
-    [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), username] forState:UIControlStateNormal];
+    [self.logoutBtn setTitle:[NSString stringWithFormat:NSLocalizedString(@"logout_user", nil), nickname] forState:UIControlStateNormal];
     [self.searchFriendBtn setTitle:NSLocalizedString(@"search_add_friend", nil) forState:UIControlStateNormal];
     [self.commentBtn setTitle:NSLocalizedString(@"comment", nil) forState:UIControlStateNormal];
 
@@ -123,12 +123,12 @@
         }
         [SFHFKeychainUtils deleteItemForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
         [SFHFKeychainUtils deleteItemForUsername:@"tecentAccessToken" andServiceName:@"tecentlogin" error:nil];
+        [SFHFKeychainUtils deleteItemForUsername:@"tecentExpireTime" andServiceName:@"tecentlogin" error:nil];
         
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserName];
         [SFHFKeychainUtils deleteItemForUsername:username andServiceName:kUserLoginService error:nil];
         [[CacheUtility sharedCache] clear];
         [[ContainerUtility sharedInstance] clear];
-        [self.navigationController popToRootViewControllerAnimated:YES];
         AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [appDelegate refreshRootView];
     }];

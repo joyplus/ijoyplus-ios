@@ -167,7 +167,8 @@
     if(flowView != nil){
         [flowView removeFromSuperview];
     }
-    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - self.offsety)];
+    CGRect getFrame = [[UIScreen mainScreen]applicationFrame];
+    flowView = [[WaterflowView alloc] initWithFrameWithoutHeader:CGRectMake(0, 0, getFrame.size.width, getFrame.size.height - NAVIGATION_BAR_HEIGHT - self.offsety)];
     flowView.parentControllerName = @"HomeViewController";
     [flowView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     flowView.cellSelectedNotificationName = [NSString stringWithFormat:@"%@%@", @"myVideoSelected",self];
@@ -267,17 +268,17 @@
         } else {
             [self.avatarImageView setImageWithURL:[NSURL URLWithString:[result valueForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
         }
-        self.fansNumberLabel.text = [result valueForKey:@"fan_num"];
-        self.watchedNumberLabel.text = [result valueForKey:@"follow_num"];
+        self.fansNumberLabel.text = [NSString stringWithFormat:@"%@", [result valueForKey:@"fan_num"]];
+        self.watchedNumberLabel.text = [NSString stringWithFormat:@"%@", [result valueForKey:@"follow_num"]];
         theUserFollowed = [[result valueForKey:@"isFollowed"] intValue];
         NSString *kUserIdString = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         if (self.userid == nil || ![self.userid isEqualToString:kUserIdString]) {
             NSString *btnTitle;
-        if(theUserFollowed != 1){
-            btnTitle = NSLocalizedString(@"follow", nil);
-        } else {
-            btnTitle = NSLocalizedString(@"cancel_follow", nil);
-        }
+            if(theUserFollowed != 1){
+                btnTitle = NSLocalizedString(@"follow", nil);
+            } else {
+                btnTitle = NSLocalizedString(@"cancel_follow", nil);
+            }
             UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:btnTitle style:UIBarButtonSystemItemSearch target:self action:@selector(cancelFollow:)];
             self.navigationItem.rightBarButtonItem = rightButton;
         }
@@ -544,7 +545,7 @@
             NSLog(@"%@", error);
         }];
     } else {
-         [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
                 btn.title = NSLocalizedString(@"follow", nil);
@@ -564,18 +565,18 @@
         }];
         
     }
-
+    
     
     [[AFServiceAPIClient sharedClient] postPath:kPathFriendDestory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-
+            
         } else {
             
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-    }];   
+    }];
 }
 
 - (void)closeSelf

@@ -79,9 +79,15 @@
     return YES;
 }
 
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
 - (void) playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
 {
 	NSTimeInterval lastPlayTime = player.currentPlaybackTime;
+    [playerViewController.view removeFromSuperview];
     [[CacheUtility sharedCache] putInCache:self.videoUrl result:[NSNumber numberWithDouble:lastPlayTime]];
     [self dismissModalViewControllerAnimated:YES];
 }

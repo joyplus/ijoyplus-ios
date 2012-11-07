@@ -25,6 +25,12 @@
 #define LOG_BTN_HEIGHT 76 / 2
 #define MAX_COMMENT_NUMBER 10
 
+#define kJoyplusWebSite @"http://app.joyplus.tv"
+#define kSinaWeiboBaseUrl @"https://api.weibo.com"
+#define kSinaWeiboUpdateUrl @"/2/statuses/update.json"
+
+#define kTecentBaseURL @"https://graph.qq.com/"
+#define kTecentAddShare @"share/add_share"
 #define kTecentAppId @"100317415"   // for login
 
 #define kTencentAppKey @"100666407"
@@ -38,7 +44,6 @@
 
 #define kUserLoggedIn @"userLoggedIn"
 #define kSinaUID @"kSinaUID"
-#define kTencentUserLoggedIn @"tencentUserLoggedIn"
 
 #define kUserLoginService @"joypluslogin"
 #define kUserId @"kUserId"

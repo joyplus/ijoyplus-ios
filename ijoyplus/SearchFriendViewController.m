@@ -171,7 +171,6 @@
                 [self.navigationController pushViewController:viewController animated:YES];
             }
             //        } else if(indexPath.row == 1){
-            //            NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kTencentUserLoggedIn];
             //            if([num boolValue]){
             //                FriendListViewController *viewController = [[FriendListViewController alloc]initWithNibName:@"FriendListViewController" bundle:nil];
             //                viewController.sourceType = @"2";

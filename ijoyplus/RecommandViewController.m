@@ -19,12 +19,16 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "CustomPlaceHolderTextView.h"
+#import "SFHFKeychainUtils.h"
 
 #define  TEXT_MAX_COUNT 140
 
 @interface RecommandViewController (){
     BOOL btn1Selected;
+    BOOL btn2Selected;
     SinaLoginViewController *viewController;
+    TecentViewController *tecentViewController;
+    TencentOAuth *_tencentOAuth;
 }
 @property (weak, nonatomic) IBOutlet UILabel *textCount;
 @property (weak, nonatomic) IBOutlet UILabel *tipLabel;
@@ -39,9 +43,23 @@
 @synthesize textCount;
 @synthesize tipLabel;
 @synthesize textView;
-@synthesize programId;
-@synthesize programName;
+@synthesize program;
 @synthesize sinaBtn;
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    _tencentOAuth = nil;
+    tecentViewController = nil;
+    [self setQqBtn:nil];
+    self.sinaBtn = nil;
+    self.program = nil;
+    [self setTextView:nil];
+    [self setTextCount:nil];
+    [self stopObservingNotifications];
+    [self setTipLabel:nil];
+    [self setSinaBtn:nil];
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,24 +83,11 @@
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"submit", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
     self.navigationItem.rightBarButtonItem = rightButton;
     
-    [self.sinaBtn setBackgroundImage:[UIImage imageNamed:@"sina_inactive"] forState:UIControlStateNormal];
+    [self.sinaBtn setFrame: CGRectMake(67, 130, 20, 20)];
     [self.sinaBtn addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
+    [self.qqBtn setFrame: CGRectMake(101, 129, 24, 23)];
+    [self.qqBtn addTarget:self action:@selector(tencentLoginScreen)forControlEvents:UIControlEventTouchUpInside];
     textView.placeholder = @"请输入推荐理由";
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    self.sinaBtn = nil;
-    self.programId = nil;
-    self.programName = nil;
-    [self setTextView:nil];
-    [self setTextCount:nil];
-    [self stopObservingNotifications];
-    [self setTipLabel:nil];
-    [self setSinaBtn:nil];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -92,6 +97,20 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+        btn1Selected = YES;
+        [self.sinaBtn setBackgroundImage:[UIImage imageNamed:@"sina_normal"] forState:UIControlStateNormal];
+    } else {
+        btn1Selected = NO;
+        [self.sinaBtn setBackgroundImage:[UIImage imageNamed:@"sina_inactive"] forState:UIControlStateNormal];
+    }
+    if([self checkTencentAuth]){
+        btn2Selected = YES;
+        [self.qqBtn setBackgroundImage:[UIImage imageNamed:@"qq_normal"] forState:UIControlStateNormal];
+    } else {
+        btn2Selected = NO;
+        [self.qqBtn setBackgroundImage:[UIImage imageNamed:@"qq_press"] forState:UIControlStateNormal];
+    }
     self.textCount.text = [NSString stringWithFormat:@"%i", TEXT_MAX_COUNT];
     [self updateCount];
     [self startObservingNotifications];
@@ -150,6 +169,22 @@
     }
 }
 
+- (void)tencentLoginScreen
+{
+    btn2Selected = !btn2Selected;
+    if([self checkTencentAuth]){
+        if(btn2Selected){
+            [self.qqBtn setBackgroundImage:[UIImage imageNamed:@"qq_normal"] forState:UIControlStateNormal];
+        } else {
+            [self.qqBtn setBackgroundImage:[UIImage imageNamed:@"qq_press"] forState:UIControlStateNormal];
+        }
+    } else{
+        tecentViewController = [[TecentViewController alloc] init];
+        tecentViewController.fromController = @"PostViewController";
+        [self.navigationController pushViewController:tecentViewController animated:YES];
+    }
+}
+
 - (void)post
 {
     [self.textView resignFirstResponder];
@@ -169,11 +204,42 @@
     }
     
     if(btn1Selected){
-        NSString *content = [NSString stringWithFormat:@"#%@# %@", self.programName, self.textView.text];
-        [[WBEngine sharedClient] sendWeiBoWithText:content image:nil];
+        if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
+            NSString *content = [NSString stringWithFormat:@"#%@# %@", [program objectForKey:@"name"], self.textView.text];
+            AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:[NSURL URLWithString:kSinaWeiboBaseUrl]];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", nil];
+            [client postPath:kSinaWeiboUpdateUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            }];
+        } else {
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = @"请点击新浪图标，登陆微博！";
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:2];
+            return;
+        }
     }
+    if(btn2Selected){
+        if([self checkTencentAuth]){
+            AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:[NSURL URLWithString:kTecentBaseURL]];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:_tencentOAuth.accessToken, @"access_token", kTecentAppId, @"oauth_consumer_key", _tencentOAuth.openId, @"openid", @"json", @"format", @"转自悦视频", @"title",kJoyplusWebSite, @"url", [program objectForKey:@"name"],@"comment", self.textView.text,@"summary", [program objectForKey:@"poster"],@"images", @"4",@"source", nil];
+            [client postPath:kTecentAddShare parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
+        } else {
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.labelText = @"请点击腾讯图标登陆！";
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:2];
+            return;
+        }
+    }
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                self.programId, @"prod_id",
+                                [self.program objectForKey:@"id"], @"prod_id",
                                 self.textView.text, @"reason",
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -185,6 +251,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
 
     }];
+    
     HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"recommand_success", nil);
@@ -196,4 +263,23 @@
     sleep(1.5);
     [self performSelectorOnMainThread:@selector(closeSelf) withObject:nil waitUntilDone:YES];
 }
+
+- (BOOL)checkTencentAuth{
+    if(_tencentOAuth == nil){
+        _tencentOAuth = [[TencentOAuth alloc] initWithAppId:kTecentAppId andDelegate:self];
+    }
+    NSString *openId = [SFHFKeychainUtils getPasswordForUsername:@"tecentOpenId" andServiceName:@"tecentlogin" error:nil];
+    NSString *token = [SFHFKeychainUtils getPasswordForUsername:@"tecentAccessToken" andServiceName:@"tecentlogin" error:nil];
+    NSString *expireDateValue = [SFHFKeychainUtils getPasswordForUsername:@"tecentExpireTime" andServiceName:@"tecentlogin" error:nil];
+    NSDate *expireDate = [NSDate dateWithTimeIntervalSince1970:[expireDateValue doubleValue]];
+    _tencentOAuth.openId = openId;
+    _tencentOAuth.accessToken = token;
+    _tencentOAuth.expirationDate = expireDate;
+	if (![_tencentOAuth isSessionValid]) {
+		return NO;
+	} else {
+        return YES;
+    }
+}
+
 @end

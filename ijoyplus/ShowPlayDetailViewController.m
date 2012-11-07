@@ -43,7 +43,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    show = nil;
     episodeArray = nil;
 }
 
@@ -107,14 +106,14 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.programId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        show = (NSDictionary *)[result objectForKey:@"show"];
+        video = (NSDictionary *)[result objectForKey:@"show"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];
         }
-        episodeArray = [show objectForKey:@"episodes"];
+        episodeArray = [video objectForKey:@"episodes"];
         if(pullToRefreshManager_ == nil && commentArray.count > 0){
             pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableView withClient:self];
         }
@@ -128,13 +127,13 @@
 
 - (void)setPlayCellValue
 {
-    name = [show objectForKey:@"name"];
+    name = [video objectForKey:@"name"];
     CGSize constraint = CGSizeMake(300, 20000.0f);
     CGSize size = [name sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
     playCell.filmTitleLabel.text = name;
     [playCell.filmTitleLabel setNumberOfLines:0];
     [playCell.publicLabel sizeToFit];
-    totalDramaCount = [[show objectForKey:@"episodes_count"] integerValue];
+    totalDramaCount = [[video objectForKey:@"episodes_count"] integerValue];
     if(size.height < 30){
         playCell.publicLabel.textAlignment = UITextAlignmentRight;
         playCell.introuctionBtn.frame = CGRectMake(260, playCell.scoreImageView.frame.origin.y, 47, 30);
@@ -156,16 +155,16 @@
         
     }
     
-    [_imageView setImageWithURL:[NSURL URLWithString:[show objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
-    NSString *score = [show objectForKey:@"score"];
+    [_imageView setImageWithURL:[NSURL URLWithString:[video objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"u0_normal"]];
+    NSString *score = [video objectForKey:@"score"];
     if(![StringUtility stringIsEmpty:score] && ![score isEqualToString:@"0"]){
         playCell.scoreLabel.text = score;
     } else {
         playCell.scoreLabel.text = @"未评分";
     }
-    playCell.watchedLabel.text = [show objectForKey:@"watch_num"];
-    playCell.collectionLabel.text = [show objectForKey:@"favority_num"];
-    playCell.likeLabel.text = [show objectForKey:@"like_num"];
+    playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"watch_num"]];
+    playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
+    playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"like_num"]];
     
 }
 
@@ -184,37 +183,41 @@
         BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
         [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
         [alert setDestructiveButtonWithTitle:@"确定" block:^{
-            [self gotoWebsite:num];
+            [self willPlayVideo:num];
         }];
         [alert show];
     } else {
-        NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-        if(videoUrlArray.count > 0){
-            NSString *videoUrl = nil;
-            for(NSDictionary *video in videoUrlArray){
-                if([LETV isEqualToString:[video objectForKey:@"source"]]){
-                    videoUrl = [self parseVideoUrl:video];
-                    break;
-                }
-            }
-            if(videoUrl == nil){
-                if (videoUrlArray.count > 0) {
-                    videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-                }
-            }
-            if(videoUrl == nil){
-                [self gotoWebsite:num];
-            } else {
-                MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-                viewController.videoUrl = videoUrl;
-                [self presentModalViewController:viewController animated:YES];
-            }
-        }else {
-            [self gotoWebsite:num];
-        }
+        [self willPlayVideo:num];
     }
 }
 
+- (void)willPlayVideo:(NSInteger)num
+{
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        NSString *videoUrl = nil;
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                videoUrl = [self parseVideoUrl:tempVideo];
+                break;
+            }
+        }
+        if(videoUrl == nil){
+            if (videoUrlArray.count > 0) {
+                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+            }
+        }
+        if(videoUrl == nil){
+            [self gotoWebsite:num];
+        } else {
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = videoUrl;
+            [self presentModalViewController:viewController animated:YES];
+        }
+    }else {
+        [self gotoWebsite:num];
+    }
+}
 
 - (void)gotoWebsite:(NSInteger)num
 {
@@ -225,12 +228,12 @@
         url = @"";
     }
     viewController.programUrl = url;
-    viewController.title = [show objectForKey:@"name"];
+    viewController.title = [video objectForKey:@"name"];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)showIntroduction{
-    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[show objectForKey:@"name"] content:[show objectForKey:@"summary"]];
+    IntroductionView *lplv = [[IntroductionView alloc] initWithTitle:[video objectForKey:@"name"] content:[video objectForKey:@"summary"]];
     lplv.frame = CGRectMake(0, 0, lplv.frame.size.width, lplv.frame.size.height * 0.8);
     lplv.center = CGPointMake(160, 210 + _tableView.contentOffset.y);
     lplv.delegate = self;

@@ -93,7 +93,7 @@
         picker.title = NSLocalizedString(@"new_message", nil);
         picker.messageComposeDelegate = self;
         picker.navigationBar.tintColor = [UIColor blackColor];
-        picker.body = NSLocalizedString(@"register_sms_content", nil);
+        picker.body = [NSString stringWithFormat:NSLocalizedString(@"register_sms_content", nil), kJoyplusWebSite];
         picker.recipients = [NSArray arrayWithObject:[friendInfo objectForKey:@"number"]];
         [self presentModalViewController:picker animated:YES];
     }

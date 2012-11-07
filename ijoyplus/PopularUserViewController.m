@@ -356,9 +356,10 @@
 
 - (void)finishRegister
 {
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
-    [appDelegate refreshRootView];
+    [self dismissModalViewControllerAnimated:YES];
+//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [appDelegate refreshRootView];
 }
 
 

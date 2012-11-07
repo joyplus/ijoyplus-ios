@@ -77,14 +77,14 @@
     if(responseCode == nil){
         NSString *key = [NSString stringWithFormat:@"%@%@%@", @"friendshow", self.programId, self.userId];
         [[CacheUtility sharedCache] putInCache:key result:result];
-        show = (NSDictionary *)[result objectForKey:@"show"];
+        video = (NSDictionary *)[result objectForKey:@"show"];
         [self setPlayCellValue];
         [self postInitialization:result];
         friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
         if(friendCommentArray == nil || friendCommentArray.count == 0){
             friendCommentArray = [[NSMutableArray alloc]initWithCapacity:5];
         }
-        episodeArray = [show objectForKey:@"episodes"];
+        episodeArray = [video objectForKey:@"episodes"];
         [commentArray removeAllObjects];
         NSArray *tempArray = (NSArray *)[result objectForKey:@"comments"];
         if(tempArray != nil && tempArray.count > 0){
