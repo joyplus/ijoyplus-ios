@@ -21,6 +21,9 @@
 #import "WBEngine.h"
 #import "BlockAlertView.h"
 #import "CacheUtility.h"
+#import "MyUncaughtExceptionHandler.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <AssetsLibrary/ALAsset.h>
 
 @interface AppDelegate (){
     BottomTabViewController *detailViewController;
@@ -68,6 +71,11 @@
     [[UISegmentedControl appearance] setDividerImage:segUnselectedSelected forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
 }
 
+- (void)installMyUncaughtExceptionHandler
+{
+    InstallMyUncaughtExceptionHandler();
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
@@ -86,6 +94,7 @@
     self.window.rootViewController = viewController;
     [self.window makeKeyAndVisible];
     [self customizeAppearance];
+//    [self installMyUncaughtExceptionHandler];
     return YES;
 }
 

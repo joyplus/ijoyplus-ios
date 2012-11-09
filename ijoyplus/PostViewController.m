@@ -213,9 +213,8 @@
     if(btn1Selected){
         if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
             NSString *content = [NSString stringWithFormat:@"#%@# %@", [program objectForKey:@"name"], self.textView.text];
-            AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:[NSURL URLWithString:kSinaWeiboBaseUrl]];
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", nil];
-            [client postPath:kSinaWeiboUpdateUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", [program objectForKey:@"poster"], @"url", nil];
+            [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             }];

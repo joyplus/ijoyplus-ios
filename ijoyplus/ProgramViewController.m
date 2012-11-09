@@ -11,7 +11,7 @@
 
 
 @interface ProgramViewController (){
-//    MBProgressHUD *HUD;
+    //    MBProgressHUD *HUD;
 }
 
 @end
@@ -30,8 +30,9 @@
 {
     [super viewDidUnload];
     [self.webView loadRequest: nil];
+    [self.webView removeFromSuperview];
     self.webView = nil;
-//    HUD = nil;
+    //    HUD = nil;
     self.programUrl = nil;
 }
 
@@ -51,14 +52,14 @@
     [backButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     
-//    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-//    [self.view addSubview:HUD];
+    //    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    //    [self.view addSubview:HUD];
     //    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"joplus_logo"]];
     //    HUD.mode = MBProgressHUDModeCustomView;
     //    HUD.dimBackground = YES;
-//    HUD.opacity = 1;
-//    [HUD show:YES];
-//    [HUD hide:YES afterDelay:1];
+    //    HUD.opacity = 1;
+    //    [HUD show:YES];
+    //    [HUD hide:YES afterDelay:1];
     
     NSURL *url = [NSURL URLWithString:self.programUrl];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
@@ -86,32 +87,20 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    if (self.webView.loading) {
-        [self.webView stopLoading];
-    }
-    [self.webView loadRequest: nil];
-    [self.webView removeFromSuperview];
-    self.webView = nil;
-    // further logic ...
-}
-
 //- (UIButton *)findButtonInView:(UIView *)view {
 //    UIButton *button = nil;
-//    
+//
 //    if ([view isMemberOfClass:[UIButton class]]) {
 //        return (UIButton *)view;
 //    }
-//    
+//
 //    if (view.subviews && [view.subviews count] > 0) {
 //        for (UIView *subview in view.subviews) {
 //            button = [self findButtonInView:subview];
 //            if (button) return button;
 //        }
 //    }
-//    
+//
 //    return button;
 //}
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DeviceListView.h"
 
-@interface MediaPlayerViewController : UIViewController <DeviceListViewDelegate>
+@interface LocalMediaPlayerViewController : UIViewController <DeviceListViewDelegate>
 
 @property (nonatomic, strong)NSString *videoUrl;
 
