@@ -128,8 +128,8 @@
 
 - (void) initView
 {
-    leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"local_files", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(showLocalMedia)];
-    self.navigationItem.leftBarButtonItem = leftButton;
+//    leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"local_files", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(showLocalMedia)];
+//    self.navigationItem.leftBarButtonItem = leftButton;
     
     rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
     self.navigationItem.rightBarButtonItem = rightButton;

@@ -345,7 +345,9 @@
         viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
         
     }
-    [self.navigationController pushViewController:viewController animated:YES];
+    if(![viewController.userid isEqualToString:@"0"]){
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)postInitialization:(NSDictionary *)result;

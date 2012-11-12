@@ -22,8 +22,9 @@
 #import "TecentViewController.h"
 #import "SFHFKeychainUtils.h"
 #import "AFHTTPClient.h"
+#import "UIImageView+WebCache.h"
 
-#define  TEXT_MAX_COUNT 140
+#define  TEXT_MAX_COUNT 130
 
 @interface PostViewController (){
     BOOL btn1Selected;
@@ -48,10 +49,12 @@
 @synthesize sinaBtn;
 @synthesize qqBtn;
 @synthesize program;
-
+@synthesize type;
 
 - (void)viewDidUnload
 {
+    [self setFilmImageView:nil];
+    [self setInputArea:nil];
     [super viewDidUnload];
     _tencentOAuth = nil;
     tecentViewController = nil;
@@ -63,6 +66,7 @@
     [self setTipLabel:nil];
     [self setSinaBtn:nil];
     [self setQqBtn:nil];
+    self.type = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -84,10 +88,21 @@
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"post", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(post)];
     self.navigationItem.rightBarButtonItem = rightButton;
-    [self.sinaBtn setFrame: CGRectMake(67, 130, 20, 20)];
+    [self.sinaBtn setFrame: CGRectMake(67, 150, 20, 20)];
     [self.sinaBtn addTarget:self action:@selector(sinaLoginScreen)forControlEvents:UIControlEventTouchUpInside];
-    [self.qqBtn setFrame: CGRectMake(101, 129, 24, 23)];
+    [self.qqBtn setFrame: CGRectMake(101, 149, 24, 23)];
     [self.qqBtn addTarget:self action:@selector(tencentLoginScreen)forControlEvents:UIControlEventTouchUpInside];
+    
+    NSString *imageUrl = (NSString *)[self.program valueForKey:@"poster"];
+    if([type isEqualToString:@"1"] || [type isEqualToString:@"2"]){
+        self.filmImageView.frame = CGRectMake(223, 10, 88, 125);
+        [self.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"movie_placeholder"]];
+    } else {
+        self.filmImageView.frame = CGRectMake(223, 20, 88, 74);
+        [self.filmImageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    }
+    
+    self.inputArea.frame = CGRectMake(0, 0, 222, 190);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -213,6 +228,12 @@
     if(btn1Selected){
         if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
             NSString *content = [NSString stringWithFormat:@"#%@# %@", [program objectForKey:@"name"], self.textView.text];
+            if (content.length > 140) {
+                content = [content substringToIndex:140];
+            }
+            if([content rangeOfString:@"\n"].location != NSNotFound){
+                content = [content stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+            }
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", [program objectForKey:@"poster"], @"url", nil];
             [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             

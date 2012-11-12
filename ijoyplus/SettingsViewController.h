@@ -19,5 +19,6 @@
 - (IBAction)logout:(id)sender;
 - (IBAction)searchFriend:(id)sender;
 - (IBAction)commentBtnClicked:(id)sender;
+- (IBAction)aboutUs:(id)sender;
 
 @end

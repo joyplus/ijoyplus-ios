@@ -92,7 +92,7 @@
     if(mediaArray.count < (indexPath.row+1) * 4){
         num = mediaArray.count - indexPath.row * 4;
     }
-    static NSString *CellIdentifier = @"Cell";
+    NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
@@ -111,16 +111,13 @@
             [cell.contentView addSubview:imageBtn];
         }
     }
-
     for(int i = 0; i < 4; i++){
         UIImageView *imageView  = (UIImageView *)[cell viewWithTag:1001 + i];
         if(i < num){
-            MediaObject *meida = [mediaArray objectAtIndex:indexPath.row * 3 + i];
+            MediaObject *meida = [mediaArray objectAtIndex:indexPath.row * 4 + i];
             imageView.image = meida.image;
         } else {
             imageView.image = nil;
-            UIButton *imageBtn  = (UIButton *)[cell viewWithTag:2001 + i];
-            imageBtn = nil;
         }
     }
     return cell;
@@ -133,6 +130,9 @@
     point = [self.tableView convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
     int index = indexPath.row * 4 + btn.tag - 2001;
+    if(index >= mediaArray.count){
+        return;
+    }
     NSLog(@"%i", index);
     MediaObject *media = [mediaArray objectAtIndex:index];
     if(self.mediaType == 1){

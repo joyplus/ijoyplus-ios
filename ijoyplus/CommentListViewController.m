@@ -252,8 +252,11 @@
     NSIndexPath* indexpath = [self.table indexPathForRowAtPoint:point];
     
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-    viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
-    [self.navigationController pushViewController:viewController animated:YES];
+    NSString *useridStr = [NSString stringWithFormat:@"%@", [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"]];
+    if(![useridStr isEqualToString:@"0"]){
+        viewController.userid = useridStr;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)replyBtnClicked:(id)sender

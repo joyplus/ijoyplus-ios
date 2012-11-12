@@ -49,6 +49,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    videoType = @"4";
     WindowHeight = 220;
 }
 
