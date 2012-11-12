@@ -51,6 +51,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    videoType = @"2";
     dramaCell = [[DramaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dramaCell"];
     dramaCell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
@@ -86,6 +87,7 @@
         NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.programId];
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"tv"];
+        episodeArray = [video objectForKey:@"episodes"];
         [self setPlayCellValue];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -273,7 +275,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 1 && commentArray.count > 0){
+    if(indexPath.section > 2 && commentArray.count > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
         viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
@@ -338,8 +340,7 @@
 
 - (void)willPlayVideo:(NSInteger)num
 {
-    NSArray *episodeArray = [video objectForKey:@"episodes"] ;
-    NSArray *videoUrlArray = [[episodeArray objectAtIndex:0] objectForKey:@"down_urls"];
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
     for(NSDictionary *episode in episodeArray){
         if([[episode objectForKey:@"name"]integerValue] == num){
             videoUrlArray = [episode objectForKey:@"down_urls"];
@@ -349,7 +350,7 @@
     if(videoUrlArray.count > 0){
         NSString *videoUrl = nil;
         for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[video objectForKey:@"source"]]){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
                 videoUrl = [self parseVideoUrl:tempVideo];
                 break;
             }
@@ -374,7 +375,6 @@
 - (void)gotoWebsite:(NSInteger)num
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *episodeArray = [video objectForKey:@"episodes"];
     NSString *url = nil;
     for(NSDictionary *episode in episodeArray){
         if([[episode objectForKey:@"name"]integerValue] == num){

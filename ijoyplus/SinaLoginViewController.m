@@ -30,9 +30,6 @@
     PopularUserViewController *viewController;
     MBProgressHUD *HUD;
 }
-
-- (void)processSinaData;
-- (void)processSinaFriendData:(id) responseObject;
 - (void)closeSelf;
 @end
 
@@ -73,7 +70,8 @@
     webEngine = [[WBEngine sharedClient]initWithAppKey:kSinaWeiboAppKey appSecret:kSinaWeiboAppSecret];
     [webEngine setRootViewController:self];
     [webEngine setDelegate:self];
-    [webEngine setRedirectURI:@"http://"];
+    [webEngine setRedirectURI:@"https://api.weibo.com/oauth2/default.html"];
+//    [webEngine setRedirectURI:@"http://"];
     [webEngine setIsUserExclusive:NO];
     
     webView = [webEngine logIn];

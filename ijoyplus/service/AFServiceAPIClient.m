@@ -24,7 +24,7 @@
 #import "AFJSONRequestOperation.h"
 #import "ServiceConstants.h"
 
-//NSString * const kABaseURLString = @"http://112.64.18.12/";
+//NSString * const kABaseURLString = @"http://112.65.239.202/";
 NSString * const kABaseURLString = @"http://api.joyplus.tv/";
 
 @implementation AFServiceAPIClient
@@ -35,6 +35,7 @@ NSString * const kABaseURLString = @"http://api.joyplus.tv/";
     dispatch_once(&oncePredicate, ^{
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:kABaseURLString]];
         [_sharedClient setDefaultHeader:@"app_key" value:kAppKey];
+        [_sharedClient setDefaultHeader:@"Connection" value:@"keep-alive"];
     });
     
     return _sharedClient;

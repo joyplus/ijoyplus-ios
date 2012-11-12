@@ -27,7 +27,8 @@
 
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"
-#define kSinaWeiboUpdateUrl @"/2/statuses/update.json"
+#define kSinaWeiboUpdateUrl @"statuses/update.json"
+#define kSinaWeiboUpdateWithImageUrl @"statuses/upload_url_text.json"
 
 #define kTecentBaseURL @"https://graph.qq.com/"
 #define kTecentAddShare @"share/add_share"
@@ -64,6 +65,8 @@
 #define BIAO_QING @"flv"
 #define CHAO_QING @"hd2"
 #define LIU_CHANG @"3gp"
+
+#define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
 @interface CMConstants : NSObject 
     extern NSString * const MyString;

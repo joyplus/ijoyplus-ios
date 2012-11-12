@@ -40,7 +40,7 @@
 #define ROW_HEIGHT 40
 
 @interface PlayDetailViewController (){
-    
+
 }
 
 @end
@@ -72,6 +72,8 @@
     pictureCell = nil;
     userId = nil;
     name = nil;
+    dramaCell = nil;
+    episodeArray = nil;
 }
 
 - (id)initWithStretchImage {
@@ -106,6 +108,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    videoType = @"1";
     [self.view setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"background"]]];
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     self.title = NSLocalizedString(@"app_name", nil);
@@ -118,6 +121,10 @@
     
     pageSize = 10;
     reload = 2;
+    
+    dramaCell = [[DramaCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"dramaCell"];
+    dramaCell.frame = CGRectZero;
+    dramaCell.selectionStyle = UITableViewCellSelectionStyleNone;
 }
 
 #pragma mark - View lifecycle
@@ -201,6 +208,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"movie"];
         [self setPlayCellValue];
+        [self initMovieEpisodeCell];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
         if(tempArray != nil && tempArray.count > 0){
@@ -289,16 +297,45 @@
     }
 }
 
+- (void)initMovieEpisodeCell
+{
+    episodeArray = [video objectForKey:@"episodes"];
+    if(episodeArray.count > 1){
+        dramaCell.frame = CGRectMake(0, 0, self.view.frame.size.width, ceil(episodeArray.count / 5.0) * 30 + 5);
+        for (int i = 0; i < episodeArray.count; i++) {
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            btn.tag = i+1;
+            [btn setFrame:CGRectMake(10 + (i % 5) * 61, 5 + floor(i / 5.0) * 30, 59, 25)];
+            [btn setTitle:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+            [UIUtility addTextShadow:btn.titleLabel];
+            btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+            UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+            [btn setBackgroundImage:[[UIImage imageNamed:@"unfocus"]stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIUtility createImageWithColor:[UIColor blackColor]] forState:UIControlStateHighlighted];
+            [btn addTarget:self action:@selector(moviePlay:)forControlEvents:UIControlEventTouchUpInside];
+            [dramaCell.contentView addSubview:btn];
+        }
+    }
+}
+
+- (void)moviePlay:(id)sender
+{
+    UIButton *btn = (UIButton *)sender;
+    [self playVideo:btn.tag];
+}
+
 #pragma mark - Table View Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 4;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0 || section == 1){
+    if(section < 3){
         return 1;
     } else {
         if(commentArray == nil || commentArray.count == 0){
@@ -312,10 +349,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
         return pictureCell;
+    } else if (indexPath.section ==1) {
+        return playCell;
+    } else if (indexPath.section == 2){
+        return dramaCell;
     } else {
-        if (indexPath.section ==1) {
-            return playCell;
-        } else {
             if(commentArray == nil || commentArray.count == 0){
                 NoRecordCell *cell = [self displayNoRecordCell:tableView];
                 cell.textField.text = @"暂无评论";
@@ -325,12 +363,12 @@
                 return cell;
             }
         }
-    }
+
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section > 1 && commentArray.count > 0){
+    if(indexPath.section > 2 && commentArray.count > 0){
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         CommentViewController *viewController = [[CommentViewController alloc]initWithNibName:@"CommentViewController" bundle:nil];
         viewController.threadId = [[commentArray objectAtIndex:indexPath.row] valueForKey:@"id"];
@@ -345,6 +383,8 @@
         return WindowHeight;
     } else if(indexPath.section == 1){
         return playCell.frame.size.height;
+    } else if(indexPath.section == 2){
+        return dramaCell.frame.size.height;
     } else {
         return [self caculateCommentCellHeight:indexPath.row dataArray:commentArray];
     }
@@ -353,6 +393,8 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     if (section == 0 || section == 1) {
+        return 0;
+    } else if(section == 2 && episodeArray.count <= 1){
         return 0;
     } else {
         return 24;
@@ -363,6 +405,9 @@
     if(section == 0){
         return nil;
     }
+    if(section == 2 && episodeArray.count <= 1){
+        return nil;
+    }
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 24)];
     customView.backgroundColor = [UIColor blackColor];
     
@@ -370,7 +415,11 @@
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width-10, 24)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
-    headerLabel.text =  NSLocalizedString(@"user_comment", nil);
+    if(section == 2){
+        headerLabel.text =  @"电影列表";
+    } else {
+        headerLabel.text =  NSLocalizedString(@"user_comment", nil);
+    }
     headerLabel.textColor = [UIColor whiteColor];
     [customView addSubview:headerLabel];
     
@@ -538,7 +587,9 @@
     
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
     viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
-    [self.navigationController pushViewController:viewController animated:YES];
+    if(![viewController.userid isEqualToString:@"0"]){
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void)replyBtnClicked:(id)sender
@@ -561,25 +612,30 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    [self playVideo:1];
+}
+
+- (void)playVideo:(NSInteger)num
+{
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
         BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
         [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
         [alert setDestructiveButtonWithTitle:@"确定" block:^{
-            [self willPlayVideo];
+            [self willPlayVideo:num];
         }];
         [alert show];
     } else {
-        [self willPlayVideo];
+        [self willPlayVideo:num];
     }
 }
 
-- (void)willPlayVideo
+- (void)willPlayVideo:(NSInteger)num
 {
-    NSArray *videoUrlArray = [video objectForKey:@"down_urls"];
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         NSString *videoUrl = nil;
         for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[video objectForKey:@"source"]]){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
                 videoUrl = [self parseVideoUrl:tempVideo];
                 break;
             }
@@ -732,6 +788,7 @@
     } else {
         PostViewController *viewController = [[PostViewController alloc]initWithNibName:@"PostViewController" bundle:nil];
         viewController.program = video;
+        viewController.type = videoType;
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
@@ -820,7 +877,7 @@
 {
     NSNumber *num = (NSNumber *)[[ContainerUtility sharedInstance]attributeForKey:kUserLoggedIn];
     if(![num boolValue]){
-       [self loginScreen];
+        [self loginScreen];
     } else {
         SendCommentViewController *viewController = [[SendCommentViewController alloc]initWithNibName:@"SendCommentViewController" bundle:nil];
         viewController.program = video;

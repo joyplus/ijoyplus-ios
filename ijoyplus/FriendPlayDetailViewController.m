@@ -78,6 +78,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"movie"];
         [self setPlayCellValue];
+        [self initMovieEpisodeCell];
         [self postInitialization:result];
         friendCommentArray = (NSMutableArray *)[result objectForKey:@"dynamics"];
         if(friendCommentArray == nil || friendCommentArray.count == 0){
@@ -100,12 +101,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+    return 5;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section == 0 || section == 1){
+    if(section < 4){
         return 1;
     } else if(section == 2) {
         //        if(friendCommentArray.count > MAX_FRIEND_COMMENT_COUNT){
@@ -131,6 +132,8 @@
     } else if (indexPath.section == 1) {
         return playCell;
     } else if (indexPath.section == 2){
+        return dramaCell;
+    } else if (indexPath.section == 3){
         //        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
         //            LoadMoreCell *cell = [self displayLoadMoreCell:tableView];
         //            return cell;
@@ -160,6 +163,8 @@
     } else if (indexPath.section == 1) {
         return playCell.frame.size.height;
     } else if(indexPath.section == 2){
+        return dramaCell.frame.size.height;
+    } else if(indexPath.section == 3){
         //        if(indexPath.row == MAX_FRIEND_COMMENT_COUNT){
         //            return 44;
         //        } else {
@@ -278,7 +283,7 @@
         //                viewController.title = @"好友评论回复";
         //                [self.navigationController pushViewController:viewController animated:YES];
         //            }
-    } else if (indexPath.section == 3 && commentArray.count > 0) {
+    } else if (indexPath.section == 4 && commentArray.count > 0) {
         if(indexPath.row == MAX_COMMENT_COUNT){
             CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
             viewController.programId = self.programId;
@@ -297,6 +302,8 @@
 {
     if (section < 2) {
         return 0;
+    } else if(section == 2 && episodeArray.count == 1){
+        return 0;
     } else {
         return 24;
     }
@@ -306,6 +313,9 @@
     if(section < 2){
         return nil;
     }
+    if(section == 2 && episodeArray.count == 1){
+        return nil;
+    }
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 24)];
     customView.backgroundColor = [UIColor blackColor];
     
@@ -313,7 +323,7 @@
     UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10,0,self.view.bounds.size.width-10, 24)];
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
-    if(section == 2){
+    if(section == 3){
         headerLabel.text =  NSLocalizedString(@"friend_comment", nil);
     } else {
         headerLabel.text =  NSLocalizedString(@"user_comment", nil);
@@ -338,7 +348,9 @@
         viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
         
     }
-    [self.navigationController pushViewController:viewController animated:YES];
+    if(![viewController.userid isEqualToString:@"0"]){
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 @end

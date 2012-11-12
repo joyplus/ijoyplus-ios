@@ -21,7 +21,7 @@
 #import "CustomPlaceHolderTextView.h"
 #import "SFHFKeychainUtils.h"
 
-#define  TEXT_MAX_COUNT 140
+#define  TEXT_MAX_COUNT 130
 
 @interface RecommandViewController (){
     BOOL btn1Selected;
@@ -206,9 +206,14 @@
     if(btn1Selected){
         if([WBEngine sharedClient].isLoggedIn && ![WBEngine sharedClient].isAuthorizeExpired){
             NSString *content = [NSString stringWithFormat:@"#%@# %@", [program objectForKey:@"name"], self.textView.text];
-            AFHTTPClient *client = [[AFHTTPClient alloc]initWithBaseURL:[NSURL URLWithString:kSinaWeiboBaseUrl]];
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", nil];
-            [client postPath:kSinaWeiboUpdateUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            if (content.length > 140) {
+                content = [content substringToIndex:140];
+            }
+            if([content rangeOfString:@"\n"].location != NSNotFound){
+                content = [content stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+            }
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[WBEngine sharedClient].accessToken, @"access_token", content, @"status", [program objectForKey:@"poster"], @"url", nil];
+            [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             }];

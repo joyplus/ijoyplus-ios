@@ -218,6 +218,7 @@
     myCell.thirdTitleLabel.text = timeDiff;
     
     myCell.filmImageBtn.tag = indexPath.row;
+    myCell.filmImageBtn.frame = myCell.filmImageView.frame;
     [myCell.filmImageBtn addTarget:self action:@selector(fileImageClicked:) forControlEvents:UIControlEventTouchUpInside];
     [myCell.avatarBtn addTarget:self action:@selector(avatarClicked:) forControlEvents:UIControlEventTouchUpInside];
     return myCell;
@@ -241,6 +242,7 @@
         HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
         viewController.userid = [[itemsArray objectAtIndex:btn.tag] valueForKey:@"friend_id"];
         [self.navigationController pushViewController:viewController animated:YES];
+        return;
     }
     viewController.programId = [[itemsArray objectAtIndex:btn.tag] valueForKey:@"prod_id"];
     [self.navigationController pushViewController:viewController animated:YES];
