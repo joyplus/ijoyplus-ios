@@ -29,6 +29,8 @@
 #import "RecommandViewController.h"
 #import "PostViewController.h"
 #import "CacheUtility.h"
+#import "BlockAlertView.h"
+#import "MediaPlayerViewController.h"
 
 #define ROW_HEIGHT 40
 
@@ -48,6 +50,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    videoType = @"3";
     WindowHeight = 220;
 }
 
@@ -164,6 +167,51 @@
     playCell.watchedLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"watch_num"]];
     playCell.collectionLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     playCell.likeLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"like_num"]];
+}
+
+
+- (void)playVideo
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
+        [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
+        [alert setDestructiveButtonWithTitle:@"确定" block:^{
+            [self willPlayVideo];
+        }];
+        [alert show];
+    } else {
+        [self willPlayVideo];
+    }
+}
+
+- (void)willPlayVideo
+{
+    NSArray *videoUrlArray = [video objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        NSString *videoUrl = nil;
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[video objectForKey:@"source"]]){
+                videoUrl = [self parseVideoUrl:tempVideo];
+                break;
+            }
+        }
+        if(videoUrl == nil){
+            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+        }
+        if(videoUrl == nil){
+            [self showPlayWebPage];
+        } else {
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = videoUrl;
+            [self presentModalViewController:viewController animated:YES];
+        }
+    }else {
+        [self showPlayWebPage];
+    }
 }
 
 @end

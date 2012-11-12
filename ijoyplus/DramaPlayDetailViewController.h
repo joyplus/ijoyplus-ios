@@ -11,7 +11,7 @@
 #import "DramaCell.h"
 
 @interface DramaPlayDetailViewController : PlayDetailViewController{
-    DramaCell *dramaCell;
+    
 }
 
 - (void)initDramaCell;

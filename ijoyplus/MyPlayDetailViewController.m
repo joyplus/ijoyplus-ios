@@ -54,14 +54,14 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 5;
+    return 6;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if(section < 3){
+    if(section < 4){
         return 1;
-    } else if(section == 3) {
+    } else if(section == 4) {
         if(friendCommentArray == nil || friendCommentArray.count == 0){
             return 1;
         } else {
@@ -84,9 +84,11 @@
         return pictureCell;
     } else if (indexPath.section == 1){
         return playCell;
-    } else if (indexPath.section == 2){
-        return reasonCell;
+    }else if (indexPath.section == 2){
+        return dramaCell;
     } else if (indexPath.section == 3){
+        return reasonCell;
+    } else if (indexPath.section == 4){
         if(friendCommentArray == nil || friendCommentArray.count == 0){
             NoRecordCell *cell = [self displayNoRecordCell:tableView];
             cell.textField.text = @"暂无观看好友";
@@ -117,8 +119,10 @@
     } else if(indexPath.section == 1){
         return playCell.frame.size.height;
     } else if(indexPath.section == 2){
-        return reasonSize.height + 20;
+        return dramaCell.frame.size.height;
     } else if(indexPath.section == 3){
+        return reasonSize.height + 20;
+    } else if(indexPath.section == 4){
         if(friendCommentArray == nil || friendCommentArray.count == 0){
             return 44;
         } else {
@@ -178,7 +182,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 4  && commentArray.count > 0) {
+    if (indexPath.section == 5  && commentArray.count > 0) {
             if(indexPath.row == MAX_COMMENT_COUNT){
                 CommentListViewController *viewController = [[CommentListViewController alloc]initWithNibName:@"CommentListViewController" bundle:nil];
                 viewController.programId = self.programId;
@@ -198,6 +202,8 @@
 {
     if (section < 2) {
         return 0;
+    } else if(section == 2 && episodeArray.count == 1){
+        return 0;
     } else {
         return 24;
     }
@@ -205,6 +211,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     if(section < 2){
+        return nil;
+    }
+    if(section == 2 && episodeArray.count == 1){
         return nil;
     }
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 24)];
@@ -215,8 +224,10 @@
     headerLabel.backgroundColor = [UIColor clearColor];
     headerLabel.font = [UIFont boldSystemFontOfSize:12];
     if(section == 2){
-        headerLabel.text = NSLocalizedString(@"recommend_reason", nil);
+        headerLabel.text =  @"电影列表";
     } else if(section == 3){
+        headerLabel.text = NSLocalizedString(@"recommend_reason", nil);
+    } else if(section == 4){
         headerLabel.text =  NSLocalizedString(@"friend_comment", nil);
     } else {
         headerLabel.text =  NSLocalizedString(@"user_comment", nil);
@@ -241,7 +252,9 @@
         viewController.userid = [[commentArray objectAtIndex:indexpath.row] valueForKey:@"owner_id"];
         
     }
-    [self.navigationController pushViewController:viewController animated:YES];
+    if(![viewController.userid isEqualToString:@"0"]){
+        [self.navigationController pushViewController:viewController animated:YES];
+    }
 }
 
 - (void) postInitialization:(NSDictionary *)result;

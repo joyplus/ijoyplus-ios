@@ -24,6 +24,7 @@
 #import "SFHFKeychainUtils.h"
 #import "WBEngine.h"
 #import "AFSinaWeiboAPIClient.h"
+#import "AboutViewController.h"
 
 @interface SettingsViewController ()
 
@@ -142,6 +143,11 @@
 
 - (IBAction)commentBtnClicked:(id)sender {
     [UMFeedback showFeedback:self withAppkey:umengAppKey];
+}
+
+- (IBAction)aboutUs:(id)sender {
+    AboutViewController *viewController = [[AboutViewController alloc]initWithNibName:@"AboutViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)closeSelf

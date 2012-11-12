@@ -45,7 +45,7 @@
 #import "WBEngine.h"
 #import "CacheUtility.h"
 #import "SFHFKeychainUtils.h"
-
+#import "LocalGroupViewController.h"
 
 @interface BottomTabViewController (){
     PopularSegmentViewController *detailController1;
@@ -54,6 +54,7 @@
     MyselfViewController *detailController4;
     UIToolbar *bottomToolbar;
     UIBarButtonItem *rightButton;
+    UIBarButtonItem *leftButton;
 }
 - (void)initTabControllers;
 - (void)search;
@@ -91,8 +92,27 @@
     return self;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return (toInterfaceOrientation == UIInterfaceOrientationPortrait);
+-(NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{ return UIInterfaceOrientationMaskAll;}
+// iOS6.0
+- (BOOL)shouldAutorotate
+{
+    return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations
+{
+    [super supportedInterfaceOrientations];
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+// iOS5.0
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation{
+    
+    return (toInterfaceOrientation == UIInterfaceOrientationPortrait);  // 可以修改为任何方向
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIDeviceOrientationPortrait;
 }
 
 - (void)viewDidLoad
@@ -108,6 +128,9 @@
 
 - (void) initView
 {
+//    leftButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"local_files", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(showLocalMedia)];
+//    self.navigationItem.leftBarButtonItem = leftButton;
+    
     rightButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"search", nil) style:UIBarButtonSystemItemSearch target:self action:@selector(search)];
     self.navigationItem.rightBarButtonItem = rightButton;
     [self.tabBar setHidden:NO];
@@ -276,6 +299,13 @@
     [self initTabControllers];
     self.viewControllers = [NSArray arrayWithObjects: detailController1, detailController2, detailController4,detailController3, nil];
     [self setSelectedIndex:0];
+}
+
+- (void)showLocalMedia
+{
+    LocalGroupViewController *viewController = [[LocalGroupViewController alloc]initWithNibName:@"LocalGroupViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc]initWithRootViewController:viewController];
+    [self presentViewController:navController animated:YES completion:nil];
 }
 
 @end

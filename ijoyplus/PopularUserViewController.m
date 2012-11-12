@@ -33,7 +33,7 @@
     MBProgressHUD *HUD;
 }
 - (void)cancelFollow:(id)sender;
-- (void)viewUser;
+- (void)viewUser:(id)sender;
 @end
 
 @implementation PopularUserViewController
@@ -165,87 +165,97 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"friendCell";
-    FriendCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    NSString *CellIdentifier = @"friendCell";
+    if(indexPath.row == ceil(userArray.count / 3.0)-1){
+        CellIdentifier = @"LastRow";
+    }
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
-        //       cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ListCellFactory" owner:self options:nil];
-        cell = (FriendCell *)[nib objectAtIndex:1];
-        
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        for (int i = 0; i < 3; i ++){
+            UIImageView *avatarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, AVATAR_IMAGE_WIDTH, AVATAR_IMAGE_WIDTH)];
+            avatarImageView.layer.cornerRadius = 27.5;
+            avatarImageView.layer.masksToBounds = YES;
+            if(i == 0){
+                avatarImageView.center = CGPointMake(LEFT_GAP + AVATAR_IMAGE_WIDTH / 2, LEFT_GAP + AVATAR_IMAGE_WIDTH / 2);
+            } else if (i == 1){
+                avatarImageView.center = CGPointMake(self.view.frame.size.width / 2, LEFT_GAP + AVATAR_IMAGE_WIDTH / 2);
+            } else {
+                avatarImageView.center = CGPointMake(self.view.frame.size.width - LEFT_GAP - AVATAR_IMAGE_WIDTH / 2, LEFT_GAP + AVATAR_IMAGE_WIDTH / 2);
+            }
+            avatarImageView.tag = 1001 + i;
+            [cell.contentView addSubview:avatarImageView];
+            
+            UIButton *imageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            imageBtn.frame = avatarImageView.frame;
+            [imageBtn addTarget:self action:@selector(viewUser:) forControlEvents:UIControlEventTouchUpInside];
+            imageBtn.tag = 2001 + i;
+            [cell.contentView addSubview:imageBtn];
+            
+            UIImageView *roundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 74, 74)];
+            roundImageView.image = [UIImage imageNamed:@"user_big"];
+            roundImageView.center = avatarImageView.center;
+            roundImageView.tag = 3001 + i;
+            [cell.contentView addSubview:roundImageView];
+            
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 58, 21)];
+            nameLabel.textColor = [UIColor whiteColor];
+            nameLabel.font = [UIFont systemFontOfSize:15];
+            [nameLabel setBackgroundColor:[UIColor clearColor]];
+            nameLabel.tag = 4001 + i;
+            [cell.contentView addSubview:nameLabel];
+            
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            btn.frame = CGRectMake(0, 0, 96, 25);
+            btn.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 45);
+            [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
+            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
+            btn.tag = 5001 + i;
+            [cell.contentView addSubview:btn];
+        }
     }
     int num = 3;
     if(userArray.count < (indexPath.row+1) * 3){
         num = userArray.count - indexPath.row * 3;
     }
-    for (int i = 0; i < num; i ++){
-        UIImageView *avatarImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, AVATAR_IMAGE_WIDTH, AVATAR_IMAGE_WIDTH)];
-        NSDictionary *user = [userArray objectAtIndex:indexPath.row * 3 + i];
-        NSString *url = [user valueForKey:@"user_pic_url"];
-        if([StringUtility stringIsEmpty:url]){
-            avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
-        } else {
-            [avatarImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
+    for (int i = 0; i < 3; i ++){
+        UIImageView *avatarImageView = (UIImageView *)[cell viewWithTag:1001 + i];
+        UIImageView *roundImageView = (UIImageView *)[cell viewWithTag:3001 + i];
+        UILabel *nameLabel = (UILabel *)[cell viewWithTag:4001 + i];
+        UIButton *imageBtn = (UIButton *)[cell viewWithTag:2001 + i];
+        UIButton *btn = (UIButton *)[cell viewWithTag:5001 + i];
+        
+        if(i < num){
+            NSDictionary *user = [userArray objectAtIndex:indexPath.row * 3 + i];
+            NSString *url = [user valueForKey:@"user_pic_url"];
+            if([StringUtility stringIsEmpty:url]){
+                avatarImageView.image = [UIImage imageNamed:@"u2_normal"];
+            } else {
+                [avatarImageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"u2_normal"]];
+                
+            }
             
-        }
-        avatarImageView.layer.cornerRadius = 27.5;
-        avatarImageView.layer.masksToBounds = YES;
-        if(i == 0){
-            avatarImageView.center = CGPointMake(LEFT_GAP + AVATAR_IMAGE_WIDTH / 2, LEFT_GAP + AVATAR_IMAGE_WIDTH / 2);
-        } else if (i == 1){
-            avatarImageView.center = CGPointMake(self.view.frame.size.width / 2, LEFT_GAP + AVATAR_IMAGE_WIDTH / 2);
+            nameLabel.text = [user objectForKey:@"nickname"];
+            [nameLabel sizeToFit];
+            nameLabel.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);
+            
+            NSString *isFollowed = [NSString stringWithFormat:@"%@", [user objectForKey:@"is_follow"]];
+            if([isFollowed isEqualToString:@"1"]){
+                [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
+            } else {
+                [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
+            }            
         } else {
-            avatarImageView.center = CGPointMake(self.view.frame.size.width - LEFT_GAP - AVATAR_IMAGE_WIDTH / 2, LEFT_GAP + AVATAR_IMAGE_WIDTH / 2);
-        }
-        [cell.contentView addSubview:avatarImageView];
-        
-        UIButton *imageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        imageBtn.frame = avatarImageView.frame;
-        [imageBtn addTarget:self action:@selector(viewUser:) forControlEvents:UIControlEventTouchUpInside];
-        imageBtn.tag = indexPath.row * 3 + i + 1000;
-        [cell.contentView addSubview:imageBtn];
-        
-        UIImageView *roundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 74, 74)];
-        roundImageView.image = [UIImage imageNamed:@"user_big"];
-        roundImageView.center = avatarImageView.center;
-        [cell.contentView addSubview:roundImageView];
-        
-        if(i == 0){
-            cell.nameLabel1.text = [user objectForKey:@"nickname"];
-            [cell.nameLabel1 sizeToFit];
-            cell.nameLabel1.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);
-            cell.nameLabel1.textColor = [UIColor whiteColor];
-            cell.nameLabel1.font = [UIFont systemFontOfSize:15];
-            [cell.nameLabel1 setBackgroundColor:[UIColor clearColor]];
-        } else if(i == 1){
-            cell.nameLabel2.text = [user objectForKey:@"nickname"];
-            [cell.nameLabel2 sizeToFit];
-            cell.nameLabel2.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);
-            cell.nameLabel2.textColor = [UIColor whiteColor];
-            cell.nameLabel2.font = [UIFont systemFontOfSize:15];
-            [cell.nameLabel2 setBackgroundColor:[UIColor clearColor]];
-        } else {
-            cell.nameLabel3.text = [user objectForKey:@"nickname"];
-            [cell.nameLabel3 sizeToFit];
-            cell.nameLabel3.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 12);
-            cell.nameLabel3.textColor = [UIColor whiteColor];
-            cell.nameLabel3.font = [UIFont systemFontOfSize:15];
-            [cell.nameLabel3 setBackgroundColor:[UIColor clearColor]];
+            [avatarImageView removeFromSuperview];
+            [roundImageView removeFromSuperview];
+            [nameLabel removeFromSuperview];
+            [imageBtn removeFromSuperview];
+            [btn removeFromSuperview];
         }
         
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        btn.frame = CGRectMake(0, 0, 96, 25);
-        btn.center = CGPointMake(avatarImageView.center.x, avatarImageView.center.y + AVATAR_IMAGE_WIDTH / 2 + 45);
-        [btn addTarget:self action:@selector(cancelFollow:) forControlEvents:UIControlEventTouchUpInside];
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"unfocus"] forState:UIControlStateNormal];
-        NSString *isFollowed = [NSString stringWithFormat:@"%@", [user objectForKey:@"is_follow"]];
-        if([isFollowed isEqualToString:@"1"]){
-            [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
-        } else {
-            [btn setTitle:NSLocalizedString(@"follow", nil) forState:UIControlStateNormal];
-        }
-        btn.tag = indexPath.row * 3 + i;
-        [cell.contentView addSubview:btn];
+        
     }
     return cell;
 }
@@ -313,9 +323,16 @@
 
 - (void)cancelFollow:(id)sender;
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     UIButton *btn = (UIButton *)sender;
-    NSInteger tag = btn.tag;
-    NSString *friendId = [[userArray objectAtIndex:tag] objectForKey:@"id"];
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
+    int index = indexPath.row * 3 + btn.tag - 5001;
+    NSString *friendId = [[userArray objectAtIndex:index] objectForKey:@"id"];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:friendId, @"friend_ids", nil];
     if([btn.titleLabel.text isEqualToString:NSLocalizedString(@"follow", nil)]){
         [btn setTitle:NSLocalizedString(@"cancel_follow", nil) forState:UIControlStateNormal];
@@ -347,9 +364,17 @@
 
 - (void)viewUser:(id)sender
 {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
+    int index = indexPath.row * 3 + btn.tag - 2001;
     HomeViewController *viewController = [[HomeViewController alloc]initWithNibName:@"HomeViewController" bundle:nil];
-    viewController.userid = [[userArray objectAtIndex:btn.tag - 1000] valueForKey:@"id"];
+    viewController.userid = [[userArray objectAtIndex:index] valueForKey:@"id"];
     [self.navigationController pushViewController:viewController animated:YES];
     
 }
@@ -358,8 +383,8 @@
 {
     [[ContainerUtility sharedInstance]setAttribute:[NSNumber numberWithBool:YES] forKey:kUserLoggedIn];
     [self dismissModalViewControllerAnimated:YES];
-//    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//    [appDelegate refreshRootView];
+    //    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    //    [appDelegate refreshRootView];
 }
 
 

@@ -14,6 +14,7 @@
 #import "NoRecordCell.h"
 #import "LoadMoreCell.h"
 #import "UIGenericViewController.h"
+#import "DramaCell.h"
 
 @interface PlayDetailViewController : UIGenericViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, IntroductionViewDelegate, UIGestureRecognizerDelegate> {
     UIImageView     *_imageView;
@@ -33,6 +34,9 @@
     CGFloat ImageHeight;
     int reload;
     NSString *name;
+    NSString *videoType;
+    DramaCell *dramaCell;
+    NSArray *episodeArray;
 }
 
 - (void)avatarClicked;
@@ -50,10 +54,12 @@
 - (CommentCell *)displayFriendCommentCell:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath commentArray:(NSArray *)dataArray cellIdentifier:(NSString *)cellIdentifier;
 - (LoadMoreCell *)displayLoadMoreCell:(UITableView *)tableView;
 - (void)postInitialization:(NSDictionary *)result;
+- (void)initMovieEpisodeCell;
 - (NSString *)parseVideoUrl:(NSDictionary *)video;
 - (id)initWithStretchImage;
 - (void)layoutImage;
 - (void)updateOffsets;
+- (void)showPlayWebPage;
 @property (nonatomic, strong) NSString *programId;
 @property (nonatomic, strong)NSString *userId;
 @end;

@@ -484,11 +484,11 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 [NSString stringWithFormat:@"%i", currentPage], @"page_num", @"30", @"page_size", self.userid, @"userid", nil];
     [[AFServiceAPIClient sharedClient] getPath:serviceName parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [videoArray removeAllObjects];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *videos = [result objectForKey:key];
             if(videos != nil && videos.count > 0){
-                [videoArray removeAllObjects];
                 [videoArray addObjectsFromArray:videos];
             }
         } else {
@@ -498,6 +498,8 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [videoArray removeAllObjects];
+        [flowView reloadData];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"top_segment_clicked" object:self userInfo:nil];
     }];
 }

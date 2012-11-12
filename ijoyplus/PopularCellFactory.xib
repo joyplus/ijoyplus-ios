@@ -87,7 +87,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{118, 113}, {182, 21}}</string>
 								<reference key="NSSuperview" ref="905433465"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -299,7 +298,7 @@
 				<integer value="120" key="IBUIRowHeight"/>
 			</object>
 			<object class="IBUITableViewCell" id="812139808">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="919903543">
@@ -457,6 +456,7 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 300}</string>
+				<reference key="NSSuperview"/>
 				<reference key="NSNextKeyView" ref="919903543"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -651,7 +651,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{162, 252}, {102, 30}}</string>
 								<reference key="NSSuperview" ref="110538787"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -877,7 +876,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{162, 84}, {102, 30}}</string>
 								<reference key="NSSuperview" ref="587823313"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
