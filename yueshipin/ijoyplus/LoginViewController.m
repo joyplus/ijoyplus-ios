@@ -230,20 +230,20 @@
                                 strPassword, @"password",
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAccountLogin parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
+        NSString *responseCode = @"20002";
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         HUD.mode = MBProgressHUDModeCustomView;
         [self.view addSubview:HUD];
-        if([responseCode isEqualToString:kSuccessResCode]){
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"complete.png"]];
-            HUD.labelText = NSLocalizedString(@"message.signinsuccess", nil);
-            [HUD showWhileExecuting:@selector(postLogin) onTarget:self withObject:nil animated:YES];
-        } else {
+//        if([responseCode isEqualToString:kSuccessResCode]){
+//            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"complete.png"]];
+//            HUD.labelText = NSLocalizedString(@"message.signinsuccess", nil);
+//            [HUD showWhileExecuting:@selector(postLogin) onTarget:self withObject:nil animated:YES];
+//        } else {
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
             NSString *msg = [NSString stringWithFormat:@"msg_%@", responseCode];
             HUD.labelText = NSLocalizedString(msg, nil);
             [HUD showWhileExecuting:@selector(showError) onTarget:self withObject:nil animated:YES];
-        }
+//        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];

@@ -21,7 +21,6 @@
 #import "WBEngine.h"
 #import "BlockAlertView.h"
 #import "CacheUtility.h"
-#import "MyUncaughtExceptionHandler.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <AssetsLibrary/ALAsset.h>
 
@@ -69,11 +68,6 @@
     [[UISegmentedControl appearance] setDividerImage:segmentUnselectedUnselected forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setDividerImage:segmentSelectedUnselected forLeftSegmentState:UIControlStateSelected rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setDividerImage:segUnselectedSelected forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
-}
-
-- (void)installMyUncaughtExceptionHandler
-{
-    InstallMyUncaughtExceptionHandler();
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

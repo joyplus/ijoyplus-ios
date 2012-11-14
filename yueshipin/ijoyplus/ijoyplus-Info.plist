@@ -16,9 +16,11 @@
 			<array>
 				<string>Default@2x.png</string>
 				<string>Default.png</string>
-				<string>图标57.png</string>
-				<string>图标114.png</string>
+				<string>57.png</string>
+				<string>114.png</string>
 			</array>
+			<key>UIPrerenderedIcon</key>
+			<true/>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
@@ -36,6 +38,8 @@
 	<key>CFBundleVersion</key>
 	<string>0.9.1</string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>

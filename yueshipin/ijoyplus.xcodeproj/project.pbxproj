@@ -63,8 +63,6 @@
 		EB32BD0415F8873B00C878D5 /* WaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB32BCFE15F8873B00C878D5 /* WaterflowView.m */; };
 		EB32BD3815F888BD00C878D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB32BD3715F888BD00C878D5 /* QuartzCore.framework */; };
 		EB32BD3F15F8948400C878D5 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EB32BD3D15F8948400C878D5 /* Localizable.strings */; };
-		EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3CB81316315C4B00142AD0 /* 图标57.png */; };
-		EB3CB81716315C5100142AD0 /* 图标114.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3CB81616315C5100142AD0 /* 图标114.png */; };
 		EB3F0A4E1601C4F7005D97F8 /* segcontrol_sel-uns@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A491601C4F7005D97F8 /* segcontrol_sel-uns@2x.png */; };
 		EB3F0A4F1601C4F7005D97F8 /* segcontrol_sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A4A1601C4F7005D97F8 /* segcontrol_sel@2x.png */; };
 		EB3F0A501601C4F7005D97F8 /* segcontrol_uns-sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB3F0A4B1601C4F7005D97F8 /* segcontrol_uns-sel@2x.png */; };
@@ -99,7 +97,6 @@
 		EB7841D2160C70550003FB10 /* FillFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7841D0160C70550003FB10 /* FillFormViewController.m */; };
 		EB7841D3160C70550003FB10 /* FillFormViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB7841D1160C70550003FB10 /* FillFormViewController.xib */; };
 		EB91AEA5164A2FEF00C14602 /* DeviceListView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB91AEA3164A2FEF00C14602 /* DeviceListView.m */; };
-		EB91AEDF164B494400C14602 /* MyUncaughtExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = EB91AEDE164B494400C14602 /* MyUncaughtExceptionHandler.m */; };
 		EB91AEE2164B51A000C14602 /* device.png in Resources */ = {isa = PBXBuildFile; fileRef = EB91AEE1164B51A000C14602 /* device.png */; };
 		EB91AEE4164B687C00C14602 /* device_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB91AEE3164B687C00C14602 /* device_pressed.png */; };
 		EB91AEED164B85E800C14602 /* table_footer.png in Resources */ = {isa = PBXBuildFile; fileRef = EB91AEEC164B85E800C14602 /* table_footer.png */; };
@@ -222,6 +219,8 @@
 		EBB5A14E1622754000F164F2 /* qq_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14A1622754000F164F2 /* qq_press.png */; };
 		EBB5A14F1622754000F164F2 /* sina_weibo_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */; };
 		EBB5A1501622754000F164F2 /* sina_weibo_press.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5A14C1622754000F164F2 /* sina_weibo_press.png */; };
+		EBBAFCE71653309600488BB5 /* 57.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBAFCE61653309600488BB5 /* 57.png */; };
+		EBBAFCE9165330A300488BB5 /* 114.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBAFCE8165330A300488BB5 /* 114.png */; };
 		EBBB2578164A114E004463C6 /* FPPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB2573164A114E004463C6 /* FPPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBBB2579164A114E004463C6 /* FPPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB2575164A114E004463C6 /* FPPopoverView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBBB257A164A114E004463C6 /* FPTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB2577164A114E004463C6 /* FPTouchView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -389,8 +388,6 @@
 		EB32BCFE15F8873B00C878D5 /* WaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterflowView.m; sourceTree = "<group>"; };
 		EB32BD3715F888BD00C878D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		EB32BD3E15F8948400C878D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		EB3CB81316315C4B00142AD0 /* 图标57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图标57.png"; sourceTree = "<group>"; };
-		EB3CB81616315C5100142AD0 /* 图标114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图标114.png"; sourceTree = "<group>"; };
 		EB3F0A491601C4F7005D97F8 /* segcontrol_sel-uns@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "segcontrol_sel-uns@2x.png"; sourceTree = "<group>"; };
 		EB3F0A4A1601C4F7005D97F8 /* segcontrol_sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "segcontrol_sel@2x.png"; sourceTree = "<group>"; };
 		EB3F0A4B1601C4F7005D97F8 /* segcontrol_uns-sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "segcontrol_uns-sel@2x.png"; sourceTree = "<group>"; };
@@ -436,8 +433,6 @@
 		EB7841D1160C70550003FB10 /* FillFormViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FillFormViewController.xib; sourceTree = "<group>"; };
 		EB91AEA3164A2FEF00C14602 /* DeviceListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListView.m; sourceTree = "<group>"; };
 		EB91AEA4164A2FEF00C14602 /* DeviceListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListView.h; sourceTree = "<group>"; };
-		EB91AEDD164B494400C14602 /* MyUncaughtExceptionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyUncaughtExceptionHandler.h; sourceTree = "<group>"; };
-		EB91AEDE164B494400C14602 /* MyUncaughtExceptionHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyUncaughtExceptionHandler.m; sourceTree = "<group>"; };
 		EB91AEE1164B51A000C14602 /* device.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = device.png; sourceTree = "<group>"; };
 		EB91AEE3164B687C00C14602 /* device_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = device_pressed.png; sourceTree = "<group>"; };
 		EB91AEEC164B85E800C14602 /* table_footer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table_footer.png; sourceTree = "<group>"; };
@@ -629,6 +624,8 @@
 		EBB5A14A1622754000F164F2 /* qq_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = qq_press.png; sourceTree = "<group>"; };
 		EBB5A14B1622754000F164F2 /* sina_weibo_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_normal.png; sourceTree = "<group>"; };
 		EBB5A14C1622754000F164F2 /* sina_weibo_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sina_weibo_press.png; sourceTree = "<group>"; };
+		EBBAFCE61653309600488BB5 /* 57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 57.png; sourceTree = "<group>"; };
+		EBBAFCE8165330A300488BB5 /* 114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 114.png; sourceTree = "<group>"; };
 		EBBB2572164A114E004463C6 /* FPPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPPopoverController.h; sourceTree = "<group>"; };
 		EBBB2573164A114E004463C6 /* FPPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPPopoverController.m; sourceTree = "<group>"; };
 		EBBB2574164A114E004463C6 /* FPPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPPopoverView.h; sourceTree = "<group>"; };
@@ -794,9 +791,9 @@
 		EB32BCB715F885EC00C878D5 = {
 			isa = PBXGroup;
 			children = (
+				EBBAFCE8165330A300488BB5 /* 114.png */,
+				EBBAFCE61653309600488BB5 /* 57.png */,
 				EBE387D016474D3100843CEE /* Default-568h@2x.png */,
-				EB3CB81616315C5100142AD0 /* 图标114.png */,
-				EB3CB81316315C4B00142AD0 /* 图标57.png */,
 				EB24CC92160B159F009618C6 /* Default@2x.png */,
 				EB32BCCC15F885EC00C878D5 /* ijoyplus */,
 				EB32BD0515F887A400C878D5 /* External */,
@@ -1297,8 +1294,6 @@
 				EBAFBC3315F9DDC0007579D1 /* CMConstants.m */,
 				EBAFBC4315F9E849007579D1 /* AnimationFactory.h */,
 				EBAFBC4415F9E849007579D1 /* AnimationFactory.m */,
-				EB91AEDD164B494400C14602 /* MyUncaughtExceptionHandler.h */,
-				EB91AEDE164B494400C14602 /* MyUncaughtExceptionHandler.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -1669,8 +1664,6 @@
 				EB4F80BF16310A7E006DBADB /* sina_normal.png in Resources */,
 				EB4F80C21631232F006DBADB /* search_bg@2x.png in Resources */,
 				EB4F80C31631232F006DBADB /* search_btn@2x.png in Resources */,
-				EB3CB81416315C4B00142AD0 /* 图标57.png in Resources */,
-				EB3CB81716315C5100142AD0 /* 图标114.png in Resources */,
 				EBE4DA8E163684FD00249156 /* joplus_logo.png in Resources */,
 				EBB3DE55163F68AF006EAF80 /* MovieTableViewController.xib in Resources */,
 				EBB3DE61163F7F0E006EAF80 /* ShowTableViewController.xib in Resources */,
@@ -1688,6 +1681,8 @@
 				EB1D1AF0164CF5FE00061CDC /* MediaGridViewController.xib in Resources */,
 				EB1D1AF4164D0BC800061CDC /* LocalMediaPlayerViewController.xib in Resources */,
 				EBD166071650CC510037E575 /* AboutViewController.xib in Resources */,
+				EBBAFCE71653309600488BB5 /* 57.png in Resources */,
+				EBBAFCE9165330A300488BB5 /* 114.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1847,7 +1842,6 @@
 				EBBB257A164A114E004463C6 /* FPTouchView.m in Sources */,
 				EBBB257D164A1244004463C6 /* DeviceListViewController.m in Sources */,
 				EB91AEA5164A2FEF00C14602 /* DeviceListView.m in Sources */,
-				EB91AEDF164B494400C14602 /* MyUncaughtExceptionHandler.m in Sources */,
 				EB91AF1A164BA2B500C14602 /* LocalMediaViewController.m in Sources */,
 				EB91AF31164BBB0F00C14602 /* MediaObject.m in Sources */,
 				EB573963164CCD9600BA238C /* LocalGroupViewController.m in Sources */,
