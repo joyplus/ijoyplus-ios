@@ -1,0 +1,1 @@
+../../SDWebImage/SDWebImageManager.h
