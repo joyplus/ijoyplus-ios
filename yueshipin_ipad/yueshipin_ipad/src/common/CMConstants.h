@@ -7,23 +7,8 @@
 //
 #import <QuartzCore/QuartzCore.h>
 
-#define NUMBER_OF_COLUMNS 3
-
-#define NAVIGATION_BAR_HEIGHT 44
-#define SEGMENT_HEIGHT 58 / 2
-#define SEGMENT_WIDTH 304 
-#define SEGMENT_HEIGHT_GAP 15 / 2
-#define MOVIE_LOGO_HEIGHT 270 / 2
-#define MOVIE_LOGO_WIDTH  190 / 2
-#define MOVIE_LOGO_WIDTH_GAP 16 / 2
-#define TAB_BAR_HEIGHT 96 / 2
-#define MOVE_NAME_LABEL_HEIGHT 60 / 2
-#define MOVE_NAME_LABEL_WIDTH 192 / 2
-#define VIDEO_LOGO_WIDTH 190 / 2
-#define VIDEO_LOGO_HEIGHT 144 / 2
-#define LOG_BTN_WIDTH 296 / 2
-#define LOG_BTN_HEIGHT 76 / 2
-#define MAX_COMMENT_NUMBER 10
+#define MOVIE_POSTER_WIDTH 71
+#define MOVIE_POSTER_HEIGHT 95 
 
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"
@@ -74,6 +59,8 @@
 + (UIColor*)greyColor;
 
 + (UIColor *)textColor;
+
++ (UIColor *)textBlueColor;
 
 + (UIFont *)titleFont;
 

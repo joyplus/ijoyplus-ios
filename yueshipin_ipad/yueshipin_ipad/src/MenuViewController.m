@@ -42,12 +42,16 @@
 #import "StackScrollViewController.h"
 #import "HomeViewController.h"
 #import "SettingsViewController.h"
+#import "SearchViewController.h"
+#import "PersonalViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
 @interface MenuViewController () {
     HomeViewController *homeViewController;
     SettingsViewController *settingsViewController;
+    SearchViewController *searchViewController;
+    PersonalViewController *personalViewController;
     NSInteger selectedIndex;
 }
 
@@ -71,8 +75,7 @@
         bottomLineImageView.image = [[UIImage imageNamed:@"menu_bottom_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
         [self.view addSubview:bottomLineImageView];
         
-		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
-        [self.tableView setBackgroundColor:[UIColor blackColor]];
+		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MENU_DIPLAY_WIDTH, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
         [self.tableView setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[self.tableView setDelegate:self];
 		[self.tableView setDataSource:self];
@@ -101,6 +104,12 @@
     CGRect frame = [UIScreen mainScreen].bounds;
     homeViewController = [[HomeViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
     homeViewController.menuViewControllerDelegate = self;
+    
+    searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
+    searchViewController.menuViewControllerDelegate = self;
+    
+    personalViewController = [[PersonalViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
+    personalViewController.menuViewControllerDelegate = self;
     
     settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
     settingsViewController.menuViewControllerDelegate = self;
@@ -198,11 +207,11 @@
     if(selectedIndex == 0){
         return homeViewController;
     } else if(selectedIndex == 1){
-        
+        return personalViewController;
     } else if(selectedIndex == 2){
-        
+        return searchViewController;
     } else if(selectedIndex == 3){
-        
+        return nil;
     } else {
         return settingsViewController;
     }
@@ -211,6 +220,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     selectedIndex = indexPath.row;
+    if(selectedIndex == 3){
+        return;
+    }
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES];
 }
 
