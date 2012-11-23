@@ -55,7 +55,7 @@
         [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 140, 35)];
-        topImage.image = [UIImage imageNamed:@"search_top_image"];
+        topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         
         sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 115, 370, 38)];

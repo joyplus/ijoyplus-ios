@@ -26,7 +26,6 @@
     UIImageView *avatarImage;
     
     UILabel *nameLabel;
-    UITextField *nameTextField;
     UIButton *editBtn;
     
     UIImageView *personalImage;
@@ -43,6 +42,8 @@
     UIImageView *myRecordImage;
     UIButton *createBtn;
     UIButton *importDoubanBtn;
+    
+    UIImageView *tableBgImage;
 }
 
 @end
@@ -68,103 +69,109 @@
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 140, 35)];
-        topImage.image = [UIImage imageNamed:@"search_top_image"];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 187, 36)];
+        topImage.image = [UIImage imageNamed:@"my_title"];
         [self.view addSubview:topImage];
         
-        personalImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 115, 402, 150)];
-        personalImage.image = [UIImage imageNamed:@"personal_image"];
+        personalImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 164, 404, 102)];
+        personalImage.image = [UIImage imageNamed:@"my_summary_bg"];
         [self.view addSubview:personalImage];
         
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 260, 22)];
-        nameLabel.backgroundColor = [UIColor yellowColor];
-        nameLabel.textColor = [UIColor whiteColor];
-        nameLabel.font = [UIFont boldSystemFontOfSize:18];
+        nameLabel.backgroundColor = [UIColor clearColor];
+        nameLabel.textColor = [UIColor blackColor];
+        nameLabel.font = [UIFont boldSystemFontOfSize:20];
+        nameLabel.text = @"用户9527";
         [self.view addSubview:nameLabel];
         
-        nameTextField = [[UITextField alloc]initWithFrame:nameLabel.frame];
-        nameTextField.textColor = [UIColor whiteColor];
-        nameTextField.font = [UIFont boldSystemFontOfSize:17];
-        nameTextField.hidden = YES;
-        [self.view addSubview:nameTextField];
+//        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//        editBtn.frame = CGRectMake(430, 122, 25, 27);
+//        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
+//        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:editBtn];
         
-        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        editBtn.frame = CGRectMake(430, 122, 25, 27);
-        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
-        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:editBtn];
-        
-        supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(70, 252, 80, 30)];
+        supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 228, 60, 30)];
+        supportLabel.backgroundColor = [UIColor clearColor];
+        supportLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
+        supportLabel.text = @"18";
         supportLabel.textAlignment = NSTextAlignmentCenter;
-        supportLabel.backgroundColor = [UIColor yellowColor];
-        supportLabel.textColor = [UIColor whiteColor];
-        supportLabel.font = [UIFont boldSystemFontOfSize:18];
+        supportLabel.font = [UIFont boldSystemFontOfSize:22];
         [self.view addSubview:supportLabel];        
         supportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        supportBtn.frame = supportLabel.frame;
+        supportBtn.frame = CGRectMake(70, 180, 88, 87);
+        [supportBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
         [supportBtn addTarget:self action:@selector(supportBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:supportBtn];
         
-        collectionLabel = [[UILabel alloc]initWithFrame:CGRectMake(70 + supportLabel.frame.size.width + 20, 252, 80, 30)];
+        collectionLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + supportLabel.frame.size.width + 40, 228, 60, 30)];
+        collectionLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
         collectionLabel.textAlignment = NSTextAlignmentCenter;
-        collectionLabel.backgroundColor = [UIColor yellowColor];
-        collectionLabel.textColor = [UIColor whiteColor];
-        collectionLabel.font = [UIFont boldSystemFontOfSize:18];
+        collectionLabel.backgroundColor = [UIColor clearColor];
+        collectionLabel.font = [UIFont boldSystemFontOfSize:22];
+        collectionLabel.text = @"18";
         [self.view addSubview:collectionLabel];
         collectionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        collectionBtn.frame = collectionLabel.frame;
+        collectionBtn.frame = CGRectMake(70 + supportLabel.frame.size.width + 40, 180, 88, 87);
+        [collectionBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
         [collectionBtn addTarget:self action:@selector(collectionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:collectionBtn];
         
-        sharelabel = [[UILabel alloc]initWithFrame:CGRectMake(70 + supportLabel.frame.size.width*2 + 20, 252, 80, 30)];
+        sharelabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 40)*2, 228, 60, 30)];
         sharelabel.textAlignment = NSTextAlignmentCenter;
-        sharelabel.backgroundColor = [UIColor yellowColor];
-        sharelabel.textColor = [UIColor whiteColor];
-        sharelabel.font = [UIFont boldSystemFontOfSize:18];
+        sharelabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
+        sharelabel.backgroundColor = [UIColor clearColor];
+        sharelabel.font = [UIFont boldSystemFontOfSize:22];
+        sharelabel.text = @"18";
         [self.view addSubview:sharelabel];
         shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         shareBtn.frame = sharelabel.frame;
+        [shareBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
+        shareBtn.frame = CGRectMake(70 + (supportLabel.frame.size.width + 40)*2, 180, 88, 87);
         [shareBtn addTarget:self action:@selector(shareBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:shareBtn];
         
-        listLabel = [[UILabel alloc]initWithFrame:CGRectMake(70 + supportLabel.frame.size.width*3 + 20, 252, 80, 30)];
+        listLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 40)*3, 228, 60, 30)];
         listLabel.textAlignment = NSTextAlignmentCenter;
-        listLabel.backgroundColor = [UIColor yellowColor];
-        listLabel.textColor = [UIColor whiteColor];
-        listLabel.font = [UIFont boldSystemFontOfSize:18];
+        listLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
+        listLabel.backgroundColor = [UIColor clearColor];
+        listLabel.font = [UIFont boldSystemFontOfSize:22];
+        listLabel.text = @"18";
         [self.view addSubview:listLabel];
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        listBtn.frame = listLabel.frame;
+        listBtn.frame = CGRectMake(70 + (supportLabel.frame.size.width + 40)*3, 180, 88, 87);
+        [listBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
         [listBtn addTarget:self action:@selector(listBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:listBtn];
         
         myRecordImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 283, 95, 25)];
-        myRecordImage.image = [UIImage imageNamed:@"my_record_image"];
+        myRecordImage.image = [UIImage imageNamed:@"my_record"];
         [self.view addSubview:myRecordImage];
         
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         createBtn.frame = CGRectMake(210, 282, 104, 31);
-        [createBtn setBackgroundImage:[UIImage imageNamed:@"create_btn"] forState:UIControlStateNormal];
-        [createBtn setBackgroundImage:[UIImage imageNamed:@"create_btn_pressed"] forState:UIControlStateHighlighted];
+        [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
+        [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
         [createBtn addTarget:self action:@selector(createBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:createBtn];
         
         importDoubanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        importDoubanBtn.frame = CGRectMake(430, 122, 25, 27);
-        [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_btn"] forState:UIControlStateNormal];
-        [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_btn_pressed"] forState:UIControlStateHighlighted];
+        importDoubanBtn.frame = CGRectMake(320, 282, 142, 31);
+        [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban"] forState:UIControlStateNormal];
+        [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_pressed"] forState:UIControlStateHighlighted];
         [importDoubanBtn addTarget:self action:@selector(importDoubanBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:editBtn];
+        [self.view addSubview:importDoubanBtn];
         
+        tableBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 325, 402, 370)];
+        tableBgImage.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(10, 10, 10, 10)];
+        [self.view addSubview:tableBgImage];
+
         table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, 370) style:UITableViewStylePlain];
-        [table setBackgroundColor:[UIColor yellowColor]];
+        [table setBackgroundColor:[UIColor clearColor]];
         [table setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
         [table setScrollEnabled:NO];
         [self.view addSubview:table];
-        
-
     }
     return self;
 }

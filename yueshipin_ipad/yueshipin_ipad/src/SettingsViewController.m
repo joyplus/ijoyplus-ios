@@ -22,6 +22,7 @@
     UIImageView *bgImage;
     
     UIImageView *sinaWeiboBg;
+    UIImageView *sinaWeiboImg;
     
     UIImageView *clearCacheBg;
     UIButton *clearCacheBtn;
@@ -56,46 +57,55 @@
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 372, 76)];
-        topImage.image = [UIImage imageNamed:@"search_top_image"];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 187, 34)];
+        topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
-        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 120, 372, 76)];
-        sinaWeiboBg.image = [UIImage imageNamed:@"setting_bg_image"];
+        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 120, 370, 79)];
+        sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
+        
+        sinaWeiboImg = [[UIImageView alloc]initWithFrame:CGRectMake(100, 134, 334, 45)];
+        sinaWeiboImg.image = [UIImage imageNamed:@"weibo"];
+        [self.view addSubview:sinaWeiboImg];
         
         sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(340, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
+        [self.view addSubview:sinaSwitch];
         
-        clearCacheBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 210, 140, 35)];
-        clearCacheBg.image = [UIImage imageNamed:@"setting_bg_image"];
+        clearCacheBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 210, 370, 79)];
+        clearCacheBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:clearCacheBg];
         
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         clearCacheBtn.frame = CGRectMake(100, 230, 334, 40);
-        [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+        [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
+        [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
-        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 140, 175)];
-        aboutBg.image = [[UIImage imageNamed:@"setting_bg_image"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)] ;
+        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 175)];
+        aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 2, 2, 2)] ;
         [self.view addSubview:aboutBg];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
-        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
+        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         commentBtn.frame = CGRectMake(100, 372, 334, 40);
-        [commentBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+        [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
+        [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         aboutBtn.frame = CGRectMake(100, 422, 334, 40);
-        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
+        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:aboutBtn];
         

@@ -138,14 +138,6 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
-    //    [self closeMenu];
-    //    if(sender.tag = 1001){
-    //        MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
-    //        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    //        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
-    //
-    //    }
-    
     videoType = 0;
     [table reloadData];
 }
@@ -555,7 +547,7 @@
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:14]];
         titleLabel.tag = 4031;
-        [cell.contentView addSubview:titleLabel];        
+        [cell.contentView addSubview:titleLabel];
     }
     
     UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
@@ -594,11 +586,15 @@
 
 - (void)imageBtnClicked:(UIButton *)sender
 {
+    [self closeMenu];
     UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
+    MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
