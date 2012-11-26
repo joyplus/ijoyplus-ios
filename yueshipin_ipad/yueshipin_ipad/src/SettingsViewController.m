@@ -30,8 +30,10 @@
     UIButton *suggestionBtn;
     UIButton *commentBtn;
     UIButton *aboutBtn;
-    
     UISwitch *sinaSwitch;
+    UILabel *sinaUsernameLabel;
+    SinaWeibo *_sinaweibo;
+    NSDictionary *userInfo;
 }
 
 @end
@@ -57,7 +59,7 @@
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 187, 34)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 170, 34)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
@@ -68,6 +70,12 @@
         sinaWeiboImg = [[UIImageView alloc]initWithFrame:CGRectMake(100, 134, 334, 45)];
         sinaWeiboImg.image = [UIImage imageNamed:@"weibo"];
         [self.view addSubview:sinaWeiboImg];
+        
+        sinaUsernameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 8, 135, 25)];
+        sinaUsernameLabel.backgroundColor = [UIColor clearColor];
+        sinaUsernameLabel.font = [UIFont boldSystemFontOfSize:13];
+        sinaUsernameLabel.textColor = CMConstants.textBlueColor;
+        [sinaWeiboImg addSubview:sinaUsernameLabel];
         
         sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(340, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
@@ -122,7 +130,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	_sinaweibo = [AppDelegate instance].sinaweibo;
+    _sinaweibo.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning
@@ -134,16 +143,101 @@
 - (void)sinaSwitchClicked:(UISwitch *)sender
 {
     BOOL flag = sender.isOn;
+    
     if(flag){
-        NSLog(@"on");
+        [_sinaweibo logIn];
     } else {
-        NSLog(@"off");
+        [_sinaweibo logOut];
     }
 }
 
 - (void)menuBtnClicked
 {
     [self.menuViewControllerDelegate menuButtonClicked];
+}
+
+- (void)removeAuthData
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
+}
+
+- (void)storeAuthData
+{
+    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
+                              _sinaweibo.accessToken, @"AccessTokenKey",
+                              _sinaweibo.expirationDate, @"ExpirationDateKey",
+                              _sinaweibo.userID, @"UserIDKey",
+                              _sinaweibo.refreshToken, @"refresh_token", nil];
+    [[NSUserDefaults standardUserDefaults] setObject:authData forKey:@"SinaWeiboAuthData"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+#pragma mark - SinaWeibo Delegate
+
+- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+{
+    [self storeAuthData];
+    sinaSwitch.on = YES;
+    [sinaweibo requestWithURL:@"users/show.json"
+                       params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
+                   httpMethod:@"GET"
+                     delegate:self];
+}
+
+- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboDidLogOut");
+    sinaUsernameLabel.text = @"";
+    [self removeAuthData];
+    sinaSwitch.on = NO;
+}
+
+- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboLogInDidCancel");
+    sinaSwitch.on = NO;
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
+{
+    NSLog(@"sinaweibo logInDidFailWithError %@", error);
+    sinaSwitch.on = NO;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                        message:@"网络数据错误，请重新登陆。"
+                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alertView show];
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
+{
+    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
+    [self removeAuthData];
+    sinaSwitch.on = NO;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                        message:@"Token已过期，请重新登陆。"
+                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alertView show];
+}
+
+#pragma mark - SinaWeiboRequest Delegate
+
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
+{
+    if ([request.url hasSuffix:@"users/show.json"])
+    {
+        userInfo = result;
+        NSString *username = [userInfo objectForKey:@"screen_name"];
+        sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
+    }
+}
+
+- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
+{
+    if ([request.url hasSuffix:@"users/show.json"])
+    {
+        userInfo = nil;
+        sinaUsernameLabel.text = @"";
+    }
 }
 
 @end

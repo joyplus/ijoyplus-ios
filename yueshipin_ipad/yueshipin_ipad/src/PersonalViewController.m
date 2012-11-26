@@ -99,8 +99,8 @@
         [self.view addSubview:supportLabel];        
         supportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         supportBtn.frame = CGRectMake(70, 180, 88, 87);
-        [supportBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
-        [supportBtn addTarget:self action:@selector(supportBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        supportBtn.tag = 1001;
+        [supportBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:supportBtn];
         
         collectionLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + supportLabel.frame.size.width + 40, 228, 60, 30)];
@@ -112,8 +112,8 @@
         [self.view addSubview:collectionLabel];
         collectionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         collectionBtn.frame = CGRectMake(70 + supportLabel.frame.size.width + 40, 180, 88, 87);
-        [collectionBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
-        [collectionBtn addTarget:self action:@selector(collectionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        collectionBtn.tag = 1002;
+        [collectionBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:collectionBtn];
         
         sharelabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 40)*2, 228, 60, 30)];
@@ -125,9 +125,9 @@
         [self.view addSubview:sharelabel];
         shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         shareBtn.frame = sharelabel.frame;
-        [shareBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
         shareBtn.frame = CGRectMake(70 + (supportLabel.frame.size.width + 40)*2, 180, 88, 87);
-        [shareBtn addTarget:self action:@selector(shareBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        shareBtn.tag = 1003;
+        [shareBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:shareBtn];
         
         listLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 40)*3, 228, 60, 30)];
@@ -139,8 +139,8 @@
         [self.view addSubview:listLabel];
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         listBtn.frame = CGRectMake(70 + (supportLabel.frame.size.width + 40)*3, 180, 88, 87);
-        [listBtn setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
-        [listBtn addTarget:self action:@selector(listBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        listBtn.tag = 1004;
+        [listBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:listBtn];
         
         myRecordImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 283, 95, 25)];
@@ -228,5 +228,16 @@
     [self.menuViewControllerDelegate menuButtonClicked];
 }
 
+- (void)summaryBtnClicked:(UIButton *)sender
+{
+    for(int i = 0; i < 4; i++){
+        UIButton *btn = (UIButton *)[self.view viewWithTag:1001 + i];
+        [btn setBackgroundImage:nil forState:UIControlStateNormal];
+        [btn setBackgroundImage:nil forState:UIControlStateHighlighted];
+    }
+    [sender setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
+    [sender setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateHighlighted];
+    
+}
 
 @end

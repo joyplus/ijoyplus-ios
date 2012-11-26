@@ -44,7 +44,13 @@
 @property (weak, nonatomic) IBOutlet UIButton *commentBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *dingNumberImage;
 @property (weak, nonatomic) IBOutlet UIImageView *collectioNumber;
+@property (weak, nonatomic) IBOutlet UILabel *dingNumberLabel;
+@property (weak, nonatomic) IBOutlet UILabel *collectionNumberLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *relatedBgImage;
+@property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
+
+@property (strong, nonatomic)NSString *prodId;
 
 @end

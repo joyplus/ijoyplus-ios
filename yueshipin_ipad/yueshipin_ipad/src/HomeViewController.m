@@ -8,9 +8,11 @@
 
 #import "HomeViewController.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIImageView+WebCache.h"
 #import "DDPageControl.h"
 #import "MovieDetailViewController.h"
+#import "DramaDetailViewController.h"
+#import "ShowDetailViewController.h"
+#import "ListViewController.h"
 
 #define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 167
@@ -41,7 +43,11 @@
     UIButton *showBtn;
     UIImageView *bottomImageView;
     UIImageView *bgImage;
-    
+    NSMutableArray *topsArray;
+    NSMutableArray *tvTopsArray;
+    NSMutableArray *movieTopsArray;
+    NSMutableArray *showTopsArray;
+    NSArray *lunboArray;
     int videoType; // 0: 悦单 1: 电影 2: 电视剧 3: 综艺
 }
 
@@ -55,7 +61,7 @@
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor yellowColor]];
+        [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
         
         bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
@@ -98,8 +104,213 @@
 {
     [super viewDidLoad];
     
+    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
+    [self retrieveLunboData];
+    
     videoType = 0;
-    // Do any additional setup after loading the view from its nib.
+    [self retrieveTopsListData];
+}
+
+- (void)retrieveLunboData
+{
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"lunbo_list"];
+    if(cacheResult != nil){
+        [self parseTopsListData:cacheResult];
+    }
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathLunbo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseLunboData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+        }];
+    }
+}
+
+- (void)parseLunboData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        lunboArray = [result objectForKey:@"results"];
+        if(lunboArray.count > 0){
+            [[CacheUtility sharedCache] putInCache:@"lunbo_list" result:result];
+            [table reloadData];
+        }
+    }    
+}
+
+- (void)retrieveTopsListData
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
+    if(cacheResult != nil){
+        [self parseTopsListData:cacheResult];
+    }
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseTopsListData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
+        }];
+    }
+}
+
+- (void)parseTopsListData:(id)result
+{
+    topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        if(tempTopsArray.count > 0){
+            [[CacheUtility sharedCache] putInCache:@"top_list" result:result];
+            [topsArray addObjectsFromArray:tempTopsArray];
+        }
+    } else {
+        [UIUtility showSystemError:self.view];
+    }
+    [table reloadData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+}
+
+
+- (void)retrieveMovieTopsData
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
+    if(cacheResult != nil){
+        [self parseMovieTopsData:cacheResult];
+    }
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseMovieTopsData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            movieTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
+        }];
+    }
+}
+
+- (void)parseMovieTopsData:(id)result
+{
+    movieTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        if(tempTopsArray.count > 0){
+            [[CacheUtility sharedCache] putInCache:@"movie_top_list" result:result];
+            [movieTopsArray addObjectsFromArray:tempTopsArray];
+        }
+    } else {
+        [UIUtility showSystemError:self.view];
+    }
+    [table reloadData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+}
+
+
+- (void)retrieveTvTopsData
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
+    if(cacheResult != nil){
+        [self parseTvTopsData:cacheResult];
+    }
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseTvTopsData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            tvTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
+        }];
+    }
+}
+
+- (void)parseTvTopsData:(id)result
+{
+    tvTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        if(tempTopsArray.count > 0){
+            [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
+            [tvTopsArray addObjectsFromArray:tempTopsArray];
+        }
+    } else {
+        [UIUtility showSystemError:self.view];
+    }
+    [table reloadData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+}
+
+
+- (void)retrieveShowTopsData
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
+    if(cacheResult != nil){
+        [self parseShowTopsData:cacheResult];
+    }
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+    } else {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseShowTopsData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            showTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [UIUtility showSystemError:self.view];
+        }];
+    }
+}
+
+- (void)parseShowTopsData:(id)result
+{
+    showTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        if(tempTopsArray.count > 0){
+            [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
+            [showTopsArray addObjectsFromArray:tempTopsArray];
+        }
+    } else {
+        [UIUtility showSystemError:self.view];
+    }
+    [table reloadData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+}
+
+- (void)updateScrollView
+{
+    if(pageControl.currentPage >= pageControl.numberOfPages-1){
+        [pageControl setCurrentPage:0];
+    } else {
+        pageControl.currentPage++;
+    }
+    [scrollView setContentOffset: CGPointMake(scrollView.bounds.size.width * pageControl.currentPage, scrollView.contentOffset.y) animated: YES] ;
 }
 
 - (void)pageControlClicked:(id)sender
@@ -127,7 +338,7 @@
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)aScrollView
 {
 	// if we are animating (triggered by clicking on the page control), we update the page control
-	[pageControl updateCurrentPageDisplay] ;
+	[pageControl updateCurrentPageDisplay];
 }
 
 - (void)closeMenu
@@ -138,26 +349,34 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
+    [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_pressed"] forState:UIControlStateNormal];
+    [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 0;
-    [table reloadData];
+    [self retrieveTopsListData];
 }
 
 - (void)movieBtnClicked:(UIButton *)sender
 {
+    [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateNormal];
+    [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 1;
-    [table reloadData];
+    [self retrieveMovieTopsData];
 }
 
 - (void)dramaBtnClicked:(UIButton *)sender
 {
+    [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn_pressed"] forState:UIControlStateNormal];
+    [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 2;
-    [table reloadData];
+    [self retrieveTvTopsData];
 }
 
 - (void)showBtnClicked:(UIButton *)sender
 {
+    [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn_pressed"] forState:UIControlStateNormal];
+    [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 3;
-    [table reloadData];
+    [self retrieveShowTopsData];
 }
 
 - (void)menuBtnClicked
@@ -183,7 +402,15 @@
     if(section == 0){
         return 1;
     } else {
-        return 5;
+        if (videoType == 0) {
+            return topsArray.count / 2;
+        } else if(videoType == 1){
+            return movieTopsArray.count;
+        } else if(videoType == 2){
+            return tvTopsArray.count;
+        } else {
+            return showTopsArray.count;
+        }
     }
 }
 
@@ -198,21 +425,23 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-            scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, TOP_IMAGE_HEIGHT)];
+            UIImageView *lunboPlaceholder = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, TOP_IMAGE_HEIGHT)];
+            lunboPlaceholder.image = [UIImage imageNamed:@"top_image_placeholder"];
+            [cell.contentView addSubview:lunboPlaceholder];
+            
+            scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 5, self.view.frame.size.width- 12, TOP_IMAGE_HEIGHT - 10)];
             scrollView.delegate = self;
-            NSMutableArray *imageArray = [[NSMutableArray alloc]initWithCapacity:10];
-            for(int i = 0; i < 5; i++){
-                [imageArray addObject:@"url"];
-            }
+            
+            
             CGSize size = scrollView.frame.size;
-            for (int i=0; i < imageArray.count; i++) {
+            for (int i=0; i < 5; i++) {
                 UIImageView *temp = [[UIImageView alloc]init];
-                [temp setImageWithURL:[NSURL URLWithString:@""] placeholderImage:[UIImage imageNamed:@"top_image_placeholder"]];
+                temp.tag = 9001 + i;
                 temp.frame = CGRectMake(size.width * i, 0, size.width, size.height);
                 [scrollView addSubview:temp];
             }
             scrollView.layer.zPosition = 1;
-            [scrollView setContentSize:CGSizeMake(size.width * imageArray.count, size.height)];
+            [scrollView setContentSize:CGSizeMake(size.width * 5, size.height)];
             scrollView.pagingEnabled = YES;
             scrollView.showsHorizontalScrollIndicator = NO;
             [cell.contentView addSubview:scrollView];
@@ -229,10 +458,12 @@
             
             [pageControl setIndicatorDiameter: 7.0f] ;
             [pageControl setIndicatorSpace: 8.0f] ;
-            pageControl.layer.borderWidth = 3;
-            pageControl.layer.borderColor = [UIColor whiteColor].CGColor;
-            pageControl.layer.zPosition = 1;
             [cell.contentView addSubview:pageControl];
+        }
+        for (int i = 0; i < 5; i++){
+            UIImageView *temp = (UIImageView *)[scrollView viewWithTag:9001 + i];
+            NSDictionary *lunboItem = [lunboArray objectAtIndex:i];
+            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"top_image_placeholder"]];
         }
     } else {
         if (videoType == 0) {
@@ -305,12 +536,20 @@
         nameLabel2.tag = 7001;
         [cell.contentView addSubview:nameLabel2];
         
+        UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(150, 23, 40, 20)];
+        typeImage1.tag = 8001;
+        [cell.contentView addSubview:typeImage1];
+        
+        UIImageView *typeImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(388, 23, 40, 20)];
+        typeImage2.tag = 9001;
+        [cell.contentView addSubview:typeImage2];
+        
         for(int i = 0; i < 3; i++){
             UIView *dotView1 = [self getDotView:6];
             dotView1.center = CGPointMake(120, 33 + 18 * i);
             [imageView1 addSubview:dotView1];
             
-            UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 23 + i * 19, 80, 20)];
+            UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 23 + i * 19, 78, 20)];
             [label1 setBackgroundColor:[UIColor clearColor]];
             [label1 setTextColor:[UIColor lightGrayColor]];
             [label1 setFont:[UIFont systemFontOfSize:12]];
@@ -321,7 +560,7 @@
             dotView11.center = CGPointMake(130 + 6 * i, 90);
             [imageView1 addSubview:dotView11];
             
-            UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(388, 23 + i * 19, 80, 20)];
+            UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(388, 23 + i * 19, 78, 20)];
             [label2 setBackgroundColor:[UIColor clearColor]];
             [label2 setTextColor:[UIColor lightGrayColor]];
             [label2 setFont:[UIFont systemFontOfSize:12]];
@@ -337,27 +576,51 @@
             [imageView2 addSubview:dotView22];
         }
     }
+    NSDictionary *item1 = [topsArray objectAtIndex:indexPath.row * 2];
+    NSDictionary *item2 = [topsArray objectAtIndex:indexPath.row * 2 + 1];
+    
     UIImageView *contentImage1 = (UIImageView *)[cell viewWithTag:2001];
-    [contentImage1 setImageWithURL:[NSURL URLWithString:@""] placeholderImage:[UIImage imageNamed:@"test_movie"]];
+    [contentImage1 setImageWithURL:[NSURL URLWithString:[item1 objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     UIImageView *contentImage2 = (UIImageView *)[cell viewWithTag:2002];
-    [contentImage2 setImageWithURL:[NSURL URLWithString:@""] placeholderImage:[UIImage imageNamed:@"test_movie"]];
+    [contentImage2 setImageWithURL:[NSURL URLWithString:[item2 objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     UILabel *nameLabel1 = (UILabel *)[cell viewWithTag:6001];
-    nameLabel1.text = @"name1";
+    nameLabel1.text = [item1 objectForKey:@"name"];
     [nameLabel1 sizeToFit];
     UILabel *nameLabel2 = (UILabel *)[cell viewWithTag:7001];
-    nameLabel2.text = @"name2";
+    nameLabel2.text = [item2 objectForKey:@"name"];
     [nameLabel2 sizeToFit];
     
+    NSString *type = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"prod_type"]];
+    UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
+    if([type isEqualToString:@"0"]){
+        typeImage1.image = [UIImage imageNamed:@"movie_type"];
+    } else if([type isEqualToString:@"1"]){
+        typeImage1.image = [UIImage imageNamed:@"drama_type"];
+    } else {
+        typeImage1.image = [UIImage imageNamed:@"show_type"];
+    }
     
+    UIImageView *typeImage2 = (UIImageView *)[cell viewWithTag:8002];
+    type = [NSString stringWithFormat:@"%@", [item2 objectForKey:@"prod_type"]];
+    if([type isEqualToString:@"0"]){
+        typeImage2.image = [UIImage imageNamed:@"movie_type"];
+    } else if([type isEqualToString:@"1"]){
+        typeImage2.image = [UIImage imageNamed:@"drama_type"];
+    } else {
+        typeImage2.image = [UIImage imageNamed:@"show_type"];
+    }
+
+    NSArray *subitems1 = [item1 objectForKey:@"items"];
+    NSArray *subitems2 = [item1 objectForKey:@"items"];
     for(int i = 0; i < 3; i++){
         UILabel *label1 = (UILabel *)[cell viewWithTag:(4001 + i)];
-        label1.text = [NSString stringWithFormat:@"name%i", i];
+        label1.text = [[subitems1 objectAtIndex:i]objectForKey:@"prod_name"];
         [label1 sizeToFit];
         
         UILabel *label2 = (UILabel *)[cell viewWithTag:(5001 + i)];
-        label2.text = [NSString stringWithFormat:@"name%i", i];
+        label2.text = [[subitems2 objectAtIndex:i]objectForKey:@"prod_name"];
         [label2 sizeToFit];
     }
     return cell;
@@ -402,8 +665,6 @@
             tempLabel.center = CGPointMake(tempBtn.center.x, 20 + MOVIE_LOGO_HEIGHT * 0.7);
             tempLabel.tag = 3011 + i;
             [cellScrollView addSubview:tempLabel];
-            
-            
         }
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 12, 200, 30)];
         [titleLabel setTextColor:[UIColor blackColor]];
@@ -424,16 +685,19 @@
         [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:scrollBtn];
     }
-    
+    NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
     UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
-    for(int i = 0; i < 10; i++){
+    cellScrollView.contentOffset = CGPointMake(0, 0);
+    NSArray *subitemArray = [item objectForKey:@"items"];
+    for(int i = 0; i < subitemArray.count; i++){
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
-        [contentImage setImageWithURL:[NSURL URLWithString:@""] placeholderImage:[UIImage imageNamed:@"test_movie"]];
+        NSDictionary *subitem = [subitemArray objectAtIndex:i];
+        [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
-        tempLabel.text = @"movie_name";
+        tempLabel.text = [subitem objectForKey:@"prod_name"];
     }
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
-    [titleLabel setText:@"title"];
+    [titleLabel setText:[item objectForKey:@"name"]];
     [titleLabel sizeToFit];
     return cell;
 }
@@ -465,7 +729,7 @@
             [tempBtn setImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
             [tempBtn setImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
             tempBtn.tag = 2021 + i;
-            [tempBtn addTarget:self action:@selector(movieImageClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [tempBtn addTarget:self action:@selector(dramaImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
             [cellScrollView addSubview:tempBtn];
             
@@ -499,16 +763,19 @@
         [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:scrollBtn];
     }
-    
+    NSDictionary *item = [tvTopsArray objectAtIndex:indexPath.row];
     UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
-    for(int i = 0; i < 10; i++){
+    cellScrollView.contentOffset = CGPointMake(0, 0);
+    NSArray *subitemArray = [item objectForKey:@"items"];
+    for(int i = 0; i < subitemArray.count; i++){
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
-        [contentImage setImageWithURL:[NSURL URLWithString:@""] placeholderImage:[UIImage imageNamed:@"test_movie"]];
+         NSDictionary *subitem = [subitemArray objectAtIndex:i];
+        [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
-        tempLabel.text = @"movie_name";
+        tempLabel.text = [subitem objectForKey:@"prod_name"];
     }
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4021];
-    [titleLabel setText:@"title"];
+    [titleLabel setText:[item objectForKey:@"name"]];
     [titleLabel sizeToFit];
     return cell;
 }
@@ -549,16 +816,16 @@
         titleLabel.tag = 4031;
         [cell.contentView addSubview:titleLabel];
     }
-    
+    NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
     UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
-    [tempImage setImageWithURL:[NSURL URLWithString:@""] placeholderImage:[UIImage imageNamed:@"test_show"]];
+    [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
     
     UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
-    [tempNameLabel setText:@"title"];
+    [tempNameLabel setText:[item objectForKey:@"name"]];
     [tempNameLabel sizeToFit];
     
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
-    [titleLabel setText:@"title"];
+    [titleLabel setText:[item objectForKey:@"content"]];
     [titleLabel sizeToFit];
     return cell;
 }
@@ -571,6 +838,9 @@
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     UITableViewCell *cell = [table cellForRowAtIndexPath:indexPath];
     UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
+    if(cellScrollView == nil){
+        cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
+    }
     [cellScrollView setContentOffset: CGPointMake(cellScrollView.bounds.size.width, 0) animated: YES] ;
 }
 
@@ -582,6 +852,41 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
+    MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
+    NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
+    viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    
+}
+
+- (void)dramaImageClicked:(UIButton *)sender
+{
+    [self closeMenu];
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [table convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    
+    DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+    NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
+    NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
+    viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+}
+
+- (void)showImageClicked:(UIButton *)sender
+{
+    [self closeMenu];
+    UIButton *btn = (UIButton *)sender;
+    CGPoint point = btn.center;
+    point = [table convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 - (void)imageBtnClicked:(UIButton *)sender
@@ -591,10 +896,15 @@
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
-    
-    MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    ListViewController *viewController = [[ListViewController alloc] init];
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    NSDictionary *item = [topsArray objectAtIndex:floor(indexPath.row * 2.0) + btn.tag - 3001];
+    NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
+    viewController.topId = topId;
+    viewController.listTitle = [item objectForKey: @"name"];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -630,7 +940,7 @@
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn"] forState:UIControlStateNormal];
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateHighlighted];
     [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn"] forState:UIControlStateNormal];
-    [dramaBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateHighlighted];
+    [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn_pressed"] forState:UIControlStateHighlighted];
     [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn"] forState:UIControlStateNormal];
     [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn_pressed"] forState:UIControlStateHighlighted];
     if (videoType == 0) {
@@ -638,7 +948,7 @@
     } else if(videoType == 1){
         [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateNormal];
     } else if(videoType == 2){
-        [dramaBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateNormal];
+        [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn_pressed"] forState:UIControlStateNormal];
     } else {
         [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn_pressed"] forState:UIControlStateNormal];
     }

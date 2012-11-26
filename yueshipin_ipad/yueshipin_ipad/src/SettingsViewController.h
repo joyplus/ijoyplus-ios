@@ -8,8 +8,9 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
+#import "SinaWeibo.h"
 
-@interface SettingsViewController : GenericBaseViewController
+@interface SettingsViewController : GenericBaseViewController <SinaWeiboDelegate, SinaWeiboRequestDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 @property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;

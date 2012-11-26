@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SinaWeibo.h"
 
 @class RootViewController;
 
@@ -18,6 +19,11 @@
 
 @property (assign, nonatomic) BOOL closed;
 
+@property (strong, nonatomic) SinaWeibo *sinaweibo;
+
 + (AppDelegate *) instance;
+
+- (BOOL)isParseReachable;
+- (BOOL)isWifiReachable;
 
 @end

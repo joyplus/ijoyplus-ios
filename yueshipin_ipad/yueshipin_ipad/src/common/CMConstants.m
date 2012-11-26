@@ -24,6 +24,11 @@
     return [UIColor colorWithRed:48/255.0 green:89/255.0 blue:147/255.0 alpha:1];
 }
 
++ (UIColor *)titleBlueColor
+{
+    return [UIColor colorWithRed:53/255.0 green:96/255.0 blue:152/255.0 alpha:1];
+}
+
 + (UIFont *)titleFont
 {
     return [UIFont systemFontOfSize:13];

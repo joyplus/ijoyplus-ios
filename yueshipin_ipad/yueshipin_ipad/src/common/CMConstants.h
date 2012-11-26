@@ -24,6 +24,7 @@
 
 #define kSinaWeiboAppKey  @"1490285522"
 #define kSinaWeiboAppSecret  @"f9ebc3ca95991b6dfce2c1608687e92b"
+#define kSinaWeiboRedirectURL @"https://api.weibo.com/oauth2/default.html"
 #define kPAPUserDefaultsCacheSinaFriendsKey @"sinaFriendKey"
 #define kSinaWeiboAccessToken @"sinaAccessToken"
 #define kSinaWeiboUID @"sinaUid"
@@ -51,6 +52,10 @@
 #define CHAO_QING @"hd2"
 #define LIU_CHANG @"3gp"
 
+#define  SHOW_MB_PROGRESS_BAR @"show_mb_progress_bar"
+
+#define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"
+
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
 @interface CMConstants : NSObject 
@@ -61,6 +66,8 @@
 + (UIColor *)textColor;
 
 + (UIColor *)textBlueColor;
+
++ (UIColor *)titleBlueColor;
 
 + (UIFont *)titleFont;
 
