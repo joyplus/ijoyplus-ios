@@ -195,6 +195,8 @@
             int btnWidth = [[hotKeyBtnWidth valueForKey:content] intValue];
             hotKeyBtn.frame = CGRectMake(btnPositionX, btnPositionY, btnWidth, BUTTON_HEIGHT);
             [hotKeyBtn setTitle:content forState:UIControlStateNormal];
+            [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
+            [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
             [cell.contentView addSubview:hotKeyBtn];
         }
     } else {
@@ -230,18 +232,12 @@
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, TABLE_VIEW_WIDTH, 40)];
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:view.frame];
-    [view addSubview:imageView];
-    
-    UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, 100, 25)];
-    [name setTextColor:CMConstants.textBlueColor];
     if(section == 0){
-        [name setText:@"热 门 搜 索"];
+        imageView.image = [UIImage imageNamed:@"hotkeys"];
     } else {
-        [name setText:@"历 史 记 录"];
+        imageView.image = [UIImage imageNamed:@"history"];
     }
-    [name sizeToFit];
-    [name setBackgroundColor:[UIColor clearColor]];
-    [view addSubview:name];
+    [view addSubview:imageView];    
     return view;
 }
 

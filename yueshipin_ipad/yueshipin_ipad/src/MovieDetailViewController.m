@@ -10,6 +10,7 @@
 #import "CommonHeader.h"
 #import "MediaPlayerViewController.h"
 #import "ProgramViewController.h"
+#import "SinaWeibo.h"
 
 #define LEFT_GAP 50
 
@@ -17,6 +18,7 @@
     NSDictionary *video;
     NSMutableArray *commentArray;
     NSArray *episodeArray;
+    SinaWeibo *_sinaweibo;
 }
 
 @end
@@ -51,7 +53,6 @@
     [self setCollectionBtn:nil];
     [self setPlayBtn:nil];
     [self setShareBtn:nil];
-    [self setWantBtn:nil];
     [self setAddListBtn:nil];
     [self setLineImage:nil];
     [self setIntroImage:nil];
@@ -109,54 +110,53 @@
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 62, 26);
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
-    self.titleLabel.frame = CGRectMake(290, 85, 130, 20);
-    self.scoreLabel.frame = CGRectMake(420, 85, 35, 20);
-    self.doulanLogo.frame = CGRectMake(462, 85, 15, 15);
+    self.titleLabel.frame = CGRectMake(290, 85, 180, 20);
+    
+    self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
+    self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.directorLabel.frame = CGRectMake(290, 180, 50, 15);
-    self.directorNameLabel.frame = CGRectMake(335, 180, 140, 15);
-    self.actorLabel.frame = CGRectMake(290, 220, 50, 15);
-    self.actorName1Label.frame = CGRectMake(335, 220, 140, 15);
-    self.actorName2Label.frame = CGRectMake(335, 245, 140, 15);
-    self.actorName3Label.frame = CGRectMake(335, 270, 140, 15);
-
-    self.playLabel.frame = CGRectMake(290, 300, 50, 15);
-    self.playTimeLabel.frame = CGRectMake(335, 300, 100, 15);
-    self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
-    self.regionNameLabel.frame = CGRectMake(335, 333, 100, 15);
-    
-    self.playBtn.frame = CGRectMake(290, 115, 185, 40);
+    self.playBtn.frame = CGRectMake(290, 150, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     
+    self.directorLabel.frame = CGRectMake(290, 205, 50, 15);
+    self.directorNameLabel.frame = CGRectMake(335, 205, 140, 15);
+    self.actorLabel.frame = CGRectMake(290, 230, 50, 15);
+    self.actorName1Label.frame = CGRectMake(335, 230, 140, 15);
+    self.actorName2Label.frame = CGRectMake(335, 255, 140, 15);
+    self.actorName3Label.frame = CGRectMake(335, 280, 140, 15);
+
+    self.playLabel.frame = CGRectMake(290, 305, 50, 15);
+    self.playTimeLabel.frame = CGRectMake(335, 305, 100, 15);
+    self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
+    self.regionNameLabel.frame = CGRectMake(335, 333, 100, 15);
+    
+    
     self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
     self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
-    self.dingNumberLabel.frame = self.dingNumberImage.frame;
-    self.dingNumberLabel.text = @"1043人顶";
+    self.dingNumberLabel.frame = CGRectMake(295, 360, 40, 24);
     
     self.collectioNumber.frame = CGRectMake(390, 360, 84, 24);
     self.collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
-    self.collectionNumberLabel.frame = self.collectioNumber.frame;
-    self.collectionNumberLabel.text = @"1043人收藏";
+    self.collectionNumberLabel.frame = CGRectMake(395, 360, 40, 24);
     
     self.dingBtn.frame = CGRectMake(LEFT_GAP, 405, 55, 34);
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push_pressed"] forState:UIControlStateHighlighted];
+    [self.dingBtn addTarget:self action:@selector(dingBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.collectionBtn.frame = CGRectMake(115, 405, 74, 34);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
+    [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareBtn.frame = CGRectMake(195, 405, 74, 34);
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
-    
-    self.wantBtn.frame = CGRectMake(290, 405, 76, 34);
-    [self.wantBtn setBackgroundImage:[UIImage imageNamed:@"watch"] forState:UIControlStateNormal];
-    [self.wantBtn setBackgroundImage:[UIImage imageNamed:@"watch_pressed"] forState:UIControlStateHighlighted];
-    
-    self.addListBtn.frame = CGRectMake(370, 405, 104, 34);
+    [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+
+    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
     
@@ -247,6 +247,8 @@
     NSArray *starArray;
     if([stars rangeOfString:@"/"].length > 0){
         starArray = [stars componentsSeparatedByString:@"/"];
+    } else if([stars rangeOfString:@","].length > 0){
+        starArray = [stars componentsSeparatedByString:@","];
     } else {
         starArray = [stars componentsSeparatedByString:@" "];
     }
@@ -259,8 +261,8 @@
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
-    self.dingNumberLabel.text = [NSString stringWithFormat:@"%@ 人顶", [video objectForKey:@"support_num"]];
-    self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@ 收藏", [video objectForKey:@"favority_num"]];
+    self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
+    self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
 }
@@ -323,6 +325,131 @@
     viewController.title = [video objectForKey:@"name"];
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+}
+
+- (void)dingBtnClicked:(id)sender
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:2];
+            self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
+        } else {
+            [[AppDelegate instance].rootViewController showFailureModalView:2];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showSystemError:self.view];
+    }];
+}
+
+- (void)collectionBtnClicked
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:2];
+            self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
+        } else {
+            [[AppDelegate instance].rootViewController showFailureModalView:2];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showSystemError:self.view];
+    }];
+}
+
+- (void)shareBtnClicked
+{
+    _sinaweibo = [AppDelegate instance].sinaweibo;
+    _sinaweibo.delegate = self;
+    
+    if ([_sinaweibo isLoggedIn]) {
+        [AppDelegate instance].rootViewController.prodId = self.prodId;
+        [AppDelegate instance].rootViewController.prodUrl = [video objectForKey:@"poster"];
+        [AppDelegate instance].rootViewController.prodName = [video objectForKey:@"name"];
+        [[AppDelegate instance].rootViewController showSharePopup];
+    } else {
+        [_sinaweibo logIn];
+    }
+}
+
+- (void)removeAuthData
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
+}
+
+- (void)storeAuthData
+{
+    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
+                              _sinaweibo.accessToken, @"AccessTokenKey",
+                              _sinaweibo.expirationDate, @"ExpirationDateKey",
+                              _sinaweibo.userID, @"UserIDKey",
+                              _sinaweibo.refreshToken, @"refresh_token", nil];
+    [[NSUserDefaults standardUserDefaults] setObject:authData forKey:@"SinaWeiboAuthData"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+#pragma mark - SinaWeibo Delegate
+
+- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+{
+    [self storeAuthData];
+    [sinaweibo requestWithURL:@"users/show.json"
+                       params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
+                   httpMethod:@"GET"
+                     delegate:self];
+}
+
+- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboDidLogOut");
+    [self removeAuthData];
+}
+
+- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboLogInDidCancel");
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
+{
+    NSLog(@"sinaweibo logInDidFailWithError %@", error);
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                        message:@"网络数据错误，请重新登陆。"
+                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alertView show];
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
+{
+    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
+    [self removeAuthData];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                        message:@"Token已过期，请重新登陆。"
+                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alertView show];
+}
+
+#pragma mark - SinaWeiboRequest Delegate
+
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
+{
+    if ([request.url hasSuffix:@"users/show.json"])
+    {
+        NSString *username = [result objectForKey:@"screen_name"];
+        [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
+        NSString *avatarUrl = [result objectForKey:@"avatar_large"];
+        [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
+    }
+}
+
+- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
+{
+    if ([request.url hasSuffix:@"users/show.json"])
+    {
+
+    }
 }
 
 @end

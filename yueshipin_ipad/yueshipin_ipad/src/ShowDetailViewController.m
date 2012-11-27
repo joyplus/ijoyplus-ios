@@ -78,13 +78,11 @@
     
     self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
     self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
-    self.dingNumberLabel.frame = self.dingNumberImage.frame;
-    self.dingNumberLabel.text = @"1043人顶";
+    self.dingNumberLabel.frame = CGRectMake(295, 360, 40, 24);
     
     self.collectioNumber.frame = CGRectMake(390, 360, 84, 24);
     self.collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
-    self.collectionNumberLabel.frame = self.collectioNumber.frame;
-    self.collectionNumberLabel.text = @"1043人收藏";
+    self.collectionNumberLabel.frame = CGRectMake(395, 360, 40, 24);
     
     self.dingBtn.frame = CGRectMake(LEFT_GAP, 405, 55, 34);
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];

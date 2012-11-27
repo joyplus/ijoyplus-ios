@@ -7,8 +7,9 @@
 //
 
 #import "GenericBaseViewController.h"
+#import "SinaWeibo.h"
 
-@interface MovieDetailViewController : GenericBaseViewController
+@interface MovieDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;
 @property (weak, nonatomic) IBOutlet UIImageView *filmImage;
@@ -30,7 +31,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *collectionBtn;
 @property (weak, nonatomic) IBOutlet UIButton *playBtn;
 @property (weak, nonatomic) IBOutlet UIButton *shareBtn;
-@property (weak, nonatomic) IBOutlet UIButton *wantBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addListBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *lineImage;
 @property (weak, nonatomic) IBOutlet UIImageView *introImage;

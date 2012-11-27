@@ -45,14 +45,20 @@
 
 @class UIViewExt;
 
-@interface RootViewController : GenericBaseViewController {
+@interface RootViewController : GenericBaseViewController <UITextViewDelegate> {
 	UIViewExt* rootView;
 	UIView* leftMenuView;
-	UIView* rightSlideView;	
+	UIView* rightSlideView;
+    UITextView *contentTextView;
+    UIButton *shareBtn;
 }
 
 @property (nonatomic, strong) MenuViewController* menuViewController;
 @property (nonatomic, strong) StackScrollViewController* stackScrollViewController;
-
-
+@property (nonatomic, strong) NSString *prodId;
+@property (nonatomic, strong) NSString *prodUrl;
+@property (nonatomic, strong) NSString *prodName;
+- (void)showSuccessModalView:(int)closeTime;
+- (void)showFailureModalView:(int)closeTime;
+- (void)showSharePopup;
 @end

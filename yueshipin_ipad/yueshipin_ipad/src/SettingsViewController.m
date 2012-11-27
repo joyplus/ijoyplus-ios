@@ -122,16 +122,21 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	_sinaweibo = [AppDelegate instance].sinaweibo;
+    _sinaweibo = [AppDelegate instance].sinaweibo;
     _sinaweibo.delegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    if([_sinaweibo isLoggedIn]){
+        sinaSwitch.on = YES;
+        NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
+        sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -227,7 +232,10 @@
     {
         userInfo = result;
         NSString *username = [userInfo objectForKey:@"screen_name"];
+        [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
+        NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
+        [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
     }
 }
 

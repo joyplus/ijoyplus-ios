@@ -108,32 +108,31 @@
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
     self.titleLabel.frame = CGRectMake(290, 85, 130, 20);
-    self.scoreLabel.frame = CGRectMake(420, 85, 35, 20);
-    self.doulanLogo.frame = CGRectMake(462, 85, 15, 15);
+    
+    self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
+    self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.actorLabel.frame = CGRectMake(290, 180, 50, 15);
-    self.actorName1Label.frame = CGRectMake(335, 180, 100, 15);
-    self.actorName2Label.frame = CGRectMake(335, 215, 100, 15);
-    self.actorName3Label.frame = CGRectMake(335, 250, 100, 15);
-    self.playLabel.frame = CGRectMake(290, 290, 50, 15);
-    self.playTimeLabel.frame = CGRectMake(335, 290, 100, 15);
-    self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
-    self.regionNameLabel.frame = CGRectMake(335, 333, 100, 15);
-    
-    self.playBtn.frame = CGRectMake(290, 115, 185, 40);
+    self.playBtn.frame = CGRectMake(290, 150, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     
+    self.actorLabel.frame = CGRectMake(290, 210, 50, 15);
+    self.actorName1Label.frame = CGRectMake(335, 210, 100, 15);
+    self.actorName2Label.frame = CGRectMake(335, 235, 100, 15);
+    self.actorName3Label.frame = CGRectMake(335, 260, 100, 15);
+    self.playLabel.frame = CGRectMake(290, 300, 50, 15);
+    self.playTimeLabel.frame = CGRectMake(335, 300, 100, 15);
+    self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
+    self.regionNameLabel.frame = CGRectMake(335, 333, 100, 15);
+    
     self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
     self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
-    self.dingNumberLabel.frame = self.dingNumberImage.frame;
-    self.dingNumberLabel.text = @"1043人顶";
+    self.dingNumberLabel.frame = CGRectMake(295, 360, 40, 24);
     
     self.collectioNumber.frame = CGRectMake(390, 360, 84, 24);
     self.collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
-    self.collectionNumberLabel.frame = self.collectioNumber.frame;
-    self.collectionNumberLabel.text = @"1043人收藏";
+    self.collectionNumberLabel.frame = CGRectMake(395, 360, 40, 24);
     
     self.dingBtn.frame = CGRectMake(LEFT_GAP, 405, 55, 34);
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];
@@ -231,6 +230,8 @@
     NSArray *starArray;
     if([stars rangeOfString:@"/"].length > 0){
         starArray = [stars componentsSeparatedByString:@"/"];
+    } else if([stars rangeOfString:@","].length > 0){
+        starArray = [stars componentsSeparatedByString:@","];
     } else {
         starArray = [stars componentsSeparatedByString:@" "];
     }

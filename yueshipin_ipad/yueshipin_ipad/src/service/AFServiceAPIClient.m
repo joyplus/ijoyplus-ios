@@ -73,7 +73,7 @@ NSString * const kABaseURLString = @"http://test.joyplus.tv/";
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
-	[self generateUserId:path parameters:parameters success:success failure:failure];
+    [self generateUserId:path parameters:parameters success:success failure:failure];
 }
 
 - (void)generateUserId:(NSString *)path
@@ -81,6 +81,10 @@ NSString * const kABaseURLString = @"http://test.joyplus.tv/";
                success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
 {
+    if([kPathGenerateUIID isEqualToString:path]){
+        [super getPath:path parameters:parameters success:success failure:failure];
+        return;
+    }
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     if(userId == nil){
         Reachability *tempHostReach = [Reachability reachabilityForInternetConnection];
@@ -93,7 +97,7 @@ NSString * const kABaseURLString = @"http://test.joyplus.tv/";
                     NSString *nickname = [result objectForKey:@"nickname"];
                     NSString *username = [result objectForKey:@"username"];
                     [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
-                    [[ContainerUtility sharedInstance] setAttribute:nickname forKey:kUserNickName];
+                    [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"%@", nickname] forKey:kUserNickName];
                     [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserName];
                     [super setDefaultHeader:@"user_id" value:user_id];
                     [super getPath:path parameters:parameters success:success failure:failure];
@@ -134,7 +138,7 @@ NSString * const kABaseURLString = @"http://test.joyplus.tv/";
                     NSString *nickname = [result objectForKey:@"nickname"];
                     NSString *username = [result objectForKey:@"username"];
                     [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
-                    [[ContainerUtility sharedInstance] setAttribute:nickname forKey:kUserNickName];
+                    [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"用户%@", nickname] forKey:kUserNickName];
                     [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserName];
                     [super setDefaultHeader:@"user_id" value:user_id];
                     [super postPath:path parameters:parameters success:success failure:failure];

@@ -8,6 +8,8 @@
 
 #import "PersonalViewController.h"
 #import "CustomSearchBar.h"
+#import "DingListViewController.h"
+#import "CollectionListViewController.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -51,6 +53,16 @@
 @implementation PersonalViewController
 @synthesize menuViewControllerDelegate;
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+}
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
@@ -77,11 +89,20 @@
         personalImage.image = [UIImage imageNamed:@"my_summary_bg"];
         [self.view addSubview:personalImage];
         
+        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 110, 70, 70)];
+        NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
+        [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_placeholder"]];
+        avatarImage.layer.borderWidth = 2;
+        avatarImage.layer.borderColor = [UIColor whiteColor].CGColor;
+        avatarImage.layer.cornerRadius = 5;
+        avatarImage.layer.masksToBounds = YES;
+        [self.view addSubview:avatarImage];
+        
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 260, 22)];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.textColor = [UIColor blackColor];
-        nameLabel.font = [UIFont boldSystemFontOfSize:20];
-        nameLabel.text = @"用户9527";
+        nameLabel.font = [UIFont systemFontOfSize:20];
+        nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
         [self.view addSubview:nameLabel];
         
 //        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -189,10 +210,10 @@
 	// Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning
+- (void)closeMenu
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [AppDelegate instance].closed = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
 }
 
 #pragma mark -
@@ -230,6 +251,7 @@
 
 - (void)summaryBtnClicked:(UIButton *)sender
 {
+    [self closeMenu];
     for(int i = 0; i < 4; i++){
         UIButton *btn = (UIButton *)[self.view viewWithTag:1001 + i];
         [btn setBackgroundImage:nil forState:UIControlStateNormal];
@@ -237,7 +259,19 @@
     }
     [sender setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
     [sender setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateHighlighted];
-    
+    if(sender.tag == 1001){
+        DingListViewController *viewController = [[DingListViewController alloc] init];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    } else if(sender.tag == 1002){
+        CollectionListViewController *viewController = [[CollectionListViewController alloc] init];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    } else if(sender.tag == 1003){
+        
+    } else if(sender.tag = 1004){
+        
+    }
 }
 
 @end

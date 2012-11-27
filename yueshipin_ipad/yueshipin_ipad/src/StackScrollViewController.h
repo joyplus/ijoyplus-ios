@@ -70,6 +70,7 @@
 - (void) addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView;
 - (void)bounceBack:(NSString*)animationID finished:(NSNumber*)finished context:(void*)context;
 - (void)menuToggle:(BOOL)menuClicked isStackStartView:(BOOL)isStackStartView;
+
 @property (nonatomic, strong) UIView* slideViews;
 @property (nonatomic, strong) UIView* borderViews;
 @property (nonatomic, assign) CGFloat slideStartPosition;

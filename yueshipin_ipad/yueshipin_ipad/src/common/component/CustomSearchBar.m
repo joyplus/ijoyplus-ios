@@ -20,18 +20,6 @@
     return self;
 }
 
-- (void) clearSearchBarBg {
-    for (UIView *subview in self.subviews) {
-        if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])  {
-            UIView *bg = [[UIView alloc] initWithFrame:subview.frame];
-            bg.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"search_bg"]];
-            [self insertSubview:bg aboveSubview:subview];
-            [subview removeFromSuperview];
-            break;
-        }
-    }
-}
-
 - (void)layoutSubviews {
 //    UITextField *searchField;
     UIButton *cancelButton;
@@ -40,13 +28,22 @@
 //            searchField = subview;
         } else if([subview isKindOfClass:[UIButton class]]){
             cancelButton = (UIButton *)subview;
-            [cancelButton setTitle:@"搜索"  forState:UIControlStateNormal];
-//            [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//            [cancelButton setBackgroundImage:[UIImage imageNamed:@"search_btn"] forState:UIControlStateNormal];
-//            [cancelButton setTintColor:CMConstants.greyColor];
+            [cancelButton setTitle:@"" forState:UIControlStateNormal];
+            [cancelButton setBackgroundImage:[UIImage imageNamed:@"search_btn"] forState:UIControlStateNormal];
+            [cancelButton setBackgroundImage:[UIImage imageNamed:@"search_btn_pressed"] forState:UIControlStateHighlighted];
         }
     }
-    [self clearSearchBarBg];
+    for (UIView *subview in self.subviews)
+    {
+        if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])
+        {
+            [subview removeFromSuperview];
+//            break;
+        }
+    }
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"search_box"]];
+    [self insertSubview:imageView atIndex:1];
+    //3自定义背景
     [super layoutSubviews];
 }
 

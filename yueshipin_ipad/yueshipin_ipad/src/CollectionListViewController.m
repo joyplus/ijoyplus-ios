@@ -6,23 +6,21 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "ListViewController.h"
+#import "CollectionListViewController.h"
 #import "MovieDetailViewController.h"
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
 
-@interface ListViewController (){
+@interface CollectionListViewController (){
     UITableView *table;
     UIImageView *bgImage;
-    UILabel *titleLabel;
-    NSMutableArray *topsArray;
+    UIImageView *titleImage;
+    NSMutableArray *videoArray;
 }
 
 @end
 
-@implementation ListViewController
-@synthesize topId;
-@synthesize listTitle;
+@implementation CollectionListViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,13 +38,9 @@
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     [self.view addSubview:bgImage];
     
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 25, 377, 30)];    
-    titleLabel.font = [UIFont boldSystemFontOfSize:26];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = CMConstants.titleBlueColor;
-    titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
-    titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
-    [self.view addSubview:titleLabel];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 62, 26)];
+    titleImage.image = [UIImage imageNamed:@"collect_title"];
+    [self.view addSubview:titleImage];
     
     table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 350)];
     table.delegate = self;
@@ -59,8 +53,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    titleLabel.text = self.listTitle;
-    if(topsArray.count > 0){        
+    if(videoArray.count > 0){        
     } else {
         [self retrieveTopsListData];        
     }
@@ -68,39 +61,37 @@
 
 
 - (void)retrieveTopsListData
-{
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_detail_list"];
+{       
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_collection_list"];
     if(cacheResult != nil){
-        [self parseTopsListData:cacheResult];
+        [self parseVideoData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", self.topId, @"top_id", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseTopsListData:result];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseVideoData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
-            topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            [videoArray removeAllObjects];
             [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-            [UIUtility showSystemError:self.view];
         }];
     }
 }
 
-- (void)parseTopsListData:(id)result
+- (void)parseVideoData:(id)result
 {
-    topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        NSArray *tempTopsArray = [result objectForKey:@"items"];
-        if(tempTopsArray.count > 0){
-            [[CacheUtility sharedCache] putInCache:@"top_detail_list" result:result];
-            [topsArray addObjectsFromArray:tempTopsArray];
+        NSArray *videos = [result objectForKey:@"favorities"];
+        if(videos != nil && videos.count > 0){
+            [[CacheUtility sharedCache] putInCache:@"my_collection_list" result:result];
+            [videoArray addObjectsFromArray:videos];
         }
-    } else {
-        [UIUtility showSystemError:self.view];
     }
     [table reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+
 }
 
 
@@ -120,7 +111,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return topsArray.count;
+    return videoArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -153,7 +144,7 @@
 //            [cell.contentView addSubview:startImage];
 //        }
         
-        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 48, 45, 20)];
+        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 45, 45, 20)];
         scoreLabel.tag = 4001;
         scoreLabel.text = @"8.6分";
         scoreLabel.backgroundColor = [UIColor clearColor];
@@ -217,12 +208,12 @@
         devidingLine.image = [UIImage imageNamed:@"dividing"];
         [cell.contentView addSubview:devidingLine];        
     }
-    NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
+    NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@""]];
+    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@""]];
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
-    nameLabel.text = [item objectForKey:@"prod_name"];
+    nameLabel.text = [item objectForKey:@"content_name"];
     
 //    int score = 3;
 //    for(int i = 0; i < score; i++){
@@ -244,51 +235,31 @@
     return 160;
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
 
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleDelete;
+}
 
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    //NSLog(@"commitEditingStyle");
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [videoArray removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+    else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }
+    
+}
+ 
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [table deselectRowAtIndexPath:indexPath animated:YES];
-    NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
+    NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
     NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
     if([type isEqualToString:@"1"]){

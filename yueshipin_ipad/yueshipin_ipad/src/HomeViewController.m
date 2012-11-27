@@ -137,7 +137,7 @@
             [[CacheUtility sharedCache] putInCache:@"lunbo_list" result:result];
             [table reloadData];
         }
-    }    
+    }
 }
 
 - (void)retrieveTopsListData
@@ -494,7 +494,7 @@
         imageView1.image = [UIImage imageNamed:@"briefcard_orange"];
         [cell.contentView addSubview:imageView1];
         
-        UIImageView *hotImage1 = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hot"]];
+        UIImageView *hotImage1 = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hot_signal"]];
         hotImage1.frame = CGRectMake(3, 3, 62, 62);
         [imageView1 addSubview:hotImage1];
         
@@ -519,7 +519,7 @@
         imageView2.image = [UIImage imageNamed:@"briefcard_blue"];
         [cell.contentView addSubview:imageView2];
         
-        UIImageView *hotImage2 = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hot"]];
+        UIImageView *hotImage2 = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hot_signal"]];
         hotImage2.frame = CGRectMake(3, 3, 62, 62);
         [imageView2 addSubview:hotImage2];
         
@@ -611,7 +611,7 @@
     } else {
         typeImage2.image = [UIImage imageNamed:@"show_type"];
     }
-
+    
     NSArray *subitems1 = [item1 objectForKey:@"items"];
     NSArray *subitems2 = [item1 objectForKey:@"items"];
     for(int i = 0; i < 3; i++){
@@ -769,7 +769,7 @@
     NSArray *subitemArray = [item objectForKey:@"items"];
     for(int i = 0; i < subitemArray.count; i++){
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
-         NSDictionary *subitem = [subitemArray objectAtIndex:i];
+        NSDictionary *subitem = [subitemArray objectAtIndex:i];
         [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
         tempLabel.text = [subitem objectForKey:@"prod_name"];
@@ -844,6 +844,22 @@
     [cellScrollView setContentOffset: CGPointMake(cellScrollView.bounds.size.width, 0) animated: YES] ;
 }
 
+- (void)showDetailScreen:(NSDictionary *)item
+{
+    NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    if([prodType isEqualToString:@"1"]){
+        MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    } else if([prodType isEqualToString:@"2"]){
+        DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    }
+}
+
 - (void)movieImageClicked:(UIButton *)sender
 {
     
@@ -852,13 +868,9 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
-    MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
     NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
-    viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
-    
+    [self showDetailScreen:item];
 }
 
 - (void)dramaImageClicked:(UIButton *)sender
@@ -869,12 +881,9 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
-    DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
     NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
     NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
-    viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [self showDetailScreen:item];
 }
 
 - (void)showImageClicked:(UIButton *)sender
