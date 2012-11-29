@@ -36,8 +36,8 @@
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     [self.view addSubview:bgImage];
     
-    titleImage = [[UIImageView alloc]initWithFrame: CGRectMake(LEFT_GAP, 35, 110, 27)];
-    titleImage.image = [UIImage imageNamed:@"create_list_title"];
+    titleImage = [[UIImageView alloc]initWithFrame: CGRectMake(LEFT_GAP, 35, 183, 27)];
+    titleImage.image = [UIImage imageNamed:@"add_title"];
     [self.view addSubview:titleImage];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];

@@ -8,7 +8,13 @@
 
 #import "VideoDetailViewController.h"
 
-@interface ShowDetailViewController : VideoDetailViewController
+@protocol ShowDetailViewControllerDelegate <NSObject>
+
+- (void)playVideoCallback:(NSInteger)num;
+
+@end
+
+@interface ShowDetailViewController : VideoDetailViewController <ShowDetailViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;
 @property (weak, nonatomic) IBOutlet UIImageView *filmImage;

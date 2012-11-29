@@ -10,6 +10,9 @@
 #import "LightMenuBar.h"
 #import "ShowListViewController.h"
 #import "CommonHeader.h"
+#import "ProgramViewController.h"
+#import "MediaPlayerViewController.h"
+#import "CommentListViewController.h"
 
 #define LEFT_GAP 50
 #define USE_CUSTOM_DISPLAY 0
@@ -18,6 +21,7 @@
     ShowListViewController *listViewController;
     NSMutableArray *commentArray;
     NSArray *episodeArray;
+    CommentListViewController *commentListViewController;
 }
 
 @end
@@ -95,6 +99,7 @@
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateHighlighted];
+    [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.playRoundBtn.center = self.filmImage.center;
     
@@ -109,6 +114,7 @@
     self.playBtn.frame = CGRectMake(290, 150, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
+    [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.actorLabel.frame = CGRectMake(290, 210, 80, 15);
     self.actorName1Label.frame = CGRectMake(335, 210, 100, 15);
@@ -157,14 +163,18 @@
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
     self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
-    
-    listViewController = [[ShowListViewController alloc]initWithStyle:UITableViewStylePlain];
-    listViewController.view.frame = CGRectMake(LEFT_GAP, 590, 425, 200);
-    [self.bgScrollView addSubview:listViewController.view];
+       
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
 }
 
-
 - (void)viewWillAppear:(BOOL)animated
+{
+    if(video == nil){
+        [self retrieveData];
+    }
+}
+
+- (void)retrieveData
 {
     NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.prodId];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
@@ -234,20 +244,122 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
+    listViewController = [[ShowListViewController alloc]initWithStyle:UITableViewStylePlain];
+    listViewController.parentDelegate = self;
+    listViewController.view.frame = CGRectMake(LEFT_GAP, 590, 425, (episodeArray.count > 5 ? 5 : episodeArray.count)*30);
+    listViewController.view.backgroundColor = [UIColor yellowColor];
     listViewController.listData = episodeArray;
-    [listViewController.tableView reloadData];
+    [self.bgScrollView addSubview:listViewController.view];
+    
+    int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
     
     int positionY = listViewController.view.frame.origin.y + (episodeArray.count > 5 ? 5 : episodeArray.count)*30;
-    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 30, self.commentImage.frame.size.width, self.commentImage.frame.size.height);
+    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 30, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
-    self.numberLabel.frame = CGRectMake(139, positionY + 30, self.numberLabel.frame.size.width, self.numberLabel.frame.size.height);
     
-    self.commentBtn.frame = CGRectMake(410, positionY + 30, self.commentBtn.frame.size.width, self.commentBtn.frame.size.height);
+    self.numberLabel.frame = CGRectMake(139, positionY + 30, 100, 18);
+    self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
+    
+    self.commentBtn.frame = CGRectMake(410, positionY + 27, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
+    [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
 
+    if(commentListViewController == nil){
+        commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
+        commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 70, 425, 200);
+        commentListViewController.totalCommentNum = totalCommentNum;
+        commentListViewController.parentDelegate = self;
+        commentListViewController.prodId = self.prodId;
+        [self.bgScrollView addSubview:commentListViewController.view];
+    }
+    commentListViewController.listData = commentArray;
+    [commentListViewController.tableView reloadData];
+    
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + 200)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 70, 425, commentListViewController.tableHeight);
 }
 
+- (void)getTopComments:(int)num
+{
+    [self retrieveData];
+}
+
+- (void)refreshCommentListView:(int)tableHeight
+{
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+5 * 30 + 200)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, tableHeight);
+}
+
+- (void)playVideo
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    [self playVideo:0];
+}
+
+- (void)playVideo:(NSInteger)num
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
+        [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
+        [alert setDestructiveButtonWithTitle:@"确定" block:^{
+            [self willPlayVideo:num];
+        }];
+        [alert show];
+    } else {
+        [self willPlayVideo:num];
+    }
+}
+
+- (void)playVideoCallback:(NSInteger)num
+{
+    [self playVideo:num];
+}
+
+
+- (void)willPlayVideo:(NSInteger)num
+{
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        NSString *videoUrl = nil;
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                videoUrl = [self parseVideoUrl:tempVideo];
+                break;
+            }
+        }
+        if(videoUrl == nil){
+            if (videoUrlArray.count > 0) {
+                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+            }
+        }
+        if(videoUrl == nil){
+            [self gotoWebsite:num];
+        } else {
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = videoUrl;
+            [self presentModalViewController:viewController animated:YES];
+        }
+    }else {
+        [self gotoWebsite:num];
+    }
+}
+
+- (void)gotoWebsite:(NSInteger)num
+{
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
+    NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    if([StringUtility stringIsEmpty:url]){
+        url = @"";
+    }
+    viewController.programUrl = url;
+    viewController.title = [video objectForKey:@"name"];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
 
 - (void)dingBtnClicked:(id)sender
 {

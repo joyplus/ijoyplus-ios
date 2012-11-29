@@ -455,7 +455,7 @@
 							<object class="IBUIImageView" id="873855402">
 								<reference key="NSNextResponder" ref="163951952"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{69, 697}, {52, 22}}</string>
+								<string key="NSFrame">{{69, 697}, {74, 19}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
 								<reference key="NSNextKeyView" ref="471544401"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -474,7 +474,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">（173条）</string>
+								<string key="IBUIText"/>
 								<reference key="IBUITextColor" ref="155562371"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>

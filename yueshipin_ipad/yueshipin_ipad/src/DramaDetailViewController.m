@@ -10,6 +10,7 @@
 #import "ProgramViewController.h"
 #import "MediaPlayerViewController.h"
 #import "CommonHeader.h"
+#import "CommentListViewController.h"
 
 #define LEFT_GAP 50
 
@@ -17,6 +18,8 @@
     NSDictionary *video;
     NSMutableArray *commentArray;
     NSArray *episodeArray;
+    CommentListViewController *commentListViewController;
+    int totalEpisodeNumber;
 }
 
 
@@ -81,7 +84,7 @@
 {
     [super viewDidLoad];
     self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
     
     self.playBtn.frame = CGRectMake(290, 115, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
@@ -115,6 +118,7 @@
     self.playBtn.frame = CGRectMake(290, 150, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
+    [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.actorLabel.frame = CGRectMake(290, 210, 50, 15);
     self.actorName1Label.frame = CGRectMake(335, 210, 100, 15);
@@ -163,15 +167,8 @@
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
     self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
-
-    self.commentImage.frame = CGRectMake(LEFT_GAP, 735, 74, 19);
-    self.commentImage.image = [UIImage imageNamed:@"comment_title"];
-    
-    self.numberLabel.frame = CGRectMake(139, 736, 100, 18);
-    
-    self.commentBtn.frame = CGRectMake(410, 736, 66, 26);
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
+   
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
 }
 
 
@@ -252,12 +249,18 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
-    int totalEpisodeNumber = [[video objectForKey:@"episodes_count"] intValue];
+    id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
+    int lastNum = -1;
+    if(lastNumObj != nil){
+        lastNum = [lastNumObj integerValue];
+    }
+    
+    totalEpisodeNumber = [[video objectForKey:@"episodes_count"] intValue];
     for (int i = 0; i < totalEpisodeNumber; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         btn.tag = i+1;
         [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39, 44, 34)];
-        if (i < 10) {
+        if (i < 9) {
             [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
         } else {
             [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
@@ -265,24 +268,74 @@
         [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
         btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
         UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-        [btn setBackgroundImage:[UIImage imageNamed:@"episode_btn"] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"episode_btn_pressed"] forState:UIControlStateHighlighted];
+        if(lastNum == i+1){
+            [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
+        } else {
+            [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+        }
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
         [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
         [self.bgScrollView addSubview:btn];
     }
     
     UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber-1)];
-    self.commentImage.frame = CGRectMake(self.commentImage.frame.origin.x, lastBtn.frame.origin.y + 60, self.commentImage.frame.size.width, self.commentImage.frame.size.height);
+
+    int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
+    self.commentImage.frame = CGRectMake(LEFT_GAP, lastBtn.frame.origin.y + 60, 74, 19);
+    self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
-    self.numberLabel.frame = CGRectMake(self.numberLabel.frame.origin.x, lastBtn.frame.origin.y + 61, self.numberLabel.frame.size.width, self.numberLabel.frame.size.height);
+    self.numberLabel.frame = CGRectMake(139, lastBtn.frame.origin.y + 60, 100, 18);
+    self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(self.commentBtn.frame.origin.x, lastBtn.frame.origin.y + 61, self.commentBtn.frame.size.width, self.commentBtn.frame.size.height);
+    self.commentBtn.frame = CGRectMake(410, lastBtn.frame.origin.y + 57, 66, 26);
+    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
+    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
+    [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    if(commentListViewController == nil){
+        commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
+        commentListViewController.view.frame = CGRectMake(LEFT_GAP, lastBtn.frame.origin.y + 90, 425, 200);
+        commentListViewController.totalCommentNum = totalCommentNum;
+        commentListViewController.parentDelegate = self;
+        commentListViewController.prodId = self.prodId;
+        [self.bgScrollView addSubview:commentListViewController.view];
+    }
+    commentListViewController.listData = commentArray;
+    [commentListViewController.tableView reloadData];
+    
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 200)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, commentListViewController.tableHeight);
 }
 
+- (void)getTopComments:(int)num
+{
+    [self retrieveData];
+}
+
+- (void)refreshCommentListView:(int)tableHeight
+{
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 200)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, tableHeight);
+}
+
+- (void)clearLastBtnImage
+{
+    id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
+    int lastNum = -1;
+    if(lastNumObj != nil){
+        lastNum = [lastNumObj integerValue];
+    }
+    UIButton *lastbtn = (UIButton *)[self.bgScrollView viewWithTag:lastNum];
+    [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+}
 
 - (void)dramaPlay:(id)sender
 {
+    [self clearLastBtnImage];
     UIButton *btn = (UIButton *)sender;
+    [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
     [self playVideo:btn.tag];
 }
 
@@ -293,6 +346,10 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    [self clearLastBtnImage];
+    
+    UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:1];
+    [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
     [self playVideo:1];
 }
 
@@ -312,6 +369,7 @@
 
 - (void)willPlayVideo:(NSInteger)num
 {
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:num]];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
     for(NSDictionary *episode in episodeArray){
         if([[episode objectForKey:@"name"]integerValue] == num){

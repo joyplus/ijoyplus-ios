@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ShowDetailViewController.h"
 
 @interface ShowListViewController : UITableViewController
 
 @property (nonatomic, strong)NSArray *listData;
+@property (nonatomic, weak)id<ShowDetailViewControllerDelegate>parentDelegate;
 @end

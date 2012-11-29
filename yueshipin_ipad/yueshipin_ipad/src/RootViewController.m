@@ -83,6 +83,7 @@
 @implementation RootViewController
 @synthesize menuViewController, stackScrollViewController;
 @synthesize prodUrl, prodId, prodName;
+@synthesize videoDetailDelegate;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -222,6 +223,57 @@
     [self.view addSubview:view];
 }
 
+
+- (void)showCommentPopup
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    view.tag = 3268142;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"comment_frame"]];
+    frame.frame = CGRectMake(0, 0, 424, 265);
+    frame.center = CGPointMake(view.center.x, view.center.y - 20);
+    [view addSubview:frame];
+    
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(675, 240, 40, 42);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:closeBtn];
+    
+    sendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    sendBtn.frame = CGRectMake(615, 440, 80, 32);
+    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateNormal];
+    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateHighlighted];
+    [sendBtn addTarget:self action:@selector(sendComment) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:sendBtn];
+    
+    contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(330, 310, 360, 110)];
+    contentTextView.delegate = self;
+    [view addSubview:contentTextView];
+    [self.view addSubview:view];
+}
+
+- (void)sendComment{
+    if(contentTextView.text.length > 0){
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", contentTextView.text, @"content", [StringUtility createUUID], @"token", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [self removeOverlay];
+            [self showSuccessModalView:1.5];
+            [self.videoDetailDelegate getTopComments:10];
+        } else {
+            [self removeOverlay];
+            [self showFailureModalView:1.5];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self removeOverlay];
+        [self showFailureModalView:1.5];
+    }];
+    }
+}
+
 - (void)sendWeibo
 {
     if(contentTextView.text.length > 0){
@@ -236,10 +288,10 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:_sinaweibo.accessToken, @"access_token", content, @"status", self.prodUrl, @"url", nil];
         [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self removeOverlay];
-            [self showSuccessModalView:2];
+            [self showSuccessModalView:1.5];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [self removeOverlay];
-            [self showFailureModalView:2];
+            [self showFailureModalView:1.5];
         }];
 
     }
@@ -260,9 +312,13 @@
     if(textView.text.length > 0){
         [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn"] forState:UIControlStateNormal];
         [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_pressed"] forState:UIControlStateHighlighted];
+        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn"] forState:UIControlStateNormal];
+        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_pressed"] forState:UIControlStateHighlighted];
     } else {
         [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateNormal];
         [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateHighlighted];
+        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateNormal];
+        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateHighlighted];
         
     }
 }
@@ -270,6 +326,9 @@
 - (void)removeOverlay
 {
     UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    for(UIView *subview in view.subviews){
+        [subview removeFromSuperview];
+    }
     [view removeFromSuperview];
     view = nil;
 }

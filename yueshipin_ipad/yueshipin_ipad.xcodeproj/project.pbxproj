@@ -140,6 +140,14 @@
 		EBB59CD316673A0500F646C7 /* movie_type@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CD016673A0500F646C7 /* movie_type@2x.png */; };
 		EBB59CD416673A0500F646C7 /* result_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CD116673A0500F646C7 /* result_title@2x.png */; };
 		EBB59CD716673CFE00F646C7 /* VideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CD616673CFD00F646C7 /* VideoDetailViewController.m */; };
+		EBB59CEA1667476000F646C7 /* add_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE61667476000F646C7 /* add_title@2x.png */; };
+		EBB59CEB1667476000F646C7 /* drama_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE71667476000F646C7 /* drama_pressed@2x.png */; };
+		EBB59CEC1667476000F646C7 /* drama_watched@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE81667476000F646C7 /* drama_watched@2x.png */; };
+		EBB59CED1667476000F646C7 /* drama@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE91667476000F646C7 /* drama@2x.png */; };
+		EBB59CF1166751D200F646C7 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CF0166751D100F646C7 /* CommentListViewController.m */; };
+		EBB59CF41667608600F646C7 /* morecomments_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CF21667608600F646C7 /* morecomments_pressed@2x.png */; };
+		EBB59CF51667608600F646C7 /* morecomments@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CF31667608600F646C7 /* morecomments@2x.png */; };
+		EBB59CF81667681E00F646C7 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CF71667681E00F646C7 /* CommentCell.m */; };
 		EBB732F8165C7789008E407E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB732EE165C7789008E407E /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB732F9165C7789008E407E /* SinaWeibo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EBB732F0165C7789008E407E /* SinaWeibo.bundle */; };
 		EBB732FA165C7789008E407E /* SinaWeibo.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB732F2165C7789008E407E /* SinaWeibo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -437,6 +445,16 @@
 		EBB59CD116673A0500F646C7 /* result_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "result_title@2x.png"; sourceTree = "<group>"; };
 		EBB59CD516673CFC00F646C7 /* VideoDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDetailViewController.h; sourceTree = "<group>"; };
 		EBB59CD616673CFD00F646C7 /* VideoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoDetailViewController.m; sourceTree = "<group>"; };
+		EBB59CE61667476000F646C7 /* add_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_title@2x.png"; sourceTree = "<group>"; };
+		EBB59CE71667476000F646C7 /* drama_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_pressed@2x.png"; sourceTree = "<group>"; };
+		EBB59CE81667476000F646C7 /* drama_watched@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_watched@2x.png"; sourceTree = "<group>"; };
+		EBB59CE91667476000F646C7 /* drama@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama@2x.png"; sourceTree = "<group>"; };
+		EBB59CEF166751D100F646C7 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
+		EBB59CF0166751D100F646C7 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
+		EBB59CF21667608600F646C7 /* morecomments_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "morecomments_pressed@2x.png"; sourceTree = "<group>"; };
+		EBB59CF31667608600F646C7 /* morecomments@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "morecomments@2x.png"; sourceTree = "<group>"; };
+		EBB59CF61667681E00F646C7 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentCell.h; sourceTree = "<group>"; };
+		EBB59CF71667681E00F646C7 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentCell.m; sourceTree = "<group>"; };
 		EBB732ED165C7789008E407E /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		EBB732EE165C7789008E407E /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		EBB732F0165C7789008E407E /* SinaWeibo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SinaWeibo.bundle; sourceTree = "<group>"; };
@@ -632,6 +650,12 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBB59CE61667476000F646C7 /* add_title@2x.png */,
+				EBB59CE71667476000F646C7 /* drama_pressed@2x.png */,
+				EBB59CE81667476000F646C7 /* drama_watched@2x.png */,
+				EBB59CE91667476000F646C7 /* drama@2x.png */,
+				EBB59CF21667608600F646C7 /* morecomments_pressed@2x.png */,
+				EBB59CF31667608600F646C7 /* morecomments@2x.png */,
 				EBB59CC91667382400F646C7 /* numberofcomment@2x.png */,
 				EBB59CCA1667382400F646C7 /* searchicon_btn_pressed@2x.png */,
 				EBB59CCB1667382400F646C7 /* searchicon_btn@2x.png */,
@@ -986,6 +1010,8 @@
 		EBB73301165C7E67008E407E /* component */ = {
 			isa = PBXGroup;
 			children = (
+				EBB59CF61667681E00F646C7 /* CommentCell.h */,
+				EBB59CF71667681E00F646C7 /* CommentCell.m */,
 				EB8201521665B4E40015F447 /* CustomPlaceHolderTextView.h */,
 				EB8201531665B4E40015F447 /* CustomPlaceHolderTextView.m */,
 				EBF2524C1665A4BF00147D23 /* WaterflowView.h */,
@@ -1046,6 +1072,8 @@
 				EBF3A966166301F100EBF56D /* ShowDetailViewController.xib */,
 				EBF3A967166301F100EBF56D /* ShowListViewController.h */,
 				EBF3A968166301F100EBF56D /* ShowListViewController.m */,
+				EBB59CEF166751D100F646C7 /* CommentListViewController.h */,
+				EBB59CF0166751D100F646C7 /* CommentListViewController.m */,
 				EBF3A961166301F100EBF56D /* ListViewController.h */,
 				EBF3A962166301F100EBF56D /* ListViewController.m */,
 				EBF3A963166301F100EBF56D /* ListViewController.xib */,
@@ -1367,6 +1395,12 @@
 				EBB59CD216673A0500F646C7 /* drama_type@2x.png in Resources */,
 				EBB59CD316673A0500F646C7 /* movie_type@2x.png in Resources */,
 				EBB59CD416673A0500F646C7 /* result_title@2x.png in Resources */,
+				EBB59CEA1667476000F646C7 /* add_title@2x.png in Resources */,
+				EBB59CEB1667476000F646C7 /* drama_pressed@2x.png in Resources */,
+				EBB59CEC1667476000F646C7 /* drama_watched@2x.png in Resources */,
+				EBB59CED1667476000F646C7 /* drama@2x.png in Resources */,
+				EBB59CF41667608600F646C7 /* morecomments_pressed@2x.png in Resources */,
+				EBB59CF51667608600F646C7 /* morecomments@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1466,6 +1500,8 @@
 				EBB59CC316670B2B00F646C7 /* SuggestionViewController.m in Sources */,
 				EBB59CC816670F6E00F646C7 /* SearchListViewController.m in Sources */,
 				EBB59CD716673CFE00F646C7 /* VideoDetailViewController.m in Sources */,
+				EBB59CF1166751D200F646C7 /* CommentListViewController.m in Sources */,
+				EBB59CF81667681E00F646C7 /* CommentCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

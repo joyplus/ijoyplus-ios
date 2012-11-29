@@ -53,6 +53,15 @@
     }
 }
 
+- (void)commentBtnClicked
+{
+    [AppDelegate instance].rootViewController.prodId = self.prodId;
+    [AppDelegate instance].rootViewController.videoDetailDelegate = self;
+    [[AppDelegate instance].rootViewController showCommentPopup];
+    
+}
+
+
 - (void)removeAuthData
 {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];

@@ -40,7 +40,7 @@
 #import "MenuViewController.h"
 #import "StackScrollViewController.h"
 #import "CommonHeader.h"
-
+#import "VideoDetailViewController.h"
 #define LEFT_MENU_DIPLAY_WIDTH 150
 
 @class UIViewExt;
@@ -51,6 +51,7 @@
 	UIView* rightSlideView;
     UITextView *contentTextView;
     UIButton *shareBtn;
+    UIButton *sendBtn;
 }
 
 @property (nonatomic, strong) MenuViewController* menuViewController;
@@ -58,8 +59,10 @@
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSString *prodUrl;
 @property (nonatomic, strong) NSString *prodName;
+@property (nonatomic, weak)id<VideoDetailViewControllerDelegate>videoDetailDelegate;
 - (void)showSuccessModalView:(int)closeTime;
 - (void)showFailureModalView:(int)closeTime;
 - (void)showListFailureModalView:(int)closeTime;
 - (void)showSharePopup;
+- (void)showCommentPopup;
 @end

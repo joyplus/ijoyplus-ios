@@ -473,7 +473,7 @@
 							<object class="IBUIImageView" id="873855402">
 								<reference key="NSNextResponder" ref="163951952"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{69, 697}, {52, 22}}</string>
+								<string key="NSFrame">{{69, 697}, {74, 19}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
 								<reference key="NSNextKeyView" ref="583553628"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -491,7 +491,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">（173条）</string>
+								<string key="IBUIText"/>
 								<reference key="IBUITextColor" ref="155562371"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -570,7 +570,7 @@
 							<object class="IBUIButton" id="568387778">
 								<reference key="NSNextResponder" ref="163951952"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{69, 525}, {73, 44}}</string>
+								<string key="NSFrame">{{279, 528}, {73, 44}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
 								<reference key="NSNextKeyView" ref="780948182"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -1077,7 +1077,6 @@
 							<reference ref="606402887"/>
 							<reference ref="435211991"/>
 							<reference ref="808957376"/>
-							<reference ref="568387778"/>
 							<reference ref="477345568"/>
 							<reference ref="1048107117"/>
 							<reference ref="94747098"/>
@@ -1108,6 +1107,7 @@
 							<reference ref="455658947"/>
 							<reference ref="1072307691"/>
 							<reference ref="987500521"/>
+							<reference ref="568387778"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>

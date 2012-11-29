@@ -9,7 +9,13 @@
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
 
-@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate>{
+@protocol VideoDetailViewControllerDelegate <NSObject>
+
+- (void)refreshCommentListView:(int)tableHeight;
+- (void)getTopComments:(int)num;
+@end
+
+@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate>{
         SinaWeibo *_sinaweibo;
         NSDictionary *video;
 }

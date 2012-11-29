@@ -13,6 +13,7 @@
 #import "SinaWeibo.h"
 #import "SublistViewController.h"
 #import "SelectListViewController.h"
+#import "CommentListViewController.h"
 
 #define LEFT_GAP 50
 
@@ -21,6 +22,7 @@
     NSArray *episodeArray;
     SublistViewController *topicListViewController;
     NSArray *topics;
+    CommentListViewController *commentListViewController;
 }
 
 @end
@@ -127,7 +129,7 @@
     self.actorName1Label.frame = CGRectMake(335, 230, 140, 15);
     self.actorName2Label.frame = CGRectMake(335, 255, 140, 15);
     self.actorName3Label.frame = CGRectMake(335, 280, 140, 15);
-
+    
     self.playLabel.frame = CGRectMake(290, 305, 50, 15);
     self.playTimeLabel.frame = CGRectMake(335, 305, 100, 15);
     self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
@@ -156,7 +158,7 @@
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
     [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-
+    
     self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
@@ -171,7 +173,9 @@
     self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 80);
+    
+    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -258,8 +262,8 @@
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_GAP, 585, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
-//        self.relatedBgImage.frame = CGRectMake(LEFT_GAP, 620, 440, 86);
-//        self.relatedBgImage.image = [UIImage imageNamed:@"morelists"];
+        //        self.relatedBgImage.frame = CGRectMake(LEFT_GAP, 620, 440, 86);
+        //        self.relatedBgImage.image = [UIImage imageNamed:@"morelists"];
         
         topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
         topicListViewController.view.frame = CGRectMake(LEFT_GAP, 590, 425, 200);
@@ -270,14 +274,42 @@
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
+    int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
     self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 20, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     self.numberLabel.frame = CGRectMake(139, positionY + 20, 100, 18);
+    self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(410, positionY + 20, 66, 26);
+    self.commentBtn.frame = CGRectMake(410, positionY + 17, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
+    [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    if(commentListViewController == nil){
+        commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
+        commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 425, 200);
+        commentListViewController.totalCommentNum = totalCommentNum;
+        commentListViewController.parentDelegate = self;
+        commentListViewController.prodId = self.prodId;
+        [self.bgScrollView addSubview:commentListViewController.view];
+    }
+    commentListViewController.listData = commentArray;
+    [commentListViewController.tableView reloadData];
+    
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+200)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, commentListViewController.tableHeight);
+}
+
+- (void)getTopComments:(int)num
+{
+    [self retrieveData];
+}
+
+- (void)refreshCommentListView:(int)tableHeight
+{
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+200)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, tableHeight);
 }
 
 - (void)playVideo
