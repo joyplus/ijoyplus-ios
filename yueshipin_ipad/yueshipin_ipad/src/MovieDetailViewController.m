@@ -280,15 +280,6 @@
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
 }
 
-- (void)addListBtnClicked
-{
-    SelectListViewController *viewController = [[SelectListViewController alloc]init];
-    viewController.prodId = self.prodId;
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
-}
-
-
 - (void)playVideo
 {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){

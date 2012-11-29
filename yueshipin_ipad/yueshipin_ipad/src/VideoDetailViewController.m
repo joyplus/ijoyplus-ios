@@ -7,6 +7,7 @@
 //
 
 #import "VideoDetailViewController.h"
+#import "SelectListViewController.h"
 #import "CommonHeader.h"
 
 @interface VideoDetailViewController ()
@@ -172,6 +173,14 @@
         }
     }
     return videoUrl;
+}
+
+- (void)addListBtnClicked
+{
+    SelectListViewController *viewController = [[SelectListViewController alloc]init];
+    viewController.prodId = self.prodId;
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 

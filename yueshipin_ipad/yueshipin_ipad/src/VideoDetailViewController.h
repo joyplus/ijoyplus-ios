@@ -16,4 +16,5 @@
 @property (strong, nonatomic)NSString *prodId;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
+- (void)addListBtnClicked;
 @end

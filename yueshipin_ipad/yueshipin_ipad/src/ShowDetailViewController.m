@@ -145,6 +145,7 @@
     self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_GAP, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
