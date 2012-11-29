@@ -8,9 +8,26 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
+#import "CustomSearchBar.h"
 
-@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>{
+    UIView *backgroundView;
+    UIButton *menuBtn;
+    UIImageView *topImage;
+    UIImageView *bgImage;
+    CustomSearchBar *sBar;
+    UITableView *table;
+    
+    NSMutableArray *historyArray;
+    NSMutableArray *hotKeyArray;
+    
+    NSMutableArray *hotKeyIndex;
+    
+    NSMutableDictionary *hotKeyBtnWidth;
+}
+
 
 - (id)initWithFrame:(CGRect)frame;
+- (void)addKeyToLocalHistory:(NSString *)key;
 @property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
 @end

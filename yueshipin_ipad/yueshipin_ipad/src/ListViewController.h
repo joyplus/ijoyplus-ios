@@ -8,7 +8,10 @@
 
 #import "CommonHeader.h"
 
-@interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>{
+    UITableView *table;
+    NSMutableArray *topsArray;
+}
 
 @property (nonatomic, strong)NSString *listTitle;
 @property (nonatomic, strong)NSString *topId;

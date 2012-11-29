@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "GenericBaseViewController.h"
-#import "GenericBaseTableViewController.h"
 #import "CMConstants.h"
 #import "AppDelegate.h"
 #import "RootViewController.h"

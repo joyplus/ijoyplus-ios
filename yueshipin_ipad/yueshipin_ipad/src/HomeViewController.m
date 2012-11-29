@@ -13,6 +13,7 @@
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
 #import "ListViewController.h"
+#import "SubsearchViewController.h"
 
 #define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 167
@@ -27,6 +28,9 @@
 #define DRAMA_LOGO_WEIGHT 83
 #define SHOW_LOGO_HEIGHT 125
 #define SHOW_LOGO_WEIGHT 486
+
+#define MOVIE_NUMBER 10
+#define DRAMA_NUMBER 10
 
 @interface HomeViewController (){
     UIView *backgroundView;
@@ -80,9 +84,8 @@
         
         searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         searchBtn.frame = CGRectMake(440, 48, 42, 30);
-        [searchBtn setBackgroundImage:[UIImage imageNamed:@"search_btn"] forState:UIControlStateNormal];
-        [searchBtn setBackgroundImage:[UIImage imageNamed:@"search_pressed_btn"] forState:UIControlStateHighlighted];
-        
+        [searchBtn setBackgroundImage:[UIImage imageNamed:@"searchicon_btn"] forState:UIControlStateNormal];
+        [searchBtn setBackgroundImage:[UIImage imageNamed:@"searchicon_pressed_btn"] forState:UIControlStateHighlighted];
         [searchBtn addTarget:self action:@selector(searchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [backgroundView addSubview:searchBtn];
         
@@ -104,8 +107,8 @@
 {
     [super viewDidLoad];
     
-    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     [self retrieveLunboData];
+    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
     videoType = 0;
     [self retrieveTopsListData];
@@ -274,7 +277,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
     } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseShowTopsData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -293,8 +296,11 @@
     if(responseCode == nil){
         NSArray *tempTopsArray = [result objectForKey:@"tops"];
         if(tempTopsArray.count > 0){
-            [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
-            [showTopsArray addObjectsFromArray:tempTopsArray];
+            NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
+            if(tempArray.count > 0) {
+                [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
+                [showTopsArray addObjectsFromArray:tempArray];
+            }
         }
     } else {
         [UIUtility showSystemError:self.view];
@@ -386,7 +392,8 @@
 
 - (void)searchBtnClicked
 {
-    
+    SubsearchViewController *viewController = [[SubsearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 #pragma mark -
@@ -438,6 +445,12 @@
                 UIImageView *temp = [[UIImageView alloc]init];
                 temp.tag = 9001 + i;
                 temp.frame = CGRectMake(size.width * i, 0, size.width, size.height);
+                
+                UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                tempBtn.frame = temp.frame;
+                tempBtn.tag = 9021 + i;
+                [tempBtn addTarget:self action:@selector(lunboImageClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [scrollView addSubview:tempBtn];
                 [scrollView addSubview:temp];
             }
             scrollView.layer.zPosition = 1;
@@ -541,38 +554,38 @@
         [cell.contentView addSubview:typeImage1];
         
         UIImageView *typeImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(388, 23, 40, 20)];
-        typeImage2.tag = 9001;
+        typeImage2.tag = 8002;
         [cell.contentView addSubview:typeImage2];
         
         for(int i = 0; i < 3; i++){
-            UIView *dotView1 = [self getDotView:6];
-            dotView1.center = CGPointMake(120, 33 + 18 * i);
+            UIView *dotView1 = [UIUtility getDotView:6];
+            dotView1.center = CGPointMake(120, 58 + 18 * i);
             [imageView1 addSubview:dotView1];
             
-            UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 23 + i * 19, 78, 20)];
+            UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 47 + i * 18, 80, 20)];
             [label1 setBackgroundColor:[UIColor clearColor]];
             [label1 setTextColor:[UIColor lightGrayColor]];
             [label1 setFont:[UIFont systemFontOfSize:12]];
             label1.tag = 4001 + i;
             [cell.contentView addSubview:label1];
             
-            UIView *dotView11 = [self getDotView:4];
-            dotView11.center = CGPointMake(130 + 6 * i, 90);
+            UIView *dotView11 = [UIUtility getDotView:4];
+            dotView11.center = CGPointMake(130 + 6 * i, 115);
             [imageView1 addSubview:dotView11];
             
-            UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(388, 23 + i * 19, 78, 20)];
+            UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(388, 47 + i * 18, 80, 20)];
             [label2 setBackgroundColor:[UIColor clearColor]];
             [label2 setTextColor:[UIColor lightGrayColor]];
             [label2 setFont:[UIFont systemFontOfSize:12]];
             label2.tag = 5001 + i;
             [cell.contentView addSubview:label2];
             
-            UIView *dotView2 = [self getDotView:6];
-            dotView2.center = CGPointMake(120, 33 + 18 * i);
+            UIView *dotView2 = [UIUtility getDotView:6];
+            dotView2.center = CGPointMake(120, 58 + 18 * i);
             [imageView2 addSubview:dotView2];
             
-            UIView *dotView22 = [self getDotView:4];
-            dotView22.center = CGPointMake(130 + 6 * i, 90);
+            UIView *dotView22 = [UIUtility getDotView:4];
+            dotView22.center = CGPointMake(130 + 6 * i, 115);
             [imageView2 addSubview:dotView22];
         }
     }
@@ -594,9 +607,9 @@
     
     NSString *type = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"prod_type"]];
     UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
-    if([type isEqualToString:@"0"]){
+    if([type isEqualToString:@"1"]){
         typeImage1.image = [UIImage imageNamed:@"movie_type"];
-    } else if([type isEqualToString:@"1"]){
+    } else if([type isEqualToString:@"2"]){
         typeImage1.image = [UIImage imageNamed:@"drama_type"];
     } else {
         typeImage1.image = [UIImage imageNamed:@"show_type"];
@@ -604,9 +617,9 @@
     
     UIImageView *typeImage2 = (UIImageView *)[cell viewWithTag:8002];
     type = [NSString stringWithFormat:@"%@", [item2 objectForKey:@"prod_type"]];
-    if([type isEqualToString:@"0"]){
+    if([type isEqualToString:@"1"]){
         typeImage2.image = [UIImage imageNamed:@"movie_type"];
-    } else if([type isEqualToString:@"1"]){
+    } else if([type isEqualToString:@"2"]){
         typeImage2.image = [UIImage imageNamed:@"drama_type"];
     } else {
         typeImage2.image = [UIImage imageNamed:@"show_type"];
@@ -617,11 +630,8 @@
     for(int i = 0; i < 3; i++){
         UILabel *label1 = (UILabel *)[cell viewWithTag:(4001 + i)];
         label1.text = [[subitems1 objectAtIndex:i]objectForKey:@"prod_name"];
-        [label1 sizeToFit];
-        
         UILabel *label2 = (UILabel *)[cell viewWithTag:(5001 + i)];
         label2.text = [[subitems2 objectAtIndex:i]objectForKey:@"prod_name"];
-        [label2 sizeToFit];
     }
     return cell;
 }
@@ -635,11 +645,7 @@
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
         UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(12, 32, 450, MOVIE_LOGO_HEIGHT + 10)];
         cellScrollView.tag = 1011;
-        NSMutableArray *imageArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for(int i = 0; i < 10; i++){
-            [imageArray addObject:@"url"];
-        }
-        for (int i=0; i < imageArray.count; i++) {
+        for (int i=0; i < MOVIE_NUMBER; i++) {
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6011 + i;
@@ -672,7 +678,7 @@
         titleLabel.tag = 4011;
         [cell.contentView addSubview:titleLabel];
         
-        [cellScrollView setContentSize:CGSizeMake((MOVIE_LOGO_WEIGHT+5) * imageArray.count + 12, MOVIE_LOGO_HEIGHT)];
+        [cellScrollView setContentSize:CGSizeMake((MOVIE_LOGO_WEIGHT+5) * MOVIE_NUMBER + 12, MOVIE_LOGO_HEIGHT)];
         cellScrollView.pagingEnabled = YES;
         cellScrollView.showsHorizontalScrollIndicator = NO;
         [cell.contentView addSubview:cellScrollView];
@@ -711,11 +717,7 @@
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
         UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(12, 32, 450, MOVIE_LOGO_HEIGHT + 10)];
         cellScrollView.tag = 1021;
-        NSMutableArray *imageArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for(int i = 0; i < 10; i++){
-            [imageArray addObject:@"url"];
-        }
-        for (int i=0; i < imageArray.count; i++) {
+        for (int i=0; i < DRAMA_NUMBER; i++) {
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6021 + i;
@@ -750,7 +752,7 @@
         titleLabel.tag = 4021;
         [cell.contentView addSubview:titleLabel];
         
-        [cellScrollView setContentSize:CGSizeMake((MOVIE_LOGO_WEIGHT+5) * imageArray.count + 12, MOVIE_LOGO_HEIGHT)];
+        [cellScrollView setContentSize:CGSizeMake((MOVIE_LOGO_WEIGHT+5) * DRAMA_NUMBER + 12, MOVIE_LOGO_HEIGHT)];
         cellScrollView.pagingEnabled = YES;
         cellScrollView.showsHorizontalScrollIndicator = NO;
         [cell.contentView addSubview:cellScrollView];
@@ -786,6 +788,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIImageView *tempImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 5, SHOW_LOGO_WEIGHT, SHOW_LOGO_HEIGHT)];
         tempImage.tag = 1031;
         [cell.contentView addSubview:tempImage];
@@ -800,33 +803,36 @@
         [tempBtn addTarget:self action:@selector(showImageClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:tempBtn];
         
-        UILabel *tempNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, MOVIE_LOGO_WEIGHT*0.8, 30)];
+        UILabel *tempNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(tempImage.frame.origin.x + 12, overLayImage.frame.origin.y + 8, tempImage.frame.size.width *0.6, 20)];
         [tempNameLabel setTextColor:[UIColor whiteColor]];
         [tempNameLabel setBackgroundColor:[UIColor clearColor]];
         [tempNameLabel setFont:[UIFont boldSystemFontOfSize:15]];
-        tempNameLabel.frame = CGRectMake(tempImage.frame.origin.x + 12, overLayImage.frame.origin.y + 8, tempImage.frame.size.width *0.6, 20);
         tempNameLabel.tag = 3031;
         [cell.contentView addSubview:tempNameLabel];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 12, 200, 30)];
-        titleLabel.frame = CGRectMake(tempImage.frame.size.width *0.7 + 10, overLayImage.frame.origin.y + 8, tempImage.frame.size.width *0.25, 20);
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width, 20)];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
+        titleLabel.textAlignment = NSTextAlignmentRight;
         [titleLabel setFont:[UIFont systemFontOfSize:14]];
         titleLabel.tag = 4031;
         [cell.contentView addSubview:titleLabel];
     }
     NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
     UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
-    [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
+    [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
     
     UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
-    [tempNameLabel setText:[item objectForKey:@"name"]];
+    [tempNameLabel setText:[item objectForKey:@"prod_name"]];
     [tempNameLabel sizeToFit];
     
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
-    [titleLabel setText:[item objectForKey:@"content"]];
-    [titleLabel sizeToFit];
+    NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
+    if(titleText.length > 20){
+        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", [titleText substringToIndex:20]]];
+    } else {
+        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
+    }
     return cell;
 }
 
@@ -844,6 +850,13 @@
     [cellScrollView setContentOffset: CGPointMake(cellScrollView.bounds.size.width, 0) animated: YES] ;
 }
 
+- (void)lunboImageClicked:(UIButton *)btn
+{
+    int index = btn.tag - 9021;
+    [self showDetailScreen:[lunboArray objectAtIndex:index]];
+    
+}
+
 - (void)showDetailScreen:(NSDictionary *)item
 {
     NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
@@ -857,12 +870,17 @@
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    } else if([prodType isEqualToString:@"3"]){
+        ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
     }
 }
 
 - (void)movieImageClicked:(UIButton *)sender
 {
-    
+    [self closeMenu];
     UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
@@ -893,9 +911,8 @@
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
-    ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
+    [self showDetailScreen:item];
 }
 
 - (void)imageBtnClicked:(UIButton *)sender
@@ -1010,15 +1027,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (UIView *)getDotView:(int)radius
-{
-    UIView *dotView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, radius, radius)];
-    dotView.layer.cornerRadius = 5;
-    dotView.layer.masksToBounds = YES;
-    dotView.backgroundColor = [UIColor colorWithRed:129/255.0 green:129/255.0 blue:129/255.0 alpha:1.0];
-    return dotView;
 }
 
 @end

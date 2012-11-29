@@ -60,5 +60,6 @@
 @property (nonatomic, strong) NSString *prodName;
 - (void)showSuccessModalView:(int)closeTime;
 - (void)showFailureModalView:(int)closeTime;
+- (void)showListFailureModalView:(int)closeTime;
 - (void)showSharePopup;
 @end

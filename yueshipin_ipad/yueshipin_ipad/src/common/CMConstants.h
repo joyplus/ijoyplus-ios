@@ -39,6 +39,7 @@
 #define kUserAvatarUrl @"kUserAvatarUrl"
 #define kSessionRenew @"kSessionRenew"
 #define kPhoneNumber @"kPhoneNumber"
+#define kTopicId @"kTopicId"
 
 #define LOCAL_KEYS_NUMBER 5
 #define umengAppKey @"5074db485270155fcd000093"

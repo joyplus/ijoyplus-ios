@@ -10,4 +10,5 @@
 
 @interface ShowListViewController : UITableViewController
 
+@property (nonatomic, strong)NSArray *listData;
 @end

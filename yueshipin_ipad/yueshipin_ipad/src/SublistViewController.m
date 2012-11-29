@@ -1,18 +1,19 @@
 //
-//  GenericBaseTableViewController.m
+//  ShowListViewController.m
 //  yueshipin_ipad
 //
-//  Created by zhang zhipeng on 12-11-24.
+//  Created by zhang zhipeng on 12-11-25.
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "GenericBaseTableViewController.h"
+#import "SublistViewController.h"
 
-@interface GenericBaseTableViewController ()
+@interface SublistViewController ()
 
 @end
 
-@implementation GenericBaseTableViewController
+@implementation SublistViewController
+@synthesize listData;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -26,12 +27,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.tableView.scrollEnabled = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -44,28 +42,38 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return listData.count > 5 ? 5 : listData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if(cell == nil){
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, cell.bounds.size.width+100, 20)];
+        nameLabel.backgroundColor = [UIColor clearColor];
+        nameLabel.textColor = [UIColor lightGrayColor];
+        nameLabel.tag = 1001;
+        nameLabel.font = [UIFont systemFontOfSize:16];
+        [cell.contentView addSubview:nameLabel];
+        
+    }
+    NSDictionary *item =  [listData objectAtIndex:indexPath.row];
+    UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
+    nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"t_name"]];
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 30;
+}
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

@@ -6,10 +6,10 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "GenericBaseViewController.h"
-#import "SinaWeibo.h"
+#import "VideoDetailViewController.h"
 
-@interface MovieDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate>
+@interface MovieDetailViewController : VideoDetailViewController
+
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;
 @property (weak, nonatomic) IBOutlet UIImageView *filmImage;
@@ -51,6 +51,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
 
-@property (strong, nonatomic)NSString *prodId;
+
 
 @end

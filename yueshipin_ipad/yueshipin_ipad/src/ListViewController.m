@@ -12,10 +12,8 @@
 #import "ShowDetailViewController.h"
 
 @interface ListViewController (){
-    UITableView *table;
     UIImageView *bgImage;
     UILabel *titleLabel;
-    NSMutableArray *topsArray;
 }
 
 @end
@@ -69,7 +67,7 @@
 
 - (void)retrieveTopsListData
 {
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_detail_list"];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
     }
@@ -93,7 +91,7 @@
     if(responseCode == nil){
         NSArray *tempTopsArray = [result objectForKey:@"items"];
         if(tempTopsArray.count > 0){
-            [[CacheUtility sharedCache] putInCache:@"top_detail_list" result:result];
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId] result:result];
             [topsArray addObjectsFromArray:tempTopsArray];
         }
     } else {
@@ -140,7 +138,6 @@
         [cell.contentView addSubview:contentImage];
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
-        nameLabel.text = @"暮光之城";
         nameLabel.font = [UIFont boldSystemFontOfSize:20];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
@@ -155,7 +152,7 @@
         
         UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 48, 45, 20)];
         scoreLabel.tag = 4001;
-        scoreLabel.text = @"8.6分";
+        scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
         scoreLabel.textColor = CMConstants.textBlueColor;
@@ -172,7 +169,7 @@
         [cell.contentView addSubview:directorLabel];
         
         UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 180, 25)];
-        directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
+        directorNameLabel.font = [UIFont systemFontOfSize:13];
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 6001;
         [cell.contentView addSubview:directorNameLabel];
@@ -184,7 +181,7 @@
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 180, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 200, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
         actorName1Label.backgroundColor = [UIColor clearColor];
         actorName1Label.tag = 7001;
@@ -210,7 +207,7 @@
         collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
         collectionNumberLabel.backgroundColor = [UIColor clearColor];
         collectionNumberLabel.font = [UIFont systemFontOfSize:13];
-        collectionNumberLabel.tag = 6001;
+        collectionNumberLabel.tag = 8001;
         [cell.contentView addSubview:collectionNumberLabel];
         
         UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
@@ -230,11 +227,20 @@
 //        startImage.image = [UIImage imageNamed:@"star"];
 //    }
     
+    UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:6001];
+    directorNameLabel.text = [item objectForKey:@"directors"];
+    
+    UILabel *actorLabel = (UILabel *)[cell viewWithTag:7001];
+    actorLabel.text = [item objectForKey:@"stars"];
+    
     UILabel *scoreLabel = (UILabel *)[cell viewWithTag:4001];
+    scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
     
     UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:5001];
+    dingNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"support_num"]];
     
-    UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:6001];
+    UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:8001];
+    collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"favority_num"]];
     
     return cell;
 }

@@ -23,7 +23,6 @@
 @end
 
 @implementation DramaDetailViewController
-@synthesize prodId;
 
 
 - (void)didReceiveMemoryWarning
@@ -107,7 +106,7 @@
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 62, 26);
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
-    self.titleLabel.frame = CGRectMake(290, 85, 130, 20);
+    self.titleLabel.frame = CGRectMake(290, 85, 180, 20);
     
     self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
     self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
@@ -137,14 +136,17 @@
     self.dingBtn.frame = CGRectMake(LEFT_GAP, 405, 55, 34);
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push_pressed"] forState:UIControlStateHighlighted];
+    [self.dingBtn addTarget:self action:@selector(dingBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     self.collectionBtn.frame = CGRectMake(115, 405, 74, 34);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
+    [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareBtn.frame = CGRectMake(195, 405, 74, 34);
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
+    [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
@@ -159,7 +161,7 @@
     self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 500, 400, 58);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
 
     self.commentImage.frame = CGRectMake(LEFT_GAP, 735, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
@@ -244,8 +246,8 @@
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
-    self.dingNumberLabel.text = [NSString stringWithFormat:@"%@ 人顶", [video objectForKey:@"support_num"]];
-    self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@ 收藏", [video objectForKey:@"favority_num"]];
+    self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
+    self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
@@ -360,5 +362,37 @@
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
+
+- (void)dingBtnClicked:(id)sender
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
+        } else {
+            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showSystemError:self.view];
+    }];
+}
+
+- (void)collectionBtnClicked
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
+        } else {
+            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showSystemError:self.view];
+    }];
+}
 
 @end

@@ -10,6 +10,5 @@
 
 @interface GenericBaseViewController : UIViewController
 
-- (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 
 @end

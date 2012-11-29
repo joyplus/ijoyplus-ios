@@ -161,7 +161,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 		UIView* bgView = [[UIView alloc] init];
-		[bgView setBackgroundColor:[UIColor redColor]];
+		[bgView setBackgroundColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1]];
 		[cell setSelectedBackgroundView:bgView];
 
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 15, 30, 30)];

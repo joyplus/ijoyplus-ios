@@ -8,6 +8,8 @@
 
 #import "SearchViewController.h"
 #import "CustomSearchBar.h"
+#import "AddSearchListViewController.h"
+#import "SearchListViewController.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -15,22 +17,7 @@
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
-@interface SearchViewController (){
-    UIView *backgroundView;
-    UIButton *menuBtn;
-    UIImageView *topImage;
-    UIImageView *bgImage;
-    CustomSearchBar *sBar;
-    UITableView *table;
-    
-    NSMutableArray *historyArray;
-    NSMutableArray *hotKeyArray;
-    
-    NSMutableArray *hotKeyIndex;
-    
-    NSMutableDictionary *hotKeyBtnWidth;
-}
-
+@interface SearchViewController ()
 @end
 
 @implementation SearchViewController
@@ -41,7 +28,7 @@
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor yellowColor]];
+        [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
         
         bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
@@ -93,41 +80,50 @@
         NSMutableDictionary *cloneItem = [[NSMutableDictionary alloc]initWithDictionary:item];
         [historyArray addObject:cloneItem];
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *keyArray = (NSArray *)[result objectForKey:@"topKeywords"];
-            if(keyArray != nil && keyArray.count > 0){
-                [hotKeyArray removeAllObjects];
-                [hotKeyArray addObjectsFromArray:keyArray];
-                int length = 0;
-                int index = 0;
-                [hotKeyIndex removeAllObjects];
-                [hotKeyIndex addObject:[NSNumber numberWithInt:0]];
-                while (index < hotKeyArray.count-1) {
-                    for(int i = index; i < hotKeyArray.count; i++){
-                        length += [self calculateBtnWidth:[[hotKeyArray objectAtIndex:i] valueForKey:@"content"]];
-                        index = i;
-                        if(length > TABLE_VIEW_WIDTH) {
-                            length = 0;
-                            if(i > 0){
-                                [hotKeyIndex addObject:[NSNumber numberWithInt:i]];
-                            }
-                            break;
-                        }
-                    }
-                }
-                [hotKeyIndex addObject:[NSNumber numberWithInt:hotKeyArray.count]];
+    
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
+    if(cacheResult != nil){
+        [self parseData:cacheResult];
+    }
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                [self parseData:result];
             }
             [table reloadData];
-        } else {
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
+        }];
+    }
+}
+
+- (void)parseData:(id)result{
+    NSArray *keyArray = (NSArray *)[result objectForKey:@"topKeywords"];
+    if(keyArray != nil && keyArray.count > 0){
+        [[CacheUtility sharedCache] putInCache:@"hotkeys_list" result:result];
+        [hotKeyArray removeAllObjects];
+        [hotKeyArray addObjectsFromArray:keyArray];
+        int length = 0;
+        int index = 0;
+        [hotKeyIndex removeAllObjects];
+        [hotKeyIndex addObject:[NSNumber numberWithInt:0]];
+        while (index < hotKeyArray.count-1) {
+            for(int i = index; i < hotKeyArray.count; i++){
+                length += [self calculateBtnWidth:[[hotKeyArray objectAtIndex:i] valueForKey:@"content"]];
+                index = i;
+                if(length > TABLE_VIEW_WIDTH) {
+                    length = 0;
+                    if(i > 0){
+                        [hotKeyIndex addObject:[NSNumber numberWithInt:i]];
+                    }
+                    break;
+                }
+            }
         }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
-    }];
-    [table reloadData];
+        [hotKeyIndex addObject:[NSNumber numberWithInt:hotKeyArray.count]];
+    }
 }
 
 - (int)calculateBtnWidth:(NSString *)btnTitle
@@ -136,7 +132,6 @@
     label.text = btnTitle;
     [label sizeToFit];
     int btnWidth = label.frame.size.width + 2 * BUTTON_TITLE_GAP;
-    NSLog(@"%@ => %i", btnTitle, btnWidth);
     [hotKeyBtnWidth setValue:[NSNumber numberWithInt:btnWidth] forKey:btnTitle];
     return btnWidth;
 }
@@ -176,8 +171,8 @@
 {
     static NSString *CellIdentifier = @"cell";
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    [cell setSelectionStyle:UITableViewCellEditingStyleNone];
     if(indexPath.section == 0){
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         int btnPositionX = 6; // left gap
         int rowNumber = 0;
         for (int i = 0; i < hotKeyArray.count; i++) {
@@ -195,11 +190,14 @@
             int btnWidth = [[hotKeyBtnWidth valueForKey:content] intValue];
             hotKeyBtn.frame = CGRectMake(btnPositionX, btnPositionY, btnWidth, BUTTON_HEIGHT);
             [hotKeyBtn setTitle:content forState:UIControlStateNormal];
+            [hotKeyBtn setTag:2001 + i];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
+            [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:hotKeyBtn];
         }
     } else {
+        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
         UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
         [name setTextColor:CMConstants.textBlueColor];
         [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
@@ -214,7 +212,7 @@
 {
     if(indexPath.section == 0){
         if(hotKeyArray.count > 0){
-        return (hotKeyIndex.count - 1) * 40 + 20;
+            return (hotKeyIndex.count - 1) * 40 + 20;
         } else {
             return 40;
         }
@@ -237,10 +235,23 @@
     } else {
         imageView.image = [UIImage imageNamed:@"history"];
     }
-    [view addSubview:imageView];    
+    [view addSubview:imageView];
     return view;
 }
 
+- (void)hotKeyBtnClicked:(UIButton *)btn
+{
+    int index = btn.tag - 2001;
+    [self search:[[hotKeyArray objectAtIndex:index] objectForKey:@"content"]];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if(indexPath.section == 1){
+        [self search:[[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"]];
+    }
+}
 
 - (void)menuBtnClicked
 {
@@ -258,9 +269,7 @@
     [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
     [table reloadData];
-    //    [itemsArray removeAllObjects];
-    //    [self showProgressBar];
-    //    [self getResult];
+    [self search:searchBar.text];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
@@ -268,6 +277,17 @@
     [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
     [table reloadData];
+    [self search:searchBar.text];
+}
+
+- (void)search:(NSString *)keyword
+{
+    [self menuBtnClicked];
+    SearchListViewController *viewController = [[SearchListViewController alloc] init];
+    viewController.keyword = keyword;
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    
 }
 
 - (void)addKeyToLocalHistory:(NSString *)key

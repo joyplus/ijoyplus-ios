@@ -11,20 +11,21 @@
 #import "MediaPlayerViewController.h"
 #import "ProgramViewController.h"
 #import "SinaWeibo.h"
+#import "SublistViewController.h"
+#import "SelectListViewController.h"
 
 #define LEFT_GAP 50
 
 @interface MovieDetailViewController (){
-    NSDictionary *video;
     NSMutableArray *commentArray;
     NSArray *episodeArray;
-    SinaWeibo *_sinaweibo;
+    SublistViewController *topicListViewController;
+    NSArray *topics;
 }
 
 @end
 
 @implementation MovieDetailViewController
-@synthesize prodId;
 
 
 - (void)didReceiveMemoryWarning
@@ -159,6 +160,7 @@
     self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_GAP, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
@@ -169,22 +171,7 @@
     self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 500, 400, 58);
-    self.relatedImage.frame = CGRectMake(LEFT_GAP, 585, 80, 20);
-    self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
-    
-    self.relatedBgImage.frame = CGRectMake(LEFT_GAP, 620, 440, 86);
-    self.relatedBgImage.image = [UIImage imageNamed:@"morelists"];
-    
-    self.commentImage.frame = CGRectMake(LEFT_GAP, 735, 74, 19);
-    self.commentImage.image = [UIImage imageNamed:@"comment_title"];
-    
-    self.numberLabel.frame = CGRectMake(139, 736, 100, 18);
-    
-    self.commentBtn.frame = CGRectMake(410, 736, 66, 26);
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
-    
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -223,6 +210,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"movie"];
         episodeArray = [video objectForKey:@"episodes"];
+        topics = [video objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
         if(tempArray != nil && tempArray.count > 0){
@@ -265,6 +253,39 @@
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
+    
+    int positionY = 585;
+    if(topics.count > 0){
+        self.relatedImage.frame = CGRectMake(LEFT_GAP, 585, 80, 20);
+        self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
+//        self.relatedBgImage.frame = CGRectMake(LEFT_GAP, 620, 440, 86);
+//        self.relatedBgImage.image = [UIImage imageNamed:@"morelists"];
+        
+        topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
+        topicListViewController.view.frame = CGRectMake(LEFT_GAP, 590, 425, 200);
+        topicListViewController.listData = topics;
+        [topicListViewController.tableView reloadData];
+        [self.bgScrollView addSubview:topicListViewController.view];
+        
+        positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
+    }
+    
+    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 20, 74, 19);
+    self.commentImage.image = [UIImage imageNamed:@"comment_title"];
+    
+    self.numberLabel.frame = CGRectMake(139, positionY + 20, 100, 18);
+    
+    self.commentBtn.frame = CGRectMake(410, positionY + 20, 66, 26);
+    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
+    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
+}
+
+- (void)addListBtnClicked
+{
+    SelectListViewController *viewController = [[SelectListViewController alloc]init];
+    viewController.prodId = self.prodId;
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 
@@ -327,16 +348,17 @@
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
+
 - (void)dingBtnClicked:(id)sender
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathProgramRecommend parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[AppDelegate instance].rootViewController showSuccessModalView:2];
+            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
         } else {
-            [[AppDelegate instance].rootViewController showFailureModalView:2];
+            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
@@ -349,107 +371,13 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[AppDelegate instance].rootViewController showSuccessModalView:2];
+            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
         } else {
-            [[AppDelegate instance].rootViewController showFailureModalView:2];
+            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
     }];
 }
-
-- (void)shareBtnClicked
-{
-    _sinaweibo = [AppDelegate instance].sinaweibo;
-    _sinaweibo.delegate = self;
-    
-    if ([_sinaweibo isLoggedIn]) {
-        [AppDelegate instance].rootViewController.prodId = self.prodId;
-        [AppDelegate instance].rootViewController.prodUrl = [video objectForKey:@"poster"];
-        [AppDelegate instance].rootViewController.prodName = [video objectForKey:@"name"];
-        [[AppDelegate instance].rootViewController showSharePopup];
-    } else {
-        [_sinaweibo logIn];
-    }
-}
-
-- (void)removeAuthData
-{
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
-}
-
-- (void)storeAuthData
-{
-    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
-                              _sinaweibo.accessToken, @"AccessTokenKey",
-                              _sinaweibo.expirationDate, @"ExpirationDateKey",
-                              _sinaweibo.userID, @"UserIDKey",
-                              _sinaweibo.refreshToken, @"refresh_token", nil];
-    [[NSUserDefaults standardUserDefaults] setObject:authData forKey:@"SinaWeiboAuthData"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
-#pragma mark - SinaWeibo Delegate
-
-- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
-{
-    [self storeAuthData];
-    [sinaweibo requestWithURL:@"users/show.json"
-                       params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
-                   httpMethod:@"GET"
-                     delegate:self];
-}
-
-- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
-{
-    NSLog(@"sinaweiboDidLogOut");
-    [self removeAuthData];
-}
-
-- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
-{
-    NSLog(@"sinaweiboLogInDidCancel");
-}
-
-- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
-{
-    NSLog(@"sinaweibo logInDidFailWithError %@", error);
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
-                                                        message:@"网络数据错误，请重新登陆。"
-                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    [alertView show];
-}
-
-- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
-{
-    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
-    [self removeAuthData];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
-                                                        message:@"Token已过期，请重新登陆。"
-                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-    [alertView show];
-}
-
-#pragma mark - SinaWeiboRequest Delegate
-
-- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
-{
-    if ([request.url hasSuffix:@"users/show.json"])
-    {
-        NSString *username = [result objectForKey:@"screen_name"];
-        [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
-        NSString *avatarUrl = [result objectForKey:@"avatar_large"];
-        [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
-    }
-}
-
-- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
-{
-    if ([request.url hasSuffix:@"users/show.json"])
-    {
-
-    }
-}
-
 @end

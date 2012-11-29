@@ -17,4 +17,5 @@
 + (UIImage *) createImageWithColor: (UIColor *) color;
 + (void)showNetWorkError:(UIView *)view;
 + (void)showSystemError:(UIView *)view;
++ (UIView *)getDotView:(int)radius;
 @end

@@ -97,11 +97,16 @@ extern NSString *const kPathProgramViewRecommend;
 //Search
 extern NSString *const kPathSearchTopKeywords;
 extern NSString *const kPathSearch;
-
+extern NSString *const kPathAddItem;
 extern NSString *const kPathTops;
+extern NSString *const kPathSupport;
 extern NSString *const kPathTvTops;
 extern NSString *const kPathMoiveTops;
 extern NSString *const kPathShowTops;
 extern NSString *const kPathLunbo;
 extern NSString *const kPathGenerateUIID;
 extern NSString *const kPathTopItems;
+extern NSString *const kPathNew;
+extern NSString *const kPathUserTopics;
+extern NSString *const kPathUserSupport;
+extern NSString *const kPathTopDelete;

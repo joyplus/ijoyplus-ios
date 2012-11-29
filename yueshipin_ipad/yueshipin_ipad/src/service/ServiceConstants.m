@@ -102,10 +102,16 @@ NSString *const kPathSearchTopKeywords = @"/index.php/search/topKeywords";
 NSString *const kPathSearch = @"/index.php/search";
 
 NSString *const kPathTops = @"/index.php/tops";
+NSString *const kPathSupport = @"/index.php/program/support";
+NSString *const kPathUserSupport = @"/index.php/user/supports";
+NSString *const kPathAddItem = @"/index.php/top/addItem";
+NSString *const kPathNew = @"/index.php/top/new";
 NSString *const kPathTvTops = @"/index.php/tv_tops";
 NSString *const kPathMoiveTops = @"/index.php/movie_tops";
 NSString *const kPathShowTops = @"/index.php/show_tops";
 NSString *const kPathLunbo = @"/index.php/lunbo";
 NSString *const kPathGenerateUIID = @"/index.php/account/generateUIID";
 NSString *const kPathTopItems = @"/index.php/top_items";
+NSString *const kPathUserTopics = @"/index.php/user/tops";
+NSString *const kPathTopDelete = @"/index.php/top/del";
 

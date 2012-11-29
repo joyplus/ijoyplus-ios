@@ -6,10 +6,9 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "GenericBaseViewController.h"
-#import "LightMenuBarDelegate.h"
+#import "VideoDetailViewController.h"
 
-@interface ShowDetailViewController : GenericBaseViewController <LightMenuBarDelegate>
+@interface ShowDetailViewController : VideoDetailViewController
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;
 @property (weak, nonatomic) IBOutlet UIImageView *filmImage;
@@ -44,10 +43,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *dingNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *collectionNumberLabel;
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
-@property (weak, nonatomic) IBOutlet UIScrollView *monthScrollView;
 
 @property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
 
-@property (strong, nonatomic)NSString *prodId;
 
 @end

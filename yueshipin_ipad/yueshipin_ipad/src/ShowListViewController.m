@@ -13,6 +13,7 @@
 @end
 
 @implementation ShowListViewController
+@synthesize listData;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -26,7 +27,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor yellowColor]];
+    self.tableView.scrollEnabled = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view setBackgroundColor:[UIColor clearColor]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -44,7 +47,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return listData.count > 5 ? 5 : listData.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -52,10 +55,18 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];        
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, cell.bounds.size.width+100, 20)];
+        nameLabel.backgroundColor = [UIColor clearColor];
+        nameLabel.textColor = [UIColor lightGrayColor];
+        nameLabel.tag = 1001;
+        nameLabel.font = [UIFont systemFontOfSize:16];
+        [cell.contentView addSubview:nameLabel];
+        
     }
-    cell.textLabel.textColor = [UIColor blackColor];
-    cell.textLabel.text = @"test";
+    NSDictionary *item =  [listData objectAtIndex:indexPath.row];
+    UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
+    nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
     
     return cell;
 }

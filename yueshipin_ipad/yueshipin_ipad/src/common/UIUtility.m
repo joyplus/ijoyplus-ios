@@ -78,4 +78,12 @@
     [HUD hide:YES afterDelay:1];
 }
 
++ (UIView *)getDotView:(int)radius
+{
+    UIView *dotView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, radius, radius)];
+    dotView.layer.cornerRadius = 5;
+    dotView.layer.masksToBounds = YES;
+    dotView.backgroundColor = [UIColor colorWithRed:129/255.0 green:129/255.0 blue:129/255.0 alpha:1.0];
+    return dotView;
+}
 @end

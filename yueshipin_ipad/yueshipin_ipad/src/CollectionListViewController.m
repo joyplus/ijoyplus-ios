@@ -145,8 +145,8 @@
 //        }
         
         UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 45, 45, 20)];
-        scoreLabel.tag = 4001;
-        scoreLabel.text = @"8.6分";
+        scoreLabel.tag = 3001;
+        scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
         scoreLabel.textColor = CMConstants.textBlueColor;
@@ -165,7 +165,7 @@
         UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 180, 25)];
         directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
         directorNameLabel.backgroundColor = [UIColor clearColor];
-        directorNameLabel.tag = 6001;
+        directorNameLabel.tag = 4001;
         [cell.contentView addSubview:directorNameLabel];
         
         UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
@@ -178,7 +178,7 @@
         UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 180, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
         actorName1Label.backgroundColor = [UIColor clearColor];
-        actorName1Label.tag = 7001;
+        actorName1Label.tag = 5001;
         [cell.contentView addSubview:actorName1Label];
         
         
@@ -190,7 +190,7 @@
         dingNumberLabel.textAlignment = NSTextAlignmentCenter;
         dingNumberLabel.backgroundColor = [UIColor clearColor];
         dingNumberLabel.font = [UIFont systemFontOfSize:13];
-        dingNumberLabel.tag = 5001;
+        dingNumberLabel.tag = 6001;
         [cell.contentView addSubview:dingNumberLabel];
         
         UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(250, 130, 84, 24)];
@@ -201,7 +201,7 @@
         collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
         collectionNumberLabel.backgroundColor = [UIColor clearColor];
         collectionNumberLabel.font = [UIFont systemFontOfSize:13];
-        collectionNumberLabel.tag = 6001;
+        collectionNumberLabel.tag = 7001;
         [cell.contentView addSubview:collectionNumberLabel];
         
         UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
@@ -215,17 +215,21 @@
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"content_name"];
     
-//    int score = 3;
-//    for(int i = 0; i < score; i++){
-//        UIImageView *startImage = (UIImageView *)[cell viewWithTag:3001 + i];
-//        startImage.image = [UIImage imageNamed:@"star"];
-//    }
+    UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:5001];
+    directorNameLabel.text = [item objectForKey:@"directors"];
     
-    UILabel *scoreLabel = (UILabel *)[cell viewWithTag:4001];
+    UILabel *actorLabel = (UILabel *)[cell viewWithTag:4001];
+    actorLabel.text = [item objectForKey:@"stars"];
     
-    UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:5001];
+    UILabel *scoreLabel = (UILabel *)[cell viewWithTag:3001];
+    scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
     
-    UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:6001];
+    UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
+    dingNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"support_num"]];
+    
+    UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:7001];
+    collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"favority_num"]];
+    
     
     return cell;
 }
@@ -260,8 +264,8 @@
 {
     [table deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
-    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
-    NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"content_type"]];
+    NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"content_id"]];
     if([type isEqualToString:@"1"]){
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
         viewController.prodId = prodId;
