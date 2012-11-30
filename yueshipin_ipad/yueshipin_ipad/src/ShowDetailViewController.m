@@ -112,8 +112,8 @@
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
     self.playBtn.frame = CGRectMake(290, 150, 185, 40);
-    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.actorLabel.frame = CGRectMake(290, 210, 80, 15);
@@ -185,7 +185,7 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
-            [self showValues];
+            
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
             [UIUtility showSystemError:self.view];
@@ -208,6 +208,7 @@
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];
         }
+        [self showValues];
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
@@ -341,6 +342,9 @@
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
             viewController.videoUrl = videoUrl;
+            viewController.type = 3;
+            viewController.name = [video objectForKey:@"name"];
+            viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
             [self presentModalViewController:viewController animated:YES];
         }
     }else {
@@ -358,7 +362,9 @@
     }
     viewController.programUrl = url;
     viewController.title = [video objectForKey:@"name"];
-    [self.navigationController pushViewController:viewController animated:YES];
+    viewController.type = 3;
+    viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 - (void)dingBtnClicked:(id)sender

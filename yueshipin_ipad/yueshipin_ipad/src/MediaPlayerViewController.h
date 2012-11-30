@@ -11,6 +11,9 @@
 
 @interface MediaPlayerViewController : UIViewController <DeviceListViewDelegate>
 
+@property (nonatomic, strong)NSString *name;
+@property (nonatomic, strong)NSString *subname;
+@property (nonatomic, assign)int type;
 @property (nonatomic, strong)NSString *videoUrl;
 
 @end

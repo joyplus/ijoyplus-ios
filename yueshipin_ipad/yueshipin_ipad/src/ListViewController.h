@@ -8,7 +8,7 @@
 
 #import "CommonHeader.h"
 
-@interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>{
+@interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
     UITableView *table;
     NSMutableArray *topsArray;
 }

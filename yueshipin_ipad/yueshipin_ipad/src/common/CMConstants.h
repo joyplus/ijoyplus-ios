@@ -54,6 +54,8 @@
 #define CHAO_QING @"hd2"
 #define LIU_CHANG @"3gp"
 
+#define WATCH_RECORD_NUMBER 5
+
 #define  SHOW_MB_PROGRESS_BAR @"show_mb_progress_bar"
 
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"
@@ -72,5 +74,7 @@
 + (UIColor *)titleBlueColor;
 
 + (UIFont *)titleFont;
+
++ (UIColor *)tableBorderColor;
 
 @end

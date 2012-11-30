@@ -38,7 +38,7 @@
 /**
  * Defines arrow image
  */
-#define MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE                               @"up"
+#define MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE                               @"MNMBottomPullToRefreshArrow"
 
 @implementation MNMBottomPullToRefreshView
 

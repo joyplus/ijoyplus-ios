@@ -9,7 +9,7 @@
 #import "CommonHeader.h"
 #import "MenuViewController.h"
 
-@interface HomeViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
+@interface HomeViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient>
 
 - (id)initWithFrame:(CGRect)frame;
 @property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;

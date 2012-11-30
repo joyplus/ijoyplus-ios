@@ -37,7 +37,7 @@
 //
 
 #import "StackScrollViewController.h"
-#import "UIViewWithShadow.h"
+//#import "UIViewWithShadow.h"
 #import "RootViewController.h"
 #import <QuartzCore/QuartzCore.h>
 const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = -130;
@@ -692,13 +692,13 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		[[borderViews viewWithTag:1] setHidden:TRUE];
 	}
 	
-	if ([slideViews.subviews count] != 0) {
-		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(-40, 0, 40 , self.view.frame.size.height)];
-		[verticalLineView setBackgroundColor:[UIColor clearColor]];
-		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-		[verticalLineView setClipsToBounds:NO];
-		[controller.view addSubview:verticalLineView];
-	}
+//	if ([slideViews.subviews count] != 0) {
+//		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(-40, 0, 40 , self.view.frame.size.height)];
+//		[verticalLineView setBackgroundColor:[UIColor clearColor]];
+//		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+//		[verticalLineView setClipsToBounds:NO];
+//		[controller.view addSubview:verticalLineView];
+//	}
 	
 	[viewControllersStack addObject:controller];
 	if (invokeByController !=nil) {

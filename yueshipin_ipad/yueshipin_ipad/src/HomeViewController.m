@@ -53,6 +53,8 @@
     NSMutableArray *showTopsArray;
     NSArray *lunboArray;
     int videoType; // 0: 悦单 1: 电影 2: 电视剧 3: 综艺
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
 }
 
 @end
@@ -97,10 +99,19 @@
 		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[backgroundView addSubview:table];
         
+        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        
+        reloads_ = 2;
+        
         bottomImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - 8, self.view.frame.size.width, 20)];
         [backgroundView addSubview:bottomImageView];
 	}
     return self;
+}
+
+- (void)loadTable {
+    [table reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewDidLoad
@@ -166,6 +177,30 @@
     }
 }
 
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                [topsArray addObjectsFromArray:tempTopsArray];
+                reloads_ ++;
+            }
+        } else {
+            
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
 - (void)parseTopsListData:(id)result
 {
     topsArray = [[NSMutableArray alloc]initWithCapacity:10];
@@ -179,7 +214,7 @@
     } else {
         [UIUtility showSystemError:self.view];
     }
-    [table reloadData];
+    [self loadTable];
     [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
@@ -327,38 +362,47 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
-	CGFloat pageWidth = scrollView.bounds.size.width ;
-    float fractionalPage = scrollView.contentOffset.x / pageWidth ;
-	NSInteger nearestNumber = lround(fractionalPage) ;
-	
-	if (pageControl.currentPage != nearestNumber)
-	{
-		pageControl.currentPage = nearestNumber ;
-		
-		// if we are dragging, we want to update the page control directly during the drag
-		if (scrollView.dragging)
-			[pageControl updateCurrentPageDisplay] ;
-	}
+    if(aScrollView.tag == 11270014){
+        CGFloat pageWidth = scrollView.bounds.size.width ;
+        float fractionalPage = scrollView.contentOffset.x / pageWidth ;
+        NSInteger nearestNumber = lround(fractionalPage) ;
+        
+        if (pageControl.currentPage != nearestNumber)
+        {
+            pageControl.currentPage = nearestNumber ;
+            // if we are dragging, we want to update the page control directly during the drag
+            if (scrollView.dragging)
+                [pageControl updateCurrentPageDisplay] ;
+        }
+    } else {
+        if(videoType == 0)
+        [pullToRefreshManager_ tableViewScrolled];
+        
+    }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)aScrollView
 {
-	// if we are animating (triggered by clicking on the page control), we update the page control
-	[pageControl updateCurrentPageDisplay];
+	if(aScrollView.tag == 11270014){
+        [pageControl updateCurrentPageDisplay];
+    }
 }
 
-- (void)closeMenu
-{
-    [AppDelegate instance].closed = YES;
-    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
+    if(aScrollView.tag == 11270014){
+    } else {
+        if(videoType == 0)
+        [pullToRefreshManager_ tableViewReleased];
+    }
 }
+
 
 - (void)listBtnClicked:(UIButton *)sender
 {
     [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_pressed"] forState:UIControlStateNormal];
     [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 0;
-    [self retrieveTopsListData];
+    [table reloadData];
 }
 
 - (void)movieBtnClicked:(UIButton *)sender
@@ -437,6 +481,7 @@
             [cell.contentView addSubview:lunboPlaceholder];
             
             scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 5, self.view.frame.size.width- 12, TOP_IMAGE_HEIGHT - 10)];
+            scrollView.tag = 11270014;
             scrollView.delegate = self;
             
             

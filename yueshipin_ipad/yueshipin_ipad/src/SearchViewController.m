@@ -49,12 +49,15 @@
         sBar.delegate = self;
         [self.view addSubview:sBar];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(80, 170, 370, 500) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(80, 170, 370, 210) style:UITableViewStylePlain];
         [table setBackgroundColor:[UIColor clearColor]];
-        [table setSeparatorStyle:UITableViewCellSelectionStyleNone];
+        [table setSeparatorColor:CMConstants.tableBorderColor];
 		[table setDelegate:self];
 		[table setDataSource:self];
         [table setScrollEnabled:NO];
+        table.layer.borderWidth = 1;
+        table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+        table.tableFooterView = [[UIView alloc] init];
         [self.view addSubview:table];
         
         historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
@@ -80,7 +83,7 @@
         NSMutableDictionary *cloneItem = [[NSMutableDictionary alloc]initWithDictionary:item];
         [historyArray addObject:cloneItem];
     }
-    
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
     if(cacheResult != nil){
         [self parseData:cacheResult];
@@ -186,11 +189,14 @@
                 btnPositionX += preBtnWidth + 5; // 5: inner gap
             }
             int btnPositionY = 10 + (BUTTON_HEIGHT + 5)* (rowNumber-1); // 5: inner gap
-            UIButton *hotKeyBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            UIButton *hotKeyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             int btnWidth = [[hotKeyBtnWidth valueForKey:content] intValue];
             hotKeyBtn.frame = CGRectMake(btnPositionX, btnPositionY, btnWidth, BUTTON_HEIGHT);
             [hotKeyBtn setTitle:content forState:UIControlStateNormal];
             [hotKeyBtn setTag:2001 + i];
+            [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+            [hotKeyBtn setTitleColor:[CMConstants textColor] forState:UIControlStateNormal];
+            [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
             [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -212,7 +218,7 @@
 {
     if(indexPath.section == 0){
         if(hotKeyArray.count > 0){
-            return (hotKeyIndex.count - 1) * 40 + 20;
+            return (hotKeyIndex.count - 1) * 40 + 10;
         } else {
             return 40;
         }
@@ -249,7 +255,11 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if(indexPath.section == 1){
-        [self search:[[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"]];
+        NSString *keyword = [[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"];
+        [self addKeyToLocalHistory:keyword];
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+        [table reloadData];
+        [self search:keyword];
     }
 }
 
@@ -268,6 +278,7 @@
 {
     [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     [table reloadData];
     [self search:searchBar.text];
 }
@@ -276,13 +287,14 @@
 {
     [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     [table reloadData];
     [self search:searchBar.text];
 }
 
 - (void)search:(NSString *)keyword
 {
-    [self menuBtnClicked];
+    [self closeMenu];
     SearchListViewController *viewController = [[SearchListViewController alloc] init];
     viewController.keyword = keyword;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
@@ -331,7 +343,12 @@
         [newHistoryArray addObject:newItem];
     }
     historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
-    [historyArray addObjectsFromArray:newHistoryArray];
+    NSArray *sortedArray = [newHistoryArray sortedArrayUsingComparator:^(id a, id b) {
+        NSDate *first = [DateUtility dateFromFormatString:[(NSMutableDictionary*)a objectForKey:@"last_search_date"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
+        NSDate *second = [DateUtility dateFromFormatString:[(NSMutableDictionary*)b objectForKey:@"last_search_date"] formatString: @"yyyy-MM-dd HH:mm:ss"];
+        return [second compare:first];
+    }];
+    [historyArray addObjectsFromArray:sortedArray];
     [[ContainerUtility sharedInstance]setAttribute:newHistoryArray forKey:@"search_history"];
 }
 

@@ -11,6 +11,9 @@
 #import "CacheUtility.h"
 #import "FPPopoverController.h"
 #import "DeviceListViewController.h"
+#import "CMConstants.h"
+#import "DateUtility.h"
+
 
 @interface MediaPlayerViewController (){
     MPMoviePlayerViewController *playerViewController;
@@ -23,6 +26,7 @@
     UIView *deviceLoadingView;
     UIButton *switchBtn;
     UIImageView *deviceImageView;
+    NSNumber *lastPlayTime;
     
     BOOL play;
     BOOL pause;
@@ -33,6 +37,8 @@
 
 @implementation MediaPlayerViewController
 @synthesize videoUrl;
+@synthesize name;
+@synthesize type;
 
 - (void)viewDidUnload
 {
@@ -82,7 +88,7 @@
     [self.view addSubview:playerViewController.view];
     
     player = [playerViewController moviePlayer];
-    NSNumber *lastPlayTime = (NSNumber*)[[CacheUtility sharedCache]loadFromCache:self.videoUrl];
+    lastPlayTime = (NSNumber*)[[CacheUtility sharedCache]loadFromCache:self.videoUrl];
     [player setInitialPlaybackTime: lastPlayTime.doubleValue];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVideoFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
@@ -114,29 +120,81 @@
 
 - (void)moviePlayerPreloadFinish:(NSNotification *)theNotification
 {
-    [self readOverLayView:player.view];
-    UIView *buttonView = (UIView *)[overlayView.subviews objectAtIndex:0];
-    UIView *existingBtnView = ((UIView *)[buttonView.subviews objectAtIndex:1]);
-    if(shareBtn == nil){
-        shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    }
-    shareBtn.frame = CGRectMake(0, 0, 56, 56);
-    shareBtn.center = CGPointMake(40, existingBtnView.center.y);
-    shareBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-    [shareBtn setBackgroundImage:[UIImage imageNamed:@"device"] forState:UIControlStateNormal];
-    [shareBtn setBackgroundImage:[UIImage imageNamed:@"device_pressed"] forState:UIControlStateHighlighted];
-    [shareBtn addTarget:self action:@selector(showPopWindow:)forControlEvents:UIControlEventTouchUpInside];
-    [buttonView addSubview:shareBtn];
+    //    [self readOverLayView:player.view];
+    //    UIView *buttonView = (UIView *)[overlayView.subviews objectAtIndex:0];
+    //    UIView *existingBtnView = ((UIView *)[buttonView.subviews objectAtIndex:1]);
+    //    if(shareBtn == nil){
+    //        shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    //    }
+    //    shareBtn.frame = CGRectMake(0, 0, 56, 56);
+    //    shareBtn.center = CGPointMake(40, existingBtnView.center.y);
+    //    shareBtn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+    //    [shareBtn setBackgroundImage:[UIImage imageNamed:@"device"] forState:UIControlStateNormal];
+    //    [shareBtn setBackgroundImage:[UIImage imageNamed:@"device_pressed"] forState:UIControlStateHighlighted];
+    //    [shareBtn addTarget:self action:@selector(showPopWindow:)forControlEvents:UIControlEventTouchUpInside];
+    //    [buttonView addSubview:shareBtn];
 }
 - (void)playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
 {
-	NSTimeInterval lastPlayTime = player.currentPlaybackTime;
-    if(player.duration - lastPlayTime <= 0.1){
+	lastPlayTime = [NSNumber numberWithDouble:player.currentPlaybackTime];
+    if(player.duration - lastPlayTime.doubleValue <= 0.1){
         lastPlayTime = 0;
     }
-    [[CacheUtility sharedCache] putInCache:self.videoUrl result:[NSNumber numberWithDouble:lastPlayTime]];
+    [self updateWatchRecord];
+    [[CacheUtility sharedCache] putInCache:self.videoUrl result:lastPlayTime];
     [playerViewController.view removeFromSuperview];
     [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)updateWatchRecord
+{
+    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
+    int index = 0;
+    BOOL exist = NO;
+    NSMutableDictionary *watchingItem;
+    for(int i = 0; i < watchRecordArray.count; i++){
+        NSDictionary *item = (NSDictionary *)[watchRecordArray objectAtIndex:i];
+        if ([[item objectForKey:@"name"] isEqualToString: self.name]) {
+            watchingItem = [[NSMutableDictionary alloc]initWithDictionary:item];;
+            index = i;
+            exist = YES;
+            break;
+        }
+    }
+    if(watchingItem == nil){
+        watchingItem = [[NSMutableDictionary alloc]initWithCapacity:7];
+    }
+    [watchingItem setValue:@"1" forKey:@"play_type"]; // 1:player 2 web-player
+    [watchingItem setValue:(self.name == nil ? @"" : self.name) forKey:@"name"];
+    [watchingItem setValue:(self.subname == nil ? @"" : self.subname) forKey:@"subname"];
+    [watchingItem setValue:[NSString stringWithFormat:@"%i", self.type] forKey:@"type"];
+    [watchingItem setValue:[DateUtility formatDateWithString:[NSDate date] formatString: @"yyyy-MM-dd HH:mm:ss"] forKey:@"createDateStr"];
+    [watchingItem setValue:[NSNumber numberWithFloat:player.currentPlaybackTime] forKey:@"playbackTime"];
+    [watchingItem setValue:[NSNumber numberWithFloat:player.duration] forKey:@"duration"];
+    [watchingItem setValue: self.videoUrl forKey:@"videoUrl"];
+    
+    NSMutableArray *temp = [[NSMutableArray alloc]initWithCapacity:WATCH_RECORD_NUMBER];
+    if(!exist){
+        [temp addObject:watchingItem];
+    }
+    for(int i = 0; i < watchRecordArray.count; i++){
+        if(exist && i == index){
+            [temp addObject:watchingItem];
+        } else {
+            [temp addObject:[watchRecordArray objectAtIndex:i]];
+        }
+    }
+    NSArray *sortedArray = [temp sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
+        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
+        return [second compare:first];
+    }];
+    int num = sortedArray.count > WATCH_RECORD_NUMBER ? WATCH_RECORD_NUMBER : sortedArray.count;
+    NSMutableArray *newWatchRecord = [[NSMutableArray alloc]initWithCapacity:num];
+    for(int i = 0; i < num; i++){
+        [newWatchRecord addObject:[temp objectAtIndex:i]];
+    }
+    [[CacheUtility sharedCache]putInCache:@"watch_record" result:newWatchRecord];
 }
 
 - (void)readOverLayView:(UIView *)view
@@ -220,7 +278,7 @@
         UIView *videoView = [mpVideoView.subviews objectAtIndex:0];
         [mpVideoView insertSubview:deviceLoadingView aboveSubview:videoView];
         [videoView setHidden:YES];
-    } else {        
+    } else {
         [mpVideoView setHidden:YES];
     }
     

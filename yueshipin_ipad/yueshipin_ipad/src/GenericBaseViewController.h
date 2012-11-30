@@ -10,5 +10,6 @@
 
 @interface GenericBaseViewController : UIViewController
 
+- (void)closeMenu;
 
 @end

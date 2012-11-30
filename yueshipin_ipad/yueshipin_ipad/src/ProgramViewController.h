@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong) NSString *programUrl;
 @property (nonatomic, weak) IBOutlet UIWebView *webView;
+@property (nonatomic, strong)NSString *subname;
+@property (nonatomic, assign)int type;
 @end

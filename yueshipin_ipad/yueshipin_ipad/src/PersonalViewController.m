@@ -12,6 +12,10 @@
 #import "CollectionListViewController.h"
 #import "CreateListOneViewController.h"
 #import "TopicListViewController.h"
+#import "WatchRecordCell.h"
+#import "MediaPlayerViewController.h"
+#import "ProgramViewController.h"
+
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -46,6 +50,9 @@
     UIButton *importDoubanBtn;
     
     UIImageView *tableBgImage;
+    
+    NSArray *sortedwatchRecordArray;
+    int tableHeight;
 }
 
 @end
@@ -110,7 +117,7 @@
 //        [self.view addSubview:editBtn];
         
         supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 228, 100, 30)];
-        supportLabel.backgroundColor = [UIColor yellowColor];
+        supportLabel.backgroundColor = [UIColor clearColor];
         supportLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
         supportLabel.text = @"0";
         supportLabel.textAlignment = NSTextAlignmentCenter;
@@ -125,7 +132,7 @@
         collectionLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + supportLabel.frame.size.width + 34, 228, 100, 30)];
         collectionLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
         collectionLabel.textAlignment = NSTextAlignmentCenter;
-        collectionLabel.backgroundColor = [UIColor yellowColor];
+        collectionLabel.backgroundColor = [UIColor clearColor];
         collectionLabel.font = [UIFont boldSystemFontOfSize:22];
         collectionLabel.text = @"0";
         [self.view addSubview:collectionLabel];
@@ -138,7 +145,7 @@
         listLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 33)*2, 228, 100, 30)];
         listLabel.textAlignment = NSTextAlignmentCenter;
         listLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
-        listLabel.backgroundColor = [UIColor yellowColor];
+        listLabel.backgroundColor = [UIColor clearColor];
         listLabel.font = [UIFont boldSystemFontOfSize:22];
         listLabel.text = @"0";
         [self.view addSubview:listLabel];
@@ -153,7 +160,8 @@
         [self.view addSubview:myRecordImage];
         
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        createBtn.frame = CGRectMake(210, 282, 104, 31);
+//        createBtn.frame = CGRectMake(210, 282, 104, 31);
+        createBtn.frame = CGRectMake(358, 282, 104, 31);
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
         [createBtn addTarget:self action:@selector(createBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -165,14 +173,13 @@
         [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_pressed"] forState:UIControlStateHighlighted];
         [importDoubanBtn addTarget:self action:@selector(importDoubanBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
 //        [self.view addSubview:importDoubanBtn];
-        
-        tableBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 325, 402, 370)];
-        tableBgImage.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets: UIEdgeInsetsMake(10, 10, 10, 10)];
-        [self.view addSubview:tableBgImage];
 
         table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, 370) style:UITableViewStylePlain];
-        [table setBackgroundColor:[UIColor clearColor]];
-        [table setSeparatorStyle:UITableViewCellSelectionStyleNone];
+        [table setBackgroundColor:[UIColor whiteColor]];
+        [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        table.layer.borderWidth  = 1;
+        table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+        table.tableFooterView = [[UIView alloc] init];
 		[table setDelegate:self];
 		[table setDataSource:self];
         [table setScrollEnabled:NO];
@@ -189,8 +196,21 @@
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_placeholder"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
     [self parseResult];
+    
+    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
+    sortedwatchRecordArray = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
+        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
+        return [second compare:first];
+    }];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    table.frame = CGRectMake(60, 325, 400, tableHeight);
+    [table reloadData];
+    
+}
 
 - (void)parseResult
 {
@@ -229,38 +249,125 @@
 	// Do any additional setup after loading the view.
 }
 
-- (void)closeMenu
-{
-    [AppDelegate instance].closed = YES;
-    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
-}
-
 #pragma mark -
 #pragma mark Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return sortedwatchRecordArray.count;
 }
 
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"cell";
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    [cell setSelectionStyle:UITableViewCellEditingStyleNone];
+    static NSString *CellIdentifier = @"Cell";
+    WatchRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if(cell == nil){
+        cell = [[WatchRecordCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 15)];
+        movieNameLabel.backgroundColor = [UIColor clearColor];
+        movieNameLabel.textColor = [UIColor blackColor];
+        movieNameLabel.tag = 1001;
+        movieNameLabel.font = [UIFont systemFontOfSize:16];
+        [cell.contentView addSubview:movieNameLabel];
+        
+        UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        playButton.tag = 1002;
+        [playButton addTarget:self action:@selector(playBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addSubview:playButton];
+        
+        UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 35, 280, 15)];
+        contentLabel.backgroundColor = [UIColor clearColor];
+        contentLabel.textColor = CMConstants.textColor;
+        contentLabel.tag = 1003;
+        contentLabel.font = [UIFont systemFontOfSize:15];
+        [contentLabel setNumberOfLines:0];
+        [cell.contentView addSubview:contentLabel];
+    }
+    NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+    UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
+    movieNameLabel.text = [item objectForKey:@"name"];
+    
+    UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
+    contentLabel.text = [self composeContent:item];
+    CGSize size = [self calculateContentSize:contentLabel.text width:280];
+    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
+    
+    UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
+    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playbackTime"];
+    NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
+    if(duration.doubleValue - playbackTime.doubleValue < 3){
+        [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
+        [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
+    } else {
+        [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+        [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
+    }
+    playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
+    
     return cell;
 }
 
+- (void)playBtnClicked:(UIButton *)btn
+{
+    CGPoint point = btn.center;
+    point = [table convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
+    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
+        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+        viewController.videoUrl = [item objectForKey:@"videoUrl"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.name = [item objectForKey:@"name"];
+        viewController.subname = [item objectForKey:@"subname"];
+        [self presentModalViewController:viewController animated:YES];
+    } else {
+        ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+        viewController.programUrl = [item objectForKey:@"videoUrl"];
+        viewController.title = [item objectForKey:@"name"];
+        viewController.subname = [item objectForKey:@"subname"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    }
+}
+
+- (NSString *)composeContent:(NSDictionary *)item
+{
+    NSString *content;
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playbackTime"];
+    if ([[item objectForKey:@"type"] isEqualToString:@"1"]) {
+        content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[item objectForKey:@"type"] isEqualToString:@"2"]) {
+        content = [NSString stringWithFormat:@"已观看到第%@集 %@", [item objectForKey:@"subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[item objectForKey:@"type"] isEqualToString:@"3"]) {
+        content = [NSString stringWithFormat:@"已观看《%@》 %@", [item objectForKey:@"subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+    }
+    return content;
+}
+
+- (CGSize)calculateContentSize:(NSString *)content width:(int)width
+{
+    CGSize constraint = CGSizeMake(width, 20000.0f);
+    CGSize size = [content sizeWithFont:[UIFont systemFontOfSize:15.0f] constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    return size;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   return 40;
+    NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+    NSString *content = [self composeContent:item];
+    CGSize size = [self calculateContentSize:content width:tableView.frame.size.width];
+    tableHeight += size.height + 40;
+   return size.height + 40;
 }
 
 - (void)menuBtnClicked

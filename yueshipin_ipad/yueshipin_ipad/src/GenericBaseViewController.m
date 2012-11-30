@@ -12,7 +12,9 @@
 #import "ServiceConstants.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
-#import "StringUtility.h"
+#import "AppDelegate.h"
+#import "StackScrollViewController.h"
+#import "RootViewController.h"
 
 @interface GenericBaseViewController (){
 
@@ -40,5 +42,11 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)closeMenu
+{
+    [AppDelegate instance].closed = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
 }
 @end

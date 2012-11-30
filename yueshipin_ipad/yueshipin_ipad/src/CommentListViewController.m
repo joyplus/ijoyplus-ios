@@ -138,7 +138,11 @@
     }
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
-    nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"owner_name"]];
+    NSString *name = [item objectForKey:@"owner_name"];
+    if([StringUtility stringIsEmpty:name]){
+        name = @"网络用户";
+    }
+    nameLabel.text = [NSString stringWithFormat:@"%@", name];
     
     UILabel *timeLabel = (UILabel *)[cell viewWithTag:1002];
     NSString *createDate = [item valueForKey:@"create_date"];

@@ -105,7 +105,7 @@
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateHighlighted];
+    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
     [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.playRoundBtn.center = self.filmImage.center;
@@ -122,6 +122,7 @@
     self.playBtn.frame = CGRectMake(290, 150, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
+    [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.directorLabel.frame = CGRectMake(290, 205, 50, 15);
     self.directorNameLabel.frame = CGRectMake(335, 205, 140, 15);
@@ -196,7 +197,6 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
-            [self showValues];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
             [UIUtility showSystemError:self.view];
@@ -221,6 +221,7 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [self showValues];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showSystemError:self.view];
@@ -354,6 +355,9 @@
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
             viewController.videoUrl = videoUrl;
+            viewController.type = 1;
+            viewController.name = [video objectForKey:@"name"];
+            viewController.subname = [NSString stringWithFormat:@"%i", num];
             [self presentModalViewController:viewController animated:YES];
         }
     }else {
@@ -367,6 +371,7 @@
     NSArray *urlArray = [video objectForKey:@"video_urls"];
     viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
     viewController.title = [video objectForKey:@"name"];
+    viewController.type = 1;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }

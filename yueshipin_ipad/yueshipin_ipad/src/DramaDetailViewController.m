@@ -102,7 +102,7 @@
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateHighlighted];
+    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
     [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     self.playRoundBtn.center = self.filmImage.center;
     
@@ -190,7 +190,6 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
-            [self showValues];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
             [UIUtility showSystemError:self.view];
@@ -213,6 +212,7 @@
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];
         }
+        [self showValues];
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
     } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
@@ -255,9 +255,10 @@
         lastNum = [lastNumObj integerValue];
     }
     
-    totalEpisodeNumber = [[video objectForKey:@"episodes_count"] intValue];
+    int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
+    totalEpisodeNumber = episodeArray.count;
     for (int i = 0; i < totalEpisodeNumber; i++) {
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag = i+1;
         [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39, 44, 34)];
         if (i < 9) {
@@ -279,24 +280,26 @@
         [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
         [self.bgScrollView addSubview:btn];
     }
-    
     UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber-1)];
+    if(lastBtn != nil){
+        positionY = lastBtn.frame.origin.y;
+    }
 
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
-    self.commentImage.frame = CGRectMake(LEFT_GAP, lastBtn.frame.origin.y + 60, 74, 19);
+    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 60, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
-    self.numberLabel.frame = CGRectMake(139, lastBtn.frame.origin.y + 60, 100, 18);
+    self.numberLabel.frame = CGRectMake(139, positionY + 60, 100, 18);
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(410, lastBtn.frame.origin.y + 57, 66, 26);
+    self.commentBtn.frame = CGRectMake(410, positionY + 57, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
     [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     if(commentListViewController == nil){
         commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
-        commentListViewController.view.frame = CGRectMake(LEFT_GAP, lastBtn.frame.origin.y + 90, 425, 200);
+        commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 90, 425, 200);
         commentListViewController.totalCommentNum = totalCommentNum;
         commentListViewController.parentDelegate = self;
         commentListViewController.prodId = self.prodId;
@@ -395,6 +398,9 @@
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
             viewController.videoUrl = videoUrl;
+            viewController.type = 2;
+            viewController.name = [video objectForKey:@"name"];
+            viewController.subname = [NSString stringWithFormat:@"%i", num];
             [self presentModalViewController:viewController animated:YES];
         }
     }else {
@@ -418,7 +424,9 @@
     }
     viewController.programUrl = url;
     viewController.title = [video objectForKey:@"name"];
-    [self.navigationController pushViewController:viewController animated:YES];
+    viewController.type = 2;
+    viewController.subname = [NSString stringWithFormat:@"%i", num];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
 }
 
 

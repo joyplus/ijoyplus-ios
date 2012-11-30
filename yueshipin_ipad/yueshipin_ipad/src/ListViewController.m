@@ -14,6 +14,8 @@
 @interface ListViewController (){
     UIImageView *bgImage;
     UILabel *titleLabel;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
 }
 
 @end
@@ -53,6 +55,15 @@
     table.separatorStyle = UITableViewCellSeparatorStyleNone;
     table.showsVerticalScrollIndicator = NO;
     [self.view addSubview:table];
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+    
+    reloads_ = 2;
+    
+}
+
+- (void)loadTable {    
+    [table reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -97,7 +108,7 @@
     } else {
         [UIUtility showSystemError:self.view];
     }
-    [table reloadData];
+    [self loadTable];
     [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
@@ -318,4 +329,42 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
 }
+
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManagerClient
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [pullToRefreshManager_ tableViewScrolled];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", self.topId, @"top_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"items"];
+            if(tempTopsArray.count > 0){
+                [topsArray addObjectsFromArray:tempTopsArray];
+                reloads_ ++;
+            }
+        } else {
+            
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+
+    }];
+}
+
+
 @end
