@@ -85,12 +85,12 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		viewAtRight2=nil;
 		viewAtRightAtTouchBegan = nil;
 		
-//		UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
-//		[panRecognizer setMaximumNumberOfTouches:1];
-//		[panRecognizer setDelaysTouchesBegan:TRUE];
-//		[panRecognizer setDelaysTouchesEnded:TRUE];
-//		[panRecognizer setCancelsTouchesInView:TRUE];
-//		[self.view addGestureRecognizer:panRecognizer];
+        //		UIPanGestureRecognizer* panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
+        //		[panRecognizer setMaximumNumberOfTouches:1];
+        //		[panRecognizer setDelaysTouchesBegan:TRUE];
+        //		[panRecognizer setDelaysTouchesEnded:TRUE];
+        //		[panRecognizer setCancelsTouchesInView:TRUE];
+        //		[self.view addGestureRecognizer:panRecognizer];
 		[self.view addSubview:slideViews];
 		
 	}
@@ -667,11 +667,6 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                          [[slideViews viewWithTag:lastViewControllerIndex] removeFromSuperview];
                          [viewControllersStack removeObjectAtIndex:lastViewControllerIndex];
                      }];
-    
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:topController.view cache:YES];
-//    [UIView setAnimationBeginsFromCurrentState:NO];
-//    [UIView commitAnimations];
 }
 
 - (void)addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView removePreviousView:(BOOL)removePreviousView{
@@ -690,7 +685,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		[viewControllersStack removeAllObjects];
 	}
 	
-	    CGRect frame = [UIScreen mainScreen].bounds;
+    CGRect frame = [UIScreen mainScreen].bounds;
 	if([viewControllersStack count] > 1 && removePreviousView){
 		NSInteger indexOfViewController = [viewControllersStack
 										   indexOfObject:invokeByController]+1;
@@ -716,16 +711,16 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		[[borderViews viewWithTag:1] setHidden:TRUE];
 	}
 	
-//	if ([slideViews.subviews count] != 0) {
-//		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(-40, 0, 40 , self.view.frame.size.height)];
-//		[verticalLineView setBackgroundColor:[UIColor clearColor]];
-//		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-//		[verticalLineView setClipsToBounds:NO];
-//		[controller.view addSubview:verticalLineView];
-//	}
+    //	if ([slideViews.subviews count] != 0) {
+    //		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(-40, 0, 40 , self.view.frame.size.height)];
+    //		[verticalLineView setBackgroundColor:[UIColor clearColor]];
+    //		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+    //		[verticalLineView setClipsToBounds:NO];
+    //		[controller.view addSubview:verticalLineView];
+    //	}
 	
 	[viewControllersStack addObject:controller];
-
+    
 	if (invokeByController !=nil) {
 		viewXPosition = frame.size.height;
 	}
@@ -761,9 +756,9 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                              }];
         }else {
             viewAtRight = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-1];
-            viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-2];
-            viewAtLeft2 = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-3];
-            [viewAtLeft2 setHidden:FALSE];
+            //            viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-2];
+            //            viewAtLeft2 = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-3];
+            //            [viewAtLeft2 setHidden:FALSE];
             viewAtRight2 = nil;
             
             [UIView animateWithDuration:0.5
@@ -793,7 +788,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		}else if ([[slideViews subviews] count]==2){
             viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-2];
             viewAtLeft2 = nil;
-            viewAtRight2 = nil;            
+            viewAtRight2 = nil;
         }
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];

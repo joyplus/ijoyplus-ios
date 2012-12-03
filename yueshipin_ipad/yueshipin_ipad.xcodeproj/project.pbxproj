@@ -239,7 +239,7 @@
 		EBBA01121664E7040069FE7E /* search_box@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA01111664E7030069FE7E /* search_box@2x.png */; };
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
-		EBF2524E1665A4BF00147D23 /* WaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF2524D1665A4BF00147D23 /* WaterflowView.m */; };
+		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
 		EBF3A95B166301AD00EBF56D /* LightMenuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A957166301AD00EBF56D /* LightMenuBar.m */; };
 		EBF3A95C166301AD00EBF56D /* LightMenuBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95A166301AD00EBF56D /* LightMenuBarView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */; };
@@ -566,8 +566,8 @@
 		EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
 		EBBDCE33166C58EB00C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		EBBDCE34166C590200C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		EBF2524C1665A4BF00147D23 /* WaterflowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterflowView.h; sourceTree = "<group>"; };
-		EBF2524D1665A4BF00147D23 /* WaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterflowView.m; sourceTree = "<group>"; };
+		EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomColoredAccessory.h; sourceTree = "<group>"; };
+		EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomColoredAccessory.m; sourceTree = "<group>"; };
 		EBF3A956166301AD00EBF56D /* LightMenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightMenuBar.h; sourceTree = "<group>"; };
 		EBF3A957166301AD00EBF56D /* LightMenuBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LightMenuBar.m; sourceTree = "<group>"; };
 		EBF3A958166301AD00EBF56D /* LightMenuBarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightMenuBarDelegate.h; sourceTree = "<group>"; };
@@ -1015,14 +1015,14 @@
 		EBB73301165C7E67008E407E /* component */ = {
 			isa = PBXGroup;
 			children = (
+				EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */,
+				EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */,
 				EB93829716688CB20046A3B1 /* WatchRecordCell.h */,
 				EB93829816688CB30046A3B1 /* WatchRecordCell.m */,
 				EBB59CF61667681E00F646C7 /* CommentCell.h */,
 				EBB59CF71667681E00F646C7 /* CommentCell.m */,
 				EB8201521665B4E40015F447 /* CustomPlaceHolderTextView.h */,
 				EB8201531665B4E40015F447 /* CustomPlaceHolderTextView.m */,
-				EBF2524C1665A4BF00147D23 /* WaterflowView.h */,
-				EBF2524D1665A4BF00147D23 /* WaterflowView.m */,
 				EBF3A9901663972A00EBF56D /* DeviceListView.h */,
 				EBF3A9911663972A00EBF56D /* DeviceListView.m */,
 				EBB73302165C7E67008E407E /* CustomSearchBar.h */,
@@ -1101,16 +1101,16 @@
 		EBBA0CEE165B257000D3F11B /* personal */ = {
 			isa = PBXGroup;
 			children = (
-				EB8201B21665FB650015F447 /* TopicListViewController.h */,
-				EB8201B31665FB660015F447 /* TopicListViewController.m */,
-				EBB59CAC1666FE8300F646C7 /* MyListViewController.h */,
-				EBB59CAD1666FE8400F646C7 /* MyListViewController.m */,
 				EB182D00165CFCBD00A347BA /* PersonalViewController.h */,
 				EB182D01165CFCBD00A347BA /* PersonalViewController.m */,
 				EBBA00BC166488D70069FE7E /* DingListViewController.h */,
 				EBBA00BD166488D70069FE7E /* DingListViewController.m */,
 				EBBA00D9166496FB0069FE7E /* CollectionListViewController.h */,
 				EBBA00DA166496FC0069FE7E /* CollectionListViewController.m */,
+				EB8201B21665FB650015F447 /* TopicListViewController.h */,
+				EB8201B31665FB660015F447 /* TopicListViewController.m */,
+				EBB59CAC1666FE8300F646C7 /* MyListViewController.h */,
+				EBB59CAD1666FE8400F646C7 /* MyListViewController.m */,
 				EB8201371665B08D0015F447 /* CreateListOneViewController.h */,
 				EB8201441665B17E0015F447 /* CreateListOneViewController.m */,
 				EB8201451665B17E0015F447 /* CreateListOneViewController.xib */,
@@ -1491,7 +1491,6 @@
 				EBBA01041664BC510069FE7E /* UIImage+AlphaAdditions.m in Sources */,
 				EBBA01051664BC510069FE7E /* UIImage+ResizeAdditions.m in Sources */,
 				EBBA01061664BC510069FE7E /* UIImage+RoundedCornerAdditions.m in Sources */,
-				EBF2524E1665A4BF00147D23 /* WaterflowView.m in Sources */,
 				EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */,
 				EB8201251665A5E20015F447 /* MNMBottomPullToRefreshView.m in Sources */,
 				EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */,
@@ -1515,6 +1514,7 @@
 				EB93829916688CB30046A3B1 /* WatchRecordCell.m in Sources */,
 				EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */,
 				EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */,
+				EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -164,6 +164,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(indexPath.row == 0){
+        tableHeight = 0;
+    }
     if(indexPath.row == listData.count){//loadmore cell
         tableHeight += 40;
         return 40;

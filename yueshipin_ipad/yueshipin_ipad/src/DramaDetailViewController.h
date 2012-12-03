@@ -34,6 +34,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *introBgImage;
 @property (weak, nonatomic) IBOutlet UITextView *introContentTextView;
 @property (weak, nonatomic)UITableViewController *listViewController;
+@property (weak, nonatomic) IBOutlet UIImageView *relatedImage;
 @property (weak, nonatomic)UITableViewController *commentViewController;
 @property (weak, nonatomic) IBOutlet UIImageView *commentImage;
 @property (weak, nonatomic) IBOutlet UILabel *numberLabel;

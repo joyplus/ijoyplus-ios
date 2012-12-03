@@ -65,4 +65,5 @@
 - (void)showListFailureModalView:(int)closeTime;
 - (void)showSharePopup;
 - (void)showCommentPopup;
+- (void)pesentMyModalView:(UIViewController *)viewController;
 @end

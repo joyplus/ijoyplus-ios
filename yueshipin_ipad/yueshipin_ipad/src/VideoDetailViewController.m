@@ -129,6 +129,13 @@
         [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
         NSString *avatarUrl = [result objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
+        
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [result objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
     }
 }
 

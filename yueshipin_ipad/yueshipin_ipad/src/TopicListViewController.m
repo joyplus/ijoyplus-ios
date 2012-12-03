@@ -19,6 +19,9 @@
     UIImageView *bgImage;
     UIImageView *titleImage;
     NSMutableArray *videoArray;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    NSUInteger reloads_;
+    int pageSize;
 }
 
 @end
@@ -52,6 +55,15 @@
     table.separatorStyle = UITableViewCellSeparatorStyleNone;
     table.showsVerticalScrollIndicator = NO;
     [self.view addSubview:table];
+    reloads_ = 2;
+    pageSize = 5;
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+    [self loadTable];
+}
+
+- (void)loadTable {
+    [table reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,7 +79,7 @@
         [self parseVideoData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -88,8 +100,11 @@
             [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
             [videoArray addObjectsFromArray:videos];
         }
+        if(videos.count < pageSize){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        }
     }
-    [table reloadData];
+    [self loadTable];
     [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 
 }
@@ -280,5 +295,45 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+}
+
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManagerClient
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [pullToRefreshManager_ tableViewScrolled];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        NSArray *tempArray;
+        if(responseCode == nil){
+            tempArray = [result objectForKey:@"tops"];
+            if(tempArray.count > 0){
+                [videoArray addObjectsFromArray:tempArray];
+                reloads_ ++;
+            }
+        } else {
+            
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        if(tempArray.count < pageSize){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
 }
 @end

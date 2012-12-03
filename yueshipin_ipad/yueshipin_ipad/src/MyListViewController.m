@@ -7,7 +7,7 @@
 //
 
 #import "MyListViewController.h"
-#import "SubsearchViewController.h"
+#import "AddSearchViewController.h"
 #define LEFT_GAP 50
 
 @interface MyListViewController (){
@@ -62,7 +62,7 @@
 
 - (void)createBtnClicked
 {
-    SubsearchViewController *viewController = [[SubsearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
@@ -120,6 +120,5 @@
     }
     
 }
-
 
 @end

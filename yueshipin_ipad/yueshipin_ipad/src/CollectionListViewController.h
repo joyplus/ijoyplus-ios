@@ -8,6 +8,6 @@
 
 #import "CommonHeader.h"
 
-@interface CollectionListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface CollectionListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
 
 @end

@@ -11,6 +11,7 @@
 #import "MediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "CommentListViewController.h"
+#import "SublistViewController.h"
 
 #define LEFT_GAP 50
 
@@ -18,8 +19,14 @@
     NSDictionary *video;
     NSMutableArray *commentArray;
     NSArray *episodeArray;
+    SublistViewController *topicListViewController;
     CommentListViewController *commentListViewController;
     int totalEpisodeNumber;
+    NSArray *topics;
+    UIButton *introBtn;
+    float introContentHeight;
+    BOOL introExpand;
+    BOOL btnAdded;
 }
 
 
@@ -68,6 +75,7 @@
     [self setDingNumberLabel:nil];
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
+    [self setRelatedImage:nil];
     [super viewDidUnload];
 }
 
@@ -168,10 +176,45 @@
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
     self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
-   
+    
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
+    
+    introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+    [introBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    introBtn.frame = CGRectMake(LEFT_GAP + 420, self.introContentTextView.frame.origin.y + 60, 15, 15);
+    [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.bgScrollView addSubview:introBtn];
 }
 
+- (void)introBtnClicked
+{
+    if(introContentHeight > 80){
+        introExpand = !introExpand;
+        if(introExpand){
+            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+                [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
+                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86 + introContentHeight - 80);
+                [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+                [introBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 60 + introContentHeight - 80, 15, 15);
+                [self repositElements:introContentHeight - 80];
+            } completion:^(BOOL finished) {
+            }];
+        } else {
+            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+                [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 80)];
+                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86);
+                [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+                [introBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 60, introBtn.frame.size.width, introBtn.frame.size.height);
+                [self repositElements:0];
+            } completion:^(BOOL finished) {
+                
+            }];
+        }
+    }
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -208,11 +251,13 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"tv"];
         episodeArray = [video objectForKey:@"episodes"];
+        topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
         if(tempArray != nil && tempArray.count > 0){
             [commentArray addObjectsFromArray:tempArray];
         }
+        [self calculateIntroContentHeight];
         [self showValues];
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
     } else {
@@ -250,72 +295,130 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
+    [self repositElements:0];
+}
+
+
+- (void)calculateIntroContentHeight
+{
+    float fPadding = 16.0; // 8.0px x 2
+    CGSize constraint = CGSizeMake(self.introContentTextView.contentSize.width - fPadding, CGFLOAT_MAX);
+    CGSize size = [[video objectForKey:@"summary"] sizeWithFont: self.introContentTextView.font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
+    introContentHeight = size.height + 16.0;
+}
+
+
+- (void)repositElements:(int)increasePositionY
+{   
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
         lastNum = [lastNumObj integerValue];
     }
     
-    int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
     totalEpisodeNumber = episodeArray.count;
-    for (int i = 0; i < totalEpisodeNumber; i++) {
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.tag = i+1;
-        [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39, 44, 34)];
-        if (i < 9) {
-            [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
-        } else {
-            [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
+    if(btnAdded){
+        for (int i = 0; i < totalEpisodeNumber; i++) {
+            UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:i+1];
+            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39 + increasePositionY, 44, 34)];
         }
-        [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-        btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-        UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-        if(lastNum == i+1){
-            [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
-        } else {
-            [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    } else {
+        for (int i = 0; i < totalEpisodeNumber; i++) {
+            btnAdded = YES;
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn.tag = i+1;
+            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39, 44, 34)];
+            if (i < 9) {
+                [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
+            } else {
+                [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
+            }
+            [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+            btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
+            UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+            if(lastNum == i+1){
+                [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
+            } else {
+                [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+            }
+            [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
+            [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
+            [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
+            [self.bgScrollView addSubview:btn];
         }
-        [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
-        [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
-        [self.bgScrollView addSubview:btn];
     }
+    int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY;
     UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber-1)];
     if(lastBtn != nil){
         positionY = lastBtn.frame.origin.y;
     }
-
+    
+    if(topics.count > 0){
+        self.relatedImage.frame = CGRectMake(LEFT_GAP, positionY + 60, 80, 20);
+        self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
+        if(topicListViewController == nil){
+            topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
+            topicListViewController.listData = topics;
+            [self addChildViewController:topicListViewController];
+            [self.bgScrollView addSubview:topicListViewController.view];
+        }
+        topicListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 85, 425, (topics.count > 5 ? 5 : topics.count)*30);
+        positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
+    }
+    
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
-    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 60, 74, 19);
+    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 20, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
-    self.numberLabel.frame = CGRectMake(139, positionY + 60, 100, 18);
+    self.numberLabel.frame = CGRectMake(139, positionY + 20, 100, 18);
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(410, positionY + 57, 66, 26);
+    self.commentBtn.frame = CGRectMake(410, positionY + 17, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
     [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     if(commentListViewController == nil){
         commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
-        commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 90, 425, 200);
-        commentListViewController.totalCommentNum = totalCommentNum;
         commentListViewController.parentDelegate = self;
         commentListViewController.prodId = self.prodId;
         [self.bgScrollView addSubview:commentListViewController.view];
     }
+    commentListViewController.totalCommentNum = totalCommentNum;
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 425, 200);
     commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
     
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 200)];
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, commentListViewController.tableHeight);
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 300 + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
 }
 
 - (void)getTopComments:(int)num
 {
-    [self retrieveData];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
+            [[CacheUtility sharedCache] putInCache:key result:result];
+            video = (NSDictionary *)[result objectForKey:@"tv"];
+            episodeArray = [video objectForKey:@"episodes"];
+            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+            [commentArray removeAllObjects];
+            if(tempArray != nil && tempArray.count > 0){
+                [commentArray addObjectsFromArray:tempArray];
+            }
+            if(introContentHeight > 80){
+                if(introExpand){
+                    [self repositElements:introContentHeight - 80];
+                } else {
+                    [self repositElements:0];
+                }
+            }
+            
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
 
 - (void)refreshCommentListView:(int)tableHeight
@@ -402,7 +505,7 @@
             viewController.type = 2;
             viewController.name = [video objectForKey:@"name"];
             viewController.subname = [NSString stringWithFormat:@"%i", num];
-            [self presentModalViewController:viewController animated:YES];
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         }
     }else {
         [self gotoWebsite:num];
@@ -427,7 +530,7 @@
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 2;
     viewController.subname = [NSString stringWithFormat:@"%i", num];
-
+    
 }
 
 

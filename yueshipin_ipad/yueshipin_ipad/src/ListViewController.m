@@ -16,7 +16,7 @@
     UILabel *titleLabel;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
-    UIButton *closeBtn;
+    int pageSize;
 }
 
 @end
@@ -67,6 +67,7 @@
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     
     reloads_ = 2;
+    pageSize = 5;
     
 }
 
@@ -92,7 +93,7 @@
         [self parseTopsListData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", self.topId, @"top_id", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.topId, @"top_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -113,6 +114,9 @@
         if(tempTopsArray.count > 0){
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId] result:result];
             [topsArray addObjectsFromArray:tempTopsArray];
+        }
+        if(tempTopsArray.count < pageSize){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         }
     } else {
         [UIUtility showSystemError:self.view];
@@ -360,8 +364,9 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", self.topId, @"top_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
+        NSArray *tempTopsArray;
         if(responseCode == nil){
-            NSArray *tempTopsArray = [result objectForKey:@"items"];
+            tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [topsArray addObjectsFromArray:tempTopsArray];
                 reloads_ ++;
@@ -370,8 +375,11 @@
             
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        if(tempTopsArray.count < 20){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 }
 

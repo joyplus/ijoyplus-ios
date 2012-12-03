@@ -7,6 +7,8 @@
 //
 
 #import "SublistViewController.h"
+#import "CustomColoredAccessory.h"
+#import "ListViewController.h"
 
 @interface SublistViewController ()
 
@@ -56,7 +58,11 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, cell.bounds.size.width+100, 20)];
+        CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor lightGrayColor]];
+        accessory.highlightedColor = [UIColor whiteColor];
+        cell.accessoryView = accessory;
+        
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, cell.bounds.size.width+100, 20)];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.textColor = [UIColor lightGrayColor];
         nameLabel.tag = 1001;
@@ -117,13 +123,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    ListViewController *viewController = [[ListViewController alloc] init];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    NSDictionary *item = [listData objectAtIndex:indexPath.row];
+    NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"t_id"]];
+    viewController.topId = topId;
+    viewController.listTitle = [item objectForKey: @"t_name"];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self.parentViewController isStackStartView:FALSE removePreviousView:NO];
 }
 
 @end

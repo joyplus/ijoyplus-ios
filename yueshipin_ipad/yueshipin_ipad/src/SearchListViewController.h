@@ -6,8 +6,8 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "GenericBaseViewController.h"
+#import "CommonHeader.h"
 
-@interface SearchListViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate>
+@interface SearchListViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
 @property (nonatomic, strong)NSString *keyword;
 @end

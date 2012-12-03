@@ -15,6 +15,7 @@
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
 
+
 #define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 167
 #define LIST_LOGO_WIDTH 220
@@ -55,6 +56,8 @@
     int videoType; // 0: 悦单 1: 电影 2: 电视剧 3: 综艺
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
+    EGORefreshTableHeaderView *_refreshHeaderView;
+    BOOL _reloading;
 }
 
 @end
@@ -105,6 +108,16 @@
         
         bottomImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - 8, self.view.frame.size.width, 20)];
         [backgroundView addSubview:bottomImageView];
+        
+        if (_refreshHeaderView == nil) {
+            EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
+            view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up2"]];
+            view.delegate = self;
+            [table addSubview:view];
+            _refreshHeaderView = view;
+            
+        }
+        [_refreshHeaderView refreshLastUpdatedDate];
 	}
     return self;
 }
@@ -165,7 +178,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
     } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -179,17 +192,66 @@
     }
 }
 
+- (void)reloadTableViewDataSource{
+    reloads_ = 2;
+    [self retrieveLunboData];
+	if(videoType == 0){
+        [self retrieveTopsListData];
+        [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+    } else if(videoType == 1){
+        [self retrieveMovieTopsData];
+    } else if(videoType == 2){
+        [self retrieveTvTopsData];
+    } else if(videoType == 3){
+        [self retrieveShowTopsData];
+    }
+    _reloading = YES;
+}
+
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:table];
+	
+}
+
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return _reloading; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
+        NSArray *tempTopsArray;
         if(responseCode == nil){
-            NSArray *tempTopsArray = [result objectForKey:@"tops"];
+            tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
                 [topsArray addObjectsFromArray:tempTopsArray];
                 reloads_ ++;
@@ -198,8 +260,11 @@
             
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        if(tempTopsArray.count < 20){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 }
 
@@ -377,8 +442,9 @@
                 [pageControl updateCurrentPageDisplay] ;
         }
     } else {
+        [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
         if(videoType == 0)
-        [pullToRefreshManager_ tableViewScrolled];
+            [pullToRefreshManager_ tableViewScrolled];
         
     }
 }
@@ -393,8 +459,9 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
     if(aScrollView.tag == 11270014){
     } else {
+        [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
         if(videoType == 0)
-        [pullToRefreshManager_ tableViewReleased];
+            [pullToRefreshManager_ tableViewReleased];
     }
 }
 
@@ -504,7 +571,7 @@
             [cell.contentView addSubview:scrollView];
             
             pageControl = [[DDPageControl alloc] init] ;
-            [pageControl setCenter: CGPointMake(self.view.center.x, TOP_IMAGE_HEIGHT + 10)] ;
+            [pageControl setCenter: CGPointMake(self.view.center.x + LEFT_MENU_DIPLAY_WIDTH, TOP_IMAGE_HEIGHT + 10)] ;
             [pageControl setNumberOfPages: 5] ;
             [pageControl setCurrentPage: 0] ;
             [pageControl addTarget: self action: @selector(pageControlClicked:) forControlEvents: UIControlEventValueChanged] ;

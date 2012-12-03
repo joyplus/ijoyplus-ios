@@ -107,15 +107,7 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight);
-}
-
-- (BOOL)shouldAutorotate{
-    return NO;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIDeviceOrientationLandscapeLeft;
+    return toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight;
 }
 
 - (void)moviePlayerPreloadFinish:(NSNotification *)theNotification

@@ -35,8 +35,8 @@
 - (CGFloat)tableScrollOffset;
 
 @end
-
 @implementation MNMBottomPullToRefreshManager
+
 
 #pragma mark -
 #pragma mark Memory management

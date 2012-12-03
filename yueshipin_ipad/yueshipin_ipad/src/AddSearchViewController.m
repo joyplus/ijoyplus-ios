@@ -41,26 +41,15 @@
     return self;
 }
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+- (void)search:(NSString *)keyword
 {
-    [self addKeyToLocalHistory:sBar.text];
-    [searchBar resignFirstResponder];
-    [table reloadData];
+    [self closeMenu];
+    [sBar resignFirstResponder];
     AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
-    viewController.keyword = searchBar.text;
+    viewController.keyword = keyword;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
-{
-    [self addKeyToLocalHistory:sBar.text];
-    [searchBar resignFirstResponder];
-    [table reloadData];
-    AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
-    viewController.keyword = searchBar.text;
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView];
+    
 }
 
 @end

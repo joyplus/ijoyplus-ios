@@ -104,9 +104,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     CGRect frame = [UIScreen mainScreen].bounds;
-	rootView = [[UIViewExt alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, self.view.frame.size.height)];
+	rootView = [[UIViewExt alloc] initWithFrame:CGRectMake(0, 0, frame.size.height, self.view.frame.size.height)];
 	rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth + UIViewAutoresizingFlexibleHeight;
-	[rootView setBackgroundColor:[UIColor clearColor]];
+	[rootView setBackgroundColor:[UIColor redColor]];
 	
 	leftMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, self.view.frame.size.height)];
 	leftMenuView.autoresizingMask = UIViewAutoresizingFlexibleHeight;	
@@ -331,6 +331,11 @@
     }
     [view removeFromSuperview];
     view = nil;
+}
+
+- (void)pesentMyModalView:(UIViewController *)viewController
+{
+    [self presentModalViewController:viewController animated:YES];
 }
 
 @end

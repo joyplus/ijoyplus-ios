@@ -193,7 +193,7 @@
     [super viewWillAppear:YES];
     self.userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
-    [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"avatar_placeholder"]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"personal_icon"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
     [self parseResult];
     
@@ -209,7 +209,6 @@
 {
     table.frame = CGRectMake(60, 325, 400, tableHeight);
     [table reloadData];
-    
 }
 
 - (void)parseResult
@@ -363,6 +362,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if(indexPath.row == 0){
+        tableHeight = 0;
+    }
     NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
     NSString *content = [self composeContent:item];
     CGSize size = [self calculateContentSize:content width:tableView.frame.size.width];

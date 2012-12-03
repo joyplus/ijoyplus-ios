@@ -11,6 +11,7 @@
 @interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
     UITableView *table;
     NSMutableArray *topsArray;
+    UIButton *closeBtn;
 }
 
 @property (nonatomic, strong)NSString *listTitle;

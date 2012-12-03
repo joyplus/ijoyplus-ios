@@ -8,6 +8,6 @@
 
 #import "CommonHeader.h"
 
-@interface TopicListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface TopicListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
 
 @end

@@ -8,6 +8,6 @@
 
 #import "CommonHeader.h"
 
-@interface DingListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface DingListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
 
 @end

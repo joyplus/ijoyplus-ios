@@ -8,8 +8,9 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface HomeViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient>
+@interface HomeViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 @property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
