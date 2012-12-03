@@ -18,6 +18,7 @@
 #define BUTTON_TITLE_GAP 13
 
 @interface SearchViewController ()
+
 @end
 
 @implementation SearchViewController
@@ -67,6 +68,8 @@
         hotKeyArray = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyIndex = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyBtnWidth = [[NSMutableDictionary alloc]initWithCapacity:10];
+        
+        removePreviousView = YES;
     }
     return self;
 }
@@ -295,10 +298,11 @@
 - (void)search:(NSString *)keyword
 {
     [self closeMenu];
+    [sBar resignFirstResponder];
     SearchListViewController *viewController = [[SearchListViewController alloc] init];
     viewController.keyword = keyword;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView];
     
 }
 

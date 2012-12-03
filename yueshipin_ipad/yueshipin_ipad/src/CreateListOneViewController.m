@@ -35,6 +35,7 @@
     self.closeBtn.frame = CGRectMake(470, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.titleFieldBg.frame = CGRectMake(LEFT_GAP, 100, 400, 39);
     self.titleFieldBg.image = [UIImage imageNamed:@"box_title"];
@@ -42,6 +43,7 @@
     self.titleField.frame = CGRectMake(LEFT_GAP+5, 103, 390, 33);
     self.titleField.placeholder = @"标题";
     self.titleField.delegate = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeNextBtnImage:) name:UITextFieldTextDidChangeNotification object:self.titleField];
     
     self.contentBgImage.frame = CGRectMake(LEFT_GAP, 140, 400, 102);
     self.contentBgImage.image = [UIImage imageNamed:@"box_content"];
@@ -50,8 +52,10 @@
     self.contentText.placeholder = @"简介（可选）";
     
     self.nextBtn.frame = CGRectMake(390, 250, 62, 39);
-    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateNormal];
+    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
+    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];
+    [self.nextBtn setEnabled:NO];
     [self.nextBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -69,33 +73,25 @@
     [self setNextBtn:nil];
     [self setCloseBtn:nil];
     [self setTitleFieldBg:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.titleField];
     [super viewDidUnload];
 }
 
-- (void)textViewDidBeginEditing:(UITextField *)textField
+- (void)changeNextBtnImage:(NSNotification *)notificaiton
 {
-    [self changeNextBtnImage:textField];
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [self changeNextBtnImage:textField];
-}
-
-- (void)changeNextBtnImage:(UITextField *)textField
-{
+    UITextField *textField = notificaiton.object;
     if(textField.text.length > 0){
-        [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
-        [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];
+        [self.nextBtn setEnabled:YES];
     } else {
-        [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateNormal];
-        [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateHighlighted];
-        
+        [self.nextBtn setEnabled:NO];
     }
 }
 
 - (void)nextBtnClicked:(id)sender
 {
+    [self.nextBtn setEnabled:NO];
+    [self.titleField resignFirstResponder];
+    [self.contentText resignFirstResponder];
     if(self.titleField.text.length > 0){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -104,7 +100,7 @@
                 CreateListTwoViewController *viewController = [[CreateListTwoViewController alloc]initWithNibName:@"CreateListTwoViewController" bundle:nil];
                 [[ContainerUtility sharedInstance]setAttribute:[result objectForKey:@"topic_id"] forKey:kTopicId];
                 viewController.titleContent = self.titleField.text;
-                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
             } else {
                 [[AppDelegate instance].rootViewController showListFailureModalView:1.5];
             }

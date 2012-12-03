@@ -6,16 +6,14 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "SubsearchViewController.h"
-#import "SearchListViewController.h"
+#import "AddSearchViewController.h"
+#import "AddSearchListViewController.h"
 
-@interface SubsearchViewController (){
-    UIButton *closeBtn;
-}
+@interface AddSearchViewController ()
 
 @end
 
-@implementation SubsearchViewController
+@implementation AddSearchViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,17 +38,6 @@
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    
-    [menuBtn removeFromSuperview];
-    menuBtn = nil;
-    
-    closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(470, 20, 40, 42);
-    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
-    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
-    [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:closeBtn];
     return self;
 }
 
@@ -59,7 +46,7 @@
     [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
     [table reloadData];
-    SearchListViewController *viewController = [[SearchListViewController alloc] init];
+    AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
     viewController.keyword = searchBar.text;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
@@ -70,7 +57,7 @@
     [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
     [table reloadData];
-    SearchListViewController *viewController = [[SearchListViewController alloc] init];
+    AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
     viewController.keyword = searchBar.text;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];

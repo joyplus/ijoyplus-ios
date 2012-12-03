@@ -44,6 +44,7 @@
     closeBtn.frame = CGRectMake(470, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
     table = [[UITableView alloc]initWithFrame:CGRectMake(25, 120, 460, self.view.frame.size.height - 350)];
@@ -243,7 +244,7 @@
 - (void)createBtnClicked
 {
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
 }
 
 @end

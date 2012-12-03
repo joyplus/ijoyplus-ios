@@ -170,7 +170,9 @@
             [self parseTopsListData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
-            topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            if(topsArray == nil){
+                topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
             [UIUtility showSystemError:self.view];
         }];
@@ -399,33 +401,29 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
-    [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_pressed"] forState:UIControlStateNormal];
-    [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 0;
+    [self initTopButtonImage];
     [table reloadData];
 }
 
 - (void)movieBtnClicked:(UIButton *)sender
 {
-    [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateNormal];
-    [movieBtn setBackgroundImage:[UIImage imageNamed:@"movie_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 1;
+    [self initTopButtonImage];
     [self retrieveMovieTopsData];
 }
 
 - (void)dramaBtnClicked:(UIButton *)sender
 {
-    [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn_pressed"] forState:UIControlStateNormal];
-    [dramaBtn setBackgroundImage:[UIImage imageNamed:@"drama_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 2;
+    [self initTopButtonImage];
     [self retrieveTvTopsData];
 }
 
 - (void)showBtnClicked:(UIButton *)sender
 {
-    [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn_pressed"] forState:UIControlStateNormal];
-    [showBtn setBackgroundImage:[UIImage imageNamed:@"show_btn_pressed"] forState:UIControlStateHighlighted];
     videoType = 3;
+    [self initTopButtonImage];
     [self retrieveShowTopsData];
 }
 
@@ -436,8 +434,9 @@
 
 - (void)searchBtnClicked
 {
+    [self closeMenu];
     SubsearchViewController *viewController = [[SubsearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
 #pragma mark -
@@ -701,8 +700,8 @@
                 tempBtn.frame = CGRectMake(6 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
                 movieImage.frame = CGRectMake(10 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             }
-            [tempBtn setImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
-            [tempBtn setImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
             tempBtn.tag = 2011 + i;
             [tempBtn addTarget:self action:@selector(movieImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
@@ -909,17 +908,17 @@
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
     } else if([prodType isEqualToString:@"2"]){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if([prodType isEqualToString:@"3"]){
         ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     }
 }
 
@@ -973,7 +972,7 @@
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
     viewController.topId = topId;
     viewController.listTitle = [item objectForKey: @"name"];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     
     
 }

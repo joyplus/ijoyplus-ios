@@ -275,7 +275,7 @@
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
     viewController.topId = topId;
     viewController.listTitle = [item objectForKey: @"name"];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
 - (void)viewDidUnload {

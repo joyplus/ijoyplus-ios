@@ -8,7 +8,7 @@
 
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
-#import "SubsearchViewController.h"
+#import "AddSearchViewController.h"
 #define LEFT_GAP 50
 @interface CreateListTwoViewController ()
 
@@ -58,6 +58,7 @@
     self.closeBtn.frame = CGRectMake(470, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.addBtn.frame = CGRectMake(LEFT_GAP, 100, 105, 31);
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
@@ -78,17 +79,17 @@
 
 - (void)addBtnClicked
 {
-    SubsearchViewController *viewController = [[SubsearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
 - (void)deleteBtnClicked
 {
-    [self deleteVideo];
+    [self deleteList];
 }
 
 
-- (void)deleteVideo
+- (void)deleteList
 {
     NSString *topId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kTopicId];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topId, @"topic_id", nil];

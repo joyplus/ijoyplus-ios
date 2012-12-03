@@ -63,7 +63,7 @@
 - (void)createBtnClicked
 {
     SubsearchViewController *viewController = [[SubsearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
 - (void)deleteBtnClicked
@@ -95,6 +95,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }

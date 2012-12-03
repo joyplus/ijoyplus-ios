@@ -93,6 +93,7 @@
     self.closeBtn.frame = CGRectMake(470, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.placeholderImage.frame = CGRectMake(LEFT_GAP, 78, 217, 312);
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
@@ -426,7 +427,7 @@
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 2;
     viewController.subname = [NSString stringWithFormat:@"%i", num];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+
 }
 
 

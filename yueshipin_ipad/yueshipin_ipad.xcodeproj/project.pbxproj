@@ -54,7 +54,6 @@
 		EB6DEA7D165A2F1A00AF8003 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEA7C165A2F1A00AF8003 /* AppDelegate.m */; };
 		EB6DEAA4165A322F00AF8003 /* MenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEA9A165A322F00AF8003 /* MenuViewController.m */; };
 		EB6DEAA5165A322F00AF8003 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEA9C165A322F00AF8003 /* RootViewController.m */; };
-		EB6DEAA6165A322F00AF8003 /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEA9E165A322F00AF8003 /* StackScrollViewController.m */; };
 		EB6DEAA7165A322F00AF8003 /* UIViewWithShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAA0165A322F00AF8003 /* UIViewWithShadow.m */; };
 		EB6DEAA9165A347F00AF8003 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEAA8165A347F00AF8003 /* QuartzCore.framework */; };
 		EB6DEABF165A34F200AF8003 /* AnimationFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAAC165A34F200AF8003 /* AnimationFactory.m */; };
@@ -238,6 +237,8 @@
 		EBBA010E1664E2C80069FE7E /* search_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */; };
 		EBBA01101664E3520069FE7E /* hotkeys@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010F1664E3510069FE7E /* hotkeys@2x.png */; };
 		EBBA01121664E7040069FE7E /* search_box@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA01111664E7030069FE7E /* search_box@2x.png */; };
+		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
+		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBF2524E1665A4BF00147D23 /* WaterflowView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF2524D1665A4BF00147D23 /* WaterflowView.m */; };
 		EBF3A95B166301AD00EBF56D /* LightMenuBar.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A957166301AD00EBF56D /* LightMenuBar.m */; };
 		EBF3A95C166301AD00EBF56D /* LightMenuBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95A166301AD00EBF56D /* LightMenuBarView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -326,7 +327,6 @@
 		EB6DEA9B165A322F00AF8003 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		EB6DEA9C165A322F00AF8003 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		EB6DEA9D165A322F00AF8003 /* StackScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackScrollViewController.h; sourceTree = "<group>"; };
-		EB6DEA9E165A322F00AF8003 /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
 		EB6DEA9F165A322F00AF8003 /* UIViewWithShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewWithShadow.h; sourceTree = "<group>"; };
 		EB6DEAA0165A322F00AF8003 /* UIViewWithShadow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewWithShadow.m; sourceTree = "<group>"; };
 		EB6DEAA8165A347F00AF8003 /* QuartzCore.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -561,6 +561,11 @@
 		EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBBA010F1664E3510069FE7E /* hotkeys@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hotkeys@2x.png"; sourceTree = "<group>"; };
 		EBBA01111664E7030069FE7E /* search_box@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_box@2x.png"; sourceTree = "<group>"; };
+		EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSearchViewController.h; sourceTree = "<group>"; };
+		EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSearchViewController.m; sourceTree = "<group>"; };
+		EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
+		EBBDCE33166C58EB00C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		EBBDCE34166C590200C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EBF2524C1665A4BF00147D23 /* WaterflowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaterflowView.h; sourceTree = "<group>"; };
 		EBF2524D1665A4BF00147D23 /* WaterflowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaterflowView.m; sourceTree = "<group>"; };
 		EBF3A956166301AD00EBF56D /* LightMenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightMenuBar.h; sourceTree = "<group>"; };
@@ -1127,6 +1132,8 @@
 				EBB59CC716670F6D00F646C7 /* SearchListViewController.m */,
 				EB8201621665C4D30015F447 /* SubsearchViewController.h */,
 				EB8201631665C4D30015F447 /* SubsearchViewController.m */,
+				EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */,
+				EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */,
 			);
 			name = search;
 			sourceTree = "<group>";
@@ -1150,7 +1157,7 @@
 				EB6DEA99165A322F00AF8003 /* MenuViewController.h */,
 				EB6DEA9A165A322F00AF8003 /* MenuViewController.m */,
 				EB6DEA9D165A322F00AF8003 /* StackScrollViewController.h */,
-				EB6DEA9E165A322F00AF8003 /* StackScrollViewController.m */,
+				EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */,
 			);
 			name = framework;
 			sourceTree = "<group>";
@@ -1216,6 +1223,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 			);
 			mainGroup = EB6DEA5D165A2F1A00AF8003;
 			productRefGroup = EB6DEA69165A2F1A00AF8003 /* Products */;
@@ -1438,7 +1446,6 @@
 				EB6DEA7D165A2F1A00AF8003 /* AppDelegate.m in Sources */,
 				EB6DEAA4165A322F00AF8003 /* MenuViewController.m in Sources */,
 				EB6DEAA5165A322F00AF8003 /* RootViewController.m in Sources */,
-				EB6DEAA6165A322F00AF8003 /* StackScrollViewController.m in Sources */,
 				EB6DEAA7165A322F00AF8003 /* UIViewWithShadow.m in Sources */,
 				EB6DEABF165A34F200AF8003 /* AnimationFactory.m in Sources */,
 				EB6DEAC0165A34F200AF8003 /* CacheUtility.m in Sources */,
@@ -1506,6 +1513,8 @@
 				EBB59CF81667681E00F646C7 /* CommentCell.m in Sources */,
 				EB938296166878F30046A3B1 /* TimeUtility.m in Sources */,
 				EB93829916688CB30046A3B1 /* WatchRecordCell.m in Sources */,
+				EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */,
+				EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1516,6 +1525,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				EB6DEA76165A2F1A00AF8003 /* en */,
+				EBBDCE34166C590200C7129F /* zh-Hans */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1524,6 +1534,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				EBF3A978166309AC00EBF56D /* en */,
+				EBBDCE33166C58EB00C7129F /* zh-Hans */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

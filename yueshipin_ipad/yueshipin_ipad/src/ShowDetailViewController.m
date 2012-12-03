@@ -90,6 +90,7 @@
     self.closeBtn.frame = CGRectMake(470, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.filmImage.frame = CGRectMake(LEFT_GAP+6, 84, 205, 300);
 
@@ -112,8 +113,8 @@
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
     self.playBtn.frame = CGRectMake(290, 150, 185, 40);
-    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.actorLabel.frame = CGRectMake(290, 210, 80, 15);
@@ -364,7 +365,7 @@
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 3;
     viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+
 }
 
 - (void)dingBtnClicked:(id)sender

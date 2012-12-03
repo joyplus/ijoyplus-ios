@@ -49,4 +49,9 @@
     [AppDelegate instance].closed = YES;
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
 }
+
+- (void)closeBtnClicked
+{
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
+}
 @end

@@ -150,7 +150,7 @@
 {
     SuggestionViewController *viewController = [[SuggestionViewController alloc] init];
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
 - (void)sinaSwitchClicked:(UISwitch *)sender
