@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "CommonHeader.h"
-
+#import "OpenUDID.h"
 #import "RootViewController.h"
 
 @interface AppDelegate ()
@@ -66,6 +66,7 @@
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     //    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
     //    [MobClick checkUpdate];
+    [self generateUserId];
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
@@ -131,6 +132,33 @@
     networkStatus = [curReach currentReachabilityStatus];
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
+    }
+}
+
+- (void)generateUserId
+{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if(userId == nil){
+        Reachability *tempHostReach = [Reachability reachabilityForInternetConnection];
+        if([tempHostReach currentReachabilityStatus] != NotReachable) {
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:  [OpenUDID value], @"uiid", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathGenerateUIID parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if (responseCode == nil) {
+                    NSString *user_id = [result objectForKey:@"user_id"];
+                    NSString *nickname = [result objectForKey:@"nickname"];
+                    NSString *username = [result objectForKey:@"username"];
+                    [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+                    [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"%@", nickname] forKey:kUserNickName];
+                    [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserName];
+                    [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"%@", error);
+            }];
+        }
+    } else {
+        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:userId];
     }
 }
 
