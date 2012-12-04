@@ -10,7 +10,9 @@
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
 #define LEFT_GAP 50
-@interface CreateListOneViewController ()
+@interface CreateListOneViewController (){
+
+}
 
 @end
 
@@ -29,6 +31,10 @@
 {
     [super viewDidLoad];
     
+    [self.view setBackgroundColor:[UIColor clearColor]];
+    self.bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
+        
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 110, 27);
     self.titleImage.image = [UIImage imageNamed:@"create_list_title"];
     
@@ -74,6 +80,7 @@
     [self setCloseBtn:nil];
     [self setTitleFieldBg:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.titleField];
+    [self setBgImage:nil];
     [super viewDidUnload];
 }
 
@@ -99,6 +106,7 @@
             if(responseCode == nil){
                 CreateListTwoViewController *viewController = [[CreateListTwoViewController alloc]initWithNibName:@"CreateListTwoViewController" bundle:nil];
                 [[ContainerUtility sharedInstance]setAttribute:[result objectForKey:@"topic_id"] forKey:kTopicId];
+                viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
                 viewController.titleContent = self.titleField.text;
                 [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
             } else {

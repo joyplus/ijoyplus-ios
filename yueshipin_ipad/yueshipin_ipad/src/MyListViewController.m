@@ -14,6 +14,7 @@
     UIButton *createBtn;
     UIImageView *lineImage;
     UIButton *deleteBtn;
+    UIImageView *bgImage;
 }
 
 @end
@@ -39,6 +40,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:[UIColor clearColor]];
+    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    bgImage.image = [UIImage imageNamed:@"detail_bg"];
+    [self.view addSubview:bgImage];
+    
 	table.frame = CGRectMake(25, 120, 460, self.view.frame.size.height - 350);
     
     lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
@@ -62,7 +68,7 @@
 
 - (void)createBtnClicked
 {
-    AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 

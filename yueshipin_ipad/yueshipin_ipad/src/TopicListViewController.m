@@ -40,7 +40,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    bgImage = [[UIImageView alloc]initWithFrame:self.view.frame];
+    [self.view setBackgroundColor:[UIColor clearColor]];
+    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     [self.view addSubview:bgImage];
     
@@ -285,7 +286,7 @@
 {
     [table deselectRowAtIndexPath:indexPath animated:YES];
     MyListViewController *viewController = [[MyListViewController alloc] init];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
     viewController.topId = topId;

@@ -75,7 +75,7 @@
         bottomLineImageView.image = [[UIImage imageNamed:@"menu_bottom_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
         [self.view addSubview:bottomLineImageView];
         
-		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MENU_DIPLAY_WIDTH, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
+		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(4, 0, LEFT_MENU_DIPLAY_WIDTH+4, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
         [self.tableView setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[self.tableView setDelegate:self];
 		[self.tableView setDataSource:self];
@@ -102,16 +102,16 @@
 - (void)initMenuController
 {
     CGRect frame = [UIScreen mainScreen].bounds;
-    homeViewController = [[HomeViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
+    homeViewController = [[HomeViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     homeViewController.menuViewControllerDelegate = self;
     
-    searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
+    searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     searchViewController.menuViewControllerDelegate = self;
     
-    personalViewController = [[PersonalViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
+    personalViewController = [[PersonalViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     personalViewController.menuViewControllerDelegate = self;
     
-    settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, frame.size.width)];
+    settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     settingsViewController.menuViewControllerDelegate = self;
 }
 

@@ -60,6 +60,10 @@
 
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"
 
+#define LEFT_VIEW_WIDTH 529
+
+#define RIGHT_VIEW_WIDTH 760
+
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
 @interface CMConstants : NSObject 

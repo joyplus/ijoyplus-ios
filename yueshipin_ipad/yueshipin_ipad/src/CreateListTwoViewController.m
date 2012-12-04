@@ -10,7 +10,9 @@
 #import "CommonHeader.h"
 #import "AddSearchViewController.h"
 #define LEFT_GAP 50
-@interface CreateListTwoViewController ()
+@interface CreateListTwoViewController (){
+    UIImageView *bgImage;
+}
 
 @end
 
@@ -29,6 +31,7 @@
     [self setDeleteBtn:nil];
     [self setCloseBtn:nil];
     [self setLineImage:nil];
+    [self setBgImage:nil];
     [super viewDidUnload];
 }
 
@@ -45,6 +48,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self.view setBackgroundColor:[UIColor clearColor]];
+    self.bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
+    
     self.titleLabel.frame = CGRectMake(LEFT_GAP, 35, 310, 27);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:26];
     self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -79,7 +87,7 @@
 
 - (void)addBtnClicked
 {
-    AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 

@@ -47,7 +47,7 @@
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor yellowColor]];
+        [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
         
         bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
@@ -55,8 +55,9 @@
         [backgroundView addSubview:bgImage];
         
         menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuBtn.frame = CGRectMake(17, 33, 29, 42);
+        menuBtn.frame = CGRectMake(0, 28, 60, 60);
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
@@ -149,7 +150,7 @@
 - (void)suggestionBtnClicked
 {
     SuggestionViewController *viewController = [[SuggestionViewController alloc] init];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 

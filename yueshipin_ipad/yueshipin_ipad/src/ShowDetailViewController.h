@@ -15,6 +15,7 @@
 @end
 
 @interface ShowDetailViewController : VideoDetailViewController <ShowDetailViewControllerDelegate>
+@property (weak, nonatomic) IBOutlet UIImageView *bgImage;
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;
 @property (weak, nonatomic) IBOutlet UIImageView *filmImage;

@@ -32,7 +32,8 @@
 {
     [super viewDidLoad];
     
-    bgImage = [[UIImageView alloc]initWithFrame:self.view.frame];
+    [self.view setBackgroundColor:[UIColor clearColor]];
+    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     [self.view addSubview:bgImage];
     
@@ -244,6 +245,7 @@
 - (void)createBtnClicked
 {
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
 }
 

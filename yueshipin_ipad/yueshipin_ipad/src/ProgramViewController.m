@@ -52,8 +52,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc]initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(closeSelf)];
-    self.navigationItem.leftBarButtonItem = leftBtn;
+    UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    myButton.frame = CGRectMake(0, 0, 56, 29);
+    [myButton setBackgroundImage:[UIImage imageNamed:@"left_btn"] forState:UIControlStateNormal];
+    [myButton setBackgroundImage:[UIImage imageNamed:@"left_btn_pressed"] forState:UIControlStateHighlighted];
+    [myButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside]; 
+    UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithCustomView:myButton];
+    self.navigationItem.leftBarButtonItem = customItem;
+    
+    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+    t.font = [UIFont boldSystemFontOfSize:18];
+    t.textColor = [UIColor whiteColor];
+    t.backgroundColor = [UIColor clearColor];
+    t.textAlignment = UITextAlignmentCenter;
+    t.text = self.title;
+    self.navigationItem.titleView = t;
     
     NSURL *url = [NSURL URLWithString:self.programUrl];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];

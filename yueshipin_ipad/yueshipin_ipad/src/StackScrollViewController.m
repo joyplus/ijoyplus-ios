@@ -750,7 +750,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                                   delay:0.0
                                 options:UIViewAnimationCurveEaseOut
                              animations:^{
-                                 [viewAtRight setFrame:CGRectMake(frame.size.height/2 - LEFT_MENU_DIPLAY_WIDTH, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
+                                 [viewAtRight setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 32, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
                              } completion:^(BOOL finished) {
                                  slideStartPosition = SLIDE_VIEWS_MINUS_X_POSITION;
                              }];
@@ -765,7 +765,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                                   delay:0.0
                                 options:UIViewAnimationCurveEaseOut
                              animations:^{
-                                 [viewAtRight setFrame:CGRectMake(frame.size.height/2 - LEFT_MENU_DIPLAY_WIDTH, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
+                                 [viewAtRight setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 32, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
                              } completion:^(BOOL finished) {
                                  slideStartPosition = SLIDE_VIEWS_MINUS_X_POSITION;
                              }];

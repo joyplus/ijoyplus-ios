@@ -52,15 +52,15 @@
 {   
 	UIView* viewToReturn=nil;
 	CGPoint pointToReturn;
-	UIView* uiRightView = (UIView*)[[self subviews] objectAtIndex:1];
+	UIView* uiRightView = (UIView*)[[self subviews] objectAtIndex:2];
 	
 	if ([[uiRightView subviews] objectAtIndex:0]) {
 		
 		UIView* uiStackScrollView = [[uiRightView subviews] objectAtIndex:0];	
 		
-		if ([[uiStackScrollView subviews] objectAtIndex:1]) {	 
+		if ([[uiStackScrollView subviews] objectAtIndex:1]) {
 			
-			UIView* uiSlideView = [[uiStackScrollView subviews] objectAtIndex:1];	
+			UIView* uiSlideView = [[uiStackScrollView subviews] objectAtIndex:1];
 			
 			for (UIView* subView in [uiSlideView subviews]) {
 				CGPoint point  = [subView convertPoint:pt fromView:self];
@@ -106,7 +106,11 @@
     CGRect frame = [UIScreen mainScreen].bounds;
 	rootView = [[UIViewExt alloc] initWithFrame:CGRectMake(0, 0, frame.size.height, self.view.frame.size.height)];
 	rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth + UIViewAutoresizingFlexibleHeight;
-	[rootView setBackgroundColor:[UIColor redColor]];
+	[rootView setBackgroundColor:[UIColor clearColor]];
+    
+    UIImageView *bgImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"background"]];
+    bgImageView.frame = CGRectMake(rootView.frame.origin.x, rootView.frame.origin.y-2, rootView.frame.size.width, 750);
+    [rootView addSubview:bgImageView];
 	
 	leftMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, self.view.frame.size.height)];
 	leftMenuView.autoresizingMask = UIViewAutoresizingFlexibleHeight;	
