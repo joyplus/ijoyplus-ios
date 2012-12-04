@@ -81,7 +81,7 @@
     
     checkboxes = [[NSMutableSet alloc]initWithCapacity:10];
     reloads_ = 2;
-    pageSize = 5;
+    pageSize = 10;
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     [self loadTable];
 }

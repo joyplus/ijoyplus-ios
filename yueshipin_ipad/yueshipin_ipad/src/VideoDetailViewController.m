@@ -9,6 +9,7 @@
 #import "VideoDetailViewController.h"
 #import "SelectListViewController.h"
 #import "CommonHeader.h"
+#import "ListViewController.h"
 
 @interface VideoDetailViewController ()
 
@@ -196,6 +197,16 @@
     SelectListViewController *viewController = [[SelectListViewController alloc]init];
     viewController.prodId = self.prodId;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+}
+
+- (void)showSublistView:(int)num{
+    ListViewController *viewController = [[ListViewController alloc] init];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    NSDictionary *item = [topics objectAtIndex:num];
+    NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"t_id"]];
+    viewController.topId = topId;
+    viewController.listTitle = [item objectForKey: @"t_name"];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 

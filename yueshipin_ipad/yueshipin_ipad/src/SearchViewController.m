@@ -61,10 +61,6 @@
         table.tableFooterView = [[UIView alloc] init];
         [self.view addSubview:table];
         
-        historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
-        if(historyArray == nil){
-            historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
-        }
         hotKeyArray = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyIndex = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyBtnWidth = [[NSMutableDictionary alloc]initWithCapacity:10];
@@ -76,6 +72,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
+    if(historyArray == nil){
+        historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
+    }
     NSArray *sortedArray = [historyArray sortedArrayUsingComparator:^(id a, id b) {
         NSDate *first = [DateUtility dateFromFormatString:[(NSMutableDictionary*)a objectForKey:@"last_search_date"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
         NSDate *second = [DateUtility dateFromFormatString:[(NSMutableDictionary*)b objectForKey:@"last_search_date"] formatString: @"yyyy-MM-dd HH:mm:ss"];
@@ -279,7 +279,6 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
-    [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
     table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     [table reloadData];
@@ -288,7 +287,6 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
 {
-    [self addKeyToLocalHistory:sBar.text];
     [searchBar resignFirstResponder];
     table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     [table reloadData];
@@ -298,6 +296,7 @@
 - (void)search:(NSString *)keyword
 {
     [self closeMenu];
+    [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     SearchListViewController *viewController = [[SearchListViewController alloc] init];
     viewController.keyword = keyword;

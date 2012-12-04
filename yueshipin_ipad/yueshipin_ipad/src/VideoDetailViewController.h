@@ -13,11 +13,13 @@
 
 - (void)refreshCommentListView:(int)tableHeight;
 - (void)getTopComments:(int)num;
+- (void)showSublistView:(int)num;
 @end
 
 @interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate>{
         SinaWeibo *_sinaweibo;
         NSDictionary *video;
+        NSArray *topics;
 }
 @property (strong, nonatomic)NSString *prodId;
 - (void)shareBtnClicked;

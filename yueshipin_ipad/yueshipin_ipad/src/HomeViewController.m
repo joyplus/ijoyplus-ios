@@ -58,6 +58,7 @@
     NSUInteger reloads_;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
+    int pageSize;
 }
 
 @end
@@ -102,13 +103,11 @@
 		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[backgroundView addSubview:table];
         
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        
-        reloads_ = 2;
-        
         bottomImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - 8, self.view.frame.size.width, 20)];
         [backgroundView addSubview:bottomImageView];
         
+        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        reloads_ = 2;
         if (_refreshHeaderView == nil) {
             EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
             view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up2"]];
@@ -134,6 +133,7 @@
     [self retrieveLunboData];
     [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
+    pageSize = 20;
     videoType = 0;
     [self retrieveTopsListData];
 }
@@ -178,7 +178,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
     } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -246,7 +246,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempTopsArray;
@@ -260,7 +260,7 @@
             
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-        if(tempTopsArray.count < 20){
+        if(tempTopsArray.count < pageSize){
             [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -270,7 +270,7 @@
 
 - (void)parseTopsListData:(id)result
 {
-    topsArray = [[NSMutableArray alloc]initWithCapacity:10];
+    topsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         NSArray *tempTopsArray = [result objectForKey:@"tops"];
@@ -963,6 +963,7 @@
 
 - (void)lunboImageClicked:(UIButton *)btn
 {
+    [self closeMenu];
     int index = btn.tag - 9021;
     [self showDetailScreen:[lunboArray objectAtIndex:index]];
     

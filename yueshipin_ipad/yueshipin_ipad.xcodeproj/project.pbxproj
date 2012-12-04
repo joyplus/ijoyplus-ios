@@ -204,6 +204,7 @@
 		EBB7CA8F165F84420062DD56 /* my_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB7CA88165F84420062DD56 /* my_title@2x.png */; };
 		EBB7CA92165F848B0062DD56 /* create_list_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB7CA90165F848B0062DD56 /* create_list_pressed@2x.png */; };
 		EBB7CA93165F848B0062DD56 /* create_list@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB7CA91165F848B0062DD56 /* create_list@2x.png */; };
+		EBB9031B166DC80D00495F8C /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9031A166DC80D00495F8C /* background@2x.png */; };
 		EBBA00BF166488D70069FE7E /* DingListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA00BD166488D70069FE7E /* DingListViewController.m */; };
 		EBBA00D3166496600069FE7E /* collect_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA00CD166496600069FE7E /* collect_title@2x.png */; };
 		EBBA00D4166496600069FE7E /* list_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA00CE166496600069FE7E /* list_title@2x.png */; };
@@ -522,6 +523,7 @@
 		EBB7CA88165F84420062DD56 /* my_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_title@2x.png"; sourceTree = "<group>"; };
 		EBB7CA90165F848B0062DD56 /* create_list_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "create_list_pressed@2x.png"; sourceTree = "<group>"; };
 		EBB7CA91165F848B0062DD56 /* create_list@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "create_list@2x.png"; sourceTree = "<group>"; };
+		EBB9031A166DC80D00495F8C /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		EBBA00BC166488D70069FE7E /* DingListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DingListViewController.h; sourceTree = "<group>"; };
 		EBBA00BD166488D70069FE7E /* DingListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DingListViewController.m; sourceTree = "<group>"; };
 		EBBA00CD166496600069FE7E /* collect_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collect_title@2x.png"; sourceTree = "<group>"; };
@@ -657,6 +659,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBB9031A166DC80D00495F8C /* background@2x.png */,
 				EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */,
 				EB93829A16688FC60046A3B1 /* continue_pressed@2x.png */,
 				EB93829B16688FC60046A3B1 /* continue@2x.png */,
@@ -1415,6 +1418,7 @@
 				EB9382A31668A1CC0046A3B1 /* Default-Landscape~ipad.png in Resources */,
 				EB9382A51668A1E10046A3B1 /* Default-Landscape@2x~ipad.png in Resources */,
 				EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */,
+				EBB9031B166DC80D00495F8C /* background@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

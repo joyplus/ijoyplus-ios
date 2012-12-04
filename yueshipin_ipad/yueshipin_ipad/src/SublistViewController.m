@@ -16,6 +16,7 @@
 
 @implementation SublistViewController
 @synthesize listData;
+@synthesize videoDelegate;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -124,13 +125,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    ListViewController *viewController = [[ListViewController alloc] init];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    NSDictionary *item = [listData objectAtIndex:indexPath.row];
-    NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"t_id"]];
-    viewController.topId = topId;
-    viewController.listTitle = [item objectForKey: @"t_name"];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self.parentViewController isStackStartView:FALSE removePreviousView:NO];
+    [videoDelegate showSublistView:indexPath.row];
 }
 
 @end

@@ -367,7 +367,7 @@
     }
     NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
     NSString *content = [self composeContent:item];
-    CGSize size = [self calculateContentSize:content width:tableView.frame.size.width];
+    CGSize size = [self calculateContentSize:content width:280];
     tableHeight += size.height + 40;
    return size.height + 40;
 }

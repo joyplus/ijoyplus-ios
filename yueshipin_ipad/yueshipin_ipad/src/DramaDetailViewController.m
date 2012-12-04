@@ -22,11 +22,11 @@
     SublistViewController *topicListViewController;
     CommentListViewController *commentListViewController;
     int totalEpisodeNumber;
-    NSArray *topics;
     UIButton *introBtn;
     float introContentHeight;
     BOOL introExpand;
     BOOL btnAdded;
+    UITapGestureRecognizer *tapGesture;
 }
 
 
@@ -175,7 +175,11 @@
     self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 400, 70);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 70);
+    tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [self.introContentTextView addGestureRecognizer:tapGesture];
     
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     
@@ -192,7 +196,7 @@
     if(introContentHeight > 80){
         introExpand = !introExpand;
         if(introExpand){
-            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
                 self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86 + introContentHeight - 80);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
@@ -202,7 +206,7 @@
             } completion:^(BOOL finished) {
             }];
         } else {
-            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 80)];
                 self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
@@ -351,7 +355,7 @@
     int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY;
     UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber-1)];
     if(lastBtn != nil){
-        positionY = lastBtn.frame.origin.y;
+        positionY = lastBtn.frame.origin.y + 30;
     }
     
     if(topics.count > 0){
@@ -360,6 +364,7 @@
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
             topicListViewController.listData = topics;
+            topicListViewController.videoDelegate = self;
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }

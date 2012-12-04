@@ -47,6 +47,8 @@
     [[UIBarButtonItem appearance] setBackgroundImage:btnImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setBackgroundImage:btnPressedImage forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
     
+//    [[UISearchBar appearance] setImage:[UIImage imageNamed:@"search_box"] forSearchBarIcon:UISearchBarIconSearch state:UIControlStateNormal];
+    
 }
 - (void)initSinaweibo
 {

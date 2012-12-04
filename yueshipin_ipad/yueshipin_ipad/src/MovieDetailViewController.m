@@ -21,11 +21,11 @@
     NSMutableArray *commentArray;
     NSArray *episodeArray;
     SublistViewController *topicListViewController;
-    NSArray *topics;
     CommentListViewController *commentListViewController;
     UIButton *introBtn;
     float introContentHeight;
     BOOL introExpand;
+    UITapGestureRecognizer *tapGesture;
 }
 
 @end
@@ -179,6 +179,10 @@
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
     self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 80);
+    tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [self.introContentTextView addGestureRecognizer:tapGesture];
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
@@ -195,7 +199,7 @@
     if(introContentHeight > 80){
         introExpand = !introExpand;
         if(introExpand){
-            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
                 self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86 + introContentHeight - 80);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
@@ -205,7 +209,7 @@
             } completion:^(BOOL finished) {
             }];
         } else {
-            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 80)];
                 self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
@@ -317,6 +321,7 @@
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
             topicListViewController.listData = topics;
+            topicListViewController.videoDelegate = self;
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }

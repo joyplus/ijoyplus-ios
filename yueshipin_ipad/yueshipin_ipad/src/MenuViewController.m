@@ -79,7 +79,7 @@
         [self.tableView setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[self.tableView setDelegate:self];
 		[self.tableView setDataSource:self];
-		[self.tableView setBackgroundColor:CMConstants.greyColor];
+		[self.tableView setBackgroundColor:[UIColor clearColor]];
         [self.tableView setScrollEnabled:NO];
         
         UIView* footerView =  [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];

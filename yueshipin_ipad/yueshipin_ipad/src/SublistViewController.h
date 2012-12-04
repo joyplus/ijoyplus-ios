@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VideoDetailViewController.h"
 
 @interface SublistViewController : UITableViewController
 
 @property (nonatomic, strong)NSArray *listData;
+@property (nonatomic, weak)id <VideoDetailViewControllerDelegate>videoDelegate;
 @end
