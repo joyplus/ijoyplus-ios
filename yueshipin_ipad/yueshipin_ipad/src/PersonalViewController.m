@@ -326,7 +326,7 @@
         viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
         viewController.name = [item objectForKey:@"name"];
         viewController.subname = [item objectForKey:@"subname"];
-        [self presentModalViewController:viewController animated:YES];
+        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
     } else {
         ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
         viewController.programUrl = [item objectForKey:@"videoUrl"];
@@ -334,7 +334,7 @@
         viewController.subname = [item objectForKey:@"subname"];
         viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }
 }
 

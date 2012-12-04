@@ -530,7 +530,7 @@
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 2;
     viewController.subname = [NSString stringWithFormat:@"%i", num];
-    
+    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
 }
 
 

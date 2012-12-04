@@ -443,7 +443,7 @@
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 3;
     viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
-    
+    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
 }
 
 - (void)dingBtnClicked:(id)sender

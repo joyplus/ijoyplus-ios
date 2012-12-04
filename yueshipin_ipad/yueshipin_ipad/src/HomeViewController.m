@@ -142,7 +142,7 @@
 {
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"lunbo_list"];
     if(cacheResult != nil){
-        [self parseTopsListData:cacheResult];
+        [self parseLunboData:cacheResult];
     }
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] != NotReachable) {
@@ -470,7 +470,7 @@
 {
     videoType = 0;
     [self initTopButtonImage];
-    [table reloadData];
+    [self loadTable];
 }
 
 - (void)movieBtnClicked:(UIButton *)sender

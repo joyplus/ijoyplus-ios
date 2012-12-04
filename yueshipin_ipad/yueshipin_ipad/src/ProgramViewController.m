@@ -52,11 +52,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIBarButtonItem *leftBtn = [[UIBarButtonItem alloc]initWithTitle:@"关闭" style:UIBarButtonItemStylePlain target:self action:@selector(closeSelf)];
+    self.navigationItem.leftBarButtonItem = leftBtn;
     
     NSURL *url = [NSURL URLWithString:self.programUrl];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:requestObj];
     [self updateWatchRecord];
+}
+
+- (void)closeSelf
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -126,11 +133,6 @@
         
         [self hideGradientBackground:subview];
     }
-}
-
-- (void)closeSelf
-{
-    [self.navigationController popViewControllerAnimated:YES];
 }
 
 //- (UIButton *)findButtonInView:(UIView *)view {

@@ -35,6 +35,19 @@
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
 }
 
+- (void)customizeAppearance
+{
+    // Set the background image for *all* UINavigationBars
+    UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
+    
+    // Customize UIBarButtonItems
+    UIImage *btnImage = [[UIImage imageNamed:@"left_btn"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    UIImage *btnPressedImage = [[UIImage imageNamed:@"left_btn_pressed"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    [[UIBarButtonItem appearance] setBackgroundImage:btnImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setBackgroundImage:btnPressedImage forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
+    
+}
 - (void)initSinaweibo
 {
     self.sinaweibo = [[SinaWeibo alloc] initWithAppKey:kSinaWeiboAppKey appSecret:kSinaWeiboAppSecret appRedirectURI:kSinaWeiboRedirectURL andDelegate:nil];
@@ -56,6 +69,7 @@
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
+    [self customizeAppearance];
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
