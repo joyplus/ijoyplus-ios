@@ -40,16 +40,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
     
 	table.frame = CGRectMake(25, 120, 460, self.view.frame.size.height - 350);
     
-    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
-    lineImage.image = [UIImage imageNamed:@"dividing"];
-    [self.view addSubview:lineImage];
+//    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
+//    lineImage.image = [UIImage imageNamed:@"dividing"];
+//    [self.view addSubview:lineImage];
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     createBtn.frame = CGRectMake(LEFT_GAP, 80, 105, 31);
@@ -66,8 +64,13 @@
     [self.view addSubview:deleteBtn];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
 - (void)createBtnClicked
 {
+    [[ContainerUtility sharedInstance]setAttribute:self.topId forKey:kTopicId];
     AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }

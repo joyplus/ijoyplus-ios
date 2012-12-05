@@ -157,9 +157,9 @@ static const CGFloat kHeight = 36.0f;
     if ([self superview]) {
         UITouch *touch = [touches anyObject];
         CGPoint point = [touch locationInView:[self superview]];
-        CGRect validTouchArea = CGRectMake((self.frame.origin.x - 5),
+        CGRect validTouchArea = CGRectMake((self.frame.origin.x - 20),
                                            (self.frame.origin.y - 10),
-                                           (self.frame.size.width + 5),
+                                           (self.frame.size.width + 20),
                                            (self.frame.size.height + 10));
         if (CGRectContainsPoint(validTouchArea, point)) {
             checked = !checked;

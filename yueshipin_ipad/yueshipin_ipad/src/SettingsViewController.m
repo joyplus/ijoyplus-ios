@@ -9,6 +9,7 @@
 #import "SettingsViewController.h"
 #import "CustomSearchBar.h"
 #import "SuggestionViewController.h"
+#import "UMFeedback.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -76,7 +77,7 @@
         sinaUsernameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 8, 135, 25)];
         sinaUsernameLabel.backgroundColor = [UIColor clearColor];
         sinaUsernameLabel.font = [UIFont boldSystemFontOfSize:13];
-        sinaUsernameLabel.textColor = CMConstants.textBlueColor;
+        sinaUsernameLabel.textColor = CMConstants.titleBlueColor;
         [sinaWeiboImg addSubview:sinaUsernameLabel];
         
         sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(340, 140, 75, 27)];
@@ -91,7 +92,7 @@
         clearCacheBtn.frame = CGRectMake(100, 230, 334, 40);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
-        [clearCacheBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
         aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 175)];
@@ -109,14 +110,14 @@
         commentBtn.frame = CGRectMake(100, 372, 334, 40);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
-        [commentBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         aboutBtn.frame = CGRectMake(100, 422, 334, 40);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
-        [aboutBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:aboutBtn];
         
         
@@ -141,6 +142,10 @@
     }
 }
 
+- (void)clearCacheBtnClicked{
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -149,9 +154,20 @@
 
 - (void)suggestionBtnClicked
 {
-    SuggestionViewController *viewController = [[SuggestionViewController alloc] init];
-    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+    [UMFeedback showFeedback:self withAppkey:umengAppKey];
+//    SuggestionViewController *viewController = [[SuggestionViewController alloc] init];
+//    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+//    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+}
+
+- (void)commentBtnClicked
+{
+    
+}
+
+- (void)aboutBtnClicked
+{
+    
 }
 
 - (void)sinaSwitchClicked:(UISwitch *)sender

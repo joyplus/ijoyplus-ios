@@ -124,6 +124,7 @@
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
     self.titleLabel.frame = CGRectMake(290, 85, 180, 20);
+    self.titleLabel.font = CMConstants.titleFont;
     
     self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
     self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
@@ -135,13 +136,21 @@
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.actorLabel.frame = CGRectMake(290, 210, 50, 15);
+    self.actorLabel.textColor = CMConstants.grayColor;
     self.actorName1Label.frame = CGRectMake(335, 210, 100, 15);
+    self.actorName1Label.textColor = CMConstants.grayColor;
     self.actorName2Label.frame = CGRectMake(335, 235, 100, 15);
+    self.actorName2Label.textColor = CMConstants.grayColor;
     self.actorName3Label.frame = CGRectMake(335, 260, 100, 15);
+    self.actorName3Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(290, 300, 50, 15);
+    self.playLabel.textColor = CMConstants.grayColor;
     self.playTimeLabel.frame = CGRectMake(335, 300, 100, 15);
+    self.playTimeLabel.textColor = CMConstants.grayColor;
     self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
+    self.regionLabel.textColor = CMConstants.grayColor;
     self.regionNameLabel.frame = CGRectMake(335, 333, 100, 15);
+    self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
     self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
@@ -180,7 +189,7 @@
     self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 70);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 80);
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -278,6 +287,7 @@
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
+    self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [video objectForKey:@"stars"];
     NSArray *starArray;
     if([stars rangeOfString:@"/"].length > 0){
@@ -299,6 +309,7 @@
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
+    self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
     [self repositElements:0];
@@ -361,7 +372,7 @@
     }
     
     if(topics.count > 0){
-        self.relatedImage.frame = CGRectMake(LEFT_GAP, positionY + 60, 80, 20);
+        self.relatedImage.frame = CGRectMake(LEFT_GAP, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
@@ -370,7 +381,7 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 85, 425, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 55, 440, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
@@ -379,9 +390,10 @@
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     self.numberLabel.frame = CGRectMake(139, positionY + 20, 100, 18);
+    self.numberLabel.textColor = CMConstants.grayColor;
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(410, positionY + 17, 66, 26);
+    self.commentBtn.frame = CGRectMake(425, positionY + 17, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
     [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -393,7 +405,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     commentListViewController.totalCommentNum = totalCommentNum;
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 425, 200);
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 440, 200);
     commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
     

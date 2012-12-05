@@ -69,11 +69,9 @@
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 
-+ (UIColor*)greyColor;
++ (UIColor*)grayColor;
 
-+ (UIColor *)textColor;
-
-+ (UIColor *)textBlueColor;
++ (UIColor *)scoreBlueColor;
 
 + (UIColor *)titleBlueColor;
 

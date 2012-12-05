@@ -12,6 +12,7 @@
     UITableView *table;
     NSMutableArray *topsArray;
     UIButton *closeBtn;
+    UILabel *titleLabel;
 }
 
 @property (nonatomic, strong)NSString *listTitle;

@@ -169,7 +169,7 @@
         [cell.contentView addSubview:imageView];
         
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(60, 20, 60, 55)];
-        label.textColor = CMConstants.textColor;
+        label.textColor = CMConstants.grayColor;
         label.backgroundColor = [UIColor clearColor];
         label.font = [UIFont boldSystemFontOfSize:15];
         label.tag = 1002;

@@ -146,7 +146,7 @@
         [cell.contentView addSubview:contentImage];
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
-        nameLabel.font = [UIFont boldSystemFontOfSize:18];
+        nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
         [cell.contentView addSubview:nameLabel];
@@ -194,52 +194,52 @@
             [cell.contentView addSubview:dotView8];
         }
         
-        UILabel *name1 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 40, 110, 25)];
+        UILabel *name1 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 42, 110, 25)];
         name1.font =[UIFont systemFontOfSize:14];
-        name1.backgroundColor = [UIColor yellowColor];
-        [name1 setTextColor:[UIColor lightGrayColor]];
+        name1.backgroundColor = [UIColor clearColor];
+        [name1 setTextColor:CMConstants.grayColor];
         name1.tag = 4001;
         [cell.contentView addSubview:name1];
         
-        UILabel *name2 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 40, 110, 25)];
+        UILabel *name2 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 42, 110, 25)];
         name2.font = [UIFont systemFontOfSize:14];
-        name2.backgroundColor = [UIColor yellowColor];
-        [name2 setTextColor:[UIColor lightGrayColor]];
+        name2.backgroundColor = [UIColor clearColor];
+        [name2 setTextColor:CMConstants.grayColor];
         name2.tag = 4002;
         [cell.contentView addSubview:name2];
         
-        UILabel *name3 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 65, 110, 25)];
+        UILabel *name3 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 67, 110, 25)];
         name3.font =[UIFont systemFontOfSize:14];
-        name3.backgroundColor = [UIColor yellowColor];
-        [name3 setTextColor:[UIColor lightGrayColor]];
+        name3.backgroundColor = [UIColor clearColor];
+        [name3 setTextColor:CMConstants.grayColor];
         name3.tag = 4003;
         [cell.contentView addSubview:name3];
         
-        UILabel *name4 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 65, 110, 25)];
+        UILabel *name4 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 67, 110, 25)];
         name4.font =[UIFont systemFontOfSize:14];
-        name4.backgroundColor = [UIColor yellowColor];
-        [name4 setTextColor:[UIColor lightGrayColor]];
+        name4.backgroundColor = [UIColor clearColor];
+        [name4 setTextColor:CMConstants.grayColor];
         name4.tag = 4004;
         [cell.contentView addSubview:name4];
         
-        UILabel *name5 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 85, 110, 25)];
+        UILabel *name5 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 91, 110, 25)];
         name5.font =[UIFont systemFontOfSize:14];
-        name5.backgroundColor = [UIColor yellowColor];
-        [name5 setTextColor:[UIColor lightGrayColor]];
+        name5.backgroundColor = [UIColor clearColor];
+        [name5 setTextColor:CMConstants.grayColor];
         name5.tag = 4005;
         [cell.contentView addSubview:name5];
         
-        UILabel *name6 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 85, 110, 25)];
+        UILabel *name6 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 91, 110, 25)];
         name6.font =[UIFont systemFontOfSize:14];
-        name6.backgroundColor = [UIColor yellowColor];
-        [name6 setTextColor:[UIColor lightGrayColor]];
+        name6.backgroundColor = [UIColor clearColor];
+        [name6 setTextColor:CMConstants.grayColor];
         name6.tag = 4006;
         [cell.contentView addSubview:name6];
         
-        UILabel *name7 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 110, 110, 25)];
+        UILabel *name7 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 115, 110, 25)];
         name7.font =[UIFont systemFontOfSize:14];
-        name7.backgroundColor = [UIColor yellowColor];
-        [name7 setTextColor:[UIColor lightGrayColor]];
+        name7.backgroundColor = [UIColor clearColor];
+        [name7 setTextColor:CMConstants.grayColor];
         name7.tag = 4007;
         [cell.contentView addSubview:name7];
         
@@ -249,7 +249,7 @@
     }
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@""]];
+    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"name"];
@@ -259,18 +259,19 @@
         UIView *dotView =  (UIView *)[cell viewWithTag:3001 + i];
         UILabel *label = (UILabel *)[cell viewWithTag:4001 + i];
         if(i < videos.count){
+            dotView.backgroundColor = CMConstants.grayColor;
             label.text = [[videos objectAtIndex:i] objectForKey:@"prod_name"];
         } else {
             label.text = @"";
             dotView.backgroundColor = [UIColor clearColor];
         }
     }
-    if(videos.count <= 7){
+    if(videos.count < 7){
         for (int i = 0; i < 3; i++){
             UIView *dotView8 = (UIView *)[cell viewWithTag:3008 + i];
             dotView8.backgroundColor = [UIColor clearColor];
         }
-    }
+    } 
 
     return cell;
 }
@@ -286,7 +287,6 @@
 {
     [table deselectRowAtIndexPath:indexPath animated:YES];
     MyListViewController *viewController = [[MyListViewController alloc] init];
-    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
     viewController.topId = topId;

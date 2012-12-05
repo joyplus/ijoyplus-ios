@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ShowDetailViewController.h"
+#import "CommonHeader.h"
 
 @interface ShowListViewController : UITableViewController
 

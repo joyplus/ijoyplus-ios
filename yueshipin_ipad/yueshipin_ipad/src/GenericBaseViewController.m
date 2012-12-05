@@ -15,6 +15,7 @@
 #import "AppDelegate.h"
 #import "StackScrollViewController.h"
 #import "RootViewController.h"
+#import "CommonHeader.h"
 
 @interface GenericBaseViewController (){
 
@@ -36,12 +37,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:SHOW_MB_PROGRESS_BAR object:nil];
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SHOW_MB_PROGRESS_BAR object:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SHOW_MB_PROGRESS_BAR object:nil];
 }
 
 - (void)closeMenu
@@ -54,4 +62,5 @@
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
 }
+
 @end

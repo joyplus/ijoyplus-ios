@@ -7,7 +7,6 @@
 //
 
 #import "ShowDetailViewController.h"
-#import "LightMenuBar.h"
 #import "ShowListViewController.h"
 #import "CommonHeader.h"
 #import "ProgramViewController.h"
@@ -26,6 +25,7 @@
     float introContentHeight;
     BOOL introExpand;
     UITapGestureRecognizer *tapGesture;
+    int showPageNumber;
 }
 
 @end
@@ -73,6 +73,8 @@
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
     [self setBgImage:nil];
+    [self setPreviousShowBtn:nil];
+    [self setNextShowBtn:nil];
     [super viewDidUnload];
 }
 
@@ -115,7 +117,9 @@
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 62, 26);
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
-    self.titleLabel.frame = CGRectMake(290, 85, 180, 20);
+    self.titleLabel.frame = CGRectMake(288, 85, 180, 20);
+    self.titleLabel.font = CMConstants.titleFont;
+    
     self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
     self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
@@ -126,13 +130,21 @@
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.actorLabel.frame = CGRectMake(290, 210, 80, 15);
-    self.actorName1Label.frame = CGRectMake(335, 210, 100, 15);
-    self.actorName2Label.frame = CGRectMake(335, 235, 100, 15);
-    self.actorName3Label.frame = CGRectMake(335, 260, 100, 15);
+    self.actorLabel.textColor = CMConstants.grayColor;
+    self.actorName1Label.frame = CGRectMake(345, 210, 100, 15);
+    self.actorName1Label.textColor = CMConstants.grayColor;
+    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
+    self.actorName2Label.textColor = CMConstants.grayColor;
+    self.actorName3Label.frame = CGRectMake(345, 260, 100, 15);
+    self.actorName3Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(290, 290, 80, 15);
-    self.playTimeLabel.frame = CGRectMake(370, 290, 100, 15);
+    self.playLabel.textColor = CMConstants.grayColor;
+    self.playTimeLabel.frame = CGRectMake(335, 290, 100, 15);
+    self.playTimeLabel.textColor = CMConstants.grayColor;
     self.regionLabel.frame = CGRectMake(290, 330, 50, 15);
+    self.regionLabel.textColor = CMConstants.grayColor;
     self.regionNameLabel.frame = CGRectMake(335, 330, 100, 15);
+    self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
     self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
@@ -278,7 +290,8 @@
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    NSString *stars = [video objectForKey:@"stars"];
+    self.scoreLabel.textColor = CMConstants.scoreBlueColor;
+    NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSArray *starArray;
     if([stars rangeOfString:@"/"].length > 0){
         starArray = [stars componentsSeparatedByString:@"/"];
@@ -299,32 +312,48 @@
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
+    self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
     [self repositElements:0];
+    
+    [self updatePageBtnState];
 }
 
 - (void)repositElements:(int)increasePositionY
 {
+    self.previousShowBtn.frame = CGRectMake(LEFT_GAP,  590 + increasePositionY, 32, 161);
+    [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+    [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+    [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
+    [self.previousShowBtn addTarget:self action:@selector(previousShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.nextShowBtn.frame = CGRectMake(LEFT_GAP + 390 + 20,  590 + increasePositionY, 32, 161);
+    [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+    [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+    [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
+    [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
     if(listViewController == nil){
         listViewController = [[ShowListViewController alloc]initWithStyle:UITableViewStylePlain];
         listViewController.parentDelegate = self;
-        listViewController.view.backgroundColor = [UIColor yellowColor];
+        listViewController.view.backgroundColor = [UIColor clearColor];
         [self.bgScrollView addSubview:listViewController.view];
     }
-    listViewController.listData = episodeArray;
-    listViewController.view.frame = CGRectMake(LEFT_GAP, 590 + increasePositionY, 425, (episodeArray.count > 5 ? 5 : episodeArray.count)*30);
+    listViewController.listData = [self getEpisodes];
+    listViewController.view.frame = CGRectMake(LEFT_GAP + 40, 590 + increasePositionY, 360, 161);
     
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
     
-    int positionY = listViewController.view.frame.origin.y + (episodeArray.count > 5 ? 5 : episodeArray.count)*30;
+    int positionY = listViewController.view.frame.origin.y + 161;
     self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 30, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     self.numberLabel.frame = CGRectMake(139, positionY + 30, 100, 18);
+    self.numberLabel.textColor = CMConstants.grayColor;
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(410, positionY + 27, 66, 26);
+    self.commentBtn.frame = CGRectMake(425, positionY + 27, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
     [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -338,10 +367,59 @@
     commentListViewController.totalCommentNum = totalCommentNum;
     commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 425, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 440, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + 200 + increasePositionY)];
     //    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 70, 425, commentListViewController.tableHeight);
+}
+
+- (NSMutableArray *)getEpisodes
+{
+    NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    for(int i = showPageNumber * 5; i <  showPageNumber * 5 + 5; i++){
+        if(i < episodeArray.count){
+            [tempArray addObject: [episodeArray objectAtIndex:i]];
+        } else {
+            [tempArray addObject:[[NSDictionary alloc]init]];
+        }
+    }
+    return tempArray;
+}
+
+- (void)previousShowBtnClicked
+{
+    showPageNumber --;
+    if(showPageNumber < 0){
+        showPageNumber = 0;
+    }
+    [self updatePageBtnState];
+    listViewController.listData = [self getEpisodes];
+    [listViewController.tableView reloadData];
+}
+
+- (void)nextShowBtnClicked
+{
+    showPageNumber ++;
+    if(showPageNumber > ceil(episodeArray.count / 5.0)-1){
+        showPageNumber = ceil(episodeArray.count / 5.0)-1;
+    }
+    [self updatePageBtnState];
+    listViewController.listData = [self getEpisodes];
+    [listViewController.tableView reloadData];
+}
+
+- (void)updatePageBtnState
+{
+    if(showPageNumber > 0 && showPageNumber < ceil(episodeArray.count / 5.0)-1){
+        [self.previousShowBtn setEnabled:YES];
+        [self.nextShowBtn setEnabled:YES];
+    }
+    if(showPageNumber == 0){
+        [self.previousShowBtn setEnabled:NO];
+    }
+    if(showPageNumber == ceil(episodeArray.count / 5.0)-1){
+        [self.nextShowBtn setEnabled:NO];
+    }
 }
 
 - (void)getTopComments:(int)num
@@ -402,7 +480,10 @@
 
 - (void)playVideoCallback:(NSInteger)num
 {
-    [self playVideo:num];
+    int index = showPageNumber * 5 + num;
+    if(index < episodeArray.count){
+        [self playVideo:num];
+    }
 }
 
 

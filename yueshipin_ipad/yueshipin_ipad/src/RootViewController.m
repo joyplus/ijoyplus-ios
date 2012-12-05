@@ -204,7 +204,7 @@
     
     UIImageView *tempMovieImage = [[UIImageView alloc]initWithFrame:CGRectMake(270, 460, 114, 162)];
     tempMovieImage.frame = CGRectMake(408, 73, 113, 170);
-    [tempMovieImage setImageWithURL:[NSURL URLWithString:self.prodUrl] placeholderImage:[UIImage imageNamed:@""]];
+    [tempMovieImage setImageWithURL:[NSURL URLWithString:self.prodUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [frame addSubview:tempMovieImage];
 
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];

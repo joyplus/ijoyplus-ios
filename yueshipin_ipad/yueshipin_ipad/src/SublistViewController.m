@@ -22,7 +22,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
+
     }
     return self;
 }
@@ -32,7 +32,10 @@
     [super viewDidLoad];
     self.tableView.scrollEnabled = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.view setBackgroundColor:[UIColor clearColor]];
+    self.tableView.layer.borderWidth = 1;
+    self.tableView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    [self.view setBackgroundColor:[UIColor whiteColor]];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,17 +62,20 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor lightGrayColor]];
+        CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor blackColor]];
         accessory.highlightedColor = [UIColor whiteColor];
         cell.accessoryView = accessory;
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, cell.bounds.size.width+100, 20)];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, cell.bounds.size.width+100, 20)];
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.textColor = [UIColor lightGrayColor];
+        nameLabel.textColor = [UIColor blackColor];
         nameLabel.tag = 1001;
         nameLabel.font = [UIFont systemFontOfSize:16];
         [cell.contentView addSubview:nameLabel];
         
+        UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 28, self.tableView.frame.size.width, 2)];
+        devidingLine.image = [UIImage imageNamed:@"dividing"];
+        [cell.contentView addSubview:devidingLine];
     }
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];

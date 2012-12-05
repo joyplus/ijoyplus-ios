@@ -11,7 +11,6 @@
 #import "CustomSearchBar.h"
 
 @interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>{
-    UIView *backgroundView;
     UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *bgImage;

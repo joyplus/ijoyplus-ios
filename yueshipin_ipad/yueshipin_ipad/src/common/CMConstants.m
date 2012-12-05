@@ -14,29 +14,24 @@
     return [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1.0];
 }
 
-+ (UIColor *)greyColor
++ (UIColor *)grayColor
 {
-    return [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
+    return [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
 }
 
-+ (UIColor *)textColor
++ (UIColor *)scoreBlueColor
 {
-    return [UIColor colorWithRed:155/255.0 green:155/255.0 blue:155/255.0 alpha:1];
-}
-
-+ (UIColor *)textBlueColor
-{
-    return [UIColor colorWithRed:48/255.0 green:89/255.0 blue:147/255.0 alpha:1];
+    return [UIColor colorWithRed:59/255.0 green:120/255.0 blue:198/255.0 alpha:1];
 }
 
 + (UIColor *)titleBlueColor
 {
-    return [UIColor colorWithRed:53/255.0 green:96/255.0 blue:152/255.0 alpha:1];
+    return [UIColor colorWithRed:54/255.0 green:98/255.0 blue:156/255.0 alpha:1];
 }
 
 + (UIFont *)titleFont
 {
-    return [UIFont systemFontOfSize:13];
+    return [UIFont boldSystemFontOfSize:18];
 }
 
 @end

@@ -46,7 +46,7 @@
     titleImage.image = [UIImage imageNamed:@"collect_title"];
     [self.view addSubview:titleImage];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 360)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -147,8 +147,7 @@
         [cell.contentView addSubview:contentImage];
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
-        nameLabel.text = @"暮光之城";
-        nameLabel.font = [UIFont boldSystemFontOfSize:20];
+        nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
         [cell.contentView addSubview:nameLabel];
@@ -165,7 +164,7 @@
         scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
-        scoreLabel.textColor = CMConstants.textBlueColor;
+        scoreLabel.textColor = CMConstants.scoreBlueColor;
         [cell.contentView addSubview:scoreLabel];
         UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
         doubanLogo.image = [UIImage imageNamed:@"douban"];
@@ -173,26 +172,28 @@
         
         UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
         directorLabel.text = @"导演：";
-        [directorLabel sizeToFit];
+        directorLabel.textColor = CMConstants.grayColor;
         directorLabel.font = [UIFont systemFontOfSize:13];
         directorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:directorLabel];
         
-        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 180, 25)];
+        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(195, 75, 220, 25)];
         directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
+        directorNameLabel.textColor = CMConstants.grayColor;
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 4001;
         [cell.contentView addSubview:directorNameLabel];
         
         UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
         actorLabel.text = @"主演：";
-        [actorLabel sizeToFit];
+        actorLabel.textColor = CMConstants.grayColor;
         actorLabel.font = [UIFont systemFontOfSize:13];
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 180, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(195, 100, 220, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
+        actorName1Label.textColor = CMConstants.grayColor;
         actorName1Label.backgroundColor = [UIColor clearColor];
         actorName1Label.tag = 5001;
         [cell.contentView addSubview:actorName1Label];
@@ -226,15 +227,15 @@
     }
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@""]];
+    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"content_name"];
     
-    UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:5001];
+    UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:4001];
     directorNameLabel.text = [item objectForKey:@"directors"];
     
-    UILabel *actorLabel = (UILabel *)[cell viewWithTag:4001];
+    UILabel *actorLabel = (UILabel *)[cell viewWithTag:5001];
     actorLabel.text = [item objectForKey:@"stars"];
     
     UILabel *scoreLabel = (UILabel *)[cell viewWithTag:3001];

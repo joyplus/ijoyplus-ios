@@ -13,7 +13,6 @@
 
 @interface ListViewController (){
     UIImageView *bgImage;
-    UILabel *titleLabel;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
@@ -38,7 +37,7 @@
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor clearColor];
-    bgImage = [[UIImageView alloc]initWithFrame:self.view.frame];
+    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     [self.view addSubview:bgImage];
     
@@ -58,7 +57,7 @@
     [self.view addSubview:closeBtn];
 
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(50, 70, 420, self.view.frame.size.height - 350)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -162,8 +161,8 @@
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
-        nameLabel.font = [UIFont boldSystemFontOfSize:20];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 250, 25)];
+        nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
         [cell.contentView addSubview:nameLabel];
@@ -180,7 +179,7 @@
         scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
-        scoreLabel.textColor = CMConstants.textBlueColor;
+        scoreLabel.textColor = CMConstants.scoreBlueColor;
         [cell.contentView addSubview:scoreLabel];
         UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
         doubanLogo.image = [UIImage imageNamed:@"douban"];
@@ -188,26 +187,28 @@
         
         UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
         directorLabel.text = @"导演：";
-        [directorLabel sizeToFit];
+        directorLabel.textColor = CMConstants.grayColor;
         directorLabel.font = [UIFont systemFontOfSize:13];
         directorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:directorLabel];
         
-        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 180, 25)];
+        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(195, 75, 180, 25)];
         directorNameLabel.font = [UIFont systemFontOfSize:13];
+        directorNameLabel.textColor = CMConstants.grayColor;
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 6001;
         [cell.contentView addSubview:directorNameLabel];
         
         UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
         actorLabel.text = @"主演：";
-        [actorLabel sizeToFit];
+        actorLabel.textColor = CMConstants.grayColor;
         actorLabel.font = [UIFont systemFontOfSize:13];
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 200, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(195, 100, 200, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
+        actorName1Label.textColor = CMConstants.grayColor;
         actorName1Label.backgroundColor = [UIColor clearColor];
         actorName1Label.tag = 7001;
         [cell.contentView addSubview:actorName1Label];
@@ -241,7 +242,7 @@
     }
     NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
     UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@""]];
+    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"prod_name"];

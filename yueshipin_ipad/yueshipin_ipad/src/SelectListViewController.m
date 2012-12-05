@@ -137,9 +137,9 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 10, cell.bounds.size.width, 20)];
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.textColor = [UIColor lightGrayColor];
+        nameLabel.textColor = [UIColor blackColor];
         nameLabel.tag = 1001;
-        nameLabel.font = [UIFont systemFontOfSize:16];
+        nameLabel.font = CMConstants.titleFont;
         [cell.contentView addSubview:nameLabel];
         
         SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 3, 20, 20) style:kSSCheckBoxViewStyleBox checked:NO];

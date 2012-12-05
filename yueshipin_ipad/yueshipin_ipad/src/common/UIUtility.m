@@ -11,6 +11,12 @@
 #import "MBProgressHUD.h"
 #import "ContainerUtility.h"
 
+@interface UIUtility (){
+    MBProgressHUD *HUD;
+}
+
+@end
+
 @implementation UIUtility
 
 + (void)customizeNavigationBar:(UINavigationBar *)navBar
@@ -85,5 +91,18 @@
     dotView.layer.masksToBounds = YES;
     dotView.backgroundColor = [UIColor colorWithRed:129/255.0 green:129/255.0 blue:129/255.0 alpha:1.0];
     return dotView;
+}
+
+- (void)showProgressBar:(UIView *)view
+{
+    HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.opacity = 0;
+    [HUD show:YES];
+}
+
+- (void)hide
+{
+    [HUD hide:YES afterDelay:0.5];
 }
 @end

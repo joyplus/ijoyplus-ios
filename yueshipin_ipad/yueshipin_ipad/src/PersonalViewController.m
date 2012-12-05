@@ -119,7 +119,7 @@
         
         supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 228, 100, 30)];
         supportLabel.backgroundColor = [UIColor clearColor];
-        supportLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
+        supportLabel.textColor = CMConstants.titleBlueColor;
         supportLabel.text = @"0";
         supportLabel.textAlignment = NSTextAlignmentCenter;
         supportLabel.font = [UIFont boldSystemFontOfSize:22];
@@ -131,7 +131,7 @@
         [self.view addSubview:supportBtn];
         
         collectionLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + supportLabel.frame.size.width + 34, 228, 100, 30)];
-        collectionLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
+        collectionLabel.textColor = CMConstants.titleBlueColor;
         collectionLabel.textAlignment = NSTextAlignmentCenter;
         collectionLabel.backgroundColor = [UIColor clearColor];
         collectionLabel.font = [UIFont boldSystemFontOfSize:22];
@@ -145,7 +145,7 @@
         
         listLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 33)*2, 228, 100, 30)];
         listLabel.textAlignment = NSTextAlignmentCenter;
-        listLabel.textColor = [UIColor colorWithRed:51/255.0 green:109/255.0 blue:190/255.0 alpha:1];
+        listLabel.textColor = CMConstants.titleBlueColor;
         listLabel.backgroundColor = [UIColor clearColor];
         listLabel.font = [UIFont boldSystemFontOfSize:22];
         listLabel.text = @"0";
@@ -285,7 +285,7 @@
         
         UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 35, 280, 15)];
         contentLabel.backgroundColor = [UIColor clearColor];
-        contentLabel.textColor = CMConstants.textColor;
+        contentLabel.textColor = CMConstants.grayColor;
         contentLabel.tag = 1003;
         contentLabel.font = [UIFont systemFontOfSize:15];
         [contentLabel setNumberOfLines:0];

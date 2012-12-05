@@ -48,7 +48,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return listData.count > 5 ? 5 : listData.count;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -57,24 +57,44 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, cell.bounds.size.width+100, 20)];
-        nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.textColor = [UIColor lightGrayColor];
-        nameLabel.tag = 1001;
-        nameLabel.font = [UIFont systemFontOfSize:16];
-        [cell.contentView addSubview:nameLabel];
+//        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, 350, 20)];
+//        nameLabel.backgroundColor = [UIColor clearColor];
+//        nameLabel.tag = 1001;
+//        nameLabel.font = [UIFont systemFontOfSize:15];
+//        [cell.contentView addSubview:nameLabel];
         
+        UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        nameBtn.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 30);
+        nameBtn.tag = 1001;
+        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
+        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
+        nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+        [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateHighlighted];
+        [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:nameBtn];
     }
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
-    UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
-    nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+    UIButton *nameBtn = (UIButton *)[cell viewWithTag:1001];
+    NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+    if ([item objectForKey:@"name"] == nil) {
+        name = @"";
+    }
+    [nameBtn setTitle:name forState:UIControlStateNormal];
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 30;
+    return 32;
+}
+
+- (void)nameBtnClicked:(UIButton *)btn{
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
+    [self.parentDelegate playVideoCallback:indexPath.row];
 }
 /*
 // Override to support conditional editing of the table view.
@@ -114,13 +134,5 @@
     return YES;
 }
 */
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.parentDelegate playVideoCallback:indexPath.row];
-}
 
 @end

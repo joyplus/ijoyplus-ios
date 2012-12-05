@@ -120,17 +120,17 @@
         nameLabel.font = [UIFont systemFontOfSize:16];
         [cell.contentView addSubview:nameLabel];
         
-        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(cell.bounds.size.width - 20, 11, 120, 15)];
+        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(cell.bounds.size.width - 5, 11, 120, 15)];
         timeLabel.backgroundColor = [UIColor clearColor];
         timeLabel.textAlignment = NSTextAlignmentRight;
-        timeLabel.textColor = [UIColor lightGrayColor];
+        timeLabel.textColor = CMConstants.grayColor;
         timeLabel.tag = 1002;
         timeLabel.font = [UIFont systemFontOfSize:14];
         [cell.contentView addSubview:timeLabel];
         
         UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 35, cell.bounds.size.width, 15)];
         contentLabel.backgroundColor = [UIColor clearColor];
-        contentLabel.textColor = CMConstants.textColor;
+        contentLabel.textColor = CMConstants.grayColor;
         contentLabel.tag = 1003;
         contentLabel.font = [UIFont systemFontOfSize:15];
         [contentLabel setNumberOfLines:0];

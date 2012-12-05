@@ -51,7 +51,7 @@
             break;
         }
     }
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"search_box"]];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"search_box_text"]];
     [self insertSubview:imageView atIndex:1];
     //3自定义背景
     [super layoutSubviews];

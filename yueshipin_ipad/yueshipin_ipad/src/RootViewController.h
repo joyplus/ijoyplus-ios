@@ -45,7 +45,7 @@
 
 @class UIViewExt;
 
-@interface RootViewController : GenericBaseViewController <UITextViewDelegate> {
+@interface RootViewController : UIViewController <UITextViewDelegate> {
 	UIViewExt* rootView;
 	UIView* leftMenuView;
 	UIView* rightSlideView;
@@ -66,4 +66,5 @@
 - (void)showSharePopup;
 - (void)showCommentPopup;
 - (void)pesentMyModalView:(UIViewController *)viewController;
+
 @end

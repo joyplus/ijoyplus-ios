@@ -66,13 +66,13 @@
     [self.view addSubview:closeBtn];
     
     addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(LEFT_GAP, 100, 62, 39);
+    addBtn.frame = CGRectMake(LEFT_GAP, 90, 62, 39);
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video"] forState:UIControlStateNormal];
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:addBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 140, 460, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 140, 460, 580)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -104,7 +104,7 @@
 
 - (void)getResult
 {
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -175,12 +175,11 @@
         [cell.contentView addSubview:imageView];
         
         UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
-        contentImage.image = [UIImage imageNamed:@"test_movie"];
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
-        nameLabel.text = @"暮光之城";
+        nameLabel.text = @"";
         nameLabel.font = [UIFont boldSystemFontOfSize:20];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
@@ -198,7 +197,7 @@
         scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
-        scoreLabel.textColor = CMConstants.textBlueColor;
+        scoreLabel.textColor = CMConstants.scoreBlueColor;
         [cell.contentView addSubview:scoreLabel];
         UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
         doubanLogo.image = [UIImage imageNamed:@"douban"];
@@ -211,7 +210,7 @@
         directorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:directorLabel];
         
-        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 180, 25)];
+        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 200, 25)];
         directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 4001;
@@ -224,7 +223,7 @@
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 180, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 200, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
         actorName1Label.backgroundColor = [UIColor clearColor];
         actorName1Label.tag = 5001;
@@ -264,7 +263,7 @@
     }
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@""]];
+    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"prod_name"];

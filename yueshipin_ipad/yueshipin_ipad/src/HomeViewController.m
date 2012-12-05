@@ -66,6 +66,17 @@
 @implementation HomeViewController
 @synthesize menuViewControllerDelegate;
 
+- (void)viewDidUnload{
+    [super viewDidUnload];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
@@ -677,7 +688,7 @@
             
             UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 47 + i * 18, 80, 20)];
             [label1 setBackgroundColor:[UIColor clearColor]];
-            [label1 setTextColor:[UIColor lightGrayColor]];
+            [label1 setTextColor:CMConstants.grayColor];
             [label1 setFont:[UIFont systemFontOfSize:12]];
             label1.tag = 4001 + i;
             [cell.contentView addSubview:label1];
@@ -688,7 +699,7 @@
             
             UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(388, 47 + i * 18, 80, 20)];
             [label2 setBackgroundColor:[UIColor clearColor]];
-            [label2 setTextColor:[UIColor lightGrayColor]];
+            [label2 setTextColor:CMConstants.grayColor];
             [label2 setFont:[UIFont systemFontOfSize:12]];
             label2.tag = 5001 + i;
             [cell.contentView addSubview:label2];
@@ -1096,7 +1107,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 40)];
-    customView.backgroundColor = CMConstants.greyColor;
+    customView.backgroundColor = [UIColor whiteColor];
     if(listBtn == nil){
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         listBtn.frame = CGRectMake(12, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
@@ -1136,11 +1147,5 @@
     
 }
 
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 @end

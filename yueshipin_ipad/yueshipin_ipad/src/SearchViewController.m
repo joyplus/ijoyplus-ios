@@ -28,13 +28,10 @@
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
-        backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor clearColor]];
-        [self.view addSubview:backgroundView];
         
-        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
+        bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
         bgImage.image = [UIImage imageNamed:@"left_background"];
-        [backgroundView addSubview:bgImage];
+        [self.view addSubview:bgImage];
         
         menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         menuBtn.frame = CGRectMake(0, 28, 60, 60);
@@ -199,7 +196,7 @@
             [hotKeyBtn setTitle:content forState:UIControlStateNormal];
             [hotKeyBtn setTag:2001 + i];
             [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
-            [hotKeyBtn setTitleColor:[CMConstants textColor] forState:UIControlStateNormal];
+            [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
             [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
@@ -209,7 +206,7 @@
     } else {
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
         UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
-        [name setTextColor:CMConstants.textBlueColor];
+        [name setTextColor:[UIColor blackColor]];
         [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
         [name sizeToFit];
         [name setBackgroundColor:[UIColor clearColor]];
@@ -288,10 +285,12 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
 {
-    [searchBar resignFirstResponder];
-    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
-    [table reloadData];
-    [self search:searchBar.text];
+    if(searchBar.text.length > 0){
+        [searchBar resignFirstResponder];
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+        [table reloadData];
+        [self search:searchBar.text];
+    }
 }
 
 - (void)search:(NSString *)keyword

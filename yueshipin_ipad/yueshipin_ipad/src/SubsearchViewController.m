@@ -40,9 +40,7 @@
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    backgroundView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    
+    bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);    
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     
     [menuBtn removeFromSuperview];

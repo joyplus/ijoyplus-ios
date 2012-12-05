@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GenericBaseViewController : UIViewController
+@interface GenericBaseViewController : UIViewController{
+    
+}
 
 - (void)closeMenu;
 

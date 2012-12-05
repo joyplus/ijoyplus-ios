@@ -18,4 +18,7 @@
 + (void)showNetWorkError:(UIView *)view;
 + (void)showSystemError:(UIView *)view;
 + (UIView *)getDotView:(int)radius;
+
+- (void)showProgressBar:(UIView *)view;
+- (void)hide;
 @end
