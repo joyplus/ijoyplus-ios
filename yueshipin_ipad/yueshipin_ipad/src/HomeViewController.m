@@ -559,7 +559,7 @@
             lunboPlaceholder.image = [UIImage imageNamed:@"top_image_placeholder"];
             [cell.contentView addSubview:lunboPlaceholder];
             
-            scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 5, self.view.frame.size.width- 12, TOP_IMAGE_HEIGHT - 10)];
+            scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 4, self.view.frame.size.width- 12, TOP_IMAGE_HEIGHT - 8)];
             scrollView.tag = 11270014;
             scrollView.delegate = self;
             
@@ -600,7 +600,7 @@
         for (int i = 0; i < 5; i++){
             UIImageView *temp = (UIImageView *)[scrollView viewWithTag:9001 + i];
             NSDictionary *lunboItem = [lunboArray objectAtIndex:i];
-            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"top_image_placeholder"]];
+            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"lunbo_placeholder"]];
         }
     } else {
         if (videoType == 0) {

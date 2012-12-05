@@ -160,7 +160,7 @@ static const CGFloat kHeight = 36.0f;
         CGRect validTouchArea = CGRectMake((self.frame.origin.x - 20),
                                            (self.frame.origin.y - 10),
                                            (self.frame.size.width + 20),
-                                           (self.frame.size.height + 10));
+                                           (self.frame.size.height + 20));
         if (CGRectContainsPoint(validTouchArea, point)) {
             checked = !checked;
             [self updateCheckBoxImage];

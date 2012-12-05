@@ -14,6 +14,7 @@
 @end
 
 @implementation AddSearchViewController
+@synthesize topId;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,6 +48,7 @@
     [sBar resignFirstResponder];
     AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
     viewController.keyword = keyword;
+    viewController.topId = self.topId;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView];
     

@@ -8,7 +8,7 @@
 
 #import "GenericBaseViewController.h"
 
-@interface CreateListTwoViewController : GenericBaseViewController
+@interface CreateListTwoViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *bgImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
@@ -16,4 +16,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *lineImage;
 @property (strong, nonatomic) NSString *titleContent;
+
+@property (strong, nonatomic)NSString *topId;
 @end

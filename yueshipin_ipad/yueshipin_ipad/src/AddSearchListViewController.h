@@ -12,4 +12,6 @@
 
 @property (nonatomic, strong)NSString *keyword;
 
+@property (nonatomic, strong)NSString *topId;
+
 @end

@@ -19,4 +19,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *titleFieldBg;
 
+@property (strong, nonatomic)NSString *prodId;
+
 @end

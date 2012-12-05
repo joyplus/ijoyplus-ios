@@ -155,18 +155,18 @@
     self.actorLabel.textColor = CMConstants.grayColor;
     self.actorName1Label.frame = CGRectMake(335, 230, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
-    self.actorName2Label.frame = CGRectMake(335, 255, 140, 15);
-    self.actorName2Label.textColor = CMConstants.grayColor;
-    self.actorName3Label.frame = CGRectMake(335, 280, 140, 15);
-    self.actorName3Label.textColor = CMConstants.grayColor;
+//    self.actorName2Label.frame = CGRectMake(335, 255, 140, 15);
+//    self.actorName2Label.textColor = CMConstants.grayColor;
+//    self.actorName3Label.frame = CGRectMake(335, 280, 140, 15);
+//    self.actorName3Label.textColor = CMConstants.grayColor;
     
-    self.playLabel.frame = CGRectMake(290, 305, 50, 15);
+    self.playLabel.frame = CGRectMake(290, 260, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(335, 305, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(335, 260, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(290, 333, 50, 15);
+    self.regionLabel.frame = CGRectMake(290, 290, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(335, 333, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(335, 290, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     
@@ -293,20 +293,21 @@
     self.directorNameLabel.text = [video objectForKey:@"directors"];
     
     NSString *stars = [video objectForKey:@"stars"];
-    NSArray *starArray;
-    if([stars rangeOfString:@"/"].length > 0){
-        starArray = [stars componentsSeparatedByString:@"/"];
-    } else if([stars rangeOfString:@","].length > 0){
-        starArray = [stars componentsSeparatedByString:@","];
-    } else {
-        starArray = [stars componentsSeparatedByString:@" "];
-    }
-    if(starArray.count > 0)
-        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if(starArray.count > 1)
-        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if(starArray.count > 2)
-        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    self.actorName1Label.text = stars;
+//    NSArray *starArray;
+//    if([stars rangeOfString:@"/"].length > 0){
+//        starArray = [stars componentsSeparatedByString:@"/"];
+//    } else if([stars rangeOfString:@","].length > 0){
+//        starArray = [stars componentsSeparatedByString:@","];
+//    } else {
+//        starArray = [stars componentsSeparatedByString:@" "];
+//    }
+//    if(starArray.count > 0)
+//        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+//    if(starArray.count > 1)
+//        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+//    if(starArray.count > 2)
+//        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];

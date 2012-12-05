@@ -11,12 +11,13 @@
 #import "CommonHeader.h"
 #define LEFT_GAP 50
 @interface CreateListOneViewController (){
-
+    
 }
 
 @end
 
 @implementation CreateListOneViewController
+@synthesize prodId;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,7 +35,7 @@
     [self.view setBackgroundColor:[UIColor clearColor]];
     self.bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
-        
+    
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 110, 27);
     self.titleImage.image = [UIImage imageNamed:@"create_list_title"];
     
@@ -104,11 +105,21 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
-                CreateListTwoViewController *viewController = [[CreateListTwoViewController alloc]initWithNibName:@"CreateListTwoViewController" bundle:nil];
-                [[ContainerUtility sharedInstance]setAttribute:[result objectForKey:@"topic_id"] forKey:kTopicId];
-                viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-                viewController.titleContent = self.titleField.text;
-                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+                if(![StringUtility stringIsEmpty:self.prodId]){
+                    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [result objectForKey:@"topic_id"], @"topic_id", self.prodId, @"prod_id", nil];
+                    [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id tempresult) {
+                        NSString *responseCode = [tempresult objectForKey:@"res_code"];
+                        if([responseCode isEqualToString:kSuccessResCode]){
+                            [self gotoNextScreen:result];
+                        } else {
+                            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+                        }
+                    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                        [UIUtility showSystemError:self.view];
+                    }];
+                } else {
+                    [self gotoNextScreen:result];                    
+                }
             } else {
                 [[AppDelegate instance].rootViewController showListFailureModalView:1.5];
             }
@@ -116,5 +127,14 @@
             [UIUtility showSystemError:self.view];
         }];
     }
+}
+
+- (void)gotoNextScreen:(id)result
+{
+    CreateListTwoViewController *viewController = [[CreateListTwoViewController alloc]initWithNibName:@"CreateListTwoViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    viewController.titleContent = self.titleField.text;
+    viewController.topId = [NSString stringWithFormat:@"%@", [result objectForKey:@"topic_id"]];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 @end

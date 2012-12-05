@@ -43,7 +43,7 @@
     self.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [self.view setBackgroundColor:[UIColor clearColor]];
     
-	table.frame = CGRectMake(25, 120, 460, self.view.frame.size.height - 350);
+	table.frame = CGRectMake(25, 120, 460, self.view.frame.size.height - 420);
     
 //    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
 //    lineImage.image = [UIImage imageNamed:@"dividing"];
@@ -70,8 +70,8 @@
 }
 - (void)createBtnClicked
 {
-    [[ContainerUtility sharedInstance]setAttribute:self.topId forKey:kTopicId];
     AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+    viewController.topId = self.topId;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 

@@ -124,26 +124,26 @@
     self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.playBtn.frame = CGRectMake(290, 150, 185, 40);
+    self.playBtn.frame = CGRectMake(290, 120, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
-    self.actorLabel.frame = CGRectMake(290, 210, 80, 15);
+    self.actorLabel.frame = CGRectMake(290, 180, 80, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(345, 210, 100, 15);
+    self.actorName1Label.frame = CGRectMake(345, 180, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
-    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
-    self.actorName2Label.textColor = CMConstants.grayColor;
-    self.actorName3Label.frame = CGRectMake(345, 260, 100, 15);
-    self.actorName3Label.textColor = CMConstants.grayColor;
-    self.playLabel.frame = CGRectMake(290, 290, 80, 15);
+//    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
+//    self.actorName2Label.textColor = CMConstants.grayColor;
+//    self.actorName3Label.frame = CGRectMake(345, 260, 100, 15);
+//    self.actorName3Label.textColor = CMConstants.grayColor;
+    self.playLabel.frame = CGRectMake(290, 210, 80, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(335, 290, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(335, 210, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(290, 330, 50, 15);
+    self.regionLabel.frame = CGRectMake(290, 240, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(335, 330, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(335, 240, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
@@ -169,10 +169,10 @@
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
     [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
-    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
-    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
-    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+//    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
+//    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+//    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+//    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_GAP, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
@@ -292,20 +292,21 @@
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
     self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    NSArray *starArray;
-    if([stars rangeOfString:@"/"].length > 0){
-        starArray = [stars componentsSeparatedByString:@"/"];
-    } else if([stars rangeOfString:@","].length > 0){
-        starArray = [stars componentsSeparatedByString:@","];
-    } else {
-        starArray = [stars componentsSeparatedByString:@" "];
-    }
-    if(starArray.count > 0)
-        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if(starArray.count > 1)
-        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if(starArray.count > 2)
-        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    self.actorName1Label.text = stars;
+//    NSArray *starArray;
+//    if([stars rangeOfString:@"/"].length > 0){
+//        starArray = [stars componentsSeparatedByString:@"/"];
+//    } else if([stars rangeOfString:@","].length > 0){
+//        starArray = [stars componentsSeparatedByString:@","];
+//    } else {
+//        starArray = [stars componentsSeparatedByString:@" "];
+//    }
+//    if(starArray.count > 0)
+//        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+//    if(starArray.count > 1)
+//        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+//    if(starArray.count > 2)
+//        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];

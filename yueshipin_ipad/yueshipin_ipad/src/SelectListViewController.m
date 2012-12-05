@@ -142,7 +142,7 @@
         nameLabel.font = CMConstants.titleFont;
         [cell.contentView addSubview:nameLabel];
         
-        SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 3, 20, 20) style:kSSCheckBoxViewStyleBox checked:NO];
+        SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 3, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
         checkbox.tag = 2001;
         [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
         [cell.contentView addSubview:checkbox];
@@ -245,6 +245,7 @@
 - (void)createBtnClicked
 {
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
+    viewController.prodId = self.prodId;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
 }

@@ -11,4 +11,6 @@
 
 @interface AddSearchViewController : SubsearchViewController
 - (id)initWithFrame:(CGRect)frame;
+
+@property (nonatomic, strong)NSString *topId;
 @end

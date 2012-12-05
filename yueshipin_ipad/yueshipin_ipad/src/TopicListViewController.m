@@ -49,7 +49,7 @@
     titleImage.image = [UIImage imageNamed:@"list_title"];
     [self.view addSubview:titleImage];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 360)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];

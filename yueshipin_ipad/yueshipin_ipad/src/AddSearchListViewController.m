@@ -32,6 +32,7 @@
 
 @implementation AddSearchListViewController
 @synthesize keyword;
+@synthesize topId;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,7 +51,7 @@
     bgImage.image = [UIImage imageNamed:@"detail_bg"];
     [self.view addSubview:bgImage];
     
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 62, 26)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 107, 26)];
     titleImage.image = [UIImage imageNamed:@"add_video_title"];
     [self.view addSubview:titleImage];
     
@@ -94,9 +95,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if(videoArray.count > 0){        
+    if(videoArray.count > 0){
     } else {
-        [self getResult];        
+        [self getResult];
     }
 }
 
@@ -140,7 +141,7 @@
     }
     [table reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-
+    
 }
 
 
@@ -160,139 +161,161 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if(videoArray == nil){
+        return 0;
+    }
+    if(videoArray.count == 0){
+        return 1;
+    }
     return videoArray.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(cell == nil){
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 102, 146)];
-        imageView.image = [UIImage imageNamed:@"movie_frame"];
-        [cell.contentView addSubview:imageView];
+    if(videoArray.count > 0){
+        static NSString *CellIdentifier = @"Cell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if(cell == nil){
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 102, 146)];
+            imageView.image = [UIImage imageNamed:@"movie_frame"];
+            [cell.contentView addSubview:imageView];
+            
+            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
+            contentImage.tag = 1001;
+            [cell.contentView addSubview:contentImage];
+            
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
+            nameLabel.text = @"";
+            nameLabel.font = [UIFont boldSystemFontOfSize:20];
+            nameLabel.backgroundColor = [UIColor clearColor];
+            nameLabel.tag = 2001;
+            [cell.contentView addSubview:nameLabel];
+            
+            //        for (int i = 0; i < 5; i++){
+            //            UIImageView *startImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"empty_star"]];
+            //            startImage.frame = CGRectMake(160 + (16 + 5) * i, 48, 16, 16);
+            //            startImage.tag = 3001 + i;
+            //            [cell.contentView addSubview:startImage];
+            //        }
+            
+            UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 45, 45, 20)];
+            scoreLabel.tag = 3001;
+            scoreLabel.text = @"0 分";
+            scoreLabel.backgroundColor = [UIColor clearColor];
+            scoreLabel.font = [UIFont boldSystemFontOfSize:15];
+            scoreLabel.textColor = CMConstants.scoreBlueColor;
+            [cell.contentView addSubview:scoreLabel];
+            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
+            doubanLogo.image = [UIImage imageNamed:@"douban"];
+            [cell.contentView addSubview:doubanLogo];
+            
+            UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
+            directorLabel.text = @"导演：";
+            [directorLabel sizeToFit];
+            directorLabel.font = [UIFont systemFontOfSize:13];
+            directorLabel.backgroundColor = [UIColor clearColor];
+            [cell.contentView addSubview:directorLabel];
+            
+            UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 200, 25)];
+            directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
+            directorNameLabel.backgroundColor = [UIColor clearColor];
+            directorNameLabel.tag = 4001;
+            [cell.contentView addSubview:directorNameLabel];
+            
+            UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
+            actorLabel.text = @"主演：";
+            [actorLabel sizeToFit];
+            actorLabel.font = [UIFont systemFontOfSize:13];
+            actorLabel.backgroundColor = [UIColor clearColor];
+            [cell.contentView addSubview:actorLabel];
+            
+            UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 200, 25)];
+            actorName1Label.font = [UIFont systemFontOfSize:13];
+            actorName1Label.backgroundColor = [UIColor clearColor];
+            actorName1Label.tag = 5001;
+            [cell.contentView addSubview:actorName1Label];
+            
+            
+            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(160, 130, 75, 24)];
+            dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
+            [cell.contentView addSubview:dingNumberImage];
+            
+            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 40, 24)];
+            dingNumberLabel.textAlignment = NSTextAlignmentCenter;
+            dingNumberLabel.backgroundColor = [UIColor clearColor];
+            dingNumberLabel.font = [UIFont systemFontOfSize:13];
+            dingNumberLabel.tag = 6001;
+            [cell.contentView addSubview:dingNumberLabel];
+            
+            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(250, 130, 84, 24)];
+            collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
+            [cell.contentView addSubview:collectioNumber];
+            
+            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(255, 130, 40, 24)];
+            collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
+            collectionNumberLabel.backgroundColor = [UIColor clearColor];
+            collectionNumberLabel.font = [UIFont systemFontOfSize:13];
+            collectionNumberLabel.tag = 7001;
+            [cell.contentView addSubview:collectionNumberLabel];
+            
+            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
+            devidingLine.image = [UIImage imageNamed:@"dividing"];
+            [cell.contentView addSubview:devidingLine];
+            
+            SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 65, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
+            checkbox.tag = 8001;
+            [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
+            [cell.contentView addSubview:checkbox];
+        }
+        NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
+        UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
+        [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         
-        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
-        contentImage.tag = 1001;
-        [cell.contentView addSubview:contentImage];
+        UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
+        nameLabel.text = [item objectForKey:@"prod_name"];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
-        nameLabel.text = @"";
-        nameLabel.font = [UIFont boldSystemFontOfSize:20];
-        nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.tag = 2001;
-        [cell.contentView addSubview:nameLabel];
+        UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:4001];
+        directorNameLabel.text = [item objectForKey:@"director"];
         
-//        for (int i = 0; i < 5; i++){
-//            UIImageView *startImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"empty_star"]];
-//            startImage.frame = CGRectMake(160 + (16 + 5) * i, 48, 16, 16);
-//            startImage.tag = 3001 + i;
-//            [cell.contentView addSubview:startImage];
-//        }
+        UILabel *actorLabel = (UILabel *)[cell viewWithTag:5001];
+        actorLabel.text = [item objectForKey:@"star"];
         
-        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 45, 45, 20)];
-        scoreLabel.tag = 3001;
-        scoreLabel.text = @"0 分";
-        scoreLabel.backgroundColor = [UIColor clearColor];
-        scoreLabel.font = [UIFont boldSystemFontOfSize:15];
-        scoreLabel.textColor = CMConstants.scoreBlueColor;
-        [cell.contentView addSubview:scoreLabel];
-        UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
-        doubanLogo.image = [UIImage imageNamed:@"douban"];
-        [cell.contentView addSubview:doubanLogo];
+        SSCheckBoxView *checkbox = (SSCheckBoxView *)[cell viewWithTag:8001];
+        NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        if([checkboxes containsObject:prodId]){
+            [checkbox setChecked:YES];
+        } else {
+            [checkbox setChecked:NO];
+        }
+        [checkbox setValue:prodId];
         
-        UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
-        directorLabel.text = @"导演：";
-        [directorLabel sizeToFit];
-        directorLabel.font = [UIFont systemFontOfSize:13];
-        directorLabel.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:directorLabel];
+        UILabel *scoreLabel = (UILabel *)[cell viewWithTag:4001];
+        scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
         
-        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 200, 25)];
-        directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
-        directorNameLabel.backgroundColor = [UIColor clearColor];
-        directorNameLabel.tag = 4001;
-        [cell.contentView addSubview:directorNameLabel];
+        UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
+        dingNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"support_num"]];
         
-        UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
-        actorLabel.text = @"主演：";
-        [actorLabel sizeToFit];
-        actorLabel.font = [UIFont systemFontOfSize:13];
-        actorLabel.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:actorLabel];
+        UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:7001];
+        collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"favority_num"]];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 200, 25)];
-        actorName1Label.font = [UIFont systemFontOfSize:13];
-        actorName1Label.backgroundColor = [UIColor clearColor];
-        actorName1Label.tag = 5001;
-        [cell.contentView addSubview:actorName1Label];
-        
-        
-        UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(160, 130, 75, 24)];
-        dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
-        [cell.contentView addSubview:dingNumberImage];
-        
-        UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 40, 24)];
-        dingNumberLabel.textAlignment = NSTextAlignmentCenter;
-        dingNumberLabel.backgroundColor = [UIColor clearColor];
-        dingNumberLabel.font = [UIFont systemFontOfSize:13];
-        dingNumberLabel.tag = 6001;
-        [cell.contentView addSubview:dingNumberLabel];
-        
-        UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(250, 130, 84, 24)];
-        collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
-        [cell.contentView addSubview:collectioNumber];
-        
-        UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(255, 130, 40, 24)];
-        collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
-        collectionNumberLabel.backgroundColor = [UIColor clearColor];
-        collectionNumberLabel.font = [UIFont systemFontOfSize:13];
-        collectionNumberLabel.tag = 7001;
-        [cell.contentView addSubview:collectionNumberLabel];
-        
-        UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
-        devidingLine.image = [UIImage imageNamed:@"dividing"];
-        [cell.contentView addSubview:devidingLine];
-        
-        SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 65, 30, 30) style:kSSCheckBoxViewStyleBox checked:NO];
-        checkbox.tag = 8001;
-        [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
-        [cell.contentView addSubview:checkbox];
-    }
-    NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
-    UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-    [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-    
-    UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
-    nameLabel.text = [item objectForKey:@"prod_name"];
-    
-    UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:4001];
-    directorNameLabel.text = [item objectForKey:@"director"];
-    
-    UILabel *actorLabel = (UILabel *)[cell viewWithTag:5001];
-    actorLabel.text = [item objectForKey:@"star"];
-    
-    SSCheckBoxView *checkbox = (SSCheckBoxView *)[cell viewWithTag:8001];
-    NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-    if([checkboxes containsObject:prodId]){
-        [checkbox setChecked:YES];
+        return cell;
     } else {
-        [checkbox setChecked:NO];
+        static NSString *noRecordCellIdentifier = @"noRecordCell";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:noRecordCellIdentifier];
+        if(cell == nil){
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:noRecordCellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(140, 0, 300, 40)];
+            [label setBackgroundColor:[UIColor clearColor]];
+            label.textColor = CMConstants.grayColor;
+            label.font = [UIFont systemFontOfSize: 16];
+            label.text = @"很抱歉，没有找到相关影片！";
+            [cell.contentView addSubview:label];
+        }
+        return cell;
     }
-    [checkbox setValue:prodId];
-    
-    UILabel *scoreLabel = (UILabel *)[cell viewWithTag:4001];
-    scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
-     
-    UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
-    dingNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"support_num"]];
-    
-    UILabel *collectionNumberLabel = (UILabel *)[cell viewWithTag:7001];
-    collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"favority_num"]];
-    
-    return cell;
 }
 
 - (void) checkBoxViewChangedState:(SSCheckBoxView *)cbv
@@ -317,26 +340,26 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [table deselectRowAtIndexPath:indexPath animated:YES];
-//    NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
-//    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
-//    NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-//    if([type isEqualToString:@"1"]){
-//        MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
-//        viewController.prodId = prodId;
-//        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
-//    } else if([type isEqualToString:@"2"]){
-//        DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
-//        viewController.prodId = prodId;
-//        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
-//    } else {
-//        ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
-//        viewController.prodId = prodId;
-//        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
-//    }
+    //    [table deselectRowAtIndexPath:indexPath animated:YES];
+    //    NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
+    //    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    //    NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+    //    if([type isEqualToString:@"1"]){
+    //        MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+    //        viewController.prodId = prodId;
+    //        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    //        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    //    } else if([type isEqualToString:@"2"]){
+    //        DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+    //        viewController.prodId = prodId;
+    //        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    //        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    //    } else {
+    //        ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+    //        viewController.prodId = prodId;
+    //        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    //        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
+    //    }
 }
 
 - (void)viewDidUnload {
@@ -355,11 +378,7 @@
     } else {
         return;
     }
-    NSString *topicId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kTopicId];
-    if(topicId == nil){
-        [[AppDelegate instance].rootViewController showFailureModalView:1.5];
-    }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"topic_id", prodIdStr, @"prod_id", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.topId, @"topic_id", prodIdStr, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
