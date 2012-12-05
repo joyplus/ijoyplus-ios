@@ -117,7 +117,7 @@
             for(int i = index; i < hotKeyArray.count; i++){
                 length += [self calculateBtnWidth:[[hotKeyArray objectAtIndex:i] valueForKey:@"content"]];
                 index = i;
-                if(length > TABLE_VIEW_WIDTH) {
+                if(length > 350) {
                     length = 0;
                     if(i > 0){
                         [hotKeyIndex addObject:[NSNumber numberWithInt:i]];

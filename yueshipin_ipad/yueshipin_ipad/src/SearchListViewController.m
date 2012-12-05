@@ -155,7 +155,7 @@
             scoreLabel.textColor = CMConstants.scoreBlueColor;
             [cell.contentView addSubview:scoreLabel];
             UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
-            doubanLogo.image = [UIImage imageNamed:@"douban"];
+            doubanLogo.tag = 9001;
             [cell.contentView addSubview:doubanLogo];
             
             UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
@@ -228,7 +228,15 @@
         actorLabel.text = [item objectForKey:@"star"];
         
         UILabel *scoreLabel = (UILabel *)[cell viewWithTag:3001];
-        scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
+        UIImageView *doubanlogo = (UIImageView *)[cell viewWithTag:9001];
+        NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+        if([type isEqualToString:@"3"]){
+            scoreLabel.text = @"";
+            doubanlogo.image = nil;
+        } else {
+            scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
+            doubanlogo.image = [UIImage imageNamed:@"douban"];
+        }
         
         UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
         dingNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"support_num"]];
