@@ -207,7 +207,7 @@
     self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
     self.introBgImage.image = [UIImage imageNamed:@"brief"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 80);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 490, 420, 86);
     self.introContentTextView.textColor = CMConstants.grayColor;
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
@@ -498,8 +498,8 @@
 
 - (void)introBtnClicked
 {
+    introExpand = !introExpand;
     if(introContentHeight > 80){
-        introExpand = !introExpand;
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
@@ -519,7 +519,14 @@
             } completion:^(BOOL finished) {
             }];
         }
+    } else {
+        if(introExpand){
+            [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
+        } else {
+            [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
+        }
     }
+    
 }
 
 @end

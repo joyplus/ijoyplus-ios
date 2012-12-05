@@ -14,7 +14,7 @@
 #import "CommentListViewController.h"
 
 #define LEFT_GAP 50
-#define USE_CUSTOM_DISPLAY 0
+#define DEFAULT_POSOTION_Y 585
 
 @interface ShowDetailViewController (){
     ShowListViewController *listViewController;
@@ -133,10 +133,10 @@
     self.actorLabel.textColor = CMConstants.grayColor;
     self.actorName1Label.frame = CGRectMake(345, 180, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
-//    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
-//    self.actorName2Label.textColor = CMConstants.grayColor;
-//    self.actorName3Label.frame = CGRectMake(345, 260, 100, 15);
-//    self.actorName3Label.textColor = CMConstants.grayColor;
+    //    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
+    //    self.actorName2Label.textColor = CMConstants.grayColor;
+    //    self.actorName3Label.frame = CGRectMake(345, 260, 100, 15);
+    //    self.actorName3Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(290, 210, 80, 15);
     self.playLabel.textColor = CMConstants.grayColor;
     self.playTimeLabel.frame = CGRectMake(335, 210, 100, 15);
@@ -169,10 +169,10 @@
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
     [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-//    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
-//    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
-//    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
-//    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    //    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
+    //    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+    //    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    //    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_GAP, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
@@ -208,8 +208,8 @@
 
 - (void)introBtnClicked
 {
+    introExpand = !introExpand;
     if(introContentHeight > 80){
-        introExpand = !introExpand;
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
@@ -229,6 +229,12 @@
             } completion:^(BOOL finished) {
                 
             }];
+        }
+    } else {
+        if(introExpand){
+            [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
+        } else {
+            [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
         }
     }
 }
@@ -293,20 +299,20 @@
     self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     self.actorName1Label.text = stars;
-//    NSArray *starArray;
-//    if([stars rangeOfString:@"/"].length > 0){
-//        starArray = [stars componentsSeparatedByString:@"/"];
-//    } else if([stars rangeOfString:@","].length > 0){
-//        starArray = [stars componentsSeparatedByString:@","];
-//    } else {
-//        starArray = [stars componentsSeparatedByString:@" "];
-//    }
-//    if(starArray.count > 0)
-//        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    if(starArray.count > 1)
-//        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    if(starArray.count > 2)
-//        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //    NSArray *starArray;
+    //    if([stars rangeOfString:@"/"].length > 0){
+    //        starArray = [stars componentsSeparatedByString:@"/"];
+    //    } else if([stars rangeOfString:@","].length > 0){
+    //        starArray = [stars componentsSeparatedByString:@","];
+    //    } else {
+    //        starArray = [stars componentsSeparatedByString:@" "];
+    //    }
+    //    if(starArray.count > 0)
+    //        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //    if(starArray.count > 1)
+    //        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //    if(starArray.count > 2)
+    //        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
@@ -323,30 +329,33 @@
 
 - (void)repositElements:(int)increasePositionY
 {
-    self.previousShowBtn.frame = CGRectMake(LEFT_GAP,  590 + increasePositionY, 32, 161);
-    [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-    [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-    [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
-    [self.previousShowBtn addTarget:self action:@selector(previousShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.nextShowBtn.frame = CGRectMake(LEFT_GAP + 390 + 20,  590 + increasePositionY, 32, 161);
-    [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-    [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-    [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
-    [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    if(listViewController == nil){
-        listViewController = [[ShowListViewController alloc]initWithStyle:UITableViewStylePlain];
-        listViewController.parentDelegate = self;
-        listViewController.view.backgroundColor = [UIColor clearColor];
-        [self.bgScrollView addSubview:listViewController.view];
+    int positionY = DEFAULT_POSOTION_Y + increasePositionY;
+    if(episodeArray.count > 1){
+        self.previousShowBtn.frame = CGRectMake(LEFT_GAP,  590 + increasePositionY, 32, 161);
+        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
+        [self.previousShowBtn addTarget:self action:@selector(previousShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.nextShowBtn.frame = CGRectMake(LEFT_GAP + 390 + 20,  590 + increasePositionY, 32, 161);
+        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
+        [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        
+        if(listViewController == nil){
+            listViewController = [[ShowListViewController alloc]initWithStyle:UITableViewStylePlain];
+            listViewController.parentDelegate = self;
+            listViewController.view.backgroundColor = [UIColor clearColor];
+            [self.bgScrollView addSubview:listViewController.view];
+        }
+        listViewController.listData = [self getEpisodes];
+        listViewController.view.frame = CGRectMake(LEFT_GAP + 40, 590 + increasePositionY, 360, 161);
+        positionY = listViewController.view.frame.origin.y + 161;
     }
-    listViewController.listData = [self getEpisodes];
-    listViewController.view.frame = CGRectMake(LEFT_GAP + 40, 590 + increasePositionY, 360, 161);
     
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
     
-    int positionY = listViewController.view.frame.origin.y + 161;
     self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 30, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
