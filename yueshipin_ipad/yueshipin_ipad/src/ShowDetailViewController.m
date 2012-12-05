@@ -103,6 +103,7 @@
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.filmImage.frame = CGRectMake(LEFT_GAP+6, 84, 205, 300);
+    self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
     
     self.placeholderImage.frame = CGRectMake(LEFT_GAP, 78, 217, 312);
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
@@ -180,10 +181,10 @@
     self.introImage.frame = CGRectMake(LEFT_GAP, 460, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
-    self.introBgImage.image = [UIImage imageNamed:@"brief"];
+    self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 100);
+    self.introBgImage.image = [[UIImage imageNamed:@"brief"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 80);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 490, 420, 100);
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -193,7 +194,7 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_GAP + 420, self.introContentTextView.frame.origin.y + 70, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_GAP + 420, self.introContentTextView.frame.origin.y + 80, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
 }
@@ -213,18 +214,18 @@
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
-                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86 + introContentHeight - 80);
+                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 70 + introContentHeight - 80, introBtn.frame.size.width, introBtn.frame.size.height);
-                [self repositElements:introContentHeight - 80];
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
+                [self repositElements:introContentHeight - 100];
             } completion:^(BOOL finished) {
             }];
         } else {
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-                [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 80)];
-                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86);
+                [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
+                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 70, introBtn.frame.size.width, introBtn.frame.size.height);
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
             } completion:^(BOOL finished) {
                 
@@ -262,10 +263,8 @@
 
 - (void)calculateIntroContentHeight
 {
-    float fPadding = 16.0; // 8.0px x 2
-    CGSize constraint = CGSizeMake(self.introContentTextView.contentSize.width - fPadding, CGFLOAT_MAX);
-    CGSize size = [[video objectForKey:@"summary"] sizeWithFont: self.introContentTextView.font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    introContentHeight = size.height + 16.0;
+    self.introContentTextView.text = [video objectForKey:@"summary"];
+    introContentHeight = self.introContentTextView.contentSize.height;
 }
 
 - (void)parseData:(id)result
@@ -329,15 +328,15 @@
 
 - (void)repositElements:(int)increasePositionY
 {
-    int positionY = DEFAULT_POSOTION_Y + increasePositionY;
+    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 10;
     if(episodeArray.count > 1){
-        self.previousShowBtn.frame = CGRectMake(LEFT_GAP,  590 + increasePositionY, 32, 161);
+        self.previousShowBtn.frame = CGRectMake(LEFT_GAP,  600 + increasePositionY, 32, 161);
         [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
         [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
         [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
         [self.previousShowBtn addTarget:self action:@selector(previousShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         
-        self.nextShowBtn.frame = CGRectMake(LEFT_GAP + 390 + 20,  590 + increasePositionY, 32, 161);
+        self.nextShowBtn.frame = CGRectMake(LEFT_GAP + 390 + 20,  600 + increasePositionY, 32, 161);
         [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
         [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
         [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
@@ -350,7 +349,7 @@
             [self.bgScrollView addSubview:listViewController.view];
         }
         listViewController.listData = [self getEpisodes];
-        listViewController.view.frame = CGRectMake(LEFT_GAP + 40, 590 + increasePositionY, 360, 161);
+        listViewController.view.frame = CGRectMake(LEFT_GAP + 40, 600 + increasePositionY, 360, 161);
         positionY = listViewController.view.frame.origin.y + 161;
     }
     

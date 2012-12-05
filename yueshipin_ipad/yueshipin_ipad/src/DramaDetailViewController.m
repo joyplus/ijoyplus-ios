@@ -186,10 +186,10 @@
     self.introImage.frame = CGRectMake(LEFT_GAP, 460, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 86);
-    self.introBgImage.image = [UIImage imageNamed:@"brief"];
+    self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 100);
+    self.introBgImage.image = [[UIImage imageNamed:@"brief"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 493, 420, 80);
+    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 490, 420, 100);
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -199,7 +199,7 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_GAP + 420, self.introContentTextView.frame.origin.y + 70, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_GAP + 420, self.introContentTextView.frame.origin.y + 80, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
 }
@@ -211,18 +211,18 @@
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
-                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86 + introContentHeight - 80);
+                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 70 + introContentHeight - 80, introBtn.frame.size.width, introBtn.frame.size.height);
-                [self repositElements:introContentHeight - 80];
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
+                [self repositElements:introContentHeight - 100];
             } completion:^(BOOL finished) {
             }];
         } else {
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-                [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 80)];
-                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 86);
+                [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
+                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 70, introBtn.frame.size.width, introBtn.frame.size.height);
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
             } completion:^(BOOL finished) {
                 
@@ -325,10 +325,8 @@
 
 - (void)calculateIntroContentHeight
 {
-    float fPadding = 16.0; // 8.0px x 2
-    CGSize constraint = CGSizeMake(self.introContentTextView.contentSize.width - fPadding, CGFLOAT_MAX);
-    CGSize size = [[video objectForKey:@"summary"] sizeWithFont: self.introContentTextView.font constrainedToSize:constraint lineBreakMode:UILineBreakModeWordWrap];
-    introContentHeight = size.height + 16.0;
+    self.introContentTextView.text = [video objectForKey:@"summary"];
+    introContentHeight = self.introContentTextView.contentSize.height;
 }
 
 
@@ -344,14 +342,14 @@
     if(btnAdded){
         for (int i = 0; i < totalEpisodeNumber; i++) {
             UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:i+1];
-            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39 + increasePositionY, 44, 34)];
+            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 600 + floor(i / 9.0) * 39 + increasePositionY, 44, 34)];
         }
     } else {
         for (int i = 0; i < totalEpisodeNumber; i++) {
             btnAdded = YES;
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.tag = i+1;
-            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 590 + floor(i / 9.0) * 39, 44, 34)];
+            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 600 + floor(i / 9.0) * 39, 44, 34)];
             if (i < 9) {
                 [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
             } else {
@@ -372,7 +370,7 @@
             [self.bgScrollView addSubview:btn];
         }
     }
-    int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY;
+    int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY + 10;
     UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber-1)];
     if(lastBtn != nil){
         positionY = lastBtn.frame.origin.y + 30;
@@ -380,7 +378,7 @@
     
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_GAP, positionY + 30, 80, 20);
-        self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
+        self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
             topicListViewController.listData = topics;
