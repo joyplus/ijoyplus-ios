@@ -108,7 +108,7 @@
         [searchBtn addTarget:self action:@selector(searchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [backgroundView addSubview:searchBtn];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(8, 92, backgroundView.frame.size.width - 18, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 92, backgroundView.frame.size.width - 18, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];

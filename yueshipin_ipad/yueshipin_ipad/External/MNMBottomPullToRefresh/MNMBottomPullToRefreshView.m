@@ -74,7 +74,7 @@
         
         UIImage *arrowImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE];
         
-        arrowImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(60.0f, round(MM_FOOTER_VIEW_HEIGHT / 2.0f) - round(arrowImage.size.height / 2.0f), arrowImage.size.width, arrowImage.size.height)];
+        arrowImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(130.0f, round(MM_FOOTER_VIEW_HEIGHT / 2.0f) - round(arrowImage.size.height / 2.0f), arrowImage.size.width, arrowImage.size.height)];
         arrowImageView_.contentMode = UIViewContentModeCenter;
         arrowImageView_.image = arrowImage;
         

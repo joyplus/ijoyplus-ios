@@ -154,7 +154,7 @@
         [cell.contentView addSubview:imageView];
         
         UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
-        contentImage.image = [UIImage imageNamed:@"test_movie"];
+        contentImage.image = [UIImage imageNamed:@""];
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
@@ -179,11 +179,11 @@
         scoreLabel.textColor = CMConstants.scoreBlueColor;
         [cell.contentView addSubview:scoreLabel];
         UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
-        doubanLogo.image = [UIImage imageNamed:@"douban"];
+        doubanLogo.tag = 9001;
         [cell.contentView addSubview:doubanLogo];
         
         UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
-        directorLabel.text = @"导演：";
+        directorLabel.tag = 4011;
         directorLabel.textColor = CMConstants.grayColor;
         directorLabel.font = [UIFont systemFontOfSize:13];
         directorLabel.backgroundColor = [UIColor clearColor];
@@ -197,7 +197,7 @@
         [cell.contentView addSubview:directorNameLabel];
         
         UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
-        actorLabel.text = @"主演：";
+        actorLabel.tag = 5011;
         actorLabel.textColor = CMConstants.grayColor;
         actorLabel.font = [UIFont systemFontOfSize:13];
         actorLabel.backgroundColor = [UIColor clearColor];
@@ -245,13 +245,33 @@
     nameLabel.text = [item objectForKey:@"content_name"];
     
     UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:4001];
-    directorNameLabel.text = [item objectForKey:@"directors"];
     
     UILabel *actorLabel = (UILabel *)[cell viewWithTag:5001];
-    actorLabel.text = [item objectForKey:@"stars"];
     
     UILabel *scoreLabel = (UILabel *)[cell viewWithTag:3001];
-    scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
+    UIImageView *doubanlogo = (UIImageView *)[cell viewWithTag:9001];
+    UILabel *directorLabel = (UILabel *)[cell viewWithTag:4011];
+    UILabel *actorLabel1 = (UILabel *)[cell viewWithTag:5011];
+    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"content_type"]];
+    if([type isEqualToString:@"3"]){
+        scoreLabel.text = @"";
+        doubanlogo.image = nil;
+        directorLabel.text = @"主持人：";
+        directorNameLabel.frame = CGRectMake(225, 75, 220, 25);
+        directorNameLabel.text = [item objectForKey:@"stars"];
+        actorLabel.frame = CGRectMake(225, 100, 220, 25);
+        actorLabel1.text = @"首播时间：";
+        actorLabel.text = [item objectForKey:@"publish_date"];
+    } else {
+        scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
+        doubanlogo.image = [UIImage imageNamed:@"douban"];
+        directorLabel.text = @"导演：";
+        directorNameLabel.frame = CGRectMake(205, 75, 220, 25);
+        directorNameLabel.text = [item objectForKey:@"directors"];
+        actorLabel.frame = CGRectMake(205, 100, 220, 25);
+        actorLabel1.text = @"主演：";
+        actorLabel.text = [item objectForKey:@"stars"];
+    }
     
     UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
     dingNumberLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"support_num"]];

@@ -86,12 +86,12 @@
 
 - (void)retrieveTopsListData
 {       
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_topic_list"];
-    if(cacheResult != nil){
-        [self parseVideoData:cacheResult];
-    } else {
-        [myHUD showProgressBar:self.view];
-    }
+//    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_topic_list"];
+//    if(cacheResult != nil){
+//        [self parseVideoData:cacheResult];
+//    } else {
+//    }
+    [myHUD showProgressBar:self.view];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -112,7 +112,7 @@
     if(responseCode == nil){
         NSArray *videos = [result objectForKey:@"tops"];
         if(videos != nil && videos.count > 0){
-            [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
+//            [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
             [videoArray addObjectsFromArray:videos];
         }
         if(videos.count < pageSize){

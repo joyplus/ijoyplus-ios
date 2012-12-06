@@ -114,4 +114,5 @@ NSString *const kPathGenerateUIID = @"/index.php/account/generateUIID";
 NSString *const kPathTopItems = @"/index.php/top_items";
 NSString *const kPathUserTopics = @"/index.php/user/tops";
 NSString *const kPathTopDelete = @"/index.php/top/del";
+NSString *const kPathRemoveItem = @"/index.php/top/removeItem";
 

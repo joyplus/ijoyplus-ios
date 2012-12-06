@@ -93,7 +93,7 @@
                                                  otherButtonTitles:@"确定", nil];
         [alertView show];
     } else {
-        [self deleteVideo];
+        [self deleteTopic];
     }
     
 }
@@ -101,11 +101,11 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex > 0) {
-        [self deleteVideo];
+        [self deleteTopic];
     }
 }
 
-- (void)deleteVideo
+- (void)deleteTopic
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.topId, @"topic_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -129,13 +129,23 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"commitEditingStyle");
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSString *itemId = [NSString stringWithFormat:@"%@", [[topsArray objectAtIndex:indexPath.row] objectForKey:@"id"]];
+        [self deleteVideo:itemId];
         [topsArray removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
-    
+}
+
+- (void)deleteVideo:(NSString *)itemId
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"item_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
 
 @end

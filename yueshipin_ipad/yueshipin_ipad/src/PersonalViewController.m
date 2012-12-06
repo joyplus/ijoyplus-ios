@@ -418,6 +418,11 @@
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if(sender.tag == 1003){
+        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if([hostReach currentReachabilityStatus] == NotReachable) {
+            [UIUtility showNetWorkError:self.view];
+            return;
+        }
         TopicListViewController *viewController = [[TopicListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];

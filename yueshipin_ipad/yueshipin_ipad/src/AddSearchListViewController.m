@@ -123,6 +123,7 @@
 
 - (void)getResult
 {
+    [myHUD showProgressBar:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
@@ -137,9 +138,11 @@
             }
         }
         [self loadTable];
+        [myHUD hide];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+        [myHUD hide];
     }];
 }
 
@@ -216,7 +219,6 @@
             
             UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 45, 45, 20)];
             scoreLabel.tag = 3001;
-            scoreLabel.text = @"0 分";
             scoreLabel.backgroundColor = [UIColor clearColor];
             scoreLabel.font = [UIFont boldSystemFontOfSize:15];
             scoreLabel.textColor = CMConstants.scoreBlueColor;
@@ -227,20 +229,18 @@
             
             UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
             directorLabel.text = @"导演：";
-            [directorLabel sizeToFit];
             directorLabel.font = [UIFont systemFontOfSize:13];
             directorLabel.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:directorLabel];
             
             UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 200, 25)];
-            directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
+            directorNameLabel.font = [UIFont systemFontOfSize:13];
             directorNameLabel.backgroundColor = [UIColor clearColor];
             directorNameLabel.tag = 4001;
             [cell.contentView addSubview:directorNameLabel];
             
             UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
             actorLabel.text = @"主演：";
-            [actorLabel sizeToFit];
             actorLabel.font = [UIFont systemFontOfSize:13];
             actorLabel.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:actorLabel];
@@ -305,7 +305,7 @@
         }
         [checkbox setValue:prodId];
         
-        UILabel *scoreLabel = (UILabel *)[cell viewWithTag:4001];
+        UILabel *scoreLabel = (UILabel *)[cell viewWithTag:3001];
         scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
         
         UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
@@ -419,7 +419,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempArray;

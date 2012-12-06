@@ -23,7 +23,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define MM_FOOTER_VIEW_HEIGHT 30
+#define MM_FOOTER_VIEW_HEIGHT 40
 
 /**
  * Enumerates control state
