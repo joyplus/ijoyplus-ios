@@ -44,7 +44,7 @@
         topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         
-        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 115, 383, 38)];
+        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 105, 383, 38)];
         sBar.delegate = self;
         [self.view addSubview:sBar];
         
