@@ -48,15 +48,15 @@
 
 @implementation UIViewExt
 
-- (UIView *) hitTest: (CGPoint) pt withEvent: (UIEvent *) event 
-{   
+- (UIView *) hitTest: (CGPoint) pt withEvent: (UIEvent *) event
+{
 	UIView* viewToReturn=nil;
 	CGPoint pointToReturn;
 	UIView* uiRightView = (UIView*)[[self subviews] objectAtIndex:2];
 	
 	if ([[uiRightView subviews] objectAtIndex:0]) {
 		
-		UIView* uiStackScrollView = [[uiRightView subviews] objectAtIndex:0];	
+		UIView* uiStackScrollView = [[uiRightView subviews] objectAtIndex:0];
 		
 		if ([[uiStackScrollView subviews] objectAtIndex:1]) {
 			
@@ -73,9 +73,9 @@
 		}
 	}
 	if(viewToReturn != nil) {
-		return [viewToReturn hitTest:pointToReturn withEvent:event];		
+		return [viewToReturn hitTest:pointToReturn withEvent:event];
 	}
-	return [super hitTest:pt withEvent:event];	
+	return [super hitTest:pt withEvent:event];
 }
 
 @end
@@ -95,7 +95,7 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {		
+    if (self) {
     }
     return self;
 }
@@ -113,7 +113,7 @@
     [rootView addSubview:bgImageView];
 	
 	leftMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, self.view.frame.size.height)];
-	leftMenuView.autoresizingMask = UIViewAutoresizingFlexibleHeight;	
+	leftMenuView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
 	menuViewController = [[MenuViewController alloc] initWithFrame:CGRectMake(0, 0, leftMenuView.frame.size.width, leftMenuView.frame.size.height)];
 	[menuViewController.view setBackgroundColor:[UIColor clearColor]];
 	[menuViewController viewWillAppear:FALSE];
@@ -122,7 +122,7 @@
 	
 	rightSlideView = [[UIView alloc] initWithFrame:CGRectMake(LEFT_MENU_DIPLAY_WIDTH, 0, rootView.frame.size.width - leftMenuView.frame.size.width, rootView.frame.size.height)];
 	rightSlideView.autoresizingMask = UIViewAutoresizingFlexibleWidth + UIViewAutoresizingFlexibleHeight;
-	stackScrollViewController = [[StackScrollViewController alloc] init];	
+	stackScrollViewController = [[StackScrollViewController alloc] init];
 	[stackScrollViewController.view setFrame:CGRectMake(0, 0, rightSlideView.frame.size.width, rightSlideView.frame.size.height)];
 	[stackScrollViewController.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth + UIViewAutoresizingFlexibleHeight];
 	[stackScrollViewController viewWillAppear:FALSE];
@@ -205,7 +205,7 @@
     tempMovieImage.frame = CGRectMake(408, 73, 113, 170);
     [tempMovieImage setImageWithURL:[NSURL URLWithString:self.prodUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [frame addSubview:tempMovieImage];
-
+    
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     closeBtn.frame = CGRectMake(735, 240, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
@@ -248,7 +248,7 @@
     sendBtn.frame = CGRectMake(615, 440, 80, 32);
     [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateNormal];
     [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateHighlighted];
-    [sendBtn addTarget:self action:@selector(sendComment) forControlEvents:UIControlEventTouchUpInside];
+    [sendBtn addTarget:self action:@selector(sendComment:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:sendBtn];
     
     contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(330, 310, 360, 110)];
@@ -257,30 +257,32 @@
     [self.view addSubview:view];
 }
 
-- (void)sendComment{
+- (void)sendComment:(UIButton *)btn
+{
     if(contentTextView.text.length > 0){
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", contentTextView.text, @"content", [StringUtility createUUID], @"token", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        if([responseCode isEqualToString:kSuccessResCode]){
-            [self removeOverlay];
-            [self showSuccessModalView:1.5];
-            [self.videoDetailDelegate getTopComments:10];
-        } else {
+        [btn setEnabled:NO];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", contentTextView.text, @"content", [StringUtility createUUID], @"token", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                [self removeOverlay];
+                [self showSuccessModalView:1.5];
+                [self.videoDetailDelegate getTopComments:10];
+            } else {
+                [self removeOverlay];
+                [self showFailureModalView:1.5];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [self removeOverlay];
             [self showFailureModalView:1.5];
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [self removeOverlay];
-        [self showFailureModalView:1.5];
-    }];
+        }];
     }
 }
 
 - (void)sendWeibo
 {
     if(contentTextView.text.length > 0){
-       SinaWeibo  *_sinaweibo = [AppDelegate instance].sinaweibo;
+        SinaWeibo  *_sinaweibo = [AppDelegate instance].sinaweibo;
         NSString *content = [NSString stringWithFormat:@"#%@# %@", self.prodName, contentTextView.text];
         if (content.length > 140) {
             content = [content substringToIndex:140];
@@ -296,7 +298,7 @@
             [self removeOverlay];
             [self showFailureModalView:1.5];
         }];
-
+        
     }
 }
 
@@ -338,6 +340,7 @@
 
 - (void)pesentMyModalView:(UIViewController *)viewController
 {
+    [AppDelegate instance].triggeredByPlayer = YES;
     [self presentModalViewController:viewController animated:YES];
 }
 

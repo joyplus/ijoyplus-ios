@@ -230,16 +230,16 @@
     for(NSString *topicId in checkboxes){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"topic_id", self.prodId, @"prod_id", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if([responseCode isEqualToString:kSuccessResCode]){
-                [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            } else {
-                [[AppDelegate instance].rootViewController showFailureModalView:1.5];
-            }
+//            NSString *responseCode = [result objectForKey:@"res_code"];
+//            if([responseCode isEqualToString:kSuccessResCode]){
+//            } else {
+//                [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+//            }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [UIUtility showSystemError:self.view];
         }];
     }
+    [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
 }
 
 - (void)createBtnClicked

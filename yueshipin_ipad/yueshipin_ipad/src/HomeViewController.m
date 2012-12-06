@@ -1015,8 +1015,10 @@
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
     NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
-    NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
-    [self showDetailScreen:item];
+    if(btn.tag - 2011 < items.count){
+        NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
+        [self showDetailScreen:item];
+    }
 }
 
 - (void)dramaImageClicked:(UIButton *)sender
@@ -1028,8 +1030,10 @@
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
     NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
-    NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
-    [self showDetailScreen:item];
+    if(btn.tag - 2021 < items.count){
+        NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
+        [self showDetailScreen:item];
+    }
 }
 
 - (void)showImageClicked:(UIButton *)sender

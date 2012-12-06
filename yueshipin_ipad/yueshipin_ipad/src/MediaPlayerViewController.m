@@ -126,16 +126,19 @@
     //    [shareBtn addTarget:self action:@selector(showPopWindow:)forControlEvents:UIControlEventTouchUpInside];
     //    [buttonView addSubview:shareBtn];
 }
-- (void)playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
+- (void)playVideoFinished:
+
+
+(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
 {
 	lastPlayTime = [NSNumber numberWithDouble:player.currentPlaybackTime];
-    if(player.duration - lastPlayTime.doubleValue <= 0.1){
-        lastPlayTime = 0;
+    if(player.duration - lastPlayTime.doubleValue <= 0.1 || lastPlayTime == nil){
+        lastPlayTime = [NSNumber numberWithInt:0];
     }
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:self.videoUrl result:lastPlayTime];
-    [playerViewController.view removeFromSuperview];
-    [self dismissModalViewControllerAnimated:YES];
+//    [playerViewController.view removeFromSuperview];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)updateWatchRecord
@@ -161,8 +164,16 @@
     [watchingItem setValue:(self.subname == nil ? @"" : self.subname) forKey:@"subname"];
     [watchingItem setValue:[NSString stringWithFormat:@"%i", self.type] forKey:@"type"];
     [watchingItem setValue:[DateUtility formatDateWithString:[NSDate date] formatString: @"yyyy-MM-dd HH:mm:ss"] forKey:@"createDateStr"];
-    [watchingItem setValue:[NSNumber numberWithFloat:player.currentPlaybackTime] forKey:@"playbackTime"];
-    [watchingItem setValue:[NSNumber numberWithFloat:player.duration] forKey:@"duration"];
+    if(player.currentPlaybackTime > 0){
+        [watchingItem setValue:[NSNumber numberWithFloat:player.currentPlaybackTime] forKey:@"playbackTime"];
+    } else {
+        [watchingItem setValue:[NSNumber numberWithFloat:0] forKey:@"playbackTime"];
+    }
+    if(player.duration > 0){
+        [watchingItem setValue:[NSNumber numberWithFloat:player.duration] forKey:@"duration"];
+    } else {
+        [watchingItem setValue:[NSNumber numberWithFloat:0] forKey:@"duration"];
+    }
     [watchingItem setValue: self.videoUrl forKey:@"videoUrl"];
     
     NSMutableArray *temp = [[NSMutableArray alloc]initWithCapacity:WATCH_RECORD_NUMBER];

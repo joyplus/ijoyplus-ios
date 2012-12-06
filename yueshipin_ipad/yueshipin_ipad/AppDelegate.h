@@ -19,6 +19,8 @@
 
 @property (assign, nonatomic) BOOL closed;
 
+@property (assign, nonatomic) BOOL triggeredByPlayer;
+
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 
 + (AppDelegate *) instance;
