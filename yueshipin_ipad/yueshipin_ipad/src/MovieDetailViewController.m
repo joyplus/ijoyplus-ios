@@ -284,7 +284,11 @@
 
 - (void)showValues
 {
-    [self.filmImage setImageWithURL:[NSURL URLWithString:[video objectForKey:@"poster"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    NSString *url = [video objectForKey:@"ipad_poster"];
+    if([StringUtility stringIsEmpty:url]){
+        url = [video objectForKey:@"poster"];
+    }
+    [self.filmImage setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];

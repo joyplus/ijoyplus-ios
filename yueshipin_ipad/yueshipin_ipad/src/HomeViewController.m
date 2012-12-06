@@ -112,6 +112,7 @@
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
+        [table setBackgroundColor:[UIColor clearColor]];
         [table setShowsVerticalScrollIndicator:NO];
 		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[backgroundView addSubview:table];
@@ -799,6 +800,7 @@
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 12, 200, 30)];
         [titleLabel setTextColor:[UIColor blackColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.tag = 4011;
         [cell.contentView addSubview:titleLabel];
         
@@ -873,6 +875,7 @@
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 12, 200, 30)];
         [titleLabel setTextColor:[UIColor blackColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.tag = 4021;
         [cell.contentView addSubview:titleLabel];
         
@@ -1107,7 +1110,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 40)];
-    customView.backgroundColor = [UIColor whiteColor];
+    customView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
     if(listBtn == nil){
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         listBtn.frame = CGRectMake(12, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
