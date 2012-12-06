@@ -28,6 +28,17 @@
 
 @implementation TopicListViewController
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    table = nil;
+    bgImage = nil;
+    titleImage = nil;
+    [videoArray removeAllObjects];
+    videoArray = nil;
+    pullToRefreshManager_ = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -78,15 +89,18 @@
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_topic_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
+    } else {
+        [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [videoArray removeAllObjects];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [myHUD hide];
         }];
     }
 }
@@ -106,8 +120,6 @@
         }
     }
     [self loadTable];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-
 }
 
 
@@ -288,7 +300,6 @@
     [table deselectRowAtIndexPath:indexPath animated:YES];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -299,11 +310,6 @@
     viewController.listTitle = [item objectForKey: @"name"];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-}
-
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient

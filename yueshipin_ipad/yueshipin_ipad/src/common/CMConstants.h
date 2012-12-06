@@ -41,7 +41,7 @@
 #define kPhoneNumber @"kPhoneNumber"
 
 #define LOCAL_KEYS_NUMBER 5
-#define umengAppKey @"5074db485270155fcd000093"
+#define umengAppKey @"50c069e25270154e81000056"
 
 #define YOU_KU @"youku"
 #define TU_DOU @"tudou"
@@ -55,8 +55,6 @@
 
 #define WATCH_RECORD_NUMBER 5
 
-#define  SHOW_MB_PROGRESS_BAR @"show_mb_progress_bar"
-
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"
 
 #define LEFT_VIEW_WIDTH 529
@@ -64,6 +62,8 @@
 #define RIGHT_VIEW_WIDTH 760
 
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
+
+#define APPIRATER_APP_ID				301377083
 
 @interface CMConstants : NSObject 
     extern NSString * const MyString;

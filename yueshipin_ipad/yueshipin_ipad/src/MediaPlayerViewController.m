@@ -43,6 +43,8 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.name = nil;
+    self.type = nil;
     self.videoUrl = nil;
     shareBtn = nil;
     mpVideoView = nil;

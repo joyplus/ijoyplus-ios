@@ -29,6 +29,19 @@
 @implementation SearchListViewController
 @synthesize keyword;
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.keyword = nil;
+    table = nil;
+    bgImage = nil;
+    titleImage = nil;
+    [videoArray removeAllObjects];
+    videoArray = nil;
+    closeBtn = nil;
+    pullToRefreshManager_ = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -77,6 +90,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [myHUD showProgressBar:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
@@ -91,11 +105,11 @@
             }
         }
         [self loadTable];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [myHUD hide];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [myHUD hide];
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
     }];
 }
 
@@ -295,11 +309,6 @@
         }
     }
 }
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-}
-
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient

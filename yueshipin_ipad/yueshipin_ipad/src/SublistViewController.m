@@ -18,6 +18,12 @@
 @synthesize listData;
 @synthesize videoDelegate;
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.listData = nil;
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];

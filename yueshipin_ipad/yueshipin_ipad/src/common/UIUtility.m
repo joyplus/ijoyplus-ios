@@ -69,6 +69,7 @@
     [view addSubview:HUD];
     HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
     HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
     HUD.labelText = NSLocalizedString(@"message.networkError", nil);
     [HUD show:YES];
     [HUD hide:YES afterDelay:1.5];
@@ -80,6 +81,7 @@
     HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"message.systemError", nil);
+    HUD.opacity = 0.5;
     [HUD show:YES];
     [HUD hide:YES afterDelay:1.5];
 }
@@ -95,14 +97,18 @@
 
 - (void)showProgressBar:(UIView *)view
 {
-    HUD = [[MBProgressHUD alloc] initWithView:view];
-    [view addSubview:HUD];
-    HUD.opacity = 0;
-    [HUD show:YES];
+    if(HUD == nil){
+        HUD = [[MBProgressHUD alloc] initWithView:view];
+        HUD.frame = CGRectMake(HUD.frame.origin.x - 100, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
+        [view addSubview:HUD];
+        HUD.labelText = @"加载中...";
+        HUD.opacity = 0.5;
+        [HUD show:YES];
+    }
 }
 
 - (void)hide
 {
-    [HUD hide:YES afterDelay:0.5];
+    [HUD hide:YES afterDelay:0.2];
 }
 @end

@@ -16,6 +16,12 @@
 @implementation AddSearchViewController
 @synthesize topId;
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.topId = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

@@ -658,7 +658,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     }
     UIViewController *topController = [viewControllersStack objectAtIndex:lastViewControllerIndex];
     
-    [UIView animateWithDuration:0.5
+    [UIView animateWithDuration:0.3
                           delay:0.0
                         options:UIViewAnimationCurveEaseOut
                      animations:^{

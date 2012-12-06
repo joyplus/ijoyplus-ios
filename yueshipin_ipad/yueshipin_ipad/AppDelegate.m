@@ -10,6 +10,7 @@
 #import "CommonHeader.h"
 #import "OpenUDID.h"
 #import "RootViewController.h"
+#import "MobClick.h"
 
 @interface AppDelegate ()
 
@@ -57,8 +58,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    //    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
-    //    [MobClick checkUpdate];
+    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:@"91store"];
+    [MobClick checkUpdate];
     [self generateUserId];
     [self initSinaweibo];
     [self monitorReachability];

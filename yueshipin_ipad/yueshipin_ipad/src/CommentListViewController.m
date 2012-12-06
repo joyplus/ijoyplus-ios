@@ -30,6 +30,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload
+{
+    listData  = nil;
+    prodId = nil;
+    [super viewDidUnload];
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];

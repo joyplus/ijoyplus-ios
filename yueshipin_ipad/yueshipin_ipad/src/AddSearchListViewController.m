@@ -34,6 +34,24 @@
 @synthesize keyword;
 @synthesize topId;
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    self.keyword = nil;
+    self.topId = nil;
+    table = nil;
+    bgImage = nil;
+    titleImage = nil;
+    [videoArray removeAllObjects];
+    videoArray = nil;
+    [checkboxes removeAllObjects];
+    checkboxes = nil;
+    closeBtn = nil;
+    addBtn = nil;
+    lineImage = nil;
+    pullToRefreshManager_ = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -119,11 +137,9 @@
             }
         }
         [self loadTable];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
     }];
 }
 
@@ -140,8 +156,6 @@
         }
     }
     [table reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-    
 }
 
 
@@ -360,10 +374,6 @@
     //        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     //        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE];
     //    }
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
 }
 
 - (void)addBtnClicked

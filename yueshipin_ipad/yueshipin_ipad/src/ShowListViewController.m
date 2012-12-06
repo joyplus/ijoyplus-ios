@@ -39,6 +39,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload
+{
+    self.listData = nil;
+    [super viewDidUnload];
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

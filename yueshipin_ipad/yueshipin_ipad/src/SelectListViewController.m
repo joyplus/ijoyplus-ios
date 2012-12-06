@@ -28,6 +28,22 @@
 @implementation SelectListViewController
 @synthesize prodId;
 
+- (void)viewDidUnload
+{
+    [listData removeAllObjects];
+    listData = nil;
+    titleImage = nil;
+    closeBtn = nil;
+    doneBtn = nil;
+    table = nil;
+    bgImage = nil;
+    [checkboxes removeAllObjects];
+    checkboxes = nil;
+    createBtn = nil;
+    self.prodId = nil;
+    [super viewDidUnload];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -86,15 +102,18 @@
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_topic_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
+    } else {
+        [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [listData removeAllObjects];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [myHUD hide];
         }];
     }
 }
@@ -111,8 +130,6 @@
         }
     }
     [table reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-    
 }
 
 

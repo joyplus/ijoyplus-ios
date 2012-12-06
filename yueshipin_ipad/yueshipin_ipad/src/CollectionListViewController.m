@@ -25,6 +25,17 @@
 
 @implementation CollectionListViewController
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    table = nil;
+    bgImage = nil;
+    titleImage = nil;
+    [videoArray removeAllObjects];
+    videoArray = nil;
+    pullToRefreshManager_ = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -78,15 +89,18 @@
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_collection_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
+    } else {
+        [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [myHUD hide];
             [videoArray removeAllObjects];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         }];
     }
 }
@@ -106,8 +120,6 @@
         }
     }
     [self loadTable];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-
 }
 
 
@@ -300,11 +312,6 @@
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
     }
 }
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-}
-
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient

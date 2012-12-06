@@ -17,6 +17,12 @@
 
 @implementation SubsearchViewController
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    closeBtn = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

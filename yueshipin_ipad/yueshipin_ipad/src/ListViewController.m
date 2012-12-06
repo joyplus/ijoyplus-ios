@@ -24,6 +24,17 @@
 @synthesize topId;
 @synthesize listTitle;
 
+- (void)viewDidUnload{
+    self.topId = nil;
+    self.listTitle = nil;
+    table = nil;
+    [topsArray removeAllObjects];
+    topsArray = nil;
+    closeBtn = nil;
+    titleLabel = nil;
+    [super viewDidUnload];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -91,15 +102,18 @@
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
+    } else {
+        [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.topId, @"top_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             topsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [myHUD hide];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -122,7 +136,6 @@
         [UIUtility showSystemError:self.view];
     }
     [self loadTable];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
 
@@ -340,11 +353,6 @@
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
     }
 }
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-}
-
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient

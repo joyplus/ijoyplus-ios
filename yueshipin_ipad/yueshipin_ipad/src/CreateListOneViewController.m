@@ -19,6 +19,21 @@
 @implementation CreateListOneViewController
 @synthesize prodId;
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.titleField];
+    [self setTitleImage:nil];
+    [self setTitleField:nil];
+    [self setContentBgImage:nil];
+    [self setContentText:nil];
+    [self setNextBtn:nil];
+    [self setCloseBtn:nil];
+    [self setTitleFieldBg:nil];
+    [self setBgImage:nil];
+    self.prodId = nil;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -70,19 +85,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)viewDidUnload {
-    [self setTitleImage:nil];
-    [self setTitleField:nil];
-    [self setContentBgImage:nil];
-    [self setContentText:nil];
-    [self setNextBtn:nil];
-    [self setCloseBtn:nil];
-    [self setTitleFieldBg:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.titleField];
-    [self setBgImage:nil];
-    [super viewDidUnload];
 }
 
 - (void)changeNextBtnImage:(NSNotification *)notificaiton

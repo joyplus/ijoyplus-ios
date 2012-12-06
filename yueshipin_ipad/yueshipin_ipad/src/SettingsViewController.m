@@ -10,12 +10,16 @@
 #import "CustomSearchBar.h"
 #import "SuggestionViewController.h"
 #import "UMFeedback.h"
+#import "AboutUsViewController.h"
+#import "MBProgressHUD.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
 #define MAX_BUTTON_WIDTH 355
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
+
+NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
 @interface SettingsViewController (){
     UIView *backgroundView;
@@ -42,6 +46,27 @@
 
 @implementation SettingsViewController
 @synthesize menuViewControllerDelegate;
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    backgroundView = nil;
+    menuBtn = nil;
+    topImage = nil;
+    bgImage = nil;
+    sinaWeiboBg = nil;
+    sinaWeiboImg = nil;
+    clearCacheBg = nil;
+    clearCacheBtn = nil;
+    aboutBg = nil;
+    suggestionBtn = nil;
+    commentBtn = nil;
+    aboutBtn = nil;
+    sinaSwitch = nil;
+    sinaUsernameLabel = nil;
+    _sinaweibo = nil;
+    userInfo = nil;
+}
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
@@ -95,26 +120,26 @@
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
-        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 175)];
-        aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 2, 2, 2)] ;
+        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 128)];
+        aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] ;
         [self.view addSubview:aboutBg];
         
-        suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
-        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
-        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
-        [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:suggestionBtn];
+//        suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//        suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
+//        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
+//        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
+//        [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+//        [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(100, 372, 334, 40);
+        commentBtn.frame = CGRectMake(100, 325, 334, 40);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(100, 422, 334, 40);
+        aboutBtn.frame = CGRectMake(100, 372, 334, 40);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -142,8 +167,13 @@
     }
 }
 
-- (void)clearCacheBtnClicked{
-    
+- (void)clearCacheBtnClicked
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:HUD];
+    HUD.labelText = @"正在清理...";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:3];
 }
 
 - (void)didReceiveMemoryWarning
@@ -156,7 +186,6 @@
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -170,22 +199,25 @@
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    
+    NSString *reviewURL = [templateReviewURL stringByReplacingOccurrencesOfString:@"APP_ID" withString:[NSString stringWithFormat:@"%d", APPIRATER_APP_ID]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
 }
 
 - (void)aboutBtnClicked
 {
-
+    [self closeMenu];
+    AboutUsViewController *viewController = [[AboutUsViewController alloc]init];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
 - (void)sinaSwitchClicked:(UISwitch *)sender
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
         return;
     }

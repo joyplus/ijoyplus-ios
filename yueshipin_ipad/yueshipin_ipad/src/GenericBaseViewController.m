@@ -37,19 +37,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideProgressBar) name:SHOW_MB_PROGRESS_BAR object:nil];
+    myHUD = [[UIUtility alloc]init];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:SHOW_MB_PROGRESS_BAR object:nil];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:SHOW_MB_PROGRESS_BAR object:nil];
+    NSLog(@"didReceiveMemoryWarning");
 }
 
 - (void)closeMenu

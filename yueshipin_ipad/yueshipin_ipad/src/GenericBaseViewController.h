@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIUtility.h"
 
 @interface GenericBaseViewController : UIViewController{
-    
+    UIUtility *myHUD;
 }
 
 - (void)closeMenu;

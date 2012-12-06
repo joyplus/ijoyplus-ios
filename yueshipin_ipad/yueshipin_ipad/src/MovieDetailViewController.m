@@ -26,7 +26,6 @@
     float introContentHeight;
     BOOL introExpand;
     UITapGestureRecognizer *tapGesture;
-    UIUtility *utility;
 }
 
 @end
@@ -37,7 +36,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    [self clearMemory];
 }
 
 - (void)viewDidUnload {
@@ -123,7 +121,7 @@
     self.placeholderImage.frame = CGRectMake(LEFT_GAP, 78, 217, 312);
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
     
-    self.filmImage.frame = CGRectMake(LEFT_GAP+6, 84, 203, 298);
+    self.filmImage.frame = CGRectMake(LEFT_GAP+5, 84, 203, 298);
     self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
@@ -223,7 +221,7 @@
     
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     
-    utility = [[UIUtility alloc]init];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -239,17 +237,20 @@
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
         [self parseData:cacheResult];
+    } else {
+        [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [myHUD hide];
             [UIUtility showSystemError:self.view];
         }];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [myHUD hide];
     }
 }
 
@@ -268,10 +269,8 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         [self calculateIntroContentHeight];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [self showValues];
     } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showSystemError:self.view];
     }
 }

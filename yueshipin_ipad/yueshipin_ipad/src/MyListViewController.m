@@ -21,6 +21,14 @@
 
 @implementation MyListViewController
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    lineImage = nil;
+    bgImage = nil;
+    createBtn = nil;
+    deleteBtn = nil;
+}
 
 - (void)didReceiveMemoryWarning
 {

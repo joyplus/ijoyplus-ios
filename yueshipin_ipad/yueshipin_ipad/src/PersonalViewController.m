@@ -70,6 +70,27 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.userId = nil;
+    backgroundView = nil;
+    menuBtn = nil;
+    topImage = nil;
+    bgImage = nil;
+    table = nil;
+    avatarImage = nil;
+    nameLabel = nil;
+    editBtn = nil;
+    personalImage = nil;
+    supportLabel = nil;
+    supportBtn = nil;
+    collectionLabel = nil;
+    collectionBtn = nil;
+    listLabel = nil;
+    listBtn = nil;
+    myRecordImage = nil;
+    createBtn = nil;
+    importDoubanBtn = nil;
+    tableBgImage = nil;    
+    sortedwatchRecordArray = nil;
 }
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
@@ -408,7 +429,6 @@
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
         return;
     }

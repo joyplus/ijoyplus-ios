@@ -13,7 +13,6 @@
 
 
 @interface ProgramViewController (){
-    //    MBProgressHUD *HUD;
 }
 
 @end
@@ -36,8 +35,8 @@
     [self.webView loadRequest: nil];
     [self.webView removeFromSuperview];
     self.webView = nil;
-    //    HUD = nil;
     self.programUrl = nil;
+    self.subname = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

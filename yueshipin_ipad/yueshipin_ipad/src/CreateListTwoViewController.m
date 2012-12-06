@@ -29,6 +29,8 @@
 }
 
 - (void)viewDidUnload {
+    self.titleContent = nil;
+    self.topId = nil;
     [self setTitleLabel:nil];
     [self setAddBtn:nil];
     [self setDeleteBtn:nil];
@@ -131,15 +133,18 @@
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
+    } else {
+        [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:1], @"page_size", self.topId, @"top_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             topsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [myHUD hide];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -159,7 +164,6 @@
         [UIUtility showSystemError:self.view];
     }
     [table reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
 

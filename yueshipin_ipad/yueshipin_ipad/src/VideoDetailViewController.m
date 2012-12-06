@@ -39,6 +39,19 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    [self clearMemory];
+}
+
+- (void)clearMemory
+{
+    _sinaweibo = nil;
+    video = nil;
+    topics = nil;
+}
+
 - (void)shareBtnClicked
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];

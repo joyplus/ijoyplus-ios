@@ -24,6 +24,21 @@
 @implementation SearchViewController
 @synthesize menuViewControllerDelegate;
 
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    menuBtn = nil;
+    topImage = nil;
+    bgImage = nil;
+    sBar = nil;
+    table = nil;
+    hotKeyArray = nil;    
+    [hotKeyIndex removeAllObjects];
+    hotKeyIndex = nil;    
+    [hotKeyBtnWidth removeAllObjects];
+    hotKeyBtnWidth = nil;
+}
+
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
@@ -44,7 +59,7 @@
         topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         
-        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 115, 382, 38)];
+        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 115, 372, 38)];
         sBar.delegate = self;
         [self.view addSubview:sBar];
         
@@ -297,7 +312,6 @@
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
         [UIUtility showNetWorkError:self.view];
         return;
     }

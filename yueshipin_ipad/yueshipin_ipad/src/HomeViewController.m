@@ -192,23 +192,34 @@
 
 - (void)retrieveTopsListData
 {
+    MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
+    } else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [table reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [tempHUD hide:YES];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
+            [tempHUD hide:YES];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             if(topsArray == nil){
                 topsArray = [[NSMutableArray alloc]initWithCapacity:10];
             }
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [tempHUD hide:YES];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -304,27 +315,37 @@
         [UIUtility showSystemError:self.view];
     }
     [self loadTable];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
 
 - (void)retrieveMovieTopsData
 {
+    MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
     if(cacheResult != nil){
         [self parseMovieTopsData:cacheResult];
+    } else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [table reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [tempHUD hide:YES];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseMovieTopsData:result];
+            [tempHUD hide:YES];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             movieTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [tempHUD hide:YES];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -344,27 +365,37 @@
         [UIUtility showSystemError:self.view];
     }
     [table reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
 
 - (void)retrieveTvTopsData
 {
+    MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
     if(cacheResult != nil){
         [self parseTvTopsData:cacheResult];
+    } else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [table reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [tempHUD hide:YES];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTvTopsData:result];
+            [tempHUD hide:YES];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             tvTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [tempHUD hide:YES];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -384,27 +415,37 @@
         [UIUtility showSystemError:self.view];
     }
     [table reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
 
 - (void)retrieveShowTopsData
 {
+    MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
     if(cacheResult != nil){
         [self parseShowTopsData:cacheResult];
+    }  else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [table reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [tempHUD hide:YES];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseShowTopsData:result];
+            [tempHUD hide:YES];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             showTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+            [tempHUD hide:YES];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -427,7 +468,6 @@
         [UIUtility showSystemError:self.view];
     }
     [table reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
 }
 
 - (void)updateScrollView
@@ -637,9 +677,9 @@
         imageView1.image = [UIImage imageNamed:@"briefcard_orange"];
         [cell.contentView addSubview:imageView1];
         
-        UIImageView *hotImage1 = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hot_signal"]];
-        hotImage1.frame = CGRectMake(3, 3, 62, 62);
-        [imageView1 addSubview:hotImage1];
+        UIImageView *hotImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(25, 3, 62, 62)];
+        hotImage1.tag = 1111;
+        [cell.contentView addSubview:hotImage1];
         
         UIButton *imageBtn1 = [UIButton buttonWithType:UIButtonTypeCustom];
         imageBtn1.frame = imageView1.frame;
@@ -662,9 +702,9 @@
         imageView2.image = [UIImage imageNamed:@"briefcard_blue"];
         [cell.contentView addSubview:imageView2];
         
-        UIImageView *hotImage2 = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"hot_signal"]];
-        hotImage2.frame = CGRectMake(3, 3, 62, 62);
-        [imageView2 addSubview:hotImage2];
+        UIImageView *hotImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(263, 3, 62, 62)];
+        hotImage2.tag = 1112;
+        [cell.contentView addSubview:hotImage2];
         
         UIButton *imageBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
         imageBtn2.frame = imageView2.frame;
@@ -725,8 +765,25 @@
     UIImageView *contentImage1 = (UIImageView *)[cell viewWithTag:2001];
     [contentImage1 setImageWithURL:[NSURL URLWithString:[item1 objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
+    UIImageView *hotImage1 = (UIImageView *)[cell viewWithTag:1111];
+    NSString *hotFlag1 = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"toptype"]];
+    if([hotFlag1 isEqualToString:@"1"]){
+        hotImage1.image = [UIImage imageNamed:@"hot_signal"];
+    } else {
+        hotImage1.image = nil;
+        
+    }
+    
     UIImageView *contentImage2 = (UIImageView *)[cell viewWithTag:2002];
     [contentImage2 setImageWithURL:[NSURL URLWithString:[item2 objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    
+    UIImageView *hotImage2 = (UIImageView *)[cell viewWithTag:1112];
+    NSString *hotFlag2 = [NSString stringWithFormat:@"%@", [item2 objectForKey:@"toptype"]];
+    if([hotFlag2 isEqualToString:@"1"]){
+        hotImage2.image = [UIImage imageNamed:@"hot_signal"];
+    } else {
+        hotImage2.image = nil;        
+    }
     
     UILabel *nameLabel1 = (UILabel *)[cell viewWithTag:6001];
     nameLabel1.text = [item1 objectForKey:@"name"];
