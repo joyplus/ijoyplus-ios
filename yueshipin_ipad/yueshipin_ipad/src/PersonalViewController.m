@@ -406,6 +406,12 @@
 
 - (void)createBtnClicked:(id)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self closeMenu];
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);

@@ -25,6 +25,9 @@ msg_20006 = "该邮箱地址已被使用。";
 msg_20008 = "会话已过期，请重新登陆";
 msg_20019 = "该昵称已被使用。";
 
+"message.networkError"="网络连接错误！";
+"message.systemError"="系统服务正忙，请稍后再试！";
+
 //FormatterKit
 "year" = "年";
 "month" = "月";

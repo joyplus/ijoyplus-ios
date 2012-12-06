@@ -476,14 +476,22 @@
 - (void)playVideo:(NSInteger)num
 {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
-        BlockAlertView *alert = [BlockAlertView alertWithTitle:@"" message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"];
-        [alert setCancelButtonWithTitle:NSLocalizedString(@"cancel", nil) block:nil];
-        [alert setDestructiveButtonWithTitle:@"确定" block:^{
-            [self willPlayVideo:num];
-        }];
-        [alert show];
+        willPlayIndex = num;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
     } else {
         [self willPlayVideo:num];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self willPlayVideo:willPlayIndex];
     }
 }
 
@@ -544,6 +552,11 @@
 
 - (void)dingBtnClicked:(id)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -560,6 +573,11 @@
 
 - (void)collectionBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

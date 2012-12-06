@@ -154,6 +154,12 @@
 
 - (void)suggestionBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [UMFeedback showFeedback:self withAppkey:umengAppKey];
 //    SuggestionViewController *viewController = [[SuggestionViewController alloc] init];
 //    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
@@ -162,18 +168,28 @@
 
 - (void)commentBtnClicked
 {
-    
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
 }
 
 - (void)aboutBtnClicked
 {
-    
+
 }
 
 - (void)sinaSwitchClicked:(UISwitch *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     BOOL flag = sender.isOn;
-    
     if(flag){
         [_sinaweibo logIn];
     } else {

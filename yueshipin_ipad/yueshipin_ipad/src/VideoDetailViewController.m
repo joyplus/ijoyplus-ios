@@ -41,6 +41,11 @@
 
 - (void)shareBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     _sinaweibo = [AppDelegate instance].sinaweibo;
     _sinaweibo.delegate = self;
     
@@ -194,6 +199,11 @@
 
 - (void)addListBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     SelectListViewController *viewController = [[SelectListViewController alloc]init];
     viewController.prodId = self.prodId;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);

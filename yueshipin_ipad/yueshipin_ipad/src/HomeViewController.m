@@ -140,6 +140,15 @@
     [pullToRefreshManager_ tableViewReloadFinished];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -190,7 +199,6 @@
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -309,7 +317,6 @@
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -350,7 +357,6 @@
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -391,7 +397,6 @@
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
-        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -585,7 +590,7 @@
             [cell.contentView addSubview:scrollView];
             
             pageControl = [[DDPageControl alloc] init] ;
-            [pageControl setCenter: CGPointMake(self.view.center.x + LEFT_MENU_DIPLAY_WIDTH, TOP_IMAGE_HEIGHT + 10)] ;
+            [pageControl setCenter: CGPointMake(self.view.center.x, TOP_IMAGE_HEIGHT + 10)] ;
             [pageControl setNumberOfPages: 5] ;
             [pageControl setCurrentPage: 0] ;
             [pageControl addTarget: self action: @selector(pageControlClicked:) forControlEvents: UIControlEventValueChanged] ;

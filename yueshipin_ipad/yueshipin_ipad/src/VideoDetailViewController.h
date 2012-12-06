@@ -16,10 +16,11 @@
 - (void)showSublistView:(int)num;
 @end
 
-@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate>{
+@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate>{
         SinaWeibo *_sinaweibo;
         NSDictionary *video;
         NSArray *topics;
+        NSInteger willPlayIndex;
 }
 @property (strong, nonatomic)NSString *prodId;
 - (void)shareBtnClicked;

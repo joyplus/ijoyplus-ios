@@ -67,11 +67,11 @@
 {
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
     [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"message.networkError", nil);
     [HUD show:YES];
-    [HUD hide:YES afterDelay:1];
+    [HUD hide:YES afterDelay:1.5];
 }
 + (void)showSystemError:(UIView *)view
 {
@@ -81,7 +81,7 @@
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"message.systemError", nil);
     [HUD show:YES];
-    [HUD hide:YES afterDelay:1];
+    [HUD hide:YES afterDelay:1.5];
 }
 
 + (UIView *)getDotView:(int)radius

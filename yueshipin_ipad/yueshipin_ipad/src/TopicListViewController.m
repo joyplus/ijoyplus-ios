@@ -286,6 +286,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [table deselectRowAtIndexPath:indexPath animated:YES];
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     MyListViewController *viewController = [[MyListViewController alloc] init];
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];

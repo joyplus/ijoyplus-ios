@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "VideoDetailViewController.h"
+#import "VideoDetailViewController.h" 
 
 @interface DramaDetailViewController : VideoDetailViewController
 @property (weak, nonatomic) IBOutlet UIImageView *bgImage;

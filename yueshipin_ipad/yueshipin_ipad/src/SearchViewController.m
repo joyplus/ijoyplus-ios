@@ -295,6 +295,12 @@
 
 - (void)search:(NSString *)keyword
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:SHOW_MB_PROGRESS_BAR object:self userInfo:nil];
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self closeMenu];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
