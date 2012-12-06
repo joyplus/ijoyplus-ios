@@ -12,6 +12,7 @@
 #import "UMFeedback.h"
 #import "AboutUsViewController.h"
 #import "MBProgressHUD.h"
+#import "SDImageCache.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -172,8 +173,13 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:HUD];
     HUD.labelText = @"正在清理...";
-    [HUD show:YES];
-    [HUD hide:YES afterDelay:3];
+    [HUD showWhileExecuting:@selector(clearCache) onTarget:self withObject:nil animated:YES];
+}
+
+- (void)clearCache
+{
+    [[SDImageCache sharedImageCache] clearDisk];
+    sleep(1);
 }
 
 - (void)didReceiveMemoryWarning

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "CommonHeader.h"
+#import "GenericBaseViewController.h"
 #import "MenuViewController.h"
 #import "SinaWeibo.h"
 

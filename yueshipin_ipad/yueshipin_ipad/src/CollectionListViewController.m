@@ -190,7 +190,7 @@
         [cell.contentView addSubview:directorLabel];
         
         UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(195, 75, 220, 25)];
-        directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
+        directorNameLabel.font = [UIFont systemFontOfSize:13];
         directorNameLabel.textColor = CMConstants.grayColor;
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 4001;

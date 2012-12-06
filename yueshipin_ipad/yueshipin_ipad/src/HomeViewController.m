@@ -124,7 +124,7 @@
         reloads_ = 2;
         if (_refreshHeaderView == nil) {
             EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
-            view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"back_up2"]];
+            view.backgroundColor = [UIColor clearColor];
             view.delegate = self;
             [table addSubview:view];
             _refreshHeaderView = view;
