@@ -70,6 +70,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     self.userId = nil;
     backgroundView = nil;
     menuBtn = nil;
@@ -243,6 +244,7 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.userId, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseResultData:result];
+            [table reloadData];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [UIUtility showSystemError:self.view];
@@ -267,7 +269,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+}
+
+- (void)refreshData:(NSNotification *)notification
+{
+    [self parseResult];
 }
 
 #pragma mark -

@@ -53,6 +53,8 @@
 #define CHAO_QING @"hd2"
 #define LIU_CHANG @"3gp"
 
+#define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
+
 #define WATCH_RECORD_NUMBER 5
 
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"

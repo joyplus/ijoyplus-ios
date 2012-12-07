@@ -91,7 +91,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [myHUD showProgressBar:self.view];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -173,7 +173,7 @@
             [cell.contentView addSubview:doubanLogo];
             
             UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
-            directorLabel.text = @"导演：";
+            directorLabel.tag = 4011;
             directorLabel.textColor = CMConstants.grayColor;
             directorLabel.font = [UIFont systemFontOfSize:13];
             directorLabel.backgroundColor = [UIColor clearColor];
@@ -181,13 +181,13 @@
             
             UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 220, 25)];
             directorNameLabel.textColor = CMConstants.grayColor;
-            directorNameLabel.font = [UIFont boldSystemFontOfSize:13];
+            directorNameLabel.font = [UIFont systemFontOfSize:13];
             directorNameLabel.backgroundColor = [UIColor clearColor];
             directorNameLabel.tag = 4001;
             [cell.contentView addSubview:directorNameLabel];
             
             UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
-            actorLabel.text = @"主演：";
+            actorLabel.tag = 5011;
             actorLabel.textColor = CMConstants.grayColor;
             actorLabel.font = [UIFont systemFontOfSize:13];
             actorLabel.backgroundColor = [UIColor clearColor];
@@ -236,20 +236,32 @@
         nameLabel.text = [item objectForKey:@"prod_name"];
         
         UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:4001];
-        directorNameLabel.text = [item objectForKey:@"director"];
         
-        UILabel *actorLabel = (UILabel *)[cell viewWithTag:5001];
-        actorLabel.text = [item objectForKey:@"star"];
+        UILabel *actorLabel1 = (UILabel *)[cell viewWithTag:5001];
         
         UILabel *scoreLabel = (UILabel *)[cell viewWithTag:3001];
+        UILabel *directorLabel = (UILabel *)[cell viewWithTag:4011];
+        UILabel *actorLabel = (UILabel *)[cell viewWithTag:5011];
         UIImageView *doubanlogo = (UIImageView *)[cell viewWithTag:9001];
         NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
         if([type isEqualToString:@"3"]){
             scoreLabel.text = @"";
             doubanlogo.image = nil;
+            directorLabel.text = @"主持人：";
+            directorNameLabel.text = [item objectForKey:@"star"];
+            directorNameLabel.frame = CGRectMake(225, 75, 220, 25);
+            actorLabel.text = @"首播时间：";
+            actorLabel1.frame = CGRectMake(225, 100, 180, 25);
+            actorLabel1.text =[item objectForKey:@"publish_date"];
         } else {
             scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
             doubanlogo.image = [UIImage imageNamed:@"douban"];
+            directorLabel.text = @"导演：";
+            actorLabel.text = @"主演：";
+            actorLabel1.frame = CGRectMake(205, 100, 180, 25);
+            directorNameLabel.text = [item objectForKey:@"director"];
+            directorNameLabel.frame = CGRectMake(205, 75, 220, 25);
+            actorLabel1.text = [item objectForKey:@"star"];
         }
         
         UILabel *dingNumberLabel = (UILabel *)[cell viewWithTag:6001];
@@ -327,7 +339,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempArray;

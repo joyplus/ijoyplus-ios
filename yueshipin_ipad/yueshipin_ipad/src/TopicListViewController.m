@@ -31,6 +31,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     table = nil;
     bgImage = nil;
     titleImage = nil;
@@ -71,6 +72,12 @@
     pageSize = 10;
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     [self loadTable];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+}
+
+- (void)refreshData:(NSNotification *)notification
+{
+    [self retrieveTopsListData];
 }
 
 - (void)loadTable {

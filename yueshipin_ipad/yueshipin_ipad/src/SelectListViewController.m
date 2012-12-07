@@ -123,9 +123,9 @@
     listData = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
         NSArray *videos = [result objectForKey:@"tops"];
         if(videos != nil && videos.count > 0){
-            [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
             [listData addObjectsFromArray:videos];
         }
     }
