@@ -459,7 +459,7 @@
 - (void)refreshCommentListView:(int)tableHeight
 {
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 200)];
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 440, tableHeight);
 }
 
 - (void)clearLastBtnImage

@@ -162,8 +162,8 @@
     NSString *content = [item objectForKey:@"content"];
     UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
     contentLabel.text = content;
-    CGSize size = [self calculateContentSize:content width:tableView.frame.size.width];
-    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
+    CGSize size = [self calculateContentSize:content width:430];
+    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, 430, size.height)];
     
     return cell;
 }
@@ -180,7 +180,7 @@
     }
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
     NSString *content = [item objectForKey:@"content"];
-    CGSize size = [self calculateContentSize:content width:tableView.frame.size.width];
+    CGSize size = [self calculateContentSize:content width:430];
     tableHeight += size.height + 40;
     return size.height + 40;
 }

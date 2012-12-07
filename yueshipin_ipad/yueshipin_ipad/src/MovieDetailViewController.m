@@ -361,7 +361,7 @@
     [commentListViewController.tableView reloadData];
     commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 440, commentListViewController.tableHeight);
     
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+ (topics.count > 5 ? 5 : topics.count)*30+commentListViewController.tableHeight+200 + increasePositionY)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+ (topics.count > 5 ? 5 : topics.count)*30+commentListViewController.tableHeight+300 + increasePositionY)];
 //    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, commentListViewController.tableHeight);
 }
 
@@ -396,8 +396,8 @@
 
 - (void)refreshCommentListView:(int)tableHeight
 {
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+200)];
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 425, tableHeight);
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, commentListViewController.view.frame.origin.y+tableHeight+300)];
+    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 440, tableHeight);
 }
 
 - (void)playVideo
