@@ -91,6 +91,7 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidChangeNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -132,6 +133,8 @@
 	[rootView addSubview:leftMenuView];
 	[rootView addSubview:rightSlideView];
 	[self.view addSubview:rootView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextViewChanged:) name:UITextViewTextDidChangeNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -194,7 +197,7 @@
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"share_frame"]];
     frame.frame = CGRectMake(0, 0, 545, 265);
-    frame.center = CGPointMake(view.center.x, view.center.y - 20);
+    frame.center = CGPointMake(view.center.x, view.center.y - 180);
     [view addSubview:frame];
     
     UIImageView *sina = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sina_btn_pressed"]];
@@ -207,23 +210,37 @@
     [frame addSubview:tempMovieImage];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(735, 240, 40, 42);
+    closeBtn.frame = CGRectMake(735, 80, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:closeBtn];
     
     shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    shareBtn.frame = CGRectMake(555, 440, 80, 32);
-    [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateNormal];
-    [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateHighlighted];
+    shareBtn.frame = CGRectMake(555, 280, 80, 32);
+    [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateDisabled];
+    [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn"] forState:UIControlStateNormal];
+    [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_pressed"] forState:UIControlStateHighlighted];
+    [shareBtn setEnabled:NO];
     [shareBtn addTarget:self action:@selector(sendWeibo) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:shareBtn];
     
-    contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(270, 310, 360, 110)];
+    contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(270, 150, 360, 110)];
     contentTextView.delegate = self;
+    [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
     [self.view addSubview:view];
+}
+
+- (void)contentTextViewChanged:(NSNotification *)notification
+{
+    if (contentTextView.text.length > 0) {
+        [shareBtn setEnabled:YES];
+        [sendBtn setEnabled:YES];
+    } else {
+        [shareBtn setEnabled:NO];
+        [sendBtn setEnabled:NO];
+    }
 }
 
 
@@ -234,25 +251,28 @@
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"comment_frame"]];
     frame.frame = CGRectMake(0, 0, 424, 265);
-    frame.center = CGPointMake(view.center.x, view.center.y - 20);
+    frame.center = CGPointMake(view.center.x, view.center.y - 180);
     [view addSubview:frame];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(675, 240, 40, 42);
+    closeBtn.frame = CGRectMake(675, 80, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:closeBtn];
     
     sendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    sendBtn.frame = CGRectMake(615, 440, 80, 32);
-    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateNormal];
-    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateHighlighted];
+    sendBtn.frame = CGRectMake(615, 280, 80, 32);
+    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateDisabled];
+    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn"] forState:UIControlStateNormal];
+    [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_pressed"] forState:UIControlStateHighlighted];
     [sendBtn addTarget:self action:@selector(sendComment:) forControlEvents:UIControlEventTouchUpInside];
+    [sendBtn setEnabled:NO];
     [view addSubview:sendBtn];
     
-    contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(330, 310, 360, 110)];
+    contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(330, 150, 360, 110)];
     contentTextView.delegate = self;
+    [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
     [self.view addSubview:view];
 }
@@ -298,33 +318,6 @@
             [self removeOverlay];
             [self showFailureModalView:1.5];
         }];
-        
-    }
-}
-
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    [self changeSendBtnImage:textView];
-}
-
-- (void)textViewDidEndEditing:(UITextView *)textView
-{
-    [self changeSendBtnImage:textView];
-}
-
-- (void)changeSendBtnImage:(UITextView *)textView
-{
-    if(textView.text.length > 0){
-        [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn"] forState:UIControlStateNormal];
-        [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_pressed"] forState:UIControlStateHighlighted];
-        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn"] forState:UIControlStateNormal];
-        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_pressed"] forState:UIControlStateHighlighted];
-    } else {
-        [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateNormal];
-        [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateHighlighted];
-        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateNormal];
-        [sendBtn setBackgroundImage:[UIImage imageNamed:@"send_btn_disabled"] forState:UIControlStateHighlighted];
-        
     }
 }
 

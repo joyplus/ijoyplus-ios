@@ -7,8 +7,12 @@
 //
 #import <QuartzCore/QuartzCore.h>
 
-#define MOVIE_POSTER_WIDTH 71
-#define MOVIE_POSTER_HEIGHT 95 
+#define BIG_IMAGE_WIDTH 203
+#define BIG_IMAGE_HEIGHT 284
+
+
+#define MOVIE_POSTER_WIDTH 70
+#define MOVIE_POSTER_HEIGHT 100 
 
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"

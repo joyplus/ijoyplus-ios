@@ -23,7 +23,7 @@
 #define VIDEO_BUTTON_WIDTH 119
 #define VIDEO_BUTTON_HEIGHT 29
 #define TOP_SOLGAN_HEIGHT 93
-#define MOVIE_LOGO_HEIGHT 133
+#define MOVIE_LOGO_HEIGHT 139
 #define MOVIE_LOGO_WEIGHT 83
 #define DRAMA_LOGO_HEIGHT 145
 #define DRAMA_LOGO_WEIGHT 83
@@ -687,7 +687,7 @@
         imageBtn1.tag = 3001;
         [cell.contentView addSubview:imageBtn1];
         
-        UILabel *nameLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(imageView1.frame.origin.x + 18, LIST_LOGO_HEIGHT - 35, 180, 20)];
+        UILabel *nameLabel1 = [[UILabel alloc]initWithFrame:CGRectMake(imageView1.frame.origin.x + 18, LIST_LOGO_HEIGHT - 35, 200, 20)];
         [nameLabel1 setBackgroundColor:[UIColor clearColor]];
         [nameLabel1 setTextColor:[UIColor whiteColor]];
         [nameLabel1 setFont:[UIFont boldSystemFontOfSize:15]];
@@ -712,7 +712,7 @@
         imageBtn2.tag = 3002;
         [cell.contentView addSubview:imageBtn2];
         
-        UILabel *nameLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(imageView2.frame.origin.x + 18, LIST_LOGO_HEIGHT - 35, 180, 20)];
+        UILabel *nameLabel2 = [[UILabel alloc]initWithFrame:CGRectMake(imageView2.frame.origin.x + 18, LIST_LOGO_HEIGHT - 35, 200, 20)];
         [nameLabel2 setBackgroundColor:[UIColor clearColor]];
         [nameLabel2 setTextColor:[UIColor whiteColor]];
         [nameLabel2 setFont:[UIFont boldSystemFontOfSize:15]];
@@ -787,10 +787,8 @@
     
     UILabel *nameLabel1 = (UILabel *)[cell viewWithTag:6001];
     nameLabel1.text = [item1 objectForKey:@"name"];
-    [nameLabel1 sizeToFit];
     UILabel *nameLabel2 = (UILabel *)[cell viewWithTag:7001];
     nameLabel2.text = [item2 objectForKey:@"name"];
-    [nameLabel2 sizeToFit];
     
     NSString *type = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"prod_type"]];
     UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
@@ -838,10 +836,10 @@
             movieImage.tag = 6011 + i;
             if(i == 5){
                 tempBtn.frame = CGRectMake(12 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
-                movieImage.frame = CGRectMake(16 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+                movieImage.frame = CGRectMake(17 + (MOVIE_LOGO_WEIGHT+5) * i, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             } else {
                 tempBtn.frame = CGRectMake(6 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
-                movieImage.frame = CGRectMake(10 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+                movieImage.frame = CGRectMake(13 + (MOVIE_LOGO_WEIGHT+5) * i, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             }
             [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
@@ -859,7 +857,7 @@
             tempLabel.tag = 3011 + i;
             [cellScrollView addSubview:tempLabel];
         }
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 12, 200, 30)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 7, 200, 30)];
         [titleLabel setTextColor:[UIColor blackColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:15]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
@@ -878,6 +876,11 @@
         scrollBtn.tag = 5011;
         [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:scrollBtn];
+        
+        UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_LOGO_HEIGHT + 40 - 2, 450, 2)];
+        lineImage.image = [UIImage imageNamed:@"dividing"];
+        [self.view addSubview:lineImage];
+        [cell.contentView addSubview:lineImage];
     }
     NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
     UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
@@ -932,9 +935,12 @@
             tempLabel.tag = 3021 + i;
             [cellScrollView addSubview:tempLabel];
             
-            
+            UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_LOGO_HEIGHT + 40 - 2, 450, 2)];
+            lineImage.image = [UIImage imageNamed:@"dividing"];
+            [self.view addSubview:lineImage];
+            [cell.contentView addSubview:lineImage];
         }
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 12, 200, 30)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 7, 200, 30)];
         [titleLabel setTextColor:[UIColor blackColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:15]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];

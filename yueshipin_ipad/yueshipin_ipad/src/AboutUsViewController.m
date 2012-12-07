@@ -50,7 +50,7 @@
     titleImage.image = [UIImage imageNamed:@"about_title"];
     [self.view addSubview:titleImage];
     
-    contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 100, 418, 354)];
+    contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 90, 453, 642)];
     contentImage.image = [UIImage imageNamed:@"about_content"];
     [self.view addSubview:contentImage];
 

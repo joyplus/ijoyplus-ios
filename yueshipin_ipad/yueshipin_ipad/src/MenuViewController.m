@@ -75,7 +75,7 @@
         bottomLineImageView.image = [[UIImage imageNamed:@"menu_bottom_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
         [self.view addSubview:bottomLineImageView];
         
-		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(4, 0, LEFT_MENU_DIPLAY_WIDTH+4, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
+		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(4, 6, LEFT_MENU_DIPLAY_WIDTH+4, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
         [self.tableView setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[self.tableView setDelegate:self];
 		[self.tableView setDataSource:self];
@@ -165,7 +165,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 		UIView* bgView = [[UIView alloc] init];
-		[bgView setBackgroundColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1]];
+		[bgView setBackgroundColor:[UIColor colorWithRed:220/255.0 green:220/255.0 blue:220/255.0 alpha:1]];
 		[cell setSelectedBackgroundView:bgView];
 
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 15, 30, 30)];

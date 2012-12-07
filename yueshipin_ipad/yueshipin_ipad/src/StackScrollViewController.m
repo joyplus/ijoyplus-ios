@@ -792,6 +792,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+        [UIView setAnimationDuration:0.3];
         [UIView setAnimationBeginsFromCurrentState:NO];
         [viewAtLeft setFrame:CGRectMake(-LEFT_MENU_DIPLAY_WIDTH, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
         [UIView commitAnimations];
@@ -809,6 +810,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+        [UIView setAnimationDuration:1];
         [UIView setAnimationBeginsFromCurrentState:NO];
         [viewAtLeft setFrame:CGRectMake(0, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
         [UIView commitAnimations];
