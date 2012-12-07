@@ -1049,7 +1049,18 @@
 {
     [self closeMenu];
     int index = btn.tag - 9021;
-    [self showDetailScreen:[lunboArray objectAtIndex:index]];
+    NSDictionary *item = [lunboArray objectAtIndex:index];
+    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"type"]];
+    if ([type isEqualToString:@"0"]) {
+        [self showDetailScreen:item];
+    } else if ([type isEqualToString:@"1"]) {
+        ListViewController *viewController = [[ListViewController alloc] init];
+        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+        NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"prod_id"]];
+        viewController.topId = topId;
+        viewController.listTitle = [item objectForKey: @"prod_name"];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+    }
     
 }
 

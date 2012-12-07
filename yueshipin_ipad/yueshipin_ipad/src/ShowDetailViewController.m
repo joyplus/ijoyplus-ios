@@ -217,12 +217,12 @@
 - (void)introBtnClicked
 {
     introExpand = !introExpand;
-    if(introContentHeight > 80){
+    if(introContentHeight > 100){
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
                 self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
-                [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
+                [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:introContentHeight - 100];
             } completion:^(BOOL finished) {
@@ -231,7 +231,7 @@
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
                 self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
-                [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
+                [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
             } completion:^(BOOL finished) {
@@ -239,11 +239,8 @@
             }];
         }
     } else {
-        if(introExpand){
-            [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-        } else {
-            [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-        }
+        [introBtn removeFromSuperview];
+        introBtn = nil;
     }
 }
 
@@ -290,6 +287,10 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         [self calculateIntroContentHeight];
+        if(introContentHeight < 100){
+            [introBtn removeFromSuperview];
+            introBtn = nil;
+        }
         [self showValues];
     } else {
         [UIUtility showSystemError:self.view];

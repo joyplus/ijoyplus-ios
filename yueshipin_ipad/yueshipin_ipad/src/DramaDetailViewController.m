@@ -213,7 +213,7 @@
 - (void)introBtnClicked
 {
     introExpand = !introExpand;
-    if(introContentHeight > 80){
+    if(introContentHeight > 100){
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
@@ -235,11 +235,8 @@
             }];
         }
     } else {
-        if(introExpand){
-            [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-        } else {
-            [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-        }
+        [introBtn removeFromSuperview];
+        introBtn = nil;
     }
 }
 
@@ -288,6 +285,10 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         [self calculateIntroContentHeight];
+        if(introContentHeight < 100){
+            [introBtn removeFromSuperview];
+            introBtn = nil;
+        }
         [self showValues];
     } else {
         [UIUtility showSystemError:self.view];

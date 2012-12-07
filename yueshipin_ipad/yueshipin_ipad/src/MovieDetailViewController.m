@@ -269,6 +269,10 @@
             [commentArray addObjectsFromArray:tempArray];
         }
         [self calculateIntroContentHeight];
+        if(introContentHeight < 100){
+            [introBtn removeFromSuperview];
+            introBtn = nil;
+        }
         [self showValues];
     } else {
         [UIUtility showSystemError:self.view];
@@ -542,11 +546,13 @@
             }];
         }
     } else {
-        if(introExpand){
-            [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-        } else {
-            [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-        }
+        [introBtn removeFromSuperview];
+        introBtn = nil;
+//        if(introExpand){
+//            [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
+//        } else {
+//            [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
+//        }
     }
     
 }
