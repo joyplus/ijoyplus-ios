@@ -59,6 +59,8 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     int pageSize;
+    
+    NSTimer *timer;
 }
 
 @end
@@ -154,7 +156,7 @@
     [super viewDidLoad];
     
     [self retrieveLunboData];
-    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
     pageSize = 20;
     videoType = 0;
@@ -643,7 +645,7 @@
             [pageControl setIndicatorSpace: 8.0f] ;
             [cell.contentView addSubview:pageControl];
         }
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 5 && i < lunboArray.count; i++){
             UIImageView *temp = (UIImageView *)[scrollView viewWithTag:9001 + i];
             NSDictionary *lunboItem = [lunboArray objectAtIndex:i];
             [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"lunbo_placeholder"]];
@@ -669,6 +671,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
+    
         UIImageView *contentImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(40, 20, 87, 120)];
         contentImage1.tag = 2001;
         [cell.contentView addSubview:contentImage1];
@@ -1047,6 +1050,7 @@
 
 - (void)lunboImageClicked:(UIButton *)btn
 {
+    [timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5]];
     [self closeMenu];
     int index = btn.tag - 9021;
     NSDictionary *item = [lunboArray objectAtIndex:index];
