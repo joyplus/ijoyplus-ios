@@ -84,13 +84,16 @@
     playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:mediaFileUrl];
     CGRect bound = self.view.bounds;
     playerViewController.view.frame = CGRectMake(0, -20, bound.size.width, bound.size.height + 20);
-    
+
     [self.navigationController setNavigationBarHidden:YES];
     [self.view addSubview:playerViewController.view];
     
     player = [playerViewController moviePlayer];
+    [player prepareToPlay];
+    player.useApplicationAudioSession = NO;
     lastPlayTime = (NSNumber*)[[CacheUtility sharedCache]loadFromCache:self.videoUrl];
     [player setInitialPlaybackTime: lastPlayTime.doubleValue];
+    [player play];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVideoFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPreloadFinish:) name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:nil];
