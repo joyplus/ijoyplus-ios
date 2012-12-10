@@ -262,6 +262,14 @@
 		EBBA010D1664E2C80069FE7E /* label@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA01091664E2C80069FE7E /* label@2x.png */; };
 		EBBA010E1664E2C80069FE7E /* search_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */; };
 		EBBA01101664E3520069FE7E /* hotkeys@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010F1664E3510069FE7E /* hotkeys@2x.png */; };
+		EBBCDBB71675901C006E2F64 /* drama_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB31675901C006E2F64 /* drama_btn.png */; };
+		EBBCDBB81675901C006E2F64 /* list_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB41675901C006E2F64 /* list_btn.png */; };
+		EBBCDBB91675901C006E2F64 /* movie_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB51675901C006E2F64 /* movie_btn.png */; };
+		EBBCDBBA1675901C006E2F64 /* show_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB61675901C006E2F64 /* show_btn.png */; };
+		EBBCDBBF1675A048006E2F64 /* drama_btn_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBBB1675A047006E2F64 /* drama_btn_pressed.png */; };
+		EBBCDBC01675A048006E2F64 /* list_btn_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBBC1675A047006E2F64 /* list_btn_pressed.png */; };
+		EBBCDBC11675A048006E2F64 /* movie_btn_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBBD1675A048006E2F64 /* movie_btn_pressed.png */; };
+		EBBCDBC21675A048006E2F64 /* show_btn_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBBE1675A048006E2F64 /* show_btn_pressed.png */; };
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
@@ -331,14 +339,14 @@
 		EB182CFC165CF01700A347BA /* show_overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "show_overlay@2x.png"; sourceTree = "<group>"; };
 		EB182D00165CFCBD00A347BA /* PersonalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersonalViewController.h; sourceTree = "<group>"; };
 		EB182D01165CFCBD00A347BA /* PersonalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalViewController.m; sourceTree = "<group>"; };
-		EB6DEA68165A2F1A00AF8003 /* yueshipin_ipad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yueshipin_ipad.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB6DEA68165A2F1A00AF8003 /* yueshipin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yueshipin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EB6DEA70165A2F1A00AF8003 /* CoreGraphics.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		EB6DEA74165A2F1A00AF8003 /* yueshipin_ipad-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "yueshipin_ipad-Info.plist"; sourceTree = "<group>"; };
+		EB6DEA74165A2F1A00AF8003 /* yueshipin-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "yueshipin-Info.plist"; sourceTree = "<group>"; };
 		EB6DEA76165A2F1A00AF8003 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EB6DEA78165A2F1A00AF8003 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		EB6DEA7A165A2F1A00AF8003 /* yueshipin_ipad-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "yueshipin_ipad-Prefix.pch"; sourceTree = "<group>"; };
+		EB6DEA7A165A2F1A00AF8003 /* yueshipin-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "yueshipin-Prefix.pch"; sourceTree = "<group>"; };
 		EB6DEA7B165A2F1A00AF8003 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../AppDelegate.h; sourceTree = "<group>"; };
 		EB6DEA7C165A2F1A00AF8003 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ../AppDelegate.m; sourceTree = "<group>"; };
 		EB6DEA99165A322F00AF8003 /* MenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuViewController.h; sourceTree = "<group>"; };
@@ -608,6 +616,14 @@
 		EBBA01091664E2C80069FE7E /* label@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label@2x.png"; sourceTree = "<group>"; };
 		EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBBA010F1664E3510069FE7E /* hotkeys@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hotkeys@2x.png"; sourceTree = "<group>"; };
+		EBBCDBB31675901C006E2F64 /* drama_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_btn.png; sourceTree = "<group>"; };
+		EBBCDBB41675901C006E2F64 /* list_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_btn.png; sourceTree = "<group>"; };
+		EBBCDBB51675901C006E2F64 /* movie_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_btn.png; sourceTree = "<group>"; };
+		EBBCDBB61675901C006E2F64 /* show_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = show_btn.png; sourceTree = "<group>"; };
+		EBBCDBBB1675A047006E2F64 /* drama_btn_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_btn_pressed.png; sourceTree = "<group>"; };
+		EBBCDBBC1675A047006E2F64 /* list_btn_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_btn_pressed.png; sourceTree = "<group>"; };
+		EBBCDBBD1675A048006E2F64 /* movie_btn_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_btn_pressed.png; sourceTree = "<group>"; };
+		EBBCDBBE1675A048006E2F64 /* show_btn_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = show_btn_pressed.png; sourceTree = "<group>"; };
 		EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSearchViewController.h; sourceTree = "<group>"; };
 		EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSearchViewController.m; sourceTree = "<group>"; };
 		EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
@@ -696,6 +712,14 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBBCDBBB1675A047006E2F64 /* drama_btn_pressed.png */,
+				EBBCDBBC1675A047006E2F64 /* list_btn_pressed.png */,
+				EBBCDBBD1675A048006E2F64 /* movie_btn_pressed.png */,
+				EBBCDBBE1675A048006E2F64 /* show_btn_pressed.png */,
+				EBBCDBB31675901C006E2F64 /* drama_btn.png */,
+				EBBCDBB41675901C006E2F64 /* list_btn.png */,
+				EBBCDBB51675901C006E2F64 /* movie_btn.png */,
+				EBBCDBB61675901C006E2F64 /* show_btn.png */,
 				EBB5AF161671EC8D00AD15C9 /* list_background@2x.png */,
 				EBB5AF141671C68800AD15C9 /* show_placeholder@2x.png */,
 				EBB9E0D316706AB9006ECEE8 /* about_content@2x.png */,
@@ -878,7 +902,7 @@
 		EB6DEA69165A2F1A00AF8003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EB6DEA68165A2F1A00AF8003 /* yueshipin_ipad.app */,
+				EB6DEA68165A2F1A00AF8003 /* yueshipin.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -912,10 +936,10 @@
 			isa = PBXGroup;
 			children = (
 				EBF3A977166309AC00EBF56D /* Localizable.strings */,
-				EB6DEA74165A2F1A00AF8003 /* yueshipin_ipad-Info.plist */,
+				EB6DEA74165A2F1A00AF8003 /* yueshipin-Info.plist */,
 				EB6DEA75165A2F1A00AF8003 /* InfoPlist.strings */,
 				EB6DEA78165A2F1A00AF8003 /* main.m */,
-				EB6DEA7A165A2F1A00AF8003 /* yueshipin_ipad-Prefix.pch */,
+				EB6DEA7A165A2F1A00AF8003 /* yueshipin-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1241,9 +1265,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EB6DEA67165A2F1A00AF8003 /* yueshipin_ipad */ = {
+		EB6DEA67165A2F1A00AF8003 /* yueshipin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EB6DEA8C165A2F1A00AF8003 /* Build configuration list for PBXNativeTarget "yueshipin_ipad" */;
+			buildConfigurationList = EB6DEA8C165A2F1A00AF8003 /* Build configuration list for PBXNativeTarget "yueshipin" */;
 			buildPhases = (
 				EB6DEA64165A2F1A00AF8003 /* Sources */,
 				EB6DEA65165A2F1A00AF8003 /* Frameworks */,
@@ -1254,9 +1278,9 @@
 			);
 			dependencies = (
 			);
-			name = yueshipin_ipad;
+			name = yueshipin;
 			productName = yueshipin_ipad;
-			productReference = EB6DEA68165A2F1A00AF8003 /* yueshipin_ipad.app */;
+			productReference = EB6DEA68165A2F1A00AF8003 /* yueshipin.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1268,7 +1292,7 @@
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = joyplus;
 			};
-			buildConfigurationList = EB6DEA62165A2F1A00AF8003 /* Build configuration list for PBXProject "yueshipin_ipad" */;
+			buildConfigurationList = EB6DEA62165A2F1A00AF8003 /* Build configuration list for PBXProject "yueshipin" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1281,7 +1305,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EB6DEA67165A2F1A00AF8003 /* yueshipin_ipad */,
+				EB6DEA67165A2F1A00AF8003 /* yueshipin */,
 			);
 		};
 /* End PBXProject section */
@@ -1488,6 +1512,14 @@
 				EBB9E0DD167090FE006ECEE8 /* Icon-72@2x.png in Resources */,
 				EBB5AF151671C68800AD15C9 /* show_placeholder@2x.png in Resources */,
 				EBB5AF171671EC8E00AD15C9 /* list_background@2x.png in Resources */,
+				EBBCDBB71675901C006E2F64 /* drama_btn.png in Resources */,
+				EBBCDBB81675901C006E2F64 /* list_btn.png in Resources */,
+				EBBCDBB91675901C006E2F64 /* movie_btn.png in Resources */,
+				EBBCDBBA1675901C006E2F64 /* show_btn.png in Resources */,
+				EBBCDBBF1675A048006E2F64 /* drama_btn_pressed.png in Resources */,
+				EBBCDBC01675A048006E2F64 /* list_btn_pressed.png in Resources */,
+				EBBCDBC11675A048006E2F64 /* movie_btn_pressed.png in Resources */,
+				EBBCDBC21675A048006E2F64 /* show_btn_pressed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1671,14 +1703,14 @@
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin_ipad-Prefix.pch";
-				INFOPLIST_FILE = "yueshipin_ipad/yueshipin_ipad-Info.plist";
+				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin-Prefix.pch";
+				INFOPLIST_FILE = "yueshipin_ipad/yueshipin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = yueshipin;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1689,14 +1721,14 @@
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin_ipad-Prefix.pch";
-				INFOPLIST_FILE = "yueshipin_ipad/yueshipin_ipad-Info.plist";
+				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin-Prefix.pch";
+				INFOPLIST_FILE = "yueshipin_ipad/yueshipin-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = yueshipin;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1705,7 +1737,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EB6DEA62165A2F1A00AF8003 /* Build configuration list for PBXProject "yueshipin_ipad" */ = {
+		EB6DEA62165A2F1A00AF8003 /* Build configuration list for PBXProject "yueshipin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EB6DEA8A165A2F1A00AF8003 /* Debug */,
@@ -1714,7 +1746,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EB6DEA8C165A2F1A00AF8003 /* Build configuration list for PBXNativeTarget "yueshipin_ipad" */ = {
+		EB6DEA8C165A2F1A00AF8003 /* Build configuration list for PBXNativeTarget "yueshipin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EB6DEA8D165A2F1A00AF8003 /* Debug */,

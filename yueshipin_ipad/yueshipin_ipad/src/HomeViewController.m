@@ -61,6 +61,11 @@
     int pageSize;
     
     NSTimer *timer;
+    
+    UIButton *lastPressedBtn;
+    int selectedRowNumber;
+    
+    UIImageView *lastSelectedListImage;
 }
 
 @end
@@ -677,7 +682,8 @@
         [cell.contentView addSubview:contentImage1];
         
         UIImageView *imageView1 = [[UIImageView alloc]initWithFrame:CGRectMake(22, 0, LIST_LOGO_WIDTH, LIST_LOGO_HEIGHT)];
-        imageView1.image = [UIImage imageNamed:@"briefcard_orange"];
+        imageView1.image = [UIImage imageNamed:@"briefcard_blue"];
+        imageView1.tag = 3101;
         [cell.contentView addSubview:imageView1];
         
         UIImageView *hotImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(25, 3, 62, 62)];
@@ -703,6 +709,7 @@
         
         UIImageView *imageView2 = [[UIImageView alloc]initWithFrame:CGRectMake(22 + LIST_LOGO_WIDTH + 18, 0, LIST_LOGO_WIDTH, LIST_LOGO_HEIGHT)];
         imageView2.image = [UIImage imageNamed:@"briefcard_blue"];
+        imageView2.tag = 3102;
         [cell.contentView addSubview:imageView2];
         
         UIImageView *hotImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(263, 3, 62, 62)];
@@ -821,6 +828,22 @@
         UILabel *label2 = (UILabel *)[cell viewWithTag:(5001 + i)];
         label2.text = [[subitems2 objectAtIndex:i]objectForKey:@"prod_name"];
     }
+    
+    UIImageView *imageView1 = (UIImageView *)[cell viewWithTag:3101];
+    UIImageView *imageView2 = (UIImageView *)[cell viewWithTag:3102];
+    if(indexPath.row == selectedRowNumber){
+        if(imageView1 == lastSelectedListImage){
+            imageView1.image = [UIImage imageNamed:@"briefcard_orange"];
+        } else if(imageView2 == lastSelectedListImage){
+            imageView2.image = [UIImage imageNamed:@"briefcard_orange"];
+        } else {
+            imageView1.image = [UIImage imageNamed:@"briefcard_blue"];
+            imageView2.image = [UIImage imageNamed:@"briefcard_blue"];
+        }
+    } else {
+        imageView1.image = [UIImage imageNamed:@"briefcard_blue"];
+        imageView2.image = [UIImage imageNamed:@"briefcard_blue"];
+    }
     return cell;
 }
 
@@ -887,6 +910,14 @@
     }
     NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
     UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
+    for (int i=0; i < MOVIE_NUMBER; i++) {
+        UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+        if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+        } else {
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+        }
+    }
     cellScrollView.contentOffset = CGPointMake(0, 0);
     NSArray *subitemArray = [item objectForKey:@"items"];
     for(int i = 0; i < subitemArray.count; i++){
@@ -922,8 +953,8 @@
                 tempBtn.frame = CGRectMake(6 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
                 movieImage.frame = CGRectMake(10 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             }
-            [tempBtn setImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
-            [tempBtn setImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
             tempBtn.tag = 2021 + i;
             [tempBtn addTarget:self action:@selector(dramaImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
@@ -966,6 +997,14 @@
     NSDictionary *item = [tvTopsArray objectAtIndex:indexPath.row];
     UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
     cellScrollView.contentOffset = CGPointMake(0, 0);
+    for (int i=0; i < MOVIE_NUMBER; i++) {
+        UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2021 + i];
+        if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+        } else {
+            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+        }
+    }
     NSArray *subitemArray = [item objectForKey:@"items"];
     for(int i = 0; i < subitemArray.count; i++){
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
@@ -1089,14 +1128,25 @@
     }
 }
 
-- (void)movieImageClicked:(UIButton *)sender
+- (void)updatePressedBtn:(UIButton *)btn selectedRow:(NSInteger)selectedRow
+{
+    if(lastPressedBtn != nil){
+        [lastPressedBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+    }
+    [btn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+    selectedRowNumber = selectedRow;
+    lastPressedBtn = btn;
+    lastSelectedListImage = nil;
+}
+
+- (void)movieImageClicked:(UIButton *)btn
 {
     [self closeMenu];
-    UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
+    [self updatePressedBtn:btn selectedRow:indexPath.row];
     NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
     if(btn.tag - 2011 < items.count){
         NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
@@ -1104,14 +1154,14 @@
     }
 }
 
-- (void)dramaImageClicked:(UIButton *)sender
+- (void)dramaImageClicked:(UIButton *)btn
 {
     [self closeMenu];
-    UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
+    [self updatePressedBtn:btn selectedRow:indexPath.row];
     NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
     if(btn.tag - 2021 < items.count){
         NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
@@ -1119,10 +1169,12 @@
     }
 }
 
-- (void)showImageClicked:(UIButton *)sender
+- (void)showImageClicked:(UIButton *)btn
 {
+    lastSelectedListImage = nil;
+    lastPressedBtn = nil;
+    selectedRowNumber = 0;
     [self closeMenu];
-    UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -1130,13 +1182,23 @@
     [self showDetailScreen:item];
 }
 
-- (void)imageBtnClicked:(UIButton *)sender
+- (void)imageBtnClicked:(UIButton *)btn
 {
+    
     [self closeMenu];
-    UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    
+    if(lastSelectedListImage != nil){
+        lastSelectedListImage.image = [UIImage imageNamed:@"briefcard_blue"];
+    }
+    UIImageView *listBgImage = (UIImageView *)[[btn superview] viewWithTag:btn.tag + 100];
+    listBgImage.image = [UIImage imageNamed:@"briefcard_orange"];
+    lastSelectedListImage = listBgImage;
+    selectedRowNumber = indexPath.row;
+    lastPressedBtn = nil;
+    
     ListViewController *viewController = [[ListViewController alloc] init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     NSDictionary *item = [topsArray objectAtIndex:floor(indexPath.row * 2.0) + btn.tag - 3001];
