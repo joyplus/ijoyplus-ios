@@ -77,6 +77,8 @@
         [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateHighlighted];
         [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
         [cell.contentView addSubview:nameBtn];
     }
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];

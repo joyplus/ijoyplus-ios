@@ -83,7 +83,7 @@
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [self.deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_GAP, 160, 420, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(30, 160, 420, self.view.frame.size.height - 350)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];

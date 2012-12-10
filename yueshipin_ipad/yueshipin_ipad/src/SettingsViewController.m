@@ -154,12 +154,12 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _sinaweibo = [AppDelegate instance].sinaweibo;
-    _sinaweibo.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    _sinaweibo = [AppDelegate instance].sinaweibo;
+    _sinaweibo.delegate = self;
     [super viewWillAppear:YES];
     if([_sinaweibo isLoggedIn]){
         sinaSwitch.on = YES;

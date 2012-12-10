@@ -26,6 +26,8 @@
     BOOL introExpand;
     BOOL btnAdded;
     UITapGestureRecognizer *tapGesture;
+    
+    NSMutableArray *episodeUrlArray;
 }
 
 
@@ -278,6 +280,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"tv"];
         episodeArray = [video objectForKey:@"episodes"];
+        [self initEpisodeUrlArray];
         topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -293,6 +296,11 @@
     } else {
         [UIUtility showSystemError:self.view];
     }
+}
+
+- (void)initEpisodeUrlArray
+{
+    
 }
 
 - (void)showValues

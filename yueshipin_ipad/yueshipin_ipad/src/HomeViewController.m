@@ -63,9 +63,11 @@
     NSTimer *timer;
     
     UIButton *lastPressedBtn;
+    UILabel *lastPressedLabel;
     int selectedRowNumber;
     
     UIImageView *lastSelectedListImage;
+    UIImageView *lastSelectedOverlay;
 }
 
 @end
@@ -729,11 +731,11 @@
         nameLabel2.tag = 7001;
         [cell.contentView addSubview:nameLabel2];
         
-        UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(150, 23, 40, 20)];
+        UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(150, 23, 37, 18)];
         typeImage1.tag = 8001;
         [cell.contentView addSubview:typeImage1];
         
-        UIImageView *typeImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(388, 23, 40, 20)];
+        UIImageView *typeImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(388, 23, 37, 18)];
         typeImage2.tag = 8002;
         [cell.contentView addSubview:typeImage2];
         
@@ -879,7 +881,7 @@
             [tempLabel setTextColor:[UIColor blackColor]];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
             [tempLabel setFont:[UIFont systemFontOfSize:13]];
-            tempLabel.center = CGPointMake(tempBtn.center.x, 20 + MOVIE_LOGO_HEIGHT * 0.7);
+            tempLabel.center = CGPointMake(tempBtn.center.x, 22 + MOVIE_LOGO_HEIGHT * 0.7);
             tempLabel.tag = 3011 + i;
             [cellScrollView addSubview:tempLabel];
         }
@@ -926,6 +928,11 @@
         [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
         tempLabel.text = [subitem objectForKey:@"prod_name"];
+        if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
+            tempLabel.textColor = [UIColor whiteColor];
+        } else {
+            tempLabel.textColor = [UIColor blackColor];
+        }
     }
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
     [titleLabel setText:[item objectForKey:@"name"]];
@@ -965,7 +972,7 @@
             [tempLabel setTextColor:[UIColor blackColor]];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
             [tempLabel setFont:[UIFont systemFontOfSize:13]];
-            tempLabel.center = CGPointMake(tempBtn.center.x, 20 + MOVIE_LOGO_HEIGHT * 0.7);
+            tempLabel.center = CGPointMake(tempBtn.center.x, 22 + MOVIE_LOGO_HEIGHT * 0.7);
             tempLabel.tag = 3021 + i;
             [cellScrollView addSubview:tempLabel];
             
@@ -1012,6 +1019,11 @@
         [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
         tempLabel.text = [subitem objectForKey:@"prod_name"];
+        if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
+            tempLabel.textColor = [UIColor whiteColor];
+        } else {
+            tempLabel.textColor = [UIColor blackColor];
+        }
     }
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4021];
     [titleLabel setText:[item objectForKey:@"name"]];
@@ -1031,7 +1043,8 @@
         [cell.contentView addSubview:tempImage];
         
         UIImageView *overLayImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"show_overlay"]];
-        overLayImage.frame = CGRectMake(tempImage.frame.origin.x, 5 + SHOW_LOGO_HEIGHT-38 , tempImage.frame.size.width-6, 38);
+        overLayImage.frame = CGRectMake(tempImage.frame.origin.x, 5 + SHOW_LOGO_HEIGHT-38 , tempImage.frame.size.width, 38);
+        overLayImage.tag = 2131;
         [cell.contentView addSubview:overLayImage];
         
         UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -1062,6 +1075,13 @@
     UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
     [tempNameLabel setText:[item objectForKey:@"prod_name"]];
     [tempNameLabel sizeToFit];
+    
+    UIImageView *overLayImage = (UIImageView *)[cell viewWithTag:2131];
+    if(selectedRowNumber == indexPath.row && lastSelectedOverlay == overLayImage){
+        overLayImage.image = [UIImage imageNamed:@"show_overlay_pressed"];
+    } else {
+        overLayImage.image = [UIImage imageNamed:@"show_overlay"];
+    }
     
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
     NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
@@ -1128,15 +1148,19 @@
     }
 }
 
-- (void)updatePressedBtn:(UIButton *)btn selectedRow:(NSInteger)selectedRow
+- (void)updatePressedBtn:(UIButton *)btn pressedLabel:(UILabel *)pressedLabel selectedRow:(NSInteger)selectedRow
 {
     if(lastPressedBtn != nil){
+        lastPressedLabel.textColor = [UIColor blackColor];
         [lastPressedBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
     }
+    pressedLabel.textColor = [UIColor whiteColor];
     [btn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+    lastPressedLabel = pressedLabel;
     selectedRowNumber = selectedRow;
     lastPressedBtn = btn;
     lastSelectedListImage = nil;
+    lastSelectedOverlay = nil;
 }
 
 - (void)movieImageClicked:(UIButton *)btn
@@ -1146,7 +1170,8 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
-    [self updatePressedBtn:btn selectedRow:indexPath.row];
+    UILabel *titleLabel = (UILabel *)[[btn superview] viewWithTag:btn.tag + 1000];
+    [self updatePressedBtn:btn pressedLabel:titleLabel selectedRow:indexPath.row];
     NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
     if(btn.tag - 2011 < items.count){
         NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
@@ -1161,7 +1186,8 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
-    [self updatePressedBtn:btn selectedRow:indexPath.row];
+    UILabel *titleLabel = (UILabel *)[[btn superview] viewWithTag:btn.tag + 1000];
+    [self updatePressedBtn:btn pressedLabel:titleLabel selectedRow:indexPath.row];
     NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
     if(btn.tag - 2021 < items.count){
         NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
@@ -1173,11 +1199,21 @@
 {
     lastSelectedListImage = nil;
     lastPressedBtn = nil;
-    selectedRowNumber = 0;
+    lastPressedLabel = nil;
+
+    
     [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    selectedRowNumber = indexPath.row;
+    if(lastSelectedOverlay != nil){
+        lastSelectedOverlay.image = [UIImage imageNamed:@"show_overlay"];
+    }
+    UIImageView *overlay = (UIImageView *)[[btn superview]viewWithTag:btn.tag + 100];
+    overlay.image = [UIImage imageNamed:@"show_overlay_pressed"];
+    lastSelectedOverlay = overlay;
+    
     NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
     [self showDetailScreen:item];
 }
@@ -1198,6 +1234,8 @@
     lastSelectedListImage = listBgImage;
     selectedRowNumber = indexPath.row;
     lastPressedBtn = nil;
+    lastPressedLabel = nil;
+    lastSelectedOverlay = nil;
     
     ListViewController *viewController = [[ListViewController alloc] init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);

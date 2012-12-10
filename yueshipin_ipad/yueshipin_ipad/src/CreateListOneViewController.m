@@ -102,6 +102,7 @@
     [self.nextBtn setEnabled:NO];
     [self.titleField resignFirstResponder];
     [self.contentText resignFirstResponder];
+    [myHUD showProgressBar:self.view];
     if(self.titleField.text.length > 0){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -111,6 +112,7 @@
                 if(![StringUtility stringIsEmpty:self.prodId]){
                     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [result objectForKey:@"topic_id"], @"topic_id", self.prodId, @"prod_id", nil];
                     [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id tempresult) {
+                        [myHUD hide];
                         NSString *responseCode = [tempresult objectForKey:@"res_code"];
                         if([responseCode isEqualToString:kSuccessResCode]){
                             [self gotoNextScreen:result];
@@ -118,15 +120,19 @@
                             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
                         }
                     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                        [myHUD hide];
                         [UIUtility showSystemError:self.view];
                     }];
                 } else {
+                    [myHUD hide];
                     [self gotoNextScreen:result];                    
                 }
             } else {
+                [myHUD hide];
                 [[AppDelegate instance].rootViewController showListFailureModalView:1.5];
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [myHUD hide];
             [UIUtility showSystemError:self.view];
         }];
     }
