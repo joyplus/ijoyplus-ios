@@ -669,20 +669,46 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                      }];
 }
 
+- (void)removeAllSubviewInSlider
+{
+    CGRect frame = [UIScreen mainScreen].bounds;
+    NSInteger lastViewControllerIndex = viewControllersStack.count - 1;
+    if(lastViewControllerIndex <= 0){
+        return;
+    }
+    
+    [UIView animateWithDuration:0.3
+                          delay:0.0
+                        options:UIViewAnimationCurveEaseOut
+                     animations:^{
+                         for(int i = lastViewControllerIndex; i > 0; i--){
+                             UIViewController *topController = [viewControllersStack objectAtIndex:i];
+                             [topController.view setFrame:CGRectMake(frame.size.height, topController.view.frame.origin.y, topController.view.frame.size.width, topController.view.frame.size.height)];
+                             topController = nil;
+                         }
+                     } completion:^(BOOL finished) {
+                         for(int i = lastViewControllerIndex; i > 0; i--){
+                             NSLog(@"%d = %d", lastViewControllerIndex, i);
+                             [[slideViews viewWithTag:i] removeFromSuperview];
+                             [viewControllersStack removeObjectAtIndex:i];
+                         }
+                     }];
+}
+
 - (void)addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView removePreviousView:(BOOL)removePreviousView{
     
 	if (isStackStartView) {
-		slideStartPosition = SLIDE_VIEWS_START_X_POS;
-		viewXPosition = slideStartPosition;
-		
-		for (UIView* subview in [slideViews subviews]) {
-			[subview removeFromSuperview];
-		}
-		
-		[[borderViews viewWithTag:3] setHidden:TRUE];
-		[[borderViews viewWithTag:2] setHidden:TRUE];
-		[[borderViews viewWithTag:1] setHidden:TRUE];
-		[viewControllersStack removeAllObjects];
+        slideStartPosition = SLIDE_VIEWS_START_X_POS;
+        viewXPosition = slideStartPosition;
+        
+        for (UIView* subview in [slideViews subviews]) {
+            [subview removeFromSuperview];
+        }
+        
+        [[borderViews viewWithTag:3] setHidden:TRUE];
+        [[borderViews viewWithTag:2] setHidden:TRUE];
+        [[borderViews viewWithTag:1] setHidden:TRUE];
+        [viewControllersStack removeAllObjects];
 	}
 	
     CGRect frame = [UIScreen mainScreen].bounds;
@@ -810,7 +836,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
-        [UIView setAnimationDuration:1];
+        [UIView setAnimationDuration:0.3];
         [UIView setAnimationBeginsFromCurrentState:NO];
         [viewAtLeft setFrame:CGRectMake(0, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
         [UIView commitAnimations];
@@ -887,9 +913,9 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 //		if (!((viewAtRight != nil && [viewAtRight isEqual:subController.view]) || (viewAtLeft != nil && [viewAtLeft isEqual:subController.view]) || (viewAtLeft2 != nil && [viewAtLeft2 isEqual:subController.view]))) {
 //			[[subController view] setHidden:TRUE];
 //		}
-//		
+//
 //	}
-//	
+//
 //}
 //
 //- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

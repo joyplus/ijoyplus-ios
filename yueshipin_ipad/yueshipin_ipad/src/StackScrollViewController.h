@@ -68,6 +68,7 @@
 }
 
 - (void)removeViewInSlider;
+- (void)removeAllSubviewInSlider;
 - (void) addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView removePreviousView:(BOOL)removePreviousView;
 - (void)bounceBack:(NSString*)animationID finished:(NSNumber*)finished context:(void*)context;
 - (void)menuToggle:(BOOL)menuClicked isStackStartView:(BOOL)isStackStartView;

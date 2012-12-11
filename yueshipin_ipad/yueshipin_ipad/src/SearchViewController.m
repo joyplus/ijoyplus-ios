@@ -17,7 +17,9 @@
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
-@interface SearchViewController ()
+@interface SearchViewController (){
+    UIButton *lastPressedBtn;
+}
 
 @end
 
@@ -215,6 +217,10 @@
             [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
+            if(lastPressedBtn.tag == hotKeyBtn.tag){
+                [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateNormal];
+                [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            }
             [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:hotKeyBtn];
         }
@@ -264,8 +270,17 @@
 
 - (void)hotKeyBtnClicked:(UIButton *)btn
 {
+    if(lastPressedBtn != nil){
+        [lastPressedBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
+        [lastPressedBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
+    }
+    [btn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    lastPressedBtn = btn;
     int index = btn.tag - 2001;
     [self search:[[hotKeyArray objectAtIndex:index] objectForKey:@"content"]];
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+    [table reloadData];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -273,10 +288,10 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if(indexPath.section == 1){
         NSString *keyword = [[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"];
-        [self addKeyToLocalHistory:keyword];
+        [self search:keyword];
+        lastPressedBtn = nil;
         table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
         [table reloadData];
-        [self search:keyword];
     }
 }
 
@@ -294,18 +309,20 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
     [searchBar resignFirstResponder];
-    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
-    [table reloadData];
     [self search:searchBar.text];
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+    lastPressedBtn = nil;
+    [table reloadData];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
 {
     if(searchBar.text.length > 0){
         [searchBar resignFirstResponder];
-        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
-        [table reloadData];
         [self search:searchBar.text];
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+        lastPressedBtn = nil;
+        [table reloadData];
     }
 }
 
@@ -316,6 +333,7 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    sBar.text = keyword;
     [self closeMenu];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];

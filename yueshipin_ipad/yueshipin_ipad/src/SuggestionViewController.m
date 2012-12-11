@@ -109,9 +109,9 @@
     }
     [self.titleField resignFirstResponder];
     [self.contentText resignFirstResponder];
-    if(self.titleField.text.length > 0){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    if(self.contentText.text.length > 0){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"email", self.contentText.text, @"content", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathFeekback parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
         }];

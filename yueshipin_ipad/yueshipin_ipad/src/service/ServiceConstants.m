@@ -115,4 +115,5 @@ NSString *const kPathTopItems = @"/joyplus-service/index.php/top_items";
 NSString *const kPathUserTopics = @"/joyplus-service/index.php/user/tops";
 NSString *const kPathTopDelete = @"/joyplus-service/index.php/top/del";
 NSString *const kPathRemoveItem = @"/joyplus-service/index.php/top/removeItem";
+NSString *const kPathFeekback = @"/joyplus-service/index.php/user/feedback";
 

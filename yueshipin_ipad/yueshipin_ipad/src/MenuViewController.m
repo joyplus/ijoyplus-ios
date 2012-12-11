@@ -129,7 +129,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     if(![AppDelegate instance].triggeredByPlayer){
-        [self menuButtonClicked];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+        [AppDelegate instance].closed = ![AppDelegate instance].closed;
+        [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
     }
 }
 
@@ -251,7 +253,7 @@
 }
 - (void)menuButtonClicked
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
     [AppDelegate instance].closed = ![AppDelegate instance].closed;
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
 }
@@ -266,6 +268,10 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
+    homeViewController = nil;
+    settingsViewController = nil;
+    searchViewController = nil;
+    personalViewController = nil;
 }
 
 @end
