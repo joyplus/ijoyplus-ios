@@ -216,7 +216,7 @@
     [super viewWillAppear:YES];
     self.userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
-    [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"personal_icon"]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
     [self parseResult];
     

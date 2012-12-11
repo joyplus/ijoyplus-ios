@@ -156,11 +156,11 @@
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 102, 146)];
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 110, 149)];
         imageView.image = [UIImage imageNamed:@"moviecard_list"];
         [cell.contentView addSubview:imageView];
         
-        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 13, 83, 124)];
+        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(52, 13, 85, 131)];
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         

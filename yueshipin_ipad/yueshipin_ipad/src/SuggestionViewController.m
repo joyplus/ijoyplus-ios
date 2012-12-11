@@ -53,7 +53,7 @@
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 110, 27);
     self.titleImage.image = [UIImage imageNamed:@"proposal"];
     
-    self.closeBtn.frame = CGRectMake(470, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(485, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -67,15 +67,15 @@
     self.titleField.placeholder = @"邮箱";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeNextBtnImage:) name:UITextFieldTextDidChangeNotification object:self.titleField];
     
-    self.contentBgImage.frame = CGRectMake(LEFT_GAP, 140, 400, 102);
+    self.contentBgImage.frame = CGRectMake(LEFT_GAP, 145, 400, 102);
     self.contentBgImage.image = [UIImage imageNamed:@"box_content"];
     self.contentBgImage.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.contentBgImage.layer.borderWidth = 1;
     
-    self.contentText.frame = CGRectMake(LEFT_GAP+5, 145, 390, 92);
-    self.contentText.placeholder = @"你的反馈是我们进步的动力。";
+    self.contentText.frame = CGRectMake(LEFT_GAP+5, 150, 390, 92);
+    self.contentText.placeholder = @"您的反馈是我们进步的动力。（必填）";
     
-    self.nextBtn.frame = CGRectMake(390, 250, 62, 39);
+    self.nextBtn.frame = CGRectMake(390, 255, 62, 39);
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"submit"] forState:UIControlStateNormal];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"submit_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"submit_pressed"] forState:UIControlStateHighlighted];

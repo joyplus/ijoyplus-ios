@@ -61,7 +61,7 @@
     [self.view addSubview:titleLabel];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(470, 20, 40, 42);
+    closeBtn.frame = CGRectMake(485, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -174,7 +174,7 @@
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 250, 25)];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 250, 30)];
         nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;

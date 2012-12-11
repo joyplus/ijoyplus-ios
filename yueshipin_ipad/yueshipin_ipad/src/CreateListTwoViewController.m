@@ -68,7 +68,7 @@
     self.lineImage.frame = CGRectMake(LEFT_GAP, 80, 400, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
    
-    self.closeBtn.frame = CGRectMake(470, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(485, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
