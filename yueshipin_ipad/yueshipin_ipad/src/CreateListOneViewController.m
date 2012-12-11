@@ -61,6 +61,8 @@
     
     self.titleFieldBg.frame = CGRectMake(LEFT_GAP, 100, 400, 39);
     self.titleFieldBg.image = [UIImage imageNamed:@"box_title"];
+    self.titleFieldBg.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    self.titleFieldBg.layer.borderWidth = 1;
     
     self.titleField.frame = CGRectMake(LEFT_GAP+5, 103, 390, 33);
     self.titleField.placeholder = @"标题";
@@ -69,6 +71,8 @@
     
     self.contentBgImage.frame = CGRectMake(LEFT_GAP, 140, 400, 102);
     self.contentBgImage.image = [UIImage imageNamed:@"box_content"];
+    self.contentBgImage.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    self.contentBgImage.layer.borderWidth = 1;
     
     self.contentText.frame = CGRectMake(LEFT_GAP+5, 145, 390, 92);
     self.contentText.placeholder = @"简介（可选）";

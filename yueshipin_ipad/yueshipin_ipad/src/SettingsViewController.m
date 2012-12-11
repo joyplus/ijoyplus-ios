@@ -9,7 +9,6 @@
 #import "SettingsViewController.h"
 #import "CustomSearchBar.h"
 #import "SuggestionViewController.h"
-#import "UMFeedback.h"
 #import "AboutUsViewController.h"
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
@@ -41,6 +40,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
     NSDictionary *userInfo;
+    
+    UIButton *followBtn;
 }
 
 @end
@@ -67,6 +68,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     sinaUsernameLabel = nil;
     _sinaweibo = nil;
     userInfo = nil;
+    followBtn = nil;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -88,7 +90,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 170, 34)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 137, 34)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
@@ -121,26 +123,33 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
-        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 128)];
+        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 220)];
         aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] ;
         [self.view addSubview:aboutBg];
         
-//        suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
-//        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
-//        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
-//        [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:suggestionBtn];
+        suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
+        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
+        [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
+        [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(100, 325, 334, 40);
+        commentBtn.frame = CGRectMake(100, 372, 334, 40);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
+        followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        followBtn.frame = CGRectMake(100, 419, 334, 40);
+        [followBtn setBackgroundImage:[UIImage imageNamed:@"follow"] forState:UIControlStateNormal];
+        [followBtn setBackgroundImage:[UIImage imageNamed:@"follow_pressed"] forState:UIControlStateHighlighted];
+        [followBtn addTarget:self action:@selector(followBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:followBtn];
+        
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(100, 372, 334, 40);
+        aboutBtn.frame = CGRectMake(100, 466, 334, 40);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -190,15 +199,10 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)suggestionBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [UMFeedback showFeedback:self withAppkey:umengAppKey];
-//    SuggestionViewController *viewController = [[SuggestionViewController alloc] init];
-//    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-//    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+    [self closeMenu];
+    SuggestionViewController *viewController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
 - (void)commentBtnClicked
@@ -233,6 +237,12 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     } else {
         [_sinaweibo logOut];
     }
+}
+
+- (void)followBtnClicked
+{
+    NSURL *url=[NSURL URLWithString:@"http://weibo.com/u/3058636171"];
+    [[UIApplication sharedApplication] openURL:url];
 }
 
 - (void)menuBtnClicked

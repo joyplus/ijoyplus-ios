@@ -89,6 +89,7 @@
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video"] forState:UIControlStateNormal];
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [addBtn setHidden:YES];
     [self.view addSubview:addBtn];
     
     table = [[UITableView alloc]initWithFrame:CGRectMake(25, 140, 460, 580)];
@@ -136,6 +137,9 @@
             if(searchResult.count < pageSize){
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
             }
+        }
+        if(videoArray.count > 0){
+            [addBtn setHidden:NO];
         }
         [self loadTable];
         [myHUD hide];
@@ -392,6 +396,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
+            [[NSNotificationCenter defaultCenter] postNotificationName:MY_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];

@@ -58,6 +58,7 @@
 #define LIU_CHANG @"3gp"
 
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
+#define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 
 #define WATCH_RECORD_NUMBER 5
 

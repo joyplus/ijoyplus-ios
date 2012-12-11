@@ -210,7 +210,7 @@
             hotKeyBtn.frame = CGRectMake(btnPositionX, btnPositionY, btnWidth, BUTTON_HEIGHT);
             [hotKeyBtn setTitle:content forState:UIControlStateNormal];
             [hotKeyBtn setTag:2001 + i];
-            [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+            [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
             [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
             [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
@@ -222,6 +222,7 @@
         [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
         UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
         [name setTextColor:[UIColor blackColor]];
+        [name setFont:[UIFont systemFontOfSize:14]];
         [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
         [name sizeToFit];
         [name setBackgroundColor:[UIColor clearColor]];

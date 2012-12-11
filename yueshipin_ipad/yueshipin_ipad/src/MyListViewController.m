@@ -24,6 +24,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MY_LIST_VIEW_REFRESH object:nil];
     lineImage = nil;
     bgImage = nil;
     createBtn = nil;
@@ -70,6 +71,13 @@
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:deleteBtn];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:MY_LIST_VIEW_REFRESH object:nil];
+}
+
+- (void)refreshData:(NSNotification *)notification
+{
+    [self retrieveTopsListData];
 }
 
 - (void)viewWillAppear:(BOOL)animated

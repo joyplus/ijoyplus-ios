@@ -234,7 +234,7 @@
 {
     if(indexPath.row == 3){
         CGRect frame = [UIScreen mainScreen].bounds;
-        return frame.size.width - 60 * 4 - 45;
+        return frame.size.width - 60 * 4 - 50;
     } else {
         return 60;
     }

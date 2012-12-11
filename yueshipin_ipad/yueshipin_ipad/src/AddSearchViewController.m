@@ -51,6 +51,7 @@
 - (void)search:(NSString *)keyword
 {
     [self closeMenu];
+    [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
     viewController.keyword = keyword;

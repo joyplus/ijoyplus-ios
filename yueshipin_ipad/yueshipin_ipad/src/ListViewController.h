@@ -18,4 +18,6 @@
 @property (nonatomic, strong)NSString *listTitle;
 @property (nonatomic, strong)NSString *topId;
 
+- (void)retrieveTopsListData;
+
 @end

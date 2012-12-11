@@ -98,9 +98,9 @@
     static NSString *CellIdentifier = @"loadMoreComment";
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     UIButton *showMoreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    showMoreBtn.frame = CGRectMake(0, 0, 440, 30);
+    showMoreBtn.frame = CGRectMake(0, 0, 440, 33);
     [showMoreBtn setBackgroundImage:[UIImage imageNamed:@"morecomments"] forState:UIControlStateNormal];
-    [showMoreBtn setBackgroundImage:[UIImage imageNamed:@"morecomments_pressed"] forState:UIControlStateNormal];
+    [showMoreBtn setBackgroundImage:[UIImage imageNamed:@"morecomments_pressed"] forState:UIControlStateHighlighted];
     [showMoreBtn addTarget:self action:@selector(showMoreBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     [cell.contentView addSubview:showMoreBtn];
