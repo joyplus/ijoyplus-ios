@@ -121,8 +121,8 @@
         [self.view addSubview:personalImage];
         
         avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 110, 70, 70)];
-        avatarImage.layer.borderWidth = 2;
-        avatarImage.layer.borderColor = [UIColor whiteColor].CGColor;
+        avatarImage.layer.borderWidth = 1;
+        avatarImage.layer.borderColor = [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1].CGColor;
         avatarImage.layer.cornerRadius = 5;
         avatarImage.layer.masksToBounds = YES;
         [self.view addSubview:avatarImage];
