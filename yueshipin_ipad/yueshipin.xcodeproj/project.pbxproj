@@ -75,6 +75,10 @@
 		EB513FFB167835530072E013 /* search_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EB513FF1167835530072E013 /* search_btn.png */; };
 		EB513FFC167835530072E013 /* searchicon_btn_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB513FF2167835530072E013 /* searchicon_btn_pressed.png */; };
 		EB513FFD167835530072E013 /* searchicon_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EB513FF3167835530072E013 /* searchicon_btn.png */; };
+		EB51401116788F7E0072E013 /* add_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB51400D16788F7E0072E013 /* add_pressed.png */; };
+		EB51401216788F7E0072E013 /* add.png in Resources */ = {isa = PBXBuildFile; fileRef = EB51400E16788F7E0072E013 /* add.png */; };
+		EB51401316788F7E0072E013 /* delete_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB51400F16788F7E0072E013 /* delete_pressed.png */; };
+		EB51401416788F7E0072E013 /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = EB51401016788F7E0072E013 /* delete.png */; };
 		EB6DEA6D165A2F1A00AF8003 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */; };
 		EB6DEA6F165A2F1A00AF8003 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */; };
 		EB6DEA71165A2F1A00AF8003 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEA70165A2F1A00AF8003 /* CoreGraphics.framework */; };
@@ -425,6 +429,10 @@
 		EB513FF1167835530072E013 /* search_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_btn.png; sourceTree = "<group>"; };
 		EB513FF2167835530072E013 /* searchicon_btn_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchicon_btn_pressed.png; sourceTree = "<group>"; };
 		EB513FF3167835530072E013 /* searchicon_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = searchicon_btn.png; sourceTree = "<group>"; };
+		EB51400D16788F7E0072E013 /* add_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_pressed.png; sourceTree = "<group>"; };
+		EB51400E16788F7E0072E013 /* add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add.png; sourceTree = "<group>"; };
+		EB51400F16788F7E0072E013 /* delete_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete_pressed.png; sourceTree = "<group>"; };
+		EB51401016788F7E0072E013 /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
 		EB6DEA68165A2F1A00AF8003 /* yueshipin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yueshipin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -820,6 +828,10 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EB51400D16788F7E0072E013 /* add_pressed.png */,
+				EB51400E16788F7E0072E013 /* add.png */,
+				EB51400F16788F7E0072E013 /* delete_pressed.png */,
+				EB51401016788F7E0072E013 /* delete.png */,
 				EB513FEA167835530072E013 /* brief_title.png */,
 				EB513FEB167835530072E013 /* comment_title.png */,
 				EB513FEC167835530072E013 /* morelists_title.png */,
@@ -1736,6 +1748,10 @@
 				EB513FFB167835530072E013 /* search_btn.png in Resources */,
 				EB513FFC167835530072E013 /* searchicon_btn_pressed.png in Resources */,
 				EB513FFD167835530072E013 /* searchicon_btn.png in Resources */,
+				EB51401116788F7E0072E013 /* add_pressed.png in Resources */,
+				EB51401216788F7E0072E013 /* add.png in Resources */,
+				EB51401316788F7E0072E013 /* delete_pressed.png in Resources */,
+				EB51401416788F7E0072E013 /* delete.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

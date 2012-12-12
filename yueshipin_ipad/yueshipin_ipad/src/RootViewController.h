@@ -52,6 +52,8 @@
     UITextView *contentTextView;
     UIButton *shareBtn;
     UIButton *sendBtn;
+    UILabel *textCount;
+    int maxTextCount;
 }
 
 @property (nonatomic, strong) MenuViewController* menuViewController;

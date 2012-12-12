@@ -131,6 +131,8 @@
         }
         if(tempTopsArray.count < pageSize){
             [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        } else {
+            [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
         }
     } else {
         [UIUtility showSystemError:self.view];

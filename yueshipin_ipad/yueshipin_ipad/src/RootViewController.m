@@ -226,10 +226,27 @@
     [view addSubview:shareBtn];
     
     contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(270, 150, 360, 110)];
+    contentTextView.font = [UIFont systemFontOfSize:14];
     contentTextView.delegate = self;
     [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
-    [self.view addSubview:view];
+    
+    maxTextCount = 120;
+    UILabel *numberLabel = [[UILabel alloc]initWithFrame:CGRectMake(585, 235, 50, 30)];
+    numberLabel.textColor = CMConstants.grayColor;
+    numberLabel.backgroundColor = [UIColor clearColor];
+    numberLabel.font = [UIFont boldSystemFontOfSize:16];
+    numberLabel.text = [NSString stringWithFormat:@"/ %d", maxTextCount];
+    [view addSubview:numberLabel];
+    
+    textCount = [[UILabel alloc]initWithFrame:CGRectMake(528, 235, 50, 30)];
+    textCount.textColor = CMConstants.grayColor;
+    textCount.textAlignment = NSTextAlignmentRight;
+    textCount.backgroundColor = [UIColor clearColor];
+    textCount.font = [UIFont boldSystemFontOfSize:16];
+    textCount.text = @"0";
+    [view addSubview:textCount];
+    [self.view addSubview:view];    
 }
 
 - (void)contentTextViewChanged:(NSNotification *)notification
@@ -241,6 +258,20 @@
         [shareBtn setEnabled:NO];
         [sendBtn setEnabled:NO];
     }
+    [self updateCount];
+}
+
+- (void)updateCount
+{
+    NSUInteger count = [contentTextView.text length];
+    if(count > maxTextCount){
+        textCount.textColor = [UIColor redColor];
+        textCount.text =  [NSString stringWithFormat:@"-%d", -maxTextCount+count];
+    } else {
+        textCount.textColor = CMConstants.grayColor;
+        textCount.text = [NSString stringWithFormat:@"%d", maxTextCount-count];
+    }
+    
 }
 
 
@@ -274,6 +305,22 @@
     contentTextView.delegate = self;
     [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
+    
+    maxTextCount = 140;
+    UILabel *numberLabel = [[UILabel alloc]initWithFrame:CGRectMake(640, 235, 50, 30)];
+    numberLabel.textColor = CMConstants.grayColor;
+    numberLabel.backgroundColor = [UIColor clearColor];
+    numberLabel.font = [UIFont boldSystemFontOfSize:16];
+    numberLabel.text = [NSString stringWithFormat:@"/ %d", maxTextCount];
+    [view addSubview:numberLabel];
+    
+    textCount = [[UILabel alloc]initWithFrame:CGRectMake(583, 235, 50, 30)];
+    textCount.textColor = CMConstants.grayColor;
+    textCount.textAlignment = NSTextAlignmentRight;
+    textCount.backgroundColor = [UIColor clearColor];
+    textCount.font = [UIFont boldSystemFontOfSize:16];
+    textCount.text = @"0";
+    [view addSubview:textCount];
     [self.view addSubview:view];
 }
 
@@ -281,7 +328,11 @@
 {
     if(contentTextView.text.length > 0){
         [btn setEnabled:NO];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", contentTextView.text, @"content", [StringUtility createUUID], @"token", nil];
+        NSString *content = contentTextView.text;
+        if (content.length > 140) {
+            content = [content substringToIndex:140];
+        }
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", content, @"content", [StringUtility createUUID], @"token", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathProgramComment parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){

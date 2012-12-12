@@ -510,6 +510,7 @@
                 [pageControl updateCurrentPageDisplay] ;
         }
     } else {
+        [self closeMenu];
         [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
         if(videoType == 0)
             [pullToRefreshManager_ tableViewScrolled];
