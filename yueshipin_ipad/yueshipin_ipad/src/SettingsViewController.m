@@ -12,6 +12,7 @@
 #import "AboutUsViewController.h"
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
+#import "AFSinaWeiboAPIClient.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -241,8 +242,18 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)followBtnClicked
 {
-    NSURL *url=[NSURL URLWithString:@"http://weibo.com/u/3058636171"];
-    [[UIApplication sharedApplication] openURL:url];
+    _sinaweibo = [AppDelegate instance].sinaweibo;
+    if([_sinaweibo isLoggedIn]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:_sinaweibo.accessToken, @"access_token", @"悦视频", @"screen_name", nil];
+        [[AFSinaWeiboAPIClient sharedClient] postPath:kFollowUserURI parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+        [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+    } else {
+        NSURL *url=[NSURL URLWithString:@"http://weibo.com/u/3058636171"];
+        [[UIApplication sharedApplication] openURL:url];
+    }
 }
 
 - (void)menuBtnClicked

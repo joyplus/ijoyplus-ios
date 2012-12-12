@@ -18,6 +18,7 @@
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"
 #define kSinaWeiboUpdateUrl @"statuses/update.json"
 #define kSinaWeiboUpdateWithImageUrl @"statuses/upload_url_text.json"
+#define kFollowUserURI @"friendships/create.json"
 
 #define kTecentBaseURL @"https://graph.qq.com/"
 #define kTecentAddShare @"share/add_share"
