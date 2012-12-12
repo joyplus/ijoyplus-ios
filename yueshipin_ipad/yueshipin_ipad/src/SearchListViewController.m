@@ -193,7 +193,7 @@
             actorLabel.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:actorLabel];
             
-            UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 180, 25)];
+            UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 220, 25)];
             actorName1Label.font = [UIFont systemFontOfSize:13];
             actorName1Label.textColor = CMConstants.grayColor;
             actorName1Label.backgroundColor = [UIColor clearColor];
@@ -251,14 +251,14 @@
             directorNameLabel.text = [item objectForKey:@"star"];
             directorNameLabel.frame = CGRectMake(225, 75, 220, 25);
             actorLabel.text = @"首播时间：";
-            actorLabel1.frame = CGRectMake(225, 100, 180, 25);
+            actorLabel1.frame = CGRectMake(225, 100, 220, 25);
             actorLabel1.text =[item objectForKey:@"publish_date"];
         } else {
             scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
             doubanlogo.image = [UIImage imageNamed:@"douban"];
             directorLabel.text = @"导演：";
             actorLabel.text = @"主演：";
-            actorLabel1.frame = CGRectMake(205, 100, 180, 25);
+            actorLabel1.frame = CGRectMake(205, 100, 220, 25);
             directorNameLabel.text = [item objectForKey:@"director"];
             directorNameLabel.frame = CGRectMake(205, 75, 220, 25);
             actorLabel1.text = [item objectForKey:@"star"];

@@ -68,6 +68,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
         CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor blackColor]];
         accessory.highlightedColor = [UIColor whiteColor];
         cell.accessoryView = accessory;
@@ -76,7 +77,7 @@
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.textColor = [UIColor blackColor];
         nameLabel.tag = 1001;
-        nameLabel.font = [UIFont systemFontOfSize:16];
+        nameLabel.font = [UIFont systemFontOfSize:14];
         [cell.contentView addSubview:nameLabel];
         
         UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 28, self.tableView.frame.size.width, 2)];

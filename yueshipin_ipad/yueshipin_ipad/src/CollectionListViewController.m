@@ -297,6 +297,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"commitEditingStyle");
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+        NSString *itemId = [NSString stringWithFormat:@"%@", [[videoArray objectAtIndex:indexPath.row] objectForKey:@"content_id"]];
+        [self deleteVideo:itemId];
         [videoArray removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -304,6 +306,15 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
     
+}
+
+- (void)deleteVideo:(NSString *)itemId
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
  
 

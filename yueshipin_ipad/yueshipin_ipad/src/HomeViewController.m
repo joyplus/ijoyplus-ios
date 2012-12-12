@@ -20,7 +20,7 @@
 #define TOP_IMAGE_HEIGHT 167
 #define LIST_LOGO_WIDTH 220
 #define LIST_LOGO_HEIGHT 180
-#define VIDEO_BUTTON_WIDTH 119
+#define VIDEO_BUTTON_WIDTH 118
 #define VIDEO_BUTTON_HEIGHT 29
 #define TOP_SOLGAN_HEIGHT 93
 #define MOVIE_LOGO_HEIGHT 139
@@ -623,7 +623,7 @@
             for (int i=0; i < 5; i++) {
                 UIImageView *temp = [[UIImageView alloc]init];
                 temp.tag = 9001 + i;
-                temp.frame = CGRectMake(size.width * i, 0, size.width, size.height);
+                temp.frame = CGRectMake(size.width * i, 0, size.width-7, size.height);
                 
                 UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 tempBtn.frame = temp.frame;
@@ -1300,22 +1300,22 @@
     customView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
     if(listBtn == nil){
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        listBtn.frame = CGRectMake(12, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
+        listBtn.frame = CGRectMake(11, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
         listBtn.tag = 1001;
         [listBtn addTarget:self action:@selector(listBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         movieBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        movieBtn.frame = CGRectMake(12 + VIDEO_BUTTON_WIDTH + 6, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
+        movieBtn.frame = CGRectMake(11 + VIDEO_BUTTON_WIDTH + 6, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
         movieBtn.tag = 1002;
         [movieBtn addTarget:self action:@selector(movieBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         dramaBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        dramaBtn.frame = CGRectMake(12 + (VIDEO_BUTTON_WIDTH + 6)*2, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
+        dramaBtn.frame = CGRectMake(10 + (VIDEO_BUTTON_WIDTH + 6)*2, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
         dramaBtn.tag = 1003;
         [dramaBtn addTarget:self action:@selector(dramaBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         showBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        showBtn.frame = CGRectMake(12 + (VIDEO_BUTTON_WIDTH + 6)*3, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
+        showBtn.frame = CGRectMake(9 + (VIDEO_BUTTON_WIDTH + 6)*3, 0, VIDEO_BUTTON_WIDTH-4, VIDEO_BUTTON_HEIGHT);
         showBtn.tag = 1004;
         [showBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     }

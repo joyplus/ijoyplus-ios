@@ -140,18 +140,30 @@
 
 #pragma mark - SinaWeiboRequest Delegate
 
-- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)userInfo
 {
     if ([request.url hasSuffix:@"users/show.json"])
     {
-        NSString *username = [result objectForKey:@"screen_name"];
+        NSString *username = [userInfo objectForKey:@"screen_name"];
         [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
-        NSString *avatarUrl = [result objectForKey:@"avatar_large"];
+        NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
         
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [result objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                NSString *user_id = [result objectForKey:@"user_id"];
+                [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
+                [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+            } else {
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
+            }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
         }];

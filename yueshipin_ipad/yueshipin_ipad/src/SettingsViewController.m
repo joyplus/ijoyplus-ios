@@ -40,7 +40,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UISwitch *sinaSwitch;
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
-    NSDictionary *userInfo;
     
     UIButton *followBtn;
 }
@@ -68,7 +67,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     sinaSwitch = nil;
     sinaUsernameLabel = nil;
     _sinaweibo = nil;
-    userInfo = nil;
     followBtn = nil;
 }
 
@@ -326,23 +324,37 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 #pragma mark - SinaWeiboRequest Delegate
 
-- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)result
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)userInfo
 {
     if ([request.url hasSuffix:@"users/show.json"])
     {
-        userInfo = result;
         NSString *username = [userInfo objectForKey:@"screen_name"];
         [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
         NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
         
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-           
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){                
+                NSString *user_id = [result objectForKey:@"user_id"];
+                [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
+                [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+            } else {
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
+            }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-           
+            
         }];
+        
+        
+        
     }
 }
 
@@ -350,7 +362,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 {
     if ([request.url hasSuffix:@"users/show.json"])
     {
-        userInfo = nil;
         sinaUsernameLabel.text = @"";
     }
 }

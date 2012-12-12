@@ -131,7 +131,7 @@
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 62, 26);
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
-    self.titleLabel.frame = CGRectMake(290, 85, 180, 20);
+    self.titleLabel.frame = CGRectMake(288, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
     
     self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
@@ -391,7 +391,7 @@
         }
     }
     int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY + 10;
-    UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber-1)];
+    UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber)];
     if(lastBtn != nil){
         positionY = lastBtn.frame.origin.y + 30;
     }

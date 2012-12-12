@@ -134,7 +134,7 @@
     self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 62, 26);
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
-    self.titleLabel.frame = CGRectMake(290, 85, 180, 20);
+    self.titleLabel.frame = CGRectMake(288, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
     
     self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);

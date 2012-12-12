@@ -219,7 +219,7 @@
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(195, 100, 200, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(195, 100, 220, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
         actorName1Label.textColor = CMConstants.grayColor;
         actorName1Label.backgroundColor = [UIColor clearColor];
