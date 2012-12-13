@@ -653,7 +653,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 - (void)removeViewInSlider {
     CGRect frame = [UIScreen mainScreen].bounds;
     NSInteger lastViewControllerIndex = viewControllersStack.count - 1;
-    if(lastViewControllerIndex < 0){
+    if(lastViewControllerIndex < 0 || lastViewControllerIndex >= viewControllersStack.count){
         return;
     }
     UIViewController *topController = [viewControllersStack objectAtIndex:lastViewControllerIndex];

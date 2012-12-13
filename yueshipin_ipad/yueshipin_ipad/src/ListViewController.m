@@ -335,6 +335,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [table deselectRowAtIndexPath:indexPath animated:YES];
+    if(indexPath.row >= topsArray.count){
+        return;
+    }
     NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
     NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
     NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];

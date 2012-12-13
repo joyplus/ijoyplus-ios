@@ -71,7 +71,7 @@
 
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
-#define APPIRATER_APP_ID				301377083
+#define APPIRATER_APP_ID				587246114
 
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
