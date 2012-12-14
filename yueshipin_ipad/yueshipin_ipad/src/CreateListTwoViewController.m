@@ -9,7 +9,7 @@
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
 #import "AddSearchViewController.h"
-#define LEFT_GAP 50
+
 @interface CreateListTwoViewController (){
     UIImageView *bgImage;
     UITableView *table;
@@ -36,7 +36,7 @@
     [self setDeleteBtn:nil];
     [self setCloseBtn:nil];
     [self setLineImage:nil];
-    [self setBgImage:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:MY_LIST_VIEW_REFRESH object:nil];
     [super viewDidUnload];
 }
 
@@ -53,37 +53,32 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    self.bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    
-    self.titleLabel.frame = CGRectMake(LEFT_GAP, 35, 310, 27);
+    self.titleLabel.frame = CGRectMake(LEFT_WIDTH, 35, 310, 27);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:26];
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.textColor = CMConstants.titleBlueColor;
     self.titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
     self.titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
     
-    self.lineImage.frame = CGRectMake(LEFT_GAP, 80, 400, 2);
+    self.lineImage.frame = CGRectMake(LEFT_WIDTH, 80, 400, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
    
-    self.closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.addBtn.frame = CGRectMake(LEFT_GAP, 100, 105, 31);
+    self.addBtn.frame = CGRectMake(LEFT_WIDTH, 100, 105, 31);
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [self.addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteBtn.frame = CGRectMake(LEFT_GAP + 115, 100, 105, 31);
+    self.deleteBtn.frame = CGRectMake(LEFT_WIDTH + 115, 100, 105, 31);
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [self.deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(30, 160, 420, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 160, 420, self.view.frame.size.height - 350)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -91,7 +86,15 @@
     table.showsVerticalScrollIndicator = NO;
     [self.view addSubview:table];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:MY_LIST_VIEW_REFRESH object:nil];
 }
+
+- (void)refreshData:(NSNotification *)notification
+{
+    [self retrieveTopsListData];
+    [table reloadData];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -103,6 +106,7 @@
 {
     AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     viewController.topId = self.topId;
+    viewController.backToViewController = self;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
@@ -187,17 +191,17 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 102, 146)];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 8, 102, 146)];
         imageView.image = [UIImage imageNamed:@"movie_frame"];
         [cell.contentView addSubview:imageView];
         
-        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
+        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, 12, 94, 138)];
         contentImage.image = [UIImage imageNamed:@"test_movie"];
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 250, 25)];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 12, 250, 25)];
         nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
@@ -210,39 +214,39 @@
         //            [cell.contentView addSubview:startImage];
         //        }
         
-        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 48, 45, 20)];
+        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 48, 45, 20)];
         scoreLabel.tag = 4001;
         scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
         scoreLabel.textColor = CMConstants.scoreBlueColor;
         [cell.contentView addSubview:scoreLabel];
-        UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
+        UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(170, 50, 15, 15)];
         doubanLogo.image = [UIImage imageNamed:@"douban"];
         [cell.contentView addSubview:doubanLogo];
         
-        UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
+        UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 75, 150, 25)];
         directorLabel.text = @"导演：";
         directorLabel.textColor = CMConstants.grayColor;
         directorLabel.font = [UIFont systemFontOfSize:13];
         directorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:directorLabel];
         
-        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(195, 75, 180, 25)];
+        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 75, 250, 25)];
         directorNameLabel.font = [UIFont systemFontOfSize:13];
         directorNameLabel.textColor = CMConstants.grayColor;
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 6001;
         [cell.contentView addSubview:directorNameLabel];
         
-        UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
+        UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 150, 25)];
         actorLabel.text = @"主演：";
         actorLabel.textColor = CMConstants.grayColor;
         actorLabel.font = [UIFont systemFontOfSize:13];
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(195, 100, 200, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(155, 100, 250, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
         actorName1Label.textColor = CMConstants.grayColor;
         actorName1Label.backgroundColor = [UIColor clearColor];
@@ -250,22 +254,22 @@
         [cell.contentView addSubview:actorName1Label];
         
         
-        UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(160, 130, 75, 24)];
+        UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(120, 130, 75, 24)];
         dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
         [cell.contentView addSubview:dingNumberImage];
         
-        UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 40, 24)];
+        UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(125, 130, 40, 24)];
         dingNumberLabel.textAlignment = NSTextAlignmentCenter;
         dingNumberLabel.backgroundColor = [UIColor clearColor];
         dingNumberLabel.font = [UIFont systemFontOfSize:13];
         dingNumberLabel.tag = 5001;
         [cell.contentView addSubview:dingNumberLabel];
         
-        UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(250, 130, 84, 24)];
+        UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(210, 130, 84, 24)];
         collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
         [cell.contentView addSubview:collectioNumber];
         
-        UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(255, 130, 40, 24)];
+        UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(215, 130, 40, 24)];
         collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
         collectionNumberLabel.backgroundColor = [UIColor clearColor];
         collectionNumberLabel.font = [UIFont systemFontOfSize:13];

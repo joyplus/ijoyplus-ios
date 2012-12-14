@@ -13,7 +13,6 @@
 #import "CommentListViewController.h"
 #import "SublistViewController.h"
 
-#define LEFT_GAP 50
 
 @interface DramaDetailViewController (){
     NSMutableArray *commentArray;
@@ -84,7 +83,6 @@
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
     [self setRelatedImage:nil];
-    [self setBgImage:nil];
     [super viewDidUnload];
 }
 
@@ -101,25 +99,22 @@
 {
     [super viewDidLoad];
     
-    self.bgImage.frame = self.view.frame;
-    self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    
-    self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
+    self.bgScrollView.frame = CGRectMake(0, 255, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
     
     self.playBtn.frame = CGRectMake(290, 115, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     
-    self.closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.placeholderImage.frame = CGRectMake(LEFT_GAP, 78, 217, 312);
+    self.placeholderImage.frame = CGRectMake(LEFT_WIDTH, 78, 217, 312);
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
     
-    self.filmImage.frame = CGRectMake(LEFT_GAP+5, 84, 205, 300);
+    self.filmImage.frame = CGRectMake(LEFT_WIDTH+5, 84, 205, 300);
     self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
@@ -128,76 +123,76 @@
     [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     self.playRoundBtn.center = self.filmImage.center;
     
-    self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 62, 26);
+    self.titleImage.frame = CGRectMake(LEFT_WIDTH, 35, 62, 26);
     self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
-    self.titleLabel.frame = CGRectMake(288, 85, 200, 20);
+    self.titleLabel.frame = CGRectMake(278, 85, 210, 20);
     self.titleLabel.font = CMConstants.titleFont;
     
-    self.scoreLabel.frame = CGRectMake(290, 110, 50, 20);
+    self.scoreLabel.frame = CGRectMake(280, 110, 50, 20);
     self.doulanLogo.frame = CGRectMake(335, 113, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.playBtn.frame = CGRectMake(290, 150, 185, 40);
+    self.playBtn.frame = CGRectMake(280, 150, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
-    self.actorLabel.frame = CGRectMake(290, 210, 50, 15);
+    self.actorLabel.frame = CGRectMake(280, 210, 50, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(335, 210, 140, 15);
+    self.actorName1Label.frame = CGRectMake(325, 210, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
 //    self.actorName2Label.frame = CGRectMake(335, 235, 100, 15);
 //    self.actorName2Label.textColor = CMConstants.grayColor;
 //    self.actorName3Label.frame = CGRectMake(335, 260, 100, 15);
 //    self.actorName3Label.textColor = CMConstants.grayColor;
-    self.playLabel.frame = CGRectMake(290, 240, 50, 15);
+    self.playLabel.frame = CGRectMake(280, 240, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(335, 240, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(325, 240, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(290, 270, 50, 15);
+    self.regionLabel.frame = CGRectMake(280, 270, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(335, 270, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(325, 270, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
-    self.dingNumberImage.frame = CGRectMake(290, 360, 75, 24);
+    self.dingNumberImage.frame = CGRectMake(280, 360, 75, 24);
     self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
-    self.dingNumberLabel.frame = CGRectMake(295, 360, 40, 24);
+    self.dingNumberLabel.frame = CGRectMake(285, 360, 40, 24);
     
-    self.collectioNumber.frame = CGRectMake(390, 360, 84, 24);
+    self.collectioNumber.frame = CGRectMake(380, 360, 84, 24);
     self.collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
-    self.collectionNumberLabel.frame = CGRectMake(395, 360, 40, 24);
+    self.collectionNumberLabel.frame = CGRectMake(385, 360, 40, 24);
     
-    self.dingBtn.frame = CGRectMake(LEFT_GAP, 405, 55, 34);
+    self.dingBtn.frame = CGRectMake(LEFT_WIDTH, 405, 55, 34);
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];
     [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push_pressed"] forState:UIControlStateHighlighted];
     [self.dingBtn addTarget:self action:@selector(dingBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.collectionBtn.frame = CGRectMake(115, 405, 74, 34);
+    self.collectionBtn.frame = CGRectMake(LEFT_WIDTH + 60, 405, 74, 34);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
     [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.shareBtn.frame = CGRectMake(195, 405, 74, 34);
+    self.shareBtn.frame = CGRectMake(LEFT_WIDTH + 140, 405, 74, 34);
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
     [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
+    self.addListBtn.frame = CGRectMake(280, 405, 104, 34);
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
     [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.lineImage.frame = CGRectMake(LEFT_GAP, 450, 430, 2);
+    self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
     
-    self.introImage.frame = CGRectMake(LEFT_GAP, 460, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, 460, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    self.introBgImage.frame = CGRectMake(LEFT_GAP, 490, 440, 100);
-    self.introBgImage.image = [[UIImage imageNamed:@"brief"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
+    self.introBgImage.frame = CGRectMake(LEFT_WIDTH, 490, 430, 100);
+    self.introBgImage.image = [[UIImage imageNamed:@"brief"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_GAP + 10, 490, 420, 100);
+    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH + 10, 490, 420, 100);
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -207,7 +202,7 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_GAP + 420, self.introContentTextView.frame.origin.y + 80, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 410, self.introContentTextView.frame.origin.y + 80, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
 }
@@ -219,7 +214,7 @@
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
-                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
+                self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:introContentHeight - 100];
@@ -228,7 +223,7 @@
         } else {
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
-                self.introBgImage.frame = CGRectMake(LEFT_GAP, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
+                self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
@@ -362,14 +357,14 @@
     if(btnAdded){
         for (int i = 0; i < totalEpisodeNumber; i++) {
             UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:i+1];
-            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 600 + floor(i / 9.0) * 39 + increasePositionY, 44, 34)];
+            [btn setFrame:CGRectMake(LEFT_WIDTH + (i % 9) * 49, 600 + floor(i / 9.0) * 39 + increasePositionY, 44, 34)];
         }
     } else {
         for (int i = 0; i < totalEpisodeNumber; i++) {
             btnAdded = YES;
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.tag = i+1;
-            [btn setFrame:CGRectMake(LEFT_GAP + (i % 9) * 49, 600 + floor(i / 9.0) * 39, 44, 34)];
+            [btn setFrame:CGRectMake(LEFT_WIDTH + (i % 9) * 49, 600 + floor(i / 9.0) * 39, 44, 34)];
             if (i < 9) {
                 [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
             } else {
@@ -397,7 +392,7 @@
     }
     
     if(topics.count > 0){
-        self.relatedImage.frame = CGRectMake(LEFT_GAP, positionY + 30, 80, 20);
+        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
@@ -406,19 +401,19 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 55, 440, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 55, 430, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
-    self.commentImage.frame = CGRectMake(LEFT_GAP, positionY + 20, 74, 19);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     self.numberLabel.frame = CGRectMake(139, positionY + 20, 100, 18);
     self.numberLabel.textColor = CMConstants.grayColor;
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(425, positionY + 17, 66, 26);
+    self.commentBtn.frame = CGRectMake(405, positionY + 17, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
     [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -430,7 +425,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     commentListViewController.totalCommentNum = totalCommentNum;
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, positionY + 60, 440, 200);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, 200);
     commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
     
@@ -468,7 +463,7 @@
 - (void)refreshCommentListView:(int)tableHeight
 {
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 200)];
-    commentListViewController.view.frame = CGRectMake(LEFT_GAP, commentListViewController.view.frame.origin.y, 440, tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 430, tableHeight);
 }
 
 - (void)clearLastBtnImage

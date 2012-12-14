@@ -7,9 +7,7 @@
 //
 #import <QuartzCore/QuartzCore.h>
 
-#define BIG_IMAGE_WIDTH 203
-#define BIG_IMAGE_HEIGHT 284
-
+#define LEFT_WIDTH 40
 
 #define MOVIE_POSTER_WIDTH 70
 #define MOVIE_POSTER_HEIGHT 100 
@@ -67,7 +65,7 @@
 
 #define LEFT_VIEW_WIDTH 529
 
-#define RIGHT_VIEW_WIDTH 760
+#define RIGHT_VIEW_WIDTH 515
 
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
@@ -85,5 +83,7 @@
 + (UIFont *)titleFont;
 
 + (UIColor *)tableBorderColor;
+
++ (UIColor *)backgroundColor;
 
 @end

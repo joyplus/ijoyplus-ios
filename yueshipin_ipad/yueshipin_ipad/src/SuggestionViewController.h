@@ -10,7 +10,6 @@
 #import "CustomPlaceHolderTextView.h"
 
 @interface SuggestionViewController : GenericBaseViewController
-@property (weak, nonatomic) IBOutlet UIImageView *bgImage;
 @property (weak, nonatomic) IBOutlet UIImageView *titleImage;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UIImageView *contentBgImage;

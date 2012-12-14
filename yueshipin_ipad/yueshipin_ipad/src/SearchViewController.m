@@ -50,6 +50,7 @@
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [self.view addSubview:bgImage];
         
+        leftWidth = 80;
         menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         menuBtn.frame = CGRectMake(0, 28, 60, 60);
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
@@ -57,15 +58,15 @@
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 140, 35)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 140, 35)];
         topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         
-        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 115, 372, 38)];
+        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(leftWidth, 115, 372, 38)];
         sBar.delegate = self;
         [self.view addSubview:sBar];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(80, 170, 370, 210) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(leftWidth, 170, 370, 210) style:UITableViewStylePlain];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setSeparatorColor:CMConstants.tableBorderColor];
 		[table setDelegate:self];

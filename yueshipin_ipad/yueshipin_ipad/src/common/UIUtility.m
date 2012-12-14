@@ -99,7 +99,7 @@
 {
     if(HUD == nil){
         HUD = [[MBProgressHUD alloc] initWithView:view];
-        HUD.frame = CGRectMake(HUD.frame.origin.x - 100, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
+        HUD.frame = CGRectMake(HUD.frame.origin.x, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
         [view addSubview:HUD];
         HUD.labelText = @"加载中...";
         HUD.opacity = 0.5;

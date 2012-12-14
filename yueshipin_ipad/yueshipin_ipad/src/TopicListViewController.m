@@ -16,12 +16,12 @@
 
 @interface TopicListViewController (){
     UITableView *table;
-    UIImageView *bgImage;
     UIImageView *titleImage;
     NSMutableArray *videoArray;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
+    UIButton *closeBtn;
 }
 
 @end
@@ -33,11 +33,11 @@
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     table = nil;
-    bgImage = nil;
     titleImage = nil;
     [videoArray removeAllObjects];
     videoArray = nil;
     pullToRefreshManager_ = nil;
+    closeBtn = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -52,16 +52,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
-    
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 62, 26)];
+   
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 62, 26)];
     titleImage.image = [UIImage imageNamed:@"list_title"];
     [self.view addSubview:titleImage];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 70, 460, self.view.frame.size.height - 360)];
+    closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:closeBtn];
+    
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 80, 420, self.view.frame.size.height - 370)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -313,11 +316,14 @@
         return;
     }
     MyListViewController *viewController = [[MyListViewController alloc] init];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
     viewController.topId = topId;
     viewController.listTitle = [item objectForKey: @"name"];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+    viewController.fromViewController = self;
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
+    self.moveToLeft = NO;
 }
 
 #pragma mark -

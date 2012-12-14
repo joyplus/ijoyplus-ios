@@ -23,19 +23,17 @@
     closeBtn = nil;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,14 +44,14 @@
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);    
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
+    bgImage.image = nil;
+    [bgImage removeFromSuperview];
     
     [menuBtn removeFromSuperview];
     menuBtn = nil;
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];

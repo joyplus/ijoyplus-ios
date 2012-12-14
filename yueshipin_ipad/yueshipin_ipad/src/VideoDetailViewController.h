@@ -8,6 +8,7 @@
 
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
+#import "SlideBaseViewController.h"
 
 @protocol VideoDetailViewControllerDelegate <NSObject>
 
@@ -23,6 +24,7 @@
         NSInteger willPlayIndex;
 }
 @property (strong, nonatomic)NSString *prodId;
+@property (strong, nonatomic)SlideBaseViewController *fromViewController;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 - (void)addListBtnClicked;

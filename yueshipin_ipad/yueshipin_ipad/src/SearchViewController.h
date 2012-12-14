@@ -24,6 +24,8 @@
     
     NSMutableDictionary *hotKeyBtnWidth;
     BOOL removePreviousView;
+    
+    int leftWidth;
 }
 
 

@@ -1133,16 +1133,19 @@
     NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
     if([prodType isEqualToString:@"1"]){
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+        viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
     } else if([prodType isEqualToString:@"2"]){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+        viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if([prodType isEqualToString:@"3"]){
         ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+        viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -1298,7 +1301,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 40)];
-    customView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
+    customView.backgroundColor = CMConstants.backgroundColor;
     if(listBtn == nil){
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         listBtn.frame = CGRectMake(11, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);

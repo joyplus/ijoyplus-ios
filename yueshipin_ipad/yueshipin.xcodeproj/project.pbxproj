@@ -296,6 +296,7 @@
 		EBBA010D1664E2C80069FE7E /* label@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA01091664E2C80069FE7E /* label@2x.png */; };
 		EBBA010E1664E2C80069FE7E /* search_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */; };
 		EBBA01101664E3520069FE7E /* hotkeys@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010F1664E3510069FE7E /* hotkeys@2x.png */; };
+		EBBA67FF167AD7C500A2D94D /* SlideBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA67FE167AD7C500A2D94D /* SlideBaseViewController.m */; };
 		EBBCDBB71675901C006E2F64 /* drama_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB31675901C006E2F64 /* drama_btn.png */; };
 		EBBCDBB81675901C006E2F64 /* list_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB41675901C006E2F64 /* list_btn.png */; };
 		EBBCDBB91675901C006E2F64 /* movie_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB51675901C006E2F64 /* movie_btn.png */; };
@@ -708,6 +709,8 @@
 		EBBA01091664E2C80069FE7E /* label@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label@2x.png"; sourceTree = "<group>"; };
 		EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBBA010F1664E3510069FE7E /* hotkeys@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hotkeys@2x.png"; sourceTree = "<group>"; };
+		EBBA67FD167AD7C400A2D94D /* SlideBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideBaseViewController.h; sourceTree = "<group>"; };
+		EBBA67FE167AD7C500A2D94D /* SlideBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideBaseViewController.m; sourceTree = "<group>"; };
 		EBBCDBB31675901C006E2F64 /* drama_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_btn.png; sourceTree = "<group>"; };
 		EBBCDBB41675901C006E2F64 /* list_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_btn.png; sourceTree = "<group>"; };
 		EBBCDBB51675901C006E2F64 /* movie_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_btn.png; sourceTree = "<group>"; };
@@ -1133,6 +1136,8 @@
 				EB6DEAA0165A322F00AF8003 /* UIViewWithShadow.m */,
 				EB6DEAD0165A367F00AF8003 /* GenericBaseViewController.h */,
 				EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */,
+				EBBA67FD167AD7C400A2D94D /* SlideBaseViewController.h */,
+				EBBA67FE167AD7C500A2D94D /* SlideBaseViewController.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -1851,6 +1856,7 @@
 				EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */,
 				EBB9E0D116706AAE006ECEE8 /* AboutUsViewController.m in Sources */,
 				EB513F8C1676D19B0072E013 /* SuggestionViewController.m in Sources */,
+				EBBA67FF167AD7C500A2D94D /* SlideBaseViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1887,7 +1893,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai Joyplus Network Tech nology Co., Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1925,7 +1931,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3331DE6E-8CBC-4BD9-B1BF-04556B3294C8";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;

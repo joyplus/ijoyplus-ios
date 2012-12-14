@@ -8,7 +8,6 @@
 
 #import "MyListViewController.h"
 #import "AddSearchViewController.h"
-#define LEFT_GAP 50
 
 @interface MyListViewController (){
     UIButton *createBtn;
@@ -20,6 +19,7 @@
 @end
 
 @implementation MyListViewController
+@synthesize fromViewController;
 
 - (void)viewDidUnload
 {
@@ -49,24 +49,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    
-	table.frame = CGRectMake(25, 120, 460, self.view.frame.size.height - 420);
+  
+	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 420);
     
 //    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
 //    lineImage.image = [UIImage imageNamed:@"dividing"];
 //    [self.view addSubview:lineImage];
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(LEFT_GAP, 80, 105, 31);
+    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 105, 31);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:createBtn];
     
     deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    deleteBtn.frame = CGRectMake(LEFT_GAP + createBtn.frame.size.width + 10, 80, 105, 31);
+    deleteBtn.frame = CGRectMake(LEFT_WIDTH + createBtn.frame.size.width + 10, 80, 105, 31);
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -78,6 +76,7 @@
 - (void)refreshData:(NSNotification *)notification
 {
     [self retrieveTopsListData];
+    [table reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -88,7 +87,8 @@
 {
     AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     viewController.topId = self.topId;
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+    viewController.backToViewController = self;
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:NO];
 }
 
 - (void)deleteBtnClicked
@@ -120,8 +120,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
+            [closeBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }
@@ -157,4 +156,9 @@
     }];
 }
 
+- (void)closeBtnClicked
+{
+    fromViewController.moveToLeft = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
+}
 @end

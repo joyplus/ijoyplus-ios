@@ -38,6 +38,7 @@
 {
     [super viewDidLoad];
     myHUD = [[UIUtility alloc]init];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
 }
 
 - (void)viewDidUnload

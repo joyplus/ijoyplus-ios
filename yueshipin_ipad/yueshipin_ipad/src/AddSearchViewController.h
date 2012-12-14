@@ -13,4 +13,6 @@
 - (id)initWithFrame:(CGRect)frame;
 
 @property (nonatomic, strong)NSString *topId;
+@property (nonatomic, strong)UIViewController *backToViewController;
+
 @end

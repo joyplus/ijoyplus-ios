@@ -14,4 +14,6 @@
 
 @property (nonatomic, strong)NSString *topId;
 
+@property (nonatomic, strong)UIViewController *backToViewController;
+
 @end

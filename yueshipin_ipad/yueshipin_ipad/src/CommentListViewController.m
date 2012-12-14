@@ -10,8 +10,6 @@
 #import "CommonHeader.h"
 #import "CommentCell.h"
 
-#define LEFT_GAP 50
-
 @interface CommentListViewController (){
 
 }
@@ -127,7 +125,7 @@
         nameLabel.font = [UIFont systemFontOfSize:16];
         [cell.contentView addSubview:nameLabel];
         
-        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(cell.bounds.size.width - 5, 11, 120, 15)];
+        UILabel *timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(cell.bounds.size.width - 15, 11, 120, 15)];
         timeLabel.backgroundColor = [UIColor clearColor];
         timeLabel.textAlignment = NSTextAlignmentRight;
         timeLabel.textColor = CMConstants.grayColor;
@@ -162,8 +160,8 @@
     NSString *content = [item objectForKey:@"content"];
     UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
     contentLabel.text = content;
-    CGSize size = [self calculateContentSize:content width:430];
-    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, 430, size.height)];
+    CGSize size = [self calculateContentSize:content width:420];
+    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, 420, size.height)];
     
     return cell;
 }
@@ -180,7 +178,7 @@
     }
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
     NSString *content = [item objectForKey:@"content"];
-    CGSize size = [self calculateContentSize:content width:430];
+    CGSize size = [self calculateContentSize:content width:420];
     tableHeight += size.height + 40;
     return size.height + 40;
 }

@@ -15,6 +15,7 @@
 
 @implementation AddSearchViewController
 @synthesize topId;
+@synthesize backToViewController;
 
 - (void)viewDidUnload
 {
@@ -34,7 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	removePreviousView = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,14 +50,14 @@
 
 - (void)search:(NSString *)keyword
 {
-    [self closeMenu];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
     viewController.keyword = keyword;
     viewController.topId = self.topId;
+    viewController.backToViewController = self.backToViewController;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:NO];
     
 }
 

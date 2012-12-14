@@ -17,6 +17,7 @@
 
 @implementation VideoDetailViewController
 @synthesize prodId;
+@synthesize fromViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,7 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor clearColor];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -245,5 +246,9 @@
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
-
+- (void)closeBtnClicked
+{
+    fromViewController.moveToLeft = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
+}
 @end

@@ -9,7 +9,6 @@
 #import "CreateListOneViewController.h"
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
-#define LEFT_GAP 50
 @interface CreateListOneViewController (){
     
 }
@@ -30,7 +29,6 @@
     [self setNextBtn:nil];
     [self setCloseBtn:nil];
     [self setTitleFieldBg:nil];
-    [self setBgImage:nil];
     self.prodId = nil;
 }
 
@@ -46,38 +44,33 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    self.bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    
-    self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 110, 27);
+    self.titleImage.frame = CGRectMake(LEFT_WIDTH, 35, 110, 27);
     self.titleImage.image = [UIImage imageNamed:@"create_list_title"];
     
-    self.closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.titleFieldBg.frame = CGRectMake(LEFT_GAP, 100, 400, 39);
+    self.titleFieldBg.frame = CGRectMake(LEFT_WIDTH, 100, 400, 39);
     self.titleFieldBg.image = [UIImage imageNamed:@"box_title"];
     self.titleFieldBg.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.titleFieldBg.layer.borderWidth = 1;
     
-    self.titleField.frame = CGRectMake(LEFT_GAP+5, 103, 390, 33);
+    self.titleField.frame = CGRectMake(LEFT_WIDTH+5, 103, 390, 33);
     self.titleField.placeholder = @"标题";
     self.titleField.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeNextBtnImage:) name:UITextFieldTextDidChangeNotification object:self.titleField];
     
-    self.contentBgImage.frame = CGRectMake(LEFT_GAP, 145, 400, 102);
+    self.contentBgImage.frame = CGRectMake(LEFT_WIDTH, 145, 400, 102);
     self.contentBgImage.image = [UIImage imageNamed:@"box_content"];
     self.contentBgImage.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.contentBgImage.layer.borderWidth = 1;
     
-    self.contentText.frame = CGRectMake(LEFT_GAP+5, 150, 390, 92);
+    self.contentText.frame = CGRectMake(LEFT_WIDTH+5, 150, 390, 92);
     self.contentText.placeholder = @"简介（可选）";
     
-    self.nextBtn.frame = CGRectMake(390, 255, 62, 39);
+    self.nextBtn.frame = CGRectMake(380, 255, 62, 39);
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];

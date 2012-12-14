@@ -8,7 +8,7 @@
 
 #import "CommonHeader.h"
 
-@interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
+@interface ListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
     UITableView *table;
     NSMutableArray *topsArray;
     UIButton *closeBtn;

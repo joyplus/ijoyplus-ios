@@ -8,6 +8,6 @@
 
 #import "CommonHeader.h"
 
-@interface SearchListViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
+@interface SearchListViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
 @property (nonatomic, strong)NSString *keyword;
 @end

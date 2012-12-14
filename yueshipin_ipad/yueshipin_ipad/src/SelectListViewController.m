@@ -11,7 +11,6 @@
 #import "SSCheckBoxView.h"
 #import "CreateListOneViewController.h"
 
-#define LEFT_GAP 50
 @interface SelectListViewController (){
     NSMutableArray *listData;
     UIImageView *titleImage;
@@ -48,23 +47,18 @@
 {
     [super viewDidLoad];
     
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
-    
-    titleImage = [[UIImageView alloc]initWithFrame: CGRectMake(LEFT_GAP, 35, 183, 27)];
+    titleImage = [[UIImageView alloc]initWithFrame: CGRectMake(LEFT_WIDTH, 35, 183, 27)];
     titleImage.image = [UIImage imageNamed:@"add_title"];
     [self.view addSubview:titleImage];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 120, 460, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 130, 420, self.view.frame.size.height - 350)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -73,7 +67,7 @@
     [self.view addSubview:table];
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(LEFT_GAP, 80, 105, 31);
+    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 105, 31);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -256,7 +250,10 @@
             [UIUtility showSystemError:self.view];
         }];
     }
-    [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+    if(checkboxes.count > 0){
+        [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+        [closeBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }
 }
 
 - (void)createBtnClicked

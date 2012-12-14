@@ -12,9 +12,9 @@
 #import "ShowDetailViewController.h"
 
 @interface AboutUsViewController (){
-    UIImageView *bgImage;
     UIImageView *titleImage;
     UIImageView *contentImage;
+    UIButton *closeBtn;
 }
 
 @end
@@ -24,9 +24,9 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    bgImage = nil;
     titleImage = nil;
     contentImage = nil;
+    closeBtn = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -41,16 +41,19 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
     
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 104, 27)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 104, 27)];
     titleImage.image = [UIImage imageNamed:@"about_title"];
     [self.view addSubview:titleImage];
     
-    contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 90, 453, 642)];
+    closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:closeBtn];
+    
+    contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 90, 453, 642)];
     contentImage.image = [UIImage imageNamed:@"about_content"];
     [self.view addSubview:contentImage];
 
