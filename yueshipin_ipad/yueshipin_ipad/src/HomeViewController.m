@@ -1123,6 +1123,7 @@
         NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"prod_id"]];
         viewController.topId = topId;
         viewController.listTitle = [item objectForKey: @"prod_name"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]]intValue];
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     }
     

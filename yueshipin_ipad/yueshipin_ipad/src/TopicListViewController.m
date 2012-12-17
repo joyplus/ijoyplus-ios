@@ -169,11 +169,15 @@
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 250, 25)];
         nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
         [cell.contentView addSubview:nameLabel];
+        
+        UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(160, 40, 37, 18)];
+        typeImage1.tag = 8001;
+        [cell.contentView addSubview:typeImage1];
         
         int posx = 165;
         UIView *dotView1 = [UIUtility getDotView:6];
@@ -277,6 +281,16 @@
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"name"];
+    
+    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
+    if([type isEqualToString:@"1"]){
+        typeImage1.image = [UIImage imageNamed:@"movie_type"];
+    } else if([type isEqualToString:@"2"]){
+        typeImage1.image = [UIImage imageNamed:@"drama_type"];
+    } else {
+        typeImage1.image = [UIImage imageNamed:@"show_type"];
+    }
 
     NSArray *videos = [item objectForKey:@"items"];
     for(int i = 0; i < 7; i++){
@@ -319,6 +333,7 @@
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
+    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]]intValue];
     viewController.topId = topId;
     viewController.listTitle = [item objectForKey: @"name"];
     viewController.fromViewController = self;

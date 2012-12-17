@@ -8,8 +8,9 @@
 
 #import "GenericBaseViewController.h"
 #import "CustomPlaceHolderTextView.h"
+#import "RadioButton.h"
 
-@interface CreateListOneViewController : GenericBaseViewController <UITextFieldDelegate>
+@interface CreateListOneViewController : GenericBaseViewController <UITextFieldDelegate, RadioButtonDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *titleImage;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet UIImageView *contentBgImage;

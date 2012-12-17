@@ -12,7 +12,6 @@
 #import "ProgramViewController.h"
 #import "SinaWeibo.h"
 #import "SublistViewController.h"
-#import "SelectListViewController.h"
 #import "CommentListViewController.h"
 #import "ListViewController.h"
 #define DEFAULT_POSOTION_Y 585
@@ -217,7 +216,7 @@
     
     commentArray = [[NSMutableArray alloc]initWithCapacity:10];
     
-
+    self.type = 1;
 }
 
 - (void)viewWillAppear:(BOOL)animated

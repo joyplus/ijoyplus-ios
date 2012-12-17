@@ -26,6 +26,7 @@
 
 @implementation SelectListViewController
 @synthesize prodId;
+@synthesize type;
 
 - (void)viewDidUnload
 {
@@ -100,7 +101,7 @@
         [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"100", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
             [myHUD hide];
@@ -120,7 +121,11 @@
         [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
         NSArray *videos = [result objectForKey:@"tops"];
         if(videos != nil && videos.count > 0){
-            [listData addObjectsFromArray:videos];
+            for (NSDictionary *item in videos) {
+                if([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] intValue] == self.type){
+                   [listData addObjectsFromArray:videos];
+                }
+            }
         }
     }
     [table reloadData];

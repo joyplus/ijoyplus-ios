@@ -10,6 +10,7 @@
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
 @interface CreateListOneViewController (){
+    int type;
     
 }
 
@@ -52,25 +53,50 @@
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.titleFieldBg.frame = CGRectMake(LEFT_WIDTH, 100, 400, 39);
+    RadioButton *movieType = [[RadioButton alloc] initWithGroupId:@"list type" index:0];
+    [movieType setChecked:YES];
+    type = 1;
+    movieType.frame = CGRectMake(LEFT_WIDTH,100,50,50);
+    UILabel *movieTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieType.frame.origin.x+30, 100, 100, 20)];
+    [movieTypeLabel setBackgroundColor:[UIColor clearColor]];
+    movieTypeLabel.textColor = CMConstants.grayColor;
+    movieTypeLabel.text = @"电影悦单";
+    movieTypeLabel.font = [UIFont systemFontOfSize:14];
+    [self.view addSubview:movieTypeLabel];
+    
+    
+    RadioButton *dramaType = [[RadioButton alloc] initWithGroupId:@"list type" index:1];
+    dramaType.frame = CGRectMake(LEFT_WIDTH + 150,100,50,50);
+    UILabel *dramaTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(dramaType.frame.origin.x+30, 100, 100, 20)];
+    [dramaTypeLabel setBackgroundColor:[UIColor clearColor]];
+    dramaTypeLabel.textColor = CMConstants.grayColor;
+    dramaTypeLabel.text = @"电视剧悦单";
+    dramaTypeLabel.font = [UIFont systemFontOfSize:14];
+    [self.view addSubview:dramaTypeLabel];
+    
+    [self.view addSubview:movieType];
+    [self.view addSubview:dramaType];
+    [RadioButton addObserverForGroupId:@"list type" observer:self];
+    
+    self.titleFieldBg.frame = CGRectMake(LEFT_WIDTH, 130, 400, 39);
     self.titleFieldBg.image = [UIImage imageNamed:@"box_title"];
     self.titleFieldBg.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.titleFieldBg.layer.borderWidth = 1;
     
-    self.titleField.frame = CGRectMake(LEFT_WIDTH+5, 103, 390, 33);
+    self.titleField.frame = CGRectMake(LEFT_WIDTH+5, 133, 390, 33);
     self.titleField.placeholder = @"标题";
     self.titleField.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeNextBtnImage:) name:UITextFieldTextDidChangeNotification object:self.titleField];
     
-    self.contentBgImage.frame = CGRectMake(LEFT_WIDTH, 145, 400, 102);
+    self.contentBgImage.frame = CGRectMake(LEFT_WIDTH, 175, 400, 102);
     self.contentBgImage.image = [UIImage imageNamed:@"box_content"];
     self.contentBgImage.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.contentBgImage.layer.borderWidth = 1;
     
-    self.contentText.frame = CGRectMake(LEFT_WIDTH+5, 150, 390, 92);
+    self.contentText.frame = CGRectMake(LEFT_WIDTH+5, 180, 390, 92);
     self.contentText.placeholder = @"简介（可选）";
     
-    self.nextBtn.frame = CGRectMake(380, 255, 62, 39);
+    self.nextBtn.frame = CGRectMake(380, 285, 62, 39);
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];
@@ -141,6 +167,11 @@
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     viewController.titleContent = self.titleField.text;
     viewController.topId = [NSString stringWithFormat:@"%@", [result objectForKey:@"topic_id"]];
+    viewController.type = type;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+}
+
+-(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
+    type = index + 1;
 }
 @end

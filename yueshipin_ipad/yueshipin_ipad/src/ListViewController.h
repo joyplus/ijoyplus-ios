@@ -17,7 +17,7 @@
 
 @property (nonatomic, strong)NSString *listTitle;
 @property (nonatomic, strong)NSString *topId;
-
+@property (nonatomic, assign)int type;
 - (void)retrieveTopsListData;
 
 @end

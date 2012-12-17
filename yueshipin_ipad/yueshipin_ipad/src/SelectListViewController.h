@@ -12,6 +12,6 @@
 @interface SelectListViewController : GenericBaseViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong)NSString *prodId;
-
+@property (assign, nonatomic)int type;
 
 @end

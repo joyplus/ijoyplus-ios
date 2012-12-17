@@ -33,6 +33,7 @@
 @synthesize keyword;
 @synthesize topId;
 @synthesize backToViewController;
+@synthesize type;
 
 - (void)viewDidUnload
 {
@@ -77,8 +78,8 @@
     
     addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     addBtn.frame = CGRectMake(LEFT_WIDTH, 80, 62, 31);
-    [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video"] forState:UIControlStateNormal];
-    [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video_pressed"] forState:UIControlStateHighlighted];
+    [addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
+    [addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [addBtn setHidden:YES];
     [self.view addSubview:addBtn];
@@ -124,7 +125,7 @@
 - (void)getResult
 {
     [myHUD showProgressBar:self.view];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSString stringWithFormat:@"%d", self.type], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -329,7 +330,13 @@
             [label setBackgroundColor:[UIColor clearColor]];
             label.textColor = CMConstants.grayColor;
             label.font = [UIFont systemFontOfSize: 16];
-            label.text = @"很抱歉，没有找到相关影片！";
+            if (self.type == 1) {
+                label.text = @"很抱歉，没有找到相关电影！";
+            } else if (self.type == 2) {
+                label.text = @"很抱歉，没有找到相关电视剧！";
+            } else {
+                label.text = @"很抱歉，没有找到相关影片！";
+            }
             [cell.contentView addSubview:label];
         }
         return cell;
@@ -412,7 +419,6 @@
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.backToViewController.class];
 }
 
-
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient
 
@@ -430,7 +436,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSString stringWithFormat:@"%d", self.type], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempArray;

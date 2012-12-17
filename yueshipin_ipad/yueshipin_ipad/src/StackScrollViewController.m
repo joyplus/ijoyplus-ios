@@ -658,13 +658,21 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         return;
     }
     UIViewController *topViewController = [viewControllersStack objectAtIndex:viewControllersStack.count -1];
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         if(topViewController == includeViewController){
             [topViewController.view setFrame:CGRectMake(frame.size.height, topViewController.view.frame.origin.y, topViewController.view.frame.size.width, topViewController.view.frame.size.height)];
+            for (UIView *subview in topViewController.view.subviews) {
+                [subview setAlpha:0];
+            }
+            [topViewController.view setAlpha:0];
         } else {
             for (int i = viewControllersStack.count -1 ; i > 0; i--) {
                 UIViewController *viewController = [viewControllersStack objectAtIndex:i];
                 [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
+                for (UIView *subview in viewController.view.subviews) {
+                    [subview setAlpha:0];
+                }
+                [viewController.view setAlpha:0];
                 if(viewController == includeViewController){
                     break;
                 }
@@ -694,7 +702,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     if (viewControllersStack.count - 1 <= 0) {
         return;
     }
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
             if([viewController isKindOfClass:clazz]){
@@ -702,6 +710,10 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                 break;
             } else{
                 [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
+                for (UIView *subview in viewController.view.subviews) {
+                    [subview setAlpha:0];
+                }
+                [viewController.view setAlpha:0];
             }
         }
     } completion:^(BOOL finished) {
@@ -727,8 +739,12 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     
     UIViewController *topController = [viewControllersStack lastObject];
     
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         [topController.view setFrame:CGRectMake(frame.size.height, topController.view.frame.origin.y, topController.view.frame.size.width, topController.view.frame.size.height)];
+        for (UIView *subview in topController.view.subviews) {
+            [subview setAlpha:0];
+        }
+        [topController.view setAlpha:0];
     } completion:^(BOOL finished) {
         [[slideViews viewWithTag:lastViewControllerIndex] removeFromSuperview];
         [viewControllersStack removeLastObject];
@@ -743,10 +759,14 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         return;
     }
     
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for(int i = lastViewControllerIndex; i > 0; i--){
             UIViewController *topController = [viewControllersStack objectAtIndex:i];
             [topController.view setFrame:CGRectMake(frame.size.height, topController.view.frame.origin.y, topController.view.frame.size.width, topController.view.frame.size.height)];
+            for (UIView *subview in topController.view.subviews) {
+                [subview setAlpha:0];
+            }
+            [topController.view setAlpha:0];
             topController = nil;
         }
     } completion:^(BOOL finished) {

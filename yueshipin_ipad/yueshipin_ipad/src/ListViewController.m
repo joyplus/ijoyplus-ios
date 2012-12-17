@@ -22,6 +22,7 @@
 @implementation ListViewController
 @synthesize topId;
 @synthesize listTitle;
+@synthesize type;
 
 - (void)viewDidUnload{
     self.topId = nil;

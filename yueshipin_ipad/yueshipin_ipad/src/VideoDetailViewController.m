@@ -18,6 +18,7 @@
 @implementation VideoDetailViewController
 @synthesize prodId;
 @synthesize fromViewController;
+@synthesize type;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -232,6 +233,7 @@
     }
     SelectListViewController *viewController = [[SelectListViewController alloc]init];
     viewController.prodId = self.prodId;
+    viewController.type = self.type;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }

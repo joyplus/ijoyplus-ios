@@ -57,7 +57,7 @@
 //    [self.view addSubview:lineImage];
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 105, 31);
+    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 62, 31);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -115,6 +115,7 @@
 
 - (void)deleteTopic
 {
+    [myHUD showProgressBar:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.topId, @"topic_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -124,8 +125,10 @@
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }
+        [myHUD hide];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
+        [myHUD hide];
     }];
 }
 

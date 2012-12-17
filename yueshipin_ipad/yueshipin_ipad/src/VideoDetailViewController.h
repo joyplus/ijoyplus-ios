@@ -24,6 +24,7 @@
         NSInteger willPlayIndex;
 }
 @property (strong, nonatomic)NSString *prodId;
+@property (assign, nonatomic)int type;
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;

@@ -21,6 +21,7 @@
 @implementation CreateListTwoViewController
 @synthesize titleContent;
 @synthesize topId;
+@synthesize type;
 
 - (void)didReceiveMemoryWarning
 {
@@ -68,12 +69,12 @@
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.addBtn.frame = CGRectMake(LEFT_WIDTH, 100, 105, 31);
+    self.addBtn.frame = CGRectMake(LEFT_WIDTH, 100, 62, 31);
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [self.addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteBtn.frame = CGRectMake(LEFT_WIDTH + 115, 100, 105, 31);
+    self.deleteBtn.frame = CGRectMake(LEFT_WIDTH + self.addBtn.frame.size.width + 10, 100, 105, 31);
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [self.deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -107,6 +108,7 @@
     AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     viewController.topId = self.topId;
     viewController.backToViewController = self;
+    viewController.type = self.type;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
@@ -143,7 +145,7 @@
         [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:1], @"page_size", self.topId, @"top_id", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", self.topId, @"top_id", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
             [myHUD hide];
