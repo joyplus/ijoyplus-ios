@@ -11,7 +11,8 @@
 #import "CommonHeader.h"
 @interface CreateListOneViewController (){
     int type;
-    
+    RadioButton *movieType;
+    RadioButton *dramaType;
 }
 
 @end
@@ -21,6 +22,8 @@
 
 - (void)viewDidUnload
 {
+    [self setMovieTypeBtn:nil];
+    [self setDramaTypeBtn:nil];
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.titleField];
     [self setTitleImage:nil];
@@ -31,6 +34,8 @@
     [self setCloseBtn:nil];
     [self setTitleFieldBg:nil];
     self.prodId = nil;
+    movieType = nil;
+    dramaType = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -53,26 +58,30 @@
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    RadioButton *movieType = [[RadioButton alloc] initWithGroupId:@"list type" index:0];
+    movieType = [[RadioButton alloc] initWithGroupId:@"list type" index:0];
     [movieType setChecked:YES];
     type = 1;
-    movieType.frame = CGRectMake(LEFT_WIDTH,100,50,50);
+    movieType.frame = CGRectMake(LEFT_WIDTH,100,22,22);
     UILabel *movieTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieType.frame.origin.x+30, 100, 100, 20)];
     [movieTypeLabel setBackgroundColor:[UIColor clearColor]];
     movieTypeLabel.textColor = CMConstants.grayColor;
     movieTypeLabel.text = @"电影悦单";
     movieTypeLabel.font = [UIFont systemFontOfSize:14];
     [self.view addSubview:movieTypeLabel];
+    self.movieTypeBtn.tag = 1001;
+    self.movieTypeBtn.frame = CGRectMake(movieType.frame.origin.x+20, 100, 80, movieTypeLabel.frame.size.height);
     
     
-    RadioButton *dramaType = [[RadioButton alloc] initWithGroupId:@"list type" index:1];
-    dramaType.frame = CGRectMake(LEFT_WIDTH + 150,100,50,50);
+    dramaType = [[RadioButton alloc] initWithGroupId:@"list type" index:1];
+    dramaType.frame = CGRectMake(LEFT_WIDTH + 150,100,22,22);
     UILabel *dramaTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(dramaType.frame.origin.x+30, 100, 100, 20)];
     [dramaTypeLabel setBackgroundColor:[UIColor clearColor]];
     dramaTypeLabel.textColor = CMConstants.grayColor;
     dramaTypeLabel.text = @"电视剧悦单";
     dramaTypeLabel.font = [UIFont systemFontOfSize:14];
     [self.view addSubview:dramaTypeLabel];
+    self.dramaTypeBtn.tag = 1002;
+    self.dramaTypeBtn.frame = CGRectMake(dramaType.frame.origin.x+20, 100, 80, dramaTypeLabel.frame.size.height);
     
     [self.view addSubview:movieType];
     [self.view addSubview:dramaType];
@@ -173,5 +182,18 @@
 
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
     type = index + 1;
+}
+
+
+- (IBAction)videoTypeBtnClicked:(UIButton *)btn {
+    if(btn.tag == 1001){
+        [movieType setChecked:YES];
+        [dramaType setChecked:NO];
+        type = 1;
+    } else if(btn.tag == 1002){
+        [dramaType setChecked:YES];
+        [movieType setChecked:NO];
+        type = 2;
+    }
 }
 @end

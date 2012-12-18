@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *nextBtn;
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *titleFieldBg;
+@property (weak, nonatomic) IBOutlet UIButton *movieTypeBtn;
+@property (weak, nonatomic) IBOutlet UIButton *dramaTypeBtn;
+- (IBAction)videoTypeBtnClicked:(id)sender;
 
 @property (strong, nonatomic)NSString *prodId;
 
