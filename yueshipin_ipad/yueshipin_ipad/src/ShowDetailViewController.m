@@ -7,7 +7,6 @@
 //
 
 #import "ShowDetailViewController.h"
-#import "ShowListViewController.h"
 #import "CommonHeader.h"
 #import "ProgramViewController.h"
 #import "MediaPlayerViewController.h"
@@ -16,7 +15,6 @@
 #define DEFAULT_POSOTION_Y 585
 
 @interface ShowDetailViewController (){
-    ShowListViewController *listViewController;
     NSMutableArray *commentArray;
     NSArray *episodeArray;
     CommentListViewController *commentListViewController;
@@ -25,6 +23,8 @@
     BOOL introExpand;
     UITapGestureRecognizer *tapGesture;
     int showPageNumber;
+    BOOL btnAdded;
+    UIScrollView *showListView;
 }
 
 @end
@@ -41,10 +41,10 @@
     [commentArray removeAllObjects];
     commentArray = nil;
     episodeArray = nil;
-    listViewController = nil;
     commentListViewController = nil;
     introBtn = nil;
     tapGesture = nil;
+    showListView = nil;
     [self setBgScrollView:nil];
     [self setPlaceholderImage:nil];
     [self setFilmImage:nil];
@@ -197,9 +197,15 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_WIDTH + 410, self.introContentTextView.frame.origin.y + 80, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 413, self.introContentTextView.frame.origin.y + 80, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
+    
+    showListView = [[UIScrollView alloc]initWithFrame:CGRectZero];
+    showListView.scrollEnabled = NO;
+    showListView.backgroundColor = [UIColor clearColor];
+    [showListView setPagingEnabled:YES];
+    [self.bgScrollView addSubview:showListView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -336,30 +342,79 @@
 
 - (void)repositElements:(int)increasePositionY
 {
-    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 10;
-    if(episodeArray.count > 1){
-        self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH,  600 + increasePositionY, 32, 161);
-        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-        [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
-        [self.previousShowBtn addTarget:self action:@selector(previousShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 390 + 10,  600 + increasePositionY, 32, 161);
-        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-        [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
-        [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        
-        if(listViewController == nil){
-            listViewController = [[ShowListViewController alloc]initWithStyle:UITableViewStylePlain];
-            listViewController.parentDelegate = self;
-            listViewController.view.backgroundColor = [UIColor clearColor];
-            [self.bgScrollView addSubview:listViewController.view];
-        }
-        listViewController.listData = [self getEpisodes];
-        listViewController.view.frame = CGRectMake(LEFT_WIDTH + 40, 600 + increasePositionY, 350, 161);
-        positionY = listViewController.view.frame.origin.y + 161;
+    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
+    if(episodeArray.count > 5){
+        self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH,  positionY, 32, 161);
+        self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 390 + 10,  positionY, 32, 161);
     }
+    showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
+    if(!btnAdded){
+        btnAdded = YES;
+        if(episodeArray.count > 5){
+            showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 5 * 32);
+            showListView.contentSize = showListView.frame.size;
+            
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
+            [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.previousShowBtn.tag = 9001;
+            
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
+            [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.nextShowBtn.tag = 9002;
+            for (int i = 0; i < episodeArray.count; i++) {
+                btnAdded = YES;
+                int pageNum = floor(i/5.0);
+                NSDictionary *item = [episodeArray objectAtIndex:i];
+                UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                nameBtn.tag = i + 1;
+                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
+                NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+                if ([item objectForKey:@"name"] == nil) {
+                    name = @"";
+                }
+                [nameBtn setTitle:name forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
+                nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateHighlighted];
+                [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                [showListView addSubview:nameBtn];
+            }
+        } else {
+            [self.previousShowBtn setHidden:YES];
+            [self.nextShowBtn setHidden:YES];
+            showListView.frame = CGRectMake(LEFT_WIDTH, positionY, 430, episodeArray.count * 32);
+            showListView.contentSize = showListView.frame.size;
+            for(int i = 0; i < episodeArray.count; i++){
+                NSDictionary *item = [episodeArray objectAtIndex:i];
+                UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                nameBtn.tag = i + 1;
+                nameBtn.frame = CGRectMake(0, i * 32, showListView.frame.size.width, 30);
+                NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+                if ([item objectForKey:@"name"] == nil) {
+                    name = @"";
+                }
+                [nameBtn setTitle:name forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
+                nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateHighlighted];
+                [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                [showListView addSubview:nameBtn];
+            }
+        }
+    }
+    positionY = showListView.frame.origin.y + showListView.frame.size.height;
     
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
     
@@ -390,6 +445,10 @@
     //    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 70, 425, commentListViewController.tableHeight);
 }
 
+- (void)nameBtnClicked:(UIButton *)btn{
+    [self playVideo:btn.tag - 1];
+}
+
 - (NSMutableArray *)getEpisodes
 {
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
@@ -403,26 +462,21 @@
     return tempArray;
 }
 
-- (void)previousShowBtnClicked
+- (void)nextShowBtnClicked:(UIButton *)btn
 {
-    showPageNumber --;
+    if(btn.tag == 9001){
+        showPageNumber --;
+    } else{
+        showPageNumber ++;
+    }
     if(showPageNumber < 0){
         showPageNumber = 0;
     }
-    [self updatePageBtnState];
-    listViewController.listData = [self getEpisodes];
-    [listViewController.tableView reloadData];
-}
-
-- (void)nextShowBtnClicked
-{
-    showPageNumber ++;
     if(showPageNumber > ceil(episodeArray.count / 5.0)-1){
         showPageNumber = ceil(episodeArray.count / 5.0)-1;
     }
     [self updatePageBtnState];
-    listViewController.listData = [self getEpisodes];
-    [listViewController.tableView reloadData];
+    [showListView setContentOffset:CGPointMake(350*showPageNumber, 0) animated:YES];
 }
 
 - (void)updatePageBtnState
@@ -483,6 +537,9 @@
 
 - (void)playVideo:(NSInteger)num
 {
+    if(num < 0 || num >= episodeArray.count){
+        return;
+    }
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
         willPlayIndex = num;
         UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
@@ -502,15 +559,6 @@
         [self willPlayVideo:willPlayIndex];
     }
 }
-
-- (void)playVideoCallback:(NSInteger)num
-{
-    int index = showPageNumber * 5 + num;
-    if(index < episodeArray.count){
-        [self playVideo:num];
-    }
-}
-
 
 - (void)willPlayVideo:(NSInteger)num
 {

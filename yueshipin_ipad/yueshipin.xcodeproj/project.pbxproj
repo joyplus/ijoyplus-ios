@@ -344,7 +344,6 @@
 		EBF3A96C166301F100EBF56D /* ListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A963166301F100EBF56D /* ListViewController.xib */; };
 		EBF3A96D166301F100EBF56D /* ShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A965166301F100EBF56D /* ShowDetailViewController.m */; };
 		EBF3A96E166301F100EBF56D /* ShowDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A966166301F100EBF56D /* ShowDetailViewController.xib */; };
-		EBF3A96F166301F100EBF56D /* ShowListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A968166301F100EBF56D /* ShowListViewController.m */; };
 		EBF3A979166309AC00EBF56D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A977166309AC00EBF56D /* Localizable.strings */; };
 		EBF3A985166384DF00EBF56D /* brief@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A981166384DF00EBF56D /* brief@2x.png */; };
 		EBF3A987166384DF00EBF56D /* morelists_title1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A983166384DF00EBF56D /* morelists_title1@2x.png */; };
@@ -772,8 +771,6 @@
 		EBF3A964166301F100EBF56D /* ShowDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDetailViewController.h; sourceTree = "<group>"; };
 		EBF3A965166301F100EBF56D /* ShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDetailViewController.m; sourceTree = "<group>"; };
 		EBF3A966166301F100EBF56D /* ShowDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowDetailViewController.xib; sourceTree = "<group>"; };
-		EBF3A967166301F100EBF56D /* ShowListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowListViewController.h; sourceTree = "<group>"; };
-		EBF3A968166301F100EBF56D /* ShowListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowListViewController.m; sourceTree = "<group>"; };
 		EBF3A978166309AC00EBF56D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EBF3A981166384DF00EBF56D /* brief@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brief@2x.png"; sourceTree = "<group>"; };
 		EBF3A983166384DF00EBF56D /* morelists_title1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "morelists_title1@2x.png"; sourceTree = "<group>"; };
@@ -1358,8 +1355,6 @@
 				EBF3A964166301F100EBF56D /* ShowDetailViewController.h */,
 				EBF3A965166301F100EBF56D /* ShowDetailViewController.m */,
 				EBF3A966166301F100EBF56D /* ShowDetailViewController.xib */,
-				EBF3A967166301F100EBF56D /* ShowListViewController.h */,
-				EBF3A968166301F100EBF56D /* ShowListViewController.m */,
 				EBB59CEF166751D100F646C7 /* CommentListViewController.h */,
 				EBB59CF0166751D100F646C7 /* CommentListViewController.m */,
 				EBF3A961166301F100EBF56D /* ListViewController.h */,
@@ -1842,7 +1837,6 @@
 				EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */,
 				EBF3A96B166301F100EBF56D /* ListViewController.m in Sources */,
 				EBF3A96D166301F100EBF56D /* ShowDetailViewController.m in Sources */,
-				EBF3A96F166301F100EBF56D /* ShowListViewController.m in Sources */,
 				EBF3A98C1663965F00EBF56D /* MediaPlayerViewController.m in Sources */,
 				EBF3A9921663972A00EBF56D /* DeviceListView.m in Sources */,
 				EBF3A99A1663973200EBF56D /* FPPopoverController.m in Sources */,

@@ -549,7 +549,7 @@
     if(lastNumObj != nil){
         lastNum = [lastNumObj integerValue];
     }
-    UIButton *lastbtn = (UIButton *)[self.bgScrollView viewWithTag:lastNum];
+    UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:lastNum];
     [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
 }
 
