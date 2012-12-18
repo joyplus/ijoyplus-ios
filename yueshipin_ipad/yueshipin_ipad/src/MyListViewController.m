@@ -88,6 +88,7 @@
     AddSearchViewController *viewController = [[AddSearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     viewController.topId = self.topId;
     viewController.backToViewController = self;
+    viewController.type = self.type;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:NO];
 }
 

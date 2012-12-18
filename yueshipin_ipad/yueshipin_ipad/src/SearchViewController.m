@@ -34,9 +34,9 @@
     bgImage = nil;
     sBar = nil;
     table = nil;
-    hotKeyArray = nil;    
+    hotKeyArray = nil;
     [hotKeyIndex removeAllObjects];
-    hotKeyIndex = nil;    
+    hotKeyIndex = nil;
     [hotKeyBtnWidth removeAllObjects];
     hotKeyBtnWidth = nil;
 }
@@ -102,7 +102,11 @@
         NSMutableDictionary *cloneItem = [[NSMutableDictionary alloc]initWithDictionary:item];
         [historyArray addObject:cloneItem];
     }
-    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+    if(historyArray.count>0){
+        table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+    } else {
+        table.frame = CGRectMake(80, 170, 370, 210);
+    }
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
     if(cacheResult != nil){
         [self parseData:cacheResult];
@@ -183,7 +187,11 @@
     if(section == 0){
         return 1;
     } else {
-        return historyArray.count;
+        if(historyArray.count > 0){
+            return historyArray.count + 1;
+        } else {
+            return 0;
+        }
     }
 }
 
@@ -226,16 +234,35 @@
             [cell.contentView addSubview:hotKeyBtn];
         }
     } else {
-        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
-        UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
-        [name setTextColor:[UIColor blackColor]];
-        [name setFont:[UIFont systemFontOfSize:14]];
-        [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
-        [name sizeToFit];
-        [name setBackgroundColor:[UIColor clearColor]];
-        [cell.contentView addSubview:name];
+        if(indexPath.row < historyArray.count){
+            [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+            UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
+            [name setTextColor:[UIColor blackColor]];
+            [name setFont:[UIFont systemFontOfSize:14]];
+            [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
+            [name sizeToFit];
+            [name setBackgroundColor:[UIColor clearColor]];
+            [cell.contentView addSubview:name];
+        } else {
+            UIButton *clearAllBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            clearAllBtn.frame = CGRectMake(0, 5, 200, 30);
+            [clearAllBtn setTitle:@"clear all" forState:UIControlStateNormal];
+            [clearAllBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+            [clearAllBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+            [clearAllBtn addTarget:self action:@selector(clearAllHistory) forControlEvents:UIControlEventTouchUpInside];
+            [cell.contentView addSubview:clearAllBtn];
+        }
     }
     return cell;
+}
+
+- (void)clearAllHistory
+{
+    [historyArray removeAllObjects];
+    [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
+    table.frame = CGRectMake(80, 170, 370, 210);
+    [table reloadData];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -280,18 +307,18 @@
     lastPressedBtn = btn;
     int index = btn.tag - 2001;
     [self search:[[hotKeyArray objectAtIndex:index] objectForKey:@"content"]];
-    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+    table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
     [table reloadData];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(indexPath.section == 1){
+    if(indexPath.section == 1 && indexPath.row < historyArray.count){
         NSString *keyword = [[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"];
         [self search:keyword];
         lastPressedBtn = nil;
-        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+        table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
         [table reloadData];
     }
 }
@@ -311,7 +338,7 @@
 {
     [searchBar resignFirstResponder];
     [self search:searchBar.text];
-    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+    table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
     lastPressedBtn = nil;
     [table reloadData];
 }
@@ -321,7 +348,7 @@
     if(searchBar.text.length > 0){
         [searchBar resignFirstResponder];
         [self search:searchBar.text];
-        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+        table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
         lastPressedBtn = nil;
         [table reloadData];
     }
@@ -393,6 +420,31 @@
     }];
     [historyArray addObjectsFromArray:sortedArray];
     [[ContainerUtility sharedInstance]setAttribute:newHistoryArray forKey:@"search_history"];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section > 0 && historyArray.count > 0 && indexPath.row < historyArray.count){
+        return UITableViewCellEditingStyleDelete;
+    } else {
+        return UITableViewCellEditingStyleNone;
+    }
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section > 0){
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            [historyArray removeObjectAtIndex:indexPath.row];
+            [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
+            if (historyArray.count > 0) {
+                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+            } else {
+                table.frame = CGRectMake(80, 170, 370, 210);
+                [tableView reloadData];
+            }
+        }
+    }
 }
 
 @end

@@ -127,7 +127,7 @@
     [self.contentText resignFirstResponder];
     [myHUD showProgressBar:self.view];
     if(self.titleField.text.length > 0){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", [NSNumber numberWithInt:type], @"type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){

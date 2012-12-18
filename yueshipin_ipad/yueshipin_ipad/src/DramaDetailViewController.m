@@ -13,6 +13,8 @@
 #import "CommentListViewController.h"
 #import "SublistViewController.h"
 
+#define DEFAULT_POSITION_Y 600
+#define EPISODE_NUMBER_IN_ROW 5
 
 @interface DramaDetailViewController (){
     NSMutableArray *commentArray;
@@ -27,6 +29,13 @@
     UITapGestureRecognizer *tapGesture;
     
     NSMutableArray *episodeUrlArray;
+    
+    UIScrollView *episodeView;
+    int episodePageNumber;
+    
+    UIButton *nextBtn;
+    UIButton *previousBtn;
+    int increasePositionY;
 }
 
 
@@ -49,6 +58,9 @@
     commentListViewController = nil;
     introBtn = nil;
     tapGesture = nil;
+    episodeView = nil;
+    nextBtn = nil;
+    previousBtn = nil;
     [self setBgScrollView:nil];
     [self setPlaceholderImage:nil];
     [self setFilmImage:nil];
@@ -142,10 +154,10 @@
     self.actorLabel.textColor = CMConstants.grayColor;
     self.actorName1Label.frame = CGRectMake(325, 210, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
-//    self.actorName2Label.frame = CGRectMake(335, 235, 100, 15);
-//    self.actorName2Label.textColor = CMConstants.grayColor;
-//    self.actorName3Label.frame = CGRectMake(335, 260, 100, 15);
-//    self.actorName3Label.textColor = CMConstants.grayColor;
+    //    self.actorName2Label.frame = CGRectMake(335, 235, 100, 15);
+    //    self.actorName2Label.textColor = CMConstants.grayColor;
+    //    self.actorName3Label.frame = CGRectMake(335, 260, 100, 15);
+    //    self.actorName3Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(280, 240, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
     self.playTimeLabel.frame = CGRectMake(325, 240, 100, 15);
@@ -207,6 +219,12 @@
     [self.bgScrollView addSubview:introBtn];
     
     self.type = 2;
+    
+    episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
+    episodeView.scrollEnabled = NO;
+    episodeView.backgroundColor = [UIColor clearColor];
+    [episodeView setPagingEnabled:YES];
+    [self.bgScrollView addSubview:episodeView];
 }
 
 - (void)introBtnClicked
@@ -219,7 +237,8 @@
                 self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
-                [self repositElements:introContentHeight - 100];
+                increasePositionY = introContentHeight - 100;
+                [self repositElements];
             } completion:^(BOOL finished) {
             }];
         } else {
@@ -228,7 +247,8 @@
                 self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
-                [self repositElements:0];
+                increasePositionY = 0;
+                [self repositElements];
             } completion:^(BOOL finished) {
                 
             }];
@@ -313,20 +333,20 @@
     self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [video objectForKey:@"stars"];
     self.actorName1Label.text = stars;
-//    NSArray *starArray;
-//    if([stars rangeOfString:@"/"].length > 0){
-//        starArray = [stars componentsSeparatedByString:@"/"];
-//    } else if([stars rangeOfString:@","].length > 0){
-//        starArray = [stars componentsSeparatedByString:@","];
-//    } else {
-//        starArray = [stars componentsSeparatedByString:@" "];
-//    }
-//    if(starArray.count > 0)
-//        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    if(starArray.count > 1)
-//        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-//    if(starArray.count > 2)
-//        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //    NSArray *starArray;
+    //    if([stars rangeOfString:@"/"].length > 0){
+    //        starArray = [stars componentsSeparatedByString:@"/"];
+    //    } else if([stars rangeOfString:@","].length > 0){
+    //        starArray = [stars componentsSeparatedByString:@","];
+    //    } else {
+    //        starArray = [stars componentsSeparatedByString:@" "];
+    //    }
+    //    if(starArray.count > 0)
+    //        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //    if(starArray.count > 1)
+    //        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    //    if(starArray.count > 2)
+    //        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
@@ -335,8 +355,8 @@
     
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
-    
-    [self repositElements:0];
+    increasePositionY = 0;
+    [self repositElements];
 }
 
 
@@ -346,9 +366,33 @@
     introContentHeight = self.introContentTextView.contentSize.height;
 }
 
+- (void)next20Epi:(UIButton *)btn
+{
+    if(btn.tag == 9011){
+        episodePageNumber++;
+    } else {
+        episodePageNumber--;
+    }
+    if(episodePageNumber <=0){
+        episodePageNumber = 0;
+        [nextBtn setHidden:NO];
+        [previousBtn setHidden:YES];
+    }
+    if(episodePageNumber >= floor(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0))){
+        episodePageNumber = floor(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0));
+        [nextBtn setHidden:YES];
+        [previousBtn setHidden:NO];
+    } 
+    [self relocateComment];
+    if(episodePageNumber > 0 && episodePageNumber < floor(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0))){
+        [nextBtn setHidden:NO];
+        [previousBtn setHidden:NO];
+    }
+    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
+}
 
-- (void)repositElements:(int)increasePositionY
-{   
+- (void)repositElements
+{
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
@@ -356,18 +400,17 @@
     }
     
     totalEpisodeNumber = episodeArray.count;
-    if(btnAdded){
-        for (int i = 0; i < totalEpisodeNumber; i++) {
-            UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:i+1];
-            [btn setFrame:CGRectMake(LEFT_WIDTH + (i % 9) * 49, 600 + floor(i / 9.0) * 39 + increasePositionY, 44, 34)];
-        }
-    } else {
+    episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * 39);
+    episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/EPISODE_NUMBER_IN_ROW*4.0) * 430, episodeView.frame.size.height);
+    if(!btnAdded){
         for (int i = 0; i < totalEpisodeNumber; i++) {
             btnAdded = YES;
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.tag = i+1;
-            [btn setFrame:CGRectMake(LEFT_WIDTH + (i % 9) * 49, 600 + floor(i / 9.0) * 39, 44, 34)];
-            if (i < 9) {
+            int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
+            [btn setFrame:CGRectMake(pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * 87, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 82, 34)];
+            NSLog(@"%d %f %f %f", i, btn.frame.origin.x, btn.frame.origin.y, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW));
+            if (i < EPISODE_NUMBER_IN_ROW) {
                 [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
             } else {
                 [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
@@ -384,15 +427,45 @@
             [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
             [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
-            [self.bgScrollView addSubview:btn];
+            [episodeView addSubview:btn];
         }
     }
-    int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY + 10;
-    UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber)];
-    if(lastBtn != nil){
-        positionY = lastBtn.frame.origin.y + 30;
+    if(nextBtn == nil){
+        nextBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [nextBtn setTitle:@"next" forState:UIControlStateNormal];
+        [nextBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+        [nextBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
+        [nextBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
+        nextBtn.tag = 9011;
+        [self.bgScrollView addSubview:nextBtn];
     }
     
+    if(previousBtn == nil){
+        previousBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [previousBtn setTitle:@"previous" forState:UIControlStateNormal];
+        [previousBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+        [previousBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
+        [previousBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
+        previousBtn.tag = 9012;
+        [previousBtn setHidden:YES];
+        [self.bgScrollView addSubview:previousBtn];
+    }   
+    if(totalEpisodeNumber <= EPISODE_NUMBER_IN_ROW * 4){
+        [nextBtn setHidden:YES];
+        [previousBtn setHidden:YES];
+    }
+    
+    [self relocateComment];
+}
+
+- (void)relocateComment
+{
+    UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
+    
+    nextBtn.frame = CGRectMake(LEFT_WIDTH + 380, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 10, 40, 30);
+    previousBtn.frame = CGRectMake(LEFT_WIDTH, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 10, 40, 30);
+
+    int positionY = previousBtn.frame.origin.y + 20;
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
@@ -403,7 +476,7 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 55, 430, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
@@ -427,7 +500,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     commentListViewController.totalCommentNum = totalCommentNum;
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, 200);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
     
@@ -451,10 +524,11 @@
             }
             if(introContentHeight > 80){
                 if(introExpand){
-                    [self repositElements:introContentHeight - 80];
+                    increasePositionY = introContentHeight - 80;
                 } else {
-                    [self repositElements:0];
+                    increasePositionY = 0;
                 }
+                [self repositElements];
             }
             
         }

@@ -802,7 +802,7 @@
     nameLabel1.text = [item1 objectForKey:@"name"];
     UILabel *nameLabel2 = (UILabel *)[cell viewWithTag:7001];
     nameLabel2.text = [item2 objectForKey:@"name"];
-    
+    NSLog(@"%@, %@", [item1 objectForKey:@"name"], [item2 objectForKey:@"name"]);
     NSString *type = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"prod_type"]];
     UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
     if([type isEqualToString:@"1"]){
@@ -824,10 +824,13 @@
     }
     
     NSArray *subitems1 = [item1 objectForKey:@"items"];
-    NSArray *subitems2 = [item2 objectForKey:@"items"];
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < fmin(subitems1.count, 3); i++){
         UILabel *label1 = (UILabel *)[cell viewWithTag:(4001 + i)];
         label1.text = [[subitems1 objectAtIndex:i]objectForKey:@"prod_name"];
+    }
+    
+    NSArray *subitems2 = [item2 objectForKey:@"items"];
+    for(int i = 0; i < fmin(subitems2.count, 3); i++){
         UILabel *label2 = (UILabel *)[cell viewWithTag:(5001 + i)];
         label2.text = [[subitems2 objectAtIndex:i]objectForKey:@"prod_name"];
     }
