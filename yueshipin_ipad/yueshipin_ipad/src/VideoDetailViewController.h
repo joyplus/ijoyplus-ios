@@ -8,6 +8,7 @@
 
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
+#import "MobClick.h"
 
 @protocol VideoDetailViewControllerDelegate <NSObject>
 

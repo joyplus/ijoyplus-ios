@@ -73,6 +73,8 @@
 
 #define APPIRATER_APP_ID				587246114
 
+#define PLAY_BTN_SUPPRESSED @"playBtnSuppressed"
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

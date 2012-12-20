@@ -31,6 +31,7 @@
 @synthesize internetReach;
 @synthesize wifiReach;
 @synthesize sinaweibo;
+@synthesize playBtnSuppressed;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -59,6 +60,8 @@
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
+    [MobClick updateOnlineConfig];
+    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
     [MobClick checkUpdate];
     [self generateUserId];
     [self initSinaweibo];
@@ -94,6 +97,8 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     [self.sinaweibo applicationDidBecomeActive];
+    [MobClick updateOnlineConfig];
+    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

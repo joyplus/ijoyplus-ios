@@ -121,7 +121,7 @@
     
     self.filmImage.frame = CGRectMake(LEFT_GAP+5, 84, 205, 300);
     self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
-    
+      
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
@@ -244,6 +244,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
+        [self.playRoundBtn setHidden:YES];
+        [self.playBtn setEnabled:NO];
+        [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    }
     if(video == nil){
         [self retrieveData];
     }
@@ -359,6 +364,7 @@
     }
     
     totalEpisodeNumber = episodeArray.count;
+    if(![@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
     if(btnAdded){
         for (int i = 0; i < totalEpisodeNumber; i++) {
             UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:i+1];
@@ -389,6 +395,7 @@
             [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
             [self.bgScrollView addSubview:btn];
         }
+    }
     }
     int positionY = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height + increasePositionY + 10;
     UIButton *lastBtn = (UIButton *)[self.bgScrollView viewWithTag:(totalEpisodeNumber)];

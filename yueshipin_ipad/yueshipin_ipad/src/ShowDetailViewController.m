@@ -208,6 +208,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
+        [self.playRoundBtn setHidden:YES];
+        [self.playBtn setEnabled:NO];
+        [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    }
     if(video == nil){
         [self retrieveData];
     }
@@ -341,6 +346,7 @@
 - (void)repositElements:(int)increasePositionY
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 10;
+    if(![@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
     if(episodeArray.count > 1){
         self.previousShowBtn.frame = CGRectMake(LEFT_GAP,  600 + increasePositionY, 32, 161);
         [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
@@ -363,6 +369,7 @@
         listViewController.listData = [self getEpisodes];
         listViewController.view.frame = CGRectMake(LEFT_GAP + 40, 600 + increasePositionY, 360, 161);
         positionY = listViewController.view.frame.origin.y + 161;
+    }
     }
     
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];

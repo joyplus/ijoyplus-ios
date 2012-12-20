@@ -214,6 +214,13 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
+        [myRecordImage setHidden:YES];
+        [table setHidden:YES];
+    } else {
+        [myRecordImage setHidden:NO];
+        [table setHidden:NO];
+    }
     self.userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];

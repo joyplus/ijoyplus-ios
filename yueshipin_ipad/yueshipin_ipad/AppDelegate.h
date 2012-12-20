@@ -23,6 +23,8 @@
 
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 
+@property (strong, nonatomic) NSString *playBtnSuppressed;
+
 + (AppDelegate *) instance;
 
 - (BOOL)isParseReachable;

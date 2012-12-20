@@ -296,6 +296,7 @@
 		EBBA010D1664E2C80069FE7E /* label@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA01091664E2C80069FE7E /* label@2x.png */; };
 		EBBA010E1664E2C80069FE7E /* search_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */; };
 		EBBA01101664E3520069FE7E /* hotkeys@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010F1664E3510069FE7E /* hotkeys@2x.png */; };
+		EBBBF3EE16830168002F198E /* play_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBBF3ED16830168002F198E /* play_disabled@2x.png */; };
 		EBBCDBB71675901C006E2F64 /* drama_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB31675901C006E2F64 /* drama_btn.png */; };
 		EBBCDBB81675901C006E2F64 /* list_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB41675901C006E2F64 /* list_btn.png */; };
 		EBBCDBB91675901C006E2F64 /* movie_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB51675901C006E2F64 /* movie_btn.png */; };
@@ -708,6 +709,7 @@
 		EBBA01091664E2C80069FE7E /* label@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label@2x.png"; sourceTree = "<group>"; };
 		EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBBA010F1664E3510069FE7E /* hotkeys@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hotkeys@2x.png"; sourceTree = "<group>"; };
+		EBBBF3ED16830168002F198E /* play_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_disabled@2x.png"; sourceTree = "<group>"; };
 		EBBCDBB31675901C006E2F64 /* drama_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_btn.png; sourceTree = "<group>"; };
 		EBBCDBB41675901C006E2F64 /* list_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_btn.png; sourceTree = "<group>"; };
 		EBBCDBB51675901C006E2F64 /* movie_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_btn.png; sourceTree = "<group>"; };
@@ -828,6 +830,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBBBF3ED16830168002F198E /* play_disabled@2x.png */,
 				EB51400D16788F7E0072E013 /* add_pressed.png */,
 				EB51400E16788F7E0072E013 /* add.png */,
 				EB51400F16788F7E0072E013 /* delete_pressed.png */,
@@ -1752,6 +1755,7 @@
 				EB51401216788F7E0072E013 /* add.png in Resources */,
 				EB51401316788F7E0072E013 /* delete_pressed.png in Resources */,
 				EB51401416788F7E0072E013 /* delete.png in Resources */,
+				EBBBF3EE16830168002F198E /* play_disabled@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1887,7 +1891,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Shanghai Joyplus Network Tech nology Co., Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;

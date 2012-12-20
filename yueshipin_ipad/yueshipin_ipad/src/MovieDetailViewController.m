@@ -123,7 +123,7 @@
     
     self.filmImage.frame = CGRectMake(LEFT_GAP+5, 84, 203, 298);
     self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
-    
+   
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
@@ -226,6 +226,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
+        [self.playRoundBtn setHidden:YES];
+        [self.playBtn setEnabled:NO];
+        [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    }
     if(video == nil){
         [self retrieveData];
     }
