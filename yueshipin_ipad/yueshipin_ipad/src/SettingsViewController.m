@@ -13,6 +13,7 @@
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
 #import "AFSinaWeiboAPIClient.h"
+#import "ClauseViewController.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -37,6 +38,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UIButton *suggestionBtn;
     UIButton *commentBtn;
     UIButton *aboutBtn;
+    UIButton *speakBtn;
     UISwitch *sinaSwitch;
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
@@ -56,6 +58,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     menuBtn = nil;
     topImage = nil;
     bgImage = nil;
+    speakBtn = nil;
     sinaWeiboBg = nil;
     sinaWeiboImg = nil;
     clearCacheBg = nil;
@@ -122,7 +125,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
-        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 220)];
+        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 267)];
         aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] ;
         [self.view addSubview:aboutBg];
         
@@ -153,6 +156,13 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:aboutBtn];
+        
+        speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        speakBtn.frame = CGRectMake(100, 513, 334, 40);
+        [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
+        [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
+        [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:speakBtn];
         
         
     }
@@ -220,6 +230,13 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 {
     [self closeMenu];
     AboutUsViewController *viewController = [[AboutUsViewController alloc]init];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+}
+
+- (void)speakBtnClicked
+{
+    [self closeMenu];
+    ClauseViewController *viewController = [[ClauseViewController alloc]init];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
