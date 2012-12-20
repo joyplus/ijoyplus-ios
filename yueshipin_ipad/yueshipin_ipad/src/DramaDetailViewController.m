@@ -95,6 +95,7 @@
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
     [self setRelatedImage:nil];
+    [self setDownloadBtn:nil];
     [super viewDidUnload];
 }
 
@@ -194,6 +195,11 @@
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
     [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.downloadBtn.frame = CGRectMake(394, 405, 104, 34);
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
@@ -700,5 +706,37 @@
         [UIUtility showSystemError:self.view];
     }];
 }
+
+- (void)downloadBtnClicked
+{
+    [AppDelegate instance].rootViewController.videoDetailDelegate = self;
+    [[AppDelegate instance].rootViewController showDramaDownloadView:totalEpisodeNumber];
+}
+
+- (void)downloadDrama:(int)num
+{
+    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+    DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    if (item != nil) {
+        return;
+    }
+    
+    item = [[DownloadItem alloc]init];
+    item.itemId = self.prodId;
+    item.imageUrl = [video objectForKey:@"ipad_poster"];
+    if([StringUtility stringIsEmpty:item.imageUrl]){
+        item.imageUrl = [video objectForKey:@"poster"];
+    }
+    item.name = [video objectForKey:@"name"];
+    item.percentage = 0;
+    item.type = 1;
+    item.downloadingStatus = @"start";
+    item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
+//    NSArray *urlArray = [[NSArray alloc]initWithObjects:videoAddress, nil];
+//    item.urlArray = urlArray;
+//    [item save];
+//    [[AppDelegate instance] addToDownloaderArray:item];
+}
+
 
 @end

@@ -68,5 +68,6 @@
 - (void)showSharePopup;
 - (void)showCommentPopup;
 - (void)pesentMyModalView:(UIViewController *)viewController;
+- (void)showDramaDownloadView:(int)totalNumber;
 
 @end

@@ -14,6 +14,7 @@
 #import "SublistViewController.h"
 #import "CommentListViewController.h"
 #import "ListViewController.h"
+#import "DownloadItem.h"
 #define DEFAULT_POSOTION_Y 585
 
 @interface MovieDetailViewController (){
@@ -25,6 +26,7 @@
     float introContentHeight;
     BOOL introExpand;
     UITapGestureRecognizer *tapGesture;
+    NSString *videoAddress;
 }
 
 @end
@@ -38,12 +40,8 @@
 }
 
 - (void)viewDidUnload {
-    [super viewDidUnload];
-    [self clearMemory];
-}
-
-- (void)clearMemory
-{
+    [self setDownloadBtn:nil];
+    videoAddress = nil;
     [commentArray removeAllObjects];
     commentArray = nil;
     episodeArray = nil;
@@ -86,6 +84,7 @@
     [self setCollectionNumberLabel:nil];
     [self setRelatedBgImage:nil];
     [self setCloseBtn:nil];
+    [super viewDidUnload];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -192,6 +191,11 @@
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
     [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
+    self.downloadBtn.frame = CGRectMake(394, 405, 104, 34);
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
     self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
     
@@ -268,7 +272,9 @@
             [introBtn removeFromSuperview];
             introBtn = nil;
         }
+        [self getVideoAddress];
         [self showValues];
+        
     } else {
         [UIUtility showSystemError:self.view];
     }
@@ -316,6 +322,12 @@
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
+    
+    if(videoAddress != nil && [videoAddress hasSuffix:@"mp4"]){
+        [self.downloadBtn setEnabled:YES];
+    } else {
+        [self.downloadBtn setEnabled:NO];
+    }
     [self repositElements:0];
 }
 
@@ -430,25 +442,31 @@
     }
 }
 
+- (void)getVideoAddress
+{
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:0] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                videoAddress = [self parseVideoUrl:tempVideo];
+                break;
+            }
+        }
+        if(videoAddress == nil){
+            videoAddress = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+        }
+    }
+}
+
 - (void)willPlayVideo:(NSInteger)num
 {
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
-                break;
-            }
-        }
-        if(videoUrl == nil){
-            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-        }
-        if(videoUrl == nil){
+        if(videoAddress == nil){
             [self showPlayWebPage];
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = videoUrl;
+            viewController.videoUrl = videoAddress;
             viewController.type = 1;
             viewController.name = [video objectForKey:@"name"];
             viewController.subname = [NSString stringWithFormat:@"%i", num];
@@ -550,6 +568,31 @@
 //        }
     }
     
+}
+
+- (void)downloadBtnClicked
+{
+    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+    DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    if (item != nil) {
+        return;
+    }
+    
+    item = [[DownloadItem alloc]init];
+    item.itemId = self.prodId;
+    item.imageUrl = [video objectForKey:@"ipad_poster"];
+    if([StringUtility stringIsEmpty:item.imageUrl]){
+        item.imageUrl = [video objectForKey:@"poster"];
+    }
+    item.name = [video objectForKey:@"name"];
+    item.percentage = 0;
+    item.type = 1;
+    item.downloadingStatus = @"start";
+    item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
+    NSArray *urlArray = [[NSArray alloc]initWithObjects:videoAddress, nil];
+    item.urlArray = urlArray;
+    [item save];
+    [[AppDelegate instance] addToDownloaderArray:item];
 }
 
 @end

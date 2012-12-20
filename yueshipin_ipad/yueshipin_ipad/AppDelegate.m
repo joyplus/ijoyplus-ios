@@ -18,6 +18,7 @@
 @property (nonatomic, strong) Reachability *internetReach;
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, readonly) int networkStatus;
+@property (strong, nonatomic) NSMutableArray *downloaderArray;
 - (void)monitorReachability;
 
 @end
@@ -31,16 +32,67 @@
 @synthesize internetReach;
 @synthesize wifiReach;
 @synthesize sinaweibo;
+@synthesize downloaderArray;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
+}
+
+- (void)addToDownloaderArray:(DownloadItem *)item{
+    McDownload *newdownloader = [[McDownload alloc] init];
+    newdownloader.idNum = item.itemId;
+    NSURL *url = [NSURL URLWithString:[item.urlArray objectAtIndex:0]];
+    newdownloader.url = url;
+    newdownloader.fileName = item.fileName;
+    if([item.downloadingStatus isEqualToString:@"start"]){
+        newdownloader.isStop = NO;
+    } else {
+        newdownloader.isStop = YES;
+    }
+    [self.downloaderArray addObject:newdownloader];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+}
+
+- (void)deleteDownloaderInQueue:(DownloadItem *)item
+{
+    for (McDownload *downloader in self.downloaderArray) {
+        if([downloader.idNum isEqualToString:item.itemId]){
+            [downloader stop];
+            [self.downloaderArray removeObject:downloader];
+            break;
+        }
+    }
+}
+
+- (void)initAllDownloaders
+{
+    NSArray *allItem = [DownloadItem allObjects];
+    self.downloaderArray = [[NSMutableArray alloc]initWithCapacity:allItem.count];
+    for (DownloadItem *item in allItem) {
+        McDownload *newdownloader = [[McDownload alloc] init];
+        newdownloader.idNum = item.itemId;
+        NSURL *url = [NSURL URLWithString:[item.urlArray objectAtIndex:0]];
+        newdownloader.url = url;
+        newdownloader.fileName = item.fileName;
+        if([item.downloadingStatus isEqualToString:@"start"]){
+            newdownloader.isStop = NO;
+        } else {
+            newdownloader.isStop = YES;
+        }
+        [self.downloaderArray addObject:newdownloader];
+    }
+}
+
+- (NSMutableArray *)getDownloaderQueue
+{
+    return self.downloaderArray;
 }
 
 - (void)customizeAppearance
 {
     // Set the background image for *all* UINavigationBars
     UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];   
+    [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
 }
 - (void)initSinaweibo
 {
@@ -67,7 +119,8 @@
     [self customizeAppearance];
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+
+    [self initAllDownloaders];
     self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];

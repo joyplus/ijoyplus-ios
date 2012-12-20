@@ -9,19 +9,23 @@
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
 #import "SlideBaseViewController.h"
+#import "McDownload.h"
 
 @protocol VideoDetailViewControllerDelegate <NSObject>
 
 - (void)refreshCommentListView:(int)tableHeight;
 - (void)getTopComments:(int)num;
 - (void)showSublistView:(int)num;
+- (void)downloadDrama:(int)num;
+- (void)downloadShow:(int)num;
 @end
 
-@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate>{
-        SinaWeibo *_sinaweibo;
-        NSDictionary *video;
-        NSArray *topics;
-        NSInteger willPlayIndex;
+@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate, McDownloadDelegate>{
+    SinaWeibo *_sinaweibo;
+    NSDictionary *video;
+    NSArray *topics;
+    NSInteger willPlayIndex;
+    McDownload  *downloader;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (assign, nonatomic)int type;

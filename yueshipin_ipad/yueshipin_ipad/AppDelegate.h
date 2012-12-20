@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
+#import "DownloadItem.h"
 
 @class RootViewController;
 
@@ -23,6 +24,9 @@
 
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 
+- (NSMutableArray *)getDownloaderQueue;
+- (void)addToDownloaderArray:(DownloadItem *)item;
+- (void)deleteDownloaderInQueue:(DownloadItem *)item;
 + (AppDelegate *) instance;
 
 - (BOOL)isParseReachable;

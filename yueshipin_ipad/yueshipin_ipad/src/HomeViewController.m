@@ -802,7 +802,6 @@
     nameLabel1.text = [item1 objectForKey:@"name"];
     UILabel *nameLabel2 = (UILabel *)[cell viewWithTag:7001];
     nameLabel2.text = [item2 objectForKey:@"name"];
-    NSLog(@"%@, %@", [item1 objectForKey:@"name"], [item2 objectForKey:@"name"]);
     NSString *type = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"prod_type"]];
     UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
     if([type isEqualToString:@"1"]){

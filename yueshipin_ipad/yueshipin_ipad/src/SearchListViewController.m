@@ -145,7 +145,6 @@
             [cell.contentView addSubview:imageView];
             
             UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, 12, 94, 138)];
-            contentImage.image = [UIImage imageNamed:@"test_movie"];
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             

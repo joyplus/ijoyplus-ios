@@ -58,6 +58,7 @@
 
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
+#define ADD_NEW_DOWNLOAD_ITEM @"add_new_download_item"
 
 #define WATCH_RECORD_NUMBER 5
 

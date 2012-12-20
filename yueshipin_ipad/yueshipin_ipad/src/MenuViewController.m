@@ -44,6 +44,7 @@
 #import "SettingsViewController.h"
 #import "SearchViewController.h"
 #import "PersonalViewController.h"
+#import "DownloadViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
@@ -52,6 +53,7 @@
     SettingsViewController *settingsViewController;
     SearchViewController *searchViewController;
     PersonalViewController *personalViewController;
+    DownloadViewController *downloadViewController;
     NSInteger selectedIndex;
 }
 
@@ -113,6 +115,9 @@
     
     settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     settingsViewController.menuViewControllerDelegate = self;
+    
+    downloadViewController = [[DownloadViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    downloadViewController.menuViewControllerDelegate = self;
 }
 
 - (void)viewDidLoad {
@@ -155,7 +160,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 5;
+    return 6;
 }
 
 
@@ -193,6 +198,9 @@
         imageView.image = [UIImage imageNamed:@"searching_icon"];
         label.text = @"搜索";
     } else if(indexPath.row == 3){
+        imageView.image = [UIImage imageNamed:@"searching_icon"];
+        label.text = @"缓存视频";
+    } else if(indexPath.row == 4){
         UIView* bgView = [[UIView alloc] init];
 		[bgView setBackgroundColor:[UIColor clearColor]];
         [cell setSelectedBackgroundView:bgView];
@@ -217,6 +225,8 @@
     } else if(selectedIndex == 2){
         return searchViewController;
     } else if(selectedIndex == 3){
+        return downloadViewController;
+    } else if(selectedIndex == 4){
         return nil;
     } else {
         return settingsViewController;
@@ -226,7 +236,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     selectedIndex = indexPath.row;
-    if(selectedIndex == 3){
+    if(selectedIndex == 4){
         return;
     }
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
@@ -234,9 +244,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 3){
+    if(indexPath.row == 4){
         CGRect frame = [UIScreen mainScreen].bounds;
-        return frame.size.width - 60 * 4 - 50;
+        return frame.size.width - 60 * 5 - 50;
     } else {
         return 60;
     }

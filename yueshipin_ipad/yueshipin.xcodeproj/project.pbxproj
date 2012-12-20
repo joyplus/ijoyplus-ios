@@ -303,6 +303,32 @@
 		EBBB5CFC167EEB3000F83CBA /* nocollection@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CF9167EEB3000F83CBA /* nocollection@2x.png */; };
 		EBBB5CFD167EEB3000F83CBA /* noding@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CFA167EEB3000F83CBA /* noding@2x.png */; };
 		EBBB5CFE167EEB3000F83CBA /* nolist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CFB167EEB3000F83CBA /* nolist@2x.png */; };
+		EBBB98CE16817BF200612606 /* McDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB98CD16817BF200612606 /* McDownload.m */; };
+		EBBB98D316817F4D00612606 /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB98D216817F4D00612606 /* DownloadViewController.m */; };
+		EBBB991E168189E700612606 /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB98FF168189E700612606 /* NSData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB991F168189E700612606 /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9901168189E700612606 /* NSDate-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9920168189E700612606 /* NSMutableArray-MultipleSort.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9903168189E700612606 /* NSMutableArray-MultipleSort.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9921168189E700612606 /* NSMutableData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9905168189E700612606 /* NSMutableData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9922168189E700612606 /* NSNumber-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9907168189E700612606 /* NSNumber-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9923168189E700612606 /* NSObject-ClassName.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9909168189E700612606 /* NSObject-ClassName.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9924168189E700612606 /* NSObject-MissingKV.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB990B168189E700612606 /* NSObject-MissingKV.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9925168189E700612606 /* NSObject-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB990D168189E700612606 /* NSObject-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9926168189E700612606 /* NSString-NumberStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB990F168189E700612606 /* NSString-NumberStuff.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9927168189E700612606 /* NSString-SQLiteColumnName.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9911168189E700612606 /* NSString-SQLiteColumnName.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9928168189E700612606 /* NSString-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9913168189E700612606 /* NSString-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB9929168189E700612606 /* NSString-UppercaseFirst.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9915168189E700612606 /* NSString-UppercaseFirst.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB992A168189E700612606 /* SQLiteInstanceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9917168189E700612606 /* SQLiteInstanceManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB992B168189E700612606 /* SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB9919168189E700612606 /* SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB992C168189E700612606 /* UIColor-SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB991B168189E700612606 /* UIColor-SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB992D168189E700612606 /* UIImage-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB991D168189E700612606 /* UIImage-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		EBBB992F16818A4D00612606 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBB992E16818A4C00612606 /* libsqlite3.0.dylib */; };
+		EBBB993216818AA700612606 /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB993116818AA700612606 /* DownloadItem.m */; };
+		EBBBF3DE1682B34C002F198E /* GMGridView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBBF3D41682B34C002F198E /* GMGridView.m */; };
+		EBBBF3DF1682B34C002F198E /* GMGridViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBBF3D71682B34C002F198E /* GMGridViewCell.m */; };
+		EBBBF3E01682B34C002F198E /* GMGridViewLayoutStrategies.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBBF3D91682B34C002F198E /* GMGridViewLayoutStrategies.m */; };
+		EBBBF3E11682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBBF3DB1682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.m */; };
+		EBBBF3E21682B34C002F198E /* UIView+GMGridViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBBF3DD1682B34C002F198E /* UIView+GMGridViewAdditions.m */; };
+		EBBBF3E51682B354002F198E /* close_x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBBF3E41682B354002F198E /* close_x.png */; };
 		EBBCDBB71675901C006E2F64 /* drama_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB31675901C006E2F64 /* drama_btn.png */; };
 		EBBCDBB81675901C006E2F64 /* list_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB41675901C006E2F64 /* list_btn.png */; };
 		EBBCDBB91675901C006E2F64 /* movie_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBB51675901C006E2F64 /* movie_btn.png */; };
@@ -723,6 +749,58 @@
 		EBBB5CF9167EEB3000F83CBA /* nocollection@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nocollection@2x.png"; sourceTree = "<group>"; };
 		EBBB5CFA167EEB3000F83CBA /* noding@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "noding@2x.png"; sourceTree = "<group>"; };
 		EBBB5CFB167EEB3000F83CBA /* nolist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nolist@2x.png"; sourceTree = "<group>"; };
+		EBBB98CC16817BF200612606 /* McDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McDownload.h; sourceTree = "<group>"; };
+		EBBB98CD16817BF200612606 /* McDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McDownload.m; sourceTree = "<group>"; };
+		EBBB98D116817F4D00612606 /* DownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
+		EBBB98D216817F4D00612606 /* DownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadViewController.m; sourceTree = "<group>"; };
+		EBBB98FE168189E700612606 /* NSData-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB98FF168189E700612606 /* NSData-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB9900168189E700612606 /* NSDate-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB9901168189E700612606 /* NSDate-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB9902168189E700612606 /* NSMutableArray-MultipleSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray-MultipleSort.h"; sourceTree = "<group>"; };
+		EBBB9903168189E700612606 /* NSMutableArray-MultipleSort.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray-MultipleSort.m"; sourceTree = "<group>"; };
+		EBBB9904168189E700612606 /* NSMutableData-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableData-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB9905168189E700612606 /* NSMutableData-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableData-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB9906168189E700612606 /* NSNumber-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB9907168189E700612606 /* NSNumber-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB9908168189E700612606 /* NSObject-ClassName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject-ClassName.h"; sourceTree = "<group>"; };
+		EBBB9909168189E700612606 /* NSObject-ClassName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject-ClassName.m"; sourceTree = "<group>"; };
+		EBBB990A168189E700612606 /* NSObject-MissingKV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject-MissingKV.h"; sourceTree = "<group>"; };
+		EBBB990B168189E700612606 /* NSObject-MissingKV.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject-MissingKV.m"; sourceTree = "<group>"; };
+		EBBB990C168189E700612606 /* NSObject-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB990D168189E700612606 /* NSObject-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB990E168189E700612606 /* NSString-NumberStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-NumberStuff.h"; sourceTree = "<group>"; };
+		EBBB990F168189E700612606 /* NSString-NumberStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-NumberStuff.m"; sourceTree = "<group>"; };
+		EBBB9910168189E700612606 /* NSString-SQLiteColumnName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-SQLiteColumnName.h"; sourceTree = "<group>"; };
+		EBBB9911168189E700612606 /* NSString-SQLiteColumnName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-SQLiteColumnName.m"; sourceTree = "<group>"; };
+		EBBB9912168189E700612606 /* NSString-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB9913168189E700612606 /* NSString-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB9914168189E700612606 /* NSString-UppercaseFirst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString-UppercaseFirst.h"; sourceTree = "<group>"; };
+		EBBB9915168189E700612606 /* NSString-UppercaseFirst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString-UppercaseFirst.m"; sourceTree = "<group>"; };
+		EBBB9916168189E700612606 /* SQLiteInstanceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteInstanceManager.h; sourceTree = "<group>"; };
+		EBBB9917168189E700612606 /* SQLiteInstanceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteInstanceManager.m; sourceTree = "<group>"; };
+		EBBB9918168189E700612606 /* SQLitePersistentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLitePersistentObject.h; sourceTree = "<group>"; };
+		EBBB9919168189E700612606 /* SQLitePersistentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLitePersistentObject.m; sourceTree = "<group>"; };
+		EBBB991A168189E700612606 /* UIColor-SQLitePersistentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor-SQLitePersistentObject.h"; sourceTree = "<group>"; };
+		EBBB991B168189E700612606 /* UIColor-SQLitePersistentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor-SQLitePersistentObject.m"; sourceTree = "<group>"; };
+		EBBB991C168189E700612606 /* UIImage-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage-SQLitePersistence.h"; sourceTree = "<group>"; };
+		EBBB991D168189E700612606 /* UIImage-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage-SQLitePersistence.m"; sourceTree = "<group>"; };
+		EBBB992E16818A4C00612606 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		EBBB993016818AA700612606 /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadItem.h; path = common/component/DownloadItem.h; sourceTree = "<group>"; };
+		EBBB993116818AA700612606 /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadItem.m; path = common/component/DownloadItem.m; sourceTree = "<group>"; };
+		EBBBF3D21682B34C002F198E /* GMGridView-Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GMGridView-Constants.h"; sourceTree = "<group>"; };
+		EBBBF3D31682B34C002F198E /* GMGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMGridView.h; sourceTree = "<group>"; };
+		EBBBF3D41682B34C002F198E /* GMGridView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMGridView.m; sourceTree = "<group>"; };
+		EBBBF3D51682B34C002F198E /* GMGridViewCell+Extended.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GMGridViewCell+Extended.h"; sourceTree = "<group>"; };
+		EBBBF3D61682B34C002F198E /* GMGridViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMGridViewCell.h; sourceTree = "<group>"; };
+		EBBBF3D71682B34C002F198E /* GMGridViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMGridViewCell.m; sourceTree = "<group>"; };
+		EBBBF3D81682B34C002F198E /* GMGridViewLayoutStrategies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GMGridViewLayoutStrategies.h; sourceTree = "<group>"; };
+		EBBBF3D91682B34C002F198E /* GMGridViewLayoutStrategies.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GMGridViewLayoutStrategies.m; sourceTree = "<group>"; };
+		EBBBF3DA1682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIGestureRecognizer+GMGridViewAdditions.h"; sourceTree = "<group>"; };
+		EBBBF3DB1682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIGestureRecognizer+GMGridViewAdditions.m"; sourceTree = "<group>"; };
+		EBBBF3DC1682B34C002F198E /* UIView+GMGridViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+GMGridViewAdditions.h"; sourceTree = "<group>"; };
+		EBBBF3DD1682B34C002F198E /* UIView+GMGridViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GMGridViewAdditions.m"; sourceTree = "<group>"; };
+		EBBBF3E41682B354002F198E /* close_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close_x.png; sourceTree = "<group>"; };
 		EBBCDBB31675901C006E2F64 /* drama_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_btn.png; sourceTree = "<group>"; };
 		EBBCDBB41675901C006E2F64 /* list_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_btn.png; sourceTree = "<group>"; };
 		EBBCDBB51675901C006E2F64 /* movie_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_btn.png; sourceTree = "<group>"; };
@@ -798,6 +876,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBBB992F16818A4D00612606 /* libsqlite3.0.dylib in Frameworks */,
 				EBB59CB716670A2300F646C7 /* libz.dylib in Frameworks */,
 				EBF3A98F1663967F00EBF56D /* MediaPlayer.framework in Frameworks */,
 				EB6DEAA9165A347F00AF8003 /* QuartzCore.framework in Frameworks */,
@@ -816,6 +895,9 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				EBBBF3D11682B34C002F198E /* GMGridView */,
+				EBBB98FD168189E700612606 /* SQLLite */,
+				EBBB98CA16817BF200612606 /* McDownload */,
 				EBB59CB816670A3E00F646C7 /* umeng */,
 				EB82016C1665D41F0015F447 /* SSCheckBoxView */,
 				EB8201271665A9E90015F447 /* OpenUDID */,
@@ -841,6 +923,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBBBF3E41682B354002F198E /* close_x.png */,
 				EBBB5CF9167EEB3000F83CBA /* nocollection@2x.png */,
 				EBBB5CFA167EEB3000F83CBA /* noding@2x.png */,
 				EBBB5CFB167EEB3000F83CBA /* nolist@2x.png */,
@@ -1083,7 +1166,7 @@
 				EBB9E0DA167090F4006ECEE8 /* Icon-72.png */,
 				EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */,
 				EB9382A21668A1CC0046A3B1 /* Default-Landscape~ipad.png */,
-				EB6DEA72165A2F1A00AF8003 /* yueshipin_ipad */,
+				EB6DEA72165A2F1A00AF8003 /* yueshipin */,
 				EB6DEA6B165A2F1A00AF8003 /* Frameworks */,
 				EB6DEA69165A2F1A00AF8003 /* Products */,
 				459B84FA869C445E8C832D00 /* Pods.xcconfig */,
@@ -1106,13 +1189,14 @@
 				EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */,
 				EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */,
 				EB6DEA70165A2F1A00AF8003 /* CoreGraphics.framework */,
+				EBBB992E16818A4C00612606 /* libsqlite3.0.dylib */,
 				5EC20A508D204BAE89F5A027 /* libPods.a */,
 				EBB59CB616670A2300F646C7 /* libz.dylib */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		EB6DEA72165A2F1A00AF8003 /* yueshipin_ipad */ = {
+		EB6DEA72165A2F1A00AF8003 /* yueshipin */ = {
 			isa = PBXGroup;
 			children = (
 				EB6DEA93165A322F00AF8003 /* src */,
@@ -1120,6 +1204,7 @@
 				EB14D451165B618800CB3260 /* Resource */,
 				EB6DEA73165A2F1A00AF8003 /* Supporting Files */,
 			);
+			name = yueshipin;
 			path = yueshipin_ipad;
 			sourceTree = "<group>";
 		};
@@ -1145,6 +1230,7 @@
 				EBBA0CEC165B253900D3F11B /* popular */,
 				EBBA0CEE165B257000D3F11B /* personal */,
 				EBBA0CEF165B258500D3F11B /* search */,
+				EBBB98D016817F0B00612606 /* download */,
 				EBBA0CF0165B258D00D3F11B /* settings */,
 				EB6DEAAA165A34F200AF8003 /* common */,
 				EB6DEA9F165A322F00AF8003 /* UIViewWithShadow.h */,
@@ -1441,6 +1527,84 @@
 				EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */,
 			);
 			name = framework;
+			sourceTree = "<group>";
+		};
+		EBBB98CA16817BF200612606 /* McDownload */ = {
+			isa = PBXGroup;
+			children = (
+				EBBB98CC16817BF200612606 /* McDownload.h */,
+				EBBB98CD16817BF200612606 /* McDownload.m */,
+			);
+			path = McDownload;
+			sourceTree = "<group>";
+		};
+		EBBB98D016817F0B00612606 /* download */ = {
+			isa = PBXGroup;
+			children = (
+				EBBB98D116817F4D00612606 /* DownloadViewController.h */,
+				EBBB98D216817F4D00612606 /* DownloadViewController.m */,
+				EBBB993016818AA700612606 /* DownloadItem.h */,
+				EBBB993116818AA700612606 /* DownloadItem.m */,
+			);
+			name = download;
+			sourceTree = "<group>";
+		};
+		EBBB98FD168189E700612606 /* SQLLite */ = {
+			isa = PBXGroup;
+			children = (
+				EBBB98FE168189E700612606 /* NSData-SQLitePersistence.h */,
+				EBBB98FF168189E700612606 /* NSData-SQLitePersistence.m */,
+				EBBB9900168189E700612606 /* NSDate-SQLitePersistence.h */,
+				EBBB9901168189E700612606 /* NSDate-SQLitePersistence.m */,
+				EBBB9902168189E700612606 /* NSMutableArray-MultipleSort.h */,
+				EBBB9903168189E700612606 /* NSMutableArray-MultipleSort.m */,
+				EBBB9904168189E700612606 /* NSMutableData-SQLitePersistence.h */,
+				EBBB9905168189E700612606 /* NSMutableData-SQLitePersistence.m */,
+				EBBB9906168189E700612606 /* NSNumber-SQLitePersistence.h */,
+				EBBB9907168189E700612606 /* NSNumber-SQLitePersistence.m */,
+				EBBB9908168189E700612606 /* NSObject-ClassName.h */,
+				EBBB9909168189E700612606 /* NSObject-ClassName.m */,
+				EBBB990A168189E700612606 /* NSObject-MissingKV.h */,
+				EBBB990B168189E700612606 /* NSObject-MissingKV.m */,
+				EBBB990C168189E700612606 /* NSObject-SQLitePersistence.h */,
+				EBBB990D168189E700612606 /* NSObject-SQLitePersistence.m */,
+				EBBB990E168189E700612606 /* NSString-NumberStuff.h */,
+				EBBB990F168189E700612606 /* NSString-NumberStuff.m */,
+				EBBB9910168189E700612606 /* NSString-SQLiteColumnName.h */,
+				EBBB9911168189E700612606 /* NSString-SQLiteColumnName.m */,
+				EBBB9912168189E700612606 /* NSString-SQLitePersistence.h */,
+				EBBB9913168189E700612606 /* NSString-SQLitePersistence.m */,
+				EBBB9914168189E700612606 /* NSString-UppercaseFirst.h */,
+				EBBB9915168189E700612606 /* NSString-UppercaseFirst.m */,
+				EBBB9916168189E700612606 /* SQLiteInstanceManager.h */,
+				EBBB9917168189E700612606 /* SQLiteInstanceManager.m */,
+				EBBB9918168189E700612606 /* SQLitePersistentObject.h */,
+				EBBB9919168189E700612606 /* SQLitePersistentObject.m */,
+				EBBB991A168189E700612606 /* UIColor-SQLitePersistentObject.h */,
+				EBBB991B168189E700612606 /* UIColor-SQLitePersistentObject.m */,
+				EBBB991C168189E700612606 /* UIImage-SQLitePersistence.h */,
+				EBBB991D168189E700612606 /* UIImage-SQLitePersistence.m */,
+			);
+			path = SQLLite;
+			sourceTree = "<group>";
+		};
+		EBBBF3D11682B34C002F198E /* GMGridView */ = {
+			isa = PBXGroup;
+			children = (
+				EBBBF3D21682B34C002F198E /* GMGridView-Constants.h */,
+				EBBBF3D31682B34C002F198E /* GMGridView.h */,
+				EBBBF3D41682B34C002F198E /* GMGridView.m */,
+				EBBBF3D51682B34C002F198E /* GMGridViewCell+Extended.h */,
+				EBBBF3D61682B34C002F198E /* GMGridViewCell.h */,
+				EBBBF3D71682B34C002F198E /* GMGridViewCell.m */,
+				EBBBF3D81682B34C002F198E /* GMGridViewLayoutStrategies.h */,
+				EBBBF3D91682B34C002F198E /* GMGridViewLayoutStrategies.m */,
+				EBBBF3DA1682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.h */,
+				EBBBF3DB1682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.m */,
+				EBBBF3DC1682B34C002F198E /* UIView+GMGridViewAdditions.h */,
+				EBBBF3DD1682B34C002F198E /* UIView+GMGridViewAdditions.m */,
+			);
+			path = GMGridView;
 			sourceTree = "<group>";
 		};
 		EBF3A9931663973200EBF56D /* FFPopController */ = {
@@ -1777,6 +1941,7 @@
 				EBBB5CFC167EEB3000F83CBA /* nocollection@2x.png in Resources */,
 				EBBB5CFD167EEB3000F83CBA /* noding@2x.png in Resources */,
 				EBBB5CFE167EEB3000F83CBA /* nolist@2x.png in Resources */,
+				EBBBF3E51682B354002F198E /* close_x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1877,6 +2042,30 @@
 				EB513F8C1676D19B0072E013 /* SuggestionViewController.m in Sources */,
 				EBBA67FF167AD7C500A2D94D /* SlideBaseViewController.m in Sources */,
 				EBBB5CED167EC97000F83CBA /* RadioButton.m in Sources */,
+				EBBB98CE16817BF200612606 /* McDownload.m in Sources */,
+				EBBB98D316817F4D00612606 /* DownloadViewController.m in Sources */,
+				EBBB991E168189E700612606 /* NSData-SQLitePersistence.m in Sources */,
+				EBBB991F168189E700612606 /* NSDate-SQLitePersistence.m in Sources */,
+				EBBB9920168189E700612606 /* NSMutableArray-MultipleSort.m in Sources */,
+				EBBB9921168189E700612606 /* NSMutableData-SQLitePersistence.m in Sources */,
+				EBBB9922168189E700612606 /* NSNumber-SQLitePersistence.m in Sources */,
+				EBBB9923168189E700612606 /* NSObject-ClassName.m in Sources */,
+				EBBB9924168189E700612606 /* NSObject-MissingKV.m in Sources */,
+				EBBB9925168189E700612606 /* NSObject-SQLitePersistence.m in Sources */,
+				EBBB9926168189E700612606 /* NSString-NumberStuff.m in Sources */,
+				EBBB9927168189E700612606 /* NSString-SQLiteColumnName.m in Sources */,
+				EBBB9928168189E700612606 /* NSString-SQLitePersistence.m in Sources */,
+				EBBB9929168189E700612606 /* NSString-UppercaseFirst.m in Sources */,
+				EBBB992A168189E700612606 /* SQLiteInstanceManager.m in Sources */,
+				EBBB992B168189E700612606 /* SQLitePersistentObject.m in Sources */,
+				EBBB992C168189E700612606 /* UIColor-SQLitePersistentObject.m in Sources */,
+				EBBB992D168189E700612606 /* UIImage-SQLitePersistence.m in Sources */,
+				EBBB993216818AA700612606 /* DownloadItem.m in Sources */,
+				EBBBF3DE1682B34C002F198E /* GMGridView.m in Sources */,
+				EBBBF3DF1682B34C002F198E /* GMGridViewCell.m in Sources */,
+				EBBBF3E01682B34C002F198E /* GMGridViewLayoutStrategies.m in Sources */,
+				EBBBF3E11682B34C002F198E /* UIGestureRecognizer+GMGridViewAdditions.m in Sources */,
+				EBBBF3E21682B34C002F198E /* UIView+GMGridViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
