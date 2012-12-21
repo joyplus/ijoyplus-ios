@@ -27,9 +27,7 @@
     BOOL introExpand;
     BOOL btnAdded;
     UITapGestureRecognizer *tapGesture;
-    
-    NSMutableArray *episodeUrlArray;
-    
+
     UIScrollView *episodeView;
     int episodePageNumber;
     
@@ -196,9 +194,9 @@
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
     [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.downloadBtn.frame = CGRectMake(394, 405, 104, 34);
-    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
-    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    self.downloadBtn.frame = CGRectMake(394, 405, 76, 34);
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
@@ -303,7 +301,6 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"tv"];
         episodeArray = [video objectForKey:@"episodes"];
-        [self initEpisodeUrlArray];
         topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -319,11 +316,6 @@
     } else {
         [UIUtility showSystemError:self.view];
     }
-}
-
-- (void)initEpisodeUrlArray
-{
-    
 }
 
 - (void)showValues
@@ -415,7 +407,6 @@
             btn.tag = i+1;
             int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
             [btn setFrame:CGRectMake(pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * 87, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 82, 34)];
-            NSLog(@"%d %f %f %f", i, btn.frame.origin.x, btn.frame.origin.y, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW));
             if (i < EPISODE_NUMBER_IN_ROW) {
                 [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
             } else {
@@ -603,9 +594,12 @@
     }
 }
 
-- (void)willPlayVideo:(NSInteger)num
+- (NSString *)getVideoAddress:(NSInteger)num
 {
-    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:num]];
+    NSString *videoUrl = nil;
+    if(num-1 < 0 || num-1 >=episodeArray.count){
+        return nil;
+    }
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
     for(NSDictionary *episode in episodeArray){
         if([[episode objectForKey:@"name"]integerValue] == num){
@@ -614,7 +608,6 @@
         }
     }
     if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
         for(NSDictionary *tempVideo in videoUrlArray){
             if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
                 videoUrl = [self parseVideoUrl:tempVideo];
@@ -626,6 +619,14 @@
                 videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
             }
         }
+    }
+    return videoUrl;
+}
+
+- (void)willPlayVideo:(NSInteger)num
+{
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:num]];
+        NSString *videoUrl = [self getVideoAddress:num];
         if(videoUrl == nil){
             [self gotoWebsite:num];
         } else {
@@ -636,9 +637,6 @@
             viewController.subname = [NSString stringWithFormat:@"%i", num];
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         }
-    }else {
-        [self gotoWebsite:num];
-    }
 }
 
 - (void)gotoWebsite:(NSInteger)num
@@ -710,18 +708,29 @@
 - (void)downloadBtnClicked
 {
     [AppDelegate instance].rootViewController.videoDetailDelegate = self;
-    [[AppDelegate instance].rootViewController showDramaDownloadView:totalEpisodeNumber];
+    [[AppDelegate instance].rootViewController showDramaDownloadView:self.prodId title:[video objectForKey:@"name"] totalNumber:totalEpisodeNumber];
 }
 
 - (void)downloadDrama:(int)num
 {
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
-    if (item != nil) {
-        return;
-    }
+    if (item == nil) {
+        [self addDownloadItem:num];
+        [self addSubdownloadItem:num];
+    } else {
+        NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@' and subitem_id = '%@'", self.prodId, [NSString stringWithFormat:@"%i", num]];
+        SubdownloadItem *subitem = (SubdownloadItem *)[SubdownloadItem findFirstByCriteria:subquery];
+        if(subitem == nil){
+            [self addSubdownloadItem:num];
+        }
     
-    item = [[DownloadItem alloc]init];
+    }
+}
+
+- (void)addDownloadItem:(int)num
+{
+    DownloadItem *item = [[DownloadItem alloc]init];
     item.itemId = self.prodId;
     item.imageUrl = [video objectForKey:@"ipad_poster"];
     if([StringUtility stringIsEmpty:item.imageUrl]){
@@ -729,13 +738,29 @@
     }
     item.name = [video objectForKey:@"name"];
     item.percentage = 0;
-    item.type = 1;
-    item.downloadingStatus = @"start";
-    item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-//    NSArray *urlArray = [[NSArray alloc]initWithObjects:videoAddress, nil];
-//    item.urlArray = urlArray;
-//    [item save];
-//    [[AppDelegate instance] addToDownloaderArray:item];
+    item.type = 2;
+    item.downloadingStatus = @"stop";
+    item.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
+    [item save];
+}
+
+- (void)addSubdownloadItem:(int)num
+{
+    SubdownloadItem *subitem = [[SubdownloadItem alloc]init];
+    subitem.itemId = self.prodId;
+    subitem.imageUrl = [video objectForKey:@"ipad_poster"];
+    if([StringUtility stringIsEmpty:subitem.imageUrl]){
+        subitem.imageUrl = [video objectForKey:@"poster"];
+    }
+    subitem.name = [NSString stringWithFormat:@"第%i集", num];
+    subitem.percentage = 0;
+    subitem.type = 2;
+    subitem.subitemId = [NSString stringWithFormat:@"%i", num];
+    subitem.downloadingStatus = @"start";
+    subitem.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
+    subitem.url = [self getVideoAddress:num];
+    [subitem save];
+    [[AppDelegate instance] addToDownloaderArray:subitem];
 }
 
 

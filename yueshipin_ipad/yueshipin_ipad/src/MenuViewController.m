@@ -198,7 +198,8 @@
         imageView.image = [UIImage imageNamed:@"searching_icon"];
         label.text = @"搜索";
     } else if(indexPath.row == 3){
-        imageView.image = [UIImage imageNamed:@"searching_icon"];
+        imageView.frame = CGRectMake(imageView.frame.origin.x + 1, imageView.frame.origin.y + 1, 28, 28);
+        imageView.image = [UIImage imageNamed:@"download_icon"];
         label.text = @"缓存视频";
     } else if(indexPath.row == 4){
         UIView* bgView = [[UIView alloc] init];

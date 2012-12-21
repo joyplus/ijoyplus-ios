@@ -26,6 +26,7 @@
     unsigned long long  offset;
 }
 @property (nonatomic, strong) NSString *idNum;
+@property (nonatomic, strong) NSString *subidNum;
 @property (nonatomic, assign) BOOL isStop;
 @property (nonatomic, assign) id<McDownloadDelegate> delegate;
 /*

@@ -54,6 +54,9 @@
     UIButton *sendBtn;
     UILabel *textCount;
     int maxTextCount;
+    int dramaPageNum;
+    int showPageNumber;
+    int showEpisodeCount;
 }
 
 @property (nonatomic, strong) MenuViewController* menuViewController;
@@ -68,6 +71,6 @@
 - (void)showSharePopup;
 - (void)showCommentPopup;
 - (void)pesentMyModalView:(UIViewController *)viewController;
-- (void)showDramaDownloadView:(int)totalNumber;
-
+- (void)showDramaDownloadView:(NSString *)downloadingProdid title:(NSString *)title totalNumber:(int)totalNumber;
+- (void)showShowDownloadView:(NSString *)downloadingProdid title:(NSString *)title episodeArray:(NSArray *)episodeArray;
 @end

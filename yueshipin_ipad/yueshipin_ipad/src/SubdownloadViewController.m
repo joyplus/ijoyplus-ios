@@ -6,20 +6,16 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "DownloadViewController.h"
-#import "CommonHeader.h"
-#import "DownloadItem.h"
-#import "GMGridView.h"
 #import "SubdownloadViewController.h"
+#import "CommonHeader.h"
+#import "SubdownloadItem.h"
+#import "GMGridView.h"
 
-@interface DownloadViewController ()<McDownloadDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
-    UIButton *menuBtn;
-    UIImageView *topImage;
-    UIImageView *topIcon;
-    UIImageView *bgImage;
-    
+@interface SubdownloadViewController ()<McDownloadDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
+    UIButton *closeBtn;
+    UILabel *titleLabel;
     int leftWidth;
-    NSArray *allItem;
+    NSArray *subitems;
     
     UIButton *editBtn;
     UIButton *doneBtn;;
@@ -28,8 +24,8 @@
 }
 @end
 
-@implementation DownloadViewController
-
+@implementation SubdownloadViewController
+@synthesize itemId;
 
 - (void)didReceiveMemoryWarning
 {
@@ -39,38 +35,31 @@
 
 - (void)viewDidUnload
 {
-    menuBtn = nil;
-    topImage = nil;
-    bgImage = nil;
-    allItem = nil;
+    subitems = nil;
     _gmGridView = nil;
+    closeBtn = nil;
     [super viewDidUnload];
 }
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
-        [self.view setBackgroundColor:[UIColor clearColor]];
+        [self.view setBackgroundColor:CMConstants.backgroundColor];
         
-        bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [self.view addSubview:bgImage];
+        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 377, 30)];
+        titleLabel.font = [UIFont boldSystemFontOfSize:23];
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.textColor = CMConstants.titleBlueColor;
+        titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
+        titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
+        [self.view addSubview:titleLabel];
         
-        leftWidth = 80;
-        menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:menuBtn];
-        
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth + 50, 40, 143, 35)];
-        topImage.image = [UIImage imageNamed:@"download_title"];
-        [self.view addSubview:topImage];
-        
-        topIcon = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 32, 32)];
-        topIcon.image = [UIImage imageNamed:@"download_icon"];
-        [self.view addSubview:topIcon];
+        closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        closeBtn.frame = CGRectMake(465, 20, 40, 42);
+        [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+        [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+        [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:closeBtn];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         editBtn.frame = CGRectMake(410, 80, 74, 26);
@@ -87,7 +76,6 @@
         [doneBtn setHidden:YES];
         [self.view addSubview:doneBtn];
         
-        [self initDownloadingThreads];
         GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 610)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
@@ -111,9 +99,11 @@
 {
     NSArray *downLoaderArray = [[AppDelegate instance] getDownloaderQueue];
     for (McDownload *downloader in downLoaderArray) {
-        downloader.delegate = self;
-        if(!downloader.isStop){
-            [downloader start];
+        if([downloader.idNum isEqualToString: self.itemId]){
+            downloader.delegate = self;
+            if(!downloader.isStop){
+                [downloader start];
+            }
         }
     }
 }
@@ -121,11 +111,29 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self initDownloadingThreads];
+    titleLabel.text = self.titleContent;
     _gmGridView.editing = NO;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
-    allItem = [DownloadItem allObjects];
+    [self reloadSubitems];
     [_gmGridView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    NSArray *downLoaderArray = [[AppDelegate instance] getDownloaderQueue];
+    for (McDownload *downloader in downLoaderArray) {
+        if([downloader.idNum isEqualToString: self.itemId]){
+            downloader.delegate = nil;
+        }
+    }
+}
+
+- (void)reloadSubitems
+{
+    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.itemId];
+    subitems = [SubdownloadItem findByCriteria:subquery];
 }
 
 //下载失败
@@ -137,7 +145,7 @@
 - (void)downloadFinished:(McDownload *)aDownload
 {
     NSLog(@"下载完成");
-    for (int i = 0; i < allItem.count; i++) {
+    for (int i = 0; i < subitems.count; i++) {
         GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
         UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.idNum.intValue + 20000000];
         if(progressView != nil){
@@ -146,7 +154,7 @@
             [progressLabel removeFromSuperview];
             progressView = nil;
             progressLabel = nil;
-            DownloadItem *item = [allItem objectAtIndex:i];
+            SubdownloadItem *item = [subitems objectAtIndex:i];
             item.percentage = 100;
             item.downloadingStatus = @"done";
             [item save];
@@ -161,13 +169,13 @@
 //更新下载的进度
 - (void)downloadProgressChange:(McDownload *)aDownload progress:(double)newProgress
 {
-    NSLog(@"%@", @"下载中...");
-    for (int i = 0; i < allItem.count; i++) {
+    NSLog(@"%@", @"Sub-下载中...");
+    for (int i = 0; i < subitems.count; i++) {
         GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
-        UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.idNum.intValue + 20000000];
+        UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.subidNum.intValue + 20000000];
         if(progressView != nil){
             progressView.progress = newProgress;
-            UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.idNum.intValue + 10000000];
+            UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.subidNum.intValue + 10000000];
             progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", (int)(newProgress*100)];
             NSLog(@"%@", progressLabel.text);
         }
@@ -176,24 +184,25 @@
 
 - (void)stopDownloading:(NSInteger)index
 {
-    if(index >= allItem.count){
+    if(index >= subitems.count){
         return;
     }
     GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:index];
-    DownloadItem *item = [allItem objectAtIndex:index];
+    SubdownloadItem *item = [subitems objectAtIndex:index];
     NSArray *downloaderArray = [[AppDelegate instance] getDownloaderQueue];
     for (McDownload *tempdownloder in downloaderArray) {
-        if([tempdownloder.idNum isEqualToString:item.itemId]){
-            UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.itemId.intValue + 10000000];
+        if([tempdownloder.idNum isEqualToString:item.itemId] && [tempdownloder.subidNum isEqualToString:item.subitemId]){
+            UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.subitemId.intValue + 10000000];
             if(tempdownloder.isStop){
                 progressLabel.text = [progressLabel.text stringByReplacingOccurrencesOfString:@"暂停" withString:@"下载中"];
+                tempdownloder.delegate = self;
                 [tempdownloder start];
                 item.downloadingStatus = @"start";
                 [item save];
             } else {
                 progressLabel.text = [progressLabel.text stringByReplacingOccurrencesOfString:@"下载中" withString:@"暂停"];
                 [tempdownloder stop];
-                UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.itemId.intValue + 20000000];
+                UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.subitemId.intValue + 20000000];
                 item.percentage = (int)(progressView.progress*100);
                 item.downloadingStatus = @"stop";
                 [item save];
@@ -205,7 +214,7 @@
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return fmax([allItem count], 9);
+    return fmax([subitems count], 9);
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
@@ -215,7 +224,7 @@
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
-    if(index >= allItem.count){
+    if(index >= subitems.count){
         return nil;
     }
     CGSize size = [self sizeForItemsInGMGridView:gridView];
@@ -229,46 +238,39 @@
         view.backgroundColor = [UIColor clearColor];
         cell.contentView = view;
     }
-    DownloadItem *item = [allItem objectAtIndex:index];
+    SubdownloadItem *item = [subitems objectAtIndex:index];
     
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
-    imageView.frame = CGRectMake(0, 0, 105, 146);
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 105, 146)];
+    imageView.image = [UIImage imageNamed:@"movie_frame"];
     [cell.contentView addSubview:imageView];
     
     UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 98, 138)];
     [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [cell.contentView addSubview:contentImage];
     
-    if (item.type == 1) {
-        imageView.image = [UIImage imageNamed:@"movie_frame"];
-        UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 110, 98, 25)];
-        progressLabel.tag = item.itemId.intValue + 10000000;
-        progressLabel.backgroundColor = [UIColor clearColor];
-        progressLabel.font = [UIFont boldSystemFontOfSize:10];
-        progressLabel.textColor = [UIColor whiteColor];
-        if([item.downloadingStatus isEqualToString:@"start"]){
-            progressLabel.text = @"下载中：  %";
-        } else if([item.downloadingStatus isEqualToString:@"stop"]){
-            progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
-        } else{
-            progressLabel.text = @"";
-        }
-        progressLabel.textAlignment = NSTextAlignmentCenter;
-        progressLabel.shadowColor = [UIColor blackColor];
-        progressLabel.shadowOffset = CGSizeMake(1, 1);
-        [cell.contentView addSubview:progressLabel];
-    
-        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 132, 98, 2)];
-        progressView.progress = item.percentage/100.0;
-        progressView.tag = item.itemId.intValue + 20000000;
-        [cell.contentView addSubview:progressView];
-    } else {
-        imageView.frame = CGRectMake(0, 0, 110, 150);
-        contentImage.frame = CGRectMake(10, 5, 88, 130);
-        imageView.image = [UIImage imageNamed:@"moviecard_list"];
+    UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 110, 98, 25)];
+    progressLabel.tag = item.itemId.intValue + 10000000;
+    progressLabel.backgroundColor = [UIColor clearColor];
+    progressLabel.font = [UIFont boldSystemFontOfSize:10];
+    progressLabel.textColor = [UIColor whiteColor];
+    if([item.downloadingStatus isEqualToString:@"start"]){
+        progressLabel.text = @"下载中：  %";
+    } else if([item.downloadingStatus isEqualToString:@"stop"]){
+        progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
+    } else{
+        progressLabel.text = @"";
     }
+    progressLabel.textAlignment = NSTextAlignmentCenter;
+    progressLabel.shadowColor = [UIColor blackColor];
+    progressLabel.shadowOffset = CGSizeMake(1, 1);
+    [cell.contentView addSubview:progressLabel];
+    
+    UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 132, 98, 2)];
+    progressView.progress = item.percentage/100.0;
+    progressView.tag = item.itemId.intValue + 20000000;
+    [cell.contentView addSubview:progressView];
     
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(4, 150, 105, 30)];
     nameLabel.font = [UIFont systemFontOfSize:18];;
@@ -282,7 +284,7 @@
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
-    DownloadItem *item = [allItem objectAtIndex:index];
+    SubdownloadItem *item = [subitems objectAtIndex:index];
     
     NSString *extension = @"mp4";
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -293,28 +295,19 @@
     NSEnumerator *e = [contents objectEnumerator];
     NSString *filename;
     while ((filename = [e nextObject])) {
-        if ([filename hasPrefix:[NSString stringWithFormat:@"%@.%@", item.itemId, extension]]) {
+        if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
             [[AppDelegate instance] deleteDownloaderInQueue:item];
             [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
         }
     }
     [item deleteObject];
     item = nil;
-    allItem = [DownloadItem allObjects];    
+    [self reloadSubitems];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
-    [self closeMenu];
-    DownloadItem *item = [allItem objectAtIndex:position];
-    if(item.type == 1){
-        [self stopDownloading:position];
-    } else {
-        SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
-        viewController.titleContent = item.name;
-        viewController.itemId = item.itemId;
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-    }
+    [self stopDownloading:position];
 }
 
 - (void)editBtnClicked
@@ -331,8 +324,4 @@
     [doneBtn setHidden:YES];
 }
 
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
-}
 @end

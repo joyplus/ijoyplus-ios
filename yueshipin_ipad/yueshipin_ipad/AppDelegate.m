@@ -41,7 +41,10 @@
 - (void)addToDownloaderArray:(DownloadItem *)item{
     McDownload *newdownloader = [[McDownload alloc] init];
     newdownloader.idNum = item.itemId;
-    NSURL *url = [NSURL URLWithString:[item.urlArray objectAtIndex:0]];
+    if(item.type != 1){
+        newdownloader.subidNum = ((SubdownloadItem *)item).subitemId;
+    }
+    NSURL *url = [NSURL URLWithString:item.url];
     newdownloader.url = url;
     newdownloader.fileName = item.fileName;
     if([item.downloadingStatus isEqualToString:@"start"]){
@@ -51,6 +54,12 @@
     }
     [self.downloaderArray addObject:newdownloader];
     [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+}
+
+
+- (NSMutableArray *)getDownloaderQueue
+{
+    return self.downloaderArray;
 }
 
 - (void)deleteDownloaderInQueue:(DownloadItem *)item
@@ -69,23 +78,36 @@
     NSArray *allItem = [DownloadItem allObjects];
     self.downloaderArray = [[NSMutableArray alloc]initWithCapacity:allItem.count];
     for (DownloadItem *item in allItem) {
-        McDownload *newdownloader = [[McDownload alloc] init];
-        newdownloader.idNum = item.itemId;
-        NSURL *url = [NSURL URLWithString:[item.urlArray objectAtIndex:0]];
-        newdownloader.url = url;
-        newdownloader.fileName = item.fileName;
-        if([item.downloadingStatus isEqualToString:@"start"]){
-            newdownloader.isStop = NO;
+        if(item.type == 1){
+            McDownload *newdownloader = [[McDownload alloc] init];
+            newdownloader.idNum = item.itemId;
+            NSURL *url = [NSURL URLWithString:item.url];
+            newdownloader.url = url;
+            newdownloader.fileName = item.fileName;
+            if([item.downloadingStatus isEqualToString:@"start"]){
+                newdownloader.isStop = NO;
+            } else {
+                newdownloader.isStop = YES;
+            }
+            [self.downloaderArray addObject:newdownloader];
         } else {
-            newdownloader.isStop = YES;
+            NSArray *subitems = [SubdownloadItem allObjects];
+            for(SubdownloadItem *subitem in subitems){
+                McDownload *newdownloader = [[McDownload alloc] init];
+                newdownloader.idNum = subitem.itemId;
+                newdownloader.subidNum = subitem.subitemId;
+                NSURL *url = [NSURL URLWithString:subitem.url];
+                newdownloader.url = url;
+                newdownloader.fileName = subitem.fileName;
+                if([subitem.downloadingStatus isEqualToString:@"start"]){
+                    newdownloader.isStop = NO;
+                } else {
+                    newdownloader.isStop = YES;
+                }
+                [self.downloaderArray addObject:newdownloader];
+            }
         }
-        [self.downloaderArray addObject:newdownloader];
     }
-}
-
-- (NSMutableArray *)getDownloaderQueue
-{
-    return self.downloaderArray;
 }
 
 - (void)customizeAppearance
@@ -110,7 +132,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
+    //    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
     [MobClick checkUpdate];
     [self generateUserId];
     [self initSinaweibo];
@@ -119,7 +141,7 @@
     [self customizeAppearance];
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+    
     [self initAllDownloaders];
     self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = self.rootViewController;

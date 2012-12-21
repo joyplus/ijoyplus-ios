@@ -1063,7 +1063,7 @@
         tempNameLabel.tag = 3031;
         [cell.contentView addSubview:tempNameLabel];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width, 20)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width-20, 20)];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.textAlignment = NSTextAlignmentRight;

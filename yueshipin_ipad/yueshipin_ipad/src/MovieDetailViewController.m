@@ -191,9 +191,9 @@
     [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
     [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.downloadBtn.frame = CGRectMake(394, 405, 104, 34);
-    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
-    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
+    self.downloadBtn.frame = CGRectMake(394, 405, 76, 34);
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
@@ -589,8 +589,7 @@
     item.type = 1;
     item.downloadingStatus = @"start";
     item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-    NSArray *urlArray = [[NSArray alloc]initWithObjects:videoAddress, nil];
-    item.urlArray = urlArray;
+    item.url = videoAddress;
     [item save];
     [[AppDelegate instance] addToDownloaderArray:item];
 }

@@ -12,10 +12,9 @@
 @synthesize itemId;
 @synthesize name;
 @synthesize imageUrl;
-@synthesize subnameArray;
 @synthesize percentage;
 @synthesize fileName;
-@synthesize urlArray;
+@synthesize url;
 @synthesize type;
 @synthesize downloadingStatus;
 @end

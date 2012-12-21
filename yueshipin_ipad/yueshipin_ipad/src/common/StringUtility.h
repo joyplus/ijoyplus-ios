@@ -15,4 +15,5 @@
 + (BOOL ) isNotEqualToNull:(NSObject *) param;
 + (BOOL) IsValidEmail:(NSString*) checkString;
 + (NSString *)createUUID;
++ (NSString *)md5:(NSString *)source;
 @end

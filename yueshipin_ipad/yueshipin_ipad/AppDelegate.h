@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
 #import "DownloadItem.h"
+#import "SubdownloadItem.h"
 
 @class RootViewController;
 

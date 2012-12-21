@@ -12,6 +12,7 @@
 
 @implementation McDownload
 @synthesize idNum;
+@synthesize subidNum;
 @synthesize isStop;
 @synthesize delegate;
 @synthesize overwrite;
@@ -148,7 +149,7 @@
 {
     [fileHandle writeData:aData];
     offset = [fileHandle offsetInFile];
-    
+
     if ([delegate respondsToSelector:@selector(downloadProgressChange:progress:)])
     {
         double progress = offset*1.0/fileSize;
