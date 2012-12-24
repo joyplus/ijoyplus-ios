@@ -168,6 +168,14 @@
     pageSize = 20;
     videoType = 0;
     [self retrieveTopsListData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
+}
+
+- (void)handlePushNotification:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    [self showDetailScreen:userInfo];
+    
 }
 
 - (void)retrieveLunboData

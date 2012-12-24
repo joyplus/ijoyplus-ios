@@ -316,6 +316,16 @@
 		EBBA858016842CC600973BAA /* tab_show_choose@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA857F16842CC600973BAA /* tab_show_choose@2x.png */; };
 		EBBA8583168438B100973BAA /* SubdownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA8582168438B100973BAA /* SubdownloadViewController.m */; };
 		EBBA858E1684429400973BAA /* SubdownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA858D1684429400973BAA /* SubdownloadItem.m */; };
+		EBBA85AF1688481300973BAA /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85AE1688481300973BAA /* Parse.framework */; };
+		EBBA85B21688489F00973BAA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B11688489F00973BAA /* Security.framework */; };
+		EBBA85B4168848D400973BAA /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B3168848D400973BAA /* Accounts.framework */; };
+		EBBA85B6168848E700973BAA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B5168848E700973BAA /* AudioToolbox.framework */; };
+		EBBA85B81688490000973BAA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B7168848FF00973BAA /* MobileCoreServices.framework */; };
+		EBBA85BA1688490C00973BAA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B91688490C00973BAA /* AdSupport.framework */; };
+		EBBA85BE1688492E00973BAA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85BD1688492D00973BAA /* StoreKit.framework */; };
+		EBBA85C01688496300973BAA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85BF1688496300973BAA /* SystemConfiguration.framework */; };
+		EBBA85C2168849B800973BAA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85C1168849B700973BAA /* CFNetwork.framework */; };
+		EBBA85C4168849CD00973BAA /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85C3168849CD00973BAA /* Social.framework */; };
 		EBBB5CED167EC97000F83CBA /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB5CEC167EC97000F83CBA /* RadioButton.m */; };
 		EBBB5CF1167ECC0900F83CBA /* RadioButton-Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CEF167ECC0900F83CBA /* RadioButton-Selected.png */; };
 		EBBB5CF2167ECC0900F83CBA /* RadioButton-Unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CF0167ECC0900F83CBA /* RadioButton-Unselected.png */; };
@@ -782,6 +792,16 @@
 		EBBA8582168438B100973BAA /* SubdownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdownloadViewController.m; sourceTree = "<group>"; };
 		EBBA858C1684429400973BAA /* SubdownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubdownloadItem.h; path = common/component/SubdownloadItem.h; sourceTree = "<group>"; };
 		EBBA858D1684429400973BAA /* SubdownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubdownloadItem.m; path = common/component/SubdownloadItem.m; sourceTree = "<group>"; };
+		EBBA85AE1688481300973BAA /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = SOURCE_ROOT; };
+		EBBA85B11688489F00973BAA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		EBBA85B3168848D400973BAA /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		EBBA85B5168848E700973BAA /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		EBBA85B7168848FF00973BAA /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		EBBA85B91688490C00973BAA /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		EBBA85BD1688492D00973BAA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		EBBA85BF1688496300973BAA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		EBBA85C1168849B700973BAA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		EBBA85C3168849CD00973BAA /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		EBBB5CEB167EC97000F83CBA /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
 		EBBB5CEC167EC97000F83CBA /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
 		EBBB5CEF167ECC0900F83CBA /* RadioButton-Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RadioButton-Selected.png"; sourceTree = "<group>"; };
@@ -916,16 +936,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBBA85C4168849CD00973BAA /* Social.framework in Frameworks */,
+				EBBA85C2168849B800973BAA /* CFNetwork.framework in Frameworks */,
+				EBBA85C01688496300973BAA /* SystemConfiguration.framework in Frameworks */,
+				EB6DEA6D165A2F1A00AF8003 /* UIKit.framework in Frameworks */,
+				EBBA85BE1688492E00973BAA /* StoreKit.framework in Frameworks */,
+				EBBA85BA1688490C00973BAA /* AdSupport.framework in Frameworks */,
+				EBBA85B81688490000973BAA /* MobileCoreServices.framework in Frameworks */,
+				EBBA85B6168848E700973BAA /* AudioToolbox.framework in Frameworks */,
+				EBBA85B4168848D400973BAA /* Accounts.framework in Frameworks */,
+				EBBA85B21688489F00973BAA /* Security.framework in Frameworks */,
 				EBBB992F16818A4D00612606 /* libsqlite3.0.dylib in Frameworks */,
 				EBB59CB716670A2300F646C7 /* libz.dylib in Frameworks */,
 				EBF3A98F1663967F00EBF56D /* MediaPlayer.framework in Frameworks */,
 				EB6DEAA9165A347F00AF8003 /* QuartzCore.framework in Frameworks */,
-				EB6DEA6D165A2F1A00AF8003 /* UIKit.framework in Frameworks */,
 				EB6DEA6F165A2F1A00AF8003 /* Foundation.framework in Frameworks */,
 				EB6DEA71165A2F1A00AF8003 /* CoreGraphics.framework in Frameworks */,
 				B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */,
 				EBB59CBE16670A3E00F646C7 /* libMobClickLibrary.a in Frameworks */,
 				EBB59CBF16670A3E00F646C7 /* libUMFeedback.a in Frameworks */,
+				EBBA85AF1688481300973BAA /* Parse.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1241,6 +1271,16 @@
 		EB6DEA6B165A2F1A00AF8003 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EBBA85C3168849CD00973BAA /* Social.framework */,
+				EBBA85C1168849B700973BAA /* CFNetwork.framework */,
+				EBBA85BF1688496300973BAA /* SystemConfiguration.framework */,
+				EBBA85BD1688492D00973BAA /* StoreKit.framework */,
+				EBBA85B91688490C00973BAA /* AdSupport.framework */,
+				EBBA85B7168848FF00973BAA /* MobileCoreServices.framework */,
+				EBBA85B5168848E700973BAA /* AudioToolbox.framework */,
+				EBBA85B3168848D400973BAA /* Accounts.framework */,
+				EBBA85B11688489F00973BAA /* Security.framework */,
+				EBBA85AE1688481300973BAA /* Parse.framework */,
 				EBF3A98E1663967E00EBF56D /* MediaPlayer.framework */,
 				EB6DEAA8165A347F00AF8003 /* QuartzCore.framework */,
 				EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */,
@@ -2231,6 +2271,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin-Prefix.pch";
 				INFOPLIST_FILE = "yueshipin_ipad/yueshipin-Info.plist";
@@ -2249,6 +2293,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin-Prefix.pch";
 				INFOPLIST_FILE = "yueshipin_ipad/yueshipin-Info.plist";

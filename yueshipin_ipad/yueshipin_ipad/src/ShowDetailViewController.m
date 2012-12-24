@@ -136,7 +136,7 @@
     
     self.actorLabel.frame = CGRectMake(280, 180, 80, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(335, 180, 140, 15);
+    self.actorName1Label.frame = CGRectMake(355, 180, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
     //    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
     //    self.actorName2Label.textColor = CMConstants.grayColor;

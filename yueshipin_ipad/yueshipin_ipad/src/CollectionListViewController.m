@@ -283,7 +283,7 @@
             areaNameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"area"]];
             scoreLabel.text = @"";
             doubanlogo.image = nil;
-            directorLabel.text = @"主持人：";
+            directorLabel.text = @"主持/嘉宾：";
             directorLabel.frame = CGRectMake(120, 50, 150, 25);
             directorNameLabel.frame = CGRectMake(185, 50, 250, 25);
             directorNameLabel.text = [item objectForKey:@"stars"];

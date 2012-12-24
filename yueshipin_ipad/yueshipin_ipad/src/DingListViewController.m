@@ -284,7 +284,7 @@
             scoreLabel.text = @"";
             doubanlogo.image = nil;
             directorLabel.frame = CGRectMake(120, 50, 150, 25);
-            directorLabel.text = @"主持人：";
+            directorLabel.text = @"主持/嘉宾：";
             directorNameLabel.frame = CGRectMake(185, 50, 250, 25);
             directorNameLabel.text = [item objectForKey:@"stars"];
             actorLabel.frame = CGRectMake(185, 75, 250, 25);

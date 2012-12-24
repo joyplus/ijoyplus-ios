@@ -260,7 +260,7 @@
             doubanlogo.image = nil;
             directorLabel.frame = CGRectMake(120, 50, 150, 25);
             actorLabel.frame = CGRectMake(120, 75, 150, 25);
-            directorLabel.text = @"主持人：";
+            directorLabel.text = @"主持/嘉宾：";
             directorNameLabel.text = [item objectForKey:@"star"];
             directorNameLabel.frame = CGRectMake(185, 50, 250, 25);
             actorLabel.text = @"首播时间：";
