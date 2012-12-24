@@ -1063,7 +1063,7 @@
         tempNameLabel.tag = 3031;
         [cell.contentView addSubview:tempNameLabel];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width-20, 20)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(200, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width-195, 20)];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.textAlignment = NSTextAlignmentRight;
@@ -1088,11 +1088,7 @@
     
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
     NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
-    if(titleText.length > 20){
-        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", [titleText substringToIndex:20]]];
-    } else {
-        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
-    }
+    [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
     return cell;
 }
 
