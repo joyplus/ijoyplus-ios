@@ -11,6 +11,7 @@
 #import "MovieDetailViewController.h"
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
+#import "SubsearchViewController.h"
 
 @interface SearchListViewController (){
     UITableView *table;
@@ -27,7 +28,7 @@
 
 @implementation SearchListViewController
 @synthesize keyword;
-
+@synthesize fromViewController;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -38,6 +39,7 @@
     videoArray = nil;
     closeBtn = nil;
     pullToRefreshManager_ = nil;
+    fromViewController = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -381,5 +383,18 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
+}
+
+- (void)closeBtnClicked
+{
+    if(self.fromViewController != nil){
+        if([self.fromViewController isKindOfClass:SubsearchViewController.class]){
+            ((SubsearchViewController *)self.fromViewController).moveToLeft = YES;
+        }
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.fromViewController.class];
+    } else {
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+
+    }
 }
 @end

@@ -16,6 +16,7 @@
 @end
 
 @implementation SubsearchViewController
+@synthesize moveToLeft;
 
 - (void)viewDidUnload
 {
@@ -28,6 +29,7 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
+    self.moveToLeft = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -57,5 +59,30 @@
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     return self;
+}
+
+- (void)search:(NSString *)keyword
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    sBar.text = keyword;
+    [self closeMenu];
+    [self addKeyToLocalHistory:keyword];
+    [sBar resignFirstResponder];
+    SearchListViewController *viewController = [[SearchListViewController alloc] init];
+    viewController.keyword = keyword;
+    viewController.fromViewController = self;
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView moveToLeft:self.moveToLeft];
+    self.moveToLeft = NO;
+}
+
+- (void)closeBtnClicked
+{
+    self.moveToLeft = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
 }
 @end

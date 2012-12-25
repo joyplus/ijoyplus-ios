@@ -10,4 +10,5 @@
 
 @interface SearchListViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
 @property (nonatomic, strong)NSString *keyword;
+@property (nonatomic, weak)UIViewController *fromViewController;
 @end

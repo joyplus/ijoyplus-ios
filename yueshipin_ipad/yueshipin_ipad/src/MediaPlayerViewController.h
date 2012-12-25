@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DeviceListView.h"
+#import "DramaDetailViewController.h"
 
 @interface MediaPlayerViewController : UIViewController <DeviceListViewDelegate>
 
@@ -15,5 +16,6 @@
 @property (nonatomic, strong)NSString *subname;
 @property (nonatomic, assign)int type;
 @property (nonatomic, strong)NSString *videoUrl;
-
+@property (nonatomic, assign)int currentNum;
+@property (nonatomic, weak)id <DramaDetailViewControllerDelegate>dramaDetailViewControllerDelegate;
 @end

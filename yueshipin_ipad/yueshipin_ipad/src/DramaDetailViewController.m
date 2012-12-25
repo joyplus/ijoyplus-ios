@@ -386,6 +386,7 @@
         [nextBtn setHidden:NO];
         [previousBtn setHidden:NO];
     }
+    [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
     [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
 }
 
@@ -407,7 +408,7 @@
             btn.tag = i+1;
             int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
             [btn setFrame:CGRectMake(pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * 87, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 82, 34)];
-            if (i < EPISODE_NUMBER_IN_ROW) {
+            if (i < 9) {
                 [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
             } else {
                 [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
@@ -428,20 +429,29 @@
         }
     }
     if(nextBtn == nil){
-        nextBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [nextBtn setTitle:@"next" forState:UIControlStateNormal];
-        [nextBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
-        [nextBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
+        nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [nextBtn setTitle:@"后20集" forState:UIControlStateNormal];
+        [nextBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [nextBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 60, 0, 5)];
+        [nextBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
+        nextBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+        [nextBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [nextBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+        [nextBtn setImage:[UIImage imageNamed:@"right"] forState:UIControlStateNormal];
         [nextBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
         nextBtn.tag = 9011;
         [self.bgScrollView addSubview:nextBtn];
     }
     
     if(previousBtn == nil){
-        previousBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [previousBtn setTitle:@"previous" forState:UIControlStateNormal];
-        [previousBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
-        [previousBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
+        previousBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [previousBtn setTitle:@"前20集" forState:UIControlStateNormal];
+        [previousBtn setImage:[UIImage imageNamed:@"left"] forState:UIControlStateNormal];
+        previousBtn.titleLabel.font = [UIFont systemFontOfSize:13];
+        [previousBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [previousBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 60)];
+        [previousBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+        [previousBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
         [previousBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
         previousBtn.tag = 9012;
         [previousBtn setHidden:YES];
@@ -459,10 +469,10 @@
 {
     UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
     
-    nextBtn.frame = CGRectMake(LEFT_WIDTH + 380, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 10, 40, 30);
-    previousBtn.frame = CGRectMake(LEFT_WIDTH, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 10, 40, 30);
+    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height , 80, 30);
+    previousBtn.frame = CGRectMake(LEFT_WIDTH, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height, 80, 30);
 
-    int positionY = previousBtn.frame.origin.y + 20;
+    int positionY = previousBtn.frame.origin.y + 10;
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
@@ -478,14 +488,14 @@
     }
     
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 74, 19);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 74, 19);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
-    self.numberLabel.frame = CGRectMake(139, positionY + 20, 100, 18);
+    self.numberLabel.frame = CGRectMake(139, positionY + 30, 100, 18);
     self.numberLabel.textColor = CMConstants.grayColor;
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(405, positionY + 17, 66, 26);
+    self.commentBtn.frame = CGRectMake(405, positionY + 27, 66, 26);
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
     [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -497,9 +507,9 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     commentListViewController.totalCommentNum = totalCommentNum;
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 300 + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
 }
@@ -632,11 +642,32 @@
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
             viewController.videoUrl = videoUrl;
+            viewController.dramaDetailViewControllerDelegate = self;
             viewController.type = 2;
+            viewController.currentNum = num;
             viewController.name = [video objectForKey:@"name"];
             viewController.subname = [NSString stringWithFormat:@"%i", num];
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         }
+}
+
+- (void)playNextEpisode:(int)currentNum
+{
+    if(currentNum <=0 || currentNum >=episodeArray.count){
+        return;
+    }
+    id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
+    int lastNum = -1;
+    if(lastNumObj != nil){
+        lastNum = [lastNumObj integerValue];
+    }
+    
+    UIButton *btn = (UIButton *)[episodeView viewWithTag:lastNum];
+    [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    
+    UIButton *nextEpiBtn = (UIButton *)[episodeView viewWithTag:lastNum+1];
+    [nextEpiBtn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
+    [self willPlayVideo:currentNum+1];
 }
 
 - (void)gotoWebsite:(NSInteger)num

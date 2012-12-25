@@ -14,7 +14,6 @@
 #import "CMConstants.h"
 #import "DateUtility.h"
 
-
 @interface MediaPlayerViewController (){
     MPMoviePlayerViewController *playerViewController;
     MPMoviePlayerController *player;
@@ -39,6 +38,8 @@
 @synthesize videoUrl;
 @synthesize name;
 @synthesize type;
+@synthesize currentNum;
+@synthesize dramaDetailViewControllerDelegate;
 
 - (void)viewDidUnload
 {
@@ -73,7 +74,7 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor clearColor]];
-    //    self.videoUrl = @"http://m.youku.com/wap/pvs?id=XNDUxNjU4NjAw&format=3gphd";
+//    self.videoUrl = @"http://hot.vrs.sohu.com/ipad909901_4567748189248_220033.m3u8";
     int nowDate = [[NSDate date] timeIntervalSince1970];
     if([self.videoUrl rangeOfString:@"{now_date}"].location != NSNotFound){
         self.videoUrl = [self.videoUrl stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
@@ -130,19 +131,22 @@
     //    [shareBtn addTarget:self action:@selector(showPopWindow:)forControlEvents:UIControlEventTouchUpInside];
     //    [buttonView addSubview:shareBtn];
 }
-- (void)playVideoFinished:
-
-
-(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
+- (void)playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
 {
+    BOOL userClicked = YES;
 	lastPlayTime = [NSNumber numberWithDouble:player.currentPlaybackTime];
     if(player.duration - lastPlayTime.doubleValue <= 0.1 || lastPlayTime == nil){
         lastPlayTime = [NSNumber numberWithInt:0];
+        userClicked = NO;
     }
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:self.videoUrl result:lastPlayTime];
 //    [playerViewController.view removeFromSuperview];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        if(!userClicked){
+            [self.dramaDetailViewControllerDelegate playNextEpisode:self.currentNum];
+        }
+    }];
 }
 
 - (void)updateWatchRecord

@@ -408,7 +408,7 @@
 - (void)refreshCommentListView:(int)tableHeight
 {
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, commentListViewController.view.frame.origin.y+tableHeight+300)];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 440, tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 430, tableHeight);
 }
 
 - (void)playVideo

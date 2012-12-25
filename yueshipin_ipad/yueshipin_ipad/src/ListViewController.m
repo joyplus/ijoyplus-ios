@@ -332,15 +332,15 @@
         return;
     }
     NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
-    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
     NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-    if([type isEqualToString:@"1"]){
+    if([prodType isEqualToString:@"1"]){
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
         viewController.prodId = prodId;
         viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
-    } else if([type isEqualToString:@"2"]){
+    } else if([prodType isEqualToString:@"2"]){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
         viewController.prodId = prodId;
         viewController.fromViewController = self;

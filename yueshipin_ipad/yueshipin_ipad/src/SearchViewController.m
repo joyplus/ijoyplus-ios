@@ -19,6 +19,7 @@
 
 @interface SearchViewController (){
     UIButton *lastPressedBtn;
+    UIButton *clearAllBtn;
 }
 
 @end
@@ -39,6 +40,7 @@
     hotKeyIndex = nil;
     [hotKeyBtnWidth removeAllObjects];
     hotKeyBtnWidth = nil;
+    clearAllBtn = nil;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -77,6 +79,13 @@
         table.tableFooterView = [[UIView alloc] init];
         [self.view addSubview:table];
         
+        clearAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        clearAllBtn.frame = CGRectMake(350, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
+        [clearAllBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
+        [clearAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_pressed"] forState:UIControlStateHighlighted];
+        [clearAllBtn addTarget:self action:@selector(clearAllHistory) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:clearAllBtn];
+        
         hotKeyArray = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyIndex = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyBtnWidth = [[NSMutableDictionary alloc]initWithCapacity:10];
@@ -103,10 +112,11 @@
         [historyArray addObject:cloneItem];
     }
     if(historyArray.count>0){
-        table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     } else {
         table.frame = CGRectMake(80, 170, 370, 210);
     }
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
     if(cacheResult != nil){
         [self parseData:cacheResult];
@@ -187,11 +197,7 @@
     if(section == 0){
         return 1;
     } else {
-        if(historyArray.count > 0){
-            return historyArray.count + 1;
-        } else {
-            return 0;
-        }
+        return historyArray.count;
     }
 }
 
@@ -243,16 +249,7 @@
             [name sizeToFit];
             [name setBackgroundColor:[UIColor clearColor]];
             [cell.contentView addSubview:name];
-        } else {
-            UIButton *clearAllBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            clearAllBtn.frame = CGRectMake(0, 5, 200, 30);
-            [clearAllBtn setTitle:@"clear all" forState:UIControlStateNormal];
-            [clearAllBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
-            [clearAllBtn setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateHighlighted];
-            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-            [clearAllBtn addTarget:self action:@selector(clearAllHistory) forControlEvents:UIControlEventTouchUpInside];
-            [cell.contentView addSubview:clearAllBtn];
-        }
+        } 
     }
     return cell;
 }
@@ -263,6 +260,7 @@
     [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
     table.frame = CGRectMake(80, 170, 370, 210);
     [table reloadData];
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -307,8 +305,9 @@
     lastPressedBtn = btn;
     int index = btn.tag - 2001;
     [self search:[[hotKeyArray objectAtIndex:index] objectForKey:@"content"]];
-    table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     [table reloadData];
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -318,8 +317,9 @@
         NSString *keyword = [[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"];
         [self search:keyword];
         lastPressedBtn = nil;
-        table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
         [table reloadData];
+        clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
     }
 }
 
@@ -338,9 +338,10 @@
 {
     [searchBar resignFirstResponder];
     [self search:searchBar.text];
-    table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     lastPressedBtn = nil;
     [table reloadData];
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
@@ -348,9 +349,10 @@
     if(searchBar.text.length > 0){
         [searchBar resignFirstResponder];
         [self search:searchBar.text];
-        table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
         lastPressedBtn = nil;
         [table reloadData];
+        clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
     }
 }
 
@@ -438,11 +440,12 @@
             [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
             if (historyArray.count > 0) {
                 [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-                table.frame = CGRectMake(80, 170, 370, (historyArray.count+1) * 40 + 210);
+                table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
             } else {
                 table.frame = CGRectMake(80, 170, 370, 210);
                 [tableView reloadData];
             }
+            clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
         }
     }
 }

@@ -145,7 +145,7 @@
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
     NSString *name = [item objectForKey:@"owner_name"];
     if([StringUtility stringIsEmpty:name]){
-        name = @"网络用户";
+        name = @"网友评论";
     }
     nameLabel.text = [NSString stringWithFormat:@"%@", name];
     

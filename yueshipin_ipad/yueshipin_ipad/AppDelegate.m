@@ -139,7 +139,7 @@
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
-    [Parse setApplicationId:@"srr4Qfiqi1mVFibvkUGE2L3NNp3787xpNRH34Gxr" clientKey:@"tW4vN8VFD2kdReM1CvkX5Bj4qVO5kA1WS9BNmTdV"];
+    [Parse setApplicationId:@"nSTWZrfmpCMkCWVy9batn6klsNk4PxCsxblPLX9c" clientKey:@"ogCknWEwmRI3f4whLZMsux90fnb9ECiydb2nPxGk"];
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -179,9 +179,12 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    NSString *prodId = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"prod_id"]];
+    NSString *prodType = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"prod_type"]];
+    NSString *alert = [userInfo objectForKey:@"alert"];
     [PFPush handlePush:userInfo];
-    if(!self.foreground){
-        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"98765", @"prod_id", @"1", @"prod_type", nil];
+    if(!self.foreground && prodId != nil && prodType != nil){
+        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", prodType, @"prod_type", nil];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"push_notification" object:nil userInfo:userInfo];
     }
 }
@@ -242,6 +245,7 @@
     networkStatus = [curReach currentReachabilityStatus];
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
+        [self generateUserId];
     }
 }
 
