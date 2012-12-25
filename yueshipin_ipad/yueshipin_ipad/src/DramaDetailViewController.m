@@ -413,7 +413,7 @@
             } else {
                 [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
             }
-            [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+            [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
             btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
             UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             if(lastNum == i+1){
@@ -422,7 +422,7 @@
                 [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
             }
             [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
-            [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
             [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
             [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
             [episodeView addSubview:btn];

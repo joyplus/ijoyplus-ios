@@ -121,8 +121,8 @@
 
 - (void)changeNextBtnImage:(NSNotification *)notificaiton
 {
-    UITextField *textField = notificaiton.object;
-    if(textField.text.length > 0){
+    NSString *titleContent = [self.titleField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if(titleContent.length > 0){
         [self.nextBtn setEnabled:YES];
     } else {
         [self.nextBtn setEnabled:NO];
@@ -135,8 +135,9 @@
     [self.titleField resignFirstResponder];
     [self.contentText resignFirstResponder];
     [myHUD showProgressBar:self.view];
-    if(self.titleField.text.length > 0){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", [NSNumber numberWithInt:type], @"type", nil];
+    NSString *titleContent = [self.titleField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if(titleContent.length > 0){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleContent, @"name", self.contentText.text, @"content", [NSNumber numberWithInt:type], @"type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
