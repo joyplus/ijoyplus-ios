@@ -25,6 +25,7 @@
 @implementation AppDelegate
 @synthesize window;
 @synthesize rootViewController;
+@synthesize tabBarView;
 @synthesize closed;
 @synthesize networkStatus;
 @synthesize hostReach;
@@ -58,22 +59,30 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
-    [MobClick updateOnlineConfig];
-    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
-    [MobClick checkUpdate];
-    [self generateUserId];
-    [self initSinaweibo];
-    [self monitorReachability];
-    [self isParseReachable];
-    [self customizeAppearance];
-    self.closed = YES;
+//    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+//    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
+//    [MobClick updateOnlineConfig];
+//    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
+//    [MobClick checkUpdate];
+//    [self generateUserId];
+//    [self initSinaweibo];
+//    [self monitorReachability];
+//    [self isParseReachable];
+//    [self customizeAppearance];
+//    self.closed = YES;
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    // Override point for customization after application launch.
+//    self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
+//    self.window.rootViewController = self.rootViewController;
+//    [self.window makeKeyAndVisible];
+   
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-    self.window.rootViewController = self.rootViewController;
+    self.tabBarView = [[TabBarViewController alloc] init];
+    self.window.rootViewController = self.tabBarView;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

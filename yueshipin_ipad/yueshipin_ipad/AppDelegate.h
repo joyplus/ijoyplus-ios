@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
-
+#import "TabBarViewController.h"
 @class RootViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
@@ -16,6 +16,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) RootViewController *rootViewController;
+
+@property (strong, nonatomic) TabBarViewController *tabBarView;
 
 @property (assign, nonatomic) BOOL closed;
 
