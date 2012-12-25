@@ -175,7 +175,7 @@
 {
     CreateListTwoViewController *viewController = [[CreateListTwoViewController alloc]initWithNibName:@"CreateListTwoViewController" bundle:nil];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    viewController.titleContent = self.titleField.text;
+    viewController.titleContent = [self.titleField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     viewController.topId = [NSString stringWithFormat:@"%@", [result objectForKey:@"topic_id"]];
     viewController.type = type;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
