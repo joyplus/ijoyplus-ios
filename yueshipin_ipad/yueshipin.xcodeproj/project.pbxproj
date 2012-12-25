@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22FEEE5A16899AE100A71EF4 /* AllListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4516899AE100A71EF4 /* AllListViewCell.m */; };
+		22FEEE5B16899AE100A71EF4 /* allListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4716899AE100A71EF4 /* allListViewController.m */; };
+		22FEEE5C16899AE100A71EF4 /* ItemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4916899AE100A71EF4 /* ItemDetailViewController.m */; };
+		22FEEE5D16899AE100A71EF4 /* ListDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */; };
+		22FEEE5E16899AE100A71EF4 /* ListDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4D16899AE100A71EF4 /* ListDetailViewController.m */; };
+		22FEEE5F16899AE100A71EF4 /* mineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4F16899AE100A71EF4 /* mineViewController.m */; };
+		22FEEE6016899AE100A71EF4 /* navigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5116899AE100A71EF4 /* navigationViewController.m */; };
+		22FEEE6116899AE100A71EF4 /* PageManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5316899AE100A71EF4 /* PageManageViewController.m */; };
+		22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5516899AE100A71EF4 /* SortedViewCell.m */; };
+		22FEEE6316899AE100A71EF4 /* sortedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5716899AE100A71EF4 /* sortedViewController.m */; };
+		22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5916899AE100A71EF4 /* TabBarViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		EB14D426165B306000CB3260 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D424165B306000CB3260 /* HomeViewController.m */; };
 		EB14D434165B357500CB3260 /* DDPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D433165B357500CB3260 /* DDPageControl.m */; };
@@ -360,6 +371,28 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22FEEE4416899AE100A71EF4 /* AllListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllListViewCell.h; sourceTree = "<group>"; };
+		22FEEE4516899AE100A71EF4 /* AllListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllListViewCell.m; sourceTree = "<group>"; };
+		22FEEE4616899AE100A71EF4 /* allListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = allListViewController.h; sourceTree = "<group>"; };
+		22FEEE4716899AE100A71EF4 /* allListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = allListViewController.m; sourceTree = "<group>"; };
+		22FEEE4816899AE100A71EF4 /* ItemDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemDetailViewController.h; sourceTree = "<group>"; };
+		22FEEE4916899AE100A71EF4 /* ItemDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ItemDetailViewController.m; sourceTree = "<group>"; };
+		22FEEE4A16899AE100A71EF4 /* ListDetailViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDetailViewCell.h; sourceTree = "<group>"; };
+		22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListDetailViewCell.m; sourceTree = "<group>"; };
+		22FEEE4C16899AE100A71EF4 /* ListDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDetailViewController.h; sourceTree = "<group>"; };
+		22FEEE4D16899AE100A71EF4 /* ListDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListDetailViewController.m; sourceTree = "<group>"; };
+		22FEEE4E16899AE100A71EF4 /* mineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mineViewController.h; sourceTree = "<group>"; };
+		22FEEE4F16899AE100A71EF4 /* mineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mineViewController.m; sourceTree = "<group>"; };
+		22FEEE5016899AE100A71EF4 /* navigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = navigationViewController.h; sourceTree = "<group>"; };
+		22FEEE5116899AE100A71EF4 /* navigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = navigationViewController.m; sourceTree = "<group>"; };
+		22FEEE5216899AE100A71EF4 /* PageManageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageManageViewController.h; sourceTree = "<group>"; };
+		22FEEE5316899AE100A71EF4 /* PageManageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageManageViewController.m; sourceTree = "<group>"; };
+		22FEEE5416899AE100A71EF4 /* SortedViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortedViewCell.h; sourceTree = "<group>"; };
+		22FEEE5516899AE100A71EF4 /* SortedViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortedViewCell.m; sourceTree = "<group>"; };
+		22FEEE5616899AE100A71EF4 /* sortedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sortedViewController.h; sourceTree = "<group>"; };
+		22FEEE5716899AE100A71EF4 /* sortedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sortedViewController.m; sourceTree = "<group>"; };
+		22FEEE5816899AE100A71EF4 /* TabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarViewController.h; sourceTree = "<group>"; };
+		22FEEE5916899AE100A71EF4 /* TabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarViewController.m; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB14D423165B306000CB3260 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
@@ -813,6 +846,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22FEEE4316899AE000A71EF4 /* popular_iphone */ = {
+			isa = PBXGroup;
+			children = (
+				22FEEE4416899AE100A71EF4 /* AllListViewCell.h */,
+				22FEEE4516899AE100A71EF4 /* AllListViewCell.m */,
+				22FEEE4616899AE100A71EF4 /* allListViewController.h */,
+				22FEEE4716899AE100A71EF4 /* allListViewController.m */,
+				22FEEE4816899AE100A71EF4 /* ItemDetailViewController.h */,
+				22FEEE4916899AE100A71EF4 /* ItemDetailViewController.m */,
+				22FEEE4A16899AE100A71EF4 /* ListDetailViewCell.h */,
+				22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */,
+				22FEEE4C16899AE100A71EF4 /* ListDetailViewController.h */,
+				22FEEE4D16899AE100A71EF4 /* ListDetailViewController.m */,
+				22FEEE4E16899AE100A71EF4 /* mineViewController.h */,
+				22FEEE4F16899AE100A71EF4 /* mineViewController.m */,
+				22FEEE5016899AE100A71EF4 /* navigationViewController.h */,
+				22FEEE5116899AE100A71EF4 /* navigationViewController.m */,
+				22FEEE5216899AE100A71EF4 /* PageManageViewController.h */,
+				22FEEE5316899AE100A71EF4 /* PageManageViewController.m */,
+				22FEEE5416899AE100A71EF4 /* SortedViewCell.h */,
+				22FEEE5516899AE100A71EF4 /* SortedViewCell.m */,
+				22FEEE5616899AE100A71EF4 /* sortedViewController.h */,
+				22FEEE5716899AE100A71EF4 /* sortedViewController.m */,
+				22FEEE5816899AE100A71EF4 /* TabBarViewController.h */,
+				22FEEE5916899AE100A71EF4 /* TabBarViewController.m */,
+			);
+			path = popular_iphone;
+			sourceTree = "<group>";
+		};
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
@@ -1142,6 +1204,7 @@
 				EB6DEA7C165A2F1A00AF8003 /* AppDelegate.m */,
 				EBBA0CF1165B25C300D3F11B /* framework */,
 				EBB7330C165C82D8008E407E /* service */,
+				22FEEE4316899AE000A71EF4 /* popular_iphone */,
 				EBBA0CEC165B253900D3F11B /* popular */,
 				EBBA0CEE165B257000D3F11B /* personal */,
 				EBBA0CEF165B258500D3F11B /* search */,
@@ -1877,6 +1940,17 @@
 				EBB9E0D116706AAE006ECEE8 /* AboutUsViewController.m in Sources */,
 				EB513F8C1676D19B0072E013 /* SuggestionViewController.m in Sources */,
 				EBBAD371168326710070DD95 /* ClauseViewController.m in Sources */,
+				22FEEE5A16899AE100A71EF4 /* AllListViewCell.m in Sources */,
+				22FEEE5B16899AE100A71EF4 /* allListViewController.m in Sources */,
+				22FEEE5C16899AE100A71EF4 /* ItemDetailViewController.m in Sources */,
+				22FEEE5D16899AE100A71EF4 /* ListDetailViewCell.m in Sources */,
+				22FEEE5E16899AE100A71EF4 /* ListDetailViewController.m in Sources */,
+				22FEEE5F16899AE100A71EF4 /* mineViewController.m in Sources */,
+				22FEEE6016899AE100A71EF4 /* navigationViewController.m in Sources */,
+				22FEEE6116899AE100A71EF4 /* PageManageViewController.m in Sources */,
+				22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */,
+				22FEEE6316899AE100A71EF4 /* sortedViewController.m in Sources */,
+				22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
