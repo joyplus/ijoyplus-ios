@@ -12,6 +12,9 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "UIImageView+WebCache.h"
+#import "ListDetailViewController.h"
+#import "ShowListViewCell.h"
+#import "ItemDetailViewController.h"
 #define PAGE_NUM 3
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -38,22 +41,22 @@
     return self;
 }
 
-- (void)parseTopsListData:(id)result
-{
-    self.listArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
-    NSString *responseCode = [result objectForKey:@"res_code"];
-    if(responseCode == nil){
-        NSArray *tempTopsArray = [result objectForKey:@"tops"];
-        if(tempTopsArray.count > 0){
-            
-            [ self.listArr addObjectsFromArray:tempTopsArray];
-        }
-    }
-    else {
-        
-    }
-    
-}
+//- (void)parseTopsListData:(id)result
+//{
+//    self.listArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+//    NSString *responseCode = [result objectForKey:@"res_code"];
+//    if(responseCode == nil){
+//        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+//        if(tempTopsArray.count > 0){
+//            
+//            [ self.listArr addObjectsFromArray:tempTopsArray];
+//        }
+//    }
+//    else {
+//        
+//    }
+//    
+//}
 
 
 -(void)loadTVTopsData{
@@ -118,11 +121,14 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
+        
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
-                
-                [ self.showListArr addObjectsFromArray:tempTopsArray];
+                NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
+                if(tempArray.count > 0) {
+                    [self.showListArr addObjectsFromArray:tempArray];
+                }
             }
         }
         else {
@@ -155,30 +161,31 @@
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
- 
+    NSArray *titlesArr = [NSArray arrayWithObjects:@"热播电视剧",@"热播电影",@"热播综艺", nil];
     for (int i = 0; i < PAGE_NUM; i++) {
-        UIImageView *typeImageView = [[UIImageView alloc] initWithFrame:CGRectMake(320*i, 0, 320, 30)];
-        typeImageView.backgroundColor = [UIColor redColor];
-        [self.scrollView addSubview:typeImageView];
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(320*i, 0, 320, 30)];
+        titleLabel.text = [titlesArr objectAtIndex:i];
+        titleLabel.backgroundColor = [UIColor redColor];
+        [self.scrollView addSubview:titleLabel];
         
     }
     
-    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 350) style:UITableViewStylePlain];
+    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 330) style:UITableViewStylePlain];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.tag = TV_TYPE;
     [self.scrollView addSubview:self.tvTableList];
     
-    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 350) style:UITableViewStylePlain];
+    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 330) style:UITableViewStylePlain];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
-    self.movieTableList.tag = TV_TYPE;
+    self.movieTableList.tag = MOVIE_TYPE;
     [self.scrollView addSubview:self.movieTableList];
     
-    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 350) style:UITableViewStylePlain];
+    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 330) style:UITableViewStylePlain];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
-    self.showTableList.tag = TV_TYPE;
+    self.showTableList.tag = SHOW_TYPE;
     [self.scrollView addSubview:self.showTableList];
     
     [self.view addSubview:self.scrollView];
@@ -209,43 +216,78 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     static NSString *CellIdentifier = @"Cell";
-    SortedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[SortedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
     switch (tableView.tag) {
         case TV_TYPE:{
+            SortedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            if (cell == nil) {
+                cell = [[SortedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
             NSDictionary *item = [self.tvListArr objectAtIndex:indexPath.row];
             cell.title.text = [item objectForKey:@"name"];
             [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-            break;
+            return cell;
         }
         case MOVIE_TYPE:{
+            SortedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            if (cell == nil) {
+                cell = [[SortedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
             NSDictionary *item = [self.movieListArr objectAtIndex:indexPath.row];
             cell.title.text = [item objectForKey:@"name"];
             [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-            break;
+            return cell;
         }
         case SHOW_TYPE:{
+            ShowListViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            if (cell == nil) {
+                cell = [[ShowListViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
             NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
-            cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-            break;
+            cell.nameLabel.text = [item objectForKey:@"cur_item_name"];
+           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        
+            return cell;
         }
         default:
             break;
     }
     
- 
-    return cell;
-    
+    return nil;    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 130;
     
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    int tableViewTag = tableView.tag;
+    if (tableViewTag == TV_TYPE) {
+        NSDictionary *item = [self.tvListArr objectAtIndex:indexPath.row];
+        NSMutableArray *items = [item objectForKey:@"items"];
+        ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        listDetailViewController.listArr = items;
+        [self.navigationController pushViewController:listDetailViewController animated:YES];
+    }
+    else if (tableViewTag == MOVIE_TYPE){
+        NSDictionary *item = [self.movieListArr objectAtIndex:indexPath.row];
+        NSMutableArray *items = [item objectForKey:@"items"];
+        ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        listDetailViewController.listArr = items;
+        [self.navigationController pushViewController:listDetailViewController animated:YES];
+    }
+    else if (tableViewTag == SHOW_TYPE){
+        NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
+        ItemDetailViewController *detailViewController = [[ItemDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    
+    }
+
+
+}
+
 
 -(void)changePage:(UIPageControl *)PageControl {
     int whichPage = PageControl.currentPage;

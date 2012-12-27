@@ -17,6 +17,7 @@
 
 @implementation ListDetailViewController
 @synthesize listArr = listArr_;
+@synthesize Type = Type_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -68,7 +69,13 @@
     }
     NSDictionary *item = [self.listArr objectAtIndex:indexPath.row];
     cell.label.text = [item objectForKey:@"prod_name"];
+    cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"stars"]];
+    cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    NSString *supportNum = [item objectForKey:@"support_num"];
+    cell.support.text = [NSString stringWithFormat:@"%@人顶",supportNum];
+    NSString *addFavNum = [item objectForKey:@"favority_num"];
+    cell.addFav.text = [NSString stringWithFormat:@"%@人收藏",addFavNum];
     return cell;
 }
 

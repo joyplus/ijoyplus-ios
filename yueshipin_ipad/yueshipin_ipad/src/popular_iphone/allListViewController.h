@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface allListViewController : UIViewController<UITabBarDelegate,UITableViewDataSource>{
+@interface allListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>{
     NSMutableArray *listArray_;
     UITableView *tableList_;
 }

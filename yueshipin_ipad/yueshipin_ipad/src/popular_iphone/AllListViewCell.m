@@ -11,6 +11,11 @@
 @implementation AllListViewCell
 @synthesize imageView = imageView_;
 @synthesize label = label_;
+@synthesize label1 = label1_;
+@synthesize label2 = label2_;
+@synthesize label3 = label3_;
+@synthesize label4 = label4_;
+@synthesize label5 = label5_;
 @synthesize listArr = listArr_;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -24,24 +29,18 @@
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(105, 24, 169, 15)];
         [self addSubview:self.label];
         
-        UILabel *listLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(105, 50, 90, 12)];
-        //listLabel1.text = [self.listArr objectAtIndex:0];
-        UILabel *listLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(205, 50, 90, 12)];
-        //listLabel2.text = [self.listArr objectAtIndex:1];
-        UILabel *listLabel3 = [[UILabel alloc] initWithFrame:CGRectMake(105, 58, 90, 12)];
-        //listLabel3.text = [self.listArr objectAtIndex:2];
-        UILabel *listLabel4 = [[UILabel alloc] initWithFrame:CGRectMake(205, 50, 90, 12)];
-        //listLabel4.text = [self.listArr objectAtIndex:3];
-        UILabel *listLabel5 = [[UILabel alloc] initWithFrame:CGRectMake(105, 66, 90, 12)];
-       // listLabel5.text = [self.listArr objectAtIndex:4];
-        UILabel *listLabel6 = [[UILabel alloc] initWithFrame:CGRectMake(205, 50, 90, 12)];
-       // listLabel6.text = [self.listArr objectAtIndex:5];
-        
-        [self addSubview:listLabel1];
-        [self addSubview:listLabel2];
-        [self addSubview:listLabel3];
-        [self addSubview:listLabel4];
-        [self addSubview:listLabel5];
+        label1_ = [[UILabel alloc] initWithFrame:CGRectMake(105, 50, 90, 12)];
+        label2_= [[UILabel alloc] initWithFrame:CGRectMake(205, 50, 90, 12)];
+        label3_ = [[UILabel alloc] initWithFrame:CGRectMake(105, 70, 90, 12)];
+        label4_ = [[UILabel alloc] initWithFrame:CGRectMake(205, 70, 90, 12)];
+        label5_ = [[UILabel alloc] initWithFrame:CGRectMake(105, 90, 90, 12)];
+        UILabel *listLabel6 = [[UILabel alloc] initWithFrame:CGRectMake(205, 90, 90, 12)];
+        listLabel6.text = @"...";
+        [self addSubview:label1_];
+        [self addSubview:label2_];
+        [self addSubview:label3_];
+        [self addSubview:label4_];
+        [self addSubview:label5_];
         [self addSubview:listLabel6];
     }
     return self;

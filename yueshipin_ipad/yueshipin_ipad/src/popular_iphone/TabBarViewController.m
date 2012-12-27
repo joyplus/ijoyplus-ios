@@ -10,7 +10,7 @@
 #import "allListViewController.h"
 #import "sortedViewController.h"
 #import "PageManageViewController.h"
-#import "mineViewController.h"
+#import "MineViewController.h"
 #import "navigationViewController.h"
 
 @interface TabBarViewController ()
@@ -34,7 +34,7 @@
         PageManageViewController *pageView = [[PageManageViewController alloc] init];
         navigationViewController *sortNav = [[navigationViewController alloc] initWithRootViewController:pageView];
         
-        mineViewController *mineview = [[mineViewController alloc] init];
+        MineViewController *mineview = [[MineViewController alloc] init];
         navigationViewController *mineNav = [[navigationViewController alloc] initWithRootViewController:mineview];
        
         

@@ -12,8 +12,16 @@
 
     UIImageView *imageview_;
     UILabel *label_;
+    UILabel *actors_;
+    UILabel *area_;
+    UILabel *support_;
+    UILabel *addFav_;
 }
 
 @property (strong, nonatomic)UIImageView *imageview;
 @property (strong, nonatomic)UILabel *label;
+@property (strong, nonatomic)UILabel *actors;
+@property (strong, nonatomic)UILabel *area;
+@property (strong, nonatomic)UILabel *support;
+@property (strong, nonatomic)UILabel *addFav;
 @end

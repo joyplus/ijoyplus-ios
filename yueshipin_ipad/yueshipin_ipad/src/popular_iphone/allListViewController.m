@@ -90,7 +90,14 @@
         cell = [[AllListViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];   
     }
     NSDictionary *item = [self.listArray objectAtIndex:indexPath.row];
+    NSMutableArray *items = [item objectForKey:@"items"];
     cell.label.text = [item objectForKey:@"name"];
+    NSDictionary *test = [items objectAtIndex:0] ;
+    cell.label1.text = [[items objectAtIndex:0] objectForKey:@"prod_name" ];
+    cell.label2.text = [[items objectAtIndex:1] objectForKey:@"prod_name" ];
+    cell.label3.text = [[items objectAtIndex:2] objectForKey:@"prod_name" ];
+    cell.label4.text = [[items objectAtIndex:3] objectForKey:@"prod_name" ];
+    cell.label5.text = [[items objectAtIndex:4] objectForKey:@"prod_name" ];
     [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     return cell;
 

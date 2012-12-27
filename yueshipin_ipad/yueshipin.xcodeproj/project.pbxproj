@@ -12,12 +12,18 @@
 		22FEEE5C16899AE100A71EF4 /* ItemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4916899AE100A71EF4 /* ItemDetailViewController.m */; };
 		22FEEE5D16899AE100A71EF4 /* ListDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */; };
 		22FEEE5E16899AE100A71EF4 /* ListDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4D16899AE100A71EF4 /* ListDetailViewController.m */; };
-		22FEEE5F16899AE100A71EF4 /* mineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4F16899AE100A71EF4 /* mineViewController.m */; };
 		22FEEE6016899AE100A71EF4 /* navigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5116899AE100A71EF4 /* navigationViewController.m */; };
 		22FEEE6116899AE100A71EF4 /* PageManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5316899AE100A71EF4 /* PageManageViewController.m */; };
 		22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5516899AE100A71EF4 /* SortedViewCell.m */; };
 		22FEEE6316899AE100A71EF4 /* sortedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5716899AE100A71EF4 /* sortedViewController.m */; };
 		22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5916899AE100A71EF4 /* TabBarViewController.m */; };
+		22FEEE7B168A945800A71EF4 /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE7A168A945800A71EF4 /* MineViewController.m */; };
+		22FEEE7F168A96FF00A71EF4 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */; };
+		22FEEE95168AAB3E00A71EF4 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE94168AAB3D00A71EF4 /* AboutViewController.m */; };
+		22FEEE98168AD8A300A71EF4 /* RecordListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE97168AD8A300A71EF4 /* RecordListCell.m */; };
+		22FEEE9B168AE14300A71EF4 /* MoreListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE9A168AE14300A71EF4 /* MoreListViewController.m */; };
+		22FEEE9E168AEF7C00A71EF4 /* ShowListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */; };
+		22FEEEA1168B0B2A00A71EF4 /* IphoneSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		EB14D426165B306000CB3260 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D424165B306000CB3260 /* HomeViewController.m */; };
 		EB14D434165B357500CB3260 /* DDPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D433165B357500CB3260 /* DDPageControl.m */; };
@@ -381,8 +387,6 @@
 		22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListDetailViewCell.m; sourceTree = "<group>"; };
 		22FEEE4C16899AE100A71EF4 /* ListDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDetailViewController.h; sourceTree = "<group>"; };
 		22FEEE4D16899AE100A71EF4 /* ListDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListDetailViewController.m; sourceTree = "<group>"; };
-		22FEEE4E16899AE100A71EF4 /* mineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mineViewController.h; sourceTree = "<group>"; };
-		22FEEE4F16899AE100A71EF4 /* mineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mineViewController.m; sourceTree = "<group>"; };
 		22FEEE5016899AE100A71EF4 /* navigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = navigationViewController.h; sourceTree = "<group>"; };
 		22FEEE5116899AE100A71EF4 /* navigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = navigationViewController.m; sourceTree = "<group>"; };
 		22FEEE5216899AE100A71EF4 /* PageManageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageManageViewController.h; sourceTree = "<group>"; };
@@ -393,6 +397,20 @@
 		22FEEE5716899AE100A71EF4 /* sortedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sortedViewController.m; sourceTree = "<group>"; };
 		22FEEE5816899AE100A71EF4 /* TabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarViewController.h; sourceTree = "<group>"; };
 		22FEEE5916899AE100A71EF4 /* TabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarViewController.m; sourceTree = "<group>"; };
+		22FEEE79168A945800A71EF4 /* MineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineViewController.h; sourceTree = "<group>"; };
+		22FEEE7A168A945800A71EF4 /* MineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MineViewController.m; sourceTree = "<group>"; };
+		22FEEE7D168A96FF00A71EF4 /* FeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackViewController.h; sourceTree = "<group>"; };
+		22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackViewController.m; sourceTree = "<group>"; };
+		22FEEE93168AAB3D00A71EF4 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		22FEEE94168AAB3D00A71EF4 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		22FEEE96168AD8A200A71EF4 /* RecordListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordListCell.h; sourceTree = "<group>"; };
+		22FEEE97168AD8A300A71EF4 /* RecordListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordListCell.m; sourceTree = "<group>"; };
+		22FEEE99168AE14200A71EF4 /* MoreListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreListViewController.h; sourceTree = "<group>"; };
+		22FEEE9A168AE14300A71EF4 /* MoreListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreListViewController.m; sourceTree = "<group>"; };
+		22FEEE9C168AEF7A00A71EF4 /* ShowListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowListViewCell.h; sourceTree = "<group>"; };
+		22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowListViewCell.m; sourceTree = "<group>"; };
+		22FEEE9F168B0B2900A71EF4 /* IphoneSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneSettingViewController.h; sourceTree = "<group>"; };
+		22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneSettingViewController.m; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB14D423165B306000CB3260 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
@@ -859,8 +877,6 @@
 				22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */,
 				22FEEE4C16899AE100A71EF4 /* ListDetailViewController.h */,
 				22FEEE4D16899AE100A71EF4 /* ListDetailViewController.m */,
-				22FEEE4E16899AE100A71EF4 /* mineViewController.h */,
-				22FEEE4F16899AE100A71EF4 /* mineViewController.m */,
 				22FEEE5016899AE100A71EF4 /* navigationViewController.h */,
 				22FEEE5116899AE100A71EF4 /* navigationViewController.m */,
 				22FEEE5216899AE100A71EF4 /* PageManageViewController.h */,
@@ -871,8 +887,36 @@
 				22FEEE5716899AE100A71EF4 /* sortedViewController.m */,
 				22FEEE5816899AE100A71EF4 /* TabBarViewController.h */,
 				22FEEE5916899AE100A71EF4 /* TabBarViewController.m */,
+				22FEEE9C168AEF7A00A71EF4 /* ShowListViewCell.h */,
+				22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */,
 			);
 			path = popular_iphone;
+			sourceTree = "<group>";
+		};
+		22FEEE78168A945700A71EF4 /* personal_iphone */ = {
+			isa = PBXGroup;
+			children = (
+				22FEEE79168A945800A71EF4 /* MineViewController.h */,
+				22FEEE7A168A945800A71EF4 /* MineViewController.m */,
+				22FEEE96168AD8A200A71EF4 /* RecordListCell.h */,
+				22FEEE97168AD8A300A71EF4 /* RecordListCell.m */,
+				22FEEE99168AE14200A71EF4 /* MoreListViewController.h */,
+				22FEEE9A168AE14300A71EF4 /* MoreListViewController.m */,
+			);
+			path = personal_iphone;
+			sourceTree = "<group>";
+		};
+		22FEEE7C168A969800A71EF4 /* setting_iphone */ = {
+			isa = PBXGroup;
+			children = (
+				22FEEE93168AAB3D00A71EF4 /* AboutViewController.h */,
+				22FEEE94168AAB3D00A71EF4 /* AboutViewController.m */,
+				22FEEE7D168A96FF00A71EF4 /* FeedBackViewController.h */,
+				22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */,
+				22FEEE9F168B0B2900A71EF4 /* IphoneSettingViewController.h */,
+				22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */,
+			);
+			path = setting_iphone;
 			sourceTree = "<group>";
 		};
 		EB14D430165B357500CB3260 /* External */ = {
@@ -1204,6 +1248,8 @@
 				EB6DEA7C165A2F1A00AF8003 /* AppDelegate.m */,
 				EBBA0CF1165B25C300D3F11B /* framework */,
 				EBB7330C165C82D8008E407E /* service */,
+				22FEEE78168A945700A71EF4 /* personal_iphone */,
+				22FEEE7C168A969800A71EF4 /* setting_iphone */,
 				22FEEE4316899AE000A71EF4 /* popular_iphone */,
 				EBBA0CEC165B253900D3F11B /* popular */,
 				EBBA0CEE165B257000D3F11B /* personal */,
@@ -1945,12 +1991,18 @@
 				22FEEE5C16899AE100A71EF4 /* ItemDetailViewController.m in Sources */,
 				22FEEE5D16899AE100A71EF4 /* ListDetailViewCell.m in Sources */,
 				22FEEE5E16899AE100A71EF4 /* ListDetailViewController.m in Sources */,
-				22FEEE5F16899AE100A71EF4 /* mineViewController.m in Sources */,
 				22FEEE6016899AE100A71EF4 /* navigationViewController.m in Sources */,
 				22FEEE6116899AE100A71EF4 /* PageManageViewController.m in Sources */,
 				22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */,
 				22FEEE6316899AE100A71EF4 /* sortedViewController.m in Sources */,
 				22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */,
+				22FEEE7B168A945800A71EF4 /* MineViewController.m in Sources */,
+				22FEEE7F168A96FF00A71EF4 /* FeedBackViewController.m in Sources */,
+				22FEEE95168AAB3E00A71EF4 /* AboutViewController.m in Sources */,
+				22FEEE98168AD8A300A71EF4 /* RecordListCell.m in Sources */,
+				22FEEE9B168AE14300A71EF4 /* MoreListViewController.m in Sources */,
+				22FEEE9E168AEF7C00A71EF4 /* ShowListViewCell.m in Sources */,
+				22FEEEA1168B0B2A00A71EF4 /* IphoneSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2045,7 +2097,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
 				PRODUCT_NAME = yueshipin;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2063,7 +2115,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
 				PRODUCT_NAME = yueshipin;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

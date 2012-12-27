@@ -12,9 +12,19 @@
     UIImageView *imageView_;
     UILabel *label_;
     NSArray *listArr_;
+    UILabel *label1_;
+    UILabel *label2_;
+    UILabel *label3_;
+    UILabel *label4_;
+    UILabel *label5_;
 
 }
 @property (strong, nonatomic)UIImageView *imageView;
 @property (strong, nonatomic)UILabel *label;
 @property (strong, nonatomic)NSArray *listArr;
+@property (strong, nonatomic)UILabel *label1;
+@property (strong, nonatomic)UILabel *label2;
+@property (strong, nonatomic)UILabel *label3;
+@property (strong, nonatomic)UILabel *label4;
+@property (strong, nonatomic)UILabel *label5;
 @end

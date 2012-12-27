@@ -59,12 +59,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+      [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
 //    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
 //    [MobClick updateOnlineConfig];
 //    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
 //    [MobClick checkUpdate];
-//    [self generateUserId];
+      [self generateUserId];
 //    [self initSinaweibo];
 //    [self monitorReachability];
 //    [self isParseReachable];
