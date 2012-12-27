@@ -10,8 +10,9 @@
 
 @interface allListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>{
     NSMutableArray *listArray_;
-    UITableView *tableList_;
+    UITableView *tableList_;    
 }
 @property (strong, nonatomic) NSMutableArray *listArray;
 @property (strong, nonatomic) UITableView *tableList;
+
 @end

@@ -88,6 +88,7 @@
     self.segControl = [[UISegmentedControl alloc] initWithItems:itemsArr];
     self.segControl.frame = CGRectMake(12, 40, 296, 51);
     [self.segControl addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventValueChanged];
+    self.segControl.selectedSegmentIndex = 0;
     [self.view addSubview:self.segControl];
     
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
@@ -97,12 +98,14 @@
     self.recordTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
     self.recordTableList.dataSource = self;
     self.recordTableList.delegate = self;
+    self.recordTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.recordTableList.tag = RECORD_TYPE;
     self.recordTableList.scrollEnabled = NO;
     
     self.favTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
     self.favTableList.dataSource = self;
     self.favTableList.delegate = self;
+    self.favTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
 }
@@ -171,7 +174,14 @@
     if (cell == nil) {
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-
+    if (tableView.tag == RECORD_TYPE) {
+       
+        
+    }
+    else if (tableView.tag == Fav_TYPE){
+        NSDictionary *infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+        cell.titleLab.text = [infoDic objectForKey:@"content_name"];
+    }
     return cell;
 }
 

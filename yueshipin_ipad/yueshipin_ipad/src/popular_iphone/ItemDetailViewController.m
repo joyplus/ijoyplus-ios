@@ -8,6 +8,13 @@
 
 #import "ItemDetailViewController.h"
 #import "UIImageView+WebCache.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "CacheUtility.h"
+#import "CMConstants.h"
+#import "MediaPlayerViewController.h"
+#import "AppDelegate.h"
+#import "ProgramViewController.h"
 
 @interface ItemDetailViewController ()
 
@@ -15,6 +22,8 @@
 
 @implementation ItemDetailViewController
 @synthesize infoDic = infoDic_;
+@synthesize videoInfo = videoInfo_;
+@synthesize episodesArr = episodesArr_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -28,11 +37,33 @@
 {
     [super viewDidLoad];
      self.title = [self.infoDic objectForKey:@"prod_name"];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self loadData];
+}
+
+-(void)loadData{
+    
+    NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", [self.infoDic objectForKey:@"prod_id"]];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+    if(cacheResult != nil){
+       
+    }
+    else{
+    
+    
+    }
+
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    [[CacheUtility sharedCache] putInCache:key result:result];
+      videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
+      episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+     NSString *test =   [(NSDictionary *)[(NSArray *)[(NSDictionary *)[episodesArr_ objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0]objectForKey:@"url"];
+        NSLog(@"");
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       
+    }];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,18 +118,21 @@
             
             UIButton *play = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             play.frame = CGRectMake(115, 28, 87, 27);
+            play.tag = 10001;
             [play setTitle:@"播放视频" forState:UIControlStateNormal];
             [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:play];
             
             UIButton *addFav = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             addFav.frame = CGRectMake(14, 152, 142, 27);
+            addFav.tag = 10002;
             [addFav setTitle:[NSString stringWithFormat:@"收藏（%@）",[self.infoDic objectForKey:@"favority_num" ]]  forState:UIControlStateNormal];
             [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:addFav];
             
             UIButton *support = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             support.frame = CGRectMake(165, 152, 142, 27);
+            support.tag = 10003;
             [support setTitle:[NSString stringWithFormat:@"顶（%@）",[self.infoDic objectForKey:@"support_num" ]] forState:UIControlStateNormal];
             [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:support];
@@ -141,58 +175,131 @@
 
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
 -(void)action:(id)sender {
+    UIButton *button = (UIButton *)sender;
+    switch (button.tag) {
+        case 10001:{
+            NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
+                 if(videoUrlArray.count > 0){
+                    NSString *videoUrl = nil;
+                    for(NSDictionary *tempVideo in videoUrlArray){
+                        if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                            videoUrl = [self parseVideoUrl:tempVideo];
+                            break;
+                        }
+                    }
+                    if(videoUrl == nil){
+                        videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+                    }
+                    if(videoUrl == nil){
+                        [self showPlayWebPage];
+                    } else {
+                        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+                        viewController.videoUrl = videoUrl;
+                        viewController.type = 1;
+                        viewController.name = [videoInfo_ objectForKey:@"name"];
+                        [self presentViewController:viewController animated:YES completion:nil];
+                    }
+                }else {
+                    [self showPlayWebPage];
+                }
+ 
+            
+            break;
+        }
+        case 10002:{
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if([responseCode isEqualToString:kSuccessResCode]){
+                    
+                } else {
+                    
+                }
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
+
+            
+            break;
+        }
+        case 10003:{
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if([responseCode isEqualToString:kSuccessResCode]){
+                    
+                } else {
+                    
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+               
+            }];
+
+            
+            break;
+        }
+            
+        default:
+            break;
+    }
+}
+
+- (void)showPlayWebPage
+{
+    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+    NSDictionary *episode = [episodesArr_ objectAtIndex:0];
+    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
+    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
+    viewController.title = [videoInfo_ objectForKey:@"name"];
+    viewController.type = 1;
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
     
 }
+
+- (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
+{
+    NSString *videoUrl;
+    NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+    for(NSDictionary *url in urlArray){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]){
+            videoUrl = [url objectForKey:@"url"];
+            break;
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        if(urlArray.count > 0){
+            videoUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+        }
+    }
+    return videoUrl;
+}
+
 @end

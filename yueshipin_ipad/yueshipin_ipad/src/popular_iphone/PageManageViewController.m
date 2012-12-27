@@ -15,6 +15,9 @@
 #import "ListDetailViewController.h"
 #import "ShowListViewCell.h"
 #import "ItemDetailViewController.h"
+#import "CacheUtility.h"
+#import "MBProgressHUD.h"
+#import "AppDelegate.h"
 #define PAGE_NUM 3
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -60,6 +63,33 @@
 
 
 -(void)loadTVTopsData{
+    MBProgressHUD *tempHUD;
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
+    if(cacheResult != nil){
+        self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+
+                [ self.tvListArr addObjectsFromArray:tempTopsArray];
+            }
+        }
+                
+        [self.tvTableList reloadData];
+    }
+    else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.tvTableList reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
+        
+        
+    }
 
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -68,7 +98,7 @@
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
-                
+               [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
                 [ self.tvListArr addObjectsFromArray:tempTopsArray];
             }
         }
@@ -77,19 +107,45 @@
         }
         
         [self.tvTableList reloadData];
-
+        [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.tvListArr == nil){
             self.tvListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [tempHUD hide:YES];
     }];
     
     }
 
 -(void)loadMovieTopsData{
-    
+    MBProgressHUD *tempHUD;
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
+    if(cacheResult != nil){
+        self.movieListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                
+                [ self.movieListArr addObjectsFromArray:tempTopsArray];
+            }
+        }
+        
+        [self.movieTableList reloadData];
+    }
+    else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.movieTableList reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        } 
+    }
+
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.movieListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -97,7 +153,7 @@
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
-                
+                [[CacheUtility sharedCache] putInCache:@"movie_top_list" result:result];
                 [ self.movieListArr addObjectsFromArray:tempTopsArray];
             }
         }
@@ -105,18 +161,45 @@
             
         }
         [self.movieTableList reloadData];
+         [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.movieListArr == nil){
             self.movieListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+         [tempHUD hide:YES];
     }];
         
 }
 
 -(void)loadShowTopsData{
-    
+
+    MBProgressHUD *tempHUD;
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
+    if(cacheResult != nil){
+        self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                [ self.showListArr addObjectsFromArray:tempTopsArray];
+            }
+        }
+        
+        [self.showTableList reloadData];
+    }
+    else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.showTableList reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
+    }
+
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -127,6 +210,7 @@
             if(tempTopsArray.count > 0){
                 NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
                 if(tempArray.count > 0) {
+                    [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
                     [self.showListArr addObjectsFromArray:tempArray];
                 }
             }
@@ -135,12 +219,14 @@
             
         }
         [self.showTableList reloadData];
+        [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.showListArr == nil){
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [tempHUD hide:YES];
     }];
     
     
@@ -150,10 +236,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self loadTVTopsData];
-    [self loadMovieTopsData];
-    [self loadShowTopsData];
     
 	// Do any additional setup after loading the view.
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 380)];
@@ -173,18 +255,21 @@
     self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 330) style:UITableViewStylePlain];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
+    self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tvTableList.tag = TV_TYPE;
     [self.scrollView addSubview:self.tvTableList];
     
     self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 330) style:UITableViewStylePlain];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
+    self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.movieTableList.tag = MOVIE_TYPE;
     [self.scrollView addSubview:self.movieTableList];
     
     self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 330) style:UITableViewStylePlain];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
+    self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.showTableList.tag = SHOW_TYPE;
     [self.scrollView addSubview:self.showTableList];
     
@@ -195,6 +280,10 @@
     self.pageControl.currentPage = 0;
     [self.pageControl addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:self.pageControl];
+    
+    [self loadTVTopsData];
+    [self loadMovieTopsData];
+    [self loadShowTopsData];
     
 }
 
@@ -223,6 +312,10 @@
                 cell = [[SortedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             }
             NSDictionary *item = [self.tvListArr objectAtIndex:indexPath.row];
+            NSMutableArray *items = [item objectForKey:@"items"];
+            cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name"];
+            cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name"];
+            cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name"];
             cell.title.text = [item objectForKey:@"name"];
             [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
             return cell;
@@ -233,6 +326,10 @@
                 cell = [[SortedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             }
             NSDictionary *item = [self.movieListArr objectAtIndex:indexPath.row];
+            NSMutableArray *items = [item objectForKey:@"items"];
+            cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name"];
+            cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name"];
+            cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name"];
             cell.title.text = [item objectForKey:@"name"];
             [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
             return cell;

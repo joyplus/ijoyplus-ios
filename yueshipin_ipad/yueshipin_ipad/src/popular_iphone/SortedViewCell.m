@@ -34,6 +34,10 @@
         self.labelThree = [[UILabel alloc] initWithFrame:CGRectMake(126, 86, 160, 14)];
         [self addSubview:self.labelThree];
         
+        UILabel *labelFour = [[UILabel alloc] initWithFrame:CGRectMake(130, 100,160, 14)];
+        labelFour.text = @"...";
+        [self addSubview:labelFour];
+        
         
     }
     return self;

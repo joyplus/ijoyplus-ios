@@ -10,6 +10,10 @@
 
 @interface ItemDetailViewController : UITableViewController{
     NSDictionary *infoDic_;
+    NSDictionary *videoInfo_;
+    NSArray *episodesArr_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
+@property (nonatomic, strong) NSDictionary *videoInfo;
+@property (nonatomic, strong) NSArray *episodesArr;
 @end

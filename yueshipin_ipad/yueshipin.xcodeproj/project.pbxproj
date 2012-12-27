@@ -24,6 +24,8 @@
 		22FEEE9B168AE14300A71EF4 /* MoreListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE9A168AE14300A71EF4 /* MoreListViewController.m */; };
 		22FEEE9E168AEF7C00A71EF4 /* ShowListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */; };
 		22FEEEA1168B0B2A00A71EF4 /* IphoneSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */; };
+		22FEEEBF168C128400A71EF4 /* IphoneSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEBE168C128400A71EF4 /* IphoneSearchViewController.m */; };
+		22FEEEC2168C1D5400A71EF4 /* SearchPreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEC1168C1D5400A71EF4 /* SearchPreViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		EB14D426165B306000CB3260 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D424165B306000CB3260 /* HomeViewController.m */; };
 		EB14D434165B357500CB3260 /* DDPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D433165B357500CB3260 /* DDPageControl.m */; };
@@ -411,6 +413,10 @@
 		22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowListViewCell.m; sourceTree = "<group>"; };
 		22FEEE9F168B0B2900A71EF4 /* IphoneSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneSettingViewController.h; sourceTree = "<group>"; };
 		22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneSettingViewController.m; sourceTree = "<group>"; };
+		22FEEEBD168C128400A71EF4 /* IphoneSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneSearchViewController.h; sourceTree = "<group>"; };
+		22FEEEBE168C128400A71EF4 /* IphoneSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneSearchViewController.m; sourceTree = "<group>"; };
+		22FEEEC0168C1D5400A71EF4 /* SearchPreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPreViewController.h; sourceTree = "<group>"; };
+		22FEEEC1168C1D5400A71EF4 /* SearchPreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPreViewController.m; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB14D423165B306000CB3260 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
@@ -919,6 +925,18 @@
 			path = setting_iphone;
 			sourceTree = "<group>";
 		};
+		22FEEEB0168C0E2400A71EF4 /* search_iphone */ = {
+			isa = PBXGroup;
+			children = (
+				22FEEEBD168C128400A71EF4 /* IphoneSearchViewController.h */,
+				22FEEEBE168C128400A71EF4 /* IphoneSearchViewController.m */,
+				22FEEEC0168C1D5400A71EF4 /* SearchPreViewController.h */,
+				22FEEEC1168C1D5400A71EF4 /* SearchPreViewController.m */,
+			);
+			name = search_iphone;
+			path = popular_iphone/search_iphone;
+			sourceTree = "<group>";
+		};
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
@@ -1251,6 +1269,7 @@
 				22FEEE78168A945700A71EF4 /* personal_iphone */,
 				22FEEE7C168A969800A71EF4 /* setting_iphone */,
 				22FEEE4316899AE000A71EF4 /* popular_iphone */,
+				22FEEEB0168C0E2400A71EF4 /* search_iphone */,
 				EBBA0CEC165B253900D3F11B /* popular */,
 				EBBA0CEE165B257000D3F11B /* personal */,
 				EBBA0CEF165B258500D3F11B /* search */,
@@ -2003,6 +2022,8 @@
 				22FEEE9B168AE14300A71EF4 /* MoreListViewController.m in Sources */,
 				22FEEE9E168AEF7C00A71EF4 /* ShowListViewCell.m in Sources */,
 				22FEEEA1168B0B2A00A71EF4 /* IphoneSettingViewController.m in Sources */,
+				22FEEEBF168C128400A71EF4 /* IphoneSearchViewController.m in Sources */,
+				22FEEEC2168C1D5400A71EF4 /* SearchPreViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

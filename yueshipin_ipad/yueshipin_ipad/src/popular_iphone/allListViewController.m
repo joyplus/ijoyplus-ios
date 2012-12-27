@@ -12,6 +12,10 @@
 #import "AllListViewCell.h"
 #import "UIImageView+WebCache.h"
 #import "ListDetailViewController.h"
+#import "MBProgressHUD.h"
+#import "CacheUtility.h"
+#import "IphoneSettingViewController.h"
+#import "SearchPreViewController.h"
 #define pageSize 20
 @interface allListViewController ()
 
@@ -36,7 +40,7 @@
     if(responseCode == nil){
         NSArray *tempTopsArray = [result objectForKey:@"tops"];
         if(tempTopsArray.count > 0){
-           
+           [[CacheUtility sharedCache] putInCache:@"top_list" result:result];
             [ self.listArray addObjectsFromArray:tempTopsArray];
         }
     }
@@ -49,15 +53,31 @@
 
 
 -(void)loadData{
+    MBProgressHUD *tempHUD;
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
+    if(cacheResult != nil){
+        [self parseTopsListData:cacheResult];
+    } else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
+    }
+
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [self parseTopsListData:result];
+        [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.listArray == nil){
             self.listArray = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [tempHUD hide:YES];
     }];
 
 
@@ -67,20 +87,55 @@
 {
     [super viewDidLoad];
     self.title = @"悦单";
-	
-    [self loadData];
+    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
+                                     
+                                     initWithTitle:@"搜素"
+                                     
+                                     style:UIBarButtonItemStyleDone
+                                     
+                                     target:self
+                                     
+                                     action:@selector(search:)];
+    leftButton.image=[UIImage imageNamed:@"left_button.png"];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    
+    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
+                                     
+                                     initWithTitle:@"设置"
+                                     
+                                     style:UIBarButtonItemStyleDone
+                                     
+                                     target:self
+                                     
+                                     action:@selector(setting:)];
+    rightButton.image=[UIImage imageNamed:@"right_button.png"];
+    self.navigationItem.rightBarButtonItem = rightButton;
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 380) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
+    self.tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableList];
+    [self loadData];
 }
+
+-(void)search:(id)sender{
+    SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
+    [self.navigationController pushViewController:searchViewCotroller animated:YES];
+
+}
+
+-(void)setting:(id)sender{
+    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+
+}
+
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [self.listArray count];
 }
-
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -92,7 +147,6 @@
     NSDictionary *item = [self.listArray objectAtIndex:indexPath.row];
     NSMutableArray *items = [item objectForKey:@"items"];
     cell.label.text = [item objectForKey:@"name"];
-    NSDictionary *test = [items objectAtIndex:0] ;
     cell.label1.text = [[items objectAtIndex:0] objectForKey:@"prod_name" ];
     cell.label2.text = [[items objectAtIndex:1] objectForKey:@"prod_name" ];
     cell.label3.text = [[items objectAtIndex:2] objectForKey:@"prod_name" ];
