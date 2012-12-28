@@ -1,12 +1,12 @@
 //
-//  ItemDetailViewController.m
+//  MovieDetailViewController.m
 //  yueshipin
 //
-//  Created by 08 on 12-12-25.
+//  Created by 08 on 12-12-28.
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "ItemDetailViewController.h"
+#import "IphoneMovieDetailViewController.h"
 #import "UIImageView+WebCache.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
@@ -15,15 +15,13 @@
 #import "MediaPlayerViewController.h"
 #import "AppDelegate.h"
 #import "ProgramViewController.h"
-#define TV_TYPE 0
-#define MOVIE_TYPE 1
-#define SHOW_TYPE 2
 
-@interface ItemDetailViewController ()
+@interface IphoneMovieDetailViewController ()
 
 @end
 
-@implementation ItemDetailViewController
+@implementation IphoneMovieDetailViewController
+
 @synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
 @synthesize episodesArr = episodesArr_;
@@ -41,7 +39,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-     self.title = [self.infoDic objectForKey:@"prod_name"];
+    self.title = [self.infoDic objectForKey:@"prod_name"];
     [self loadData];
 }
 
@@ -50,40 +48,26 @@
     NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", [self.infoDic objectForKey:@"prod_id"]];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
-       
-    }
-    else{
-    
-    
-    }
-
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-    [[CacheUtility sharedCache] putInCache:key result:result];
-      videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
-      episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
-      summary_ = [videoInfo_ objectForKey:@"summary"];
-        [self.tableView reloadData];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
-    }];
-
-}
-
--(int)CalculationNumberOfRows{
-    if (videoType_ == TV_TYPE) {
         
     }
-    else if (videoType_ == MOVIE_TYPE){
-    
+    else{
+        
+        
     }
-    else if(videoType_ == SHOW_TYPE){
     
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [[CacheUtility sharedCache] putInCache:key result:result];
+        videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
+        episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        summary_ = [videoInfo_ objectForKey:@"summary"];
+        [self.tableView reloadData];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
     
-    }
-    return 0;
-
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -166,7 +150,7 @@
             [cell addSubview:summary];
             break;
         }
-                 
+            
         case 2:{
             
             
@@ -198,7 +182,7 @@
         return 100;
     }
     return 0;
-
+    
 }
 
 
@@ -207,30 +191,30 @@
     switch (button.tag) {
         case 10001:{
             NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
-                 if(videoUrlArray.count > 0){
-                    NSString *videoUrl = nil;
-                    for(NSDictionary *tempVideo in videoUrlArray){
-                        if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                            videoUrl = [self parseVideoUrl:tempVideo];
-                            break;
-                        }
+            if(videoUrlArray.count > 0){
+                NSString *videoUrl = nil;
+                for(NSDictionary *tempVideo in videoUrlArray){
+                    if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                        videoUrl = [self parseVideoUrl:tempVideo];
+                        break;
                     }
-                    if(videoUrl == nil){
-                        videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-                    }
-                    if(videoUrl == nil){
-                        [self showPlayWebPage];
-                    } else {
-                        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-                        viewController.videoUrl = videoUrl;
-                        viewController.type = 1;
-                        viewController.name = [videoInfo_ objectForKey:@"name"];
-                        [self presentViewController:viewController animated:YES completion:nil];
-                    }
-                }else {
-                    [self showPlayWebPage];
                 }
- 
+                if(videoUrl == nil){
+                    videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+                }
+                if(videoUrl == nil){
+                    [self showPlayWebPage];
+                } else {
+                    MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+                    viewController.videoUrl = videoUrl;
+                    viewController.type = 1;
+                    viewController.name = [videoInfo_ objectForKey:@"name"];
+                    [self presentViewController:viewController animated:YES completion:nil];
+                }
+            }else {
+                [self showPlayWebPage];
+            }
+            
             
             break;
         }
@@ -247,7 +231,7 @@
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 
             }];
-
+            
             
             break;
         }
@@ -261,9 +245,9 @@
                     
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-               
+                
             }];
-
+            
             
             break;
         }

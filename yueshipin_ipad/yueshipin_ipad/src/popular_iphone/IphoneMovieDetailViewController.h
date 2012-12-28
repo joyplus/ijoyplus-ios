@@ -1,14 +1,14 @@
 //
-//  ItemDetailViewController.h
+//  MovieDetailViewController.h
 //  yueshipin
 //
-//  Created by 08 on 12-12-25.
+//  Created by 08 on 12-12-28.
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ItemDetailViewController : UITableViewController{
+@interface IphoneMovieDetailViewController : UITableViewController{
     NSDictionary *infoDic_;
     NSDictionary *videoInfo_;
     NSArray *episodesArr_;
@@ -21,3 +21,6 @@
 @property (nonatomic, assign) int videoType;
 @property (nonatomic, strong) NSString *summary;
 @end
+
+
+

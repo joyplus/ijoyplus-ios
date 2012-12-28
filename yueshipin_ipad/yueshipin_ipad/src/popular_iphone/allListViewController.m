@@ -17,6 +17,7 @@
 #import "IphoneSettingViewController.h"
 #import "SearchPreViewController.h"
 #define pageSize 20
+#define MOVIE_TYPE 9001
 @interface allListViewController ()
 
 @end
@@ -167,6 +168,7 @@
     NSMutableArray *items = [item objectForKey:@"items"];
     ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
     listDetailViewController.listArr = items;
+    listDetailViewController.Type = MOVIE_TYPE;
     [self.navigationController pushViewController:listDetailViewController animated:YES];
     
 }

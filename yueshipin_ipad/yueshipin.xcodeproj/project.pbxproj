@@ -26,6 +26,9 @@
 		22FEEEA1168B0B2A00A71EF4 /* IphoneSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */; };
 		22FEEEBF168C128400A71EF4 /* IphoneSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEBE168C128400A71EF4 /* IphoneSearchViewController.m */; };
 		22FEEEC2168C1D5400A71EF4 /* SearchPreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEC1168C1D5400A71EF4 /* SearchPreViewController.m */; };
+		22FEEED3168D463A00A71EF4 /* TVDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEED2168D463900A71EF4 /* TVDetailViewController.m */; };
+		22FEEEDD168D474D00A71EF4 /* IphoneMovieDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */; };
+		22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		EB14D426165B306000CB3260 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D424165B306000CB3260 /* HomeViewController.m */; };
 		EB14D434165B357500CB3260 /* DDPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D433165B357500CB3260 /* DDPageControl.m */; };
@@ -417,6 +420,12 @@
 		22FEEEBE168C128400A71EF4 /* IphoneSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneSearchViewController.m; sourceTree = "<group>"; };
 		22FEEEC0168C1D5400A71EF4 /* SearchPreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchPreViewController.h; sourceTree = "<group>"; };
 		22FEEEC1168C1D5400A71EF4 /* SearchPreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchPreViewController.m; sourceTree = "<group>"; };
+		22FEEED1168D463800A71EF4 /* TVDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVDetailViewController.h; sourceTree = "<group>"; };
+		22FEEED2168D463900A71EF4 /* TVDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVDetailViewController.m; sourceTree = "<group>"; };
+		22FEEEDB168D474B00A71EF4 /* IphoneMovieDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneMovieDetailViewController.h; sourceTree = "<group>"; };
+		22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneMovieDetailViewController.m; sourceTree = "<group>"; };
+		22FEEEE1168D4C5C00A71EF4 /* IphoneShowDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneShowDetailViewController.h; sourceTree = "<group>"; };
+		22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneShowDetailViewController.m; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB14D423165B306000CB3260 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
@@ -873,6 +882,8 @@
 		22FEEE4316899AE000A71EF4 /* popular_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				22FEEEE1168D4C5C00A71EF4 /* IphoneShowDetailViewController.h */,
+				22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */,
 				22FEEE4416899AE100A71EF4 /* AllListViewCell.h */,
 				22FEEE4516899AE100A71EF4 /* AllListViewCell.m */,
 				22FEEE4616899AE100A71EF4 /* allListViewController.h */,
@@ -895,6 +906,10 @@
 				22FEEE5916899AE100A71EF4 /* TabBarViewController.m */,
 				22FEEE9C168AEF7A00A71EF4 /* ShowListViewCell.h */,
 				22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */,
+				22FEEED1168D463800A71EF4 /* TVDetailViewController.h */,
+				22FEEED2168D463900A71EF4 /* TVDetailViewController.m */,
+				22FEEEDB168D474B00A71EF4 /* IphoneMovieDetailViewController.h */,
+				22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */,
 			);
 			path = popular_iphone;
 			sourceTree = "<group>";
@@ -2024,6 +2039,9 @@
 				22FEEEA1168B0B2A00A71EF4 /* IphoneSettingViewController.m in Sources */,
 				22FEEEBF168C128400A71EF4 /* IphoneSearchViewController.m in Sources */,
 				22FEEEC2168C1D5400A71EF4 /* SearchPreViewController.m in Sources */,
+				22FEEED3168D463A00A71EF4 /* TVDetailViewController.m in Sources */,
+				22FEEEDD168D474D00A71EF4 /* IphoneMovieDetailViewController.m in Sources */,
+				22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

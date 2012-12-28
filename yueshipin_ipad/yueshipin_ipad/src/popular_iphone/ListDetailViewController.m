@@ -9,8 +9,11 @@
 #import "ListDetailViewController.h"
 #import "ListDetailViewCell.h"
 #import "UIImageView+WebCache.h"
-#import "ItemDetailViewController.h"
-
+#import "IphoneMovieDetailViewController.h"
+#import "TVDetailViewController.h"
+#define TV_TYPE 9000
+#define MOVIE_TYPE 9001
+#define SHOW_TYPE 9002
 @interface ListDetailViewController ()
 
 @end
@@ -88,10 +91,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-     ItemDetailViewController *detailViewController = [[ItemDetailViewController alloc] init];
-     detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
-     [self.navigationController pushViewController:detailViewController animated:YES];
+    if (Type_ == TV_TYPE) {
+        TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+        detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        
+    }
+    if (Type_ == MOVIE_TYPE) {
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
     
 }
 

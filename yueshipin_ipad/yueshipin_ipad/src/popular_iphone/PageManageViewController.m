@@ -14,7 +14,7 @@
 #import "UIImageView+WebCache.h"
 #import "ListDetailViewController.h"
 #import "ShowListViewCell.h"
-#import "ItemDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
 #import "CacheUtility.h"
 #import "MBProgressHUD.h"
 #import "AppDelegate.h"
@@ -365,6 +365,7 @@
         NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         listDetailViewController.listArr = items;
+        listDetailViewController.Type = TV_TYPE;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
     else if (tableViewTag == MOVIE_TYPE){
@@ -372,16 +373,17 @@
         NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         listDetailViewController.listArr = items;
+        listDetailViewController.Type = MOVIE_TYPE;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
     else if (tableViewTag == SHOW_TYPE){
         NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
-        ItemDetailViewController *detailViewController = [[ItemDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         detailViewController.infoDic = item;
+        detailViewController.videoType = SHOW_TYPE; 
         [self.navigationController pushViewController:detailViewController animated:YES];
     
     }
-
 
 }
 
