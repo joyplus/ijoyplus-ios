@@ -55,6 +55,7 @@
     PersonalViewController *personalViewController;
     DownloadViewController *downloadViewController;
     NSInteger selectedIndex;
+    JSBadgeView *badgeView;
 }
 
 @end
@@ -65,6 +66,23 @@
 
 #pragma mark -
 #pragma mark View lifecycle
+
+#pragma mark -
+#pragma mark Memory management
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    homeViewController = nil;
+    settingsViewController = nil;
+    searchViewController = nil;
+    personalViewController = nil;
+    badgeView = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+}
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
@@ -97,6 +115,7 @@
         
         selectedIndex = 0;
         [self initMenuController];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
 	}
     return self;
 }
@@ -129,6 +148,11 @@
     if(![AppDelegate instance].triggeredByPlayer){
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
     }
+}
+
+- (void)updateDownloadNum:(NSNotification *)aNotification
+{
+    [tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -201,6 +225,19 @@
         imageView.frame = CGRectMake(imageView.frame.origin.x + 1, imageView.frame.origin.y + 1, 28, 28);
         imageView.image = [UIImage imageNamed:@"download_icon"];
         label.text = @"缓存视频";
+        if(badgeView == nil){
+            badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
+            badgeView.badgePositionAdjustment = CGPointMake(50, 18);
+            badgeView.badgeText = @"0";
+            [badgeView setHidden:YES];
+        }
+        SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+        if(newNum == nil || newNum.newDownloadItemNum == 0){
+            [badgeView setHidden:YES];
+        } else {
+            [badgeView setHidden:NO];
+            badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
+        }
     } else if(indexPath.row == 4){
         UIView* bgView = [[UIView alloc] init];
 		[bgView setBackgroundColor:[UIColor clearColor]];
@@ -240,6 +277,16 @@
     if(selectedIndex == 4){
         return;
     }
+    if(selectedIndex == 3){
+        SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+        if(newNum.newDownloadItemNum > 0){
+            [badgeView setHidden:YES];
+            newNum.newDownloadItemNum = 0;
+            [newNum save];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+        }
+
+    }
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
 }
 
@@ -267,22 +314,6 @@
     [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
     [AppDelegate instance].closed = ![AppDelegate instance].closed;
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
-}
-
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    homeViewController = nil;
-    settingsViewController = nil;
-    searchViewController = nil;
-    personalViewController = nil;
 }
 
 @end

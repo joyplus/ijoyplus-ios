@@ -9,5 +9,14 @@
 #import "SequenceData.h"
 
 @implementation SequenceData
+@synthesize newDownloadItemNum;
+@synthesize type;
+
+- (id)initWithType:(int)seqType
+{
+    self = [self init];
+    self.type = seqType;
+    return self;
+}
 
 @end

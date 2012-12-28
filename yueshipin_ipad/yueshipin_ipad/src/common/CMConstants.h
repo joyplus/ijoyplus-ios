@@ -44,6 +44,7 @@
 #define kPhoneNumber @"kPhoneNumber"
 
 #define LOCAL_KEYS_NUMBER 5
+#define MAX_DOWNLOADING_THREADS 2
 #define umengAppKey @"50c069e25270154e81000056"
 
 #define YOU_KU @"youku"
@@ -59,6 +60,7 @@
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 #define ADD_NEW_DOWNLOAD_ITEM @"add_new_download_item"
+#define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
 
 #define WATCH_RECORD_NUMBER 5
 

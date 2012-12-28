@@ -10,4 +10,9 @@
 
 @interface SequenceData : SQLitePersistentObject
 
+- (id)initWithType:(int)seqType;
+
+@property (nonatomic, assign)int newDownloadItemNum;
+@property (nonatomic, assign)int type;// 0 : for downloading item
+
 @end

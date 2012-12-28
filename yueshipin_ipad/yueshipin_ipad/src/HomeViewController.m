@@ -15,7 +15,6 @@
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
 
-
 #define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 167
 #define LIST_LOGO_WIDTH 220
@@ -68,6 +67,7 @@
     
     UIImageView *lastSelectedListImage;
     UIImageView *lastSelectedOverlay;
+    JSBadgeView *badgeView;
 }
 
 @end
@@ -151,10 +151,28 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [self updateDownloadNum:nil];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
         return;
+    }
+}
+
+- (void)updateDownloadNum:(NSNotification *)aNotification
+{
+    if(badgeView == nil){
+        badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
+        badgeView.badgePositionAdjustment = CGPointMake(-10, 7);
+        badgeView.badgeText = @"0";
+        [badgeView setHidden:YES];
+    }
+    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+    if(newNum == nil || newNum.newDownloadItemNum == 0){
+        [badgeView setHidden:YES];
+    } else {
+        [badgeView setHidden:NO];
+        badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
     }
 }
 
@@ -169,6 +187,7 @@
     videoType = 0;
     [self retrieveTopsListData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
 }
 
 - (void)handlePushNotification:(NSNotification *)notification
