@@ -331,7 +331,9 @@
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         button.frame = CGRectMake((i/4)*240, (i%4)*29, 240, 27);
         button.tag = i+1;
-        [button setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateNormal];
+        NSDictionary *dic = [episodesArr_ objectAtIndex:i];
+        NSString *title = [dic objectForKey:@"name"];
+        [button setTitle:title forState:UIControlStateNormal];
         [button addTarget:self action:@selector(episodesPlay:) forControlEvents:UIControlEventTouchUpInside];
         [scrollView_ addSubview:button];
     }
