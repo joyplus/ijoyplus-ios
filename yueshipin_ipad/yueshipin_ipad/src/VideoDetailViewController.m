@@ -52,6 +52,9 @@
     _sinaweibo = nil;
     video = nil;
     topics = nil;
+    [downloadUrls removeAllObjects];
+    downloadUrls = nil;
+    episodeArray = nil;
 }
 
 - (void)shareBtnClicked
@@ -263,5 +266,39 @@
 - (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
 {
     [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+}
+
+- (void)getDownloadUrls:(int)num
+{
+    if(num < 0 || num >=episodeArray.count){
+        downloadUrls = nil;
+        return;
+    }
+    downloadUrls = [[NSMutableArray alloc]initWithCapacity:3];
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        for(NSDictionary *tempVideo in videoUrlArray){
+            NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+            for(NSDictionary *url in urlArray){
+                if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                    NSString *videoUrl = [url objectForKey:@"url"];
+                    [downloadUrls addObject:videoUrl];
+                }
+            }
+        }
+    }
+}
+
+- (void)updateBadgeIcon
+{
+    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+    if (newNum == nil) {
+        newNum = [[SequenceData alloc]initWithType:0];
+        newNum.newDownloadItemNum = 1;
+    } else {
+        newNum.newDownloadItemNum++;
+    }
+    [newNum save];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
 }
 @end

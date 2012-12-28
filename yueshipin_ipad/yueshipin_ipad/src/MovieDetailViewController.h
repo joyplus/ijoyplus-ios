@@ -8,7 +8,7 @@
 
 #import "VideoDetailViewController.h"
 
-@interface MovieDetailViewController : VideoDetailViewController 
+@interface MovieDetailViewController : VideoDetailViewController <NSURLConnectionDelegate>
 
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;

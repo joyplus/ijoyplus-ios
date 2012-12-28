@@ -16,8 +16,8 @@
 - (void)refreshCommentListView:(int)tableHeight;
 - (void)getTopComments:(int)num;
 - (void)showSublistView:(int)num;
-- (void)downloadDrama:(int)num;
-- (void)downloadShow:(int)num;
+- (BOOL)downloadDrama:(int)num;
+- (BOOL)downloadShow:(int)num;
 @end
 
 @interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate, McDownloadDelegate>{
@@ -26,6 +26,8 @@
     NSArray *topics;
     NSInteger willPlayIndex;
     McDownload  *downloader;
+    NSMutableArray *downloadUrls;
+    NSArray *episodeArray;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (assign, nonatomic)int type;
@@ -33,4 +35,6 @@
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 - (void)addListBtnClicked;
+- (void)getDownloadUrls:(int)num;
+- (void)updateBadgeIcon;
 @end

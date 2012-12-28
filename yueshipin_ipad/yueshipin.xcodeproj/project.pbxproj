@@ -158,6 +158,9 @@
 		EB9382A31668A1CC0046A3B1 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A21668A1CC0046A3B1 /* Default-Landscape~ipad.png */; };
 		EB9382A51668A1E10046A3B1 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */; };
 		EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */; };
+		EBB48B0A168D476C00DBED1C /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB48B09168D476C00DBED1C /* JSBadgeView.m */; };
+		EBB48B0D168D4F3800DBED1C /* SequenceData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB48B0C168D4F3800DBED1C /* SequenceData.m */; };
+		EBB48B0F168D624200DBED1C /* download_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB48B0E168D624200DBED1C /* download_disabled@2x.png */; };
 		EBB59CA91666F68300F646C7 /* finish_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CA71666F68300F646C7 /* finish_pressed@2x.png */; };
 		EBB59CAA1666F68300F646C7 /* finish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CA81666F68300F646C7 /* finish@2x.png */; };
 		EBB59CAE1666FE8400F646C7 /* MyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CAD1666FE8400F646C7 /* MyListViewController.m */; };
@@ -318,14 +321,15 @@
 		EBBA858E1684429400973BAA /* SubdownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA858D1684429400973BAA /* SubdownloadItem.m */; };
 		EBBA85AF1688481300973BAA /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85AE1688481300973BAA /* Parse.framework */; };
 		EBBA85B21688489F00973BAA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B11688489F00973BAA /* Security.framework */; };
-		EBBA85B4168848D400973BAA /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B3168848D400973BAA /* Accounts.framework */; };
+		EBBA85B4168848D400973BAA /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B3168848D400973BAA /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		EBBA85B6168848E700973BAA /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B5168848E700973BAA /* AudioToolbox.framework */; };
 		EBBA85B81688490000973BAA /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B7168848FF00973BAA /* MobileCoreServices.framework */; };
 		EBBA85BA1688490C00973BAA /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85B91688490C00973BAA /* AdSupport.framework */; };
 		EBBA85BE1688492E00973BAA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85BD1688492D00973BAA /* StoreKit.framework */; };
 		EBBA85C01688496300973BAA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85BF1688496300973BAA /* SystemConfiguration.framework */; };
 		EBBA85C2168849B800973BAA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85C1168849B700973BAA /* CFNetwork.framework */; };
-		EBBA85C4168849CD00973BAA /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85C3168849CD00973BAA /* Social.framework */; };
+		EBBB37DB168BED1A00B2BD84 /* DownloadHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB37DA168BED1A00B2BD84 /* DownloadHandler.m */; };
+		EBBB37E3168C381700B2BD84 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBA85C3168849CD00973BAA /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		EBBB5CED167EC97000F83CBA /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB5CEC167EC97000F83CBA /* RadioButton.m */; };
 		EBBB5CF1167ECC0900F83CBA /* RadioButton-Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CEF167ECC0900F83CBA /* RadioButton-Selected.png */; };
 		EBBB5CF2167ECC0900F83CBA /* RadioButton-Unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBB5CF0167ECC0900F83CBA /* RadioButton-Unselected.png */; };
@@ -618,6 +622,11 @@
 		EB9382A21668A1CC0046A3B1 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_btn_pressed@2x.png"; sourceTree = "<group>"; };
+		EBB48B08168D476C00DBED1C /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
+		EBB48B09168D476C00DBED1C /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
+		EBB48B0B168D4F3800DBED1C /* SequenceData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SequenceData.h; path = common/component/SequenceData.h; sourceTree = "<group>"; };
+		EBB48B0C168D4F3800DBED1C /* SequenceData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SequenceData.m; path = common/component/SequenceData.m; sourceTree = "<group>"; };
+		EBB48B0E168D624200DBED1C /* download_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_disabled@2x.png"; sourceTree = "<group>"; };
 		EBB59CA71666F68300F646C7 /* finish_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finish_pressed@2x.png"; sourceTree = "<group>"; };
 		EBB59CA81666F68300F646C7 /* finish@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finish@2x.png"; sourceTree = "<group>"; };
 		EBB59CAC1666FE8300F646C7 /* MyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyListViewController.h; sourceTree = "<group>"; };
@@ -813,6 +822,8 @@
 		EBBA85BF1688496300973BAA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		EBBA85C1168849B700973BAA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		EBBA85C3168849CD00973BAA /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		EBBB37D9168BED1A00B2BD84 /* DownloadHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadHandler.h; path = common/component/DownloadHandler.h; sourceTree = "<group>"; };
+		EBBB37DA168BED1A00B2BD84 /* DownloadHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadHandler.m; path = common/component/DownloadHandler.m; sourceTree = "<group>"; };
 		EBBB5CEB167EC97000F83CBA /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
 		EBBB5CEC167EC97000F83CBA /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
 		EBBB5CEF167ECC0900F83CBA /* RadioButton-Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RadioButton-Selected.png"; sourceTree = "<group>"; };
@@ -958,8 +969,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBBB37E3168C381700B2BD84 /* Social.framework in Frameworks */,
 				EBBCD2CA168977C200485412 /* AVFoundation.framework in Frameworks */,
-				EBBA85C4168849CD00973BAA /* Social.framework in Frameworks */,
 				EBBA85C2168849B800973BAA /* CFNetwork.framework in Frameworks */,
 				EBBA85C01688496300973BAA /* SystemConfiguration.framework in Frameworks */,
 				EB6DEA6D165A2F1A00AF8003 /* UIKit.framework in Frameworks */,
@@ -988,6 +999,7 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				EBB48B07168D476C00DBED1C /* JSBadgeView */,
 				EBBBF3D11682B34C002F198E /* GMGridView */,
 				EBBB98FD168189E700612606 /* SQLLite */,
 				EBBB98CA16817BF200612606 /* McDownload */,
@@ -1016,6 +1028,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBB48B0E168D624200DBED1C /* download_disabled@2x.png */,
 				EBBCD2D61689A6BC00485412 /* clear_pressed.png */,
 				EBBCD2D71689A6BC00485412 /* clear_pressed@2x.png */,
 				EBBCD2D81689A6BC00485412 /* clear.png */,
@@ -1471,6 +1484,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		EBB48B07168D476C00DBED1C /* JSBadgeView */ = {
+			isa = PBXGroup;
+			children = (
+				EBB48B08168D476C00DBED1C /* JSBadgeView.h */,
+				EBB48B09168D476C00DBED1C /* JSBadgeView.m */,
+			);
+			path = JSBadgeView;
+			sourceTree = "<group>";
+		};
 		EBB59CB816670A3E00F646C7 /* umeng */ = {
 			isa = PBXGroup;
 			children = (
@@ -1566,6 +1588,8 @@
 				EB14D43E165B4FED00CB3260 /* MovieDetailViewController.h */,
 				EB14D43F165B4FED00CB3260 /* MovieDetailViewController.m */,
 				EB14D440165B4FED00CB3260 /* MovieDetailViewController.xib */,
+				EBBB37D9168BED1A00B2BD84 /* DownloadHandler.h */,
+				EBBB37DA168BED1A00B2BD84 /* DownloadHandler.m */,
 				EBF3A95E166301F100EBF56D /* DramaDetailViewController.h */,
 				EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */,
 				EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */,
@@ -1680,6 +1704,8 @@
 				EBBA8582168438B100973BAA /* SubdownloadViewController.m */,
 				EBBA858C1684429400973BAA /* SubdownloadItem.h */,
 				EBBA858D1684429400973BAA /* SubdownloadItem.m */,
+				EBB48B0B168D4F3800DBED1C /* SequenceData.h */,
+				EBB48B0C168D4F3800DBED1C /* SequenceData.m */,
 			);
 			name = download;
 			sourceTree = "<group>";
@@ -2104,6 +2130,7 @@
 				EBBCD2E71689A6BC00485412 /* notice@2x.png in Resources */,
 				EBBCD2E81689A6BC00485412 /* right.png in Resources */,
 				EBBCD2E91689A6BC00485412 /* right@2x.png in Resources */,
+				EBB48B0F168D624200DBED1C /* download_disabled@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2230,6 +2257,9 @@
 				EBBBF3E21682B34C002F198E /* UIView+GMGridViewAdditions.m in Sources */,
 				EBBA8583168438B100973BAA /* SubdownloadViewController.m in Sources */,
 				EBBA858E1684429400973BAA /* SubdownloadItem.m in Sources */,
+				EBBB37DB168BED1A00B2BD84 /* DownloadHandler.m in Sources */,
+				EBB48B0A168D476C00DBED1C /* JSBadgeView.m in Sources */,
+				EBB48B0D168D4F3800DBED1C /* SequenceData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

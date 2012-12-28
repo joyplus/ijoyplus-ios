@@ -34,6 +34,7 @@
 @synthesize wifiReach;
 @synthesize sinaweibo;
 @synthesize downloaderArray;
+@synthesize currentDownloadingNum;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -43,20 +44,16 @@
     McDownload *newdownloader = [[McDownload alloc] init];
     newdownloader.idNum = item.itemId;
     if(item.type != 1){
-        newdownloader.subidNum = ((SubdownloadItem *)item).subitemId;
+        newdownloader.subidNum = ((SubdownloadItem *)item).pk;
     }
+    
     NSURL *url = [NSURL URLWithString:item.url];
     newdownloader.url = url;
     newdownloader.fileName = item.fileName;
-    if([item.downloadingStatus isEqualToString:@"start"]){
-        newdownloader.isStop = NO;
-    } else {
-        newdownloader.isStop = YES;
-    }
+    newdownloader.status = 3;
     [self.downloaderArray addObject:newdownloader];
     [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
 }
-
 
 - (NSMutableArray *)getDownloaderQueue
 {
@@ -66,10 +63,18 @@
 - (void)deleteDownloaderInQueue:(DownloadItem *)item
 {
     for (McDownload *downloader in self.downloaderArray) {
-        if([downloader.idNum isEqualToString:item.itemId]){
-            [downloader stop];
-            [self.downloaderArray removeObject:downloader];
-            break;
+        if(item.type == 1){
+            if([downloader.idNum isEqualToString:item.itemId]){
+                [downloader stopAndClear];
+                [self.downloaderArray removeObject:downloader];
+                break;
+            }
+        } else {
+            if([downloader.idNum isEqualToString:item.itemId] && downloader.subidNum == item.pk){
+                [downloader stopAndClear];
+                [self.downloaderArray removeObject:downloader];
+                break;
+            }
         }
     }
 }
@@ -80,32 +85,36 @@
     self.downloaderArray = [[NSMutableArray alloc]initWithCapacity:allItem.count];
     for (DownloadItem *item in allItem) {
         if(item.type == 1){
-            McDownload *newdownloader = [[McDownload alloc] init];
-            newdownloader.idNum = item.itemId;
-            NSURL *url = [NSURL URLWithString:item.url];
-            newdownloader.url = url;
-            newdownloader.fileName = item.fileName;
-            if([item.downloadingStatus isEqualToString:@"start"]){
-                newdownloader.isStop = NO;
-            } else {
-                newdownloader.isStop = YES;
+            if(![item.downloadStatus isEqualToString:@"done"]){
+                McDownload *newdownloader = [[McDownload alloc] init];
+                newdownloader.idNum = item.itemId;
+                NSURL *url = [NSURL URLWithString:item.url];
+                newdownloader.url = url;
+                newdownloader.fileName = item.fileName;
+                if([item.downloadStatus isEqualToString:@"start"]){
+                    newdownloader.status = 1;
+                } else {
+                    newdownloader.status = 0;
+                }
+                [self.downloaderArray addObject:newdownloader];
             }
-            [self.downloaderArray addObject:newdownloader];
         } else {
             NSArray *subitems = [SubdownloadItem allObjects];
             for(SubdownloadItem *subitem in subitems){
-                McDownload *newdownloader = [[McDownload alloc] init];
-                newdownloader.idNum = subitem.itemId;
-                newdownloader.subidNum = subitem.subitemId;
-                NSURL *url = [NSURL URLWithString:subitem.url];
-                newdownloader.url = url;
-                newdownloader.fileName = subitem.fileName;
-                if([subitem.downloadingStatus isEqualToString:@"start"]){
-                    newdownloader.isStop = NO;
-                } else {
-                    newdownloader.isStop = YES;
+                if(![item.downloadStatus isEqualToString:@"done"]){
+                    McDownload *newdownloader = [[McDownload alloc] init];
+                    newdownloader.idNum = subitem.itemId;
+                    newdownloader.subidNum = subitem.pk;
+                    NSURL *url = [NSURL URLWithString:subitem.url];
+                    newdownloader.url = url;
+                    newdownloader.fileName = subitem.fileName;
+                    if([subitem.downloadStatus isEqualToString:@"start"]){
+                        newdownloader.status = 1;
+                    } else {
+                        newdownloader.status = 0;
+                    }
+                    [self.downloaderArray addObject:newdownloader];
                 }
-                [self.downloaderArray addObject:newdownloader];
             }
         }
     }
@@ -139,7 +148,7 @@
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
-    [Parse setApplicationId:@"nSTWZrfmpCMkCWVy9batn6klsNk4PxCsxblPLX9c" clientKey:@"ogCknWEwmRI3f4whLZMsux90fnb9ECiydb2nPxGk"];
+    [Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -181,7 +190,6 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSString *prodId = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"prod_id"]];
     NSString *prodType = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"prod_type"]];
-    NSString *alert = [userInfo objectForKey:@"alert"];
     [PFPush handlePush:userInfo];
     if(!self.foreground && prodId != nil && prodType != nil){
         userInfo = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", prodType, @"prod_type", nil];

@@ -111,4 +111,26 @@
 {
     [HUD hide:YES afterDelay:0.2];
 }
+
++ (void)showDownloadSuccess:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
+    HUD.labelText = @"已成功加至缓存队列";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:1.5];
+}
+
++ (void)showDownloadFailure:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
+    HUD.labelText = @"该视频无法缓存";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:2];
+}
 @end

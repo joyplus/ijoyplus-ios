@@ -15,18 +15,18 @@
 #import "CommentListViewController.h"
 #import "ListViewController.h"
 #import "DownloadItem.h"
+#import "DownloadHandler.h"
+#import "SequenceData.h"
 #define DEFAULT_POSOTION_Y 585
 
 @interface MovieDetailViewController (){
     NSMutableArray *commentArray;
-    NSArray *episodeArray;
     SublistViewController *topicListViewController;
     CommentListViewController *commentListViewController;
     UIButton *introBtn;
     float introContentHeight;
     BOOL introExpand;
     UITapGestureRecognizer *tapGesture;
-    NSString *videoAddress;
 }
 
 @end
@@ -41,7 +41,6 @@
 
 - (void)viewDidUnload {
     [self setDownloadBtn:nil];
-    videoAddress = nil;
     [commentArray removeAllObjects];
     commentArray = nil;
     episodeArray = nil;
@@ -192,6 +191,7 @@
     [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.downloadBtn.frame = CGRectMake(394, 405, 76, 34);
+    [self.downloadBtn setHidden:YES];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -272,7 +272,7 @@
             [introBtn removeFromSuperview];
             introBtn = nil;
         }
-        [self getVideoAddress];
+        [self getDownloadUrls:0];
         [self showValues];
         
     } else {
@@ -323,10 +323,14 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
-    if(videoAddress != nil && [videoAddress hasSuffix:@"mp4"]){
-        [self.downloadBtn setEnabled:YES];
-    } else {
-        [self.downloadBtn setEnabled:NO];
+    if(downloadUrls != nil && downloadUrls.count > 0){
+        [self.downloadBtn setHidden:NO];
+        NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+        DownloadItem *downloadingItem = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+        if(downloadingItem != nil && [downloadingItem.itemId isEqualToString:self.prodId]){
+            [self.downloadBtn setEnabled:NO];
+            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_disabled"] forState:UIControlStateDisabled];
+        }
     }
     [self repositElements:0];
 }
@@ -442,8 +446,9 @@
     }
 }
 
-- (void)getVideoAddress
+- (NSString *)getVideoAddress
 {
+    NSString *videoAddress = nil;
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:0] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
@@ -456,10 +461,12 @@
             videoAddress = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
         }
     }
+    return videoAddress;
 }
 
 - (void)willPlayVideo:(NSInteger)num
 {
+    NSString *videoAddress = [self getVideoAddress];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         if(videoAddress == nil){
@@ -481,7 +488,7 @@
 - (void)showPlayWebPage
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [video objectForKey:@"video_urls"];
+    NSArray *urlArray = [[episodeArray objectAtIndex:0] objectForKey:@"video_urls"];
     viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 1;
@@ -577,7 +584,7 @@
     if (item != nil) {
         return;
     }
-    
+
     item = [[DownloadItem alloc]init];
     item.itemId = self.prodId;
     item.imageUrl = [video objectForKey:@"ipad_poster"];
@@ -587,11 +594,26 @@
     item.name = [video objectForKey:@"name"];
     item.percentage = 0;
     item.type = 1;
-    item.downloadingStatus = @"start";
+    item.downloadStatus = @"waiting";
     item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-    item.url = videoAddress;
+//    item.url = [downloadUrls objectAtIndex:0];
+    item.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
     [item save];
     [[AppDelegate instance] addToDownloaderArray:item];
+    
+    [self updateBadgeIcon];
+    [UIUtility showDownloadSuccess:self.view];
+//    queue = [[NSOperationQueue alloc]init];
+//    handler = [[DownloadHandler alloc]init];
+//    handler.downloadUrls = downloadUrls;
+//    handler.item = item;
+//    [queue addOperation:handler];
+//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[downloadUrls objectAtIndex:0]] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];
+//    NSError *error = nil;
+//    NSURLResponse *theResponse = nil;
+//    NSURLConnection *connectiton = [[NSURLConnection alloc]initWithRequest:request delegate:self startImmediately:YES];
+//     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&theResponse error:&error];
 }
+
 
 @end

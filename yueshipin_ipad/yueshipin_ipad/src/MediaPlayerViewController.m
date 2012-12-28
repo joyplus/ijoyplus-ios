@@ -39,6 +39,7 @@
 @synthesize name;
 @synthesize type;
 @synthesize currentNum;
+@synthesize isDownloaded;
 @synthesize dramaDetailViewControllerDelegate;
 
 - (void)viewDidUnload
@@ -81,7 +82,12 @@
     }
     NSLog(@"%@", self.videoUrl);
     //NSURL *mediaFileUrl = [[NSURL alloc] initFileURLWithPath:@"assets-library://asset/asset.MOV?id=647CACF5-F040-4FB7-9EFC-3D24F63F1F4D&ext=MOV"];
-    NSURL *mediaFileUrl = [[NSURL alloc] initWithString:self.videoUrl];
+    NSURL *mediaFileUrl = nil;
+    if(isDownloaded){
+        mediaFileUrl = [[NSURL alloc] initFileURLWithPath:self.videoUrl];
+    } else {
+        mediaFileUrl = [[NSURL alloc] initWithString:self.videoUrl];
+    }
     playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:mediaFileUrl];
     CGRect bound = self.view.bounds;
     playerViewController.view.frame = CGRectMake(0, -20, bound.size.width, bound.size.height + 20);

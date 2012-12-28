@@ -13,7 +13,7 @@
 @implementation McDownload
 @synthesize idNum;
 @synthesize subidNum;
-@synthesize isStop;
+@synthesize status;
 @synthesize delegate;
 @synthesize overwrite;
 @synthesize url;
@@ -106,7 +106,7 @@
     [request addValue:range forHTTPHeaderField:@"Range"];
     [connection cancel];
     connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-    self.isStop = NO;
+    self.status = 1;
 }
 
 - (void)stop
@@ -115,7 +115,7 @@
     connection = nil;
     [fileHandle closeFile];
     fileHandle = nil;
-    self.isStop = YES;
+    self.status = 0;
 }
 
 - (void)stopAndClear

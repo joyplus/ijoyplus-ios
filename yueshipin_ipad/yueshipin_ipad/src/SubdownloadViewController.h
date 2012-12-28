@@ -9,10 +9,12 @@
 #import "GenericBaseViewController.h"
 #import "MenuViewController.h"
 #import "McDownload.h"
+#import "DownloadViewController.h"
 
 @interface SubdownloadViewController : GenericBaseViewController
 
 - (id)initWithFrame:(CGRect)frame;
 @property (nonatomic, strong) NSString *titleContent;
 @property (nonatomic, strong) NSString *itemId;
+@property (nonatomic, weak) id <DownloadViewControllerDelegate>parentDelegate;
 @end

@@ -26,8 +26,8 @@
     unsigned long long  offset;
 }
 @property (nonatomic, strong) NSString *idNum;
-@property (nonatomic, strong) NSString *subidNum;
-@property (nonatomic, assign) BOOL isStop;
+@property (nonatomic, assign) int subidNum;
+@property (nonatomic, assign) int status;  //0:stop 1:start 2:done 3: waiting 4:error
 @property (nonatomic, assign) id<McDownloadDelegate> delegate;
 /*
  当文件名相同时是否覆盖,overwriter为NO的时候，当文件已经存在，则下载结束

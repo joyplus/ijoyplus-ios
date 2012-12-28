@@ -13,8 +13,8 @@
 @synthesize name;
 @synthesize imageUrl;
 @synthesize percentage;
+@synthesize downloadStatus;
 @synthesize fileName;
 @synthesize url;
 @synthesize type;
-@synthesize downloadingStatus;
 @end

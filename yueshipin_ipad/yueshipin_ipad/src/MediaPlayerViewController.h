@@ -17,5 +17,6 @@
 @property (nonatomic, assign)int type;
 @property (nonatomic, strong)NSString *videoUrl;
 @property (nonatomic, assign)int currentNum;
+@property (nonatomic, assign)BOOL isDownloaded;
 @property (nonatomic, weak)id <DramaDetailViewControllerDelegate>dramaDetailViewControllerDelegate;
 @end

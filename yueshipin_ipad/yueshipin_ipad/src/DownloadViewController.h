@@ -10,7 +10,13 @@
 #import "MenuViewController.h"
 #import "McDownload.h"
 
-@interface DownloadViewController : GenericBaseViewController
+@protocol DownloadViewControllerDelegate <NSObject>
+
+- (void)reloadItems;
+
+@end
+
+@interface DownloadViewController : GenericBaseViewController<DownloadViewControllerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 @property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;

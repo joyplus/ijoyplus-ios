@@ -29,8 +29,8 @@
 #import "StringUtility.h"
 #import "OpenUDID.h"
 
-//NSString * const kABaseURLString = @"http://test.joyplus.tv/";
-NSString * const kABaseURLString = @"http://api.joyplus.tv/";
+NSString * const kABaseURLString = @"http://112.64.18.12/";
+//NSString * const kABaseURLString = @"http://api.joyplus.tv/";
 
 @implementation AFServiceAPIClient
 

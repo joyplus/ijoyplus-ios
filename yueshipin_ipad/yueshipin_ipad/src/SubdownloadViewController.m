@@ -10,6 +10,7 @@
 #import "CommonHeader.h"
 #import "SubdownloadItem.h"
 #import "GMGridView.h"
+#import "MediaPlayerViewController.h"
 
 @interface SubdownloadViewController ()<McDownloadDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
     UIButton *closeBtn;
@@ -26,6 +27,7 @@
 
 @implementation SubdownloadViewController
 @synthesize itemId;
+@synthesize parentDelegate;
 
 - (void)didReceiveMemoryWarning
 {
@@ -101,7 +103,7 @@
     for (McDownload *downloader in downLoaderArray) {
         if([downloader.idNum isEqualToString: self.itemId]){
             downloader.delegate = self;
-            if(!downloader.isStop){
+            if(downloader.status == 0){
                 [downloader start];
             }
         }
@@ -139,25 +141,51 @@
 //下载失败
 - (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
 {
-    NSLog(@"下载失败");
-}
-//下载结束
-- (void)downloadFinished:(McDownload *)aDownload
-{
-    NSLog(@"下载完成");
+    NSLog(@"下载失败 %@", error);
+    aDownload.status = 4;
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
     for (int i = 0; i < subitems.count; i++) {
         GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
         UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.idNum.intValue + 20000000];
         if(progressView != nil){
             [progressView removeFromSuperview];
             UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.idNum.intValue + 10000000];
-            [progressLabel removeFromSuperview];
+            progressLabel.text = @"下载失败";
             progressView = nil;
-            progressLabel = nil;
+            SubdownloadItem *item = [subitems objectAtIndex:i];
+            item.downloadStatus = @"error";
+            [item save];
+            [self reloadSubitems];
+        }
+    }
+}
+//下载结束
+- (void)downloadFinished:(McDownload *)aDownload
+{
+    NSLog(@"下载完成");
+    aDownload.status = 2;
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+    for (int i = 0; i < subitems.count; i++) {
+        GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
+        UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.subidNum + 20000000];
+        if(progressView != nil){
+            [progressView removeFromSuperview];
+            UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.subidNum + 10000000];
+            progressLabel.text = @"下载完成";
+            progressView = nil;
             SubdownloadItem *item = [subitems objectAtIndex:i];
             item.percentage = 100;
-            item.downloadingStatus = @"done";
+            item.downloadStatus  = @"done";
             [item save];
+            [self reloadSubitems];
         }
     }
 }
@@ -172,17 +200,17 @@
     NSLog(@"%@", @"Sub-下载中...");
     for (int i = 0; i < subitems.count; i++) {
         GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
-        UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.subidNum.intValue + 20000000];
+        UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.subidNum + 20000000];
         if(progressView != nil){
             progressView.progress = newProgress;
-            UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.subidNum.intValue + 10000000];
+            UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.subidNum + 10000000];
             progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", (int)(newProgress*100)];
             NSLog(@"%@", progressLabel.text);
         }
     }
 }
 
-- (void)stopDownloading:(NSInteger)index
+- (void)videoImageClicked:(NSInteger)index
 {
     if(index >= subitems.count){
         return;
@@ -191,22 +219,23 @@
     SubdownloadItem *item = [subitems objectAtIndex:index];
     NSArray *downloaderArray = [[AppDelegate instance] getDownloaderQueue];
     for (McDownload *tempdownloder in downloaderArray) {
-        if([tempdownloder.idNum isEqualToString:item.itemId] && [tempdownloder.subidNum isEqualToString:item.subitemId]){
+        if([tempdownloder.idNum isEqualToString:item.itemId] && tempdownloder.subidNum == item.pk){
             UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.subitemId.intValue + 10000000];
-            if(tempdownloder.isStop){
+            if(tempdownloder.status == 0){
                 progressLabel.text = [progressLabel.text stringByReplacingOccurrencesOfString:@"暂停" withString:@"下载中"];
                 tempdownloder.delegate = self;
                 [tempdownloder start];
-                item.downloadingStatus = @"start";
+                item.downloadStatus = @"start";
                 [item save];
             } else {
                 progressLabel.text = [progressLabel.text stringByReplacingOccurrencesOfString:@"下载中" withString:@"暂停"];
                 [tempdownloder stop];
                 UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.subitemId.intValue + 20000000];
                 item.percentage = (int)(progressView.progress*100);
-                item.downloadingStatus = @"stop";
+                item.downloadStatus = @"stop";
                 [item save];
             }
+            [self reloadSubitems];
             break;
         }
     }
@@ -251,32 +280,36 @@
     [cell.contentView addSubview:contentImage];
     
     UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 110, 98, 25)];
-    progressLabel.tag = item.itemId.intValue + 10000000;
+    progressLabel.tag = item.pk + 10000000;
     progressLabel.backgroundColor = [UIColor clearColor];
     progressLabel.font = [UIFont boldSystemFontOfSize:10];
     progressLabel.textColor = [UIColor whiteColor];
-    if([item.downloadingStatus isEqualToString:@"start"]){
+    if([item.downloadStatus isEqualToString:@"start"]){
         progressLabel.text = @"下载中：  %";
-    } else if([item.downloadingStatus isEqualToString:@"stop"]){
+    } else if([item.downloadStatus isEqualToString:@"stop"]){
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
-    } else{
-        progressLabel.text = @"";
+    } else if([item.downloadStatus isEqualToString:@"done"]){
+        progressLabel.text = @"下载完成";
+    } else {
+        progressLabel.text = @"下载失败";
     }
     progressLabel.textAlignment = NSTextAlignmentCenter;
     progressLabel.shadowColor = [UIColor blackColor];
     progressLabel.shadowOffset = CGSizeMake(1, 1);
     [cell.contentView addSubview:progressLabel];
     
-    UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 132, 98, 2)];
-    progressView.progress = item.percentage/100.0;
-    progressView.tag = item.itemId.intValue + 20000000;
-    [cell.contentView addSubview:progressView];
+    if(![item.downloadStatus isEqualToString:@"done"]){
+        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 132, 98, 2)];
+        progressView.progress = item.percentage/100.0;
+        progressView.tag = item.pk + 20000000;
+        [cell.contentView addSubview:progressView];
+    }
     
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(4, 150, 105, 30)];
-    nameLabel.font = [UIFont systemFontOfSize:18];;
+    nameLabel.font = [UIFont systemFontOfSize:15];
     nameLabel.backgroundColor = [UIColor clearColor];
+    nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.text = item.name;
-    [nameLabel sizeToFit];
     nameLabel.center = CGPointMake(imageView.center.x, nameLabel.center.y);
     [cell.contentView addSubview:nameLabel];
     return cell;
@@ -286,28 +319,51 @@
 {
     SubdownloadItem *item = [subitems objectAtIndex:index];
     
-    NSString *extension = @"mp4";
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-    NSEnumerator *e = [contents objectEnumerator];
-    NSString *filename;
-    while ((filename = [e nextObject])) {
-        if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
-            [[AppDelegate instance] deleteDownloaderInQueue:item];
-            [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
-        }
-    }
+    [[AppDelegate instance] deleteDownloaderInQueue:item];
     [item deleteObject];
-    item = nil;
+    [self reloadSubitems];
+    if(subitems == nil || subitems.count == 0){
+        NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", item.itemId];
+        NSArray *downloadingItems = [DownloadItem findByCriteria:subquery];
+        for (DownloadItem *pItem in downloadingItems){
+            [pItem deleteObject];
+            [[AppDelegate instance] deleteDownloaderInQueue:pItem];
+        }
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
+        [self.parentDelegate reloadItems];
+    }
     [self reloadSubitems];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
-    [self stopDownloading:position];
+    [self closeMenu];
+    SubdownloadItem *item = [subitems objectAtIndex:position];
+    if([item.downloadStatus isEqualToString:@"done"]){
+        NSString *extension = @"mp4";
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
+        NSEnumerator *e = [contents objectEnumerator];
+        NSString *filename;
+        NSString *filePath;
+        while ((filename = [e nextObject])) {
+            if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
+                filePath = [documentsDirectory stringByAppendingPathComponent:filename];
+                break;
+            }
+        }
+        
+        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+        viewController.videoUrl = filePath;
+        viewController.isDownloaded = YES;
+        viewController.type = 1;
+        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+    } else {
+        [self videoImageClicked:position];
+    }
 }
 
 - (void)editBtnClicked

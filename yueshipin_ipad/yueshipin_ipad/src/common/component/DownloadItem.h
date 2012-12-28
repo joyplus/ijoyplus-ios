@@ -15,8 +15,9 @@
 @property (nonatomic, strong)NSString *imageUrl;
 @property (nonatomic, strong)NSString *name;
 @property (nonatomic, strong)NSString *fileName;
+@property (nonatomic, strong)NSString *downloadStatus; // start:开始 stop: 暂停 done: 完成 error:错误
 @property (nonatomic, assign)int type;
 @property (nonatomic, assign)int percentage;
 @property (nonatomic, strong)NSString *url;
-@property (nonatomic, strong)NSString *downloadingStatus; // 0:开始 1: 暂停 2: 完成
+@property (nonatomic, strong)NSArray *downloadUrls;
 @end

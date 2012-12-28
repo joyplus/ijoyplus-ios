@@ -13,7 +13,7 @@
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -24,6 +24,8 @@
 @property (assign, nonatomic) BOOL triggeredByPlayer;
 
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
+
+@property (assign, atomic) int currentDownloadingNum;
 
 - (NSMutableArray *)getDownloaderQueue;
 - (void)addToDownloaderArray:(DownloadItem *)item;

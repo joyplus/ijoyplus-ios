@@ -771,7 +771,6 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
     } completion:^(BOOL finished) {
         for(int i = lastViewControllerIndex; i > 0; i--){
-            NSLog(@"%d = %d", lastViewControllerIndex, i);
             [[slideViews viewWithTag:i] removeFromSuperview];
             [viewControllersStack removeObjectAtIndex:i];
         }

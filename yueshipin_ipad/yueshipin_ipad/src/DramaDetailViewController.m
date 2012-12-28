@@ -18,7 +18,6 @@
 
 @interface DramaDetailViewController (){
     NSMutableArray *commentArray;
-    NSArray *episodeArray;
     SublistViewController *topicListViewController;
     CommentListViewController *commentListViewController;
     int totalEpisodeNumber;
@@ -51,7 +50,6 @@
 - (void)viewDidUnload {
     [commentArray removeAllObjects];
     commentArray = nil;
-    episodeArray = nil;
     topicListViewController = nil;
     commentListViewController = nil;
     introBtn = nil;
@@ -198,6 +196,7 @@
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.downloadBtn setHidden:YES];
     
     self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
@@ -313,6 +312,7 @@
             introBtn = nil;
         }
         [self showValues];
+        [self getDownloadUrls:0];
     } else {
         [UIUtility showSystemError:self.view];
     }
@@ -350,6 +350,10 @@
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
+    
+    if(downloadUrls != nil && downloadUrls.count > 0){
+        [self.downloadBtn setHidden:NO];
+    }
     
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
@@ -742,18 +746,26 @@
     [[AppDelegate instance].rootViewController showDramaDownloadView:self.prodId title:[video objectForKey:@"name"] totalNumber:totalEpisodeNumber];
 }
 
-- (void)downloadDrama:(int)num
+- (BOOL)downloadDrama:(int)num
 {
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
     if (item == nil) {
-        [self addDownloadItem:num];
-        [self addSubdownloadItem:num];
+        BOOL success = [self addSubdownloadItem:num];
+        if(success){
+            [self addDownloadItem:num];
+            return YES;
+        } else {
+            return NO;
+        }
     } else {
         NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@' and subitem_id = '%@'", self.prodId, [NSString stringWithFormat:@"%i", num]];
         SubdownloadItem *subitem = (SubdownloadItem *)[SubdownloadItem findFirstByCriteria:subquery];
         if(subitem == nil){
-            [self addSubdownloadItem:num];
+            BOOL success = [self addSubdownloadItem:num];
+            return success;
+        } else {
+            return YES;
         }
     
     }
@@ -770,12 +782,11 @@
     item.name = [video objectForKey:@"name"];
     item.percentage = 0;
     item.type = 2;
-    item.downloadingStatus = @"stop";
-    item.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
+    item.downloadStatus = @"stop";
     [item save];
 }
 
-- (void)addSubdownloadItem:(int)num
+- (BOOL)addSubdownloadItem:(int)num
 {
     SubdownloadItem *subitem = [[SubdownloadItem alloc]init];
     subitem.itemId = self.prodId;
@@ -787,11 +798,18 @@
     subitem.percentage = 0;
     subitem.type = 2;
     subitem.subitemId = [NSString stringWithFormat:@"%i", num];
-    subitem.downloadingStatus = @"start";
+    subitem.downloadStatus = @"start";
     subitem.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
-    subitem.url = [self getVideoAddress:num];
-    [subitem save];
-    [[AppDelegate instance] addToDownloaderArray:subitem];
+    [self getDownloadUrls:num-1];
+    if(downloadUrls.count > 0){
+        subitem.url = [downloadUrls objectAtIndex:0];
+        [subitem save];
+        [[AppDelegate instance] addToDownloaderArray:subitem];
+        [self updateBadgeIcon];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 

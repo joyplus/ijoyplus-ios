@@ -459,7 +459,7 @@
         btn.contentEdgeInsets = UIEdgeInsetsMake(2, 0, 0, 0);
         btn.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download"] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateHighlighted];
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_pressed"] forState:UIControlStateHighlighted];
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         for (SubdownloadItem *subitem in downloadingItems) {
@@ -478,9 +478,13 @@
 
 - (void)dramaDownload:(UIButton *)btn
 {
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
-    [self.videoDetailDelegate downloadDrama:btn.tag];
+    BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
+    if(success){
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
+    } else {
+        [UIUtility showDownloadFailure:self.view];
+    }
 }
 
 - (void)pageBtnClicked:(UIButton *)btn
@@ -496,7 +500,7 @@
     [episodeView setContentOffset:CGPointMake(520*(btn.tag - 1001), 0)];
 }
 
-- (void)showShowDownloadView:(NSString *)title episodeArray:(NSArray *)episodeArray
+- (void)showShowDownloadView:(NSString *)downloadingProdid title:(NSString *)title episodeArray:(NSArray *)episodeArray
 {
     showEpisodeCount = episodeArray.count;
     showPageNumber = 0;
@@ -517,7 +521,7 @@
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(708, 265, 40, 42);
+    closeBtn.frame = CGRectMake(708, 266, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -531,7 +535,9 @@
     showListView.center = CGPointMake(frame.center.x, frame.center.y + 30);
     showListView.contentSize = showListView.frame.size;
     showListView.contentOffset = CGPointMake(0, 0);
-    [view addSubview:showListView];    
+    [view addSubview:showListView];
+    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
+    NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
         if(episodeArray.count > 5){
             UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [previousShowBtn setEnabled:NO];
@@ -567,13 +573,20 @@
                 }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
-                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateHighlighted];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                for (SubdownloadItem *subitem in downloadingItems) {
+                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
+                        [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
+                        break;
+                    }
+                }
                 [showListView addSubview:nameBtn];
             }
         } else {
@@ -591,7 +604,7 @@
                 }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
-                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateHighlighted];
+                [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -607,9 +620,13 @@
 
 - (void)showBtnClicked:(UIButton *)btn
 {
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [btn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
-    [self.videoDetailDelegate downloadDrama:btn.tag - 1];
+    BOOL success = [self.videoDetailDelegate downloadShow:btn.tag - 1];
+    if(success){
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
+    } else {
+        [UIUtility showDownloadFailure:self.view];
+    }
 }
 
 - (void)updatePageBtnState
