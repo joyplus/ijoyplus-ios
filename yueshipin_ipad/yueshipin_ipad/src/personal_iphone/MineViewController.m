@@ -70,6 +70,14 @@
     
     [self loadMyFavsData];
     
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    bg.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:bg];
+    
+    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
+    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
+    self.navigationItem.backBarButtonItem = backtButton;
+    
     self.title = @"我的";
     
     UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
@@ -81,7 +89,7 @@
                                      target:self
                                      
                                      action:@selector(setting:)];
-    rightButton.image=[UIImage imageNamed:@"right_button.png"];
+    rightButton.image=[UIImage imageNamed:@"top_setting_common.png"];
     self.navigationItem.rightBarButtonItem = rightButton;
     
     NSArray *itemsArr = [NSArray arrayWithObjects:@"播放纪录",@"我的收藏",@"我的悦单", nil];
@@ -108,6 +116,10 @@
     self.favTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 -(void)setting:(id)sender{

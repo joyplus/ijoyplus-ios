@@ -22,23 +22,45 @@
         self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(7.5, 15, 68, 100)];
         [self addSubview:self.imageview];
         
-        self.title = [[UILabel alloc] initWithFrame:CGRectMake(126, 18, 160, 14)];
+        self.title = [[UILabel alloc] initWithFrame:CGRectMake(106, 18, 160, 14)];
+        self.title.font = [UIFont systemFontOfSize:15];
         [self addSubview:self.title];
         
-        self.labelOne = [[UILabel alloc] initWithFrame:CGRectMake(126, 42, 160, 14)];
+        self.labelOne = [[UILabel alloc] initWithFrame:CGRectMake(146, 42, 160, 14)];
+        self.labelOne.font = [UIFont systemFontOfSize:12];
+        self.labelOne.textColor = [UIColor grayColor];
         [self addSubview:self.labelOne];
         
-        self.labelTwo = [[UILabel alloc] initWithFrame:CGRectMake(126, 65, 160, 14)];
+        UIImageView *img1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_01.png"]];
+        img1.frame = CGRectMake(125, 44, 13, 10);
+        [self addSubview:img1];
+        
+        self.labelTwo = [[UILabel alloc] initWithFrame:CGRectMake(146, 65, 160, 14)];
+        self.labelTwo.font = [UIFont systemFontOfSize:12];
+        self.labelTwo.textColor = [UIColor grayColor];
         [self addSubview:self.labelTwo];
         
-        self.labelThree = [[UILabel alloc] initWithFrame:CGRectMake(126, 86, 160, 14)];
+        UIImageView *img2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_02.png"]];
+        img2.frame = CGRectMake(125, 67, 13, 10);
+        [self addSubview:img2];
+        
+        self.labelThree = [[UILabel alloc] initWithFrame:CGRectMake(146, 86, 160, 14)];
+        self.labelThree.font = [UIFont systemFontOfSize:12];
+        self.labelThree.textColor = [UIColor grayColor];
         [self addSubview:self.labelThree];
         
-        UILabel *labelFour = [[UILabel alloc] initWithFrame:CGRectMake(130, 100,160, 14)];
+        UIImageView *img3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_03.png"]];
+        img3.frame = CGRectMake(125, 88, 13, 10);
+        [self addSubview:img3];
+        
+        UILabel *labelFour = [[UILabel alloc] initWithFrame:CGRectMake(150, 100,160, 14)];
         labelFour.text = @"...";
+        labelFour.textColor = [UIColor grayColor];
         [self addSubview:labelFour];
         
-        
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        line.frame = CGRectMake(0, 129, 320, 1);
+        [self addSubview:line];
     }
     return self;
 }

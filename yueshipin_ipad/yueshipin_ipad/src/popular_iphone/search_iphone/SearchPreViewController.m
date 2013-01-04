@@ -28,6 +28,10 @@
 {
     [super viewDidLoad];
     self.title = @"搜索";
+    
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    bg.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:bg];
 	// Do any additional setup after loading the view.
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.delegate = self;

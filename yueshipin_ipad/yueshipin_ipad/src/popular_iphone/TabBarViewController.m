@@ -24,24 +24,26 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        
         allListViewController *allListview = [[allListViewController alloc] init];
         navigationViewController *allListNav = [[navigationViewController alloc] initWithRootViewController:allListview];
+        //simulator[allListNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
        
-        
-//        sortedViewController *sortedview = [[sortedViewController alloc] init];
-//        navigationViewController *sortNav = [[navigationViewController alloc] initWithRootViewController:sortedview];
-        
         PageManageViewController *pageView = [[PageManageViewController alloc] init];
         navigationViewController *sortNav = [[navigationViewController alloc] initWithRootViewController:pageView];
+       //simulator [sortNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
         
         MineViewController *mineview = [[MineViewController alloc] init];
         navigationViewController *mineNav = [[navigationViewController alloc] initWithRootViewController:mineview];
+        //simulator [mineNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
        
-        
+       //simulator [self.tabBar setBackgroundImage:[UIImage imageNamed:@"tab_bg.png"]];
         self.viewControllers = [NSArray arrayWithObjects:allListNav,sortNav,mineNav, nil];
-        
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEDAN];
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEBANG];
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:MINE];
         
         self.selectedIndex = 0;

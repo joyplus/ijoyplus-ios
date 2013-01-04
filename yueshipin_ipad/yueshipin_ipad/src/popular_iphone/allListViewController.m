@@ -87,30 +87,45 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"悦单";
+    UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    backGround.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:backGround];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    titleText.backgroundColor = [UIColor clearColor];
+    titleText.textColor=[UIColor whiteColor];
+    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [titleText setText:@"悦视频"];
+    self.navigationItem.titleView=titleText;
+    
     UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
                                      
                                      initWithTitle:@"搜素"
                                      
-                                     style:UIBarButtonItemStyleDone
+                                     style:UIBarButtonItemStyleBordered
                                      
                                      target:self
                                      
                                      action:@selector(search:)];
-    leftButton.image=[UIImage imageNamed:@"left_button.png"];
+    leftButton.image=[UIImage imageNamed:@"top_search_common.png"];
     self.navigationItem.leftBarButtonItem = leftButton;
     
     UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
                                      
                                      initWithTitle:@"设置"
                                      
-                                     style:UIBarButtonItemStyleDone
+                                     style:UIBarButtonItemStyleBordered
                                      
                                      target:self
                                      
                                      action:@selector(setting:)];
-    rightButton.image=[UIImage imageNamed:@"right_button.png"];
+    rightButton.image=[UIImage imageNamed:@"top_setting_common.png"];
     self.navigationItem.rightBarButtonItem = rightButton;
+    
+    
+    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
+    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
+    self.navigationItem.backBarButtonItem = backtButton;
+
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 380) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
@@ -119,7 +134,9 @@
     [self.view addSubview:self.tableList];
     [self loadData];
 }
-
+- (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = NO;
+}
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
@@ -169,6 +186,7 @@
     ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
     listDetailViewController.listArr = items;
     listDetailViewController.Type = MOVIE_TYPE;
+    listDetailViewController.title = [item objectForKey:@"name"];
     [self.navigationController pushViewController:listDetailViewController animated:YES];
     
 }

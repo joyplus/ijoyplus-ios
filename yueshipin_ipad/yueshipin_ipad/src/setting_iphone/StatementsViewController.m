@@ -1,18 +1,18 @@
 //
-//  ViewController.m
+//  StatementsViewController.m
 //  yueshipin
 //
-//  Created by 08 on 12-12-26.
-//  Copyright (c) 2012年 joyplus. All rights reserved.
+//  Created by Rong on 13-1-3.
+//  Copyright (c) 2013年 joyplus. All rights reserved.
 //
 
-#import "AboutViewController.h"
+#import "StatementsViewController.h"
 
-@interface AboutViewController ()
+@interface StatementsViewController ()
 
 @end
 
-@implementation AboutViewController
+@implementation StatementsViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -26,13 +26,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"关于我们";
-        
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,320, 480)];
-    imageView.image = [UIImage imageNamed:@"background_about_us.png"];
-    
-    [self.view addSubview:imageView];
 	// Do any additional setup after loading the view.
+    
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    bg.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:bg];
 }
 
 - (void)didReceiveMemoryWarning

@@ -243,30 +243,42 @@
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
-    NSArray *titlesArr = [NSArray arrayWithObjects:@"热播电视剧",@"热播电影",@"热播综艺", nil];
+    
     for (int i = 0; i < PAGE_NUM; i++) {
-        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(320*i, 0, 320, 30)];
-        titleLabel.text = [titlesArr objectAtIndex:i];
-        titleLabel.backgroundColor = [UIColor redColor];
-        [self.scrollView addSubview:titleLabel];
+        UIImageView *titleName = titleName = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 100, 18)];
+        if (i == 0) {
+            titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_1.png"];
+        }
+        else if(i == 1){
+            titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_2.png"];
+        
+        }
+        else if (i == 2){
+            titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_3.png"];
+        }
+        
+        UIImageView *titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_biao_ti_top.png"]];
+        titleView.frame = CGRectMake(320*i, 0, 320, 30);
+        [titleView addSubview:titleName];
+        [self.scrollView addSubview:titleView];
         
     }
     
-    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 330) style:UITableViewStylePlain];
+    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 350) style:UITableViewStylePlain];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tvTableList.tag = TV_TYPE;
     [self.scrollView addSubview:self.tvTableList];
     
-    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 330) style:UITableViewStylePlain];
+    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 350) style:UITableViewStylePlain];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
     self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.movieTableList.tag = MOVIE_TYPE;
     [self.scrollView addSubview:self.movieTableList];
     
-    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 330) style:UITableViewStylePlain];
+    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 350) style:UITableViewStylePlain];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -285,6 +297,10 @@
     [self loadMovieTopsData];
     [self loadShowTopsData];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

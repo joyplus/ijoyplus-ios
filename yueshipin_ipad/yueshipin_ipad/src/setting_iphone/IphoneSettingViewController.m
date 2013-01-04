@@ -9,6 +9,7 @@
 #import "IphoneSettingViewController.h"
 #import "FeedBackViewController.h"
 #import "AboutViewController.h"
+#import "StatementsViewController.h"
 
 @interface IphoneSettingViewController ()
 
@@ -28,6 +29,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
+    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
+    self.navigationItem.backBarButtonItem = backtButton;
+    
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    bg.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:bg];
+    
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     feedBack.frame = CGRectMake(24, 168, 273, 33);
     [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
@@ -36,7 +45,7 @@
     
     UIButton *suggest = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     suggest.frame = CGRectMake(24, 208, 273, 33);
-    [suggest setTitle:@"给我们评价" forState:UIControlStateNormal];
+    [suggest setTitle:@"免责声明" forState:UIControlStateNormal];
     [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:suggest];
     
@@ -48,6 +57,9 @@
 	// Do any additional setup after loading the view.
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = YES;
+}
 
 -(void)feedBack:(id)sender{
     FeedBackViewController *feedBackViewController = [[FeedBackViewController alloc] init];
@@ -56,7 +68,8 @@
 }
 
 -(void)suggest:(id)sender{
-    
+    StatementsViewController *satementViewController = [[StatementsViewController alloc] init];
+    [self.navigationController pushViewController:satementViewController animated:YES];
     
 }
 

@@ -33,15 +33,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"XXXX";
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
+    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
+    self.navigationItem.backBarButtonItem = backtButton;
+    self.view.frame = CGRectMake(0, 0, 320, 430);
 }
-
+- (void)viewWillAppear:(BOOL)animated{
+    self.tabBarController.tabBar.hidden = YES;
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

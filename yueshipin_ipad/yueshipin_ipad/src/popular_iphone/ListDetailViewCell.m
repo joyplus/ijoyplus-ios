@@ -25,10 +25,13 @@
         [self addSubview:self.imageview];
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(82, 19, 170, 14)];
+        self.label.font = [UIFont systemFontOfSize:15];
         [self addSubview:self.label];
         
         actors_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 42, 200, 12)];
+        actors_.font = [UIFont systemFontOfSize:12];
         area_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 58, 170, 12)];
+        area_.font = [UIFont systemFontOfSize:12];
         [self addSubview:actors_];
         [self addSubview:area_];
         
@@ -40,9 +43,15 @@
         [self addSubview:addFavBg];
         
         support_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 82, 55, 10)];
+        support_.font = [UIFont systemFontOfSize:12];
         addFav_ = [[UILabel alloc] initWithFrame:CGRectMake(163, 82, 55, 10)];
+        addFav_.font = [UIFont systemFontOfSize:12];
         [self addSubview:support_];
         [self addSubview:addFav_];
+        
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        line.frame = CGRectMake(0, 111, 320, 1);
+        [self addSubview:line];
         
     }
     return self;

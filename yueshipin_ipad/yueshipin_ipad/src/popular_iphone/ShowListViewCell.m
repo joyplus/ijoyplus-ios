@@ -22,6 +22,9 @@
         nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(11, 81, 280, 15)];
         [self addSubview:nameLabel_];
         
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        line.frame = CGRectMake(0, 129, 320, 1);
+        [self addSubview:line];
     }
     return self;
 }

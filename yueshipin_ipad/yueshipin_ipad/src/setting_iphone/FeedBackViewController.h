@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FeedBackViewController : UIViewController
+@interface FeedBackViewController : UIViewController{
+    UITextView *textView_;
+}
 
+@property (nonatomic, strong)UITextView *textView;
 @end
