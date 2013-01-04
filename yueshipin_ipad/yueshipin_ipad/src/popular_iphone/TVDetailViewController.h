@@ -16,6 +16,7 @@
     NSString *summary_;
     UIScrollView *scrollView_;
     int pageCount_;
+    NSMutableArray *commentArray_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -23,5 +24,6 @@
 @property (nonatomic, assign) int videoType;
 @property (nonatomic, strong) NSString *summary;
 @property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) NSMutableArray *commentArray;
 @end
 

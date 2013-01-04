@@ -34,6 +34,19 @@
     [self.view addSubview:bg];
 	// Do any additional setup after loading the view.
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    searchBar_.tintColor = [UIColor whiteColor];
+    UITextField *searchField;
+    NSUInteger numViews = [searchBar_.subviews count];
+    for(int i = 0; i < numViews; i++) {
+        if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UITextField class]]) {
+            searchField = [searchBar_.subviews objectAtIndex:i];
+        }
+    }
+    if(!(searchField == nil)) {
+        [searchField.leftView setHidden:YES];
+        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang.png"] ];
+        [searchField setBorderStyle:UITextBorderStyleNone];
+    }
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
 }

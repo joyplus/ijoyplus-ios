@@ -27,8 +27,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    self.title = @"免责声明";
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_mian_ze_sheng_ming.png"]];
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
 }

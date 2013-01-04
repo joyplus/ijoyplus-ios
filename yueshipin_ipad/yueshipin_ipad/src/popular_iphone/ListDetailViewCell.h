@@ -16,6 +16,7 @@
     UILabel *area_;
     UILabel *support_;
     UILabel *addFav_;
+    UILabel *score_;
 }
 
 @property (strong, nonatomic)UIImageView *imageview;
@@ -24,4 +25,5 @@
 @property (strong, nonatomic)UILabel *area;
 @property (strong, nonatomic)UILabel *support;
 @property (strong, nonatomic)UILabel *addFav;
+@property (strong, nonatomic)UILabel *score;
 @end

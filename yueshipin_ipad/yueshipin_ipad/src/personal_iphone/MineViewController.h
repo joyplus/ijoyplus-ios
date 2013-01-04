@@ -18,6 +18,8 @@
     NSArray *favShowArr_;
     UITableView *recordTableList_;
     UITableView *favTableList_;
+    UIView *moreView_;
+    UIButton *moreButton_;
 }
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
@@ -27,4 +29,6 @@
 @property (nonatomic, strong)NSArray *favShowArr;
 @property (nonatomic, strong)UITableView *recordTableList;
 @property (nonatomic, strong)UITableView *favTableList;
+@property (nonatomic, strong)UIView *moreView;
+@property (nonatomic, strong)UIButton *moreButton;
 @end

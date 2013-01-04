@@ -17,6 +17,7 @@
 @synthesize label4 = label4_;
 @synthesize label5 = label5_;
 @synthesize listArr = listArr_;
+@synthesize typeImageView = typeImageView_;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -58,6 +59,9 @@
         [self addSubview:label4_];
         [self addSubview:label5_];
         [self addSubview:listLabel6];
+        
+        typeImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(287, 22, 27, 18)];
+        [self addSubview:typeImageView_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 129, 320, 1);

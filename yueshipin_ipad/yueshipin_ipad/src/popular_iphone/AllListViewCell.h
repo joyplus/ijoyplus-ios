@@ -17,6 +17,7 @@
     UILabel *label3_;
     UILabel *label4_;
     UILabel *label5_;
+    UIImageView *typeImageView_;
 
 }
 @property (strong, nonatomic)UIImageView *imageView;
@@ -27,4 +28,5 @@
 @property (strong, nonatomic)UILabel *label3;
 @property (strong, nonatomic)UILabel *label4;
 @property (strong, nonatomic)UILabel *label5;
+@property (strong, nonatomic)UIImageView *typeImageView;
 @end

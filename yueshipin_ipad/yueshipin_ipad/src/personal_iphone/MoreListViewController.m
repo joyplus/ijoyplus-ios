@@ -8,6 +8,7 @@
 
 #import "MoreListViewController.h"
 #import "RecordListCell.h"
+#import "IphoneMovieDetailViewController.h"
 
 @interface MoreListViewController ()
 
@@ -26,10 +27,28 @@
 
 - (void)viewDidLoad
 {
+    self.title = @"我的收藏";
+    
+    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
+                                    
+                                    initWithTitle:@"返回"
+                                    
+                                    style:UIBarButtonItemStyleBordered
+                                    
+                                    target:self
+                                    
+                                    action:@selector(back:)];
+    leftButton.image=[UIImage imageNamed:@"top_return_common.png"];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [super viewDidLoad];
 
 }
+-(void)back:(id)sender{
+    [self dismissViewControllerAnimated:YES completion:nil];
 
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -53,12 +72,14 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
     if (cell == nil) {
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
-    cell.textLabel.text = [infoDic objectForKey:@"content_name"];
+    cell.titleLab.text = [infoDic objectForKey:@"content_name"];
+    cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+    cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
     
     return cell;
 }
@@ -72,13 +93,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+    detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 @end

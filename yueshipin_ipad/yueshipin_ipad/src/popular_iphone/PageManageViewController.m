@@ -237,6 +237,37 @@
 {
     [super viewDidLoad];
     
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    titleText.backgroundColor = [UIColor clearColor];
+    titleText.textColor=[UIColor whiteColor];
+    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [titleText setText:@"悦榜"];
+    self.navigationItem.titleView=titleText;
+    
+    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
+                                    
+                                    initWithTitle:@"搜素"
+                                    
+                                    style:UIBarButtonItemStyleBordered
+                                    
+                                    target:self
+                                    
+                                    action:@selector(search:)];
+    leftButton.image=[UIImage imageNamed:@"top_search_common.png"];
+    self.navigationItem.leftBarButtonItem = leftButton;
+    
+    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
+                                     
+                                     initWithTitle:@"设置"
+                                     
+                                     style:UIBarButtonItemStyleBordered
+                                     
+                                     target:self
+                                     
+                                     action:@selector(setting:)];
+    rightButton.image=[UIImage imageNamed:@"top_setting_common.png"];
+    self.navigationItem.rightBarButtonItem = rightButton;
+    
 	// Do any additional setup after loading the view.
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 380)];
     self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, 380);
@@ -264,14 +295,14 @@
         
     }
     
-    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 350) style:UITableViewStylePlain];
+    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 350) style:UITableViewStylePlain];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tvTableList.tag = TV_TYPE;
     [self.scrollView addSubview:self.tvTableList];
     
-    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 350) style:UITableViewStylePlain];
+    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 350) style:UITableViewStylePlain];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
     self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -293,8 +324,8 @@
     [self.pageControl addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:self.pageControl];
     
-    [self loadTVTopsData];
     [self loadMovieTopsData];
+    [self loadTVTopsData];
     [self loadShowTopsData];
     
 }

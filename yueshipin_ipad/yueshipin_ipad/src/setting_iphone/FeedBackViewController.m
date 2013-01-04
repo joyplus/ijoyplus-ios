@@ -59,13 +59,37 @@
     if(textView_.text.length > 0){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: textView_.text, @"email", textView_.text, @"content", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathFeekback parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSLog(@"feedback succeed");
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [self showSuccessModalView:1.5];
         }];
     }
 
 
 
+}
+
+- (void)showSuccessModalView:(int)closeTime
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    view.tag = 3268142;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
+    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.center = view.center;
+    [view addSubview:temp];
+    [self.view addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+}
+
+- (void)removeOverlay
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    for(UIView *subview in view.subviews){
+        [subview removeFromSuperview];
+    }
+    [view removeFromSuperview];
+    view = nil;
 }
 - (void)didReceiveMemoryWarning
 {

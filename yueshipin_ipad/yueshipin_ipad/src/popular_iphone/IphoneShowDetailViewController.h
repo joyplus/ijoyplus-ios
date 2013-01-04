@@ -19,6 +19,7 @@
     int currentPage_;
     UIButton *next_;
     UIButton *pre_;
+    NSMutableArray *commentArray_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -28,4 +29,5 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIButton *next;
 @property (nonatomic, strong) UIButton *pre;
+@property (nonatomic, strong) NSMutableArray *commentArray;
 @end

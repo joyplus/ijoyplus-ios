@@ -15,6 +15,7 @@
 @synthesize area = area_;
 @synthesize support = support_;
 @synthesize addFav = addFav_;
+@synthesize score = score_;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -30,24 +31,35 @@
         
         actors_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 42, 200, 12)];
         actors_.font = [UIFont systemFontOfSize:12];
+        actors_.textColor = [UIColor grayColor];
         area_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 58, 170, 12)];
         area_.font = [UIFont systemFontOfSize:12];
+        area_.textColor = [UIColor grayColor];
         [self addSubview:actors_];
         [self addSubview:area_];
         
         UIImageView *supportBg = [[UIImageView alloc] initWithFrame:CGRectMake(82, 75, 65, 20)];
-        supportBg.backgroundColor = [UIColor blueColor];
+        supportBg.image = [UIImage imageNamed:@"tab2_television_list_recommend.png"];
         UIImageView *addFavBg = [[UIImageView alloc] initWithFrame:CGRectMake(157, 75, 65, 20)];
-        addFavBg.backgroundColor = [UIColor blueColor];
+        addFavBg.image = [UIImage imageNamed:@"tab2_television_list_favorite.png"];
         [self addSubview:supportBg];
         [self addSubview:addFavBg];
         
-        support_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 82, 55, 10)];
+        support_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 81, 55, 10)];
+        support_.backgroundColor = [UIColor clearColor];
         support_.font = [UIFont systemFontOfSize:12];
-        addFav_ = [[UILabel alloc] initWithFrame:CGRectMake(163, 82, 55, 10)];
+        support_.textAlignment = NSTextAlignmentCenter;
+        addFav_ = [[UILabel alloc] initWithFrame:CGRectMake(163, 81, 55, 10)];
+        addFav_.backgroundColor = [UIColor clearColor];
         addFav_.font = [UIFont systemFontOfSize:12];
+        addFav_.textAlignment = NSTextAlignmentCenter;
         [self addSubview:support_];
         [self addSubview:addFav_];
+        
+        score_ = [[UILabel alloc] initWithFrame:CGRectMake(266, 19, 49, 14)];
+        score_.font = [UIFont systemFontOfSize:15];
+        score_.textColor = [UIColor blueColor];
+        [self addSubview:score_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 111, 320, 1);

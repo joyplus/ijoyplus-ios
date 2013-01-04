@@ -10,8 +10,10 @@
 
 @interface RecordListCell : UITableViewCell{
     UILabel *titleLab_;
-    UILabel *infoLab_;
+    UILabel *actors_;
+    UILabel *date_;
 }
 @property (nonatomic, strong)UILabel *titleLab;
-@property (nonatomic, strong)UILabel *infoLab;
+@property (nonatomic, strong)UILabel *actors;
+@property (nonatomic, strong)UILabel *date;
 @end

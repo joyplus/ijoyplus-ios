@@ -37,7 +37,9 @@
     UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
     backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
     self.navigationItem.backBarButtonItem = backtButton;
-    self.view.frame = CGRectMake(0, 0, 320, 430);
+  //  self.view.frame = CGRectMake(0, 0, 320, 430);
+    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, 480)];
+    [self.tableView setFrame:CGRectMake(0, 0, 320, 480)];
 }
 - (void)viewWillAppear:(BOOL)animated{
     self.tabBarController.tabBar.hidden = YES;
@@ -72,6 +74,7 @@
     }
     NSDictionary *item = [self.listArr objectAtIndex:indexPath.row];
     cell.label.text = [item objectForKey:@"prod_name"];
+    cell.score.text = [NSString stringWithFormat:@"%@分",[item objectForKey:@"score"]];
     cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"stars"]];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];

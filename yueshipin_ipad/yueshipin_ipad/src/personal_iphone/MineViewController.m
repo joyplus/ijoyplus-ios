@@ -11,6 +11,8 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "IphoneSettingViewController.h"
+#import "MoreListViewController.h"
+#import "IphoneMovieDetailViewController.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define PAGESIZE 20
@@ -27,6 +29,8 @@
 @synthesize redShowArr = redShowArr_;
 @synthesize recordTableList = recordTableList_;
 @synthesize favTableList = favTableList_;
+@synthesize moreView = moreView_;
+@synthesize moreButton = moreButton_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,11 +67,37 @@
     
 }
 
+-(void)loadPlayRecords{
+
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserWatchs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        self.recordArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"watchs"];
+            if(tempTopsArray.count > 0){
+                
+                [ self.recordArr addObjectsFromArray:tempTopsArray];
+            }
+        }
+        else {
+            
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+        if(self.recordArr == nil){
+            self.recordArr = [[NSMutableArray alloc]initWithCapacity:10];
+        }
+    }];
+
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
+    [self loadPlayRecords];
     [self loadMyFavsData];
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
@@ -95,6 +125,9 @@
     NSArray *itemsArr = [NSArray arrayWithObjects:@"播放纪录",@"我的收藏",@"我的悦单", nil];
     self.segControl = [[UISegmentedControl alloc] initWithItems:itemsArr];
     self.segControl.frame = CGRectMake(12, 40, 296, 51);
+    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forSegmentAtIndex:0];
+    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forSegmentAtIndex:1];
+    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forSegmentAtIndex:2];
     [self.segControl addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventValueChanged];
     self.segControl.selectedSegmentIndex = 0;
     [self.view addSubview:self.segControl];
@@ -116,6 +149,20 @@
     self.favTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
+    
+    moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 293, 296, 45)];
+    moreView_.backgroundColor = [UIColor whiteColor];
+    moreButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
+    [moreButton_ setFrame:CGRectMake(5, 7, 284, 30)];
+    [moreView_ addSubview:moreButton_];
+}
+
+-(void)seeMore:(id)sender{
+    MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
+    moreListViewController.listArr = favArr_;
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -138,9 +185,12 @@
         case 0:{
                 if ([self.recordArr count] <= 3) {
                     redShowArr_ = [NSArray arrayWithArray:self.recordArr];
+                    [moreView_ removeFromSuperview];
                 }
                 else {
                     redShowArr_ = [NSArray arrayWithObjects:[self.recordArr objectAtIndex:0],[self.recordArr objectAtIndex:1],[self.recordArr objectAtIndex:2], nil];
+                    [moreButton_ setImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
+                    [self.view addSubview:moreView_];
                 }
                 [self.bgView addSubview:self.recordTableList];
                 [self.recordTableList reloadData];
@@ -150,9 +200,12 @@
         case 1:{
             if ([self.favArr count] <= 3) {
                 favShowArr_ = [NSArray arrayWithArray:self.favArr];
+                [moreView_ removeFromSuperview];
             }
             else {
                 favShowArr_ = [NSArray arrayWithObjects:[self.favArr objectAtIndex:0],[self.favArr objectAtIndex:1],[self.favArr objectAtIndex:2], nil];
+                [moreButton_ setImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
+                [self.view addSubview:moreView_];
             }
             [self.bgView addSubview:self.favTableList];
             [self.favTableList reloadData];
@@ -187,12 +240,18 @@
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     if (tableView.tag == RECORD_TYPE) {
-       
+       NSDictionary *infoDic = [redShowArr_ objectAtIndex:indexPath.row];
+        cell.titleLab.text = [infoDic objectForKey:@"content_name"];
+        cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+        cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
         
     }
     else if (tableView.tag == Fav_TYPE){
         NSDictionary *infoDic = [favShowArr_ objectAtIndex:indexPath.row];
         cell.titleLab.text = [infoDic objectForKey:@"content_name"];
+        cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+        cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        
     }
     return cell;
 }
@@ -200,6 +259,23 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
 
     return 60;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == RECORD_TYPE) {
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = [redShowArr_ objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        
+    }
+    else if (tableView.tag == Fav_TYPE){
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+        
+    }
+
+
 }
 - (void)didReceiveMemoryWarning
 {

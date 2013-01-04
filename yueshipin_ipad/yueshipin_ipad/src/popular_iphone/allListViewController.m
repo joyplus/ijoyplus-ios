@@ -171,6 +171,14 @@
     cell.label4.text = [[items objectAtIndex:3] objectForKey:@"prod_name" ];
     cell.label5.text = [[items objectAtIndex:4] objectForKey:@"prod_name" ];
     [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    
+    NSString *typeStr = [item objectForKey:@"prod_type"];
+    if ([typeStr isEqualToString:@"1"]) {
+        cell.typeImageView.image = [UIImage imageNamed:@"tab1_movieflag.png"];
+    }
+    else if ([typeStr isEqualToString:@"2"]){
+        cell.typeImageView.image = [UIImage imageNamed:@"tab1_seriesflag.png"];
+    }
     return cell;
 
 }
