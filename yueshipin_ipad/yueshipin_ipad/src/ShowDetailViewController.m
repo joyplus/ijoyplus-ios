@@ -717,7 +717,7 @@
     subitem.percentage = 0;
     subitem.type = 3;
     subitem.subitemId = [StringUtility md5:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:num] objectForKey:@"name"]]];
-    subitem.downloadStatus = @"start";
+    subitem.downloadStatus = @"waiting";
     subitem.fileName = [NSString stringWithFormat:@"%@_%@%@", self.prodId, subitem.subitemId, @".mp4"];
     [self getDownloadUrls:num];
     if(downloadUrls.count > 0){

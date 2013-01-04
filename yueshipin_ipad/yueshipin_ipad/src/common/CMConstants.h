@@ -44,7 +44,7 @@
 #define kPhoneNumber @"kPhoneNumber"
 
 #define LOCAL_KEYS_NUMBER 5
-#define MAX_DOWNLOADING_THREADS 2
+#define MAX_DOWNLOADING_THREADS 1
 #define umengAppKey @"50c069e25270154e81000056"
 
 #define YOU_KU @"youku"

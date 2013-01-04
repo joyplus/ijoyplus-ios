@@ -85,37 +85,46 @@
     self.downloaderArray = [[NSMutableArray alloc]initWithCapacity:allItem.count];
     for (DownloadItem *item in allItem) {
         if(item.type == 1){
-            if(![item.downloadStatus isEqualToString:@"done"]){
+            McDownload *newdownloader = [[McDownload alloc] init];
+            newdownloader.idNum = item.itemId;
+            NSURL *url = [NSURL URLWithString:item.url];
+            newdownloader.url = url;
+            newdownloader.fileName = item.fileName;
+            if([item.downloadStatus isEqualToString:@"start"]){
+                newdownloader.status = 1;
+            } else if([item.downloadStatus isEqualToString:@"waiting"]){
+                newdownloader.status = 3;
+            } else if([item.downloadStatus isEqualToString:@"error"]){
+                newdownloader.status = 4;
+            } else if([item.downloadStatus isEqualToString:@"done"]){
+                newdownloader.status = 2;
+            } else {
+                newdownloader.status = 0;
+            }
+            [self.downloaderArray addObject:newdownloader];
+        } else {
+            NSArray *subitems = [SubdownloadItem allObjects];
+            for(SubdownloadItem *subitem in subitems){
                 McDownload *newdownloader = [[McDownload alloc] init];
-                newdownloader.idNum = item.itemId;
-                NSURL *url = [NSURL URLWithString:item.url];
+                newdownloader.idNum = subitem.itemId;
+                newdownloader.subidNum = subitem.pk;
+                NSURL *url = [NSURL URLWithString:subitem.url];
                 newdownloader.url = url;
-                newdownloader.fileName = item.fileName;
-                if([item.downloadStatus isEqualToString:@"start"]){
+                newdownloader.fileName = subitem.fileName;
+                if([subitem.downloadStatus isEqualToString:@"start"]){
                     newdownloader.status = 1;
+                } else if([subitem.downloadStatus isEqualToString:@"waiting"]){
+                    newdownloader.status = 3;
+                } else if([subitem.downloadStatus isEqualToString:@"error"]){
+                    newdownloader.status = 4;
+                } else if([subitem.downloadStatus isEqualToString:@"done"]){
+                    newdownloader.status = 2;
                 } else {
                     newdownloader.status = 0;
                 }
                 [self.downloaderArray addObject:newdownloader];
             }
-        } else {
-            NSArray *subitems = [SubdownloadItem allObjects];
-            for(SubdownloadItem *subitem in subitems){
-                if(![item.downloadStatus isEqualToString:@"done"]){
-                    McDownload *newdownloader = [[McDownload alloc] init];
-                    newdownloader.idNum = subitem.itemId;
-                    newdownloader.subidNum = subitem.pk;
-                    NSURL *url = [NSURL URLWithString:subitem.url];
-                    newdownloader.url = url;
-                    newdownloader.fileName = subitem.fileName;
-                    if([subitem.downloadStatus isEqualToString:@"start"]){
-                        newdownloader.status = 1;
-                    } else {
-                        newdownloader.status = 0;
-                    }
-                    [self.downloaderArray addObject:newdownloader];
-                }
-            }
+            
         }
     }
 }
@@ -292,6 +301,49 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [self.sinaweibo handleOpenURL:url];
+}
+
+//下载失败
+- (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
+{
+    NSLog(@"下载失败 %@", error);
+    aDownload.status = 4;
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", aDownload.idNum];
+    NSArray *subitems = [SubdownloadItem findByCriteria:subquery];
+    for (int i = 0; i < subitems.count; i++) {
+        SubdownloadItem *item = [subitems objectAtIndex:i];
+        if ([item.itemId isEqualToString:aDownload.idNum] && aDownload.subidNum == item.pk) {
+            item.downloadStatus = @"error";
+            [item save];
+        }
+        
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+}
+//下载结束
+- (void)downloadFinished:(McDownload *)aDownload
+{
+    NSLog(@"下载完成");
+    aDownload.status = 2;
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", aDownload.idNum];
+    NSArray *subitems = [SubdownloadItem findByCriteria:subquery];
+    for (int i = 0; i < subitems.count; i++) {
+        SubdownloadItem *item = [subitems objectAtIndex:i];
+        if ([item.itemId isEqualToString:aDownload.idNum] && aDownload.subidNum == item.pk) {
+            item.percentage = 100;
+            item.downloadStatus  = @"done";
+            [item save];
+        }
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
 }
 
 @end

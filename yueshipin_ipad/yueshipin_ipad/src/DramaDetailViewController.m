@@ -798,11 +798,12 @@
     subitem.percentage = 0;
     subitem.type = 2;
     subitem.subitemId = [NSString stringWithFormat:@"%i", num];
-    subitem.downloadStatus = @"start";
+    subitem.downloadStatus = @"waiting";
     subitem.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
     [self getDownloadUrls:num-1];
     if(downloadUrls.count > 0){
         subitem.url = [downloadUrls objectAtIndex:0];
+//        subitem.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
         [subitem save];
         [[AppDelegate instance] addToDownloaderArray:subitem];
         [self updateBadgeIcon];

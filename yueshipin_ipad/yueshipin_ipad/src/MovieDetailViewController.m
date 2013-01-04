@@ -596,23 +596,13 @@
     item.type = 1;
     item.downloadStatus = @"waiting";
     item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-//    item.url = [downloadUrls objectAtIndex:0];
-    item.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
+    item.url = [downloadUrls objectAtIndex:0];
+//    item.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
     [item save];
     [[AppDelegate instance] addToDownloaderArray:item];
     
     [self updateBadgeIcon];
     [UIUtility showDownloadSuccess:self.view];
-//    queue = [[NSOperationQueue alloc]init];
-//    handler = [[DownloadHandler alloc]init];
-//    handler.downloadUrls = downloadUrls;
-//    handler.item = item;
-//    [queue addOperation:handler];
-//    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:[downloadUrls objectAtIndex:0]] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];
-//    NSError *error = nil;
-//    NSURLResponse *theResponse = nil;
-//    NSURLConnection *connectiton = [[NSURLConnection alloc]initWithRequest:request delegate:self startImmediately:YES];
-//     NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&theResponse error:&error];
 }
 
 

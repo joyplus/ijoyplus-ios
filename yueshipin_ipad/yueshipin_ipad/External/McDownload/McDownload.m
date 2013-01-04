@@ -106,7 +106,6 @@
     [request addValue:range forHTTPHeaderField:@"Range"];
     [connection cancel];
     connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-    self.status = 1;
 }
 
 - (void)stop
@@ -115,7 +114,6 @@
     connection = nil;
     [fileHandle closeFile];
     fileHandle = nil;
-    self.status = 0;
 }
 
 - (void)stopAndClear

@@ -10,10 +10,11 @@
 #import "SinaWeibo.h"
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
+#import "McDownload.h"
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, McDownloadDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
