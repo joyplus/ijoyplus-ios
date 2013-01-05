@@ -8,8 +8,8 @@
 
 #import "ServiceConstants.h"
 
-NSString *const kAppKey  = @"ijoyplus_ios_001";
-//NSString *const kAppKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";
+//NSString *const kAppKey  = @"ijoyplus_ios_001";
+NSString *const kAppKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";
 
 NSString *const kSuccessResCode  = @"00000";
 
@@ -117,4 +117,6 @@ NSString *const kPathUserTopics = @"/joyplus-service/index.php/user/tops";
 NSString *const kPathTopDelete = @"/joyplus-service/index.php/top/del";
 NSString *const kPathRemoveItem = @"/joyplus-service/index.php/top/removeItem";
 NSString *const kPathFeekback = @"/joyplus-service/index.php/user/feedback";
+NSString *const kPathPlayHistory = @"/joyplus-service/index.php/user/playHistories";
+NSString *const kPathAddPlayHistory = @"/joyplus-service/index.php/program/play";
 

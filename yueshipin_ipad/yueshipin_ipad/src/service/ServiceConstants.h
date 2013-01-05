@@ -112,3 +112,5 @@ extern NSString *const kPathUserSupport;
 extern NSString *const kPathTopDelete;
 extern NSString *const kPathRemoveItem;
 extern NSString *const kPathFeekback;
+extern NSString *const kPathPlayHistory;
+extern NSString *const kPathAddPlayHistory;

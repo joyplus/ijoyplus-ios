@@ -646,6 +646,7 @@
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
             viewController.videoUrl = videoUrl;
+            viewController.prodId = self.prodId;
             viewController.dramaDetailViewControllerDelegate = self;
             viewController.type = 2;
             viewController.currentNum = num;
@@ -688,6 +689,7 @@
     if(url == nil){
         url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
     }
+    viewController.prodId = self.prodId;
     viewController.programUrl = url;
     viewController.title = [video objectForKey:@"name"];
     viewController.type = 2;

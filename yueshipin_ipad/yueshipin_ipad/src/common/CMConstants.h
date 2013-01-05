@@ -58,6 +58,7 @@
 #define LIU_CHANG @"3gp"
 
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
+#define WATCH_HISTORY_REFRESH @"PersonalWatchHistoryViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 #define ADD_NEW_DOWNLOAD_ITEM @"add_new_download_item"
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"

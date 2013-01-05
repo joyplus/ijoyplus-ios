@@ -12,6 +12,7 @@
 
 @interface MediaPlayerViewController : UIViewController <DeviceListViewDelegate>
 
+@property (nonatomic, strong)NSString *prodId;
 @property (nonatomic, strong)NSString *name;
 @property (nonatomic, strong)NSString *subname;
 @property (nonatomic, assign)int type;

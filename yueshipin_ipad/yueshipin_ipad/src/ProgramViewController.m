@@ -10,6 +10,7 @@
 #import "DateUtility.h"
 #import "CMConstants.h"
 #import "CacheUtility.h"
+#import "CommonHeader.h"
 
 
 @interface ProgramViewController (){
@@ -22,6 +23,7 @@
 @synthesize webView;
 @synthesize subname;
 @synthesize type;
+@synthesize prodId;
 
 - (void)didReceiveMemoryWarning
 {
@@ -36,6 +38,7 @@
     [self.webView removeFromSuperview];
     self.webView = nil;
     self.programUrl = nil;
+    self.prodId = nil;
     self.subname = nil;
 }
 
@@ -81,53 +84,14 @@
 
 - (void)updateWatchRecord
 {
-    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
-    int index = 0;
-    BOOL exist = NO;
-    NSMutableDictionary *watchingItem;
-    for(int i = 0; i < watchRecordArray.count; i++){
-        NSDictionary *item = (NSDictionary *)[watchRecordArray objectAtIndex:i];
-        if ([[item objectForKey:@"name"] isEqualToString: self.title]) {
-            watchingItem = [[NSMutableDictionary alloc]initWithDictionary:item];;
-            index = i;
-            exist = YES;
-            break;
-        }
-    }
-    if(watchingItem == nil){
-        watchingItem = [[NSMutableDictionary alloc]initWithCapacity:7];
-    }
-    [watchingItem setValue:@"2" forKey:@"play_type"]; // 1:player 2 web-player
-    [watchingItem setValue:(self.title == nil ? @"" : self.title) forKey:@"name"];
-    [watchingItem setValue:(self.subname == nil ? @"" : self.subname) forKey:@"subname"];
-    [watchingItem setValue:[NSString stringWithFormat:@"%i", self.type] forKey:@"type"];
-    [watchingItem setValue:[DateUtility formatDateWithString:[NSDate date] formatString: @"yyyy-MM-dd HH:mm:ss"] forKey:@"createDateStr"];
-    [watchingItem setValue:[NSNumber numberWithInt:0] forKey:@"playbackTime"];
-    [watchingItem setValue:[NSNumber numberWithInt:0] forKey:@"duration"];
-    [watchingItem setValue: self.programUrl forKey:@"videoUrl"];
-    
-    NSMutableArray *temp = [[NSMutableArray alloc]initWithCapacity:WATCH_RECORD_NUMBER];
-    if(!exist){
-        [temp addObject:watchingItem];
-    }
-    for(int i = 0; i < watchRecordArray.count; i++){
-        if(exist && i == index){
-            [temp addObject:watchingItem];
-        } else {
-            [temp addObject:[watchRecordArray objectAtIndex:i]];
-        }
-    }
-    NSArray *sortedArray = [temp sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
-        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
-        return [second compare:first];
+    self.subname = self.subname == nil ? @"" : self.subname;
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.title, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", @"0", @"playback_time", @"0", @"duration", self.programUrl, @"video_url", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
     }];
-    int num = sortedArray.count > WATCH_RECORD_NUMBER ? WATCH_RECORD_NUMBER : sortedArray.count;
-    NSMutableArray *newWatchRecord = [[NSMutableArray alloc]initWithCapacity:num];
-    for(int i = 0; i < num; i++){
-        [newWatchRecord addObject:[temp objectAtIndex:i]];
-    }
-    [[CacheUtility sharedCache]putInCache:@"watch_record" result:newWatchRecord];
 }
 
 

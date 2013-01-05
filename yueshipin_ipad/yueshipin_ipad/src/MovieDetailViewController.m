@@ -474,6 +474,7 @@
         } else {
             MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
             viewController.videoUrl = videoAddress;
+            viewController.prodId = self.prodId;
             viewController.type = 1;
             viewController.name = [video objectForKey:@"name"];
             viewController.subname = [NSString stringWithFormat:@"%i", num];
@@ -491,6 +492,7 @@
     NSArray *urlArray = [[episodeArray objectAtIndex:0] objectForKey:@"video_urls"];
     viewController.programUrl = [[urlArray objectAtIndex:0] objectForKey:@"url"];
     viewController.title = [video objectForKey:@"name"];
+    viewController.prodId = self.prodId;
     viewController.type = 1;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];

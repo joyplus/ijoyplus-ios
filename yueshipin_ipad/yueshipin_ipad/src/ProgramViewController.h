@@ -10,6 +10,7 @@
 
 @interface ProgramViewController : UIViewController
 
+@property (nonatomic, strong)NSString *prodId;
 @property (nonatomic, strong) NSString *programUrl;
 @property (nonatomic, weak) IBOutlet UIWebView *webView;
 @property (nonatomic, strong)NSString *subname;

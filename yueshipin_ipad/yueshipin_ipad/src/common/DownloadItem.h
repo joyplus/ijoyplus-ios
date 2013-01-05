@@ -9,7 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "SQLitePersistentObject.h"
 
-@interface DownloadItem : SQLitePersistentObject
+@interface DownloadItem : SQLitePersistentObject{
+    NSString *itemId;
+    NSString *imageUrl;
+    NSString *name;
+    NSString *fileName;
+    NSString *downloadStatus;
+    NSString *url;
+    int type;
+    int percentage;
+}
 
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *imageUrl;
@@ -19,5 +28,4 @@
 @property (nonatomic, assign)int type;
 @property (nonatomic, assign)int percentage;
 @property (nonatomic, strong)NSString *url;
-@property (nonatomic, strong)NSArray *downloadUrls;
 @end

@@ -73,6 +73,7 @@
 {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WATCH_HISTORY_REFRESH object:nil];
     self.userId = nil;
     backgroundView = nil;
     menuBtn = nil;
@@ -217,6 +218,7 @@
 {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -226,24 +228,52 @@
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
-    sortedwatchRecordArray = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
-        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
-        return [second compare:first];
-    }];
-    table.frame = CGRectMake(60, 325, 400, tableHeight);
-    [table reloadData];
+//    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
+//    sortedwatchRecordArray = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+//        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
+//        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
+//        return [second compare:first];
+//    }];
+//    table.frame = CGRectMake(60, 325, 400, tableHeight);
+//    [table reloadData];    
     if (!accessed) {
         accessed = YES;
+        [self parseWatchHistory];
         [self parseResult];
     }
-    
+}
+
+- (void)parseWatchHistory
+{
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
+    if(cacheResult != nil){
+        [self parseWatchResultData:cacheResult];
+    }
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.userId, @"userid",  @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseWatchResultData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            [UIUtility showSystemError:self.view];
+        }];
+    }
+}
+
+- (void)parseWatchResultData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
+        sortedwatchRecordArray = (NSArray *)[result objectForKey:@"histories"];
+        [table reloadData];
+        table.frame = CGRectMake(60, 325, 400, tableHeight);
+    }
 }
 
 - (void)parseResult
 {
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"PersonalData%@", self.userId]];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PersonalData"];
     if(cacheResult != nil){
         [self parseResultData:cacheResult];
     }
@@ -262,7 +292,7 @@
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"PersonalData%@", self.userId] result:result];
+        [[CacheUtility sharedCache] putInCache:@"PersonalData" result:result];
         supportLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"support_num"]];
 //        sharelabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"share_num"]];
         collectionLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"favority_num"]];
@@ -273,6 +303,11 @@
 - (void)refreshData:(NSNotification *)notification
 {
     [self parseResult];
+}
+
+- (void)refreshWatchHistory:(NSNotification *)notification
+{
+    [self parseWatchHistory];
 }
 
 #pragma mark -
@@ -297,7 +332,7 @@
     if(cell == nil){
         cell = [[WatchRecordCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 15)];
+        UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 20)];
         movieNameLabel.backgroundColor = [UIColor clearColor];
         movieNameLabel.textColor = [UIColor blackColor];
         movieNameLabel.tag = 1001;
@@ -319,7 +354,7 @@
     }
     NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
     UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
-    movieNameLabel.text = [item objectForKey:@"name"];
+    movieNameLabel.text = [item objectForKey:@"prod_name"];
     
     UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
     contentLabel.text = [self composeContent:item];
@@ -327,7 +362,7 @@
     [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
     
     UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
-    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playbackTime"];
+    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
     NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
     if(duration.doubleValue - playbackTime.doubleValue < 3){
         [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
@@ -347,19 +382,21 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
-    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
+    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
         MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = [item objectForKey:@"videoUrl"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
-        viewController.name = [item objectForKey:@"name"];
-        viewController.subname = [item objectForKey:@"subname"];
+        viewController.videoUrl = [item objectForKey:@"video_url"];
+        viewController.prodId = [item objectForKey:@"prod_id"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+        viewController.name = [item objectForKey:@"prod_name"];
+        viewController.subname = [item objectForKey:@"prod_subname"];
         [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
     } else {
         ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-        viewController.programUrl = [item objectForKey:@"videoUrl"];
-        viewController.title = [item objectForKey:@"name"];
-        viewController.subname = [item objectForKey:@"subname"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.prodId = [item objectForKey:@"prod_id"];
+        viewController.programUrl = [item objectForKey:@"video_url"];
+        viewController.title = [item objectForKey:@"prod_name"];
+        viewController.subname = [item objectForKey:@"prod_subname"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }
@@ -368,13 +405,13 @@
 - (NSString *)composeContent:(NSDictionary *)item
 {
     NSString *content;
-    NSNumber *number = (NSNumber *)[item objectForKey:@"playbackTime"];
-    if ([[item objectForKey:@"type"] isEqualToString:@"1"]) {
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+    if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
         content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
-    } else if ([[item objectForKey:@"type"] isEqualToString:@"2"]) {
-        content = [NSString stringWithFormat:@"已观看到第%@集 %@", [item objectForKey:@"subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
-    } else if ([[item objectForKey:@"type"] isEqualToString:@"3"]) {
-        content = [NSString stringWithFormat:@"已观看《%@》 %@", [item objectForKey:@"subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
+        content = [NSString stringWithFormat:@"已观看到第%@集 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
+        content = [NSString stringWithFormat:@"已观看《%@》 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }
