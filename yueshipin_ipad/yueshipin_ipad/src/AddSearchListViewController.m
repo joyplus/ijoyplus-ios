@@ -105,6 +105,8 @@
     pageSize = 10;
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     [self loadTable];
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)loadTable {
@@ -390,8 +392,8 @@
 - (void)addBtnClicked
 {
     NSMutableString *prodIds = [[NSMutableString alloc]init];
-    for(NSString *id in checkboxes){
-        [prodIds appendFormat:@"%@,", id];
+    for(NSString *idStr in checkboxes){
+        [prodIds appendFormat:@"%@,", idStr];
     }
     NSString *prodIdStr;
     if(prodIds.length > 0){

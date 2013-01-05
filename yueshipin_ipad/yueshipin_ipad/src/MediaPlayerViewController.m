@@ -62,7 +62,7 @@
     player = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+    //    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -78,7 +78,7 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor clearColor]];
-//    self.videoUrl = @"http://hot.vrs.sohu.com/ipad909901_4567748189248_220033.m3u8";
+    //    self.videoUrl = @"http://hot.vrs.sohu.com/ipad909901_4567748189248_220033.m3u8";
     int nowDate = [[NSDate date] timeIntervalSince1970];
     if([self.videoUrl rangeOfString:@"{now_date}"].location != NSNotFound){
         self.videoUrl = [self.videoUrl stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
@@ -94,7 +94,7 @@
     playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:mediaFileUrl];
     CGRect bound = self.view.bounds;
     playerViewController.view.frame = CGRectMake(0, -20, bound.size.width, bound.size.height + 20);
-
+    
     [self.navigationController setNavigationBarHidden:YES];
     [self.view addSubview:playerViewController.view];
     
@@ -107,7 +107,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVideoFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPreloadFinish:) name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackStateChanged:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackStateChanged:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 }
 
 - (void)printSubview:(UIView *)view
@@ -150,7 +150,7 @@
     }
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:self.videoUrl result:lastPlayTime];
-//    [playerViewController.view removeFromSuperview];
+    //    [playerViewController.view removeFromSuperview];
     [self dismissViewControllerAnimated:YES completion:^{
         if(!userClicked){
             [self.dramaDetailViewControllerDelegate playNextEpisode:self.currentNum];
@@ -160,21 +160,24 @@
 
 - (void)updateWatchRecord
 {
-    int playbackTime = 0;
-    if(player.currentPlaybackTime > 0){
-        playbackTime = [NSNumber numberWithFloat:player.currentPlaybackTime].intValue;
+    if(!isDownloaded){
+        int playbackTime = 0;
+        if(player.currentPlaybackTime > 0){
+            playbackTime = [NSNumber numberWithFloat:player.currentPlaybackTime].intValue;
+        }
+        int duration = 0;
+        if(player.duration > 0){
+            duration = [NSNumber numberWithFloat:player.duration].intValue;
+        }
+        self.subname = self.subname == nil ? @"" : self.subname;
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"1", @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", self.videoUrl, @"video_url", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"zz%@", error);
+        }];
     }
-    int duration = 0;
-    if(player.duration > 0){
-        duration = [NSNumber numberWithFloat:player.duration].intValue;
-    } 
-    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"1", @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", self.videoUrl, @"video_url", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"zz%@", error);
-    }];    
 }
 
 - (void)readOverLayView:(UIView *)view

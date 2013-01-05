@@ -223,13 +223,14 @@
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_disabled"] forState:UIControlStateDisabled];
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn"] forState:UIControlStateNormal];
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"share_btn_pressed"] forState:UIControlStateHighlighted];
-    [shareBtn setEnabled:NO];
+    [shareBtn setEnabled:YES];
     [shareBtn addTarget:self action:@selector(sendWeibo) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:shareBtn];
     
     contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(270, 150, 360, 110)];
     contentTextView.font = [UIFont systemFontOfSize:14];
     contentTextView.delegate = self;
+    contentTextView.text = [NSString stringWithFormat:@"我正在用#悦视频#ipad版本收看了《#%@#》，推荐给大家哦！更多精彩尽在悦视频，快来和我一起看吧！", self.prodName];
     [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
     
@@ -249,6 +250,7 @@
     textCount.text = @"0";
     [view addSubview:textCount];
     [self.view addSubview:view];
+    [self updateCount];
 }
 
 - (void)contentTextViewChanged:(NSNotification *)notification
@@ -356,7 +358,7 @@
 {
     if(contentTextView.text.length > 0){
         SinaWeibo  *_sinaweibo = [AppDelegate instance].sinaweibo;
-        NSString *content = [NSString stringWithFormat:@"#%@# %@", self.prodName, contentTextView.text];
+        NSString *content = contentTextView.text;
         if (content.length > 140) {
             content = [content substringToIndex:140];
         }

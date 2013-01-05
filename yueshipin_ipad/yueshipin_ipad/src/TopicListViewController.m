@@ -76,6 +76,8 @@
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     [self loadTable];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)refreshData:(NSNotification *)notification

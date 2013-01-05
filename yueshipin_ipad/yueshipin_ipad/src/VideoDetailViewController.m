@@ -33,6 +33,7 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:CMConstants.backgroundColor];
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning

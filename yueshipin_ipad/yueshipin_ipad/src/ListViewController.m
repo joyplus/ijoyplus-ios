@@ -74,6 +74,8 @@
     
     reloads_ = 2;
     pageSize = 10;
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)loadTable {    

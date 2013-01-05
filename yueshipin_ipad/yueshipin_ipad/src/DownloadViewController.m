@@ -298,6 +298,14 @@
     
     if (item.type == 1) {
         imageView.image = [UIImage imageNamed:@"movie_frame"];
+        
+        if(![item.downloadStatus isEqualToString:@"done"]){
+            UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
+            bgLabel.tag = item.itemId.intValue + 30000000;
+            bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
+            [cell.contentView addSubview:bgLabel];
+        }
+        
         UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
         progressLabel.tag = item.itemId.intValue + 10000000;
         progressLabel.backgroundColor = [UIColor clearColor];
@@ -416,6 +424,7 @@
         viewController.videoUrl = filePath;
         viewController.prodId = item.itemId;
         viewController.name = item.name;
+        viewController.subname = @"";
         viewController.isDownloaded = YES;
         viewController.type = 1;
         [[AppDelegate instance].rootViewController pesentMyModalView:viewController];

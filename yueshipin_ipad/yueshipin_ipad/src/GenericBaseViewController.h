@@ -11,6 +11,7 @@
 
 @interface GenericBaseViewController : UIViewController{
     UIUtility *myHUD;
+    UISwipeGestureRecognizer *swipeRecognizer;
 }
 
 - (void)closeMenu;

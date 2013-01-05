@@ -57,6 +57,7 @@
     contentImage.image = [UIImage imageNamed:@"about_content"];
     [self.view addSubview:contentImage];
 
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning

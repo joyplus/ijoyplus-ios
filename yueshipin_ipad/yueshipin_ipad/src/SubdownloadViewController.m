@@ -43,6 +43,12 @@
     [super viewDidUnload];
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.view addGestureRecognizer:swipeRecognizer];
+}
+
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
@@ -324,10 +330,17 @@
     [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [cell.contentView addSubview:contentImage];
     
-    UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 110, 98, 25)];
+    if(![item.downloadStatus isEqualToString:@"done"]){
+        UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
+        bgLabel.tag = item.pk + 30000000;
+        bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
+        [cell.contentView addSubview:bgLabel];
+    }
+    
+    UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
     progressLabel.tag = item.pk + 10000000;
     progressLabel.backgroundColor = [UIColor clearColor];
-    progressLabel.font = [UIFont boldSystemFontOfSize:10];
+    progressLabel.font = [UIFont boldSystemFontOfSize:13];
     progressLabel.textColor = [UIColor whiteColor];
     if([item.downloadStatus isEqualToString:@"start"]){
         progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", item.percentage];
@@ -346,7 +359,7 @@
     [cell.contentView addSubview:progressLabel];
     
     if(![item.downloadStatus isEqualToString:@"done"]){
-        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 132, 98, 2)];
+        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 125, 98, 2)];
         progressView.progress = item.percentage/100.0;
         progressView.tag = item.pk + 20000000;
         [cell.contentView addSubview:progressView];
@@ -435,7 +448,7 @@
         viewController.name = self.titleContent;
         viewController.subname = item.name;
         viewController.isDownloaded = YES;
-        viewController.type = 1;
+        viewController.type = item.type;
         [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
     } else {
         [self videoImageClicked:position];

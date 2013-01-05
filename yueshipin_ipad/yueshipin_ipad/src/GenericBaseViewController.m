@@ -39,11 +39,17 @@
     [super viewDidLoad];
     myHUD = [[UIUtility alloc]init];
     [self.view setBackgroundColor:CMConstants.backgroundColor];
+    
+    swipeRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeBtnClicked)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    swipeRecognizer.numberOfTouchesRequired=1;   
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    myHUD = nil;
+    swipeRecognizer = nil;
 }
 
 - (void)didReceiveMemoryWarning

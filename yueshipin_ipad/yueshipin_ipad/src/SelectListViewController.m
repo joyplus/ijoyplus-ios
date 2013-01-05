@@ -82,6 +82,8 @@
     [self.view addSubview:doneBtn];
     
     checkboxes = [[NSMutableSet alloc]initWithCapacity:10];
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -92,8 +94,6 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
-    
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_topic_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
@@ -101,7 +101,7 @@
         [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"100", @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:self.type], @"type", [NSString stringWithFormat:@"%i", 1], @"page_num", @"100", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
             [myHUD hide];
@@ -158,6 +158,10 @@
         nameLabel.font = CMConstants.titleFont;
         [cell.contentView addSubview:nameLabel];
         
+        UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectZero];
+        typeImage1.tag = 3001;
+        [cell.contentView addSubview:typeImage1];
+        
         SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 3, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
         checkbox.tag = 2001;
         [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
@@ -170,6 +174,19 @@
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
     nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+    [nameLabel sizeToFit];
+    
+    NSString *itemType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    UIImageView *typeImage = (UIImageView *)[cell viewWithTag:3001];
+    if([itemType isEqualToString:@"1"]){
+        typeImage.image = [UIImage imageNamed:@"movie_type"];
+    } else if([itemType isEqualToString:@"2"]){
+        typeImage.image = [UIImage imageNamed:@"drama_type"];
+    } else {
+        typeImage.image = [UIImage imageNamed:@"show_type"];
+    }
+    typeImage.frame = CGRectMake(nameLabel.frame.origin.x + fmin(nameLabel.frame.size.width, 220)+ 5, nameLabel.frame.origin.y+ 2, 37, 18);
+
     
     SSCheckBoxView *checkbox = (SSCheckBoxView *)[cell viewWithTag:2001];
     checkbox.value = [NSString stringWithFormat:@"%@", [item objectForKey:@"id"]];
