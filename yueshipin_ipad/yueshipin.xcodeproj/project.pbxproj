@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22196D8D1697DE74008E6D62 /* wyatt_video_title.png in Resources */ = {isa = PBXBuildFile; fileRef = 22196D8C1697DE74008E6D62 /* wyatt_video_title.png */; };
+		22196D961697E47F008E6D62 /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 22196D951697E47F008E6D62 /* RadioButton.m */; };
+		22196D991697E5B7008E6D62 /* RadioButton-Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 22196D971697E5B7008E6D62 /* RadioButton-Selected.png */; };
+		22196D9A1697E5B7008E6D62 /* RadioButton-Unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = 22196D981697E5B7008E6D62 /* RadioButton-Unselected.png */; };
 		22AAA43F16966EAE00333F76 /* my_search_sou_suo_kuang.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA43E16966EAE00333F76 /* my_search_sou_suo_kuang.png */; };
 		22AAA444169676A900333F76 /* tab3_page1_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA441169676A900333F76 /* tab3_page1_icon.png */; };
 		22AAA445169676A900333F76 /* tab3_page1_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA442169676A900333F76 /* tab3_page1_icon2.png */; };
@@ -52,6 +56,18 @@
 		22AAA4971696DC0A00333F76 /* my_setting_other4.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA48C1696DC0900333F76 /* my_setting_other4.png */; };
 		22AAA49A1696EA9100333F76 /* tab2_television_list_favorite.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA4981696EA8D00333F76 /* tab2_television_list_favorite.png */; };
 		22AAA49B1696EA9100333F76 /* tab2_television_list_recommend.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA4991696EA8F00333F76 /* tab2_television_list_recommend.png */; };
+		22AAA4B31697D25300333F76 /* icon_add videos_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA4B11697D25300333F76 /* icon_add videos_s.png */; };
+		22AAA4B41697D25300333F76 /* icon_add videos.png in Resources */ = {isa = PBXBuildFile; fileRef = 22AAA4B21697D25300333F76 /* icon_add videos.png */; };
+		22AAA4B81697D42E00333F76 /* CreateMyListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */; };
+		22B262A91697EF7800B7732C /* CreateMyListTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262A81697EF7800B7732C /* CreateMyListTwoViewController.m */; };
+		22B262AD1697F29E00B7732C /* FindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262AC1697F29E00B7732C /* FindViewController.m */; };
+		22B262B01697F39D00B7732C /* icon_new wyatt single_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B262AE1697F39D00B7732C /* icon_new wyatt single_s.png */; };
+		22B262B11697F39D00B7732C /* icon_new wyatt single.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B262AF1697F39D00B7732C /* icon_new wyatt single.png */; };
+		22B262B41697F86400B7732C /* SearchResultsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262B31697F86400B7732C /* SearchResultsViewCell.m */; };
+		22B262B71697FD9C00B7732C /* list_icon_add_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B262B51697FD9C00B7732C /* list_icon_add_pressed.png */; };
+		22B262B81697FD9C00B7732C /* list_icon_add.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B262B61697FD9C00B7732C /* list_icon_add.png */; };
+		22B262BE1698230000B7732C /* tab3_page3_see_s.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B262BC1698230000B7732C /* tab3_page3_see_s.png */; };
+		22B262BF1698230000B7732C /* tab3_page3_see.png in Resources */ = {isa = PBXBuildFile; fileRef = 22B262BD1698230000B7732C /* tab3_page3_see.png */; };
 		22FEEE5A16899AE100A71EF4 /* AllListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4516899AE100A71EF4 /* AllListViewCell.m */; };
 		22FEEE5B16899AE100A71EF4 /* allListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4716899AE100A71EF4 /* allListViewController.m */; };
 		22FEEE5C16899AE100A71EF4 /* ItemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4916899AE100A71EF4 /* ItemDetailViewController.m */; };
@@ -449,6 +465,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22196D8C1697DE74008E6D62 /* wyatt_video_title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wyatt_video_title.png; sourceTree = "<group>"; };
+		22196D941697E47F008E6D62 /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
+		22196D951697E47F008E6D62 /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
+		22196D971697E5B7008E6D62 /* RadioButton-Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RadioButton-Selected.png"; sourceTree = "<group>"; };
+		22196D981697E5B7008E6D62 /* RadioButton-Unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RadioButton-Unselected.png"; sourceTree = "<group>"; };
 		22AAA43E16966EAE00333F76 /* my_search_sou_suo_kuang.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_search_sou_suo_kuang.png; sourceTree = "<group>"; };
 		22AAA441169676A900333F76 /* tab3_page1_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab3_page1_icon.png; sourceTree = "<group>"; };
 		22AAA442169676A900333F76 /* tab3_page1_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab3_page1_icon2.png; sourceTree = "<group>"; };
@@ -494,6 +515,22 @@
 		22AAA48C1696DC0900333F76 /* my_setting_other4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = my_setting_other4.png; sourceTree = "<group>"; };
 		22AAA4981696EA8D00333F76 /* tab2_television_list_favorite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab2_television_list_favorite.png; sourceTree = "<group>"; };
 		22AAA4991696EA8F00333F76 /* tab2_television_list_recommend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab2_television_list_recommend.png; sourceTree = "<group>"; };
+		22AAA4B11697D25300333F76 /* icon_add videos_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_add videos_s.png"; sourceTree = "<group>"; };
+		22AAA4B21697D25300333F76 /* icon_add videos.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_add videos.png"; sourceTree = "<group>"; };
+		22AAA4B61697D42D00333F76 /* CreateMyListOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateMyListOneViewController.h; sourceTree = "<group>"; };
+		22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateMyListOneViewController.m; sourceTree = "<group>"; };
+		22B262A71697EF7800B7732C /* CreateMyListTwoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateMyListTwoViewController.h; sourceTree = "<group>"; };
+		22B262A81697EF7800B7732C /* CreateMyListTwoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateMyListTwoViewController.m; sourceTree = "<group>"; };
+		22B262AB1697F29E00B7732C /* FindViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindViewController.h; sourceTree = "<group>"; };
+		22B262AC1697F29E00B7732C /* FindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindViewController.m; sourceTree = "<group>"; };
+		22B262AE1697F39D00B7732C /* icon_new wyatt single_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_new wyatt single_s.png"; sourceTree = "<group>"; };
+		22B262AF1697F39D00B7732C /* icon_new wyatt single.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_new wyatt single.png"; sourceTree = "<group>"; };
+		22B262B21697F86400B7732C /* SearchResultsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultsViewCell.h; sourceTree = "<group>"; };
+		22B262B31697F86400B7732C /* SearchResultsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultsViewCell.m; sourceTree = "<group>"; };
+		22B262B51697FD9C00B7732C /* list_icon_add_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_icon_add_pressed.png; sourceTree = "<group>"; };
+		22B262B61697FD9C00B7732C /* list_icon_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_icon_add.png; sourceTree = "<group>"; };
+		22B262BC1698230000B7732C /* tab3_page3_see_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab3_page3_see_s.png; sourceTree = "<group>"; };
+		22B262BD1698230000B7732C /* tab3_page3_see.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab3_page3_see.png; sourceTree = "<group>"; };
 		22FEEE4416899AE100A71EF4 /* AllListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllListViewCell.h; sourceTree = "<group>"; };
 		22FEEE4516899AE100A71EF4 /* AllListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllListViewCell.m; sourceTree = "<group>"; };
 		22FEEE4616899AE100A71EF4 /* allListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = allListViewController.h; sourceTree = "<group>"; };
@@ -1014,6 +1051,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22196D931697E47F008E6D62 /* RadioButton */ = {
+			isa = PBXGroup;
+			children = (
+				22196D941697E47F008E6D62 /* RadioButton.h */,
+				22196D951697E47F008E6D62 /* RadioButton.m */,
+			);
+			path = RadioButton;
+			sourceTree = "<group>";
+		};
 		22FEEE4316899AE000A71EF4 /* popular_iphone */ = {
 			isa = PBXGroup;
 			children = (
@@ -1058,6 +1104,14 @@
 				22FEEE97168AD8A300A71EF4 /* RecordListCell.m */,
 				22FEEE99168AE14200A71EF4 /* MoreListViewController.h */,
 				22FEEE9A168AE14300A71EF4 /* MoreListViewController.m */,
+				22AAA4B61697D42D00333F76 /* CreateMyListOneViewController.h */,
+				22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */,
+				22B262A71697EF7800B7732C /* CreateMyListTwoViewController.h */,
+				22B262A81697EF7800B7732C /* CreateMyListTwoViewController.m */,
+				22B262AB1697F29E00B7732C /* FindViewController.h */,
+				22B262AC1697F29E00B7732C /* FindViewController.m */,
+				22B262B21697F86400B7732C /* SearchResultsViewCell.h */,
+				22B262B31697F86400B7732C /* SearchResultsViewCell.m */,
 			);
 			path = personal_iphone;
 			sourceTree = "<group>";
@@ -1092,6 +1146,17 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				22B262BC1698230000B7732C /* tab3_page3_see_s.png */,
+				22B262BD1698230000B7732C /* tab3_page3_see.png */,
+				22B262B51697FD9C00B7732C /* list_icon_add_pressed.png */,
+				22B262B61697FD9C00B7732C /* list_icon_add.png */,
+				22B262AE1697F39D00B7732C /* icon_new wyatt single_s.png */,
+				22B262AF1697F39D00B7732C /* icon_new wyatt single.png */,
+				22196D971697E5B7008E6D62 /* RadioButton-Selected.png */,
+				22196D981697E5B7008E6D62 /* RadioButton-Unselected.png */,
+				22196D8C1697DE74008E6D62 /* wyatt_video_title.png */,
+				22AAA4B11697D25300333F76 /* icon_add videos_s.png */,
+				22AAA4B21697D25300333F76 /* icon_add videos.png */,
 				22AAA4981696EA8D00333F76 /* tab2_television_list_favorite.png */,
 				22AAA4991696EA8F00333F76 /* tab2_television_list_recommend.png */,
 				22AAA4821696DBFC00333F76 /* my_s_xinlang.png */,
@@ -1166,6 +1231,7 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				22196D931697E47F008E6D62 /* RadioButton */,
 				EBB59CB816670A3E00F646C7 /* umeng */,
 				EB82016C1665D41F0015F447 /* SSCheckBoxView */,
 				EB8201271665A9E90015F447 /* OpenUDID */,
@@ -2198,6 +2264,17 @@
 				22AAA4971696DC0A00333F76 /* my_setting_other4.png in Resources */,
 				22AAA49A1696EA9100333F76 /* tab2_television_list_favorite.png in Resources */,
 				22AAA49B1696EA9100333F76 /* tab2_television_list_recommend.png in Resources */,
+				22AAA4B31697D25300333F76 /* icon_add videos_s.png in Resources */,
+				22AAA4B41697D25300333F76 /* icon_add videos.png in Resources */,
+				22196D8D1697DE74008E6D62 /* wyatt_video_title.png in Resources */,
+				22196D991697E5B7008E6D62 /* RadioButton-Selected.png in Resources */,
+				22196D9A1697E5B7008E6D62 /* RadioButton-Unselected.png in Resources */,
+				22B262B01697F39D00B7732C /* icon_new wyatt single_s.png in Resources */,
+				22B262B11697F39D00B7732C /* icon_new wyatt single.png in Resources */,
+				22B262B71697FD9C00B7732C /* list_icon_add_pressed.png in Resources */,
+				22B262B81697FD9C00B7732C /* list_icon_add.png in Resources */,
+				22B262BE1698230000B7732C /* tab3_page3_see_s.png in Resources */,
+				22B262BF1698230000B7732C /* tab3_page3_see.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2321,6 +2398,11 @@
 				22FEEEDD168D474D00A71EF4 /* IphoneMovieDetailViewController.m in Sources */,
 				22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */,
 				E73688131695C5B300549C74 /* StatementsViewController.m in Sources */,
+				22AAA4B81697D42E00333F76 /* CreateMyListOneViewController.m in Sources */,
+				22196D961697E47F008E6D62 /* RadioButton.m in Sources */,
+				22B262A91697EF7800B7732C /* CreateMyListTwoViewController.m in Sources */,
+				22B262AD1697F29E00B7732C /* FindViewController.m in Sources */,
+				22B262B41697F86400B7732C /* SearchResultsViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2406,6 +2488,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "yueshipin_ipad/yueshipin-Prefix.pch";
 				INFOPLIST_FILE = "yueshipin_ipad/yueshipin-Info.plist";
@@ -2415,6 +2498,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
 				PRODUCT_NAME = yueshipin;
+				PROVISIONING_PROFILE = "162529B3-BB3E-474B-9C78-4D9239B4250E";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

@@ -13,8 +13,16 @@
 #import "IphoneSettingViewController.h"
 #import "MoreListViewController.h"
 #import "IphoneMovieDetailViewController.h"
+#import "ContainerUtility.h"
+#import "CMConstants.h"
+#import "UIImageView+WebCache.h"
+#import "CacheUtility.h"
+#import "CreateMyListOneViewController.h"
+#import "CreateMyListTwoViewController.h"
+#import "DateUtility.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
+#define MYLIST_TYPE 2
 #define PAGESIZE 20
 @interface MineViewController ()
 
@@ -23,14 +31,19 @@
 @implementation MineViewController
 @synthesize segControl = segControl_;
 @synthesize bgView = bgView_;
-@synthesize recordArr = recordArr_;
+@synthesize sortedwatchRecordArray = sortedwatchRecordArray_;
 @synthesize favArr = favArr_;
 @synthesize favShowArr = favShowArr_;
 @synthesize redShowArr = redShowArr_;
+@synthesize myListArr = myListArr_;
 @synthesize recordTableList = recordTableList_;
 @synthesize favTableList = favTableList_;
 @synthesize moreView = moreView_;
 @synthesize moreButton = moreButton_;
+@synthesize avatarImage = avatarImage_;
+@synthesize userId = userId_;
+@synthesize myTableList = myTableList_;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -67,37 +80,43 @@
     
 }
 
--(void)loadPlayRecords{
+-(void)loadPersonalData{
 
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathUserWatchs parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        self.recordArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *tempTopsArray = [result objectForKey:@"watchs"];
-            if(tempTopsArray.count > 0){
-                
-                [ self.recordArr addObjectsFromArray:tempTopsArray];
+            NSArray *tempArr = [result objectForKey:@"tops"];
+            if(tempArr != nil && tempArr.count > 0){
+                [myListArr_ addObjectsFromArray:tempArr];
+                [myTableList_ reloadData];
             }
-        }
-        else {
             
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-        if(self.recordArr == nil){
-            self.recordArr = [[NSMutableArray alloc]initWithCapacity:10];
-        }
+       
+       
     }];
+
+
 
 }
 
+- (void)parseResultData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"PersonalData%@", userId_] result:result];
+
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self loadPlayRecords];
     [self loadMyFavsData];
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
@@ -125,9 +144,10 @@
     NSArray *itemsArr = [NSArray arrayWithObjects:@"播放纪录",@"我的收藏",@"我的悦单", nil];
     self.segControl = [[UISegmentedControl alloc] initWithItems:itemsArr];
     self.segControl.frame = CGRectMake(12, 40, 296, 51);
-    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forSegmentAtIndex:0];
-    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forSegmentAtIndex:1];
-    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forSegmentAtIndex:2];
+    self.segControl.segmentedControlStyle = UISegmentedControlStyleBar;
+//    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forSegmentAtIndex:0];
+//    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forSegmentAtIndex:1];
+//    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forSegmentAtIndex:2];
     [self.segControl addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventValueChanged];
     self.segControl.selectedSegmentIndex = 0;
     [self.view addSubview:self.segControl];
@@ -150,18 +170,82 @@
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
     
+    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 33, 296, 150) style:UITableViewStylePlain];
+    myTableList_.dataSource = self;
+    myTableList_.delegate = self;
+    myTableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
+    myTableList_.tag = MYLIST_TYPE;
+    myTableList_.scrollEnabled = NO;
+    
+    
     moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 293, 296, 45)];
     moreView_.backgroundColor = [UIColor whiteColor];
     moreButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton_ setFrame:CGRectMake(5, 7, 284, 30)];
     [moreView_ addSubview:moreButton_];
+    
+    createList_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    createList_.frame = CGRectMake(5, 6, 284, 30);
+    [createList_ addTarget:self action:@selector(createList:) forControlEvents:UIControlEventTouchUpInside];
+    [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single.png"] forState:UIControlStateNormal];
+    [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single_s.png"] forState:UIControlStateHighlighted];
+    
+    userId_ = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    avatarImage_ = [[UIImageView alloc] initWithFrame:CGRectMake(22, 12, 43, 43)];
+    NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
+    [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
+    [self.view addSubview:avatarImage_];
+    
+    nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(75, 18, 200, 14)];
+    nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
+    nameLabel_.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:nameLabel_];
+    
+    [self loadPersonalData];
+    
+    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
+    sortedwatchRecordArray_ = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
+        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
+        return [second compare:first];
+    }];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
+    
+    
 }
+-(void)addDone:(id)sender{
+    NSMutableDictionary *dic = [(NSNotification *)sender object];
+    if (myTableList_ == nil) {
+        myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
+    }
+    [myListArr_ addObject:dic];
+    
+    [myTableList_ reloadData];
 
+}
+-(void)createList:(id)sender{
+    CreateMyListOneViewController *createMyListOneViewController = [[CreateMyListOneViewController alloc] init];
+   // [self presentViewController:[[UINavigationController alloc] initWithRootViewController:createMyListOneViewController] animated:YES completion:nil];
+    [self.navigationController pushViewController:createMyListOneViewController animated:YES];
+
+}
 -(void)seeMore:(id)sender{
-    MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
-    moreListViewController.listArr = favArr_;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+    if (self.segControl.selectedSegmentIndex == 1) {
+        MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
+        moreListViewController.listArr = favArr_;
+        moreListViewController.type = Fav_TYPE;
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+    }
+    else if(self.segControl.selectedSegmentIndex == 2){
+        MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
+        moreListViewController.listArr = myListArr_;
+         moreListViewController.type = MYLIST_TYPE;
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+    
+    }
 
 }
 
@@ -178,20 +262,24 @@
 -(void)Selectbutton:(id)sender{
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
+    [self.myTableList removeFromSuperview];
     
     UISegmentedControl *mySegmentedControl=(UISegmentedControl *)sender;
     switch (mySegmentedControl.selectedSegmentIndex) {
         //播放纪录
         case 0:{
-                if ([self.recordArr count] <= 3) {
-                    redShowArr_ = [NSArray arrayWithArray:self.recordArr];
+                if ([self.sortedwatchRecordArray count] <= 3) {
+                    redShowArr_ = [NSArray arrayWithArray:self.sortedwatchRecordArray];
                     [moreView_ removeFromSuperview];
                 }
                 else {
-                    redShowArr_ = [NSArray arrayWithObjects:[self.recordArr objectAtIndex:0],[self.recordArr objectAtIndex:1],[self.recordArr objectAtIndex:2], nil];
-                    [moreButton_ setImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
+                    redShowArr_ = [NSArray arrayWithObjects:[self.sortedwatchRecordArray objectAtIndex:0],[self.sortedwatchRecordArray objectAtIndex:1],[self.sortedwatchRecordArray objectAtIndex:2], nil];
+                    [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
+                    [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
                     [self.view addSubview:moreView_];
                 }
+                [createList_ removeFromSuperview];
+                [myTableList_ removeFromSuperview];
                 [self.bgView addSubview:self.recordTableList];
                 [self.recordTableList reloadData];
             break;
@@ -204,16 +292,30 @@
             }
             else {
                 favShowArr_ = [NSArray arrayWithObjects:[self.favArr objectAtIndex:0],[self.favArr objectAtIndex:1],[self.favArr objectAtIndex:2], nil];
-                [moreButton_ setImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
                 [self.view addSubview:moreView_];
             }
+            [createList_ removeFromSuperview];
+            [myTableList_ removeFromSuperview];
             [self.bgView addSubview:self.favTableList];
             [self.favTableList reloadData];
             break;
         }
         //我的悦单
         case 2:{
-            
+            if ([myListArr_ count] <= 2) {
+              
+                [moreView_ removeFromSuperview];
+            }
+            else {
+               
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see.png"] forState:UIControlStateNormal];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see_s.png"] forState:UIControlStateHighlighted];
+                [self.view addSubview:moreView_];
+            }
+            [self.bgView addSubview:createList_];
+            [self.bgView addSubview:myTableList_];
             break;
         }
         default:
@@ -229,6 +331,15 @@
     if (tableView.tag == Fav_TYPE) {
         return [favShowArr_ count];
     }
+    if (tableView.tag == MYLIST_TYPE) {
+        if ([myListArr_ count] <= 2) {
+            return [myListArr_ count];
+        }
+        else{
+            return 2;
+        }
+    }
+    
     return 0;
     
 }
@@ -253,6 +364,15 @@
         cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
         
     }
+    else if (tableView.tag == MYLIST_TYPE){
+    
+        NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
+        NSDictionary *item = [(NSMutableArray *)[infoDic objectForKey:@"items"] objectAtIndex:0];
+        cell.titleLab.text = [infoDic objectForKey:@"name"];
+        cell.actors.text = [item objectForKey:@"prod_name"];
+        cell.date.text = @"...";
+    
+    }
     return cell;
 }
 
@@ -273,6 +393,15 @@
         detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
         
+    }
+    else if(tableView.tag == MYLIST_TYPE){
+        NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
+        NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
+        CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
+        createMyListTwoViewController.listArr = items;
+        [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
+        
+    
     }
 
 

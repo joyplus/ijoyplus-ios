@@ -9,6 +9,7 @@
 #import "MoreListViewController.h"
 #import "RecordListCell.h"
 #import "IphoneMovieDetailViewController.h"
+#import "CreateMyListTwoViewController.h"
 
 @interface MoreListViewController ()
 
@@ -16,6 +17,7 @@
 
 @implementation MoreListViewController
 @synthesize listArr = listArr_;
+@synthesize type = type_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -27,8 +29,14 @@
 
 - (void)viewDidLoad
 {
-    self.title = @"我的收藏";
-    
+    if (type_ == 1) {
+       self.title = @"我的收藏";  
+    }
+    else if (type_ == 2){
+       self.title = @"我的悦单";  
+        
+    }
+
     UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
                                     
                                     initWithTitle:@"返回"
@@ -77,9 +85,19 @@
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
-    cell.titleLab.text = [infoDic objectForKey:@"content_name"];
-    cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
-    cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+    if (type_ == 1) {
+        cell.titleLab.text = [infoDic objectForKey:@"content_name"];
+        cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+        cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+    }
+    else if (type_ == 2){
+        NSDictionary *item = [(NSMutableArray *)[infoDic objectForKey:@"items"] objectAtIndex:0];
+        cell.titleLab.text = [infoDic objectForKey:@"name"];
+        cell.actors.text = [item objectForKey:@"prod_name"];
+        cell.date.text = @"...";
+    
+    }
+    
     
     return cell;
 }
@@ -93,9 +111,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
-    detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:detailViewController animated:YES];
+    if (type_ == 1) {
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    else if (type_ == 2){
+        NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+        NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
+        CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
+        createMyListTwoViewController.listArr = items;
+        [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
+    }
 }
 
 @end

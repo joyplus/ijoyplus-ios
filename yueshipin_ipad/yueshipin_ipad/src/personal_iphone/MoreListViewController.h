@@ -10,8 +10,9 @@
 
 @interface MoreListViewController : UITableViewController{
     NSArray *listArr_;
-
+    int type_;
 }
 
 @property (nonatomic, strong)NSArray *listArr;
+@property (nonatomic, assign)int type;
 @end
