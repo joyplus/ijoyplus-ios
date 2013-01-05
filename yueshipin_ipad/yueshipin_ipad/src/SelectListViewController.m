@@ -12,7 +12,7 @@
 #import "CreateListOneViewController.h"
 
 @interface SelectListViewController (){
-    NSMutableArray *listData;
+    NSArray *listData;
     UIImageView *titleImage;
     UIButton *closeBtn;
     UIButton *doneBtn;
@@ -30,7 +30,6 @@
 
 - (void)viewDidUnload
 {
-    [listData removeAllObjects];
     listData = nil;
     titleImage = nil;
     closeBtn = nil;
@@ -59,7 +58,7 @@
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 130, 420, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 130, 420, self.view.frame.size.height - 420)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -107,7 +106,6 @@
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
-            [listData removeAllObjects];
             [myHUD hide];
         }];
     }
@@ -115,20 +113,12 @@
 
 - (void)parseVideoData:(id)result
 {
-    listData = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
-        NSArray *videos = [result objectForKey:@"tops"];
-        if(videos != nil && videos.count > 0){
-            for (NSDictionary *item in videos) {
-                if([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] intValue] == self.type){
-                   [listData addObjectsFromArray:videos];
-                }
-            }
-        }
+        listData = [result objectForKey:@"tops"];
+        [table reloadData];
     }
-    [table reloadData];
 }
 
 
