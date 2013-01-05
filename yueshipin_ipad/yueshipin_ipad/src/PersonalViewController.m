@@ -53,6 +53,8 @@
     
     NSArray *sortedwatchRecordArray;
     int tableHeight;
+    
+    BOOL accessed;
 }
 
 @end
@@ -211,6 +213,12 @@
     return self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
@@ -218,20 +226,19 @@
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-    [self parseResult];
-    
     NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
     sortedwatchRecordArray = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
         NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
         NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
         return [second compare:first];
     }];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
     table.frame = CGRectMake(60, 325, 400, tableHeight);
     [table reloadData];
+    if (!accessed) {
+        accessed = YES;
+        [self parseResult];
+    }
+    
 }
 
 - (void)parseResult
@@ -244,7 +251,6 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.userId, @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseResultData:result];
-            [table reloadData];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [UIUtility showSystemError:self.view];
@@ -262,14 +268,6 @@
         collectionLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"favority_num"]];
         listLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"tops_num"]];
     }
-}
-
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
 }
 
 - (void)refreshData:(NSNotification *)notification

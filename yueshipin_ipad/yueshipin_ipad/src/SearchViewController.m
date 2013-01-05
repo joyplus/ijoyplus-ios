@@ -20,6 +20,7 @@
 @interface SearchViewController (){
     UIButton *lastPressedBtn;
     UIButton *clearAllBtn;
+    BOOL accessed;
 }
 
 @end
@@ -117,21 +118,24 @@
         table.frame = CGRectMake(80, 170, 370, 210);
     }
     clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
-    if(cacheResult != nil){
-        [self parseData:cacheResult];
-    }
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
-                [self parseData:result];
-            }
-            [table reloadData];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
+    if (!accessed) {
+        accessed = YES;
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
+        if(cacheResult != nil){
+            [self parseData:cacheResult];
+        }
+        if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(responseCode == nil){
+                    [self parseData:result];
+                }
+                [table reloadData];
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
+        }
     }
 }
 
@@ -249,7 +253,7 @@
             [name sizeToFit];
             [name setBackgroundColor:[UIColor clearColor]];
             [cell.contentView addSubview:name];
-        } 
+        }
     }
     return cell;
 }
