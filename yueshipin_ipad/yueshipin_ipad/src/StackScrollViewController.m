@@ -874,7 +874,6 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             viewAtLeft2 = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-3];
             [viewAtLeft2 setHidden:FALSE];
             viewAtRight2 = nil;
-            NSLog(@"count = %i", [[slideViews subviews] count]);
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
             [UIView setAnimationBeginsFromCurrentState:NO];

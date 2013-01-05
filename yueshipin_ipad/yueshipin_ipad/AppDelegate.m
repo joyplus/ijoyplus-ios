@@ -151,7 +151,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    //    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
+    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
     [MobClick checkUpdate];
     [self generateUserId];
     [self initSinaweibo];
