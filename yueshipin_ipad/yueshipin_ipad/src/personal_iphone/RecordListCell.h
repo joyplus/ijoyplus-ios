@@ -12,8 +12,10 @@
     UILabel *titleLab_;
     UILabel *actors_;
     UILabel *date_;
+    UIButton *play_;
 }
 @property (nonatomic, strong)UILabel *titleLab;
 @property (nonatomic, strong)UILabel *actors;
 @property (nonatomic, strong)UILabel *date;
+@property (nonatomic, strong)UIButton *play;
 @end

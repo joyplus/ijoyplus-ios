@@ -20,6 +20,8 @@
 #import "CreateMyListOneViewController.h"
 #import "CreateMyListTwoViewController.h"
 #import "DateUtility.h"
+#import "MediaPlayerViewController.h"
+#import "ProgramViewController.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -34,7 +36,6 @@
 @synthesize sortedwatchRecordArray = sortedwatchRecordArray_;
 @synthesize favArr = favArr_;
 @synthesize favShowArr = favShowArr_;
-@synthesize redShowArr = redShowArr_;
 @synthesize myListArr = myListArr_;
 @synthesize recordTableList = recordTableList_;
 @synthesize favTableList = favTableList_;
@@ -210,6 +211,7 @@
         NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
         return [second compare:first];
     }];
+    [self Selectbutton:segControl_];
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
@@ -269,11 +271,9 @@
         //播放纪录
         case 0:{
                 if ([self.sortedwatchRecordArray count] <= 3) {
-                    redShowArr_ = [NSArray arrayWithArray:self.sortedwatchRecordArray];
                     [moreView_ removeFromSuperview];
                 }
                 else {
-                    redShowArr_ = [NSArray arrayWithObjects:[self.sortedwatchRecordArray objectAtIndex:0],[self.sortedwatchRecordArray objectAtIndex:1],[self.sortedwatchRecordArray objectAtIndex:2], nil];
                     [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
                     [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
                     [self.view addSubview:moreView_];
@@ -326,7 +326,12 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView.tag == RECORD_TYPE) {
-        return [redShowArr_ count];
+        if ([sortedwatchRecordArray_ count] <= 3) {
+            return [sortedwatchRecordArray_ count];
+        }
+        else{
+            return 3;
+        }
     }
     if (tableView.tag == Fav_TYPE) {
         return [favShowArr_ count];
@@ -351,10 +356,12 @@
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     if (tableView.tag == RECORD_TYPE) {
-       NSDictionary *infoDic = [redShowArr_ objectAtIndex:indexPath.row];
-        cell.titleLab.text = [infoDic objectForKey:@"content_name"];
+       NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
+        cell.titleLab.text = [infoDic objectForKey:@"name"];
         cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
         cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        cell.play.tag = indexPath.row;
+        [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
         
     }
     else if (tableView.tag == Fav_TYPE){
@@ -384,7 +391,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView.tag == RECORD_TYPE) {
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
-        detailViewController.infoDic = [redShowArr_ objectAtIndex:indexPath.row];
+        detailViewController.infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
         
     }
@@ -404,6 +411,29 @@
     
     }
 
+
+}
+-(void)continuePlay:(id)sender{
+    int num = ((UIButton *)sender).tag;
+    NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
+    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
+        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+        viewController.videoUrl = [item objectForKey:@"videoUrl"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.name = [item objectForKey:@"name"];
+        viewController.subname = [item objectForKey:@"subname"];
+        [self presentViewController:viewController animated:YES completion:nil];
+    } else {
+        ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+        viewController.programUrl = [item objectForKey:@"videoUrl"];
+        viewController.title = [item objectForKey:@"name"];
+        viewController.subname = [item objectForKey:@"subname"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
+    }
+
+    
 
 }
 - (void)didReceiveMemoryWarning

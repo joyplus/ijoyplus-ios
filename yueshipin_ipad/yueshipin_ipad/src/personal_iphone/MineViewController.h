@@ -14,7 +14,6 @@
     UIView *bgView_;
     NSArray *sortedwatchRecordArray_;
     NSMutableArray *favArr_;
-    NSArray *redShowArr_;
     NSArray *favShowArr_;
     NSMutableArray *myListArr_;
     UITableView *recordTableList_;
@@ -30,7 +29,6 @@
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
 @property (nonatomic, strong)NSArray *sortedwatchRecordArray;
-@property (nonatomic, strong)NSArray *redShowArr;
 @property (nonatomic, strong)NSMutableArray *favArr;
 @property (nonatomic, strong)NSArray *favShowArr;
 @property (nonatomic, strong)NSMutableArray *myListArr;

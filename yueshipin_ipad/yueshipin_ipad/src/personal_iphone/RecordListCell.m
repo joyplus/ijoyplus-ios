@@ -12,6 +12,7 @@
 @synthesize titleLab = titleLab_;
 @synthesize actors = actors_;
 @synthesize date = date_;
+@synthesize play = play_;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -30,6 +31,11 @@
         date_.font = [UIFont systemFontOfSize:12];
         date_.textColor = [UIColor grayColor];
         [self addSubview:date_];
+        
+        play_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        play_.frame = CGRectMake(150, 20, 60, 30);
+        [play_ setTitle:@"play" forState:UIControlStateNormal];
+        [self addSubview:play_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 59, 320, 1);
