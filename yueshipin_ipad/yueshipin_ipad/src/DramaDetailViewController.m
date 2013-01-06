@@ -434,7 +434,7 @@
     }
     if(nextBtn == nil){
         nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [nextBtn setTitle:@"后20集" forState:UIControlStateNormal];
+        [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
         [nextBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [nextBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 60, 0, 5)];
         [nextBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
