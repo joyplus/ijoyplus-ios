@@ -30,7 +30,6 @@
     [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
     self.moveToLeft = YES;
-    
     [self.view addGestureRecognizer:swipeRecognizer];
 }
 

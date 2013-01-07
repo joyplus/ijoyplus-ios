@@ -95,11 +95,17 @@
 
 - (void)retrieveTopsListData
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
     } else {
-        [myHUD showProgressBar:self.view];
+        if([hostReach currentReachabilityStatus] != NotReachable) {
+            [myHUD showProgressBar:self.view];
+        }
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.topId, @"top_id", nil];

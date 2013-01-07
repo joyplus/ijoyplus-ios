@@ -12,6 +12,7 @@
 #import "RootViewController.h"
 #import "MobClick.h"
 #import <Parse/Parse.h>
+#import "ActionUtility.h"
 
 @interface AppDelegate ()
 @property (nonatomic, assign) BOOL foreground;
@@ -35,6 +36,7 @@
 @synthesize sinaweibo;
 @synthesize downloaderArray;
 @synthesize currentDownloadingNum;
+@synthesize alertUserInfo;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -156,7 +158,7 @@
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
     [MobClick checkUpdate];
-    [self generateUserId];
+    [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
@@ -200,12 +202,22 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSString *prodId = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"prod_id"]];
-    NSString *prodType = [NSString stringWithFormat:@"%@", [userInfo objectForKey:@"prod_type"]];
-    [PFPush handlePush:userInfo];
-    if(!self.foreground && prodId != nil && prodType != nil){
-        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", prodType, @"prod_type", nil];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"push_notification" object:nil userInfo:userInfo];
+    self.alertUserInfo = userInfo;
+    NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {
+        NSString *prodId = [NSString stringWithFormat:@"%@", [self.alertUserInfo objectForKey:@"prod_id"]];
+        NSString *prodType = [NSString stringWithFormat:@"%@", [self.alertUserInfo objectForKey:@"prod_type"]];
+        NSLog(@"%i", self.foreground);
+        if(!self.foreground && prodId != nil && prodType != nil){
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", prodType, @"prod_type", nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"push_notification" object:nil userInfo:userInfo];
+        }
     }
 }
 
@@ -227,6 +239,11 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
+    if([myhostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.rootViewController.view];
+    };
+    
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
         [[PFInstallation currentInstallation] saveEventually];
@@ -265,34 +282,7 @@
     networkStatus = [curReach currentReachabilityStatus];
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
-        [self generateUserId];
-    }
-}
-
-- (void)generateUserId
-{
-    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if(userId == nil){
-        Reachability *tempHostReach = [Reachability reachabilityForInternetConnection];
-        if([tempHostReach currentReachabilityStatus] != NotReachable) {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:  [OpenUDID value], @"uiid", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathGenerateUIID parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if (responseCode == nil) {
-                    NSString *user_id = [result objectForKey:@"user_id"];
-                    NSString *nickname = [result objectForKey:@"nickname"];
-                    NSString *username = [result objectForKey:@"username"];
-                    [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
-                    [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"%@", nickname] forKey:kUserNickName];
-                    [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserName];
-                    [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
-                }
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"%@", error);
-            }];
-        }
-    } else {
-        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:userId];
+        [ActionUtility generateUserId:nil];
     }
 }
 

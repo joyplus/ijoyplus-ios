@@ -63,11 +63,12 @@
     UIGraphicsEndImageContext();
     return theImage;
 }
+
 + (void)showNetWorkError:(UIView *)view
 {
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
     [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.opacity = 0.5;
     HUD.labelText = NSLocalizedString(@"message.networkError", nil);
@@ -78,7 +79,7 @@
 {
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
     [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"message.systemError", nil);
     HUD.opacity = 0.5;

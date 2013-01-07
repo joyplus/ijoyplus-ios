@@ -13,5 +13,5 @@
 
 - (id)initWithFrame:(CGRect)frame;
 @property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
-@property (nonatomic, strong)NSString *userId;
+
 @end

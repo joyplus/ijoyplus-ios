@@ -30,7 +30,7 @@
     UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *bgImage;
-   
+    
     UITableView *table;
     
     UIImageView *avatarImage;
@@ -63,7 +63,6 @@
 
 @implementation PersonalViewController
 @synthesize menuViewControllerDelegate;
-@synthesize userId;
 
 - (void)didReceiveMemoryWarning
 {
@@ -76,7 +75,6 @@
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WATCH_HISTORY_REFRESH object:nil];
-    self.userId = nil;
     backgroundView = nil;
     menuBtn = nil;
     topImage = nil;
@@ -95,7 +93,7 @@
     myRecordImage = nil;
     createBtn = nil;
     importDoubanBtn = nil;
-    tableBgImage = nil;    
+    tableBgImage = nil;
     sortedwatchRecordArray = nil;
 }
 - (id)initWithFrame:(CGRect)frame {
@@ -138,11 +136,11 @@
         nameLabel.font = [UIFont systemFontOfSize:20];
         [self.view addSubview:nameLabel];
         
-//        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        editBtn.frame = CGRectMake(430, 122, 25, 27);
-//        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
-//        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:editBtn];
+        //        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        //        editBtn.frame = CGRectMake(430, 122, 25, 27);
+        //        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
+        //        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        //        [self.view addSubview:editBtn];
         
         supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 228, 100, 30)];
         supportLabel.backgroundColor = [UIColor clearColor];
@@ -150,7 +148,7 @@
         supportLabel.text = @"0";
         supportLabel.textAlignment = NSTextAlignmentCenter;
         supportLabel.font = [UIFont boldSystemFontOfSize:22];
-        [self.view addSubview:supportLabel];        
+        [self.view addSubview:supportLabel];
         supportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         supportBtn.frame = CGRectMake(90, 180, 88, 87);
         supportBtn.tag = 1001;
@@ -188,7 +186,7 @@
         [self.view addSubview:myRecordImage];
         
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        createBtn.frame = CGRectMake(210, 282, 104, 31);
+        //        createBtn.frame = CGRectMake(210, 282, 104, 31);
         createBtn.frame = CGRectMake(358, 282, 104, 31);
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
@@ -200,8 +198,8 @@
         [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban"] forState:UIControlStateNormal];
         [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_pressed"] forState:UIControlStateHighlighted];
         [importDoubanBtn addTarget:self action:@selector(importDoubanBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:importDoubanBtn];
-
+        //        [self.view addSubview:importDoubanBtn];
+        
         table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, 370) style:UITableViewStylePlain];
         [table setBackgroundColor:[UIColor whiteColor]];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -226,18 +224,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    self.userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-//    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
-//    sortedwatchRecordArray = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-//        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
-//        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
-//        return [second compare:first];
-//    }];
-//    table.frame = CGRectMake(60, 325, 400, tableHeight);
-//    [table reloadData];    
     if (!accessed) {
         accessed = YES;
         [self parseWatchHistory];
@@ -252,7 +241,7 @@
         [self parseWatchResultData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.userId, @"userid",  @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseWatchResultData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -268,8 +257,13 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray = (NSArray *)[result objectForKey:@"histories"];
-        [table reloadData];
-        table.frame = CGRectMake(60, 325, 400, tableHeight);
+        if(sortedwatchRecordArray.count > 0){
+            [table reloadData];
+            table.frame = CGRectMake(60, 325, 400, tableHeight);
+        } else {
+            tableHeight = 0;
+            table.frame = CGRectMake(60, 325, 400, tableHeight);
+        }
     }
 }
 
@@ -280,7 +274,7 @@
         [self parseResultData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.userId, @"userid", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseResultData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -296,7 +290,7 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"PersonalData" result:result];
         supportLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"support_num"]];
-//        sharelabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"share_num"]];
+        //        sharelabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"share_num"]];
         collectionLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"favority_num"]];
         listLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"tops_num"]];
     }
@@ -380,6 +374,11 @@
 
 - (void)playBtnClicked:(UIButton *)btn
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -435,7 +434,7 @@
     NSString *content = [self composeContent:item];
     CGSize size = [self calculateContentSize:content width:280];
     tableHeight += size.height + 40;
-   return size.height + 40;
+    return size.height + 40;    
 }
 
 - (void)menuBtnClicked
@@ -462,15 +461,10 @@
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if(sender.tag == 1003){
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable) {
-            [UIUtility showNetWorkError:self.view];
-            return;
-        }
         TopicListViewController *viewController = [[TopicListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-    } 
+    }
 }
 
 

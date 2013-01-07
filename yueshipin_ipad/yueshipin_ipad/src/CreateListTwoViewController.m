@@ -320,6 +320,9 @@
     return 160;
 }
 
-
+- (void)closeBtnClicked
+{
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
+}
 
 @end

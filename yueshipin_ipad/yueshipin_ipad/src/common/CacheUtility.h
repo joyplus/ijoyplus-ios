@@ -11,4 +11,5 @@
 - (void)setSinaUID:(NSString *)uid;
 - (id)loadFromCache:(NSString *)cacheKey;
 - (void)putInCache:(NSString *)cacheKey result:(id)result;
+- (void)removeObjectForKey:(NSString *)key;
 @end

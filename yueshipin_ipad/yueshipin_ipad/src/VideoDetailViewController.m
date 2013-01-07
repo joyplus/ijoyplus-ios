@@ -80,6 +80,11 @@
 
 - (void)commentBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [AppDelegate instance].rootViewController.prodId = self.prodId;
     [AppDelegate instance].rootViewController.videoDetailDelegate = self;
     [[AppDelegate instance].rootViewController showCommentPopup];
@@ -107,6 +112,7 @@
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
 {
+    [self shareBtnClicked];
     [self storeAuthData];
     [sinaweibo requestWithURL:@"users/show.json"
                        params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
@@ -162,6 +168,12 @@
                 NSString *user_id = [result objectForKey:@"user_id"];
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+                [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

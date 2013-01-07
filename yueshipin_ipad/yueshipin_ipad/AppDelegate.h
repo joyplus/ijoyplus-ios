@@ -14,7 +14,7 @@
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, McDownloadDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, McDownloadDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -27,6 +27,8 @@
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 
 @property (assign, atomic) int currentDownloadingNum;
+
+@property (strong, nonatomic) NSDictionary * alertUserInfo;
 
 - (NSMutableArray *)getDownloaderQueue;
 - (void)addToDownloaderArray:(DownloadItem *)item;

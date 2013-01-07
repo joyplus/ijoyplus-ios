@@ -316,6 +316,7 @@
 		EBBA010D1664E2C80069FE7E /* label@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA01091664E2C80069FE7E /* label@2x.png */; };
 		EBBA010E1664E2C80069FE7E /* search_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */; };
 		EBBA01101664E3520069FE7E /* hotkeys@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA010F1664E3510069FE7E /* hotkeys@2x.png */; };
+		EBBA0D1F169945B100F15C77 /* ActionUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA0D1E169945B100F15C77 /* ActionUtility.m */; };
 		EBBA67FF167AD7C500A2D94D /* SlideBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA67FE167AD7C500A2D94D /* SlideBaseViewController.m */; };
 		EBBA85641683F9FB00973BAA /* done_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA855E1683F9FB00973BAA /* done_pressed@2x.png */; };
 		EBBA85651683F9FB00973BAA /* done@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA855F1683F9FB00973BAA /* done@2x.png */; };
@@ -823,6 +824,8 @@
 		EBBA01091664E2C80069FE7E /* label@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label@2x.png"; sourceTree = "<group>"; };
 		EBBA010A1664E2C80069FE7E /* search_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBBA010F1664E3510069FE7E /* hotkeys@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hotkeys@2x.png"; sourceTree = "<group>"; };
+		EBBA0D1D169945B100F15C77 /* ActionUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionUtility.h; sourceTree = "<group>"; };
+		EBBA0D1E169945B100F15C77 /* ActionUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionUtility.m; sourceTree = "<group>"; };
 		EBBA67FD167AD7C400A2D94D /* SlideBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideBaseViewController.h; sourceTree = "<group>"; };
 		EBBA67FE167AD7C500A2D94D /* SlideBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideBaseViewController.m; sourceTree = "<group>"; };
 		EBBA855E1683F9FB00973BAA /* done_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "done_pressed@2x.png"; sourceTree = "<group>"; };
@@ -1413,6 +1416,8 @@
 				EB6DEABE165A34F200AF8003 /* UIUtility.m */,
 				EB6DEAD7165A36E600AF8003 /* CommonHeader.h */,
 				EB6DEAD8165A36E600AF8003 /* CommonHeader.m */,
+				EBBA0D1D169945B100F15C77 /* ActionUtility.h */,
+				EBBA0D1E169945B100F15C77 /* ActionUtility.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -2260,6 +2265,7 @@
 				EBB38D881696880100FD855E /* UIColor-SQLitePersistentObject.m in Sources */,
 				EBB38D891696880100FD855E /* UIImage-SQLitePersistence.m in Sources */,
 				EBB38D8F1696892900FD855E /* DownloadItem.m in Sources */,
+				EBBA0D1F169945B100F15C77 /* ActionUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2358,7 +2364,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
 				PRODUCT_NAME = yueshipin;
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2380,7 +2386,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
 				);
 				PRODUCT_NAME = yueshipin;
-				TARGETED_DEVICE_FAMILY = 2;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

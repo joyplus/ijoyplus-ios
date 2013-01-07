@@ -13,5 +13,6 @@
 + (id)sharedInstance;
 - (void)setAttribute:(NSObject *)attribute forKey:(NSString *)key;
 - (NSObject *)attributeForKey:(NSString *)key;
+- (void)removeObjectForKey:(NSString *)key;
 - (void)clear;
 @end

@@ -286,7 +286,14 @@
         }
 
     }
-	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+    UIViewController *viewController = [self getViewControllerByIndex];
+	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
+    if(selectedIndex < 4){
+        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if([hostReach currentReachabilityStatus] == NotReachable) {
+            [UIUtility showNetWorkError:viewController.view];
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

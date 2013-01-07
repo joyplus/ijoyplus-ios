@@ -100,4 +100,12 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+
+- (void)removeObjectForKey:(NSString *)key
+{
+    [self.cache removeObjectForKey:key];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 @end

@@ -151,12 +151,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:animated];
     [self updateDownloadNum:nil];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
@@ -564,6 +560,10 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 0;
     [self initTopButtonImage];
     [self loadTable];
@@ -571,6 +571,10 @@
 
 - (void)movieBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 1;
     [self initTopButtonImage];
     [self retrieveMovieTopsData];
@@ -578,6 +582,10 @@
 
 - (void)dramaBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 2;
     [self initTopButtonImage];
     [self retrieveTvTopsData];
@@ -585,6 +593,10 @@
 
 - (void)showBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 3;
     [self initTopButtonImage];
     [self retrieveShowTopsData];

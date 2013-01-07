@@ -271,12 +271,18 @@
 
 - (void)retrieveData
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
         [self parseData:cacheResult];
     } else {
-        [myHUD showProgressBar:self.view];
+        if([hostReach currentReachabilityStatus] != NotReachable) {
+            [myHUD showProgressBar:self.view];
+        }
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
@@ -566,6 +572,11 @@
 
 - (void)dramaPlay:(id)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self clearLastBtnImage];
     UIButton *btn = (UIButton *)sender;
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
