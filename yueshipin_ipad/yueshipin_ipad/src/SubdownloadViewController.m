@@ -420,38 +420,39 @@
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     [self closeMenu];
-    if(position > subitems.count - 1)return;
-    SubdownloadItem *item = [subitems objectAtIndex:position];
-    if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
-        item.downloadStatus = @"done";
-        item.percentage = 100;
-        [item save];
-        NSString *extension = @"mp4";
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        
-        NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-        NSEnumerator *e = [contents objectEnumerator];
-        NSString *filename;
-        NSString *filePath;
-        while ((filename = [e nextObject])) {
-            if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
-                filePath = [documentsDirectory stringByAppendingPathComponent:filename];
-                break;
+    if(position < subitems.count){
+        SubdownloadItem *item = [subitems objectAtIndex:position];
+        if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
+            item.downloadStatus = @"done";
+            item.percentage = 100;
+            [item save];
+            NSString *extension = @"mp4";
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            
+            NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
+            NSEnumerator *e = [contents objectEnumerator];
+            NSString *filename;
+            NSString *filePath;
+            while ((filename = [e nextObject])) {
+                if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
+                    filePath = [documentsDirectory stringByAppendingPathComponent:filename];
+                    break;
+                }
             }
+            
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = filePath;
+            viewController.prodId = item.itemId;
+            viewController.name = self.titleContent;
+            viewController.subname = item.name;
+            viewController.isDownloaded = YES;
+            viewController.type = item.type;
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+        } else {
+            [self videoImageClicked:position];
         }
-        
-        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = filePath;
-        viewController.prodId = item.itemId;
-        viewController.name = self.titleContent;
-        viewController.subname = item.name;
-        viewController.isDownloaded = YES;
-        viewController.type = item.type;
-        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-    } else {
-        [self videoImageClicked:position];
     }
 }
 

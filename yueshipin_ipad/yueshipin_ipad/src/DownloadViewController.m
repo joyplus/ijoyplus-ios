@@ -127,7 +127,6 @@
         if(downloader.status == startType){
             if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
                 [AppDelegate instance].currentDownloadingNum++;
-                allItem = [DownloadItem allObjects];
                 for (int i = 0; i < allItem.count; i++) {
                     DownloadItem *item = [allItem objectAtIndex:i];
                     if ([item.itemId isEqualToString:downloader.idNum]) {
@@ -144,6 +143,12 @@
 }
 - (void)startDownloadingThreads
 {
+    allItem = [DownloadItem allObjects];
+    if (allItem.count > 0) {
+        [editBtn setHidden:NO];
+    } else {
+        [editBtn setHidden:YES];
+    }
     NSArray *downLoaderArray = [[AppDelegate instance] getDownloaderQueue];
     [self startDownloadingThread:downLoaderArray startType:1]; // start
     [self startDownloadingThread:downLoaderArray startType:3]; // waiting
@@ -153,8 +158,6 @@
 {
     [super viewDidAppear:animated];
     _gmGridView.editing = NO;
-    [editBtn setHidden:NO];
-    [doneBtn setHidden:YES];
     [self reloadItems];
 }
 
@@ -402,49 +405,54 @@
     }
     item = nil;
     allItem = [DownloadItem allObjects];
-    [self startDownloadingThreads];
+    if (allItem.count > 0) {
+        [self startDownloadingThreads];
+    } else {
+        [editBtn setHidden:YES];
+        [doneBtn setHidden:YES];
+    }
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     [self closeMenu];
-    allItem = [DownloadItem allObjects];
-    if(position > allItem.count - 1)return;
-    DownloadItem *item = [allItem objectAtIndex:position];
-    if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
-        NSString *extension = @"mp4";
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        
-        NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-        NSEnumerator *e = [contents objectEnumerator];
-        NSString *filename;
-        NSString *filePath;
-        while ((filename = [e nextObject])) {
-            if ([filename hasPrefix:[NSString stringWithFormat:@"%@.%@", item.itemId, extension]]) {
-                filePath = [documentsDirectory stringByAppendingPathComponent:filename];
-                break;
+    if(position < allItem.count){
+        DownloadItem *item = [allItem objectAtIndex:position];
+        if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
+            NSString *extension = @"mp4";
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            
+            NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
+            NSEnumerator *e = [contents objectEnumerator];
+            NSString *filename;
+            NSString *filePath;
+            while ((filename = [e nextObject])) {
+                if ([filename hasPrefix:[NSString stringWithFormat:@"%@.%@", item.itemId, extension]]) {
+                    filePath = [documentsDirectory stringByAppendingPathComponent:filename];
+                    break;
+                }
             }
-        }
-        
-        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = filePath;
-        viewController.prodId = item.itemId;
-        viewController.name = item.name;
-        viewController.subname = @"";
-        viewController.isDownloaded = YES;
-        viewController.type = 1;
-        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-    } else {
-        if(item.type == 1){
-            [self stopDownloading:position];
+            
+            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+            viewController.videoUrl = filePath;
+            viewController.prodId = item.itemId;
+            viewController.name = item.name;
+            viewController.subname = @"";
+            viewController.isDownloaded = YES;
+            viewController.type = 1;
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {
-            SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
-            viewController.parentDelegate = self;
-            viewController.titleContent = item.name;
-            viewController.itemId = item.itemId;
-            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+            if(item.type == 1){
+                [self stopDownloading:position];
+            } else {
+                SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
+                viewController.parentDelegate = self;
+                viewController.titleContent = item.name;
+                viewController.itemId = item.itemId;
+                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+            }
         }
     }
 }
