@@ -49,7 +49,8 @@
     openMenuRecognizer.numberOfTouchesRequired=1;
     
     closeMenuRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeMenu)];
-    closeMenuRecognizer.numberOfTouchesRequired=1;
+    closeMenuRecognizer.numberOfTapsRequired = 1;
+    closeMenuRecognizer.cancelsTouchesInView = NO;
     
     swipeCloseMenuRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeMenu)];
     swipeCloseMenuRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;

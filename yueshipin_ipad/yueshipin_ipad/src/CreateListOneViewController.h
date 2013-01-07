@@ -23,5 +23,6 @@
 - (IBAction)videoTypeBtnClicked:(id)sender;
 
 @property (strong, nonatomic)NSString *prodId;
+@property (nonatomic)int specifiedType;
 
 @end

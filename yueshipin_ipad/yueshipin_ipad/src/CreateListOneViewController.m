@@ -13,13 +13,22 @@
     int type;
     RadioButton *movieType;
     RadioButton *dramaType;
+    UILabel *movieTypeLabel;
+    UILabel *dramaTypeLabel;
 }
 
 @end
 
 @implementation CreateListOneViewController
 @synthesize prodId;
+@synthesize specifiedType;
 
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 - (void)viewDidUnload
 {
     [self setMovieTypeBtn:nil];
@@ -36,6 +45,8 @@
     self.prodId = nil;
     movieType = nil;
     dramaType = nil;
+    movieTypeLabel = nil;
+    dramaTypeLabel = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -62,7 +73,7 @@
     [movieType setChecked:YES];
     type = 1;
     movieType.frame = CGRectMake(LEFT_WIDTH,100,22,22);
-    UILabel *movieTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieType.frame.origin.x+30, 100, 100, 20)];
+    movieTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieType.frame.origin.x+30, 100, 100, 20)];
     [movieTypeLabel setBackgroundColor:[UIColor clearColor]];
     movieTypeLabel.textColor = CMConstants.grayColor;
     movieTypeLabel.text = @"电影悦单";
@@ -74,7 +85,7 @@
     
     dramaType = [[RadioButton alloc] initWithGroupId:@"list type" index:1];
     dramaType.frame = CGRectMake(LEFT_WIDTH + 150,100,22,22);
-    UILabel *dramaTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(dramaType.frame.origin.x+30, 100, 100, 20)];
+    dramaTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(dramaType.frame.origin.x+30, 100, 100, 20)];
     [dramaTypeLabel setBackgroundColor:[UIColor clearColor]];
     dramaTypeLabel.textColor = CMConstants.grayColor;
     dramaTypeLabel.text = @"电视剧悦单";
@@ -115,10 +126,22 @@
     [self.view addGestureRecognizer:swipeRecognizer];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated{
+    if (specifiedType == 1){
+        [dramaType setHidden:YES];
+        [dramaTypeLabel setHidden:YES];
+        [self.dramaTypeBtn setHidden:YES];
+        type = 1;
+    } else if(specifiedType == 2) {
+        dramaType.frame = CGRectMake(movieType.frame.origin.x, dramaType.frame.origin.y, dramaType.frame.size.width, dramaType.frame.size.height);
+        dramaTypeLabel.frame = CGRectMake(movieTypeLabel.frame.origin.x, dramaTypeLabel.frame.origin.y, dramaTypeLabel.frame.size.width, dramaTypeLabel.frame.size.height);
+        self.dramaTypeBtn.frame = CGRectMake(self.movieTypeBtn.frame.origin.x, self.dramaTypeBtn.frame.origin.y, self.dramaTypeBtn.frame.size.width, self.dramaTypeBtn.frame.size.height);
+        [dramaType setChecked:YES];
+        [movieTypeLabel setHidden:YES];
+        [movieType setHidden:YES];
+        [self.movieTypeBtn setHidden:YES];
+        type = 2;
+    }
 }
 
 - (void)changeNextBtnImage:(NSNotification *)notificaiton

@@ -10,7 +10,7 @@
 #import "MenuViewController.h"
 #import "CustomSearchBar.h"
 
-@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>{
+@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>{
     UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *bgImage;

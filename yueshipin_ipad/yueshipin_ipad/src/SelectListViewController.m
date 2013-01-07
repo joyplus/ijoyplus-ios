@@ -272,6 +272,7 @@
 {
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
     viewController.prodId = self.prodId;
+    viewController.specifiedType = self.type;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
 }
