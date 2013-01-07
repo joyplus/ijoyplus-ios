@@ -304,8 +304,8 @@
             [introBtn removeFromSuperview];
             introBtn = nil;
         }
-        [self showValues];
         [self getDownloadUrls:0];
+        [self showValues];
     } else {
         [UIUtility showSystemError:self.view];
     }
@@ -344,8 +344,11 @@
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
+    [self.downloadBtn setHidden:NO];
     if(downloadUrls != nil && downloadUrls.count > 0){
-        [self.downloadBtn setHidden:NO];
+    } else {
+        [self.downloadBtn setEnabled:NO];
+        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
     
     self.introContentTextView.textColor = CMConstants.grayColor;

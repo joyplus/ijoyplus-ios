@@ -330,7 +330,7 @@
     } else {
         UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"no record"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UIImageView *norecord = [[UIImageView alloc]initWithFrame:CGRectMake(80, 0, 250, 250)];
+        UIImageView *norecord = [[UIImageView alloc]initWithFrame:CGRectMake(80, 70, 250, 250)];
         norecord.image = [UIImage imageNamed:@"nolist"];
         [cell.contentView addSubview:norecord];
         return cell;

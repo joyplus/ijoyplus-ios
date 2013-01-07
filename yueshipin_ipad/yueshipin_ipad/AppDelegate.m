@@ -15,7 +15,6 @@
 #import "ActionUtility.h"
 
 @interface AppDelegate ()
-@property (nonatomic, assign) BOOL foreground;
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;
 @property (nonatomic, strong) Reachability *wifiReach;
@@ -166,7 +165,9 @@
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
-        [[PFInstallation currentInstallation] saveEventually];
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation setBadge:0];
+        [installation saveInBackground];
     }
     [self customizeAppearance];
     self.closed = YES;
@@ -183,6 +184,9 @@
     [PFPush storeDeviceToken:deviceToken];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation setBadge:0];
+        [installation saveInBackground];
     }
     [PFPush subscribeToChannelInBackground:@"" block:^(BOOL succeeded, NSError *error) {
         if (succeeded)
@@ -204,17 +208,16 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     self.alertUserInfo = userInfo;
     NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
     [alertView show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {
+    if (buttonIndex == 1) {
         NSString *prodId = [NSString stringWithFormat:@"%@", [self.alertUserInfo objectForKey:@"prod_id"]];
         NSString *prodType = [NSString stringWithFormat:@"%@", [self.alertUserInfo objectForKey:@"prod_type"]];
-        NSLog(@"%i", self.foreground);
-        if(!self.foreground && prodId != nil && prodType != nil){
+        if(prodId != nil && prodType != nil){
             NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", prodType, @"prod_type", nil];
             [[NSNotificationCenter defaultCenter]postNotificationName:@"push_notification" object:nil userInfo:userInfo];
         }
@@ -229,7 +232,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    self.foreground = NO;
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -246,10 +249,11 @@
     
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
-        [[PFInstallation currentInstallation] saveEventually];
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation setBadge:0];
+        [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
-    self.foreground = YES;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

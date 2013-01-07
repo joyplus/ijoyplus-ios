@@ -17,6 +17,7 @@
 #import "DownloadItem.h"
 #import "DownloadHandler.h"
 #import "SequenceData.h"
+#import <Parse/Parse.h>
 #define DEFAULT_POSOTION_Y 585
 
 @interface MovieDetailViewController (){
@@ -329,14 +330,21 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
+    [self.downloadBtn setHidden:NO];
     if(downloadUrls != nil && downloadUrls.count > 0){
-        [self.downloadBtn setHidden:NO];
         NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
         DownloadItem *downloadingItem = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
-        if(downloadingItem != nil && [downloadingItem.itemId isEqualToString:self.prodId]){
+        if(downloadingItem != nil){
             [self.downloadBtn setEnabled:NO];
-            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_disabled"] forState:UIControlStateDisabled];
+            if(downloadingItem.percentage == 100){
+                [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_disabled"] forState:UIControlStateDisabled];
+            } else {
+                [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
+            }
         }
+    } else {
+        [self.downloadBtn setEnabled:NO];
+        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
     [self repositElements:0];
 }
@@ -587,6 +595,8 @@
 
 - (void)downloadBtnClicked
 {
+    [self.downloadBtn setEnabled:NO];
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
     if (item != nil) {

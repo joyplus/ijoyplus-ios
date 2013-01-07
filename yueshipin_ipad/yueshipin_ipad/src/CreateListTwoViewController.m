@@ -9,6 +9,7 @@
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
 #import "AddSearchViewController.h"
+#import "VideoDetailViewController.h"
 
 @interface CreateListTwoViewController (){
     UIImageView *bgImage;
@@ -322,7 +323,7 @@
 
 - (void)closeBtnClicked
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:VideoDetailViewController.class];
 }
 
 @end

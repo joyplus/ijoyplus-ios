@@ -333,8 +333,8 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 							
 							if (viewControllerCount > 1) {
 								for (int i = 1; i < viewControllerCount; i++) {
-									viewXPosition = self.view.frame.size.width - [slideViews viewWithTag:i].frame.size.width;
-									[[slideViews viewWithTag:i] removeFromSuperview];
+									viewXPosition = self.view.frame.size.width - [slideViews viewWithTag:20110106+i].frame.size.width;
+									[[slideViews viewWithTag:20110106+i] removeFromSuperview];
 									[viewControllersStack removeLastObject];
 								}
 								
@@ -436,8 +436,8 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 							NSInteger viewControllerCount = [viewControllersStack count];
 							if (viewControllerCount > 1) {
 								for (int i = 1; i < viewControllerCount; i++) {
-									viewXPosition = self.view.frame.size.width - [slideViews viewWithTag:i].frame.size.width;
-									[[slideViews viewWithTag:i] removeFromSuperview];
+									viewXPosition = self.view.frame.size.width - [slideViews viewWithTag:20110106+i].frame.size.width;
+									[[slideViews viewWithTag:20110106+i] removeFromSuperview];
 									[viewControllersStack removeLastObject];
 								}
 								[[borderViews viewWithTag:3] setHidden:TRUE];
@@ -680,12 +680,12 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
     } completion:^(BOOL finished) {
         if(topViewController == includeViewController){
-            [[slideViews viewWithTag:viewControllersStack.count - 1] removeFromSuperview];
+            [[slideViews viewWithTag:20110106+viewControllersStack.count - 1] removeFromSuperview];
             [viewControllersStack removeObjectAtIndex:viewControllersStack.count - 1];
         } else {
             for (int i = viewControllersStack.count -1 ; i > 0; i--) {
                 UIViewController *viewController = [viewControllersStack objectAtIndex:i];
-                [[slideViews viewWithTag:i] removeFromSuperview];
+                [[slideViews viewWithTag:20110106+i] removeFromSuperview];
                 [viewControllersStack removeObjectAtIndex:i];
                 viewController = nil;
                 if(viewController == includeViewController){
@@ -722,7 +722,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             if([viewController isKindOfClass:clazz]){
                 break;
             } else {
-                [[slideViews viewWithTag:i] removeFromSuperview];
+                [[slideViews viewWithTag:20110106+i] removeFromSuperview];
                 [viewControllersStack removeObjectAtIndex:i];
                 viewController = nil;
             }
@@ -746,7 +746,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
         [topController.view setAlpha:0];
     } completion:^(BOOL finished) {
-        [[slideViews viewWithTag:lastViewControllerIndex] removeFromSuperview];
+        [[slideViews viewWithTag:20110106 + lastViewControllerIndex] removeFromSuperview];
         [viewControllersStack removeLastObject];
     }];
 }
@@ -771,7 +771,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         }
     } completion:^(BOOL finished) {
         for(int i = lastViewControllerIndex; i > 0; i--){
-            [[slideViews viewWithTag:i] removeFromSuperview];
+            [[slideViews viewWithTag:20110106+i] removeFromSuperview];
             [viewControllersStack removeObjectAtIndex:i];
         }
     }];
@@ -809,7 +809,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		
 		NSInteger viewControllerCount = [viewControllersStack count];
 		for (int i = indexOfViewController; i < viewControllerCount; i++) {
-			[[slideViews viewWithTag:i] removeFromSuperview];
+			[[slideViews viewWithTag:20110106+i] removeFromSuperview];
 			[viewControllersStack removeObjectAtIndex:indexOfViewController];
 			viewXPosition = self.view.frame.size.width - [controller view].frame.size.width;
 		}
@@ -840,7 +840,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 	}
 	[[controller view] setFrame:CGRectMake(viewXPosition, 0, [controller view].frame.size.width, self.view.frame.size.height)];
 	
-	[controller.view setTag:([viewControllersStack count]-1)];
+	[controller.view setTag:(20110106 + [viewControllersStack count]-1)];
 	[controller viewWillAppear:FALSE];
 	[controller viewDidAppear:FALSE];
 	[slideViews addSubview:[controller view]];

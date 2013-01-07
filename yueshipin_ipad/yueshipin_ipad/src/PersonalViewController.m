@@ -219,7 +219,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
     
-    [self.view addGestureRecognizer:closeMenuRecognizer];
+    //    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
 }
@@ -437,7 +437,7 @@
     NSString *content = [self composeContent:item];
     CGSize size = [self calculateContentSize:content width:280];
     tableHeight += size.height + 40;
-    return size.height + 40;    
+    return size.height + 40;
 }
 
 - (void)summaryBtnClicked:(UIButton *)sender
@@ -482,24 +482,26 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(indexPath.row >= sortedwatchRecordArray.count)return;
-    NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
-    NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
-    if([prodType isEqualToString:@"1"]){
-        MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
-        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
-    } else if([prodType isEqualToString:@"2"]){
-        DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
-        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-    } else if([prodType isEqualToString:@"3"]){
-        ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
-        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+    [self closeMenu];
+    if(indexPath.row < sortedwatchRecordArray.count){
+        NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+        NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+        if([prodType isEqualToString:@"1"]){
+            MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
+        } else if([prodType isEqualToString:@"2"]){
+            DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+            viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        } else if([prodType isEqualToString:@"3"]){
+            ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+            viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        }
     }
 }
 

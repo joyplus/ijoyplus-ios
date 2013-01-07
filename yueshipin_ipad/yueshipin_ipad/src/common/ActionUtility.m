@@ -23,7 +23,9 @@
     if(userId == nil){
         Reachability *tempHostReach = [Reachability reachabilityForInternetConnection];
         if([tempHostReach currentReachabilityStatus] != NotReachable) {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:  [OpenUDID value], @"uiid", nil];
+            NSString *uuid = [OpenUDID value];
+            NSLog(@"uuid = %@", uuid);
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:  uuid, @"uiid", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathGenerateUIID parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if (responseCode == nil) {

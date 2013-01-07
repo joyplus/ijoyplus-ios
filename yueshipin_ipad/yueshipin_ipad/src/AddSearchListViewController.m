@@ -405,9 +405,9 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:2];
             [[NSNotificationCenter defaultCenter] postNotificationName:MY_LIST_VIEW_REFRESH object:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }
