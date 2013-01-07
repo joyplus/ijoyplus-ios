@@ -12,7 +12,10 @@
 
     NSMutableArray *listArr_;
     int Type_;
+    NSString *topicId_;
 }
 @property (strong, nonatomic) NSMutableArray *listArr;
 @property (assign, nonatomic)int Type;
+@property (strong, nonatomic)NSString *topicId;
+-(void)initTopicData:(NSString *)topicId;
 @end

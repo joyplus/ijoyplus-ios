@@ -11,6 +11,7 @@
 #import "Reachability.h"
 #import "UIUtility.h"
 #import "ServiceConstants.h"
+#import "UIImage+Scale.h"
 
 @interface FeedBackViewController ()
 
@@ -35,6 +36,14 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+    
 	self.title = @"意见反馈";
     textView_ = [[UITextView alloc] initWithFrame:CGRectMake(13, 15, 294, 94)];
     
@@ -48,6 +57,12 @@
     
     [self.view addSubview:button];
 }
+
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 -(void)buttonPressed:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {

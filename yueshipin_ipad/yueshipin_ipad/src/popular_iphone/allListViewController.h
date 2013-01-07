@@ -7,12 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface allListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>{
+#import "EGORefreshTableHeaderView.h"
+#import "MNMBottomPullToRefreshManager.h"
+@interface allListViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>{
     NSMutableArray *listArray_;
-    UITableView *tableList_;    
+    UITableView *tableList_;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    EGORefreshTableHeaderView *refreshHeaderView_;
+    NSUInteger reloads_;
+    BOOL reloading_;
 }
 @property (strong, nonatomic) NSMutableArray *listArray;
 @property (strong, nonatomic) UITableView *tableList;
+@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
+@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
 
 @end

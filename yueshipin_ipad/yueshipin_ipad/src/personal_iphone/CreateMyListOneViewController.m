@@ -38,33 +38,21 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
-//    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
-//                                    
-//                                    initWithTitle:@"返回"
-//                                    
-//                                    style:UIBarButtonItemStyleBordered
-//                                    
-//                                    target:self
-//                                    
-//                                    action:@selector(back:)];
-//    leftButton.image=[UIImage imageNamed:@"top_return_common.png"];
-//    self.navigationItem.backBarButtonItem = leftButton;
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    [backButton setImage:[UIImage imageNamed:@"top_icon_common_writing_cancel.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"top_icon_common_writing_cancel_s.png"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
     
-    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
-    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.backBarButtonItem = backtButton;
-    
-    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
-                                    
-                                    initWithTitle:@"下一步"
-                                    
-                                    style:UIBarButtonItemStyleBordered
-                                    
-                                    target:self
-                                    
-                                    action:@selector(nextButtonPressed:)];
-    //rightButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(nextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 51, 31);
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_writing_next.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     RadioButton *rb1 = [[RadioButton alloc] initWithGroupId:@"first group" index:0];
     RadioButton *rb2 = [[RadioButton alloc] initWithGroupId:@"first group" index:1];
@@ -99,11 +87,12 @@
    
     
 }
+
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
 
 }
 -(void)back:(id)sender{
-  [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)nextButtonPressed:(id)sender{

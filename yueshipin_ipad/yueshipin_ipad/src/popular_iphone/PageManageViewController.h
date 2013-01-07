@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDPageControl.h"
 
 @interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>{
 
     UIScrollView *scrollView_;
-    UIPageControl *pageControl_;
+    DDPageControl *pageControl_;
     NSMutableArray *listArr_;
     NSMutableArray *tvListArr_;
     NSMutableArray *movieListArr_;
@@ -20,9 +21,10 @@
     UITableView *movieTableList_;
     UITableView *showTableList_;
     
+    
 }
 @property (strong, nonatomic)UIScrollView *scrollView;
-@property (strong, nonatomic)UIPageControl *pageControl;
+@property (strong, nonatomic)DDPageControl *pageControl;
 @property (strong, nonatomic)NSMutableArray *listArr;
 @property (strong, nonatomic)NSMutableArray *tvListArr;
 @property (strong, nonatomic)NSMutableArray *movieListArr;

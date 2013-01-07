@@ -13,5 +13,4 @@
 #define MINE @"我的"
 
 @interface TabBarViewController : UITabBarController
-
 @end

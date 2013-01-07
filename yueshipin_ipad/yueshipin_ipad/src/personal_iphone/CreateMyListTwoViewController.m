@@ -10,6 +10,7 @@
 #import "FindViewController.h"
 #import "SearchResultsViewCell.h"
 #import "UIImageView+WebCache.h"
+#import "UIImage+Scale.h"
 
 @interface CreateMyListTwoViewController ()
 
@@ -37,20 +38,23 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+    
     self.title = [infoDic_ objectForKey:@"name"];
     
-    
-    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
-                                     
-                                     initWithTitle:@"完成"
-                                     
-                                     style:UIBarButtonItemStyleBordered
-                                     
-                                     target:self
-                                     
-                                     action:@selector(Done:)];
-    //rightButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(Done:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 37, 30);
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     UIView *whiteBg = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 45)];
     whiteBg.backgroundColor = [UIColor whiteColor];
@@ -62,16 +66,23 @@
     [whiteBg addSubview:moreButton];
     [self.view addSubview:whiteBg];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 46, 320, 330) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 46, 320, 350) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:tableList_];
     
-    listArr_ = [NSMutableArray arrayWithCapacity:10];
-    
+    if (listArr_ == nil) {
+         listArr_ = [NSMutableArray arrayWithCapacity:10];
+    }
+   
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(update:) name:@"Update CreateMyListTwoViewController" object:nil];
+}
+
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)update:(id)sender{

@@ -26,9 +26,9 @@
         
         self.frame = CGRectMake(0, 0, 320, 130);
         
-//        UIImageView *iconBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_list_moviecard.png"]];
-//        iconBgView.frame = CGRectMake(7, 13, 82, 111);
-//        [self addSubview:iconBgView];
+        UIImageView *iconBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_list_moviecard.png"]];
+        iconBgView.frame = CGRectMake(2, 12, 82, 111);
+        [self addSubview:iconBgView];
         self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(7.5, 15, 68, 100)];
         [self addSubview:self.imageView];
         

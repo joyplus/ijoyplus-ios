@@ -12,12 +12,22 @@
 #import "StatementsViewController.h"
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
+#import "Reachability.h"
+#import "UIUtility.h"
+#import "ContainerUtility.h"
+#import "AppDelegate.h"
+#import "CMConstants.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
+#import "UIImage+Scale.h"
 
 @interface IphoneSettingViewController ()
 
 @end
 
 @implementation IphoneSettingViewController
+@synthesize sinaSwith = sinaSwith_;
+@synthesize sinaweibo = sinaweibo_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,23 +41,39 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
-    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.backBarButtonItem = backtButton;
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"] toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
     UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 17, 296, 59)];
-    view1.backgroundColor = [UIColor whiteColor];
+    view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];;
     UIImageView *sinaWeibo = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 272, 33)];
     sinaWeibo.image = [UIImage imageNamed:@"my_s_xinlang.png"];
     [view1 addSubview:sinaWeibo];
+    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 16, 50, 22)];
+    [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
+    [view1 addSubview:sinaSwith_];
+    
+    sinaweibo_ = [AppDelegate instance].sinaweibo;
+    sinaweibo_.delegate = self;
+    if([sinaweibo_ isLoggedIn]){
+        sinaSwith_.on = YES;
+        //NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
+    }
+
     [self.view addSubview:view1];
+   
     
     UIView *view2 = [[UIView alloc] initWithFrame:CGRectMake(12, 86, 296, 59)];
-    view2.backgroundColor = [UIColor whiteColor];
+    view2.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     [self.view addSubview:view2];
     
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -60,7 +86,7 @@
     
     
     UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 172)];
-    view3.backgroundColor = [UIColor whiteColor];
+    view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];;
     [self.view addSubview:view3];
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     feedBack.frame = CGRectMake(24, 168, 273, 33);
@@ -95,13 +121,33 @@
 	// Do any additional setup after loading the view.
 }
 
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 - (void)viewWillAppear:(BOOL)animated{
-    self.tabBarController.tabBar.hidden = YES;
+//    self.tabBarController.tabBar.hidden = YES;
 }
 -(void)careUs:(id)sender{
     
 
 }
+- (void)sinaSwitchClicked:(UISwitch *)sender
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    BOOL flag = sender.isOn;
+    if(flag){
+        [sinaweibo_ logIn];
+    } else {
+        [sinaweibo_ logOut];
+    }
+}
+
 -(void)clearCache:(id)sender{
 
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
@@ -136,6 +182,113 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)removeAuthData
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
+}
+
+- (void)storeAuthData
+{
+    NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
+                              sinaweibo_.accessToken, @"AccessTokenKey",
+                              sinaweibo_.expirationDate, @"ExpirationDateKey",
+                              sinaweibo_.userID, @"UserIDKey",
+                              sinaweibo_.refreshToken, @"refresh_token", nil];
+    [[NSUserDefaults standardUserDefaults] setObject:authData forKey:@"SinaWeiboAuthData"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+#pragma mark - SinaWeibo Delegate
+
+- (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
+{
+    [self storeAuthData];
+    sinaSwith_.on = YES;
+    [sinaweibo requestWithURL:@"users/show.json"
+                       params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
+                   httpMethod:@"GET"
+                     delegate:self];
+}
+
+- (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboDidLogOut");
+   
+    [self removeAuthData];
+    sinaSwith_.on = NO;
+}
+
+- (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
+{
+    NSLog(@"sinaweiboLogInDidCancel");
+    sinaSwith_.on = NO;
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo logInDidFailWithError:(NSError *)error
+{
+    NSLog(@"sinaweibo logInDidFailWithError %@", error);
+    sinaSwith_.on = NO;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                        message:@"网络数据错误，请重新登陆。"
+                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alertView show];
+}
+
+- (void)sinaweibo:(SinaWeibo *)sinaweibo accessTokenInvalidOrExpired:(NSError *)error
+{
+    NSLog(@"sinaweiboAccessTokenInvalidOrExpired %@", error);
+    [self removeAuthData];
+    sinaSwith_.on = NO;
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Alert"
+                                                        message:@"Token已过期，请重新登陆。"
+                                                       delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+    [alertView show];
+}
+
+#pragma mark - SinaWeiboRequest Delegate
+
+- (void)request:(SinaWeiboRequest *)request didFinishLoadingWithResult:(id)userInfo
+{
+    if ([request.url hasSuffix:@"users/show.json"])
+    {
+        NSString *username = [userInfo objectForKey:@"screen_name"];
+        [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
+        
+        NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
+        [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
+        
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                NSString *user_id = [result objectForKey:@"user_id"];
+                [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
+                [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+            } else {
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    
+                }];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+        
+        
+        
+    }
+}
+
+- (void)request:(SinaWeiboRequest *)request didFailWithError:(NSError *)error
+{
+    if ([request.url hasSuffix:@"users/show.json"])
+    {
+        
+    }
 }
 
 @end

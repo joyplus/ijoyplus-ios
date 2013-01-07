@@ -15,7 +15,11 @@
 #import "MediaPlayerViewController.h"
 #import "AppDelegate.h"
 #import "ProgramViewController.h"
-
+#import "MBProgressHUD.h"
+#import "UIImage+Scale.h"
+#import "UIImage+Scale.h"
+#import "SendWeiboViewController.h"
+#import "ListDetailViewController.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -28,6 +32,7 @@
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
 @synthesize commentArray =commentArray_;
+@synthesize relevantList = relevantList_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -44,40 +49,95 @@
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, 480);
     self.tableView.backgroundView = backGround;
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 60, 30);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_common_share.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    
+    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.title = [self.infoDic objectForKey:@"prod_name"];
+    NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    self.title = titleStr;
     [self loadData];
     [self loadComments];
+    
+    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
+    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
+}
+-(void)share:(id)sender{
+    SendWeiboViewController *sendWeiBoViewController = [[SendWeiboViewController alloc] init];
+    sendWeiBoViewController.infoDic = videoInfo_;
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendWeiBoViewController] animated:YES completion:nil];
+
+}
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)loadData{
-    
-    NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", [self.infoDic objectForKey:@"prod_id"]];
+     MBProgressHUD *tempHUD;
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    NSString *key = [NSString stringWithFormat:@"%@%@", @"movie",itemId ];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
-        
+        videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"movie"];
+        episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        summary_ = [videoInfo_ objectForKey:@"summary"];
+        relevantList_ = [cacheResult objectForKey:@"topics"];
+        [self.tableView reloadData];
     }
     else{
         
-        
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
     }
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
         videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
+        relevantList_ = [result objectForKey:@"topics"];
+        [tempHUD hide:YES];
         [self.tableView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [tempHUD hide:YES];
     }];
     
 }
 - (void)loadComments
 {
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:itemId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -105,29 +165,33 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{ 
+{   int count = 2;
+    
     if ([commentArray_ count] > 0) {
-        return 2;
+        count++;
     }
-    return 1;
+    return count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
     if (section == 0) {
-        return 3;
+        return 2;
     }
     else if (section == 1){
+        return [relevantList_ count] > 5 ? 5:[relevantList_ count];
+    }
+    else if (section == 2){
         return [commentArray_ count];
     }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
@@ -139,11 +203,22 @@
         switch (indexPath.row) {
             case 0:{
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 14, 87, 129)];
-                [imageView setImageWithURL:[NSURL URLWithString:[self.infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                NSString *imageUrl = [self.infoDic objectForKey:@"prod_pic_url"];
+                if (imageUrl == nil) {
+                    imageUrl = [self.infoDic objectForKey:@"content_pic_url"];
+                }
+                [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
+                if (directors == nil) {
+                    directors = [self.infoDic objectForKey:@"director"];
+                }
+                
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
+                if (actors == nil) {
+                    actors = [self.infoDic objectForKey:@"star"];
+                }
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
                 NSString *area = [self.infoDic objectForKey:@"area"];
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
@@ -153,7 +228,7 @@
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
                 [cell addSubview:actorsLabel];
                 
-                NSString *labelText = [NSString stringWithFormat:@"地区: %@\n编剧: %@\n年代: %@",area,directors,date];
+                NSString *labelText = [NSString stringWithFormat:@"地区: %@\n导演: %@\n年代: %@",area,directors,date];
                 UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 74, 200, 60)];
                 //infoLabel.backgroundColor = [UIColor redColor];
                 infoLabel.font = [UIFont systemFontOfSize:12];
@@ -173,27 +248,30 @@
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
-                UIButton *addFav = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
                 addFav.frame = CGRectMake(14, 152, 142, 27);
                 addFav.tag = 10002;
                 [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
                 [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] forState:UIControlStateNormal];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
-                [addFav setTitle:[NSString stringWithFormat:@"收藏（%@）",[self.infoDic objectForKey:@"favority_num" ]]  forState:UIControlStateNormal];
+                [addFav setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateNormal];
+                [addFav setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateHighlighted];
+                
+             
+                
+                [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:addFav];
                 
-                UIButton *support = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
                 support.frame = CGRectMake(165, 152, 142, 27);
                 support.tag = 10003;
                 [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
                 [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
-                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
+                [support setImage: [UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] toSize:CGSizeMake(16, 15)]forState:UIControlStateNormal];
+                [support setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                [support setTitle:[NSString stringWithFormat:@"顶（%@）",[self.infoDic objectForKey:@"support_num" ]] forState:UIControlStateNormal];
+                [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:support];
                 
@@ -206,6 +284,7 @@
                 
                 UILabel *summary = [[UILabel alloc] initWithFrame:CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:14 andWidth:271])];
                 summary.textColor = [UIColor grayColor];
+                summary.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
                 summary.text = [NSString stringWithFormat:@"    %@",summary_];
                 summary.textAlignment = UITextAlignmentCenter;
                 summary.numberOfLines = 0;
@@ -215,18 +294,29 @@
                 break;
             }
                 
-            case 2:{
-                
-                
-                
-                
-                break;
-            }
-            default:
+                default:
                 break;
         }
     }
     else if (indexPath.section == 1){
+                UIView *view = [[UIView alloc] initWithFrame:CGRectMake(14, 0, 292, 26)];
+                view.backgroundColor = [UIColor whiteColor];
+                [cell addSubview:view];
+                 NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row];
+                 UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
+                 label.font = [UIFont systemFontOfSize:15]; 
+                 label.backgroundColor = [UIColor clearColor];
+                 label.text = [dic objectForKey:@"t_name"];
+                 [cell addSubview:label];
+                
+                UIImageView *push = [[UIImageView alloc] initWithFrame:CGRectMake(288, 8, 6, 10)];
+                push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];
+                [cell addSubview:push];
+                UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
+                line.frame = CGRectMake(25,25, 270, 1);
+                [cell addSubview:line];
+    }
+    else if (indexPath.section == 2){
     
                 NSDictionary *item = [commentArray_ objectAtIndex:indexPath.row];
                 
@@ -276,12 +366,19 @@
         else if(row == 1){
             return [self heightForString:summary_ fontSize:14 andWidth:271]+20;
         }
-        else if(row == 2){
-            return 100;
-        }
-
+    
     }
     else if (indexPath.section == 1){
+        if ([relevantList_ count]>0) {
+            return 26;
+        }
+        else{
+            return 0;
+        }
+    
+    
+    }
+    else if (indexPath.section == 2){
         NSDictionary *item = [commentArray_ objectAtIndex:row];
         NSString *content = [item objectForKey:@"content"];
         return [self heightForString:content fontSize:14 andWidth:271]+20;
@@ -292,18 +389,43 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section == 1) {
+        return 25;
+    }
+    if (section == 2) {
         return 20;
     }
     return 0;
 }
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
 
-    UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
-    commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
-    [view addSubview:commentV];
-    return view;
+    if (section == 1) {
+        UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+        commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,25)];
+        [view addSubview:commentV];
+        return view;
+    }
+   else if ( section == 2) {
+        UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+        commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
+        [view addSubview:commentV];
+        return view;
+    }
+    return nil;
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 1) {
+        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row];
+        ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        listDetail.topicId = [dic objectForKey:@"t_id"];
+        listDetail.Type = 9001;
+        [listDetail initTopicData:listDetail.topicId];
+        [self.navigationController pushViewController:listDetail animated:YES];
+    }
+
+}
+
 
 -(void)action:(id)sender {
     UIButton *button = (UIButton *)sender;
@@ -341,8 +463,12 @@
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
+                  
                 if([responseCode isEqualToString:kSuccessResCode]){
-                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshFav"object:nil];
+                    favCount_++;
+                    [self.tableView reloadData];
+                
                 } else {
                     
                 }
@@ -359,7 +485,8 @@
             [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
-                    
+                    supportCount_ ++;
+                    [self.tableView reloadData];
                 } else {
                     
                 }

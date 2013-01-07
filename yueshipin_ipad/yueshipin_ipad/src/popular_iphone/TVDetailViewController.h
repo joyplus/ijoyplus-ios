@@ -17,6 +17,8 @@
     UIScrollView *scrollView_;
     int pageCount_;
     NSMutableArray *commentArray_;
+    int favCount_;
+    int supportCount_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;

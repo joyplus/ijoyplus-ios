@@ -7,7 +7,7 @@
 //
 
 #import "AboutViewController.h"
-
+#import "UIImage+Scale.h"
 @interface AboutViewController ()
 
 @end
@@ -27,6 +27,14 @@
 {
     [super viewDidLoad];
     self.title = @"关于我们";
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
         
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,320, 480)];
     imageView.image = [UIImage imageNamed:@"background_about_us.png"];
@@ -34,6 +42,12 @@
     [self.view addSubview:imageView];
 	// Do any additional setup after loading the view.
 }
+
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

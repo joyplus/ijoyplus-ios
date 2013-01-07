@@ -25,6 +25,10 @@
     UILabel *nameLabel_;
     NSString *userId_;
     UIButton *createList_;
+    UIImageView *noRecordBg_;
+    UIButton *button1_;
+    UIButton *button2_;
+    UIButton *button3_;
 }
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
@@ -41,5 +45,9 @@
 @property (nonatomic, strong)NSString *userId;
 @property (nonatomic, strong)UIButton *createList;
 @property (nonatomic, strong)UITableView *myTableList;
+@property (nonatomic, strong)UIButton *button1;
+@property (nonatomic, strong)UIButton *button2;
+@property (nonatomic, strong)UIButton *button3;
+
 
 @end

@@ -127,7 +127,7 @@
             actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
             [cell addSubview:actorsLabel];
             
-            NSString *labelText = [NSString stringWithFormat:@"地区: %@\n编剧: %@\n年代: %@",area,directors,date];
+            NSString *labelText = [NSString stringWithFormat:@"地区: %@\n导演: %@\n年代: %@",area,directors,date];
             UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 75, 200, 70)];
             infoLabel.text = labelText;
             infoLabel.lineBreakMode = UILineBreakModeWordWrap;

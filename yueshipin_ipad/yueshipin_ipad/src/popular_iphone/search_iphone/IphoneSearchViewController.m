@@ -13,6 +13,9 @@
 #import "ListDetailViewCell.h"
 #import "UIImageView+WebCache.h"
 #import "ItemDetailViewController.h"
+#import "IphoneMovieDetailViewController.h"
+#import "TVDetailViewController.h"
+#import "UIImage+Scale.h"
 #define PAGESIZE 20
 @interface IphoneSearchViewController ()
 
@@ -40,17 +43,45 @@
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)]forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+    
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.delegate = self;
     searchBar_.text = self.keyWords;
+    searchBar_.tintColor = [UIColor whiteColor];
+    UITextField *searchField;
+    NSUInteger numViews = [searchBar_.subviews count];
+    for(int i = 0; i < numViews; i++) {
+        if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UITextField class]]) {
+            searchField = [searchBar_.subviews objectAtIndex:i];
+        }
+    }
+    if(!(searchField == nil)) {
+        [searchField.leftView setHidden:YES];
+        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang.png"] ];
+        [searchField setBorderStyle:UITextBorderStyleNone];
+    }
+
     [self.view addSubview:searchBar_];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, 320, 330) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, 320, 380) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     [self.view addSubview:tableList_];
     
     [self loadSearchData];
+}
+
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)loadSearchData{
@@ -108,10 +139,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *item = [searchResults_ objectAtIndex:indexPath.row];
+    NSString *typeStr = [item objectForKey:@"prod_type"];
+    if ([typeStr isEqualToString:@"1"]) {
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    else if ([typeStr isEqualToString:@"2"]){
+        TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+        detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
     
-    ItemDetailViewController *detailViewController = [[ItemDetailViewController alloc] init];
-    detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:detailViewController animated:YES];
     
 }
 

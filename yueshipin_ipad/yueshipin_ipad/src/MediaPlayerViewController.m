@@ -112,8 +112,15 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight;
+     
+}
+- (BOOL)shouldAutorotate{
+    return NO;
 }
 
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIDeviceOrientationLandscapeLeft;
+}
 - (void)moviePlayerPreloadFinish:(NSNotification *)theNotification
 {
     //    [self readOverLayView:player.view];

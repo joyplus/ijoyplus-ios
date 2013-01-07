@@ -65,7 +65,7 @@
 //    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
 //    [MobClick checkUpdate];
       [self generateUserId];
-//    [self initSinaweibo];
+      [self initSinaweibo];
 //    [self monitorReachability];
 //    [self isParseReachable];
 //    [self customizeAppearance];

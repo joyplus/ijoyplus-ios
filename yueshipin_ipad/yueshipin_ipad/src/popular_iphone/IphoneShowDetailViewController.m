@@ -15,6 +15,9 @@
 #import "MediaPlayerViewController.h"
 #import "AppDelegate.h"
 #import "ProgramViewController.h"
+#import "MBProgressHUD.h"
+#import "UIImage+Scale.h"
+#import "SendWeiboViewController.h"
 
 @interface IphoneShowDetailViewController ()
 
@@ -47,25 +50,64 @@
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, 480);
     self.tableView.backgroundView = backGround;
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 60, 30);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_common_share.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     self.title = [self.infoDic objectForKey:@"prod_name"];
     [self loadData];
     [self loadComments];
+
+    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
+    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
+}
+-(void)share:(id)sender{
+    SendWeiboViewController *sendWeiBoViewController = [[SendWeiboViewController alloc] init];
+    sendWeiBoViewController.infoDic = videoInfo_;
+    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendWeiBoViewController] animated:YES completion:nil];
+    
+}
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)loadData{
-    
+    MBProgressHUD *tempHUD;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"show", [self.infoDic objectForKey:@"prod_id"]];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
-        
+        videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"show"];
+        episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        NSLog(@"episodes count is %d",[episodesArr_ count]);
+        summary_ = [videoInfo_ objectForKey:@"summary"];
+        [self.tableView reloadData];
     }
     else{
-        
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
         
     }
-    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
@@ -73,9 +115,10 @@
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
+        [tempHUD hide:YES];
         [self.tableView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [tempHUD hide:YES];
     }];
     
 }
@@ -128,20 +171,18 @@
     else if (section == 1){
         return [commentArray_ count];
     }
-
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    for (UIView *view in cell.subviews) {
-        [view removeFromSuperview];
-    }
+     UITableViewCell *cell  = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+//    for (UIView *view in cell.subviews) {
+//        [view removeFromSuperview];
+//    }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (indexPath.section == 0) {
         switch (indexPath.row) {
@@ -161,7 +202,7 @@
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
                 [cell addSubview:actorsLabel];
                 
-                NSString *labelText = [NSString stringWithFormat:@"地区: %@\n编剧: %@\n年代: %@",area,directors,date];
+                NSString *labelText = [NSString stringWithFormat:@"地区: %@\n导演: %@\n年代: %@",area,directors,date];
                 UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 74, 200, 60)];
                 //infoLabel.backgroundColor = [UIColor redColor];
                 infoLabel.font = [UIFont systemFontOfSize:12];
@@ -181,28 +222,28 @@
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
-                UIButton *addFav = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
                 addFav.frame = CGRectMake(14, 152, 142, 27);
                 addFav.tag = 10002;
                 [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
                 [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] forState:UIControlStateNormal];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
-                [addFav setTitle:[NSString stringWithFormat:@"收藏（%@）",[self.infoDic objectForKey:@"favority_num" ]]  forState:UIControlStateNormal];
+                [addFav setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateNormal];
+                [addFav setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateHighlighted];
+                [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                  addFav.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:addFav];
                 
-                UIButton *support = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
                 support.frame = CGRectMake(165, 152, 142, 27);
                 support.tag = 10003;
                 [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
                 [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
-                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
+                [support setImage: [UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] toSize:CGSizeMake(16, 15)]forState:UIControlStateNormal];
+                [support setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                [support setTitle:[NSString stringWithFormat:@"顶（%@）",[self.infoDic objectForKey:@"support_num" ]] forState:UIControlStateNormal];
+                [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                  support.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:support];
@@ -213,8 +254,9 @@
                 UIImageView *onLine = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 50, 13)];
                 onLine.image = [UIImage imageNamed:@"tab2_detailed_common_writing2.png"];
                 [cell addSubview:onLine];
+                
                 UIView *view = [self showEpisodesplayView];
-                [cell.contentView addSubview:view];
+               [cell addSubview:view];
                 break;
             }
                 
@@ -245,7 +287,11 @@
             user.font = [UIFont systemFontOfSize:14];
             user.backgroundColor = [UIColor clearColor];
             UILabel *date =[[UILabel alloc] initWithFrame:CGRectMake(210, 5, 90, 14)];
-            date.text = [item objectForKey:@"create_date"];
+            NSString *dateStr = [item objectForKey:@"create_date"];
+            if (dateStr.length > 10) {
+                dateStr = [dateStr substringToIndex:10];
+            }
+            date.text = dateStr;
             date.font = [UIFont systemFontOfSize:14];
             date.textColor = [UIColor grayColor];
             date.backgroundColor = [UIColor clearColor];
@@ -268,7 +314,6 @@
 
     
     }
-    
     return cell;
 }
 
@@ -339,7 +384,9 @@
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
-                    
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshFav"object:nil];
+                    favCount_++;
+                    [self.tableView reloadData];
                 } else {
                     
                 }
@@ -356,7 +403,8 @@
             [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
-                    
+                    supportCount_ ++;
+                    [self.tableView reloadData];
                 } else {
                     
                 }
@@ -436,20 +484,23 @@
     
     scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(25, 33, 240, 122)];
     scrollView_.contentSize = CGSizeMake(320*(count/15), 125);
+    scrollView_.scrollEnabled = NO;
     scrollView_.pagingEnabled = YES;
     scrollView_.showsHorizontalScrollIndicator = NO;
 
     for (int i = 0; i < count; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake((i/4)*240, (i%4)*29, 240, 27);
         button.tag = i+1;
         NSDictionary *dic = [episodesArr_ objectAtIndex:i];
-        NSString *title = [dic objectForKey:@"name"];
-      
+        
+        NSString *title = [NSString stringWithFormat:@"%@", [dic objectForKey:@"name"]];
+        button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [button setTitle:title forState:UIControlStateNormal];
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-       // button.titleLabel.font = [UIFont systemFontOfSize:12];
-        
+         button.titleLabel.font = [UIFont systemFontOfSize:12];
+         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        [button setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
         [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_online_bg.png"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_online_bg_s.png"] forState:UIControlStateHighlighted];
         [button addTarget:self action:@selector(episodesPlay:) forControlEvents:UIControlEventTouchUpInside];

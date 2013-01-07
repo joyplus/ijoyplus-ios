@@ -18,6 +18,9 @@
 #import "CacheUtility.h"
 #import "MBProgressHUD.h"
 #import "AppDelegate.h"
+#import "SearchPreViewController.h"
+#import "IphoneSettingViewController.h"
+#import "UIImage+Scale.h"
 #define PAGE_NUM 3
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -237,36 +240,29 @@
 {
     [super viewDidLoad];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 40)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
     [titleText setText:@"悦榜"];
     self.navigationItem.titleView=titleText;
     
-    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
-                                    
-                                    initWithTitle:@"搜素"
-                                    
-                                    style:UIBarButtonItemStyleBordered
-                                    
-                                    target:self
-                                    
-                                    action:@selector(search:)];
-    leftButton.image=[UIImage imageNamed:@"top_search_common.png"];
-    self.navigationItem.leftBarButtonItem = leftButton;
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
+    leftButton.frame = CGRectMake(0, 0, 60, 30);
+    leftButton.backgroundColor = [UIColor clearColor];
+    [leftButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_search_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem = leftButtonItem;
     
-    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
-                                     
-                                     initWithTitle:@"设置"
-                                     
-                                     style:UIBarButtonItemStyleBordered
-                                     
-                                     target:self
-                                     
-                                     action:@selector(setting:)];
-    rightButton.image=[UIImage imageNamed:@"top_setting_common.png"];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 60, 30);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_setting_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
 	// Do any additional setup after loading the view.
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 380)];
@@ -276,7 +272,7 @@
     self.scrollView.delegate = self;
     
     for (int i = 0; i < PAGE_NUM; i++) {
-        UIImageView *titleName = titleName = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 100, 18)];
+        UIImageView *titleName = titleName = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 90, 18)];
         if (i == 0) {
             titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_1.png"];
         }
@@ -318,11 +314,25 @@
     
     [self.view addSubview:self.scrollView];
     
-    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(125, 327, 70, 26)];
-    self.pageControl.numberOfPages = PAGE_NUM;
-    self.pageControl.currentPage = 0;
-    [self.pageControl addTarget:self action:@selector(changePage:) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:self.pageControl];
+    UIView *pageColBg = [[UIView alloc] initWithFrame:CGRectMake(125, 328, 70, 26)];
+    
+    pageColBg.backgroundColor = [UIColor colorWithRed:75/255.0 green:75/255.0 blue:75/255.0 alpha: 1.0f];
+    pageColBg.alpha = 0.5;
+    [self.view addSubview:pageColBg];
+    pageControl_ = [[DDPageControl alloc] init] ;
+    [pageControl_ setCenter: CGPointMake(pageColBg.center.x, pageColBg.center.y)] ;
+    [pageControl_ setNumberOfPages: 3] ;
+    [pageControl_ setCurrentPage: 0] ;
+    [pageControl_ addTarget: self action: @selector(changePage:) forControlEvents: UIControlEventValueChanged] ;
+    [pageControl_ setDefersCurrentPageDisplay: YES] ;
+    [pageControl_ setType: DDPageControlTypeOnFullOffEmpty] ;
+    [pageControl_ setOnColor: [UIColor colorWithRed:24/255.0 green:112/255.0 blue:195/255.0 alpha: 1.0f]] ;
+
+    [pageControl_ setOffColor: [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha: 1.0f]] ;
+    
+    [pageControl_ setIndicatorDiameter: 7.0f] ;
+    [pageControl_ setIndicatorSpace: 8.0f] ;
+    [self.view addSubview:pageControl_];
     
     [self loadMovieTopsData];
     [self loadTVTopsData];
@@ -330,8 +340,20 @@
     
 }
 
+-(void)search:(id)sender{
+    SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
+    [self.navigationController pushViewController:searchViewCotroller animated:YES];
+    
+}
+
+-(void)setting:(id)sender{
+    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+    
+}
+
 - (void)viewWillAppear:(BOOL)animated{
-    self.tabBarController.tabBar.hidden = NO;
+    //self.tabBarController.tabBar.hidden = NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -386,8 +408,9 @@
             if (cell == nil) {
                 cell = [[ShowListViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             }
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
-            cell.nameLabel.text = [item objectForKey:@"cur_item_name"];
+            cell.nameLabel.text = [item objectForKey:@"prod_name"];
            [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         
             return cell;
@@ -413,6 +436,7 @@
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         listDetailViewController.listArr = items;
         listDetailViewController.Type = TV_TYPE;
+        listDetailViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
     else if (tableViewTag == MOVIE_TYPE){
@@ -420,6 +444,7 @@
         NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         listDetailViewController.listArr = items;
+         listDetailViewController.hidesBottomBarWhenPushed = YES;
         listDetailViewController.Type = MOVIE_TYPE;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
@@ -427,7 +452,8 @@
         NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
         IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         detailViewController.infoDic = item;
-        detailViewController.videoType = SHOW_TYPE; 
+        detailViewController.videoType = SHOW_TYPE;
+         detailViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailViewController animated:YES];
     
     }
@@ -454,7 +480,8 @@
 {
     CGFloat pageWidth = self.view.frame.size.width;
     int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    self.pageControl.currentPage = page;
+    [pageControl_ setCurrentPage: page] ;
+    [pageControl_ updateCurrentPageDisplay] ;
 }
 
 

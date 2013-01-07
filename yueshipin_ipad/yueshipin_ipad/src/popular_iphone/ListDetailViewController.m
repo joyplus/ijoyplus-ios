@@ -11,6 +11,12 @@
 #import "UIImageView+WebCache.h"
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
+#import "UIImage+Scale.h"
+#import "CacheUtility.h"
+#import "UIUtility.h"
+#import "MBProgressHUD.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
 #define SHOW_TYPE 9002
@@ -21,6 +27,7 @@
 @implementation ListDetailViewController
 @synthesize listArr = listArr_;
 @synthesize Type = Type_;
+@synthesize topicId = topicId_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -34,16 +41,85 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
-    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.backBarButtonItem = backtButton;
-  //  self.view.frame = CGRectMake(0, 0, 320, 430);
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"] toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+
+    
+
     [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, 480)];
     [self.tableView setFrame:CGRectMake(0, 0, 320, 480)];
 }
-- (void)viewWillAppear:(BOOL)animated{
-    self.tabBarController.tabBar.hidden = YES;
+//- (void)viewWillAppear:(BOOL)animated{
+//    self.tabBarController.tabBar.hidden = YES;
+//}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+   // [(TabBarViewController*)self.tabBarController setTabBarHidden:YES];
+    
 }
+-(void)initTopicData:(NSString *)topicId{
+    MBProgressHUD *tempHUD;
+    if (listArr_ == nil) {
+           listArr_ = [[NSMutableArray alloc]initWithCapacity:10];
+    }
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId]];
+    if(cacheResult != nil){
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"items"];
+            if(tempTopsArray.count > 0){
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:cacheResult];
+                [listArr_ addObjectsFromArray:tempTopsArray];
+            }
+            }
+        else {
+            [UIUtility showSystemError:self.view];
+        }
+        [self.tableView reloadData];
+    }
+    else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
+
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", self.topicId, @"top_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"items"];
+            if(tempTopsArray.count > 0){
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:result];
+                [listArr_ addObjectsFromArray:tempTopsArray];
+            }
+            
+        } else {
+            [UIUtility showSystemError:self.view];
+        }
+        [tempHUD hide:YES];
+        [self.tableView reloadData];
+
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+       
+        [tempHUD hide:YES];
+      
+    }];
+    
+
+
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -106,6 +182,10 @@
         [self.navigationController pushViewController:detailViewController animated:YES];
     }
     
+}
+-(void)back:(id)sender{
+
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

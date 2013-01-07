@@ -58,7 +58,7 @@
         
         score_ = [[UILabel alloc] initWithFrame:CGRectMake(266, 19, 49, 14)];
         score_.font = [UIFont systemFontOfSize:15];
-        score_.textColor = [UIColor blueColor];
+        score_.textColor = [UIColor colorWithRed:56/255.0 green:104/255.0 blue:188/255.0 alpha: 1.0f];
         [self addSubview:score_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];

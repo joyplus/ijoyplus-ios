@@ -15,6 +15,9 @@
     int videoType_;
     NSString *summary_;
     NSMutableArray *commentArray_;
+    NSArray *relevantList_;
+    int favCount_;
+    int supportCount_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -22,6 +25,7 @@
 @property (nonatomic, assign) int videoType;
 @property (nonatomic, strong) NSString *summary;
 @property (nonatomic, strong) NSMutableArray *commentArray;
+@property (nonatomic, strong) NSArray *relevantList;
 @end
 
 

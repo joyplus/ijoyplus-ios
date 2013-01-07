@@ -12,6 +12,7 @@
 #import "MBProgressHUD.h"
 #import "SearchResultsViewCell.h"
 #import "UIImageView+WebCache.h"
+#import "UIImage+Scale.h"
 #define PAGESIZE 20
 @interface FindViewController ()
 
@@ -41,16 +42,21 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
-    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
-                                     
-                                     initWithTitle:@"完成"
-                                     
-                                     style:UIBarButtonItemStyleBordered
-                                     
-                                     target:self
-                                     
-                                     action:@selector(Done:)];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(Done:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 37, 30);
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.tintColor = [UIColor whiteColor];
@@ -69,12 +75,17 @@
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 320, 330) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 320, 350) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:tableList_];
     
+}
+
+-(void)back:(id)sender{
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)Search{

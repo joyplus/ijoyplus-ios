@@ -19,7 +19,10 @@
         imageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 320, 126)];
         [self addSubview:imageView_];
         
-        nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(11, 81, 280, 15)];
+        nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 110, 320, 15)];
+        nameLabel_.backgroundColor = [UIColor grayColor];
+        nameLabel_.alpha = 0.5;
+        nameLabel_.textColor = [UIColor whiteColor];
         [self addSubview:nameLabel_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];

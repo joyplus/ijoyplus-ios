@@ -22,6 +22,8 @@
 #import "DateUtility.h"
 #import "MediaPlayerViewController.h"
 #import "ProgramViewController.h"
+#import "UIImage+Scale.h"
+#import "SearchPreViewController.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -44,7 +46,9 @@
 @synthesize avatarImage = avatarImage_;
 @synthesize userId = userId_;
 @synthesize myTableList = myTableList_;
-
+@synthesize button1 = button1_;
+@synthesize button2 = button2_;
+@synthesize button3 = button3_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -114,6 +118,13 @@
 
     }
 }
+-(UIImage *)scaleFromImage:(UIImage *)image toSize:(CGSize)size{
+    UIGraphicsBeginImageContext(size);
+    [image drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -124,35 +135,66 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
-    UIBarButtonItem * backtButton = [[UIBarButtonItem alloc]init];
-    backtButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.backBarButtonItem = backtButton;
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    titleText.backgroundColor = [UIColor clearColor];
+    titleText.textColor=[UIColor whiteColor];
+    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [titleText setText:@"悦视频"];
+    self.navigationItem.titleView=titleText;
     
-    self.title = @"我的";
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
+    leftButton.frame = CGRectMake(0, 0, 60, 30);
+    leftButton.backgroundColor = [UIColor clearColor];
+    [leftButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_search_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem = leftButtonItem;
     
-    UIBarButtonItem * rightButton = [[UIBarButtonItem alloc]
-                                     
-                                     initWithTitle:@"设置"
-                                     
-                                     style:UIBarButtonItemStyleDone
-                                     
-                                     target:self
-                                     
-                                     action:@selector(setting:)];
-    rightButton.image=[UIImage imageNamed:@"top_setting_common.png"];
-    self.navigationItem.rightBarButtonItem = rightButton;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 60, 30);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_setting_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
-    NSArray *itemsArr = [NSArray arrayWithObjects:@"播放纪录",@"我的收藏",@"我的悦单", nil];
-    self.segControl = [[UISegmentedControl alloc] initWithItems:itemsArr];
-    self.segControl.frame = CGRectMake(12, 40, 296, 51);
-    self.segControl.segmentedControlStyle = UISegmentedControlStyleBar;
-//    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forSegmentAtIndex:0];
-//    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forSegmentAtIndex:1];
-//    [self.segControl setImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forSegmentAtIndex:2];
-    [self.segControl addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventValueChanged];
-    self.segControl.selectedSegmentIndex = 0;
-    [self.view addSubview:self.segControl];
+    button1_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    button1_.frame = CGRectMake(12, 40, 99, 51);
+    button1_.selected = YES;
+    button1_.tag = 100;
+    [button1_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
+    [button1_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forState:UIControlStateNormal];
+    [button1_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]toSize:CGSizeMake(99, 52)]forState:UIControlStateSelected];
+    button2_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button2_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
+    [button2_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] toSize:CGSizeMake(99, 52)] forState:UIControlStateNormal];
+    [button2_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]toSize:CGSizeMake(99, 52)]forState:UIControlStateSelected];
+    button2_.frame = CGRectMake(111, 40, 99, 51);
+    button2_.tag = 101;
+    button3_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button3_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
+    [button3_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] toSize:CGSizeMake(99, 52)] forState:UIControlStateNormal];
+    [button3_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]toSize:CGSizeMake(99, 52)]forState:UIControlStateSelected];
+    button3_.frame = CGRectMake(210, 40, 99, 51);
+    button3_.tag = 102;
+     
+    [self.view addSubview:button1_];
+    [self.view addSubview:button2_];
+    [self.view addSubview:button3_];
     
+    [self Selectbutton:button1_];
+//    NSArray *itemsArr = [NSArray arrayWithObjects:@"播放纪录",@"我的收藏",@"我的悦单", nil];
+//    self.segControl = [[UISegmentedControl alloc] initWithItems:itemsArr];
+//    self.segControl.frame = CGRectMake(12, 40, 296, 51);
+//    self.segControl.tintColor =  [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0];
+//    self.segControl.segmentedControlStyle = UISegmentedControlStyleBar;
+//    [self.segControl setImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forSegmentAtIndex:0];
+//    [self.segControl setImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forSegmentAtIndex:1];
+//    [self.segControl setImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forSegmentAtIndex:2];
+//    [self.segControl addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventValueChanged];
+//    self.segControl.selectedSegmentIndex = 0;
+//    [self.view addSubview:self.segControl];
+        
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
     self.bgView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.bgView];
@@ -171,7 +213,7 @@
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
     
-    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 33, 296, 150) style:UITableViewStylePlain];
+    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 37, 296, 150) style:UITableViewStylePlain];
     myTableList_.dataSource = self;
     myTableList_.delegate = self;
     myTableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -181,13 +223,13 @@
     
     moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 293, 296, 45)];
     moreView_.backgroundColor = [UIColor whiteColor];
-    moreButton_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    moreButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton_ setFrame:CGRectMake(5, 7, 284, 30)];
     [moreView_ addSubview:moreButton_];
     
-    createList_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    createList_.frame = CGRectMake(5, 6, 284, 30);
+    createList_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    createList_.frame = CGRectMake(5, 7, 284, 30);
     [createList_ addTarget:self action:@selector(createList:) forControlEvents:UIControlEventTouchUpInside];
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single.png"] forState:UIControlStateNormal];
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single_s.png"] forState:UIControlStateHighlighted];
@@ -199,6 +241,7 @@
     [self.view addSubview:avatarImage_];
     
     nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(75, 18, 200, 14)];
+    nameLabel_.font = [UIFont systemFontOfSize:15];
     nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
     nameLabel_.backgroundColor = [UIColor clearColor];
     [self.view addSubview:nameLabel_];
@@ -211,16 +254,27 @@
         NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
         return [second compare:first];
     }];
-    [self Selectbutton:segControl_];
+    
     
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(refreshFav) name:@"refreshFav" object:nil];
     
+}
+-(void)refreshFav{
+    [self loadMyFavsData];
+    [favTableList_ reloadData];
+}
+-(void)search:(id)sender{
+    SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
+    searchViewCotroller.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:searchViewCotroller animated:YES];
     
 }
 -(void)addDone:(id)sender{
     NSMutableDictionary *dic = [(NSNotification *)sender object];
-    if (myTableList_ == nil) {
+    if (myListArr_ == nil) {
         myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
     }
     [myListArr_ addObject:dic];
@@ -230,18 +284,24 @@
 }
 -(void)createList:(id)sender{
     CreateMyListOneViewController *createMyListOneViewController = [[CreateMyListOneViewController alloc] init];
-   // [self presentViewController:[[UINavigationController alloc] initWithRootViewController:createMyListOneViewController] animated:YES completion:nil];
+    createMyListOneViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:createMyListOneViewController animated:YES];
 
 }
 -(void)seeMore:(id)sender{
-    if (self.segControl.selectedSegmentIndex == 1) {
+    if (button1_.selected) {
+        MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
+        moreListViewController.listArr = sortedwatchRecordArray_;
+        moreListViewController.type = RECORD_TYPE;
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+    }
+    else if (button2_.selected) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         moreListViewController.listArr = favArr_;
         moreListViewController.type = Fav_TYPE;
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
-    else if(self.segControl.selectedSegmentIndex == 2){
+    else if(button3_.selected){
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         moreListViewController.listArr = myListArr_;
          moreListViewController.type = MYLIST_TYPE;
@@ -251,12 +311,10 @@
 
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-    self.tabBarController.tabBar.hidden = NO;
-}
 
 -(void)setting:(id)sender{
     IphoneSettingViewController *settingViewController = [[IphoneSettingViewController alloc] init];
+    settingViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:settingViewController animated:YES];
 
 }
@@ -265,11 +323,15 @@
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];
-    
-    UISegmentedControl *mySegmentedControl=(UISegmentedControl *)sender;
-    switch (mySegmentedControl.selectedSegmentIndex) {
+    button1_.selected = NO;
+    button2_.selected = NO;
+    button3_.selected = NO;
+    //UISegmentedControl *mySegmentedControl=(UISegmentedControl *)sender;
+    UIButton *button = (UIButton *)sender;
+    switch (button.tag) {
         //播放纪录
-        case 0:{
+        case 100:{
+            button1_.selected = YES;
                 if ([self.sortedwatchRecordArray count] <= 3) {
                     [moreView_ removeFromSuperview];
                 }
@@ -285,7 +347,8 @@
             break;
         }
         //我的收藏
-        case 1:{
+        case 101:{
+            button2_.selected = YES;
             if ([self.favArr count] <= 3) {
                 favShowArr_ = [NSArray arrayWithArray:self.favArr];
                 [moreView_ removeFromSuperview];
@@ -303,7 +366,8 @@
             break;
         }
         //我的悦单
-        case 2:{
+        case 102:{
+            button3_.selected = YES;
             if ([myListArr_ count] <= 2) {
               
                 [moreView_ removeFromSuperview];
@@ -356,10 +420,13 @@
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     if (tableView.tag == RECORD_TYPE) {
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
        NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-        cell.titleLab.text = [infoDic objectForKey:@"name"];
-        cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
-        cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        cell.textLabel.text = [infoDic objectForKey:@"name"];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        [cell.titleLab removeFromSuperview];
+        [cell.actors removeFromSuperview];
+        [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -369,6 +436,7 @@
         cell.titleLab.text = [infoDic objectForKey:@"content_name"];
         cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
         cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        [cell.play  removeFromSuperview];
         
     }
     else if (tableView.tag == MYLIST_TYPE){
@@ -378,6 +446,7 @@
         cell.titleLab.text = [infoDic objectForKey:@"name"];
         cell.actors.text = [item objectForKey:@"prod_name"];
         cell.date.text = @"...";
+        [cell.play  removeFromSuperview];
     
     }
     return cell;
@@ -389,15 +458,10 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView.tag == RECORD_TYPE) {
-        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
-        detailViewController.infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:detailViewController animated:YES];
-        
-    }
-    else if (tableView.tag == Fav_TYPE){
+    if (tableView.tag == Fav_TYPE){
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
         detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+        detailViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailViewController animated:YES];
         
     }
@@ -406,6 +470,7 @@
         NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
         createMyListTwoViewController.listArr = items;
+        createMyListTwoViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
         
     

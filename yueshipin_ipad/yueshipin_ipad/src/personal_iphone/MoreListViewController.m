@@ -10,7 +10,9 @@
 #import "RecordListCell.h"
 #import "IphoneMovieDetailViewController.h"
 #import "CreateMyListTwoViewController.h"
-
+#import "MediaPlayerViewController.h"
+#import "ProgramViewController.h"
+#import "UIImage+Scale.h"
 @interface MoreListViewController ()
 
 @end
@@ -36,27 +38,26 @@
        self.title = @"我的悦单";  
         
     }
-
-    UIBarButtonItem * leftButton = [[UIBarButtonItem alloc]
-                                    
-                                    initWithTitle:@"返回"
-                                    
-                                    style:UIBarButtonItemStyleBordered
-                                    
-                                    target:self
-                                    
-                                    action:@selector(back:)];
-    leftButton.image=[UIImage imageNamed:@"top_return_common.png"];
-    self.navigationItem.leftBarButtonItem = leftButton;
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+    
+    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.backgroundColor = [UIColor clearColor];
+    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)]forState:UIControlStateNormal];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [super viewDidLoad];
 
 }
+ 
 -(void)back:(id)sender{
     [self dismissViewControllerAnimated:YES completion:nil];
 
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -85,16 +86,28 @@
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
-    if (type_ == 1) {
+    if (type_ == 0) {
+        cell.textLabel.text = [infoDic objectForKey:@"name"];
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        [cell.titleLab removeFromSuperview];
+        [cell.actors removeFromSuperview];
+        
+        [cell.date removeFromSuperview];
+        cell.play.tag = indexPath.row;
+        [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    else if (type_ == 1) {
         cell.titleLab.text = [infoDic objectForKey:@"content_name"];
         cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
         cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        [cell.play removeFromSuperview];
     }
     else if (type_ == 2){
         NSDictionary *item = [(NSMutableArray *)[infoDic objectForKey:@"items"] objectAtIndex:0];
         cell.titleLab.text = [infoDic objectForKey:@"name"];
         cell.actors.text = [item objectForKey:@"prod_name"];
         cell.date.text = @"...";
+        [cell.play removeFromSuperview];
     
     }
     
@@ -102,6 +115,29 @@
     return cell;
 }
 
+-(void)continuePlay:(id)sender{
+    int num = ((UIButton *)sender).tag;
+    NSDictionary *item = [listArr_ objectAtIndex:num];
+    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
+        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+        viewController.videoUrl = [item objectForKey:@"videoUrl"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.name = [item objectForKey:@"name"];
+        viewController.subname = [item objectForKey:@"subname"];
+        [self presentViewController:viewController animated:YES completion:nil];
+    } else {
+        ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+        viewController.programUrl = [item objectForKey:@"videoUrl"];
+        viewController.title = [item objectForKey:@"name"];
+        viewController.subname = [item objectForKey:@"subname"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
+    }
+    
+    
+    
+}
 
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
