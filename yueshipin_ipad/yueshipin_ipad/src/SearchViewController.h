@@ -31,5 +31,5 @@
 
 - (id)initWithFrame:(CGRect)frame;
 - (void)addKeyToLocalHistory:(NSString *)key;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
+
 @end

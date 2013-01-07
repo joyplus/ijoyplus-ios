@@ -73,7 +73,6 @@
 @end
 
 @implementation HomeViewController
-@synthesize menuViewControllerDelegate;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -184,6 +183,10 @@
     [self retrieveTopsListData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+    
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)handlePushNotification:(NSNotification *)notification
@@ -600,11 +603,6 @@
     videoType = 3;
     [self initTopButtonImage];
     [self retrieveShowTopsData];
-}
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
 }
 
 - (void)searchBtnClicked

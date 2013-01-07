@@ -48,7 +48,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 @end
 
 @implementation SettingsViewController
-@synthesize menuViewControllerDelegate;
+
 
 - (void)viewDidUnload
 {
@@ -163,6 +163,9 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -289,11 +292,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         NSURL *url=[NSURL URLWithString:@"http://weibo.com/u/3058636171"];
         [[UIApplication sharedApplication] openURL:url];
     }
-}
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
 }
 
 - (void)removeAuthData

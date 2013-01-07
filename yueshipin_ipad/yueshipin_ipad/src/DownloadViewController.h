@@ -19,5 +19,5 @@
 @interface DownloadViewController : GenericBaseViewController<DownloadViewControllerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
+
 @end

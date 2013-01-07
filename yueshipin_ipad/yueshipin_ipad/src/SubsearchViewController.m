@@ -31,6 +31,9 @@
 	removePreviousView = NO;
     self.moveToLeft = YES;
     [self.view addGestureRecognizer:swipeRecognizer];
+    
+    [self.view removeGestureRecognizer:closeMenuRecognizer];
+    [self.view removeGestureRecognizer:swipeCloseMenuRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated

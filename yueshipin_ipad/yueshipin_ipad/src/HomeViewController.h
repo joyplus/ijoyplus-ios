@@ -13,6 +13,5 @@
 @interface HomeViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
 
 @end

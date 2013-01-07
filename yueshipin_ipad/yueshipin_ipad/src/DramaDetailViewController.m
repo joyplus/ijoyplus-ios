@@ -521,7 +521,7 @@
     [commentListViewController.tableView reloadData];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 300 + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+episodeView.frame.size.height + commentListViewController.tableHeight+ 300 + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
 }
 
 - (void)getTopComments:(int)num
@@ -555,7 +555,7 @@
 
 - (void)refreshCommentListView:(int)tableHeight
 {
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+ceil(totalEpisodeNumber/10.0)*35 + 200)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+episodeView.frame.size.height + commentListViewController.tableHeight+ 300 + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 430, tableHeight);
 }
 

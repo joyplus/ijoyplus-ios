@@ -42,7 +42,18 @@
     
     swipeRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeBtnClicked)];
     swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-    swipeRecognizer.numberOfTouchesRequired=1;   
+    swipeRecognizer.numberOfTouchesRequired=1;
+    
+    openMenuRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(menuBtnClicked)];
+    openMenuRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    openMenuRecognizer.numberOfTouchesRequired=1;
+    
+    closeMenuRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeMenu)];
+    closeMenuRecognizer.numberOfTouchesRequired=1;
+    
+    swipeCloseMenuRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeMenu)];
+    swipeCloseMenuRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    swipeCloseMenuRecognizer.numberOfTouchesRequired=1;
 }
 
 - (void)viewDidUnload
@@ -50,6 +61,9 @@
     [super viewDidUnload];
     myHUD = nil;
     swipeRecognizer = nil;
+    openMenuRecognizer = nil;
+    closeMenuRecognizer = nil;
+    swipeCloseMenuRecognizer = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -62,6 +76,13 @@
 {
     [AppDelegate instance].closed = YES;
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
+}
+
+- (void)menuBtnClicked
+{
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
+    [AppDelegate instance].closed = ![AppDelegate instance].closed;
+    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
 }
 
 - (void)closeBtnClicked

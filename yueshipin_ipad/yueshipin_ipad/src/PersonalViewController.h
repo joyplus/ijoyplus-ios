@@ -12,6 +12,6 @@
 @interface PersonalViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
+
 
 @end

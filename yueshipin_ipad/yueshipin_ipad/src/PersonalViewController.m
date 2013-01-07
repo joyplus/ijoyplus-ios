@@ -62,7 +62,6 @@
 @end
 
 @implementation PersonalViewController
-@synthesize menuViewControllerDelegate;
 
 - (void)didReceiveMemoryWarning
 {
@@ -219,6 +218,10 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
+    
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -435,11 +438,6 @@
     CGSize size = [self calculateContentSize:content width:280];
     tableHeight += size.height + 40;
     return size.height + 40;    
-}
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
 }
 
 - (void)summaryBtnClicked:(UIButton *)sender

@@ -13,5 +13,4 @@
 @interface SettingsViewController : GenericBaseViewController <SinaWeiboDelegate, SinaWeiboRequestDelegate, UIAlertViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
 @end

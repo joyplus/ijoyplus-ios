@@ -26,7 +26,6 @@
 @end
 
 @implementation SearchViewController
-@synthesize menuViewControllerDelegate;
 
 - (void)viewDidUnload
 {
@@ -184,7 +183,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -336,12 +337,6 @@
         clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
     }
 }
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
-}
-
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {

@@ -50,6 +50,14 @@
     [super viewDidUnload];
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
@@ -456,8 +464,4 @@
     [doneBtn setHidden:YES];
 }
 
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
-}
 @end

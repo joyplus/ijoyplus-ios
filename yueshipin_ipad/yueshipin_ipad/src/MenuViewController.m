@@ -124,19 +124,14 @@
 {
     CGRect frame = [UIScreen mainScreen].bounds;
     homeViewController = [[HomeViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    homeViewController.menuViewControllerDelegate = self;
     
     searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    searchViewController.menuViewControllerDelegate = self;
-    
+
     personalViewController = [[PersonalViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    personalViewController.menuViewControllerDelegate = self;
     
     settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    settingsViewController.menuViewControllerDelegate = self;
     
     downloadViewController = [[DownloadViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    downloadViewController.menuViewControllerDelegate = self;
 }
 
 - (void)viewDidLoad {
@@ -314,12 +309,6 @@
     UIView *aView = [[UIView alloc]init];
     aView.backgroundColor = [UIColor clearColor];
     return aView;
-}
-- (void)menuButtonClicked
-{
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
-    [AppDelegate instance].closed = ![AppDelegate instance].closed;
-    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
 }
 
 @end
