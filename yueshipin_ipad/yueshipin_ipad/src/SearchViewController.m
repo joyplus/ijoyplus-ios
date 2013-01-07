@@ -118,6 +118,11 @@
         table.frame = CGRectMake(80, 170, 370, 210);
     }
     clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
+    if(historyArray.count > 0){
+        [clearAllBtn setHidden:NO];
+    } else {
+        [clearAllBtn setHidden:YES];
+    }
     if (!accessed) {
         accessed = YES;
         id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
@@ -264,6 +269,11 @@
     [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
     table.frame = CGRectMake(80, 170, 370, 210);
     [table reloadData];
+    if(historyArray.count > 0){
+        [clearAllBtn setHidden:NO];
+    } else {
+        [clearAllBtn setHidden:YES];
+    }
     clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
@@ -426,6 +436,11 @@
     }];
     [historyArray addObjectsFromArray:sortedArray];
     [[ContainerUtility sharedInstance]setAttribute:newHistoryArray forKey:@"search_history"];
+    if(historyArray.count > 0){
+        [clearAllBtn setHidden:NO];
+    } else {
+        [clearAllBtn setHidden:YES];
+    }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -445,9 +460,11 @@
             if (historyArray.count > 0) {
                 [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                 table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+                [clearAllBtn setHidden:NO];
             } else {
                 table.frame = CGRectMake(80, 170, 370, 210);
                 [tableView reloadData];
+                [clearAllBtn setHidden:YES];
             }
             clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
         }
