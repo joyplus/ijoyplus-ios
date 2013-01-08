@@ -157,9 +157,14 @@
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [MobClick updateOnlineConfig];
-    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
     [MobClick checkUpdate];
+    
+    NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
+    if (appKey == nil) {
+        [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
+    }
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self monitorReachability];
@@ -181,6 +186,15 @@
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (void)onlineConfigCallBack:(NSNotification *)notification {
+    self.playBtnSuppressed = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:PLAY_BTN_SUPPRESSED]];
+    NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
+    if(appKey != nil){
+        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
+        [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
+    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -240,7 +254,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [MobClick updateOnlineConfig];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -257,8 +271,7 @@
         [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
-    [MobClick updateOnlineConfig];
-    self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
