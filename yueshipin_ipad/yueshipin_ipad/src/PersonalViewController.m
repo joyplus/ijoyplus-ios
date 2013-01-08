@@ -219,9 +219,15 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
     
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
+    closeMenuRecognizer.delegate = self;
+    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    return ![NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"];
 }
 
 - (void)viewWillAppear:(BOOL)animated

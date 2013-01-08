@@ -184,7 +184,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
     
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
 }
