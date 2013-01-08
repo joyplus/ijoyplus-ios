@@ -18,6 +18,7 @@
 #import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
+#import "ListDetailViewController.h"
 
 @interface TVDetailViewController ()
 
@@ -32,6 +33,7 @@
 @synthesize summary = summary_;
 @synthesize scrollView = scrollView_;
 @synthesize commentArray =commentArray_;
+@synthesize relevantList = relevantList_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -86,7 +88,9 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+
 -(void)loadData{
+    relevantList_ = [NSArray array];
     MBProgressHUD *tempHUD;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
@@ -95,6 +99,7 @@
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
+        relevantList_ = [cacheResult objectForKey:@"topics"];
         [self.tableView reloadData];
 
     }
@@ -116,6 +121,7 @@
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
+        relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
         [self.tableView reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -156,10 +162,12 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
+    int count = 2;
+    
     if ([commentArray_ count] > 0) {
-        return 2;
+        count++;
     }
-    return 1;
+    return count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -169,9 +177,13 @@
         return 3;
     }
     else if (section == 1){
+        return [relevantList_ count] > 5 ? 5:[relevantList_ count];
+    }
+    else if (section == 2){
         return [commentArray_ count];
     }
     return 0;
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -263,13 +275,13 @@
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
                 [cell addSubview:jianjie];
                 
-                UILabel *summary = [[UILabel alloc] initWithFrame:CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:14 andWidth:271])];
+                UILabel *summary = [[UILabel alloc] initWithFrame:CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271])];
                 summary.textColor = [UIColor grayColor];
                 summary.text = [NSString stringWithFormat:@"    %@",summary_];
                 summary.textAlignment = UITextAlignmentCenter;
                 summary.numberOfLines = 0;
                 summary.lineBreakMode = UILineBreakModeWordWrap;
-                summary.font = [UIFont systemFontOfSize:14];
+                summary.font = [UIFont systemFontOfSize:13];
                 [cell addSubview:summary];
                 
                 break;
@@ -279,6 +291,24 @@
         }
     }
     else if (indexPath.section == 1){
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(14, 0, 292, 26)];
+        view.backgroundColor = [UIColor whiteColor];
+        [cell addSubview:view];
+        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
+        label.font = [UIFont systemFontOfSize:15];
+        label.backgroundColor = [UIColor clearColor];
+        label.text = [dic objectForKey:@"t_name"];
+        [cell addSubview:label];
+        
+        UIImageView *push = [[UIImageView alloc] initWithFrame:CGRectMake(288, 8, 6, 10)];
+        push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];
+        [cell addSubview:push];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
+        line.frame = CGRectMake(25,25, 270, 1);
+        [cell addSubview:line];
+    }
+    else if (indexPath.section == 2){
         NSDictionary *item = [commentArray_ objectAtIndex:indexPath.row];
         
         UILabel *user =[[UILabel alloc] initWithFrame:CGRectMake(25, 5, 180, 14)];
@@ -293,14 +323,14 @@
         [cell addSubview:user];
         [cell addSubview:date];
         NSString *content = [item objectForKey:@"content"];
-        int height = [self heightForString:content fontSize:14 andWidth:271];
+        int height = [self heightForString:content fontSize:13 andWidth:271];
         UILabel *comment =[[UILabel alloc]initWithFrame:CGRectMake(25, 20, 270, height)];
         comment.text = content;
         comment.backgroundColor = [UIColor clearColor];
         comment.textColor = [UIColor grayColor];
         comment.numberOfLines = 0;
         comment.lineBreakMode = UILineBreakModeWordWrap;
-        comment.font = [UIFont systemFontOfSize:14];
+        comment.font = [UIFont systemFontOfSize:13];
         [cell addSubview:comment];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
@@ -328,14 +358,24 @@
             return 155;
         }
         else if(row == 2){
-            return [self heightForString:summary_ fontSize:14 andWidth:271]+20;
+            return [self heightForString:summary_ fontSize:13 andWidth:271]+20;
         }
 
     }
     else if (indexPath.section == 1){
+        if ([relevantList_ count]>0) {
+            return 26;
+        }
+        else{
+            return 0;
+        }
+        
+        
+    }
+    else if (indexPath.section == 2){
         NSDictionary *item = [commentArray_ objectAtIndex:row];
         NSString *content = [item objectForKey:@"content"];
-        return [self heightForString:content fontSize:14 andWidth:271]+20;
+        return [self heightForString:content fontSize:13 andWidth:271]+20;
     }
        return 0;
     
@@ -343,6 +383,15 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section == 1) {
+        if ([relevantList_ count]>0) {
+            return 25;
+        }
+        else{
+            return 0;
+        }
+        
+    }
+    if (section == 2) {
         return 20;
     }
     return 0;
@@ -350,12 +399,35 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     
-    UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
-    commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
-    [view addSubview:commentV];
-    return view;
+    if (section == 1) {
+        UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+        commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,25)];
+        [view addSubview:commentV];
+        return view;
+    }
+    else if ( section == 2) {
+        UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+        commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
+        [view addSubview:commentV];
+        return view;
+    }
+    return nil;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 1) {
+        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row];
+        ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        listDetail.topicId = [dic objectForKey:@"t_id"];
+        listDetail.Type = 9000;
+        [listDetail initTopicData:listDetail.topicId];
+        [self.navigationController pushViewController:listDetail animated:YES];
+    }
+    
+}
+
 -(void)Play:(int)number{
     NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:number] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){

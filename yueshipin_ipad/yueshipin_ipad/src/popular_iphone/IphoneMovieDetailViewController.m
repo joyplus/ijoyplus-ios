@@ -282,14 +282,14 @@
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
                 [cell addSubview:jianjie];
                 
-                UILabel *summary = [[UILabel alloc] initWithFrame:CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:14 andWidth:271])];
+                UILabel *summary = [[UILabel alloc] initWithFrame:CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271])];
                 summary.textColor = [UIColor grayColor];
                 summary.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
                 summary.text = [NSString stringWithFormat:@"    %@",summary_];
                 summary.textAlignment = UITextAlignmentCenter;
                 summary.numberOfLines = 0;
                 summary.lineBreakMode = UILineBreakModeWordWrap;
-                summary.font = [UIFont systemFontOfSize:14];
+                summary.font = [UIFont systemFontOfSize:13];
                 [cell addSubview:summary];
                 break;
             }
@@ -332,14 +332,14 @@
                 [cell addSubview:user];
                 [cell addSubview:date];
                 NSString *content = [item objectForKey:@"content"];
-               int height = [self heightForString:content fontSize:14 andWidth:271];
+               int height = [self heightForString:content fontSize:13 andWidth:271];
                 UILabel *comment =[[UILabel alloc]initWithFrame:CGRectMake(25, 20, 270, height)];
                 comment.text = content;
                 comment.backgroundColor = [UIColor clearColor];
                 comment.textColor = [UIColor grayColor];
                 comment.numberOfLines = 0;
                 comment.lineBreakMode = UILineBreakModeWordWrap;
-                comment.font = [UIFont systemFontOfSize:14];
+                comment.font = [UIFont systemFontOfSize:13];
                 [cell addSubview:comment];
         
                 UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
@@ -364,7 +364,7 @@
             return 181;
         }
         else if(row == 1){
-            return [self heightForString:summary_ fontSize:14 andWidth:271]+20;
+            return [self heightForString:summary_ fontSize:13 andWidth:271]+20;
         }
     
     }
@@ -381,7 +381,7 @@
     else if (indexPath.section == 2){
         NSDictionary *item = [commentArray_ objectAtIndex:row];
         NSString *content = [item objectForKey:@"content"];
-        return [self heightForString:content fontSize:14 andWidth:271]+20;
+        return [self heightForString:content fontSize:13 andWidth:271]+20;
     }
         return 0;
     
@@ -389,7 +389,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (section == 1) {
-        return 25;
+        if ([relevantList_ count]>0) {
+            return 25;
+        }
+        else{
+            return 0;
+        }
+
     }
     if (section == 2) {
         return 20;

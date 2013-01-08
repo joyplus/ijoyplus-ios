@@ -19,6 +19,7 @@
     NSMutableArray *commentArray_;
     int favCount_;
     int supportCount_;
+    NSArray *relevantList_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -27,5 +28,6 @@
 @property (nonatomic, strong) NSString *summary;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray *commentArray;
+@property (nonatomic, strong) NSArray *relevantList;
 @end
 

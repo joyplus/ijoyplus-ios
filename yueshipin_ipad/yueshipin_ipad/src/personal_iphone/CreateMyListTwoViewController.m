@@ -66,7 +66,7 @@
     [whiteBg addSubview:moreButton];
     [self.view addSubview:whiteBg];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(12, 46, 296, 350) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(12, 55, 296, 350) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;

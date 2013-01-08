@@ -50,8 +50,10 @@
         addImageView_.backgroundColor = [UIColor clearColor];
         [self addSubview:addImageView_];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
         line.frame = CGRectMake(0, 94, 320, 1);
+        [self addSubview:line];
+        
     }
     return self;
 }
