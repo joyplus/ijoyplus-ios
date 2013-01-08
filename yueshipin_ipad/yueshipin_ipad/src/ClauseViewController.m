@@ -13,9 +13,9 @@
 
 @interface ClauseViewController (){
     UIScrollView *bgScrollView;
-    UIImageView *bgImage;
     UIImageView *titleImage;
     UIImageView *contentImage;
+    UIButton *closeBtn;
 }
 
 @end
@@ -25,7 +25,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    bgImage = nil;
+    closeBtn = nil;
     titleImage = nil;
     contentImage = nil;
     bgScrollView = nil;
@@ -43,10 +43,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
     
     bgScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 520, 720)];
     [bgScrollView setBackgroundColor:[UIColor clearColor]];
@@ -55,6 +51,13 @@
     bgScrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:bgScrollView];
     
+    closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [bgScrollView addSubview:closeBtn];
+    
     titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 110, 27)];
     titleImage.image = [UIImage imageNamed:@"clause_title"];
     [bgScrollView addSubview:titleImage];
@@ -62,7 +65,7 @@
     contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 100, 418, 733)];
     contentImage.image = [UIImage imageNamed:@"clause_content"];
     [bgScrollView addSubview:contentImage];
-
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
