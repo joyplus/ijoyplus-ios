@@ -164,7 +164,7 @@
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
-    [Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];
+    [Parse setApplicationId:@"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P" clientKey:@"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"];
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
