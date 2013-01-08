@@ -684,6 +684,11 @@
 
 - (void)downloadBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [AppDelegate instance].rootViewController.videoDetailDelegate = self;
     [[AppDelegate instance].rootViewController showShowDownloadView:self.prodId title:[video objectForKey:@"name"] episodeArray:episodeArray];
 }
