@@ -21,7 +21,7 @@
 #import "ServiceConstants.h"
 #import "UIImage+Scale.h"
 #import "AFSinaWeiboAPIClient.h"
-
+#import "UMFeedback.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -197,9 +197,9 @@
     sleep(1);
 }
 -(void)feedBack:(id)sender{
-    FeedBackViewController *feedBackViewController = [[FeedBackViewController alloc] init];
-    [self.navigationController pushViewController:feedBackViewController animated:YES];
-
+//    FeedBackViewController *feedBackViewController = [[FeedBackViewController alloc] init];
+//    [self.navigationController pushViewController:feedBackViewController animated:YES];
+      [UMFeedback showFeedback:self withAppkey:umengAppKey];
 }
 
 -(void)suggest:(id)sender{

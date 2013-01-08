@@ -24,6 +24,7 @@
 #import "ProgramViewController.h"
 #import "UIImage+Scale.h"
 #import "SearchPreViewController.h"
+#import "MBProgressHUD.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -60,11 +61,16 @@
 }
 
 -(void)loadMyFavsData{
-    
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.bgView];
+    [self.bgView addSubview:tempHUD];
+    tempHUD.labelText = @"加载中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
+        [tempHUD hide:YES];
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"favorities"];
             if(tempTopsArray.count > 0){
@@ -72,24 +78,28 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
-        else {
-            
-        }
-
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.favArr == nil){
             self.favArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [tempHUD hide:YES];
     }];
     
 }
 
 -(void)loadPersonalData{
-
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.bgView];
+    [self.bgView addSubview:tempHUD];
+    tempHUD.labelText = @"加载中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        
+        if (myListArr_ == nil) {
+            myListArr_  = [NSMutableArray arrayWithCapacity:10];
+        }
+        [tempHUD hide:YES];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *tempArr = [result objectForKey:@"tops"];
@@ -103,7 +113,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
        
-       
+       [tempHUD hide:YES];
     }];
 
 
@@ -129,7 +139,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self loadMyFavsData];
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.frame = CGRectMake(0, 0, 320, 480);
@@ -246,6 +255,8 @@
     nameLabel_.backgroundColor = [UIColor clearColor];
     [self.view addSubview:nameLabel_];
     
+    //加载数据
+    [self loadMyFavsData];
     [self loadPersonalData];
     
     NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
@@ -454,7 +465,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-
+    
     return 60;
 }
 

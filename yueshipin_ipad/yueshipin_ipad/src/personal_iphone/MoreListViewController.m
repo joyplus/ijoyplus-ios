@@ -164,9 +164,7 @@
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
     }
-    
-    
-    
+  
 }
 
 #pragma mark - Table view delegate
