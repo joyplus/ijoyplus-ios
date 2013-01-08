@@ -15,6 +15,7 @@
 #import "UIImage+Scale.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "ProgramNavigationController.h"
 @interface MoreListViewController ()
 
 @end
@@ -162,7 +163,9 @@
         viewController.subname = [item objectForKey:@"subname"];
         viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
+        ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
+        [self presentViewController:pro animated:YES completion:nil];
+       // [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
     }
   
 }

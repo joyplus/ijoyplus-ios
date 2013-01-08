@@ -18,6 +18,7 @@
 #import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
+#import "ProgramNavigationController.h"
 
 @interface IphoneShowDetailViewController ()
 
@@ -430,7 +431,9 @@
     viewController.title = [videoInfo_ objectForKey:@"name"];
     viewController.type = 1;
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
+    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
+    [self presentViewController:pro animated:YES completion:nil];
+    //[self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
     
 }
 
