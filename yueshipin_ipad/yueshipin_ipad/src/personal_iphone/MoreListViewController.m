@@ -13,6 +13,8 @@
 #import "MediaPlayerViewController.h"
 #import "ProgramViewController.h"
 #import "UIImage+Scale.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 @interface MoreListViewController ()
 
 @end
@@ -123,8 +125,23 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
+        NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+        NSString *topicId = [infoDic objectForKey:@"topic_id"];
         
-        
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:topicId, @"topic_id", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if([responseCode isEqualToString:kSuccessResCode]){
+                [listArr_ removeObjectAtIndex:indexPath.row];
+                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+            else {
+                [UIUtility showSystemError:self.view];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [UIUtility showSystemError:self.view];
+        }];
+           
     }
 }
 

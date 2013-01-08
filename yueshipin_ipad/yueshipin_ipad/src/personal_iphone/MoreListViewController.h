@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface MoreListViewController : UITableViewController{
-    NSArray *listArr_;
+    NSMutableArray *listArr_;
     int type_;
 }
 
-@property (nonatomic, strong)NSArray *listArr;
+@property (nonatomic, strong)NSMutableArray *listArr;
 @property (nonatomic, assign)int type;
 @end

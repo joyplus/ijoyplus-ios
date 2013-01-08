@@ -12,10 +12,11 @@
     UITextField *titleTextField_;
     UITextView *detailTextView_;
     NSMutableDictionary *infoDic_;
+    NSString *topicId_;
     
 }
 @property (nonatomic, strong)UITextField *titleTextField;
 @property (nonatomic, strong)UITextView *detailTextView;
 @property (nonatomic, strong)NSMutableDictionary *infoDic;
-
+@property (nonatomic, strong)NSString *topicId;
 @end

@@ -20,6 +20,7 @@
 @synthesize titleTextField = titleTextField_;
 @synthesize detailTextView = detailTextView_;
 @synthesize infoDic = infoDic_;
+@synthesize topicId = topicId_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -98,6 +99,7 @@
 -(void)nextButtonPressed:(id)sender{
      NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        topicId_ = [result objectForKey:@"topic_id"];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             [self next:result];
@@ -114,7 +116,7 @@
     infoDic_ = [NSMutableDictionary dictionaryWithCapacity:10];
     [infoDic_ setObject:self.titleTextField.text forKey:@"name"];
     [infoDic_ setObject:self.detailTextView.text forKey:@"detail"];
-   
+    [infoDic_ setObject:topicId_ forKey:@"topic_id"];
     CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
     createMyListTwoViewController.infoDic = infoDic_;
     createMyListTwoViewController.topicId = [result objectForKey:@"topic_id"];
