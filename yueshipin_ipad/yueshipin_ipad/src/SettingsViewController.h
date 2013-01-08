@@ -10,8 +10,7 @@
 #import "MenuViewController.h"
 #import "SinaWeibo.h"
 
-@interface SettingsViewController : GenericBaseViewController <SinaWeiboDelegate, SinaWeiboRequestDelegate>
+@interface SettingsViewController : GenericBaseViewController <SinaWeiboDelegate, SinaWeiboRequestDelegate, UIAlertViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
 @end

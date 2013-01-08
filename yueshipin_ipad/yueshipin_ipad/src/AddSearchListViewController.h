@@ -14,4 +14,8 @@
 
 @property (nonatomic, strong)NSString *topId;
 
+@property (nonatomic, strong)UIViewController *backToViewController;
+
+@property (assign, nonatomic) int type;
+
 @end

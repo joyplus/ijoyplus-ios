@@ -11,8 +11,17 @@
 
 @interface GenericBaseViewController : UIViewController{
     UIUtility *myHUD;
+    UISwipeGestureRecognizer *swipeRecognizer;
+    
+    UISwipeGestureRecognizer *openMenuRecognizer;
+    
+    UITapGestureRecognizer *closeMenuRecognizer;
+    
+    UISwipeGestureRecognizer *swipeCloseMenuRecognizer;
 }
 
 - (void)closeMenu;
+
+- (void)menuBtnClicked;
 
 @end

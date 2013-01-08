@@ -66,10 +66,12 @@
 	
 
 }
-
+- (void)removeViewInSlider:(UIViewController *)includeViewController;
+- (void)removeViewToViewInSlider:(Class)clazz;
 - (void)removeViewInSlider;
 - (void)removeAllSubviewInSlider;
 - (void) addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView removePreviousView:(BOOL)removePreviousView;
+- (void) addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView removePreviousView:(BOOL)removePreviousView moveToLeft:(BOOL)moveToLeft;
 - (void)bounceBack:(NSString*)animationID finished:(NSNumber*)finished context:(void*)context;
 - (void)menuToggle:(BOOL)menuClicked isStackStartView:(BOOL)isStackStartView;
 @property (nonatomic, strong) UIView* slideViews;

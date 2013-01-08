@@ -13,7 +13,7 @@
 #import "DeviceListViewController.h"
 #import "CMConstants.h"
 #import "DateUtility.h"
-
+#import "CommonHeader.h"
 
 @interface MediaPlayerViewController (){
     MPMoviePlayerViewController *playerViewController;
@@ -39,10 +39,15 @@
 @synthesize videoUrl;
 @synthesize name;
 @synthesize type;
+@synthesize currentNum;
+@synthesize isDownloaded;
+@synthesize prodId;
+@synthesize dramaDetailViewControllerDelegate;
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.prodId = nil;
     self.name = nil;
     self.videoUrl = nil;
     shareBtn = nil;
@@ -57,7 +62,7 @@
     player = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+    //    [[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -73,18 +78,23 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor clearColor]];
-    //    self.videoUrl = @"http://m.youku.com/wap/pvs?id=XNDUxNjU4NjAw&format=3gphd";
+    //    self.videoUrl = @"http://hot.vrs.sohu.com/ipad909901_4567748189248_220033.m3u8";
     int nowDate = [[NSDate date] timeIntervalSince1970];
     if([self.videoUrl rangeOfString:@"{now_date}"].location != NSNotFound){
         self.videoUrl = [self.videoUrl stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
     }
     NSLog(@"%@", self.videoUrl);
     //NSURL *mediaFileUrl = [[NSURL alloc] initFileURLWithPath:@"assets-library://asset/asset.MOV?id=647CACF5-F040-4FB7-9EFC-3D24F63F1F4D&ext=MOV"];
-    NSURL *mediaFileUrl = [[NSURL alloc] initWithString:self.videoUrl];
+    NSURL *mediaFileUrl = nil;
+    if(isDownloaded){
+        mediaFileUrl = [[NSURL alloc] initFileURLWithPath:self.videoUrl];
+    } else {
+        mediaFileUrl = [[NSURL alloc] initWithString:self.videoUrl];
+    }
     playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:mediaFileUrl];
     CGRect bound = self.view.bounds;
     playerViewController.view.frame = CGRectMake(0, -20, bound.size.width, bound.size.height + 20);
-
+    
     [self.navigationController setNavigationBarHidden:YES];
     [self.view addSubview:playerViewController.view];
     
@@ -97,7 +107,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVideoFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPreloadFinish:) name:MPMediaPlaybackIsPreparedToPlayDidChangeNotification object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackStateChanged:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playbackStateChanged:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 }
 
 - (void)printSubview:(UIView *)view
@@ -137,78 +147,44 @@
     //    [shareBtn addTarget:self action:@selector(showPopWindow:)forControlEvents:UIControlEventTouchUpInside];
     //    [buttonView addSubview:shareBtn];
 }
-- (void)playVideoFinished:
-
-
-(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
+- (void)playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
 {
+    BOOL userClicked = YES;
 	lastPlayTime = [NSNumber numberWithDouble:player.currentPlaybackTime];
     if(player.duration - lastPlayTime.doubleValue <= 0.1 || lastPlayTime == nil){
         lastPlayTime = [NSNumber numberWithInt:0];
+        userClicked = NO;
     }
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:self.videoUrl result:lastPlayTime];
-//    [playerViewController.view removeFromSuperview];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    //    [playerViewController.view removeFromSuperview];
+    [self dismissViewControllerAnimated:YES completion:^{
+        if(!userClicked){
+            [self.dramaDetailViewControllerDelegate playNextEpisode:self.currentNum];
+        }
+    }];
 }
 
 - (void)updateWatchRecord
 {
-    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
-    int index = 0;
-    BOOL exist = NO;
-    NSMutableDictionary *watchingItem;
-    for(int i = 0; i < watchRecordArray.count; i++){
-        NSDictionary *item = (NSDictionary *)[watchRecordArray objectAtIndex:i];
-        if ([[item objectForKey:@"name"] isEqualToString: self.name]) {
-            watchingItem = [[NSMutableDictionary alloc]initWithDictionary:item];;
-            index = i;
-            exist = YES;
-            break;
+    if(!isDownloaded){
+        int playbackTime = 0;
+        if(player.currentPlaybackTime > 0){
+            playbackTime = [NSNumber numberWithFloat:player.currentPlaybackTime].intValue;
         }
-    }
-    if(watchingItem == nil){
-        watchingItem = [[NSMutableDictionary alloc]initWithCapacity:7];
-    }
-    [watchingItem setValue:@"1" forKey:@"play_type"]; // 1:player 2 web-player
-    [watchingItem setValue:(self.name == nil ? @"" : self.name) forKey:@"name"];
-    [watchingItem setValue:(self.subname == nil ? @"" : self.subname) forKey:@"subname"];
-    [watchingItem setValue:[NSString stringWithFormat:@"%i", self.type] forKey:@"type"];
-    [watchingItem setValue:[DateUtility formatDateWithString:[NSDate date] formatString: @"yyyy-MM-dd HH:mm:ss"] forKey:@"createDateStr"];
-    if(player.currentPlaybackTime > 0){
-        [watchingItem setValue:[NSNumber numberWithFloat:player.currentPlaybackTime] forKey:@"playbackTime"];
-    } else {
-        [watchingItem setValue:[NSNumber numberWithFloat:0] forKey:@"playbackTime"];
-    }
-    if(player.duration > 0){
-        [watchingItem setValue:[NSNumber numberWithFloat:player.duration] forKey:@"duration"];
-    } else {
-        [watchingItem setValue:[NSNumber numberWithFloat:0] forKey:@"duration"];
-    }
-    [watchingItem setValue: self.videoUrl forKey:@"videoUrl"];
-    
-    NSMutableArray *temp = [[NSMutableArray alloc]initWithCapacity:WATCH_RECORD_NUMBER];
-    if(!exist){
-        [temp addObject:watchingItem];
-    }
-    for(int i = 0; i < watchRecordArray.count; i++){
-        if(exist && i == index){
-            [temp addObject:watchingItem];
-        } else {
-            [temp addObject:[watchRecordArray objectAtIndex:i]];
+        int duration = 0;
+        if(player.duration > 0){
+            duration = [NSNumber numberWithFloat:player.duration].intValue;
         }
+        self.subname = self.subname == nil ? @"" : self.subname;
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"1", @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", self.videoUrl, @"video_url", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"zz%@", error);
+        }];
     }
-    NSArray *sortedArray = [temp sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
-        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
-        return [second compare:first];
-    }];
-    int num = sortedArray.count > WATCH_RECORD_NUMBER ? WATCH_RECORD_NUMBER : sortedArray.count;
-    NSMutableArray *newWatchRecord = [[NSMutableArray alloc]initWithCapacity:num];
-    for(int i = 0; i < num; i++){
-        [newWatchRecord addObject:[temp objectAtIndex:i]];
-    }
-    [[CacheUtility sharedCache]putInCache:@"watch_record" result:newWatchRecord];
 }
 
 - (void)readOverLayView:(UIView *)view

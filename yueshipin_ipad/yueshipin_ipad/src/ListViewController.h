@@ -8,7 +8,7 @@
 
 #import "CommonHeader.h"
 
-@interface ListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
+@interface ListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
     UITableView *table;
     NSMutableArray *topsArray;
     UIButton *closeBtn;
@@ -17,7 +17,7 @@
 
 @property (nonatomic, strong)NSString *listTitle;
 @property (nonatomic, strong)NSString *topId;
-
+@property (nonatomic, assign)int type;
 - (void)retrieveTopsListData;
 
 @end

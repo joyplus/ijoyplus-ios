@@ -17,6 +17,8 @@
 
 @implementation VideoDetailViewController
 @synthesize prodId;
+@synthesize fromViewController;
+@synthesize type;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,7 +32,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor clearColor];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,6 +53,9 @@
     _sinaweibo = nil;
     video = nil;
     topics = nil;
+    [downloadUrls removeAllObjects];
+    downloadUrls = nil;
+    episodeArray = nil;
 }
 
 - (void)shareBtnClicked
@@ -75,6 +81,11 @@
 
 - (void)commentBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [AppDelegate instance].rootViewController.prodId = self.prodId;
     [AppDelegate instance].rootViewController.videoDetailDelegate = self;
     [[AppDelegate instance].rootViewController showCommentPopup];
@@ -102,6 +113,7 @@
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
 {
+    [self shareBtnClicked];
     [self storeAuthData];
     [sinaweibo requestWithURL:@"users/show.json"
                        params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
@@ -150,13 +162,20 @@
         NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
         
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"pre_user_id", [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
                 NSString *user_id = [result objectForKey:@"user_id"];
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+                [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -232,6 +251,7 @@
     }
     SelectListViewController *viewController = [[SelectListViewController alloc]init];
     viewController.prodId = self.prodId;
+    viewController.type = self.type;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
@@ -246,5 +266,54 @@
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
 }
 
+- (void)closeBtnClicked
+{
+    fromViewController.moveToLeft = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
+}
 
+- (void)downloadBegin:(McDownload *)aDownload didReceiveResponseHeaders:(NSURLResponse *)responseHeaders
+{
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"开始下载" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
+{
+    [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+}
+
+- (void)getDownloadUrls:(int)num
+{
+    if(num < 0 || num >=episodeArray.count){
+        downloadUrls = nil;
+        return;
+    }
+    downloadUrls = [[NSMutableArray alloc]initWithCapacity:3];
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        for(NSDictionary *tempVideo in videoUrlArray){
+            NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+            for(NSDictionary *url in urlArray){
+                if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                    NSString *videoUrl = [url objectForKey:@"url"];
+                    [downloadUrls addObject:videoUrl];
+                }
+            }
+        }
+    }
+}
+
+- (void)updateBadgeIcon
+{
+    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+    if (newNum == nil) {
+        newNum = [[SequenceData alloc]initWithType:0];
+        newNum.newDownloadItemNum = 1;
+    } else {
+        newNum.newDownloadItemNum++;
+    }
+    [newNum save];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+}
 @end

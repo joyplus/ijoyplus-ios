@@ -39,15 +39,6 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIImageView" id="10410089">
-						<reference key="NSNextResponder" ref="766721923"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{264, 438}, {240, 128}}</string>
-						<reference key="NSSuperview" ref="766721923"/>
-						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-					</object>
 					<object class="IBUIScrollView" id="163951952">
 						<reference key="NSNextResponder" ref="766721923"/>
 						<int key="NSvFlags">268</int>
@@ -717,6 +708,25 @@
 								<reference key="IBUIFont" ref="1015669777"/>
 								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							</object>
+							<object class="IBUIButton" id="961851344">
+								<reference key="NSNextResponder" ref="163951952"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{432, 321}, {73, 44}}</string>
+								<reference key="NSSuperview" ref="163951952"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+								<int key="IBUIContentHorizontalAlignment">0</int>
+								<int key="IBUIContentVerticalAlignment">0</int>
+								<reference key="IBUIHighlightedTitleColor" ref="214439271"/>
+								<object class="NSColor" key="IBUINormalTitleColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+								</object>
+								<reference key="IBUINormalTitleShadowColor" ref="858057724"/>
+								<reference key="IBUIFontDescription" ref="185923520"/>
+								<reference key="IBUIFont" ref="575809456"/>
+							</object>
 						</array>
 						<string key="NSFrameSize">{774, 1004}</string>
 						<reference key="NSSuperview" ref="766721923"/>
@@ -1053,11 +1063,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">bgImage</string>
+						<string key="label">downloadBtn</string>
 						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="10410089"/>
+						<reference key="destination" ref="961851344"/>
 					</object>
-					<int key="connectionID">2037</int>
+					<int key="connectionID">2039</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1084,7 +1094,6 @@
 						<reference key="object" ref="766721923"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="163951952"/>
-							<reference ref="10410089"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -1128,6 +1137,7 @@
 							<reference ref="1072307691"/>
 							<reference ref="987500521"/>
 							<reference ref="568387778"/>
+							<reference ref="961851344"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>
@@ -1337,9 +1347,9 @@
 						<reference key="parent" ref="163951952"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">2036</int>
-						<reference key="object" ref="10410089"/>
-						<reference key="parent" ref="766721923"/>
+						<int key="objectID">2038</int>
+						<reference key="object" ref="961851344"/>
+						<reference key="parent" ref="163951952"/>
 					</object>
 				</array>
 			</object>
@@ -1368,7 +1378,7 @@
 				<string key="2028.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2032.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2033.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="2036.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="2038.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="35.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="399.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1392,7 +1402,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">2037</int>
+			<int key="maxID">2039</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

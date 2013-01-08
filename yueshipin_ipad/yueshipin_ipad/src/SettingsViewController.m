@@ -14,6 +14,7 @@
 #import "SDImageCache.h"
 #import "AFSinaWeiboAPIClient.h"
 #import "ClauseViewController.h"
+#import "ActionUtility.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -49,7 +50,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 @end
 
 @implementation SettingsViewController
-@synthesize menuViewControllerDelegate;
+
 
 - (void)viewDidUnload
 {
@@ -172,6 +173,9 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -208,6 +212,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)suggestionBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self closeMenu];
     SuggestionViewController *viewController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
@@ -230,6 +239,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 {
     [self closeMenu];
     AboutUsViewController *viewController = [[AboutUsViewController alloc]init];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
@@ -237,6 +247,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 {
     [self closeMenu];
     ClauseViewController *viewController = [[ClauseViewController alloc]init];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
@@ -251,12 +262,42 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     if(flag){
         [_sinaweibo logIn];
     } else {
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"确定要解除绑定吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [[ContainerUtility sharedInstance] removeObjectForKey:kUserId];
+        [[ContainerUtility sharedInstance] removeObjectForKey:kUserAvatarUrl];
+        [[ContainerUtility sharedInstance] removeObjectForKey:kUserNickName];
+        [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
+        [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+        [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
+        [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
+        [ActionUtility generateUserId:^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+        }];
         [_sinaweibo logOut];
+    } else {
+        sinaSwitch.on = YES;
     }
 }
 
 - (void)followBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     _sinaweibo = [AppDelegate instance].sinaweibo;
     if([_sinaweibo isLoggedIn]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:_sinaweibo.accessToken, @"access_token", @"悦视频", @"screen_name", nil];
@@ -269,11 +310,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         NSURL *url=[NSURL URLWithString:@"http://weibo.com/u/3058636171"];
         [[UIApplication sharedApplication] openURL:url];
     }
-}
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
 }
 
 - (void)removeAuthData
@@ -351,13 +387,20 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
         
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"pre_user_id", [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){                
                 NSString *user_id = [result objectForKey:@"user_id"];
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+                [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
+                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {

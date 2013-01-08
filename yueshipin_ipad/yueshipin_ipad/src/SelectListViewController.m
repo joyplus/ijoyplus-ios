@@ -11,9 +11,8 @@
 #import "SSCheckBoxView.h"
 #import "CreateListOneViewController.h"
 
-#define LEFT_GAP 50
 @interface SelectListViewController (){
-    NSMutableArray *listData;
+    NSArray *listData;
     UIImageView *titleImage;
     UIButton *closeBtn;
     UIButton *doneBtn;
@@ -27,10 +26,10 @@
 
 @implementation SelectListViewController
 @synthesize prodId;
+@synthesize type;
 
 - (void)viewDidUnload
 {
-    [listData removeAllObjects];
     listData = nil;
     titleImage = nil;
     closeBtn = nil;
@@ -48,23 +47,18 @@
 {
     [super viewDidLoad];
     
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
-    
-    titleImage = [[UIImageView alloc]initWithFrame: CGRectMake(LEFT_GAP, 35, 183, 27)];
+    titleImage = [[UIImageView alloc]initWithFrame: CGRectMake(LEFT_WIDTH, 35, 183, 27)];
     titleImage.image = [UIImage imageNamed:@"add_title"];
     [self.view addSubview:titleImage];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 120, 460, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 130, 420, self.view.frame.size.height - 420)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -73,7 +67,7 @@
     [self.view addSubview:table];
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(LEFT_GAP, 80, 105, 31);
+    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 105, 31);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -87,6 +81,8 @@
     [self.view addSubview:doneBtn];
     
     checkboxes = [[NSMutableSet alloc]initWithCapacity:10];
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,8 +93,6 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
-    
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_topic_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
@@ -106,13 +100,12 @@
         [myHUD showProgressBar:self.view];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%i", 1], @"page_num", @"30", @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:self.type], @"type", [NSString stringWithFormat:@"%i", 1], @"page_num", @"100", @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseVideoData:result];
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
-            [listData removeAllObjects];
             [myHUD hide];
         }];
     }
@@ -120,16 +113,12 @@
 
 - (void)parseVideoData:(id)result
 {
-    listData = [[NSMutableArray alloc]initWithCapacity:10];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
-        NSArray *videos = [result objectForKey:@"tops"];
-        if(videos != nil && videos.count > 0){
-            [listData addObjectsFromArray:videos];
-        }
+        listData = [result objectForKey:@"tops"];
+        [table reloadData];
     }
-    [table reloadData];
 }
 
 
@@ -159,6 +148,10 @@
         nameLabel.font = CMConstants.titleFont;
         [cell.contentView addSubview:nameLabel];
         
+        UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectZero];
+        typeImage1.tag = 3001;
+        [cell.contentView addSubview:typeImage1];
+        
         SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 3, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
         checkbox.tag = 2001;
         [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
@@ -171,6 +164,19 @@
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
     nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
+    [nameLabel sizeToFit];
+    
+    NSString *itemType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    UIImageView *typeImage = (UIImageView *)[cell viewWithTag:3001];
+    if([itemType isEqualToString:@"1"]){
+        typeImage.image = [UIImage imageNamed:@"movie_type"];
+    } else if([itemType isEqualToString:@"2"]){
+        typeImage.image = [UIImage imageNamed:@"drama_type"];
+    } else {
+        typeImage.image = [UIImage imageNamed:@"show_type"];
+    }
+    typeImage.frame = CGRectMake(nameLabel.frame.origin.x + fmin(nameLabel.frame.size.width, 220)+ 5, nameLabel.frame.origin.y+ 2, 37, 18);
+
     
     SSCheckBoxView *checkbox = (SSCheckBoxView *)[cell viewWithTag:2001];
     checkbox.value = [NSString stringWithFormat:@"%@", [item objectForKey:@"id"]];
@@ -256,13 +262,17 @@
             [UIUtility showSystemError:self.view];
         }];
     }
-    [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+    if(checkboxes.count > 0){
+        [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+        [closeBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+    }
 }
 
 - (void)createBtnClicked
 {
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
     viewController.prodId = self.prodId;
+    viewController.specifiedType = self.type;
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
 }
