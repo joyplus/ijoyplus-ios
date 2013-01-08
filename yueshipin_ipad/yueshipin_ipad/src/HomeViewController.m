@@ -15,7 +15,6 @@
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
 
-
 #define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 167
 #define LIST_LOGO_WIDTH 220
@@ -68,12 +67,12 @@
     
     UIImageView *lastSelectedListImage;
     UIImageView *lastSelectedOverlay;
+    JSBadgeView *badgeView;
 }
 
 @end
 
 @implementation HomeViewController
-@synthesize menuViewControllerDelegate;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -151,10 +150,24 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
+    [super viewDidAppear:animated];
+    [self updateDownloadNum:nil];
+}
+
+- (void)updateDownloadNum:(NSNotification *)aNotification
+{
+    if(badgeView == nil){
+        badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
+        badgeView.badgePositionAdjustment = CGPointMake(-10, 7);
+        badgeView.badgeText = @"0";
+        [badgeView setHidden:YES];
+    }
+    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+    if(newNum == nil || newNum.newDownloadItemNum == 0){
+        [badgeView setHidden:YES];
+    } else {
+        [badgeView setHidden:NO];
+        badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
     }
 }
 
@@ -168,6 +181,19 @@
     pageSize = 20;
     videoType = 0;
     [self retrieveTopsListData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+    
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
+- (void)handlePushNotification:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    [self showDetailScreen:userInfo];
+    
 }
 
 - (void)retrieveLunboData
@@ -537,6 +563,10 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 0;
     [self initTopButtonImage];
     [self loadTable];
@@ -544,6 +574,10 @@
 
 - (void)movieBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 1;
     [self initTopButtonImage];
     [self retrieveMovieTopsData];
@@ -551,6 +585,10 @@
 
 - (void)dramaBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 2;
     [self initTopButtonImage];
     [self retrieveTvTopsData];
@@ -558,14 +596,13 @@
 
 - (void)showBtnClicked:(UIButton *)sender
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     videoType = 3;
     [self initTopButtonImage];
     [self retrieveShowTopsData];
-}
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
 }
 
 - (void)searchBtnClicked
@@ -802,7 +839,6 @@
     nameLabel1.text = [item1 objectForKey:@"name"];
     UILabel *nameLabel2 = (UILabel *)[cell viewWithTag:7001];
     nameLabel2.text = [item2 objectForKey:@"name"];
-    
     NSString *type = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"prod_type"]];
     UIImageView *typeImage1 = (UIImageView *)[cell viewWithTag:8001];
     if([type isEqualToString:@"1"]){
@@ -824,10 +860,13 @@
     }
     
     NSArray *subitems1 = [item1 objectForKey:@"items"];
-    NSArray *subitems2 = [item2 objectForKey:@"items"];
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < fmin(subitems1.count, 3); i++){
         UILabel *label1 = (UILabel *)[cell viewWithTag:(4001 + i)];
         label1.text = [[subitems1 objectAtIndex:i]objectForKey:@"prod_name"];
+    }
+    
+    NSArray *subitems2 = [item2 objectForKey:@"items"];
+    for(int i = 0; i < fmin(subitems2.count, 3); i++){
         UILabel *label2 = (UILabel *)[cell viewWithTag:(5001 + i)];
         label2.text = [[subitems2 objectAtIndex:i]objectForKey:@"prod_name"];
     }
@@ -1061,7 +1100,7 @@
         tempNameLabel.tag = 3031;
         [cell.contentView addSubview:tempNameLabel];
         
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(12, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width, 20)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(200, overLayImage.frame.origin.y + 8, overLayImage.frame.size.width-195, 20)];
         [titleLabel setTextColor:[UIColor whiteColor]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.textAlignment = NSTextAlignmentRight;
@@ -1086,11 +1125,7 @@
     
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
     NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
-    if(titleText.length > 20){
-        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", [titleText substringToIndex:20]]];
-    } else {
-        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
-    }
+    [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
     return cell;
 }
 
@@ -1123,6 +1158,7 @@
         NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"prod_id"]];
         viewController.topId = topId;
         viewController.listTitle = [item objectForKey: @"prod_name"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]]intValue];
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     }
     
@@ -1133,16 +1169,19 @@
     NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
     if([prodType isEqualToString:@"1"]){
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+        viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
     } else if([prodType isEqualToString:@"2"]){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+        viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if([prodType isEqualToString:@"3"]){
         ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+        viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -1298,7 +1337,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
     UIView* customView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 40)];
-    customView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
+    customView.backgroundColor = CMConstants.backgroundColor;
     if(listBtn == nil){
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         listBtn.frame = CGRectMake(11, 0, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);

@@ -10,4 +10,7 @@
 
 @interface MyListViewController : ListViewController<UIAlertViewDelegate>
 
+@property (strong, nonatomic)SlideBaseViewController *fromViewController;
+
+
 @end

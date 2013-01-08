@@ -45,6 +45,12 @@
     return object;
 }
 
+- (void)removeObjectForKey:(NSString *)key
+{
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 - (void)clear{
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserLoggedIn];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserName];
@@ -55,6 +61,6 @@
 //    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
 //    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 //    [[NSUserDefaults standardUserDefaults] setObject:@"aaa" forKey:@"aaa"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 @end

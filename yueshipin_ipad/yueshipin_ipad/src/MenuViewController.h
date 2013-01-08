@@ -38,13 +38,7 @@
 
 #import <UIKit/UIKit.h> 
 
-@protocol MenuViewControllerDelegate <NSObject>
-
-- (void)menuButtonClicked;
-
-@end
-
-@interface MenuViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MenuViewControllerDelegate>
+@interface MenuViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 - (id)initWithFrame:(CGRect)frame;
 

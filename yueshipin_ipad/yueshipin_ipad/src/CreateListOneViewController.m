@@ -9,18 +9,30 @@
 #import "CreateListOneViewController.h"
 #import "CreateListTwoViewController.h"
 #import "CommonHeader.h"
-#define LEFT_GAP 50
 @interface CreateListOneViewController (){
-    
+    int type;
+    RadioButton *movieType;
+    RadioButton *dramaType;
+    UILabel *movieTypeLabel;
+    UILabel *dramaTypeLabel;
 }
 
 @end
 
 @implementation CreateListOneViewController
 @synthesize prodId;
+@synthesize specifiedType;
 
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
 - (void)viewDidUnload
 {
+    [self setMovieTypeBtn:nil];
+    [self setDramaTypeBtn:nil];
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:self.titleField];
     [self setTitleImage:nil];
@@ -30,8 +42,11 @@
     [self setNextBtn:nil];
     [self setCloseBtn:nil];
     [self setTitleFieldBg:nil];
-    [self setBgImage:nil];
     self.prodId = nil;
+    movieType = nil;
+    dramaType = nil;
+    movieTypeLabel = nil;
+    dramaTypeLabel = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -46,55 +61,93 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    self.bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    self.bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    
-    self.titleImage.frame = CGRectMake(LEFT_GAP, 35, 110, 27);
+    self.titleImage.frame = CGRectMake(LEFT_WIDTH, 35, 110, 27);
     self.titleImage.image = [UIImage imageNamed:@"create_list_title"];
     
-    self.closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.titleFieldBg.frame = CGRectMake(LEFT_GAP, 100, 400, 39);
+    movieType = [[RadioButton alloc] initWithGroupId:@"list type" index:0];
+    [movieType setChecked:YES];
+    type = 1;
+    movieType.frame = CGRectMake(LEFT_WIDTH,100,22,22);
+    movieTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieType.frame.origin.x+30, 100, 100, 20)];
+    [movieTypeLabel setBackgroundColor:[UIColor clearColor]];
+    movieTypeLabel.textColor = CMConstants.grayColor;
+    movieTypeLabel.text = @"电影悦单";
+    movieTypeLabel.font = [UIFont systemFontOfSize:14];
+    [self.view addSubview:movieTypeLabel];
+    self.movieTypeBtn.tag = 1001;
+    self.movieTypeBtn.frame = CGRectMake(movieType.frame.origin.x+20, 100, 80, movieTypeLabel.frame.size.height);
+    
+    
+    dramaType = [[RadioButton alloc] initWithGroupId:@"list type" index:1];
+    dramaType.frame = CGRectMake(LEFT_WIDTH + 150,100,22,22);
+    dramaTypeLabel = [[UILabel alloc]initWithFrame:CGRectMake(dramaType.frame.origin.x+30, 100, 100, 20)];
+    [dramaTypeLabel setBackgroundColor:[UIColor clearColor]];
+    dramaTypeLabel.textColor = CMConstants.grayColor;
+    dramaTypeLabel.text = @"电视剧悦单";
+    dramaTypeLabel.font = [UIFont systemFontOfSize:14];
+    [self.view addSubview:dramaTypeLabel];
+    self.dramaTypeBtn.tag = 1002;
+    self.dramaTypeBtn.frame = CGRectMake(dramaType.frame.origin.x+20, 100, 80, dramaTypeLabel.frame.size.height);
+    
+    [self.view addSubview:movieType];
+    [self.view addSubview:dramaType];
+    [RadioButton addObserverForGroupId:@"list type" observer:self];
+    
+    self.titleFieldBg.frame = CGRectMake(LEFT_WIDTH, 130, 400, 39);
     self.titleFieldBg.image = [UIImage imageNamed:@"box_title"];
     self.titleFieldBg.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.titleFieldBg.layer.borderWidth = 1;
     
-    self.titleField.frame = CGRectMake(LEFT_GAP+5, 103, 390, 33);
+    self.titleField.frame = CGRectMake(LEFT_WIDTH+5, 133, 390, 33);
     self.titleField.placeholder = @"标题";
     self.titleField.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeNextBtnImage:) name:UITextFieldTextDidChangeNotification object:self.titleField];
     
-    self.contentBgImage.frame = CGRectMake(LEFT_GAP, 145, 400, 102);
+    self.contentBgImage.frame = CGRectMake(LEFT_WIDTH, 175, 400, 102);
     self.contentBgImage.image = [UIImage imageNamed:@"box_content"];
     self.contentBgImage.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.contentBgImage.layer.borderWidth = 1;
     
-    self.contentText.frame = CGRectMake(LEFT_GAP+5, 150, 390, 92);
+    self.contentText.frame = CGRectMake(LEFT_WIDTH+5, 180, 390, 92);
     self.contentText.placeholder = @"简介（可选）";
     
-    self.nextBtn.frame = CGRectMake(390, 255, 62, 39);
+    self.nextBtn.frame = CGRectMake(380, 285, 62, 39);
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];
     [self.nextBtn setEnabled:NO];
     [self.nextBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated{
+    if (specifiedType == 1){
+        [dramaType setHidden:YES];
+        [dramaTypeLabel setHidden:YES];
+        [self.dramaTypeBtn setHidden:YES];
+        type = 1;
+    } else if(specifiedType == 2) {
+        dramaType.frame = CGRectMake(movieType.frame.origin.x, dramaType.frame.origin.y, dramaType.frame.size.width, dramaType.frame.size.height);
+        dramaTypeLabel.frame = CGRectMake(movieTypeLabel.frame.origin.x, dramaTypeLabel.frame.origin.y, dramaTypeLabel.frame.size.width, dramaTypeLabel.frame.size.height);
+        self.dramaTypeBtn.frame = CGRectMake(self.movieTypeBtn.frame.origin.x, self.dramaTypeBtn.frame.origin.y, self.dramaTypeBtn.frame.size.width, self.dramaTypeBtn.frame.size.height);
+        [dramaType setChecked:YES];
+        [movieTypeLabel setHidden:YES];
+        [movieType setHidden:YES];
+        [self.movieTypeBtn setHidden:YES];
+        type = 2;
+    }
 }
 
 - (void)changeNextBtnImage:(NSNotification *)notificaiton
 {
-    UITextField *textField = notificaiton.object;
-    if(textField.text.length > 0){
+    NSString *titleContent = [self.titleField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if(titleContent.length > 0){
         [self.nextBtn setEnabled:YES];
     } else {
         [self.nextBtn setEnabled:NO];
@@ -107,8 +160,9 @@
     [self.titleField resignFirstResponder];
     [self.contentText resignFirstResponder];
     [myHUD showProgressBar:self.view];
-    if(self.titleField.text.length > 0){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.titleField.text, @"name", self.contentText.text, @"content", nil];
+    NSString *titleContent = [self.titleField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if(titleContent.length > 0){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleContent, @"name", self.contentText.text, @"content", [NSNumber numberWithInt:type], @"type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
@@ -146,8 +200,26 @@
 {
     CreateListTwoViewController *viewController = [[CreateListTwoViewController alloc]initWithNibName:@"CreateListTwoViewController" bundle:nil];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    viewController.titleContent = self.titleField.text;
+    viewController.titleContent = [self.titleField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     viewController.topId = [NSString stringWithFormat:@"%@", [result objectForKey:@"topic_id"]];
+    viewController.type = type;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+}
+
+-(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
+    type = index + 1;
+}
+
+
+- (IBAction)videoTypeBtnClicked:(UIButton *)btn {
+    if(btn.tag == 1001){
+        [movieType setChecked:YES];
+        [dramaType setChecked:NO];
+        type = 1;
+    } else if(btn.tag == 1002){
+        [dramaType setChecked:YES];
+        [movieType setChecked:NO];
+        type = 2;
+    }
 }
 @end

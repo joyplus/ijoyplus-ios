@@ -63,11 +63,12 @@
     UIGraphicsEndImageContext();
     return theImage;
 }
+
 + (void)showNetWorkError:(UIView *)view
 {
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
     [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.opacity = 0.5;
     HUD.labelText = NSLocalizedString(@"message.networkError", nil);
@@ -78,7 +79,7 @@
 {
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
     [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = NSLocalizedString(@"message.systemError", nil);
     HUD.opacity = 0.5;
@@ -99,7 +100,7 @@
 {
     if(HUD == nil){
         HUD = [[MBProgressHUD alloc] initWithView:view];
-        HUD.frame = CGRectMake(HUD.frame.origin.x - 100, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
+        HUD.frame = CGRectMake(HUD.frame.origin.x, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
         [view addSubview:HUD];
         HUD.labelText = @"加载中...";
         HUD.opacity = 0.5;
@@ -110,5 +111,27 @@
 - (void)hide
 {
     [HUD hide:YES afterDelay:0.2];
+}
+
++ (void)showDownloadSuccess:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
+    HUD.labelText = @"已成功加至缓存队列";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:1.5];
+}
+
++ (void)showDownloadFailure:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
+    HUD.labelText = @"该视频无法缓存";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:2];
 }
 @end

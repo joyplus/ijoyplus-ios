@@ -25,7 +25,9 @@
 #import "TimeUtility.h"
 #import "MNMBottomPullToRefreshManager.h"
 #import "MBProgressHUD.h"
-
+#import "SlideBaseViewController.h"
+#import "SequenceData.h"
+#import "JSBadgeView.h"
 @interface CommonHeader : NSObject
 
 @end

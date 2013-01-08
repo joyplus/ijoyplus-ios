@@ -11,13 +11,15 @@
 #import "OpenUDID.h"
 #import "RootViewController.h"
 #import "MobClick.h"
+#import <Parse/Parse.h>
+#import "ActionUtility.h"
 
 @interface AppDelegate ()
-
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, readonly) int networkStatus;
+@property (strong, nonatomic) NSMutableArray *downloaderArray;
 - (void)monitorReachability;
 
 @end
@@ -32,16 +34,111 @@
 @synthesize wifiReach;
 @synthesize sinaweibo;
 @synthesize playBtnSuppressed;
+@synthesize downloaderArray;
+@synthesize currentDownloadingNum;
+@synthesize alertUserInfo;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
+}
+
+- (void)addToDownloaderArray:(DownloadItem *)item{
+    McDownload *newdownloader = [[McDownload alloc] init];
+    newdownloader.idNum = item.itemId;
+    if(item.type != 1){
+        newdownloader.subidNum = ((SubdownloadItem *)item).pk;
+    }
+    
+    NSURL *url = [NSURL URLWithString:item.url];
+    newdownloader.url = url;
+    newdownloader.fileName = item.fileName;
+    newdownloader.status = 3;
+    [self.downloaderArray addObject:newdownloader];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+}
+
+- (NSMutableArray *)getDownloaderQueue
+{
+    return self.downloaderArray;
+}
+
+- (void)deleteDownloaderInQueue:(DownloadItem *)item
+{
+    for (McDownload *downloader in self.downloaderArray) {
+        if(item.type == 1){
+            if([downloader.idNum isEqualToString:item.itemId]){
+                [downloader stopAndClear];
+                [self.downloaderArray removeObject:downloader];
+                break;
+            }
+        } else {
+            if([downloader.idNum isEqualToString:item.itemId] && downloader.subidNum == item.pk){
+                [downloader stopAndClear];
+                [self.downloaderArray removeObject:downloader];
+                break;
+            }
+        }
+    }
+}
+
+- (void)initAllDownloaders
+{
+    NSArray *allItem = [DownloadItem allObjects];
+    self.downloaderArray = [[NSMutableArray alloc]initWithCapacity:allItem.count];
+    for (DownloadItem *item in allItem) {
+        if(item.type == 1){
+            McDownload *newdownloader = [[McDownload alloc] init];
+            newdownloader.idNum = item.itemId;
+            NSURL *url = [NSURL URLWithString:item.url];
+            newdownloader.url = url;
+            newdownloader.fileName = item.fileName;
+            if([item.downloadStatus isEqualToString:@"start"]){
+                newdownloader.status = 1;
+            } else if([item.downloadStatus isEqualToString:@"waiting"]){
+                newdownloader.status = 3;
+            } else if([item.downloadStatus isEqualToString:@"error"]){
+                newdownloader.status = 4;
+            } else if([item.downloadStatus isEqualToString:@"done"]){
+                newdownloader.status = 2;
+            } else {
+                newdownloader.status = 0;
+            }
+            [self.downloaderArray addObject:newdownloader];
+        } else {
+            NSArray *subitems = [SubdownloadItem allObjects];
+            for(SubdownloadItem *subitem in subitems){
+                McDownload *newdownloader = [[McDownload alloc] init];
+                newdownloader.idNum = subitem.itemId;
+                newdownloader.subidNum = subitem.pk;
+                NSURL *url = [NSURL URLWithString:subitem.url];
+                newdownloader.url = url;
+                newdownloader.fileName = subitem.fileName;
+                if([subitem.downloadStatus isEqualToString:@"start"]){
+                    newdownloader.status = 1;
+                } else if([subitem.downloadStatus isEqualToString:@"waiting"]){
+                    newdownloader.status = 3;
+                } else if([subitem.downloadStatus isEqualToString:@"error"]){
+                    newdownloader.status = 4;
+                } else if([subitem.downloadStatus isEqualToString:@"done"]){
+                    newdownloader.status = 2;
+                } else {
+                    newdownloader.status = 0;
+                }
+                [self.downloaderArray addObject:newdownloader];
+            }
+            
+        }
+    }
 }
 
 - (void)customizeAppearance
 {
     // Set the background image for *all* UINavigationBars
     UIImage *gradientImage44 = [[UIImage imageNamed:@"nav_bar_bg_44"]resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];   
+    [[UINavigationBar appearance] setBackgroundImage:gradientImage44 forBarMetrics:UIBarMetricsDefault];
+    
+    [[UIProgressView appearance] setProgressTintColor:[UIColor colorWithRed:95/255.0 green:169/255.0 blue:250/255.0 alpha:1.0]];
+    [[UIProgressView appearance] setTrackTintColor:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.000]];
 }
 - (void)initSinaweibo
 {
@@ -63,18 +160,71 @@
     [MobClick updateOnlineConfig];
     self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
     [MobClick checkUpdate];
-    [self generateUserId];
+    [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
+    [Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
+    if (application.applicationIconBadgeNumber != 0) {
+        application.applicationIconBadgeNumber = 0;
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation setBadge:0];
+        [installation saveInBackground];
+    }
     [self customizeAppearance];
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+    
+    [self initAllDownloaders];
     self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [PFPush storeDeviceToken:deviceToken];
+    if (application.applicationIconBadgeNumber != 0) {
+        application.applicationIconBadgeNumber = 0;
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation setBadge:0];
+        [installation saveInBackground];
+    }
+    [PFPush subscribeToChannelInBackground:@"" block:^(BOOL succeeded, NSError *error) {
+        if (succeeded)
+            NSLog(@"Successfully subscribed to broadcast channel!");
+        else
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+    }];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    if (error.code == 3010) {
+        NSLog(@"Push notifications are not supported in the iOS Simulator.");
+    } else {
+        // show some alert or otherwise handle the failure to register.
+        NSLog(@"application:didFailToRegisterForRemoteNotificationsWithError: %@", error);
+	}
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    self.alertUserInfo = userInfo;
+    NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        NSString *prodId = [NSString stringWithFormat:@"%@", [self.alertUserInfo objectForKey:@"prod_id"]];
+        NSString *prodType = [NSString stringWithFormat:@"%@", [self.alertUserInfo objectForKey:@"prod_type"]];
+        if(prodId != nil && prodType != nil){
+            NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", prodType, @"prod_type", nil];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"push_notification" object:nil userInfo:userInfo];
+        }
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -85,8 +235,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -96,6 +245,17 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
+    if([myhostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.rootViewController.view];
+    };
+    
+    if (application.applicationIconBadgeNumber != 0) {
+        application.applicationIconBadgeNumber = 0;
+        PFInstallation *installation = [PFInstallation currentInstallation];
+        [installation setBadge:0];
+        [installation saveInBackground];
+    }
     [self.sinaweibo applicationDidBecomeActive];
     [MobClick updateOnlineConfig];
     self.playBtnSuppressed = [MobClick getConfigParams:PLAY_BTN_SUPPRESSED];
@@ -131,33 +291,7 @@
     networkStatus = [curReach currentReachabilityStatus];
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
-    }
-}
-
-- (void)generateUserId
-{
-    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    if(userId == nil){
-        Reachability *tempHostReach = [Reachability reachabilityForInternetConnection];
-        if([tempHostReach currentReachabilityStatus] != NotReachable) {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:  [OpenUDID value], @"uiid", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathGenerateUIID parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if (responseCode == nil) {
-                    NSString *user_id = [result objectForKey:@"user_id"];
-                    NSString *nickname = [result objectForKey:@"nickname"];
-                    NSString *username = [result objectForKey:@"username"];
-                    [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
-                    [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"%@", nickname] forKey:kUserNickName];
-                    [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserName];
-                    [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
-                }
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"%@", error);
-            }];
-        }
-    } else {
-        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:userId];
+        [ActionUtility generateUserId:nil];
     }
 }
 
@@ -169,6 +303,49 @@
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     return [self.sinaweibo handleOpenURL:url];
+}
+
+//下载失败
+- (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
+{
+    NSLog(@"下载失败 %@", error);
+    aDownload.status = 4;
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", aDownload.idNum];
+    NSArray *subitems = [SubdownloadItem findByCriteria:subquery];
+    for (int i = 0; i < subitems.count; i++) {
+        SubdownloadItem *item = [subitems objectAtIndex:i];
+        if ([item.itemId isEqualToString:aDownload.idNum] && aDownload.subidNum == item.pk) {
+            item.downloadStatus = @"error";
+            [item save];
+        }
+        
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+}
+//下载结束
+- (void)downloadFinished:(McDownload *)aDownload
+{
+    NSLog(@"下载完成");
+    aDownload.status = 2;
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", aDownload.idNum];
+    NSArray *subitems = [SubdownloadItem findByCriteria:subquery];
+    for (int i = 0; i < subitems.count; i++) {
+        SubdownloadItem *item = [subitems objectAtIndex:i];
+        if ([item.itemId isEqualToString:aDownload.idNum] && aDownload.subidNum == item.pk) {
+            item.percentage = 100;
+            item.downloadStatus  = @"done";
+            [item save];
+        }
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
 }
 
 @end

@@ -10,4 +10,5 @@
 
 @interface SubsearchViewController : SearchViewController
 - (id)initWithFrame:(CGRect)frame;
+@property (nonatomic, assign)BOOL moveToLeft;
 @end

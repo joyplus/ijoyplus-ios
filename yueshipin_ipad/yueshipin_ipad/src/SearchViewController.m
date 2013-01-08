@@ -19,12 +19,13 @@
 
 @interface SearchViewController (){
     UIButton *lastPressedBtn;
+    UIButton *clearAllBtn;
+    BOOL accessed;
 }
 
 @end
 
 @implementation SearchViewController
-@synthesize menuViewControllerDelegate;
 
 - (void)viewDidUnload
 {
@@ -34,11 +35,12 @@
     bgImage = nil;
     sBar = nil;
     table = nil;
-    hotKeyArray = nil;    
+    hotKeyArray = nil;
     [hotKeyIndex removeAllObjects];
-    hotKeyIndex = nil;    
+    hotKeyIndex = nil;
     [hotKeyBtnWidth removeAllObjects];
     hotKeyBtnWidth = nil;
+    clearAllBtn = nil;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -50,6 +52,7 @@
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [self.view addSubview:bgImage];
         
+        leftWidth = 80;
         menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         menuBtn.frame = CGRectMake(0, 28, 60, 60);
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
@@ -57,15 +60,15 @@
         [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 140, 35)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 140, 35)];
         topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         
-        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(80, 115, 372, 38)];
+        sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(leftWidth, 115, 372, 38)];
         sBar.delegate = self;
         [self.view addSubview:sBar];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(80, 170, 370, 210) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(leftWidth, 170, 370, 210) style:UITableViewStylePlain];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setSeparatorColor:CMConstants.tableBorderColor];
 		[table setDelegate:self];
@@ -75,6 +78,13 @@
         table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
         table.tableFooterView = [[UIView alloc] init];
         [self.view addSubview:table];
+        
+        clearAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        clearAllBtn.frame = CGRectMake(350, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
+        [clearAllBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
+        [clearAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_pressed"] forState:UIControlStateHighlighted];
+        [clearAllBtn addTarget:self action:@selector(clearAllHistory) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:clearAllBtn];
         
         hotKeyArray = [[NSMutableArray alloc]initWithCapacity:10];
         hotKeyIndex = [[NSMutableArray alloc]initWithCapacity:10];
@@ -101,22 +111,35 @@
         NSMutableDictionary *cloneItem = [[NSMutableDictionary alloc]initWithDictionary:item];
         [historyArray addObject:cloneItem];
     }
-    table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
-    if(cacheResult != nil){
-        [self parseData:cacheResult];
+    if(historyArray.count>0){
+        table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+    } else {
+        table.frame = CGRectMake(80, 170, 370, 210);
     }
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
-                [self parseData:result];
-            }
-            [table reloadData];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
-        }];
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
+    if(historyArray.count > 0){
+        [clearAllBtn setHidden:NO];
+    } else {
+        [clearAllBtn setHidden:YES];
+    }
+    if (!accessed) {
+        accessed = YES;
+        id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"hotkeys_list"];
+        if(cacheResult != nil){
+            [self parseData:cacheResult];
+        }
+        if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                if(responseCode == nil){
+                    [self parseData:result];
+                }
+                [table reloadData];
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                
+            }];
+        }
     }
 }
 
@@ -160,7 +183,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -225,16 +250,32 @@
             [cell.contentView addSubview:hotKeyBtn];
         }
     } else {
-        [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
-        UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
-        [name setTextColor:[UIColor blackColor]];
-        [name setFont:[UIFont systemFontOfSize:14]];
-        [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
-        [name sizeToFit];
-        [name setBackgroundColor:[UIColor clearColor]];
-        [cell.contentView addSubview:name];
+        if(indexPath.row < historyArray.count){
+            [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+            UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
+            [name setTextColor:[UIColor blackColor]];
+            [name setFont:[UIFont systemFontOfSize:14]];
+            [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
+            [name sizeToFit];
+            [name setBackgroundColor:[UIColor clearColor]];
+            [cell.contentView addSubview:name];
+        }
     }
     return cell;
+}
+
+- (void)clearAllHistory
+{
+    [historyArray removeAllObjects];
+    [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
+    table.frame = CGRectMake(80, 170, 370, 210);
+    [table reloadData];
+    if(historyArray.count > 0){
+        [clearAllBtn setHidden:NO];
+    } else {
+        [clearAllBtn setHidden:YES];
+    }
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -281,25 +322,21 @@
     [self search:[[hotKeyArray objectAtIndex:index] objectForKey:@"content"]];
     table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     [table reloadData];
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if(indexPath.section == 1){
+    if(indexPath.section == 1 && indexPath.row < historyArray.count){
         NSString *keyword = [[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"];
         [self search:keyword];
         lastPressedBtn = nil;
         table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
         [table reloadData];
+        clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
     }
 }
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
-}
-
 
 - (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
@@ -313,6 +350,7 @@
     table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
     lastPressedBtn = nil;
     [table reloadData];
+    clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar
@@ -323,6 +361,7 @@
         table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
         lastPressedBtn = nil;
         [table reloadData];
+        clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
     }
 }
 
@@ -392,6 +431,40 @@
     }];
     [historyArray addObjectsFromArray:sortedArray];
     [[ContainerUtility sharedInstance]setAttribute:newHistoryArray forKey:@"search_history"];
+    if(historyArray.count > 0){
+        [clearAllBtn setHidden:NO];
+    } else {
+        [clearAllBtn setHidden:YES];
+    }
 }
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section > 0 && historyArray.count > 0 && indexPath.row < historyArray.count){
+        return UITableViewCellEditingStyleDelete;
+    } else {
+        return UITableViewCellEditingStyleNone;
+    }
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section > 0){
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            [historyArray removeObjectAtIndex:indexPath.row];
+            [[ContainerUtility sharedInstance] setAttribute:historyArray forKey:@"search_history"];
+            if (historyArray.count > 0) {
+                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                table.frame = CGRectMake(80, 170, 370, historyArray.count * 40 + 210);
+                [clearAllBtn setHidden:NO];
+            } else {
+                table.frame = CGRectMake(80, 170, 370, 210);
+                [tableView reloadData];
+                [clearAllBtn setHidden:YES];
+            }
+            clearAllBtn.frame = CGRectMake(clearAllBtn.frame.origin.x, table.frame.origin.y + table.frame.size.height + 10, 102, 33);
+        }
+    }
+}
+
 
 @end

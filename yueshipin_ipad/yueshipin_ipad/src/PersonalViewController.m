@@ -15,6 +15,8 @@
 #import "WatchRecordCell.h"
 #import "MediaPlayerViewController.h"
 #import "ProgramViewController.h"
+#import "MovieDetailViewController.h"
+#import "ShowDetailViewController.h"
 
 
 #define TABLE_VIEW_WIDTH 370
@@ -28,7 +30,7 @@
     UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *bgImage;
-   
+    
     UITableView *table;
     
     UIImageView *avatarImage;
@@ -53,13 +55,13 @@
     
     NSArray *sortedwatchRecordArray;
     int tableHeight;
+    
+    BOOL accessed;
 }
 
 @end
 
 @implementation PersonalViewController
-@synthesize menuViewControllerDelegate;
-@synthesize userId;
 
 - (void)didReceiveMemoryWarning
 {
@@ -71,7 +73,7 @@
 {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
-    self.userId = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WATCH_HISTORY_REFRESH object:nil];
     backgroundView = nil;
     menuBtn = nil;
     topImage = nil;
@@ -90,7 +92,7 @@
     myRecordImage = nil;
     createBtn = nil;
     importDoubanBtn = nil;
-    tableBgImage = nil;    
+    tableBgImage = nil;
     sortedwatchRecordArray = nil;
 }
 - (id)initWithFrame:(CGRect)frame {
@@ -133,11 +135,11 @@
         nameLabel.font = [UIFont systemFontOfSize:20];
         [self.view addSubview:nameLabel];
         
-//        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        editBtn.frame = CGRectMake(430, 122, 25, 27);
-//        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
-//        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:editBtn];
+        //        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        //        editBtn.frame = CGRectMake(430, 122, 25, 27);
+        //        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
+        //        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        //        [self.view addSubview:editBtn];
         
         supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 228, 100, 30)];
         supportLabel.backgroundColor = [UIColor clearColor];
@@ -145,7 +147,7 @@
         supportLabel.text = @"0";
         supportLabel.textAlignment = NSTextAlignmentCenter;
         supportLabel.font = [UIFont boldSystemFontOfSize:22];
-        [self.view addSubview:supportLabel];        
+        [self.view addSubview:supportLabel];
         supportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         supportBtn.frame = CGRectMake(90, 180, 88, 87);
         supportBtn.tag = 1001;
@@ -183,7 +185,7 @@
         [self.view addSubview:myRecordImage];
         
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-//        createBtn.frame = CGRectMake(210, 282, 104, 31);
+        //        createBtn.frame = CGRectMake(210, 282, 104, 31);
         createBtn.frame = CGRectMake(358, 282, 104, 31);
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
@@ -195,8 +197,8 @@
         [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban"] forState:UIControlStateNormal];
         [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_pressed"] forState:UIControlStateHighlighted];
         [importDoubanBtn addTarget:self action:@selector(importDoubanBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.view addSubview:importDoubanBtn];
-
+        //        [self.view addSubview:importDoubanBtn];
+        
         table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, 370) style:UITableViewStylePlain];
         [table setBackgroundColor:[UIColor whiteColor]];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -211,6 +213,17 @@
     return self;
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
+    
+    [self.view addGestureRecognizer:closeMenuRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
@@ -221,37 +234,59 @@
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
     }
-    self.userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-    [self parseResult];
-    
-    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
-    sortedwatchRecordArray = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
-        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
-        return [second compare:first];
-    }];
+    if (!accessed) {
+        accessed = YES;
+        [self parseWatchHistory];
+        [self parseResult];
+    }
 }
 
--(void)viewDidAppear:(BOOL)animated
+- (void)parseWatchHistory
 {
-    table.frame = CGRectMake(60, 325, 400, tableHeight);
-    [table reloadData];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
+    if(cacheResult != nil){
+        [self parseWatchResultData:cacheResult];
+    }
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self parseWatchResultData:result];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@", error);
+            [UIUtility showSystemError:self.view];
+        }];
+    }
+}
+
+- (void)parseWatchResultData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
+        sortedwatchRecordArray = (NSArray *)[result objectForKey:@"histories"];
+        if(sortedwatchRecordArray.count > 0){
+            [table reloadData];
+            table.frame = CGRectMake(60, 325, 400, tableHeight);
+        } else {
+            tableHeight = 0;
+            table.frame = CGRectMake(60, 325, 400, tableHeight);
+        }
+    }
 }
 
 - (void)parseResult
 {
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"PersonalData%@", self.userId]];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PersonalData"];
     if(cacheResult != nil){
         [self parseResultData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.userId, @"userid", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseResultData:result];
-            [table reloadData];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [UIUtility showSystemError:self.view];
@@ -263,25 +298,22 @@
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"PersonalData%@", self.userId] result:result];
+        [[CacheUtility sharedCache] putInCache:@"PersonalData" result:result];
         supportLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"support_num"]];
-//        sharelabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"share_num"]];
+        //        sharelabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"share_num"]];
         collectionLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"favority_num"]];
         listLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"tops_num"]];
     }
 }
 
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
-}
-
 - (void)refreshData:(NSNotification *)notification
 {
     [self parseResult];
+}
+
+- (void)refreshWatchHistory:(NSNotification *)notification
+{
+    [self parseWatchHistory];
 }
 
 #pragma mark -
@@ -305,8 +337,8 @@
     WatchRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[WatchRecordCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 15)];
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 20)];
         movieNameLabel.backgroundColor = [UIColor clearColor];
         movieNameLabel.textColor = [UIColor blackColor];
         movieNameLabel.tag = 1001;
@@ -328,7 +360,7 @@
     }
     NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
     UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
-    movieNameLabel.text = [item objectForKey:@"name"];
+    movieNameLabel.text = [item objectForKey:@"prod_name"];
     
     UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
     contentLabel.text = [self composeContent:item];
@@ -336,7 +368,7 @@
     [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
     
     UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
-    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playbackTime"];
+    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
     NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
     if(duration.doubleValue - playbackTime.doubleValue < 3){
         [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
@@ -352,23 +384,30 @@
 
 - (void)playBtnClicked:(UIButton *)btn
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
-    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
+    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
         MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = [item objectForKey:@"videoUrl"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
-        viewController.name = [item objectForKey:@"name"];
-        viewController.subname = [item objectForKey:@"subname"];
+        viewController.videoUrl = [item objectForKey:@"video_url"];
+        viewController.prodId = [item objectForKey:@"prod_id"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+        viewController.name = [item objectForKey:@"prod_name"];
+        viewController.subname = [item objectForKey:@"prod_subname"];
         [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
     } else {
         ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-        viewController.programUrl = [item objectForKey:@"videoUrl"];
-        viewController.title = [item objectForKey:@"name"];
-        viewController.subname = [item objectForKey:@"subname"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
+        viewController.prodId = [item objectForKey:@"prod_id"];
+        viewController.programUrl = [item objectForKey:@"video_url"];
+        viewController.title = [item objectForKey:@"prod_name"];
+        viewController.subname = [item objectForKey:@"prod_subname"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }
@@ -377,13 +416,13 @@
 - (NSString *)composeContent:(NSDictionary *)item
 {
     NSString *content;
-    NSNumber *number = (NSNumber *)[item objectForKey:@"playbackTime"];
-    if ([[item objectForKey:@"type"] isEqualToString:@"1"]) {
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+    if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
         content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
-    } else if ([[item objectForKey:@"type"] isEqualToString:@"2"]) {
-        content = [NSString stringWithFormat:@"已观看到第%@集 %@", [item objectForKey:@"subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
-    } else if ([[item objectForKey:@"type"] isEqualToString:@"3"]) {
-        content = [NSString stringWithFormat:@"已观看《%@》 %@", [item objectForKey:@"subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
+        content = [NSString stringWithFormat:@"已观看到第%@集 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
+        content = [NSString stringWithFormat:@"已观看《%@》 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }
@@ -405,12 +444,7 @@
     NSString *content = [self composeContent:item];
     CGSize size = [self calculateContentSize:content width:280];
     tableHeight += size.height + 40;
-   return size.height + 40;
-}
-
-- (void)menuBtnClicked
-{
-    [self.menuViewControllerDelegate menuButtonClicked];
+    return size.height + 40;
 }
 
 - (void)summaryBtnClicked:(UIButton *)sender
@@ -432,15 +466,10 @@
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if(sender.tag == 1003){
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable) {
-            [UIUtility showNetWorkError:self.view];
-            return;
-        }
         TopicListViewController *viewController = [[TopicListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-    } 
+    }
 }
 
 
@@ -456,4 +485,31 @@
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self closeMenu];
+    if(indexPath.row < sortedwatchRecordArray.count){
+        NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+        NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+        if([prodType isEqualToString:@"1"]){
+            MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
+        } else if([prodType isEqualToString:@"2"]){
+            DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+            viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        } else if([prodType isEqualToString:@"3"]){
+            ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+            viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        }
+    }
+}
+
 @end

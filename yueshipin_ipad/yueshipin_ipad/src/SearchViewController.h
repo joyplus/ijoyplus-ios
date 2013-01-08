@@ -10,7 +10,7 @@
 #import "MenuViewController.h"
 #import "CustomSearchBar.h"
 
-@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>{
+@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>{
     UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *bgImage;
@@ -24,10 +24,12 @@
     
     NSMutableDictionary *hotKeyBtnWidth;
     BOOL removePreviousView;
+    
+    int leftWidth;
 }
 
 
 - (id)initWithFrame:(CGRect)frame;
 - (void)addKeyToLocalHistory:(NSString *)key;
-@property (nonatomic, weak)id <MenuViewControllerDelegate> menuViewControllerDelegate;
+
 @end

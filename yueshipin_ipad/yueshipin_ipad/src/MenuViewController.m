@@ -44,6 +44,7 @@
 #import "SettingsViewController.h"
 #import "SearchViewController.h"
 #import "PersonalViewController.h"
+#import "DownloadViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
@@ -52,7 +53,9 @@
     SettingsViewController *settingsViewController;
     SearchViewController *searchViewController;
     PersonalViewController *personalViewController;
+    DownloadViewController *downloadViewController;
     NSInteger selectedIndex;
+    JSBadgeView *badgeView;
 }
 
 @end
@@ -63,6 +66,23 @@
 
 #pragma mark -
 #pragma mark View lifecycle
+
+#pragma mark -
+#pragma mark Memory management
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+- (void)viewDidUnload {
+    [super viewDidUnload];
+    homeViewController = nil;
+    settingsViewController = nil;
+    searchViewController = nil;
+    personalViewController = nil;
+    badgeView = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+}
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
@@ -95,6 +115,7 @@
         
         selectedIndex = 0;
         [self initMenuController];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
 	}
     return self;
 }
@@ -103,16 +124,14 @@
 {
     CGRect frame = [UIScreen mainScreen].bounds;
     homeViewController = [[HomeViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    homeViewController.menuViewControllerDelegate = self;
     
     searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    searchViewController.menuViewControllerDelegate = self;
-    
+
     personalViewController = [[PersonalViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    personalViewController.menuViewControllerDelegate = self;
     
     settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
-    settingsViewController.menuViewControllerDelegate = self;
+    
+    downloadViewController = [[DownloadViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
 }
 
 - (void)viewDidLoad {
@@ -124,6 +143,11 @@
     if(![AppDelegate instance].triggeredByPlayer){
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
     }
+}
+
+- (void)updateDownloadNum:(NSNotification *)aNotification
+{
+    [tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -155,7 +179,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 5;
+    return 6;
 }
 
 
@@ -193,6 +217,22 @@
         imageView.image = [UIImage imageNamed:@"searching_icon"];
         label.text = @"搜索";
     } else if(indexPath.row == 3){
+        imageView.image = [UIImage imageNamed:@"download_icon"];
+        label.text = @"缓存视频";
+        if(badgeView == nil){
+            badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
+            badgeView.badgePositionAdjustment = CGPointMake(50, 18);
+            badgeView.badgeText = @"0";
+            [badgeView setHidden:YES];
+        }
+        SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+        if(newNum == nil || newNum.newDownloadItemNum == 0){
+            [badgeView setHidden:YES];
+        } else {
+            [badgeView setHidden:NO];
+            badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
+        }
+    } else if(indexPath.row == 4){
         UIView* bgView = [[UIView alloc] init];
 		[bgView setBackgroundColor:[UIColor clearColor]];
         [cell setSelectedBackgroundView:bgView];
@@ -217,6 +257,8 @@
     } else if(selectedIndex == 2){
         return searchViewController;
     } else if(selectedIndex == 3){
+        return downloadViewController;
+    } else if(selectedIndex == 4){
         return nil;
     } else {
         return settingsViewController;
@@ -226,17 +268,34 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     selectedIndex = indexPath.row;
-    if(selectedIndex == 3){
+    if(selectedIndex == 4){
         return;
     }
-	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+    if(selectedIndex == 3){
+        SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+        if(newNum.newDownloadItemNum > 0){
+            [badgeView setHidden:YES];
+            newNum.newDownloadItemNum = 0;
+            [newNum save];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+        }
+
+    }
+    UIViewController *viewController = [self getViewControllerByIndex];
+	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
+    if(selectedIndex < 4){
+        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if([hostReach currentReachabilityStatus] == NotReachable) {
+            [UIUtility showNetWorkError:viewController.view];
+        }
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 3){
+    if(indexPath.row == 4){
         CGRect frame = [UIScreen mainScreen].bounds;
-        return frame.size.width - 60 * 4 - 50;
+        return frame.size.width - 60 * 5 - 50;
     } else {
         return 60;
     }
@@ -250,28 +309,6 @@
     UIView *aView = [[UIView alloc]init];
     aView.backgroundColor = [UIColor clearColor];
     return aView;
-}
-- (void)menuButtonClicked
-{
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
-    [AppDelegate instance].closed = ![AppDelegate instance].closed;
-    [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
-}
-
-
-#pragma mark -
-#pragma mark Memory management
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
-- (void)viewDidUnload {
-    [super viewDidUnload];
-    homeViewController = nil;
-    settingsViewController = nil;
-    searchViewController = nil;
-    personalViewController = nil;
 }
 
 @end

@@ -17,6 +17,8 @@
 + (UIImage *) createImageWithColor: (UIColor *) color;
 + (void)showNetWorkError:(UIView *)view;
 + (void)showSystemError:(UIView *)view;
++ (void)showDownloadSuccess:(UIView *)view;
++ (void)showDownloadFailure:(UIView *)view;
 + (UIView *)getDotView:(int)radius;
 
 - (void)showProgressBar:(UIView *)view;

@@ -8,16 +8,9 @@
 
 #import "VideoDetailViewController.h"
 
-@protocol ShowDetailViewControllerDelegate <NSObject>
-
-- (void)playVideoCallback:(NSInteger)num;
-
-@end
-
-@interface ShowDetailViewController : VideoDetailViewController <ShowDetailViewControllerDelegate>
+@interface ShowDetailViewController : VideoDetailViewController 
 @property (weak, nonatomic) IBOutlet UIButton *previousShowBtn;
 @property (weak, nonatomic) IBOutlet UIButton *nextShowBtn;
-@property (weak, nonatomic) IBOutlet UIImageView *bgImage;
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;
 @property (weak, nonatomic) IBOutlet UIImageView *filmImage;
@@ -54,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
+@property (weak, nonatomic) IBOutlet UIButton *downloadBtn;
 
 
 @end

@@ -12,7 +12,6 @@
 #import "ShowDetailViewController.h"
 
 @interface ListViewController (){
-    UIImageView *bgImage;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
@@ -23,6 +22,7 @@
 @implementation ListViewController
 @synthesize topId;
 @synthesize listTitle;
+@synthesize type;
 
 - (void)viewDidUnload{
     self.topId = nil;
@@ -47,13 +47,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor clearColor];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
-    
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 25, 377, 30)];    
-    titleLabel.font = [UIFont boldSystemFontOfSize:26];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 377, 30)];
+    titleLabel.font = [UIFont boldSystemFontOfSize:23];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.textColor = CMConstants.titleBlueColor;
     titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
@@ -61,14 +56,14 @@
     [self.view addSubview:titleLabel];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
 
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(50, 70, 420, self.view.frame.size.height - 350)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 80, 420, self.view.frame.size.height - 350)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -80,6 +75,7 @@
     reloads_ = 2;
     pageSize = 10;
     
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)loadTable {    
@@ -99,11 +95,17 @@
 
 - (void)retrieveTopsListData
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+    }
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topId]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
     } else {
-        [myHUD showProgressBar:self.view];
+        if([hostReach currentReachabilityStatus] != NotReachable) {
+            [myHUD showProgressBar:self.view];
+        }
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", self.topId, @"top_id", nil];
@@ -167,16 +169,15 @@
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 102, 146)];
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 8, 102, 146)];
         imageView.image = [UIImage imageNamed:@"movie_frame"];
         [cell.contentView addSubview:imageView];
         
-        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
-        contentImage.image = [UIImage imageNamed:@"test_movie"];
+        UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, 12, 94, 138)];
         contentImage.tag = 1001;
         [cell.contentView addSubview:contentImage];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 250, 30)];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 12, 250, 30)];
         nameLabel.font = CMConstants.titleFont;
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
@@ -189,39 +190,39 @@
 //            [cell.contentView addSubview:startImage];
 //        }
         
-        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 48, 45, 20)];
+        UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 48, 45, 20)];
         scoreLabel.tag = 4001;
         scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
         scoreLabel.textColor = CMConstants.scoreBlueColor;
         [cell.contentView addSubview:scoreLabel];
-        UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
+        UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(170, 50, 15, 15)];
         doubanLogo.image = [UIImage imageNamed:@"douban"];
         [cell.contentView addSubview:doubanLogo];
         
-        UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
+        UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 75, 150, 25)];
         directorLabel.text = @"导演：";
         directorLabel.textColor = CMConstants.grayColor;
         directorLabel.font = [UIFont systemFontOfSize:13];
         directorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:directorLabel];
         
-        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(195, 75, 180, 25)];
+        UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 75, 250, 25)];
         directorNameLabel.font = [UIFont systemFontOfSize:13];
         directorNameLabel.textColor = CMConstants.grayColor;
         directorNameLabel.backgroundColor = [UIColor clearColor];
         directorNameLabel.tag = 6001;
         [cell.contentView addSubview:directorNameLabel];
         
-        UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
+        UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 150, 25)];
         actorLabel.text = @"主演：";
         actorLabel.textColor = CMConstants.grayColor;
         actorLabel.font = [UIFont systemFontOfSize:13];
         actorLabel.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actorLabel];
         
-        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(195, 100, 220, 25)];
+        UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(155, 100, 250, 25)];
         actorName1Label.font = [UIFont systemFontOfSize:13];
         actorName1Label.textColor = CMConstants.grayColor;
         actorName1Label.backgroundColor = [UIColor clearColor];
@@ -229,22 +230,22 @@
         [cell.contentView addSubview:actorName1Label];
         
         
-        UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(160, 130, 75, 24)];
+        UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(120, 130, 75, 24)];
         dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
         [cell.contentView addSubview:dingNumberImage];
         
-        UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 40, 24)];
+        UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(125, 130, 40, 24)];
         dingNumberLabel.textAlignment = NSTextAlignmentCenter;
         dingNumberLabel.backgroundColor = [UIColor clearColor];
         dingNumberLabel.font = [UIFont systemFontOfSize:13];
         dingNumberLabel.tag = 5001;
         [cell.contentView addSubview:dingNumberLabel];
         
-        UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(250, 130, 84, 24)];
+        UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(210, 130, 84, 24)];
         collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
         [cell.contentView addSubview:collectioNumber];
         
-        UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(255, 130, 40, 24)];
+        UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(215, 130, 40, 24)];
         collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
         collectionNumberLabel.backgroundColor = [UIColor clearColor];
         collectionNumberLabel.font = [UIFont systemFontOfSize:13];
@@ -339,24 +340,28 @@
         return;
     }
     NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
-    NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+    NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
     NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-    if([type isEqualToString:@"1"]){
+    if([prodType isEqualToString:@"1"]){
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
         viewController.prodId = prodId;
+        viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
-    } else if([type isEqualToString:@"2"]){
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
+    } else if([prodType isEqualToString:@"2"]){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
         viewController.prodId = prodId;
+        viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
     } else {
         ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
         viewController.prodId = prodId;
+        viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
     }
+    self.moveToLeft = NO;
 }
 
 #pragma mark -
@@ -397,6 +402,5 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 }
-
 
 @end

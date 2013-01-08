@@ -34,4 +34,9 @@
     return [UIFont boldSystemFontOfSize:18];
 }
 
++ (UIColor *)backgroundColor
+{
+    return [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
+}
+
 @end

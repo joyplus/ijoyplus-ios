@@ -16,6 +16,7 @@
 @end
 
 @implementation SubsearchViewController
+@synthesize moveToLeft;
 
 - (void)viewDidUnload
 {
@@ -23,19 +24,22 @@
     closeBtn = nil;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
+    self.moveToLeft = YES;
+    [self.view addGestureRecognizer:swipeRecognizer];
+    
+    [self.view removeGestureRecognizer:closeMenuRecognizer];
+    [self.view removeGestureRecognizer:swipeCloseMenuRecognizer];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.view setBackgroundColor:CMConstants.backgroundColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -46,18 +50,43 @@
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    bgImage.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);    
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
+    bgImage.image = nil;
+    [bgImage removeFromSuperview];
     
     [menuBtn removeFromSuperview];
     menuBtn = nil;
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     return self;
+}
+
+- (void)search:(NSString *)keyword
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    sBar.text = keyword;
+    [self closeMenu];
+    [self addKeyToLocalHistory:keyword];
+    [sBar resignFirstResponder];
+    SearchListViewController *viewController = [[SearchListViewController alloc] init];
+    viewController.keyword = keyword;
+    viewController.fromViewController = self;
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView moveToLeft:self.moveToLeft];
+    self.moveToLeft = NO;
+}
+
+- (void)closeBtnClicked
+{
+    self.moveToLeft = YES;
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
 }
 @end

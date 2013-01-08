@@ -11,12 +11,10 @@
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
 #import "SSCheckBoxView.h"
-
-#define LEFT_GAP 50
+#import "CreateListTwoViewController.h"
 
 @interface AddSearchListViewController (){
     UITableView *table;
-    UIImageView *bgImage;
     UIImageView *titleImage;
     NSMutableArray *videoArray;
     NSMutableSet *checkboxes;
@@ -26,6 +24,7 @@
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
+    UIButton *doneBtn;
 }
 
 @end
@@ -33,6 +32,8 @@
 @implementation AddSearchListViewController
 @synthesize keyword;
 @synthesize topId;
+@synthesize backToViewController;
+@synthesize type;
 
 - (void)viewDidUnload
 {
@@ -40,7 +41,6 @@
     self.keyword = nil;
     self.topId = nil;
     table = nil;
-    bgImage = nil;
     titleImage = nil;
     [videoArray removeAllObjects];
     videoArray = nil;
@@ -64,35 +64,35 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor clearColor]];
-    bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    bgImage.image = [UIImage imageNamed:@"detail_bg"];
-    [self.view addSubview:bgImage];
-    
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 35, 107, 26)];
+
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 107, 26)];
     titleImage.image = [UIImage imageNamed:@"add_video_title"];
     [self.view addSubview:titleImage];
     
-    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 80, 400, 2)];
-    lineImage.image = [UIImage imageNamed:@"dividing"];
-    [self.view addSubview:lineImage];
-    
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(485, 20, 40, 42);
+    closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
     addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(LEFT_GAP, 90, 62, 39);
-    [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video"] forState:UIControlStateNormal];
-    [addBtn setBackgroundImage:[UIImage imageNamed:@"add_video_pressed"] forState:UIControlStateHighlighted];
+    addBtn.frame = CGRectMake(LEFT_WIDTH, 80, 62, 31);
+    [addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
+    [addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [addBtn setHidden:YES];
     [self.view addSubview:addBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(25, 140, 460, 580)];
+    doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    doneBtn.frame = CGRectMake(addBtn.frame.origin.x + 72, 80, 62, 31);
+    [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish"] forState:UIControlStateNormal];
+    [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish_pressed"] forState:UIControlStateHighlighted];
+    [doneBtn addTarget:self action:@selector(doneBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [doneBtn setHidden:YES];
+    [self.view addSubview:doneBtn];
+    
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 120, 420, 580)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -105,6 +105,8 @@
     pageSize = 10;
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     [self loadTable];
+    
+    [self.view addGestureRecognizer:swipeRecognizer];
 }
 
 - (void)loadTable {
@@ -125,7 +127,7 @@
 - (void)getResult
 {
     [myHUD showProgressBar:self.view];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSString stringWithFormat:@"%d", self.type], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -140,6 +142,7 @@
         }
         if(videoArray.count > 0){
             [addBtn setHidden:NO];
+            [doneBtn setHidden:NO];
         }
         [self loadTable];
         [myHUD hide];
@@ -282,7 +285,7 @@
             devidingLine.image = [UIImage imageNamed:@"dividing"];
             [cell.contentView addSubview:devidingLine];
             
-            SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(10, 65, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
+            SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(0, 65, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
             checkbox.tag = 8001;
             [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
             [cell.contentView addSubview:checkbox];
@@ -329,7 +332,13 @@
             [label setBackgroundColor:[UIColor clearColor]];
             label.textColor = CMConstants.grayColor;
             label.font = [UIFont systemFontOfSize: 16];
-            label.text = @"很抱歉，没有找到相关影片！";
+            if (self.type == 1) {
+                label.text = @"很抱歉，没有找到相关电影！";
+            } else if (self.type == 2) {
+                label.text = @"很抱歉，没有找到相关电视剧！";
+            } else {
+                label.text = @"很抱歉，没有找到相关影片！";
+            }
             [cell.contentView addSubview:label];
         }
         return cell;
@@ -383,8 +392,8 @@
 - (void)addBtnClicked
 {
     NSMutableString *prodIds = [[NSMutableString alloc]init];
-    for(NSString *id in checkboxes){
-        [prodIds appendFormat:@"%@,", id];
+    for(NSString *idStr in checkboxes){
+        [prodIds appendFormat:@"%@,", idStr];
     }
     NSString *prodIdStr;
     if(prodIds.length > 0){
@@ -396,8 +405,9 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:2];
             [[NSNotificationCenter defaultCenter] postNotificationName:MY_LIST_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }
@@ -406,6 +416,10 @@
     }];
 }
 
+- (void)doneBtnClicked
+{
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.backToViewController.class];
+}
 
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClient
@@ -424,7 +438,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSString stringWithFormat:@"%d", self.type], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempArray;
