@@ -183,7 +183,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:closeMenuRecognizer];
+//    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
 }
