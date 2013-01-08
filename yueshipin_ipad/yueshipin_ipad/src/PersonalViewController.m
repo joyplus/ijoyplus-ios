@@ -227,7 +227,13 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    return ![NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"];
+    if([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
+        return NO;
+    } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
