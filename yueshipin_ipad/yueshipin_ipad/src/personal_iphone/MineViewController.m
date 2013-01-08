@@ -144,7 +144,7 @@
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 60, 30);
+    leftButton.frame = CGRectMake(0, 0, 40, 30);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_search_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
@@ -152,7 +152,7 @@
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 60, 30);
+    rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_setting_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
@@ -419,9 +419,10 @@
     if (cell == nil) {
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+      cell.selectionStyle = UITableViewCellSelectionStyleNone;
     if (tableView.tag == RECORD_TYPE) {
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-       NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
+      
+        NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         cell.textLabel.text = [infoDic objectForKey:@"name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         [cell.titleLab removeFromSuperview];
@@ -478,6 +479,34 @@
 
 
 }
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (tableView.tag == MYLIST_TYPE) {
+        return YES;
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (editingStyle == UITableViewCellEditingStyleDelete){
+        NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
+        NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
+        
+//        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.topId, @"topic_id", nil];
+//        [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//            NSString *responseCode = [result objectForKey:@"res_code"];
+//            if([responseCode isEqualToString:kSuccessResCode]){
+//              
+//            } else {
+//                
+//            }
+//        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+//            
+//        }];
+
+        
+    }
+}
+
 -(void)continuePlay:(id)sender{
     int num = ((UIButton *)sender).tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];

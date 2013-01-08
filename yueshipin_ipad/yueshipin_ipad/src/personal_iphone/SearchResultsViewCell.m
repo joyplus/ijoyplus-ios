@@ -26,18 +26,22 @@
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(82, 9, 170, 14)];
         self.label.font = [UIFont systemFontOfSize:15];
+        self.label.backgroundColor = [UIColor clearColor];
         [self addSubview:self.label];
         
-        actors_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 32, 200, 12)];
+        actors_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 32, 140, 12)];
         actors_.font = [UIFont systemFontOfSize:12];
         actors_.textColor = [UIColor grayColor];
-        area_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 48, 170, 12)];
+        actors_.backgroundColor = [UIColor clearColor];
+        area_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 48, 140, 12)];
         area_.font = [UIFont systemFontOfSize:12];
         area_.textColor = [UIColor grayColor];
+        area_.backgroundColor = [UIColor clearColor];
         
-        type_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 64, 170, 12)];
+        type_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 64, 140, 12)];
         type_.font = [UIFont systemFontOfSize:12];
         type_.textColor = [UIColor grayColor];
+        type_.backgroundColor = [UIColor clearColor];
         [self addSubview:actors_];
         [self addSubview:area_];
         [self addSubview:type_];

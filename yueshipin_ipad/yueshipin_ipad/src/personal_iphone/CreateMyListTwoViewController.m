@@ -40,7 +40,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -58,7 +58,7 @@
     
     UIView *whiteBg = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 45)];
     whiteBg.backgroundColor = [UIColor whiteColor];
-    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton addTarget:self action:@selector(AddMore:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton setFrame:CGRectMake(5, 7, 284, 30)];
     [moreButton setBackgroundImage:[UIImage imageNamed:@"icon_add videos.png"] forState:UIControlStateNormal];
@@ -66,10 +66,11 @@
     [whiteBg addSubview:moreButton];
     [self.view addSubview:whiteBg];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 46, 320, 350) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(12, 46, 296, 350) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
+    tableList_.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tableList_];
     
     if (listArr_ == nil) {
@@ -121,6 +122,16 @@
     }
 
     return cell;
+}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (editingStyle == UITableViewCellEditingStyleDelete){
+        [listArr_ removeObjectAtIndex:indexPath.row];
+         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 -(void)Done:(id)sender{

@@ -38,7 +38,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -75,8 +75,9 @@
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: textView_.text, @"email", textView_.text, @"content", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathFeekback parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSLog(@"feedback succeed");
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [self showSuccessModalView:1.5];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
         }];
     }
 

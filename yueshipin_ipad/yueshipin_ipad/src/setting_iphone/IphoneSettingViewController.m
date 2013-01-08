@@ -20,6 +20,7 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "UIImage+Scale.h"
+#import "AFSinaWeiboAPIClient.h"
 
 @interface IphoneSettingViewController ()
 
@@ -43,7 +44,7 @@
     [super viewDidLoad];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 60, 30);
+    backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"] toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -126,13 +127,46 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-//    self.tabBarController.tabBar.hidden = YES;
-}
+
 -(void)careUs:(id)sender{
-    
+    sinaweibo_ = [AppDelegate instance].sinaweibo;
+    if([sinaweibo_ isLoggedIn]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaweibo_.accessToken, @"access_token", @"悦视频", @"screen_name", nil];
+        [[AFSinaWeiboAPIClient sharedClient] postPath:kFollowUserURI parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+        [self showSuccessModalView:1.5];
+    } else {
+        NSURL *url=[NSURL URLWithString:@"http://weibo.com/u/3058636171"];
+        [[UIApplication sharedApplication] openURL:url];
+    }
+
 
 }
+- (void)showSuccessModalView:(int)closeTime
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    view.tag = 3268142;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
+    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.center = view.center;
+    [view addSubview:temp];
+    [self.view addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+}
+
+- (void)removeOverlay
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    for(UIView *subview in view.subviews){
+        [subview removeFromSuperview];
+    }
+    [view removeFromSuperview];
+    view = nil;
+}
+
 - (void)sinaSwitchClicked:(UISwitch *)sender
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
