@@ -424,6 +424,7 @@
     if (indexPath.section == 1) {
         NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row];
         ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        listDetail.title = [dic objectForKey:@"t_name"];
         listDetail.topicId = [dic objectForKey:@"t_id"];
         listDetail.Type = 9001;
         [listDetail initTopicData:listDetail.topicId];

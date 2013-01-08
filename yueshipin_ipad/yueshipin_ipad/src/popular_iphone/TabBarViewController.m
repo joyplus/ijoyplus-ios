@@ -8,7 +8,6 @@
 
 #import "TabBarViewController.h"
 #import "allListViewController.h"
-#import "sortedViewController.h"
 #import "PageManageViewController.h"
 #import "MineViewController.h"
 #import "navigationViewController.h"

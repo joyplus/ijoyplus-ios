@@ -182,7 +182,6 @@
 		22FEEE6016899AE100A71EF4 /* navigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5116899AE100A71EF4 /* navigationViewController.m */; };
 		22FEEE6116899AE100A71EF4 /* PageManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5316899AE100A71EF4 /* PageManageViewController.m */; };
 		22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5516899AE100A71EF4 /* SortedViewCell.m */; };
-		22FEEE6316899AE100A71EF4 /* sortedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5716899AE100A71EF4 /* sortedViewController.m */; };
 		22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5916899AE100A71EF4 /* TabBarViewController.m */; };
 		22FEEE7B168A945800A71EF4 /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE7A168A945800A71EF4 /* MineViewController.m */; };
 		22FEEE7F168A96FF00A71EF4 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */; };
@@ -792,8 +791,6 @@
 		22FEEE5316899AE100A71EF4 /* PageManageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageManageViewController.m; sourceTree = "<group>"; };
 		22FEEE5416899AE100A71EF4 /* SortedViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SortedViewCell.h; sourceTree = "<group>"; };
 		22FEEE5516899AE100A71EF4 /* SortedViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SortedViewCell.m; sourceTree = "<group>"; };
-		22FEEE5616899AE100A71EF4 /* sortedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sortedViewController.h; sourceTree = "<group>"; };
-		22FEEE5716899AE100A71EF4 /* sortedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sortedViewController.m; sourceTree = "<group>"; };
 		22FEEE5816899AE100A71EF4 /* TabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarViewController.h; sourceTree = "<group>"; };
 		22FEEE5916899AE100A71EF4 /* TabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarViewController.m; sourceTree = "<group>"; };
 		22FEEE79168A945800A71EF4 /* MineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineViewController.h; sourceTree = "<group>"; };
@@ -1413,8 +1410,6 @@
 				22FEEE5316899AE100A71EF4 /* PageManageViewController.m */,
 				22FEEE5416899AE100A71EF4 /* SortedViewCell.h */,
 				22FEEE5516899AE100A71EF4 /* SortedViewCell.m */,
-				22FEEE5616899AE100A71EF4 /* sortedViewController.h */,
-				22FEEE5716899AE100A71EF4 /* sortedViewController.m */,
 				22FEEE5816899AE100A71EF4 /* TabBarViewController.h */,
 				22FEEE5916899AE100A71EF4 /* TabBarViewController.m */,
 				22FEEE9C168AEF7A00A71EF4 /* ShowListViewCell.h */,
@@ -2866,7 +2861,6 @@
 				22FEEE6016899AE100A71EF4 /* navigationViewController.m in Sources */,
 				22FEEE6116899AE100A71EF4 /* PageManageViewController.m in Sources */,
 				22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */,
-				22FEEE6316899AE100A71EF4 /* sortedViewController.m in Sources */,
 				22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */,
 				22FEEE7B168A945800A71EF4 /* MineViewController.m in Sources */,
 				22FEEE7F168A96FF00A71EF4 /* FeedBackViewController.m in Sources */,

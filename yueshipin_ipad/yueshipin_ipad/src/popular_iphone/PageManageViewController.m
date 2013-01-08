@@ -7,7 +7,6 @@
 //
 
 #import "PageManageViewController.h"
-#import "sortedViewController.h"
 #import "SortedViewCell.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
@@ -435,6 +434,7 @@
         NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         listDetailViewController.listArr = items;
+        listDetailViewController.title = [item objectForKey:@"name"];
         listDetailViewController.Type = TV_TYPE;
         listDetailViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
@@ -444,6 +444,7 @@
         NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         listDetailViewController.listArr = items;
+        listDetailViewController.title = [item objectForKey:@"name"];
          listDetailViewController.hidesBottomBarWhenPushed = YES;
         listDetailViewController.Type = MOVIE_TYPE;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
@@ -453,6 +454,7 @@
         IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] initWithStyle:UITableViewStylePlain];
         detailViewController.infoDic = item;
         detailViewController.videoType = SHOW_TYPE;
+        detailViewController.title = [item objectForKey:@"prod_name"];
          detailViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:detailViewController animated:YES];
     

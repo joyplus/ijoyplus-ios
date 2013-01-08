@@ -63,6 +63,7 @@
     [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
     [view1 addSubview:sinaSwith_];
     
+    self.title = @"设置";
     sinaweibo_ = [AppDelegate instance].sinaweibo;
     sinaweibo_.delegate = self;
     if([sinaweibo_ isLoggedIn]){
