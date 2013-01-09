@@ -16,7 +16,7 @@
 
 @end
 
-@interface DownloadViewController : GenericBaseViewController<DownloadViewControllerDelegate>
+@interface DownloadViewController : GenericBaseViewController<DownloadViewControllerDelegate, UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 

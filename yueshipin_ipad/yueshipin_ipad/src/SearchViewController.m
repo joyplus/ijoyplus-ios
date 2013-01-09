@@ -183,9 +183,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
+    closeMenuRecognizer.delegate = self;
+    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
+        return NO;
+    } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning

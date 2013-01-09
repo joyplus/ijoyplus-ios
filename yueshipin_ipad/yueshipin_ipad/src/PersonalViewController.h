@@ -9,7 +9,7 @@
 #import "CommonHeader.h"
 #import "MenuViewController.h"
 
-@interface PersonalViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate>
+@interface PersonalViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 

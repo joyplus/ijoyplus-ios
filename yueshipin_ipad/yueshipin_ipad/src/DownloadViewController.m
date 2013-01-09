@@ -19,6 +19,7 @@
     UIImageView *topImage;
     UIImageView *topIcon;
     UIImageView *bgImage;
+    UIImageView *nodownloadImage;
     
     int leftWidth;
     NSArray *allItem;
@@ -53,9 +54,21 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
+    closeMenuRecognizer.delegate = self;
+    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
+        return NO;
+    } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
+        return NO;
+    } else {
+        return YES;
+    }
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -66,6 +79,11 @@
         bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [self.view addSubview:bgImage];
+        
+        nodownloadImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 200, 200)];
+        nodownloadImage.center = CGPointMake(bgImage.center.x, bgImage.center.y - 100);
+        nodownloadImage.image = [UIImage imageNamed:@"nodownload"];
+        [self.view addSubview:nodownloadImage];
         
         leftWidth = 80;
         menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -146,8 +164,10 @@
     allItem = [DownloadItem allObjects];
     if (allItem.count > 0) {
         [editBtn setHidden:NO];
+        [nodownloadImage setHidden:YES];
     } else {
         [editBtn setHidden:YES];
+        [nodownloadImage setHidden:NO];
     }
     NSArray *downLoaderArray = [[AppDelegate instance] getDownloaderQueue];
     [self startDownloadingThread:downLoaderArray startType:1]; // start
@@ -410,6 +430,7 @@
     } else {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
+        [nodownloadImage setHidden:NO];
     }
 }
 
@@ -459,6 +480,7 @@
 
 - (void)editBtnClicked
 {
+    [self closeMenu];
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
     _gmGridView.editing = YES;
     [editBtn setHidden:YES];
@@ -467,6 +489,7 @@
 
 - (void)doneBtnClicked
 {
+    [self closeMenu];
     _gmGridView.editing = NO;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];

@@ -311,6 +311,12 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"tv"];
         episodeArray = [video objectForKey:@"episodes"];
+        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+        episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+            NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
+            NSNumber *second = [f numberFromString:[NSString stringWithFormat:@"%@", [b objectForKey:@"name"]]];
+            return [first compare:second];
+        }];
         topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -426,11 +432,8 @@
                 btn.tag = i+1;
                 int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
                 [btn setFrame:CGRectMake(pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * 87, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 82, 34)];
-                if (i < 9) {
-                    [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
-                } else {
-                    [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
-                }
+                NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
+                [btn setTitle:name forState:UIControlStateNormal];
                 [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
                 btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
                 UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
@@ -637,12 +640,6 @@
         return nil;
     }
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
-    for(NSDictionary *episode in episodeArray){
-        if([[episode objectForKey:@"name"]integerValue] == num){
-            videoUrlArray = [episode objectForKey:@"down_urls"];
-            break;
-        }
-    }
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
             if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
@@ -701,12 +698,9 @@
 {
     ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
     NSString *url = nil;
-    for(NSDictionary *episode in episodeArray){
-        if([[episode objectForKey:@"name"]integerValue] == num){
-            NSArray *urlArray = [episode objectForKey:@"video_urls"];
-            url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-            break;
-        }
+    NSArray *urlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"video_urls"];
+    if (urlArray.count > 0) {
+        url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
     }
     if(url == nil){
         url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
@@ -766,6 +760,11 @@
 
 - (void)downloadBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [AppDelegate instance].rootViewController.videoDetailDelegate = self;
     [[AppDelegate instance].rootViewController showDramaDownloadView:self.prodId title:[video objectForKey:@"name"] totalNumber:totalEpisodeNumber];
 }

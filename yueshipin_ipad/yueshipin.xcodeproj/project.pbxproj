@@ -158,6 +158,7 @@
 		EB9382A31668A1CC0046A3B1 /* Default-Landscape~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A21668A1CC0046A3B1 /* Default-Landscape~ipad.png */; };
 		EB9382A51668A1E10046A3B1 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */; };
 		EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */; };
+		EBA51380169C144E00198067 /* nodownload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA5137F169C144E00198067 /* nodownload@2x.png */; };
 		EBB38D7A1696880100FD855E /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D7B1696880100FD855E /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5D1696880100FD855E /* NSDate-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D7C1696880100FD855E /* NSMutableArray-MultipleSort.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5F1696880100FD855E /* NSMutableArray-MultipleSort.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -634,6 +635,7 @@
 		EB9382A21668A1CC0046A3B1 /* Default-Landscape~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape~ipad.png"; sourceTree = "<group>"; };
 		EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_btn_pressed@2x.png"; sourceTree = "<group>"; };
+		EBA5137F169C144E00198067 /* nodownload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nodownload@2x.png"; sourceTree = "<group>"; };
 		EBB38D5A1696880100FD855E /* NSData-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData-SQLitePersistence.h"; sourceTree = "<group>"; };
 		EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData-SQLitePersistence.m"; sourceTree = "<group>"; };
 		EBB38D5C1696880100FD855E /* NSDate-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-SQLitePersistence.h"; sourceTree = "<group>"; };
@@ -1054,6 +1056,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBA5137F169C144E00198067 /* nodownload@2x.png */,
 				EBB93D74169BB0A10017B5A5 /* clause_content@2x.png */,
 				EBB93D75169BB0A10017B5A5 /* clause_pressed@2x.png */,
 				EBB93D76169BB0A10017B5A5 /* clause_title@2x.png */,
@@ -2181,6 +2184,7 @@
 				EBB93D7B169BB0A10017B5A5 /* clause_title@2x.png in Resources */,
 				EBB93D7C169BB0A10017B5A5 /* clause@2x.png in Resources */,
 				EBB93D7D169BB0A10017B5A5 /* play_disabled@2x.png in Resources */,
+				EBA51380169C144E00198067 /* nodownload@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -599,6 +599,11 @@
 
 - (void)downloadBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self.downloadBtn setEnabled:NO];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
