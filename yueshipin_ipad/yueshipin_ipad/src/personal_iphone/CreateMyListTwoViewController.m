@@ -136,6 +136,9 @@
 
 -(void)Done:(id)sender{
     [self.navigationController popToRootViewControllerAnimated:YES];
+    if (infoDic_ == nil) {
+        infoDic_ = [NSMutableDictionary dictionaryWithCapacity:10];
+    }
     [infoDic_ setObject:listArr_ forKey:@"items"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Update MineViewController" object:infoDic_];
 

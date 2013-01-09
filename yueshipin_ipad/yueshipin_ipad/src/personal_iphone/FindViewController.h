@@ -14,10 +14,12 @@
    NSMutableArray *searchResults_;
    NSMutableArray *selectedArr_;
    NSString *topicId_;
+   UIBarButtonItem *rightButtonItem_;
 }
 @property (nonatomic, strong)UISearchBar *searchBar;
 @property (nonatomic, strong)UITableView *tableList;
 @property (nonatomic, strong)NSMutableArray *searchResults;
 @property (nonatomic, strong)NSMutableArray *selectedArr;
 @property (nonatomic, strong)NSString *topicId;
+@property (nonatomic, strong)UIBarButtonItem *rightButtonItem;
 @end

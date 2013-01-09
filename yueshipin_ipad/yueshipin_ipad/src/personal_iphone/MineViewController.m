@@ -484,7 +484,7 @@
     }
     else if(tableView.tag == MYLIST_TYPE){
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
-        NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
+        NSMutableArray *items = [NSMutableArray arrayWithArray:[infoDic objectForKey:@"items"]];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
         createMyListTwoViewController.listArr = items;
         createMyListTwoViewController.hidesBottomBarWhenPushed = YES;

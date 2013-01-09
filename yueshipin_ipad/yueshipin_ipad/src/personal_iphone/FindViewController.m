@@ -24,6 +24,7 @@
 @synthesize searchResults = searchResults_;
 @synthesize selectedArr = selectedArr_;
 @synthesize topicId = topicId_;
+@synthesize rightButtonItem = rightButtonItem_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,8 +56,8 @@
     rightButton.frame = CGRectMake(0, 0, 37, 30);
     [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete"] forState:UIControlStateNormal];
     [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateNormal];
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    rightButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = nil;
     
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.tintColor = [UIColor whiteColor];
@@ -173,6 +174,13 @@
   NSDictionary *item = [searchResults_ objectAtIndex:indexPath.row];
     if (![selectedArr_ containsObject:item]) {
         [selectedArr_ addObject:item];
+    }
+    if ([selectedArr_ count] == 0) {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
+    else{
+    
+        self.navigationItem.rightBarButtonItem = rightButtonItem_;
     }
     [self.tableList reloadData];
     [self addBtnClicked];

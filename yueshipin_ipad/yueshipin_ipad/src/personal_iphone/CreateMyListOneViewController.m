@@ -99,16 +99,23 @@
     
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-//    NSString *str = textField.text;
-//    if (![textField.text isEqualToString:@""]) {
-//         nextBtn_.enabled = YES;
-//    }
-//    else{
-//         nextBtn_.enabled = NO;
-//    }
+    NSString *newString = nil;
+	if (range.length == 0) {
+		newString = [textField.text stringByAppendingString:string];
+	} else {
+		NSString *headPart = [textField.text substringToIndex:range.location];
+		NSString *tailPart = [textField.text substringFromIndex:range.location+range.length];
+		newString = [NSString stringWithFormat:@"%@%@",headPart,tailPart];
+	}
+    if ([newString isEqualToString:@""] && [string isEqualToString:@""]) {
+        nextBtn_.enabled = NO;
+    }
+    else{
+    
+        nextBtn_.enabled = YES;
+    }
     return YES;
 }
-
 
 - (void)textViewDidChange:(UITextView *)textView{
     NSString *str = textView.text;

@@ -78,7 +78,7 @@
     view2.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     [self.view addSubview:view2];
     
-    UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
     clearCache.frame = CGRectMake(24, 100, 273, 33);
     // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache.png"] forState:UIControlStateNormal];
@@ -90,7 +90,7 @@
     UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 172)];
     view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];;
     [self.view addSubview:view3];
-    UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeCustom];
     feedBack.frame = CGRectMake(24, 168, 273, 33);
    // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other.png"] forState:UIControlStateNormal];
@@ -98,7 +98,7 @@
     [feedBack addTarget:self action:@selector(feedBack:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:feedBack];
     
-    UIButton *suggest = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
     suggest.frame = CGRectMake(24, 208, 273, 33);
     //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
@@ -106,7 +106,7 @@
     [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:suggest];
     
-    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
     aboutUs.frame = CGRectMake(24, 286, 273, 33);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
@@ -114,7 +114,7 @@
     [aboutUs addTarget:self action:@selector(aboutUs:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:aboutUs];
     
-    UIButton *careUs = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
     careUs.frame = CGRectMake(24, 247, 273, 33);
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
