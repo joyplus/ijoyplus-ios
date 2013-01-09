@@ -117,14 +117,9 @@
         selectedIndex = 0;
         [self initMenuController];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMenuItem) name:RELOAD_MENU_ITEM object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:RELOAD_MENU_ITEM object:nil];
 	}
     return self;
-}
-
-- (void)reloadMenuItem
-{
-    [tableView reloadData];
 }
 
 - (void)initMenuController
