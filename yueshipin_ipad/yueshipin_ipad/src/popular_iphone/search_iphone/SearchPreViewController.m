@@ -37,13 +37,14 @@
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
 	// Do any additional setup after loading the view.
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.tintColor = [UIColor whiteColor];
+    searchBar_.placeholder = @"电影/电视剧/综艺";
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
     for(int i = 0; i < numViews; i++) {

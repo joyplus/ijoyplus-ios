@@ -34,6 +34,9 @@
 @synthesize scrollView = scrollView_;
 @synthesize commentArray =commentArray_;
 @synthesize relevantList = relevantList_;
+@synthesize summaryBg = summaryBg_;
+@synthesize summaryLabel = summaryLabel__;
+@synthesize moreBtn = moreBtn_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -53,7 +56,7 @@
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -61,12 +64,13 @@
     [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_common_share.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    [rightButton setBackgroundImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     self.tableView.backgroundView = backGround;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.showsVerticalScrollIndicator = NO;
     
     self.title = [self.infoDic objectForKey:@"prod_name"];
     
@@ -75,6 +79,22 @@
     
     favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
+    
+    summaryBg_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"brief"]];
+    summaryBg_.frame = CGRectMake(14, 20, 292, 90);
+    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 20, 264,90)];
+    summaryLabel_.textColor = [UIColor grayColor];
+    summaryLabel_.backgroundColor = [UIColor clearColor];
+    summaryLabel_.numberOfLines = 0;
+    summaryLabel_.lineBreakMode = UILineBreakModeWordWrap;
+    summaryLabel_.font = [UIFont systemFontOfSize:13];
+    moreBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    moreBtn_.backgroundColor = [UIColor clearColor];
+    moreBtn_.frame = CGRectMake(288, 90, 18, 14);
+    [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
+    [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
+    [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
+
 }
 
 -(void)share:(id)sender{
@@ -275,14 +295,11 @@
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
                 [cell addSubview:jianjie];
                 
-                UILabel *summary = [[UILabel alloc] initWithFrame:CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271])];
-                summary.textColor = [UIColor grayColor];
-                summary.text = [NSString stringWithFormat:@"    %@",summary_];
-                summary.textAlignment = UITextAlignmentCenter;
-                summary.numberOfLines = 0;
-                summary.lineBreakMode = UILineBreakModeWordWrap;
-                summary.font = [UIFont systemFontOfSize:13];
-                [cell addSubview:summary];
+                [cell addSubview:summaryBg_];
+                summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+                [cell addSubview:summaryLabel_];
+                [cell addSubview:moreBtn_];
+
                 
                 break;
             }
@@ -316,7 +333,11 @@
         user.font = [UIFont systemFontOfSize:14];
         user.backgroundColor = [UIColor clearColor];
         UILabel *date =[[UILabel alloc] initWithFrame:CGRectMake(210, 5, 90, 14)];
-        date.text = [item objectForKey:@"create_date"];
+        NSString *dateStr = [item objectForKey:@"create_date"];
+        if (dateStr.length > 10) {
+            dateStr = [dateStr substringToIndex:10];
+        }
+        date.text = dateStr;
         date.font = [UIFont systemFontOfSize:14];
         date.textColor = [UIColor grayColor];
         date.backgroundColor = [UIColor clearColor];
@@ -358,7 +379,13 @@
             return 155;
         }
         else if(row == 2){
-            return [self heightForString:summary_ fontSize:13 andWidth:271]+20;
+            if (moreBtn_.selected) {
+                return [self heightForString:summary_ fontSize:13 andWidth:271]+25;
+            }
+            else{
+                return 110;
+            }
+
         }
 
     }
@@ -417,6 +444,8 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+   
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 1) {
         NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row];
         ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -501,6 +530,24 @@
         default:
             break;
     }
+}
+-(void)more:(id)sender{
+    moreBtn_.selected = !moreBtn_.selected;
+    if (moreBtn_.selected) {
+        summaryBg_.frame = CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
+        summaryLabel_.frame = CGRectMake(28, 23, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+        moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
+        
+    }
+    else{
+        summaryBg_.frame = CGRectMake(14, 20, 292, 90);
+        summaryLabel_.frame = CGRectMake(28, 20, 264,90);
+        moreBtn_.frame = CGRectMake(288, 90, 18, 14);
+    }
+    
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+    
+    
 }
 
 - (void)showPlayWebPage

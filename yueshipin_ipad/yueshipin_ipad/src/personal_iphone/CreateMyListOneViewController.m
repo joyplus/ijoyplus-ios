@@ -21,7 +21,7 @@
 @synthesize detailTextView = detailTextView_;
 @synthesize infoDic = infoDic_;
 @synthesize topicId = topicId_;
-
+@synthesize nextBtn = nextBtn_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -47,12 +47,13 @@
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(nextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 51, 31);
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_writing_next.png"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateNormal];
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    nextBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [nextBtn_ addTarget:self action:@selector(nextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    nextBtn_.frame = CGRectMake(0, 0, 51, 31);
+    nextBtn_.enabled = NO;
+    [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next.png"] forState:UIControlStateNormal];
+    [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateNormal];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:nextBtn_];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     RadioButton *rb1 = [[RadioButton alloc] initWithGroupId:@"first group" index:0];
@@ -75,20 +76,51 @@
     tv.font = [UIFont systemFontOfSize:15];
     tv.textColor = [UIColor grayColor];
     titleTextField_ = [[UITextField alloc] initWithFrame:CGRectMake(20, 70, 280, 25)];
-    titleTextField_.placeholder = @" 简介";
+    titleTextField_.placeholder = @" 标题";
     titleTextField_.backgroundColor = [UIColor whiteColor];
+    titleTextField_.delegate = self;
     
     detailTextView_ = [[UITextView alloc] initWithFrame:CGRectMake(20, 105, 280, 90)];
-    
+    detailTextView_.delegate = self;
+    detailTextView_.font = [UIFont systemFontOfSize:15];
+    detailLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 100, 25)];
+    detailLabel_.backgroundColor = [UIColor clearColor];
+    detailLabel_.textColor = [UIColor grayColor];
+    detailLabel_.font = [UIFont systemFontOfSize:15];
+    detailLabel_.text = @"简介";
+    [detailTextView_ addSubview:detailLabel_];
     [self.view addSubview:movie];
     [self.view addSubview:tv];
     [self.view addSubview:titleTextField_];
     [self.view addSubview:detailTextView_];
     
+    
    
     
 }
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+//    NSString *str = textField.text;
+//    if (![textField.text isEqualToString:@""]) {
+//         nextBtn_.enabled = YES;
+//    }
+//    else{
+//         nextBtn_.enabled = NO;
+//    }
+    return YES;
+}
 
+
+- (void)textViewDidChange:(UITextView *)textView{
+    NSString *str = textView.text;
+    if (![str isEqualToString:@""]) {
+        [detailLabel_ removeFromSuperview];
+       
+    }
+    else{
+       [detailTextView_ addSubview:detailLabel_];
+         
+    }
+}
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
 
 }

@@ -46,7 +46,7 @@
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -60,6 +60,7 @@
     
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.tintColor = [UIColor whiteColor];
+    searchBar_.placeholder = @"电影/电视剧/综艺";
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
     for(int i = 0; i < numViews; i++) {
@@ -95,7 +96,7 @@
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3", @"type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
@@ -168,7 +169,7 @@
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-
+  [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
   NSDictionary *item = [searchResults_ objectAtIndex:indexPath.row];
     if (![selectedArr_ containsObject:item]) {
         [selectedArr_ addObject:item];

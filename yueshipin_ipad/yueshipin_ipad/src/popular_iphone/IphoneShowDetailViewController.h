@@ -22,6 +22,9 @@
     NSMutableArray *commentArray_;
     int favCount_;
     int supportCount_;
+    UIImageView *summaryBg_;
+    UILabel *summaryLabel_;
+    UIButton *moreBtn_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -32,4 +35,7 @@
 @property (nonatomic, strong) UIButton *next;
 @property (nonatomic, strong) UIButton *pre;
 @property (nonatomic, strong) NSMutableArray *commentArray;
+@property (nonatomic, strong) UIImageView *summaryBg;
+@property (nonatomic, strong) UILabel *summaryLabel;
+@property (nonatomic, strong) UIButton *moreBtn;
 @end

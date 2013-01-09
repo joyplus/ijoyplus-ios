@@ -156,7 +156,7 @@
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
     leftButton.frame = CGRectMake(0, 0, 40, 30);
     leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_search_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"top_search_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
@@ -164,7 +164,7 @@
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_setting_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
@@ -173,18 +173,21 @@
     button1_.selected = YES;
     button1_.tag = 100;
     [button1_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
-    [button1_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forState:UIControlStateNormal];
-    [button1_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]toSize:CGSizeMake(99, 52)]forState:UIControlStateSelected];
+    [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forState:UIControlStateNormal];
+    [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"] forState:UIControlStateHighlighted];
+    [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]forState:UIControlStateSelected];
     button2_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [button2_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
-    [button2_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] toSize:CGSizeMake(99, 52)] forState:UIControlStateNormal];
-    [button2_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]toSize:CGSizeMake(99, 52)]forState:UIControlStateSelected];
+    [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forState:UIControlStateNormal];
+     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"] forState:UIControlStateHighlighted];
+    [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]forState:UIControlStateSelected];
     button2_.frame = CGRectMake(111, 40, 99, 51);
     button2_.tag = 101;
     button3_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [button3_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
-    [button3_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] toSize:CGSizeMake(99, 52)] forState:UIControlStateNormal];
-    [button3_ setBackgroundImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]toSize:CGSizeMake(99, 52)]forState:UIControlStateSelected];
+    [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forState:UIControlStateNormal];
+    [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"] forState:UIControlStateHighlighted];
+    [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]forState:UIControlStateSelected];
     button3_.frame = CGRectMake(210, 40, 99, 51);
     button3_.tag = 102;
      
@@ -303,7 +306,7 @@
 -(void)seeMore:(id)sender{
     if (button1_.selected) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
-        moreListViewController.listArr = sortedwatchRecordArray_;
+        moreListViewController.listArr = [NSMutableArray arrayWithArray:sortedwatchRecordArray_];
         moreListViewController.type = RECORD_TYPE;
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
@@ -338,7 +341,7 @@
     button1_.selected = NO;
     button2_.selected = NO;
     button3_.selected = NO;
-    //UISegmentedControl *mySegmentedControl=(UISegmentedControl *)sender;
+
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         //播放纪录
@@ -471,6 +474,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     if (tableView.tag == Fav_TYPE){
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
         detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];

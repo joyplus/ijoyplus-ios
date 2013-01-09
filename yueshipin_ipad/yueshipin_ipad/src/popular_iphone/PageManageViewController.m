@@ -250,7 +250,7 @@
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
     leftButton.frame = CGRectMake(0, 0, 40, 30);
     leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_search_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"top_search_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
@@ -259,7 +259,7 @@
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_setting_common.png"] toSize:CGSizeMake(19, 18)] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
@@ -427,7 +427,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     int tableViewTag = tableView.tag;
     if (tableViewTag == TV_TYPE) {
         NSDictionary *item = [self.tvListArr objectAtIndex:indexPath.row];

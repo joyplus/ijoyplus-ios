@@ -47,7 +47,7 @@
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 40, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_return_common.png"]  toSize:CGSizeMake(20, 18)]forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"]forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -178,6 +178,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     if (type_ == 1) {
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];

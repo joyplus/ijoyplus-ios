@@ -96,7 +96,7 @@
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight;
+   return toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight;
     
 }
 - (BOOL)shouldAutorotate{
@@ -106,6 +106,7 @@
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
     return UIDeviceOrientationLandscapeLeft;
 }
+
 
 
 - (void) hideGradientBackground:(UIView*)theView
