@@ -276,7 +276,7 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [MobClick updateOnlineConfig];
+//    [MobClick updateOnlineConfig];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
