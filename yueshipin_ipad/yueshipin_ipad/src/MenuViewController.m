@@ -82,6 +82,7 @@
     personalViewController = nil;
     badgeView = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RELOAD_MENU_ITEM object:nil];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -116,8 +117,14 @@
         selectedIndex = 0;
         [self initMenuController];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadMenuItem) name:RELOAD_MENU_ITEM object:nil];
 	}
     return self;
+}
+
+- (void)reloadMenuItem
+{
+    [tableView reloadData];
 }
 
 - (void)initMenuController
@@ -217,20 +224,28 @@
         imageView.image = [UIImage imageNamed:@"searching_icon"];
         label.text = @"搜索";
     } else if(indexPath.row == 3){
-        imageView.image = [UIImage imageNamed:@"download_icon"];
-        label.text = @"缓存视频";
-        if(badgeView == nil){
-            badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
-            badgeView.badgePositionAdjustment = CGPointMake(50, 18);
-            badgeView.badgeText = @"0";
-            [badgeView setHidden:YES];
-        }
-        SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
-        if(newNum == nil || newNum.newDownloadItemNum == 0){
-            [badgeView setHidden:YES];
-        } else {
-            [badgeView setHidden:NO];
-            badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
+        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+            imageView.image = [UIImage imageNamed:@"download_icon"];
+            label.text = @"缓存视频";
+            if(badgeView == nil){
+                badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
+                badgeView.badgePositionAdjustment = CGPointMake(50, 18);
+                badgeView.badgeText = @"0";
+                [badgeView setHidden:YES];
+            }
+            SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
+            if(newNum == nil || newNum.newDownloadItemNum == 0){
+                [badgeView setHidden:YES];
+            } else {
+                [badgeView setHidden:NO];
+                badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
+            }
+        } else{
+            imageView.image = nil;
+            label.text = @"";
+            UIView* bgView = [[UIView alloc] init];
+            [bgView setBackgroundColor:[UIColor clearColor]];
+            [cell setSelectedBackgroundView:bgView];
         }
     } else if(indexPath.row == 4){
         UIView* bgView = [[UIView alloc] init];
@@ -257,7 +272,11 @@
     } else if(selectedIndex == 2){
         return searchViewController;
     } else if(selectedIndex == 3){
-        return downloadViewController;
+        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+            return downloadViewController;
+        } else {
+            return nil;
+        }
     } else if(selectedIndex == 4){
         return nil;
     } else {
@@ -272,6 +291,9 @@
         return;
     }
     if(selectedIndex == 3){
+        if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+            return;
+        }
         SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
         if(newNum.newDownloadItemNum > 0){
             [badgeView setHidden:YES];

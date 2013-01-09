@@ -239,12 +239,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
-        [myRecordImage setHidden:YES];
-        [table setHidden:YES];
-    } else {
+    if(sortedwatchRecordArray.count > 0){
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
+    } else {
+        [myRecordImage setHidden:YES];
+        [table setHidden:YES];
     }
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];

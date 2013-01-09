@@ -263,10 +263,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
-        [self.playRoundBtn setHidden:YES];
-        [self.playBtn setEnabled:NO];
-        [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }
     if(video == nil){
@@ -424,7 +421,6 @@
     totalEpisodeNumber = episodeArray.count;
     episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * 39);
     episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/EPISODE_NUMBER_IN_ROW*4.0) * 430, episodeView.frame.size.height);
-    if(![@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
         if(!btnAdded){
             for (int i = 0; i < totalEpisodeNumber; i++) {
                 btnAdded = YES;
@@ -482,7 +478,6 @@
             [nextBtn setHidden:YES];
             [previousBtn setHidden:YES];
         }
-    }
     [self relocateComment];
 }
 
@@ -494,9 +489,6 @@
     previousBtn.frame = CGRectMake(LEFT_WIDTH, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height, 80, 30);
     
     int positionY = previousBtn.frame.origin.y + 10;
-    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
-        positionY = episodeView.frame.origin.y;
-    }
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
@@ -659,6 +651,25 @@
 - (void)willPlayVideo:(NSInteger)num
 {
     [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:num]];
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        NSString *url = nil;
+        NSArray *urlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"video_urls"];
+        if (urlArray.count > 0) {
+            url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+        }
+        if(url == nil){
+            url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
+        }
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    } else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
+        [self gotoWebsite:num];
+    } else {
+        [self playVideoInDefault:num];
+    }
+}
+
+- (void)playVideoInDefault:(NSInteger)num
+{    
     NSString *videoUrl = [self getVideoAddress:num];
     if(videoUrl == nil){
         [self gotoWebsite:num];

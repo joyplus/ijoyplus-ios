@@ -160,6 +160,7 @@
 		EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */; };
 		EBA51380169C144E00198067 /* nodownload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA5137F169C144E00198067 /* nodownload@2x.png */; };
 		EBB3055A169D189B005C5A30 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB30559169D189B005C5A30 /* CoreLocation.framework */; };
+		EBB30562169D4E87005C5A30 /* MyMediaPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB30561169D4E87005C5A30 /* MyMediaPlayerViewController.m */; };
 		EBB38D7A1696880100FD855E /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D7B1696880100FD855E /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5D1696880100FD855E /* NSDate-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D7C1696880100FD855E /* NSMutableArray-MultipleSort.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5F1696880100FD855E /* NSMutableArray-MultipleSort.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -638,6 +639,8 @@
 		EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBA5137F169C144E00198067 /* nodownload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nodownload@2x.png"; sourceTree = "<group>"; };
 		EBB30559169D189B005C5A30 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		EBB30560169D4E87005C5A30 /* MyMediaPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyMediaPlayerViewController.h; sourceTree = "<group>"; };
+		EBB30561169D4E87005C5A30 /* MyMediaPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyMediaPlayerViewController.m; sourceTree = "<group>"; };
 		EBB38D5A1696880100FD855E /* NSData-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData-SQLitePersistence.h"; sourceTree = "<group>"; };
 		EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData-SQLitePersistence.m"; sourceTree = "<group>"; };
 		EBB38D5C1696880100FD855E /* NSDate-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-SQLitePersistence.h"; sourceTree = "<group>"; };
@@ -1697,6 +1700,8 @@
 				EBF3A9891663965C00EBF56D /* MediaPlayerViewController.h */,
 				EBF3A98A1663965D00EBF56D /* MediaPlayerViewController.m */,
 				EBF3A98B1663965E00EBF56D /* MediaPlayerViewController.xib */,
+				EBB30560169D4E87005C5A30 /* MyMediaPlayerViewController.h */,
+				EBB30561169D4E87005C5A30 /* MyMediaPlayerViewController.m */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -2320,6 +2325,7 @@
 				EBB38D8F1696892900FD855E /* DownloadItem.m in Sources */,
 				EBBA0D1F169945B100F15C77 /* ActionUtility.m in Sources */,
 				EBB93D72169BB0320017B5A5 /* ClauseViewController.m in Sources */,
+				EBB30562169D4E87005C5A30 /* MyMediaPlayerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
