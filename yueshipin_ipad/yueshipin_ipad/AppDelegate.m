@@ -13,6 +13,7 @@
 #import "MobClick.h"
 #import <Parse/Parse.h>
 #import "ActionUtility.h"
+#import "iRate.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -40,6 +41,19 @@
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
+}
+
++ (void)initialize
+{
+	//set the app and bundle ID. normally you wouldn't need to do this
+    //but we need to test with an app that's actually on the store
+	[iRate sharedInstance].appStoreID = APPIRATER_APP_ID;
+    [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
+    [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
+    [iRate sharedInstance].daysUntilPrompt = 7;
+    
+    //enable preview mode
+    [iRate sharedInstance].previewMode = NO;
 }
 
 - (void)addToDownloaderArray:(DownloadItem *)item{

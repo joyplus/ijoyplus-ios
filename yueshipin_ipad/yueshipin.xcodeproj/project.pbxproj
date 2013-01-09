@@ -159,6 +159,7 @@
 		EB9382A51668A1E10046A3B1 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */; };
 		EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */; };
 		EBA51380169C144E00198067 /* nodownload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA5137F169C144E00198067 /* nodownload@2x.png */; };
+		EBB3055A169D189B005C5A30 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB30559169D189B005C5A30 /* CoreLocation.framework */; };
 		EBB38D7A1696880100FD855E /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D7B1696880100FD855E /* NSDate-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5D1696880100FD855E /* NSDate-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D7C1696880100FD855E /* NSMutableArray-MultipleSort.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5F1696880100FD855E /* NSMutableArray-MultipleSort.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -636,6 +637,7 @@
 		EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBA5137F169C144E00198067 /* nodownload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nodownload@2x.png"; sourceTree = "<group>"; };
+		EBB30559169D189B005C5A30 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		EBB38D5A1696880100FD855E /* NSData-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData-SQLitePersistence.h"; sourceTree = "<group>"; };
 		EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData-SQLitePersistence.m"; sourceTree = "<group>"; };
 		EBB38D5C1696880100FD855E /* NSDate-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-SQLitePersistence.h"; sourceTree = "<group>"; };
@@ -997,6 +999,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBB3055A169D189B005C5A30 /* CoreLocation.framework in Frameworks */,
 				EBBB37E3168C381700B2BD84 /* Social.framework in Frameworks */,
 				EBBCD2CA168977C200485412 /* AVFoundation.framework in Frameworks */,
 				EBBA85C2168849B800973BAA /* CFNetwork.framework in Frameworks */,
@@ -1356,6 +1359,7 @@
 		EB6DEA6B165A2F1A00AF8003 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EBB30559169D189B005C5A30 /* CoreLocation.framework */,
 				EBBCD2C9168977C200485412 /* AVFoundation.framework */,
 				EBBA85C3168849CD00973BAA /* Social.framework */,
 				EBBA85C1168849B700973BAA /* CFNetwork.framework */,
