@@ -26,7 +26,7 @@
 
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 
-@property (strong, nonatomic) NSString *playBtnSuppressed;
+@property (strong, nonatomic) NSString *showVideoSwitch;  // 0:有视频，播放视频，无视频，播放网页 1:只播放网页 2:调用safari打开播放网页
 
 @property (assign, atomic) int currentDownloadingNum;
 

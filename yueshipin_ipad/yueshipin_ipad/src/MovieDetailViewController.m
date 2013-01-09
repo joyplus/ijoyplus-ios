@@ -225,10 +225,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
-        [self.playRoundBtn setHidden:YES];
-        [self.playBtn setEnabled:NO];
-        [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }
     if(video == nil){
@@ -483,6 +480,19 @@
 }
 
 - (void)willPlayVideo:(NSInteger)num
+{
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        NSArray *urlArray = [[episodeArray objectAtIndex:0] objectForKey:@"video_urls"];
+        NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    } else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
+        [self showPlayWebPage];
+    } else {
+        [self playVideoInDefault:num];
+    }
+}
+
+- (void)playVideoInDefault:(NSInteger)num
 {
     NSString *videoAddress = [self getVideoAddress];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];

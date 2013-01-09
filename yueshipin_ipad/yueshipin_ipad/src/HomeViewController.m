@@ -565,6 +565,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
     if(aScrollView.tag == 11270014){
+        [self closeMenu];
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
         if(videoType == 0)
@@ -575,6 +576,7 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
+    [self closeMenu];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -586,6 +588,7 @@
 
 - (void)movieBtnClicked:(UIButton *)sender
 {
+    [self closeMenu];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -597,6 +600,7 @@
 
 - (void)dramaBtnClicked:(UIButton *)sender
 {
+    [self closeMenu];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -608,6 +612,7 @@
 
 - (void)showBtnClicked:(UIButton *)sender
 {
+    [self closeMenu];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];

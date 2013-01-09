@@ -12,6 +12,11 @@
 #define MOVIE_POSTER_WIDTH 70
 #define MOVIE_POSTER_HEIGHT 100 
 
+// for App Store
+#define CHANNEL_ID @""
+// for 91 Store
+//#define CHANNEL_ID @"91store"
+
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"
 #define kSinaWeiboUpdateUrl @"statuses/update.json"
@@ -64,6 +69,7 @@
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 #define ADD_NEW_DOWNLOAD_ITEM @"add_new_download_item"
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
+#define RELOAD_MENU_ITEM @"reload_menu_item"
 
 #define WATCH_RECORD_NUMBER 5
 
@@ -77,7 +83,9 @@
 
 #define APPIRATER_APP_ID				587246114
 
-#define PLAY_BTN_SUPPRESSED @"playBtnSuppressed"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch"
+
+#define WATCH_RECORD_CACHE_KEY @"watch_record2"
 
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
