@@ -10,6 +10,9 @@
 #import "CommonHeader.h"
 #import "AddSearchViewController.h"
 #import "VideoDetailViewController.h"
+#import "MovieDetailViewController.h"
+#import "DramaDetailViewController.h"
+#import "ShowDetailViewController.h"
 
 @interface CreateListTwoViewController (){
     UIImageView *bgImage;
@@ -196,7 +199,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleGray;
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 8, 102, 146)];
         imageView.image = [UIImage imageNamed:@"movie_frame"];
         [cell.contentView addSubview:imageView];
@@ -319,6 +322,36 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 160;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(topsArray.count > 0){
+        [table deselectRowAtIndexPath:indexPath animated:YES];
+        NSDictionary *item = [topsArray objectAtIndex:indexPath.row];
+        NSString *prodtype = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];
+        NSString *prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        if([prodtype isEqualToString:@"1"]){
+            MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+            viewController.prodId = prodId;
+//            viewController.fromViewController = self;
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:NO];
+        } else if([prodtype isEqualToString:@"2"]){
+            DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+            viewController.prodId = prodId;
+//            viewController.fromViewController = self;
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:NO];
+        } else if([prodtype isEqualToString:@"3"]){
+            ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+            viewController.prodId = prodId;
+//            viewController.fromViewController = self;
+            viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:NO];
+        }
+//        self.moveToLeft = NO;
+    }
 }
 
 - (void)closeBtnClicked

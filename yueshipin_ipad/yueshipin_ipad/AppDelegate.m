@@ -13,6 +13,7 @@
 #import "MobClick.h"
 #import <Parse/Parse.h>
 #import "ActionUtility.h"
+#import "iRate.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -33,13 +34,26 @@
 @synthesize internetReach;
 @synthesize wifiReach;
 @synthesize sinaweibo;
-@synthesize playBtnSuppressed;
 @synthesize downloaderArray;
 @synthesize currentDownloadingNum;
 @synthesize alertUserInfo;
+@synthesize showVideoSwitch;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
+}
+
++ (void)initialize
+{
+	//set the app and bundle ID. normally you wouldn't need to do this
+    //but we need to test with an app that's actually on the store
+	[iRate sharedInstance].appStoreID = APPIRATER_APP_ID;
+    [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
+    [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
+    [iRate sharedInstance].daysUntilPrompt = 7;
+    
+    //enable preview mode
+    [iRate sharedInstance].previewMode = NO;
 }
 
 - (void)addToDownloaderArray:(DownloadItem *)item{
@@ -156,7 +170,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
-    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:nil];
+    [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
+    self.showVideoSwitch = @"0";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
@@ -169,7 +184,8 @@
     [self initSinaweibo];
     [self monitorReachability];
     [self isParseReachable];
-    [Parse setApplicationId:@"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P" clientKey:@"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"];
+//    [Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];   // Test Env
+    [Parse setApplicationId:@"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P" clientKey:@"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"]; // Production Env
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -189,12 +205,18 @@
 }
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
-    self.playBtnSuppressed = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:PLAY_BTN_SUPPRESSED]];
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
+    if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
+        self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
+    }
+    if(self.showVideoSwitch == nil){
+        self.showVideoSwitch = @"0";
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

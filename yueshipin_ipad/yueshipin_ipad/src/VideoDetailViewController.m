@@ -170,7 +170,7 @@
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
                 [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
-                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+                [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
@@ -268,7 +268,11 @@
 - (void)closeBtnClicked
 {
     fromViewController.moveToLeft = YES;
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
+    if (fromViewController == nil) {
+         [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
+    } else {
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
+    }
 }
 
 - (void)downloadBegin:(McDownload *)aDownload didReceiveResponseHeaders:(NSURLResponse *)responseHeaders

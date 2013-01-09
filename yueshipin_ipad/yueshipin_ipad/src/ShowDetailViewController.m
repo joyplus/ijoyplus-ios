@@ -214,10 +214,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if([@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
-        [self.playRoundBtn setHidden:YES];
-        [self.playBtn setEnabled:NO];
-        [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }
     if(video == nil){
@@ -366,7 +363,6 @@
 - (void)repositElements:(int)increasePositionY
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
-    if(![@"1" isEqualToString:[AppDelegate instance].playBtnSuppressed]){
         if(episodeArray.count > 5){
             self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH,  positionY, 32, 161);
             self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 390 + 10,  positionY, 32, 161);
@@ -439,7 +435,6 @@
             }
         }
         positionY = showListView.frame.origin.y + showListView.frame.size.height;
-    }
     int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
     
     self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 74, 19);
@@ -590,6 +585,22 @@
 }
 
 - (void)willPlayVideo:(NSInteger)num
+{
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
+        NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+        if([StringUtility stringIsEmpty:url]){
+            url = @"";
+        }
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    } else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
+        [self gotoWebsite:num];
+    } else {
+        [self playVideoInDefault:num];
+    }
+}
+
+- (void)playVideoInDefault:(NSInteger)num
 {
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){

@@ -158,6 +158,9 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"item_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathRemoveItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
+        if ([responseCode isEqualToString:kSuccessResCode]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
     }];
 }
