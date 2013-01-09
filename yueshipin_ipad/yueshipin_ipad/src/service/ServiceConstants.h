@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Joyplus. All rights reserved.
 //
 
-extern NSString *const kAppKey;
+extern NSString *const kDefaultAppKey;
 
 extern NSString *const kSuccessResCode;
 

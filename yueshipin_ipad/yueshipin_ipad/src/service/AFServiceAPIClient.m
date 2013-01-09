@@ -39,7 +39,8 @@ NSString * const kABaseURLString = @"http://api.joyplus.tv/";
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:kABaseURLString]];
-        [_sharedClient setDefaultHeader:@"app_key" value:kAppKey];
+        NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
+        [_sharedClient setDefaultHeader:@"app_key" value:appKey];
         [_sharedClient setDefaultHeader:@"Connection" value:@"keep-alive"];
     });
     

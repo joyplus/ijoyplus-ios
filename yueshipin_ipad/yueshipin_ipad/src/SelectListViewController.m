@@ -117,6 +117,11 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"my_topic_list" result:result];
         listData = [result objectForKey:@"tops"];
+        if (listData.count > 0) {
+            [doneBtn setHidden:NO];
+        } else {
+            [doneBtn setHidden:YES];
+        }
         [table reloadData];
     }
 }

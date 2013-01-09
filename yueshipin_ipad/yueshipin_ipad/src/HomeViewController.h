@@ -10,7 +10,7 @@
 #import "MenuViewController.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface HomeViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>
+@interface HomeViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 

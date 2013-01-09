@@ -730,7 +730,8 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     }];
 }
 
-- (void)removeViewInSlider {
+- (void)removeViewInSlider
+{
     CGRect frame = [UIScreen mainScreen].bounds;
     NSInteger lastViewControllerIndex = viewControllersStack.count - 1;
     if(lastViewControllerIndex < 0 || lastViewControllerIndex >= viewControllersStack.count){
@@ -772,7 +773,9 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     } completion:^(BOOL finished) {
         for(int i = lastViewControllerIndex; i > 0; i--){
             [[slideViews viewWithTag:20110106+i] removeFromSuperview];
-            [viewControllersStack removeObjectAtIndex:i];
+            if(viewControllersStack.count > 1){
+                [viewControllersStack removeLastObject];
+            }
         }
     }];
 }
@@ -903,45 +906,22 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
 - (void)menuToggle:(BOOL)menuClicked isStackStartView:(BOOL)isStackStartView
 {
-    if(menuClicked){
-        if ([[slideViews subviews] count]==1) {
-			viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-1];
-			viewAtLeft2 = nil;
-			viewAtRight = nil;
-			viewAtRight2 = nil;
-			
-		}else if ([[slideViews subviews] count]==2){
-            viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-2];
-            viewAtLeft2 = nil;
-            viewAtRight2 = nil;
-        }
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
-        [UIView setAnimationDuration:0.3];
-        [UIView setAnimationBeginsFromCurrentState:NO];
-        [viewAtLeft setFrame:CGRectMake(-LEFT_MENU_DIPLAY_WIDTH, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-        [UIView commitAnimations];
-    }else {
-        if ([[slideViews subviews] count]==1) {
-			viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-1];
-			viewAtLeft2 = nil;
-			viewAtRight = nil;
-			viewAtRight2 = nil;
-			
-		}else if ([[slideViews subviews] count]==2){
-            viewAtLeft = [[slideViews subviews] objectAtIndex:[[slideViews subviews] count]-2];
-            viewAtLeft2 = nil;
-            viewAtRight2 = nil;
-        }
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
-        [UIView setAnimationDuration:0.3];
-        [UIView setAnimationBeginsFromCurrentState:NO];
-        [viewAtLeft setFrame:CGRectMake(0, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-        [UIView commitAnimations];
-        
+    if ([[slideViews subviews] count] > 0) {
+        viewAtLeft = [[slideViews subviews] objectAtIndex:0];
+        viewAtLeft2 = nil;
+        viewAtRight = nil;
+        viewAtRight2 = nil;
     }
-    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
+    [UIView setAnimationDuration:0.3];
+    [UIView setAnimationBeginsFromCurrentState:NO];
+    if(menuClicked){
+        [viewAtLeft setFrame:CGRectMake(-LEFT_MENU_DIPLAY_WIDTH, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
+    }else {
+        [viewAtLeft setFrame:CGRectMake(0, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
+    }
+    [UIView commitAnimations];    
 }
 
 
