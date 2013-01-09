@@ -258,7 +258,7 @@
 
 - (void)parseWatchHistory
 {
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record1"];
     if(cacheResult != nil){
         [self parseWatchResultData:cacheResult];
     }
@@ -277,7 +277,7 @@
 {
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
+        [[CacheUtility sharedCache] putInCache:@"watch_record1" result:result];
         sortedwatchRecordArray = (NSArray *)[result objectForKey:@"histories"];
         if(sortedwatchRecordArray.count > 0){
             [table reloadData];

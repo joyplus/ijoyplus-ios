@@ -290,7 +290,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [[ContainerUtility sharedInstance] removeObjectForKey:kUserAvatarUrl];
         [[ContainerUtility sharedInstance] removeObjectForKey:kUserNickName];
         [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
-        [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+        [[CacheUtility sharedCache] removeObjectForKey:@"watch_record1"];
         [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
         [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
         [ActionUtility generateUserId:^{
@@ -408,7 +408,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
                 [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
-                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record1"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
                 [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
