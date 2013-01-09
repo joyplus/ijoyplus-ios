@@ -79,6 +79,8 @@
 
 #define PLAY_BTN_SUPPRESSED @"playBtnSuppressed"
 
+#define WATCH_RECORD_CACHE_KEY @"watch_record2"
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 
