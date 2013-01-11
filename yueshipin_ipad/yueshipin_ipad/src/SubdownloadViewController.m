@@ -10,7 +10,7 @@
 #import "CommonHeader.h"
 #import "SubdownloadItem.h"
 #import "GMGridView.h"
-#import "MediaPlayerViewController.h"
+#import "MyMediaPlayerViewController.h"
 
 @interface SubdownloadViewController ()<McDownloadDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
     UIButton *closeBtn;
@@ -248,7 +248,7 @@
                 
                 UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.subidNum + 10000000];
                 progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", (int)(newProgress*100)];
-                NSLog(@"%@", progressLabel.text);
+//                NSLog(@"%@", progressLabel.text);
             }
             break;
         }
@@ -442,14 +442,17 @@
                 }
             }
             
-            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = filePath;
+            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+            viewController.isDownloaded = YES;
+            NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+            [urlsArray addObject:filePath];
+            viewController.videoUrls = urlsArray;
             viewController.prodId = item.itemId;
+            viewController.type = item.type;
             viewController.name = self.titleContent;
             viewController.subname = item.name;
-            viewController.isDownloaded = YES;
-            viewController.type = item.type;
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
         } else {
             [self videoImageClicked:position];
         }

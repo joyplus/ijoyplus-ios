@@ -26,7 +26,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 @interface SettingsViewController (){
     UIView *backgroundView;
-    UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *bgImage;
     
@@ -56,7 +55,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 {
     [super viewDidUnload];
     backgroundView = nil;
-    menuBtn = nil;
     topImage = nil;
     bgImage = nil;
     speakBtn = nil;
@@ -86,11 +84,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [backgroundView addSubview:bgImage];
         
-        menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 137, 34)];
@@ -199,6 +192,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch.on = YES;
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
+    }
+    if ([AppDelegate instance].closed) {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    } else {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
 }
 

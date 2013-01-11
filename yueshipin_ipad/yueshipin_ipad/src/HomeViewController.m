@@ -34,7 +34,6 @@
 
 @interface HomeViewController (){
     UIView *backgroundView;
-    UIButton *menuBtn;
     UIImageView *sloganImageView;
     UIButton *searchBtn;
     UIView *contentView;
@@ -97,12 +96,6 @@
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [backgroundView addSubview:bgImage];
         
-		menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [menuBtn setBackgroundColor:[UIColor clearColor]];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [backgroundView addSubview:menuBtn];
         
         sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];

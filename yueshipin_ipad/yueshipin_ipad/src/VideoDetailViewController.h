@@ -20,7 +20,13 @@
 - (BOOL)downloadShow:(int)num;
 @end
 
-@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate, McDownloadDelegate>{
+@protocol DramaDetailViewControllerDelegate <NSObject>
+
+- (void)playNextEpisode;
+
+@end
+
+@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate, McDownloadDelegate,  DramaDetailViewControllerDelegate>{
     SinaWeibo *_sinaweibo;
     NSDictionary *video;
     NSArray *topics;
@@ -37,4 +43,6 @@
 - (void)addListBtnClicked;
 - (void)getDownloadUrls:(int)num;
 - (void)updateBadgeIcon;
+- (void)playVideo:(int)num;
+- (BOOL)validadUrl:(NSString *)originalUrl;
 @end

@@ -134,4 +134,15 @@
     [HUD show:YES];
     [HUD hide:YES afterDelay:2];
 }
+
++ (void)showPlayVideoFailure:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
+    HUD.labelText = @"该视频暂不能播放！";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:3];
+}
 @end

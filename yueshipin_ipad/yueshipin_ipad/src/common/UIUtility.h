@@ -23,4 +23,5 @@
 
 - (void)showProgressBar:(UIView *)view;
 - (void)hide;
++ (void)showPlayVideoFailure:(UIView *)view;
 @end

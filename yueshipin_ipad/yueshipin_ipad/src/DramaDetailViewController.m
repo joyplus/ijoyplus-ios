@@ -7,8 +7,6 @@
 //
 
 #import "DramaDetailViewController.h"
-#import "ProgramViewController.h"
-#import "MediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "CommentListViewController.h"
 #import "SublistViewController.h"
@@ -107,6 +105,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.type = 2;
     
     self.bgScrollView.frame = CGRectMake(0, 255, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
@@ -219,8 +219,6 @@
     introBtn.frame = CGRectMake(LEFT_WIDTH + 410, self.introContentTextView.frame.origin.y + 80, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
-    
-    self.type = 2;
     
     episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     episodeView.scrollEnabled = NO;
@@ -431,15 +429,49 @@
                 NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
                 [btn setTitle:name forState:UIControlStateNormal];
                 [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-                btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|
-                UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-                if(lastNum == i+1){
+                btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+                BOOL btnStatus = NO;
+                // 检查是否有有效的视频地址
+                if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
+                    NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
+                    if(videoUrlArray.count > 0){
+                        for(NSDictionary *tempVideo in videoUrlArray){
+                            NSArray *urls = [tempVideo objectForKey:@"urls"];
+                            for (NSDictionary *url in urls) {
+                                if ([super validadUrl:[url objectForKey:@"url"]]) {
+                                    btnStatus = YES;
+                                    break;
+                                }
+                            }
+                            if (btnStatus) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                if(!btnStatus){
+                    // 检查是否有有效的网页地址
+                    NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
+                    for (NSDictionary *videoUrl in videoUrls) {
+                        NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+                        if([self validadUrl:url]){
+                            btnStatus = YES;
+                            break;
+                        }
+                    }
+                }
+                if (!btnStatus) {
+                    [btn setEnabled:NO];
+                }
+                if(lastNum == i+1 && btn.enabled){
+                    [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
                     [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
                 } else {
+                    [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
                     [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
-                }
+                }                
+                [btn setBackgroundImage:[[UIImage imageNamed:@"drama_disabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] forState:UIControlStateDisabled];
                 [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
-                [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
                 [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
                 [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
                 [episodeView addSubview:btn];
@@ -572,158 +604,43 @@
     if(lastNumObj != nil){
         lastNum = [lastNumObj integerValue];
     }
-    UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:lastNum];
-    [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    if (lastNum > 0 && lastNum <= episodeArray.count) {
+        UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:lastNum];
+        [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    }
 }
 
-- (void)dramaPlay:(id)sender
+- (void)dramaPlay:(UIButton *)btn
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
     [self clearLastBtnImage];
-    UIButton *btn = (UIButton *)sender;
+    [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
-    [self playVideo:btn.tag];
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:btn.tag]];
+    [super playVideo:btn.tag-1];
 }
 
 
 - (void)playVideo
-{
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [self clearLastBtnImage];
-    
+{   
     UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:1];
-    [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
-    [self playVideo:1];
+    [self dramaPlay:btn];
 }
 
-- (void)playVideo:(NSInteger)num
+- (void)playNextEpisode
 {
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
-        willPlayIndex = num;
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
-                                                          delegate:self
-                                                 cancelButtonTitle:@"取消"
-                                                 otherButtonTitles:@"确定", nil];
-        [alertView show];
-    } else {
-        [self willPlayVideo:num];
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
-    }
-}
-
-- (NSString *)getVideoAddress:(NSInteger)num
-{
-    NSString *videoUrl = nil;
-    if(num-1 < 0 || num-1 >=episodeArray.count){
-        return nil;
-    }
-    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
-                break;
-            }
-        }
-        if(videoUrl == nil){
-            if (videoUrlArray.count > 0) {
-                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-            }
-        }
-    }
-    return videoUrl;
-}
-
-- (void)willPlayVideo:(NSInteger)num
-{
-    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:num]];
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        NSString *url = nil;
-        NSArray *urlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"video_urls"];
-        if (urlArray.count > 0) {
-            url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-        }
-        if(url == nil){
-            url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
-        }
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    } else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
-        [self gotoWebsite:num];
-    } else {
-        [self playVideoInDefault:num];
-    }
-}
-
-- (void)playVideoInDefault:(NSInteger)num
-{    
-    NSString *videoUrl = [self getVideoAddress:num];
-    if(videoUrl == nil){
-        [self gotoWebsite:num];
-    } else {
-        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = videoUrl;
-        viewController.prodId = self.prodId;
-        viewController.dramaDetailViewControllerDelegate = self;
-        viewController.type = 2;
-        viewController.currentNum = num;
-        viewController.name = [video objectForKey:@"name"];
-        viewController.subname = [NSString stringWithFormat:@"%i", num];
-        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-    }
-}
-
-- (void)playNextEpisode:(int)currentNum
-{
-    if(currentNum <=0 || currentNum >=episodeArray.count){
-        return;
-    }
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
         lastNum = [lastNumObj integerValue];
     }
-    
-    UIButton *btn = (UIButton *)[episodeView viewWithTag:lastNum];
-    [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
-    
-    UIButton *nextEpiBtn = (UIButton *)[episodeView viewWithTag:lastNum+1];
-    [nextEpiBtn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
-    [self willPlayVideo:currentNum+1];
-}
-
-- (void)gotoWebsite:(NSInteger)num
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSString *url = nil;
-    NSArray *urlArray = [[episodeArray objectAtIndex:num-1] objectForKey:@"video_urls"];
-    if (urlArray.count > 0) {
-        url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
+    if (lastNum > 0 && lastNum <= episodeArray.count) {
+        UIButton *nextEpiBtn = (UIButton *)[episodeView viewWithTag:lastNum+1];
+        if(nextEpiBtn.enabled){
+            [self dramaPlay:nextEpiBtn];
+        }
     }
-    if(url == nil){
-        url = [[[[episodeArray objectAtIndex:0] objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"];
-    }
-    viewController.prodId = self.prodId;
-    viewController.programUrl = url;
-    viewController.title = [video objectForKey:@"name"];
-    viewController.type = 2;
-    viewController.subname = [NSString stringWithFormat:@"%i", num];
-    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
 }
-
 
 - (void)dingBtnClicked:(id)sender
 {

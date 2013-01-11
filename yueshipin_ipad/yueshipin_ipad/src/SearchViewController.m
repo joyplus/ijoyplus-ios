@@ -30,7 +30,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    menuBtn = nil;
     topImage = nil;
     bgImage = nil;
     sBar = nil;
@@ -53,11 +52,6 @@
         [self.view addSubview:bgImage];
         
         leftWidth = 80;
-        menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 140, 35)];
@@ -97,6 +91,12 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    if ([AppDelegate instance].closed) {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    } else {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
+    }
     historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
     if(historyArray == nil){
         historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];

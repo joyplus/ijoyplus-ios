@@ -10,6 +10,7 @@
 #import "SelectListViewController.h"
 #import "CommonHeader.h"
 #import "ListViewController.h"
+#import "MyMediaPlayerViewController.h"
 
 @interface VideoDetailViewController ()
 
@@ -319,4 +320,97 @@
     [newNum save];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
 }
+
+- (void)playVideo:(int)num
+{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        willPlayIndex = num;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    } else {
+        [self willPlayVideo:num];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self willPlayVideo:willPlayIndex];
+    }
+}
+
+- (void)willPlayVideo:(int)num
+{
+    if(num < 0 || num >= episodeArray.count){
+        return;
+    }
+    // 网页地址
+    NSString *httpUrl;
+    NSArray *videoUrls = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
+    for (NSDictionary *videoUrl in videoUrls) {
+        NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+        if([self validadUrl:url]){
+            httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            break;
+        }
+    }
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        if (httpUrl) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:httpUrl]];
+        } else {
+            [UIUtility showPlayVideoFailure:self.view];
+        }
+    } else {
+        // 视频地址
+        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
+        // 1：直接播放网页。此处不行特殊处理，只要获取视频地址就可以了。
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
+            NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+            if(videoUrlArray.count > 0){
+                for(NSDictionary *tempVideo in videoUrlArray){
+                    NSArray *urls = [tempVideo objectForKey:@"urls"];
+                    for (NSDictionary *url in urls) {
+                        NSString *tempUrl = [url objectForKey:@"url"];
+                        if([self validadUrl:tempUrl]){
+                            [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                        }
+                    }
+                }
+            }
+        }
+        MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+        viewController.videoUrls = urlsArray;
+        viewController.videoHttpUrl = httpUrl;
+        viewController.prodId = self.prodId;
+        viewController.dramaDetailViewControllerDelegate = self;
+        viewController.type = type;
+        viewController.name = [video objectForKey:@"name"];
+        viewController.subname = [NSString stringWithFormat:@"%i", num];
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+    }
+}
+
+- (BOOL)validadUrl:(NSString *)originalUrl
+{
+    NSString *formatUrl = [[originalUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+    if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
+        return YES;
+    }
+    return NO;
+}
+
+// This callback method will be implemented by subclasses.
+- (void)playNextEpisode{
+    
+}
+
 @end

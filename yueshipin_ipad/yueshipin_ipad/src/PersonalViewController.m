@@ -13,10 +13,9 @@
 #import "CreateListOneViewController.h"
 #import "TopicListViewController.h"
 #import "WatchRecordCell.h"
-#import "MediaPlayerViewController.h"
-#import "ProgramViewController.h"
 #import "MovieDetailViewController.h"
 #import "ShowDetailViewController.h"
+#import "MyMediaPlayerViewController.h"
 
 
 #define TABLE_VIEW_WIDTH 370
@@ -27,7 +26,7 @@
 
 @interface PersonalViewController (){
     UIView *backgroundView;
-    UIButton *menuBtn;
+
     UIImageView *topImage;
     UIImageView *bgImage;
     
@@ -57,6 +56,8 @@
     int tableHeight;
     
     BOOL accessed;
+    
+    UIButton *clickedBtn;
 }
 
 @end
@@ -94,6 +95,7 @@
     importDoubanBtn = nil;
     tableBgImage = nil;
     sortedwatchRecordArray = nil;
+    clickedBtn = nil;
 }
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
@@ -107,11 +109,6 @@
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [backgroundView addSubview:bgImage];
         
-        menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 187, 36)];
@@ -239,6 +236,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    if ([AppDelegate instance].closed) {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    } else {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
+    }
     if(sortedwatchRecordArray.count > 0){
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
@@ -401,28 +403,46 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        clickedBtn = btn;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    } else {        
+        [self playVideo:btn];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self playVideo:clickedBtn];
+    }
+}
+
+- (void)playVideo:(UIButton *)btn
+{
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
+    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
     if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
-        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = [item objectForKey:@"video_url"];
-        viewController.prodId = [item objectForKey:@"prod_id"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-        viewController.name = [item objectForKey:@"prod_name"];
-        viewController.subname = [item objectForKey:@"prod_subname"];
-        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+        [urlsArray addObject:[item objectForKey:@"video_url"]];
+        viewController.videoUrls = urlsArray;
     } else {
-        ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-        viewController.prodId = [item objectForKey:@"prod_id"];
-        viewController.programUrl = [item objectForKey:@"video_url"];
-        viewController.title = [item objectForKey:@"prod_name"];
-        viewController.subname = [item objectForKey:@"prod_subname"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
     }
+    viewController.prodId = [item objectForKey:@"prod_id"];
+    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+    viewController.name = [item objectForKey:@"prod_name"];
+    viewController.subname = [item objectForKey:@"prod_subname"];
+    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
 }
 
 - (NSString *)composeContent:(NSDictionary *)item

@@ -8,8 +8,6 @@
 
 #import "ShowDetailViewController.h"
 #import "CommonHeader.h"
-#import "ProgramViewController.h"
-#import "MediaPlayerViewController.h"
 #import "CommentListViewController.h"
 
 #define DEFAULT_POSOTION_Y 585
@@ -96,6 +94,8 @@
 {
     [super viewDidLoad];
     
+    self.type = 3;
+    
     self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
     
@@ -112,7 +112,7 @@
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateHighlighted];
+    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
     [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.playRoundBtn.center = self.filmImage.center;
@@ -552,100 +552,7 @@
 
 - (void)playVideo
 {
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [self playVideo:0];
-}
-
-- (void)playVideo:(NSInteger)num
-{
-    if(num < 0 || num >= episodeArray.count){
-        return;
-    }
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
-        willPlayIndex = num;
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
-                                                          delegate:self
-                                                 cancelButtonTitle:@"取消"
-                                                 otherButtonTitles:@"确定", nil];
-        [alertView show];
-    } else {
-        [self willPlayVideo:num];
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
-    }
-}
-
-- (void)willPlayVideo:(NSInteger)num
-{
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
-        NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-        if([StringUtility stringIsEmpty:url]){
-            url = @"";
-        }
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    } else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
-        [self gotoWebsite:num];
-    } else {
-        [self playVideoInDefault:num];
-    }
-}
-
-- (void)playVideoInDefault:(NSInteger)num
-{
-    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
-                break;
-            }
-        }
-        if(videoUrl == nil){
-            if (videoUrlArray.count > 0) {
-                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-            }
-        }
-        if(videoUrl == nil){
-            [self gotoWebsite:num];
-        } else {
-            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = videoUrl;
-            viewController.prodId = self.prodId;
-            viewController.type = 3;
-            viewController.name = [video objectForKey:@"name"];
-            viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-        }
-    }else {
-        [self gotoWebsite:num];
-    }
-}
-
-- (void)gotoWebsite:(NSInteger)num
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
-    NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-    if([StringUtility stringIsEmpty:url]){
-        url = @"";
-    }
-    viewController.prodId = self.prodId;
-    viewController.programUrl = url;
-    viewController.title = [video objectForKey:@"name"];
-    viewController.type = 3;
-    viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
-    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+    [super playVideo:0];
 }
 
 - (void)dingBtnClicked:(id)sender

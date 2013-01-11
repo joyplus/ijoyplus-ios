@@ -54,7 +54,6 @@
     [bgImage removeFromSuperview];
     
     [menuBtn removeFromSuperview];
-    menuBtn = nil;
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     closeBtn.frame = CGRectMake(465, 20, 40, 42);

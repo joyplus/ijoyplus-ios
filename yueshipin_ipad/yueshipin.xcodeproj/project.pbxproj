@@ -159,6 +159,8 @@
 		EB9382A51668A1E10046A3B1 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */; };
 		EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */; };
 		EBA51380169C144E00198067 /* nodownload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA5137F169C144E00198067 /* nodownload@2x.png */; };
+		EBA6E75A169E8E4E00EC394D /* cache_video.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA6E758169E8E4E00EC394D /* cache_video.png */; };
+		EBA6E75B169E8E4E00EC394D /* cache_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA6E759169E8E4E00EC394D /* cache_video@2x.png */; };
 		EBB3055A169D189B005C5A30 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB30559169D189B005C5A30 /* CoreLocation.framework */; };
 		EBB30562169D4E87005C5A30 /* MyMediaPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB30561169D4E87005C5A30 /* MyMediaPlayerViewController.m */; };
 		EBB38D7A1696880100FD855E /* NSData-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D5B1696880100FD855E /* NSData-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -198,7 +200,6 @@
 		EBB59CD716673CFE00F646C7 /* VideoDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CD616673CFD00F646C7 /* VideoDetailViewController.m */; };
 		EBB59CEA1667476000F646C7 /* add_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE61667476000F646C7 /* add_title@2x.png */; };
 		EBB59CEB1667476000F646C7 /* drama_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE71667476000F646C7 /* drama_pressed@2x.png */; };
-		EBB59CEC1667476000F646C7 /* drama_watched@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE81667476000F646C7 /* drama_watched@2x.png */; };
 		EBB59CED1667476000F646C7 /* drama@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CE91667476000F646C7 /* drama@2x.png */; };
 		EBB59CF1166751D200F646C7 /* CommentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CF0166751D100F646C7 /* CommentListViewController.m */; };
 		EBB59CF41667608600F646C7 /* morecomments_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CF21667608600F646C7 /* morecomments_pressed@2x.png */; };
@@ -423,6 +424,8 @@
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
+		EBD5DCF2169FB7C8003CCF64 /* drama_watched.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD5DCF1169FB7C8003CCF64 /* drama_watched.png */; };
+		EBD5DCF6169FCBEA003CCF64 /* drama_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD5DCF5169FCBEA003CCF64 /* drama_disabled@2x.png */; };
 		EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */; };
 		EBF3A96A166301F100EBF56D /* DramaDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */; };
 		EBF3A96B166301F100EBF56D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A962166301F100EBF56D /* ListViewController.m */; };
@@ -432,16 +435,12 @@
 		EBF3A979166309AC00EBF56D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A977166309AC00EBF56D /* Localizable.strings */; };
 		EBF3A985166384DF00EBF56D /* brief@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A981166384DF00EBF56D /* brief@2x.png */; };
 		EBF3A987166384DF00EBF56D /* morelists_title1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A983166384DF00EBF56D /* morelists_title1@2x.png */; };
-		EBF3A98C1663965F00EBF56D /* MediaPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A98A1663965D00EBF56D /* MediaPlayerViewController.m */; };
-		EBF3A98D1663965F00EBF56D /* MediaPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A98B1663965E00EBF56D /* MediaPlayerViewController.xib */; };
 		EBF3A98F1663967F00EBF56D /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBF3A98E1663967E00EBF56D /* MediaPlayer.framework */; };
 		EBF3A9921663972A00EBF56D /* DeviceListView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9911663972A00EBF56D /* DeviceListView.m */; };
 		EBF3A99A1663973200EBF56D /* FPPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9951663973200EBF56D /* FPPopoverController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBF3A99B1663973200EBF56D /* FPPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9971663973200EBF56D /* FPPopoverView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBF3A99C1663973200EBF56D /* FPTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9991663973200EBF56D /* FPTouchView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBF3A99F1663979600EBF56D /* DeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A99E1663979600EBF56D /* DeviceListViewController.m */; };
-		EBF3A9A31663982E00EBF56D /* ProgramViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9A11663982D00EBF56D /* ProgramViewController.m */; };
-		EBF3A9A41663982E00EBF56D /* ProgramViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A9A21663982D00EBF56D /* ProgramViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -638,6 +637,8 @@
 		EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBA5137F169C144E00198067 /* nodownload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nodownload@2x.png"; sourceTree = "<group>"; };
+		EBA6E758169E8E4E00EC394D /* cache_video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cache_video.png; sourceTree = "<group>"; };
+		EBA6E759169E8E4E00EC394D /* cache_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cache_video@2x.png"; sourceTree = "<group>"; };
 		EBB30559169D189B005C5A30 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		EBB30560169D4E87005C5A30 /* MyMediaPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyMediaPlayerViewController.h; sourceTree = "<group>"; };
 		EBB30561169D4E87005C5A30 /* MyMediaPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyMediaPlayerViewController.m; sourceTree = "<group>"; };
@@ -702,7 +703,6 @@
 		EBB59CD616673CFD00F646C7 /* VideoDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoDetailViewController.m; sourceTree = "<group>"; };
 		EBB59CE61667476000F646C7 /* add_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add_title@2x.png"; sourceTree = "<group>"; };
 		EBB59CE71667476000F646C7 /* drama_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_pressed@2x.png"; sourceTree = "<group>"; };
-		EBB59CE81667476000F646C7 /* drama_watched@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_watched@2x.png"; sourceTree = "<group>"; };
 		EBB59CE91667476000F646C7 /* drama@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama@2x.png"; sourceTree = "<group>"; };
 		EBB59CEF166751D100F646C7 /* CommentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentListViewController.h; sourceTree = "<group>"; };
 		EBB59CF0166751D100F646C7 /* CommentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentListViewController.m; sourceTree = "<group>"; };
@@ -966,6 +966,8 @@
 		EBBDCE34166C590200C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomColoredAccessory.h; sourceTree = "<group>"; };
 		EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomColoredAccessory.m; sourceTree = "<group>"; };
+		EBD5DCF1169FB7C8003CCF64 /* drama_watched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_watched.png; sourceTree = "<group>"; };
+		EBD5DCF5169FCBEA003CCF64 /* drama_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_disabled@2x.png"; sourceTree = "<group>"; };
 		EBF3A95E166301F100EBF56D /* DramaDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaDetailViewController.h; sourceTree = "<group>"; };
 		EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaDetailViewController.m; sourceTree = "<group>"; };
 		EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DramaDetailViewController.xib; sourceTree = "<group>"; };
@@ -978,9 +980,6 @@
 		EBF3A978166309AC00EBF56D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EBF3A981166384DF00EBF56D /* brief@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brief@2x.png"; sourceTree = "<group>"; };
 		EBF3A983166384DF00EBF56D /* morelists_title1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "morelists_title1@2x.png"; sourceTree = "<group>"; };
-		EBF3A9891663965C00EBF56D /* MediaPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaPlayerViewController.h; sourceTree = "<group>"; };
-		EBF3A98A1663965D00EBF56D /* MediaPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaPlayerViewController.m; sourceTree = "<group>"; };
-		EBF3A98B1663965E00EBF56D /* MediaPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MediaPlayerViewController.xib; sourceTree = "<group>"; };
 		EBF3A98E1663967E00EBF56D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		EBF3A9901663972A00EBF56D /* DeviceListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListView.h; sourceTree = "<group>"; };
 		EBF3A9911663972A00EBF56D /* DeviceListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListView.m; sourceTree = "<group>"; };
@@ -992,9 +991,6 @@
 		EBF3A9991663973200EBF56D /* FPTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPTouchView.m; sourceTree = "<group>"; };
 		EBF3A99D1663979500EBF56D /* DeviceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListViewController.h; sourceTree = "<group>"; };
 		EBF3A99E1663979600EBF56D /* DeviceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListViewController.m; sourceTree = "<group>"; };
-		EBF3A9A01663982C00EBF56D /* ProgramViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgramViewController.h; sourceTree = "<group>"; };
-		EBF3A9A11663982D00EBF56D /* ProgramViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramViewController.m; sourceTree = "<group>"; };
-		EBF3A9A21663982D00EBF56D /* ProgramViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProgramViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1062,6 +1058,10 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBD5DCF5169FCBEA003CCF64 /* drama_disabled@2x.png */,
+				EBD5DCF1169FB7C8003CCF64 /* drama_watched.png */,
+				EBA6E758169E8E4E00EC394D /* cache_video.png */,
+				EBA6E759169E8E4E00EC394D /* cache_video@2x.png */,
 				EBA5137F169C144E00198067 /* nodownload@2x.png */,
 				EBB93D74169BB0A10017B5A5 /* clause_content@2x.png */,
 				EBB93D75169BB0A10017B5A5 /* clause_pressed@2x.png */,
@@ -1205,7 +1205,6 @@
 				EB93829D16688FC60046A3B1 /* replay@2x.png */,
 				EBB59CE61667476000F646C7 /* add_title@2x.png */,
 				EBB59CE71667476000F646C7 /* drama_pressed@2x.png */,
-				EBB59CE81667476000F646C7 /* drama_watched@2x.png */,
 				EBB59CE91667476000F646C7 /* drama@2x.png */,
 				EBB59CF21667608600F646C7 /* morecomments_pressed@2x.png */,
 				EBB59CF31667608600F646C7 /* morecomments@2x.png */,
@@ -1692,14 +1691,8 @@
 				EB8201C116663A6D0015F447 /* SelectListViewController.m */,
 				EB8201BC166636130015F447 /* SublistViewController.h */,
 				EB8201BD166636140015F447 /* SublistViewController.m */,
-				EBF3A9A01663982C00EBF56D /* ProgramViewController.h */,
-				EBF3A9A11663982D00EBF56D /* ProgramViewController.m */,
-				EBF3A9A21663982D00EBF56D /* ProgramViewController.xib */,
 				EBF3A99D1663979500EBF56D /* DeviceListViewController.h */,
 				EBF3A99E1663979600EBF56D /* DeviceListViewController.m */,
-				EBF3A9891663965C00EBF56D /* MediaPlayerViewController.h */,
-				EBF3A98A1663965D00EBF56D /* MediaPlayerViewController.m */,
-				EBF3A98B1663965E00EBF56D /* MediaPlayerViewController.xib */,
 				EBB30560169D4E87005C5A30 /* MyMediaPlayerViewController.h */,
 				EBB30561169D4E87005C5A30 /* MyMediaPlayerViewController.m */,
 			);
@@ -1969,8 +1962,6 @@
 				EBF3A979166309AC00EBF56D /* Localizable.strings in Resources */,
 				EBF3A985166384DF00EBF56D /* brief@2x.png in Resources */,
 				EBF3A987166384DF00EBF56D /* morelists_title1@2x.png in Resources */,
-				EBF3A98D1663965F00EBF56D /* MediaPlayerViewController.xib in Resources */,
-				EBF3A9A41663982E00EBF56D /* ProgramViewController.xib in Resources */,
 				EBBA00D3166496600069FE7E /* collect_title@2x.png in Resources */,
 				EBBA00D4166496600069FE7E /* list_title@2x.png in Resources */,
 				EBBA00D5166496600069FE7E /* moviecard_list@2x.png in Resources */,
@@ -2044,7 +2035,6 @@
 				EBB59CD416673A0500F646C7 /* result_title@2x.png in Resources */,
 				EBB59CEA1667476000F646C7 /* add_title@2x.png in Resources */,
 				EBB59CEB1667476000F646C7 /* drama_pressed@2x.png in Resources */,
-				EBB59CEC1667476000F646C7 /* drama_watched@2x.png in Resources */,
 				EBB59CED1667476000F646C7 /* drama@2x.png in Resources */,
 				EBB59CF41667608600F646C7 /* morecomments_pressed@2x.png in Resources */,
 				EBB59CF51667608600F646C7 /* morecomments@2x.png in Resources */,
@@ -2194,6 +2184,10 @@
 				EBB93D7C169BB0A10017B5A5 /* clause@2x.png in Resources */,
 				EBB93D7D169BB0A10017B5A5 /* play_disabled@2x.png in Resources */,
 				EBA51380169C144E00198067 /* nodownload@2x.png in Resources */,
+				EBA6E75A169E8E4E00EC394D /* cache_video.png in Resources */,
+				EBA6E75B169E8E4E00EC394D /* cache_video@2x.png in Resources */,
+				EBD5DCF2169FB7C8003CCF64 /* drama_watched.png in Resources */,
+				EBD5DCF6169FCBEA003CCF64 /* drama_disabled@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2254,13 +2248,11 @@
 				EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */,
 				EBF3A96B166301F100EBF56D /* ListViewController.m in Sources */,
 				EBF3A96D166301F100EBF56D /* ShowDetailViewController.m in Sources */,
-				EBF3A98C1663965F00EBF56D /* MediaPlayerViewController.m in Sources */,
 				EBF3A9921663972A00EBF56D /* DeviceListView.m in Sources */,
 				EBF3A99A1663973200EBF56D /* FPPopoverController.m in Sources */,
 				EBF3A99B1663973200EBF56D /* FPPopoverView.m in Sources */,
 				EBF3A99C1663973200EBF56D /* FPTouchView.m in Sources */,
 				EBF3A99F1663979600EBF56D /* DeviceListViewController.m in Sources */,
-				EBF3A9A31663982E00EBF56D /* ProgramViewController.m in Sources */,
 				EBBA00BF166488D70069FE7E /* DingListViewController.m in Sources */,
 				EBBA00DB166496FC0069FE7E /* CollectionListViewController.m in Sources */,
 				EBBA01031664BC510069FE7E /* AFSinaWeiboAPIClient.m in Sources */,

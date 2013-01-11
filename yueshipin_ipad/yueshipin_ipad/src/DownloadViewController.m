@@ -11,11 +11,10 @@
 #import "DownloadItem.h"
 #import "GMGridView.h"
 #import "SubdownloadViewController.h"
-#import "MediaPlayerViewController.h"
 #import "SQLiteInstanceManager.h"
+#import "MyMediaPlayerViewController.h"
 
 @interface DownloadViewController ()<McDownloadDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
-    UIButton *menuBtn;
     UIImageView *topImage;
     UIImageView *topIcon;
     UIImageView *bgImage;
@@ -42,7 +41,6 @@
 
 - (void)viewDidUnload
 {
-    menuBtn = nil;
     topImage = nil;
     bgImage = nil;
     allItem = nil;
@@ -86,11 +84,6 @@
         [self.view addSubview:nodownloadImage];
         
         leftWidth = 80;
-        menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth + 50, 40, 143, 35)];
@@ -177,6 +170,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if ([AppDelegate instance].closed) {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    } else {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
+    }
     _gmGridView.editing = NO;
     [self reloadItems];
 }
@@ -456,14 +454,17 @@
                 }
             }
             
-            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = filePath;
+            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+            viewController.isDownloaded = YES;
+            NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+            [urlsArray addObject:filePath];
+            viewController.videoUrls = urlsArray;
             viewController.prodId = item.itemId;
+            viewController.type = 1;
             viewController.name = item.name;
             viewController.subname = @"";
-            viewController.isDownloaded = YES;
-            viewController.type = 1;
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+            [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
         } else {
             if(item.type == 1){
                 [self stopDownloading:position];

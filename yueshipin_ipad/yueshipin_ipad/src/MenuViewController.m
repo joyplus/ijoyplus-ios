@@ -306,6 +306,7 @@
             [UIUtility showNetWorkError:viewController.view];
         }
     }
+    [AppDelegate instance].closed = NO;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

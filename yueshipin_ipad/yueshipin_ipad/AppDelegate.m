@@ -216,6 +216,7 @@
     if(self.showVideoSwitch == nil){
         self.showVideoSwitch = @"0";
     }
+    self.showVideoSwitch = @"0";
     [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
 }
 

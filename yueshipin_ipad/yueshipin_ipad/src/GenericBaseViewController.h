@@ -11,6 +11,7 @@
 
 @interface GenericBaseViewController : UIViewController{
     UIUtility *myHUD;
+    UIButton *menuBtn;
     UISwipeGestureRecognizer *swipeRecognizer;
     
     UISwipeGestureRecognizer *openMenuRecognizer;
