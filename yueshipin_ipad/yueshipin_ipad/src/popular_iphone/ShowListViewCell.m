@@ -18,10 +18,12 @@
     if (self) {
         imageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 2, 320, 126)];
         [self addSubview:imageView_];
-        
-        nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 110, 320, 15)];
-        nameLabel_.backgroundColor = [UIColor grayColor];
-        nameLabel_.alpha = 0.5;
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 113, 320, 15)];
+        view.backgroundColor = [UIColor grayColor];
+        view.alpha = 0.5;
+        [self addSubview:view];
+        nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 113, 320, 15)];
+        nameLabel_.backgroundColor = [UIColor clearColor];
         nameLabel_.textColor = [UIColor whiteColor];
         [self addSubview:nameLabel_];
         

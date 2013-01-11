@@ -130,7 +130,13 @@
     [searchBar_ resignFirstResponder];
     [self Search];
 }
-
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+   [searchBar setShowsCancelButton:YES animated:YES];
+}
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
+    [searchBar setShowsCancelButton:NO animated:NO];
+    [searchBar resignFirstResponder];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [searchResults_ count];
 }

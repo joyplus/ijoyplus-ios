@@ -36,6 +36,11 @@
 {
     [super viewDidLoad];
     
+    //[self initSinaWei];
+    [self loadViewResource];
+}
+
+-(void)loadViewResource{
     [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
@@ -50,13 +55,12 @@
     logo.frame = CGRectMake(20, 150, 34, 33);
     [self.view addSubview:logo];
     
-    self.title = [infoDic_ objectForKey:@"name"];
+    self.title = [infoDic_ objectForKey:@"prod_name"];
     textView_ = [[UITextView alloc] initWithFrame:CGRectMake(20, 50, 280, 80)];
-    textView_.text = [NSString stringWithFormat:@"我刚看了<%@>,分享一下吧。",[infoDic_ objectForKey:@"name"]];
+    textView_.text = [NSString stringWithFormat:@"我刚看了<%@>,分享一下吧。",[infoDic_ objectForKey:@"prod_name"]];
     [textView_ becomeFirstResponder];
     UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
     share.frame = CGRectMake(220, 150, 80, 32);
-    share.backgroundColor = [UIColor redColor];
     [share setBackgroundImage:[UIImage imageNamed:@"share_btn.png"] forState:UIControlStateNormal];
     [share setBackgroundImage:[UIImage imageNamed:@"share_btn_pressed.png"] forState:UIControlStateHighlighted];
     [share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
@@ -70,46 +74,40 @@
     [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
-	// Do any additional setup after loading the view.
 }
 -(void)share:(id)sender{
-     sinaWeibo_ = [AppDelegate instance].sinaweibo;
-     sinaWeibo_.delegate = self;
-    if ([sinaWeibo_ isLoggedIn]) {
-          NSString *content = textView_.text ;
-        if ([content length] >0) {
-            if (content.length > 140) {
-                content = [content substringToIndex:140];
-            }
-            if([content rangeOfString:@"\n"].location != NSNotFound){
-                content = [content stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
-            }
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaWeibo_.accessToken, @"access_token", content, @"status", [infoDic_ objectForKey:@"poster"], @"url", nil];
-            [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                [self removeOverlay];
-                [self showSuccessModalView:1.5];
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self removeOverlay];
-                [self showFailureModalView:1.5];
-            }];
-
-
+    
+    [textView_ resignFirstResponder];
+    NSString *content = textView_.text ;
+    if ([content length] >0) {
+        if (content.length > 140) {
+            content = [content substringToIndex:140];
         }
-    }
-    else{
+        if([content rangeOfString:@"\n"].location != NSNotFound){
+            content = [content stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
+        }
+        sinaWeibo_ = [AppDelegate instance].sinaweibo;
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaWeibo_.accessToken, @"access_token", content, @"status", [infoDic_ objectForKey:@"prod_pic_url"], @"url", nil];
+        [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [self removeOverlay];
+            [self showSuccessModalView:1.5];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [self removeOverlay];
+            [self showFailureModalView:1.5];
+        }];
 
-        [sinaWeibo_ logIn];
-    }
 
+    }
+    
 }
 
 - (void)showSuccessModalView:(int)closeTime
 {
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 200, 100);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -117,11 +115,11 @@
 }
 - (void)showFailureModalView:(int)closeTime
 {
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"failure_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 200, 100);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -140,9 +138,10 @@
     [self dismissModalViewControllerAnimated:YES];
 
 }
-
+/*
 #pragma mark - SinaWeibo Delegate
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo{
+    
     NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:
                               sinaweibo.accessToken, @"AccessTokenKey",
                               sinaweibo.expirationDate, @"ExpirationDateKey",
@@ -155,6 +154,8 @@
                        params:[NSMutableDictionary dictionaryWithObject:sinaweibo.userID forKey:@"uid"]
                    httpMethod:@"GET"
                      delegate:self];
+    
+     //[self loadViewResource];
 }
 - (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo{
     NSLog(@"sinaweiboDidLogOut");
@@ -219,6 +220,7 @@
         
     }
 }
+ */
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

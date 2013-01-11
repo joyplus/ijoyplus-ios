@@ -147,11 +147,11 @@
 }
 - (void)showSuccessModalView:(int)closeTime
 {
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 200, 100);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];

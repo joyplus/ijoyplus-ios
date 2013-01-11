@@ -96,7 +96,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:backGround];

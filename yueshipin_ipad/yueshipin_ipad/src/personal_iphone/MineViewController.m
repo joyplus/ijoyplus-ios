@@ -176,13 +176,18 @@
     [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forState:UIControlStateNormal];
     [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"] forState:UIControlStateHighlighted];
     [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]forState:UIControlStateSelected];
+    button1_.adjustsImageWhenHighlighted = NO;
+
+    
     button2_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [button2_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forState:UIControlStateNormal];
-     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"] forState:UIControlStateHighlighted];
+    [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"] forState:UIControlStateHighlighted];
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]forState:UIControlStateSelected];
     button2_.frame = CGRectMake(111, 40, 99, 51);
     button2_.tag = 101;
+    button2_.adjustsImageWhenHighlighted = NO;
+    
     button3_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [button3_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forState:UIControlStateNormal];
@@ -190,6 +195,7 @@
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]forState:UIControlStateSelected];
     button3_.frame = CGRectMake(210, 40, 99, 51);
     button3_.tag = 102;
+    button3_.adjustsImageWhenHighlighted = NO;
      
     [self.view addSubview:button1_];
     [self.view addSubview:button2_];
@@ -306,7 +312,16 @@
 -(void)seeMore:(id)sender{
     if (button1_.selected) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
-        moreListViewController.listArr = [NSMutableArray arrayWithArray:sortedwatchRecordArray_];
+        if ([sortedwatchRecordArray_ count]>10) {
+            NSMutableArray *temParr = [NSMutableArray arrayWithCapacity:10];
+            for (int i = 0; i<10; i++) {
+                [temParr addObject:[sortedwatchRecordArray_ objectAtIndex:i]];
+            }
+            moreListViewController.listArr = temParr;
+        }
+        else{
+            moreListViewController.listArr = [NSMutableArray arrayWithArray:sortedwatchRecordArray_];
+        }
         moreListViewController.type = RECORD_TYPE;
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
@@ -335,6 +350,7 @@
 }
 
 -(void)Selectbutton:(id)sender{
+
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];

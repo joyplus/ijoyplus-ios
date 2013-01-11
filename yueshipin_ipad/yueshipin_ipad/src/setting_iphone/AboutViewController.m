@@ -36,7 +36,7 @@
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
         
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,320, 480)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,320, 416)];
     imageView.image = [UIImage imageNamed:@"background_about_us.png"];
     
     [self.view addSubview:imageView];

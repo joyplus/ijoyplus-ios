@@ -67,9 +67,10 @@
     [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setBackgroundImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
+    _infoDic = self.infoDic;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -89,6 +90,12 @@
     summaryLabel_.numberOfLines = 0;
     summaryLabel_.lineBreakMode = UILineBreakModeWordWrap;
     summaryLabel_.font = [UIFont systemFontOfSize:13];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(more)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    summaryLabel_.userInteractionEnabled = YES;
+    summaryLabel_.lineBreakMode = NSLineBreakByTruncatingTail;
+    [summaryLabel_ addGestureRecognizer:tapGesture];
     moreBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     moreBtn_.backgroundColor = [UIColor clearColor];
     moreBtn_.frame = CGRectMake(288, 90, 18, 14);
@@ -96,12 +103,7 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
 }
--(void)share:(id)sender{
-    SendWeiboViewController *sendWeiBoViewController = [[SendWeiboViewController alloc] init];
-    sendWeiBoViewController.infoDic = videoInfo_;
-    [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendWeiBoViewController] animated:YES completion:nil];
-    
-}
+
 -(void)back:(id)sender{
     
     [self.navigationController popViewControllerAnimated:YES];
@@ -189,7 +191,12 @@
         return 3;
     }
     else if (section == 1){
-        return [commentArray_ count];
+        if ([commentArray_ count]>0) {
+            return [commentArray_ count]+1;
+        }
+        else{
+            return 0;
+        }
     }
     return 0;
 }
@@ -226,11 +233,10 @@
                 actorsLabel.textColor = [UIColor grayColor];
                 actorsLabel.backgroundColor = [UIColor clearColor];
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
-                [cell addSubview:actorsLabel];
+               
                 
                 NSString *labelText = [NSString stringWithFormat:@"地区: %@\n导演: %@\n年代: %@",area,directors,date];
-                UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 74, 200, 60)];
-                //infoLabel.backgroundColor = [UIColor redColor];
+                UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 66, 200, 60)];
                 infoLabel.font = [UIFont systemFontOfSize:12];
                 infoLabel.textColor = [UIColor grayColor];
                 infoLabel.backgroundColor = [UIColor clearColor];
@@ -238,6 +244,7 @@
                 infoLabel.lineBreakMode = UILineBreakModeWordWrap;
                 infoLabel.numberOfLines = 0;
                 [cell addSubview:infoLabel];
+                [cell addSubview:actorsLabel];
                 
                 UIButton *play = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                 play.frame = CGRectMake(115, 28, 87, 27);
@@ -253,8 +260,8 @@
                 addFav.tag = 10002;
                 [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
                 [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [addFav setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateNormal];
-                [addFav setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] forState:UIControlStateNormal];
+                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
                 [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
@@ -266,8 +273,8 @@
                 support.tag = 10003;
                 [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
                 [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [support setImage: [UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] toSize:CGSizeMake(16, 15)]forState:UIControlStateNormal];
-                [support setImage:[UIImage scaleFromImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] toSize:CGSizeMake(16, 15)] forState:UIControlStateHighlighted];
+                [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"]forState:UIControlStateNormal];
+                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
@@ -294,7 +301,7 @@
                 [cell addSubview:summaryBg_];
                  summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
                 [cell addSubview:summaryLabel_];
-                [cell addSubview:moreBtn_];
+                //[cell addSubview:moreBtn_];
                 break;
             }
             default:
@@ -302,13 +309,23 @@
         }
     }
     else if (indexPath.section == 1){
-            NSDictionary *item = [commentArray_ objectAtIndex:indexPath.row];
+        if (indexPath.row == 0) {
+            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+            commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
+            [view addSubview:commentV];
+            [cell addSubview:view];
+        }
+        else{
+            
+            NSDictionary *item = [commentArray_ objectAtIndex:indexPath.row-1];
             
             UILabel *user =[[UILabel alloc] initWithFrame:CGRectMake(25, 5, 180, 14)];
             user.text = @"网络用户";
             user.font = [UIFont systemFontOfSize:14];
             user.backgroundColor = [UIColor clearColor];
             UILabel *date =[[UILabel alloc] initWithFrame:CGRectMake(210, 5, 90, 14)];
+            
             NSString *dateStr = [item objectForKey:@"create_date"];
             if (dateStr.length > 10) {
                 dateStr = [dateStr substringToIndex:10];
@@ -331,9 +348,9 @@
             [cell addSubview:comment];
             
             UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
-            line.frame = CGRectMake(25,height+19, 270, 1);
-            [cell addSubview:line]; 
-
+            line.frame = CGRectMake(25,height+22, 270, 1);
+            [cell addSubview:line];
+        }
     
     }
     return cell;
@@ -366,9 +383,16 @@
         
     }
     else if (indexPath.section == 1){
-        NSDictionary *item = [commentArray_ objectAtIndex:row];
-        NSString *content = [item objectForKey:@"content"];
-        return [self heightForString:content fontSize:13 andWidth:271]+20;
+        if (indexPath.row == 0) {
+            return 20;
+        }
+        else{
+            NSDictionary *item = [commentArray_ objectAtIndex:row -1];
+            NSString *content = [item objectForKey:@"content"];
+            return [self heightForString:content fontSize:13 andWidth:271]+23;
+            
+        }
+
     }
     return 0;
     
@@ -449,18 +473,18 @@
     }
 }
 
--(void)more:(id)sender{
+-(void)more{
     moreBtn_.selected = !moreBtn_.selected;
     if (moreBtn_.selected) {
         summaryBg_.frame = CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
         summaryLabel_.frame = CGRectMake(28, 23, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
-        moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
+        //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
         
     }
     else{
         summaryBg_.frame = CGRectMake(14, 20, 292, 90);
         summaryLabel_.frame = CGRectMake(28, 20, 264,90);
-        moreBtn_.frame = CGRectMake(288, 90, 18, 14);
+        //moreBtn_.frame = CGRectMake(288, 90, 18, 14);
     }
     
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];

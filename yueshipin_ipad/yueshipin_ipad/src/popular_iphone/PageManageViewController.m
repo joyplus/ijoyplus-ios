@@ -239,7 +239,7 @@
 {
     [super viewDidLoad];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 40)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];

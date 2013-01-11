@@ -28,6 +28,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    bg.frame = CGRectMake(0, 0, 320, 480);
+    [self.view addSubview:bg];
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 40, 30);
@@ -36,9 +39,14 @@
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.title = @"免责声明";
-    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_mian_ze_sheng_ming.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
-    [self.view addSubview:bg];
+    UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_mian_ze_sheng_ming.png"]];
+    img.frame = CGRectMake(0, 0, self.view.frame.size.width, 480);
+  
+    UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 416)];
+    [scrollview setContentSize:CGSizeMake(320, 480)];
+    [scrollview addSubview:img];
+    [self.view addSubview:scrollview];
+    
 }
 
 -(void)back:(id)sender{

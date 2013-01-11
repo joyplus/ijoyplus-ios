@@ -169,9 +169,15 @@
     [searchBar_ resignFirstResponder];
     [self loadSearchData];
 }
-- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    [searchBar setShowsCancelButton:YES animated:YES];
     
 }
+- (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
+    [searchBar setShowsCancelButton:NO animated:NO];
+    [searchBar resignFirstResponder];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

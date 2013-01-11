@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "IphoneVideoViewController.h"
 
-@interface IphoneMovieDetailViewController : UITableViewController{
+@interface IphoneMovieDetailViewController : IphoneVideoViewController{
     NSDictionary *infoDic_;
     NSDictionary *videoInfo_;
     NSArray *episodesArr_;
