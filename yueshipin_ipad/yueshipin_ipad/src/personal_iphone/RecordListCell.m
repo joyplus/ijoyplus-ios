@@ -33,7 +33,7 @@
         [self addSubview:date_];
         
         play_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        play_.frame = CGRectMake(180, 20, 60, 30);
+        play_.frame = CGRectMake(180, 18, 60, 30);
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see.png"] forState:UIControlStateNormal];
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see_s.png"] forState:UIControlStateHighlighted];
         [self addSubview:play_];

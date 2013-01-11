@@ -22,7 +22,10 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.frame = CGRectMake(0, 0, 320, 112);
-        self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15, 16, 57, 84)];
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        frame.frame = CGRectMake(14, 15, 59, 87);
+        [self addSubview:frame];
+        self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(16, 17, 54, 81)];
         [self addSubview:self.imageview];
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(82, 19, 170, 14)];
@@ -56,10 +59,14 @@
         [self addSubview:support_];
         [self addSubview:addFav_];
         
-        score_ = [[UILabel alloc] initWithFrame:CGRectMake(266, 19, 49, 14)];
+        score_ = [[UILabel alloc] initWithFrame:CGRectMake(256, 19, 49, 14)];
         score_.font = [UIFont systemFontOfSize:15];
         score_.textColor = [UIColor colorWithRed:56/255.0 green:104/255.0 blue:188/255.0 alpha: 1.0f];
         [self addSubview:score_];
+        
+        UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];
+        logo.frame = CGRectMake(295, 19, 14, 14);
+        [self addSubview:logo];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 111, 320, 1);

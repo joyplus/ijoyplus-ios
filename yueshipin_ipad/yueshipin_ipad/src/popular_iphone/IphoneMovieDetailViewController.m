@@ -234,7 +234,11 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:{
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 14, 87, 129)];
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
+                frame.frame = CGRectMake(14, 14, 90, 133);
+                [cell addSubview:frame];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 126)];
+        
                 NSString *imageUrl = [self.infoDic objectForKey:@"prod_pic_url"];
                 if (imageUrl == nil) {
                     imageUrl = [self.infoDic objectForKey:@"content_pic_url"];
@@ -313,7 +317,11 @@
                 [cell addSubview:jianjie];
                
                 [cell addSubview:summaryBg_];
-                summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+               
+                if (summary_ != nil) {
+                    summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+                }
+                
                 [cell addSubview:summaryLabel_];
                 //[cell addSubview:moreBtn_];
                 
@@ -502,6 +510,9 @@
                     viewController.videoUrl = videoUrl;
                     viewController.type = 1;
                     viewController.name = [videoInfo_ objectForKey:@"name"];
+                    viewController.prodId = [videoInfo_ objectForKey:@"id"];
+                    viewController.subname = [NSString stringWithFormat:@"%d", 1];
+                    
                     [self presentViewController:viewController animated:YES completion:nil];
                 }
             }else {
@@ -519,14 +530,15 @@
                 if([responseCode isEqualToString:kSuccessResCode]){
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshFav"object:nil];
                     favCount_++;
+                    [self showOpSuccessModalView:1 with:ADDFAV];
                     [self.tableView reloadData];
                 
                 } else {
-                    
+                    [self showOpFailureModalView:1 with:ADDFAV];
                 }
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
+                   [self showOpFailureModalView:1 with:ADDFAV];
             }];
             
             
@@ -538,12 +550,13 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
                     supportCount_ ++;
+                    [self showOpSuccessModalView:1 with:DING];
                     [self.tableView reloadData];
                 } else {
-                    
+                    [self showOpFailureModalView:1 with:DING];
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
+                   [self showOpFailureModalView:1 with:DING];
             }];
             
             
@@ -581,6 +594,7 @@
     viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
     viewController.title = [videoInfo_ objectForKey:@"name"];
     viewController.type = 1;
+    viewController.prodId = [videoInfo_ objectForKey:@"id"];
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:pro animated:YES completion:nil];

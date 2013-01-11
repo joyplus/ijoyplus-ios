@@ -137,8 +137,11 @@
         }
         
     }
-    
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+    NSString *proId =  [self.infoDic objectForKey:@"prod_id"];
+    if (proId == nil) {
+        proId = [self.infoDic objectForKey:@"content_id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
         videoInfo_ = (NSDictionary *)[result objectForKey:@"tv"];
@@ -225,8 +228,17 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:{
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
+                frame.frame = CGRectMake(14, 14, 90, 133);
+                [cell addSubview:frame];
+                
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 14, 87, 129)];
-                [imageView setImageWithURL:[NSURL URLWithString:[self.infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                NSString *imgUrl =[self.infoDic objectForKey:@"prod_pic_url"];
+                if (imgUrl == nil) {
+                    imgUrl = [self.infoDic objectForKey:@"content_pic_url"];
+                }
+                
+                [imageView setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
@@ -303,7 +315,9 @@
                 [cell addSubview:jianjie];
                 
                 [cell addSubview:summaryBg_];
-                summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+                if (summary_ != nil) {
+                    summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+                }
                 [cell addSubview:summaryLabel_];
                 //[cell addSubview:moreBtn_];
 
@@ -491,13 +505,15 @@
             viewController.videoUrl = videoUrl;
             viewController.type = 2;
             viewController.name = [videoInfo_ objectForKey:@"name"];
+            viewController.prodId = [videoInfo_ objectForKey:@"id"];
             viewController.currentNum = number;
+            viewController.subname = [NSString stringWithFormat:@"%d", number];
             [self presentViewController:viewController animated:YES completion:nil];
         }
     }else {
         [self showPlayWebPage];
     }
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadData];
 }
 -(void)action:(id)sender {
     UIButton *button = (UIButton *)sender;
@@ -513,13 +529,16 @@
                 if([responseCode isEqualToString:kSuccessResCode]){
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshFav"object:nil];
                     favCount_++;
+                    [self showOpSuccessModalView:1 with:ADDFAV];
                     [self.tableView reloadData];
                 } else {
-                    
+                    [self showOpFailureModalView:1 with:ADDFAV];
+
                 }
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
+                   [self showOpFailureModalView:1 with:ADDFAV];
+       
             }];
             
             
@@ -531,12 +550,13 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
                     supportCount_ ++;
+                    [self showOpSuccessModalView:1 with:DING];
                     [self.tableView reloadData];
                 } else {
-                    
+                    [self showOpFailureModalView:1 with:DING];
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
+                    [self showOpFailureModalView:1 with:DING];
             }];
             
             
@@ -629,7 +649,7 @@
     pageCount_ = (count%15 == 0 ? (count/15):(count/15)+1);
     
     scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, 125)];
-    scrollView_.contentSize = CGSizeMake(320*(count/15), 125);
+    scrollView_.contentSize = CGSizeMake(320*pageCount_, 125);
     scrollView_.pagingEnabled = YES;
     scrollView_.showsHorizontalScrollIndicator = NO; 
     NSString *cacheKey = [NSString stringWithFormat:@"drama_epi_%@",[videoInfo_ objectForKey:@"id"]];
@@ -644,19 +664,20 @@
         button.frame = CGRectMake((i/15)*320+20+(i%5)*59, (i%15/5)*32, 54, 28);
         button.tag = i+1;
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [button addTarget:self action:@selector(episodesPlay:) forControlEvents:UIControlEventTouchUpInside];
          button.titleLabel.font = [UIFont systemFontOfSize:12];
         if (lastNum == i) {
-            [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen.png"] forState:UIControlStateNormal];
-            [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen_s.png"] forState:UIControlStateHighlighted];
+             [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen.png"] forState:UIControlStateNormal];
+           
         }
         else{
             [button setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateNormal];
             [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg.png"] forState:UIControlStateNormal];
-            [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_s.png"] forState:UIControlStateHighlighted];
+           
         }
-
-        [scrollView_ addSubview:button];
+      [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen_s.png"] forState:UIControlStateHighlighted];
+      [scrollView_ addSubview:button];
     }
     for (int i = 0;i < pageCount_;i++){
         if (i < pageCount_-1) {

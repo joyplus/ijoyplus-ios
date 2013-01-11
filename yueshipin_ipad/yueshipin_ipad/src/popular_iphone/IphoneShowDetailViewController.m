@@ -130,7 +130,11 @@
         }
         
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+    NSString *proId =  [self.infoDic objectForKey:@"prod_id"]; 
+    if (proId == nil) {
+        proId =  [self.infoDic objectForKey:@"content_id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
         videoInfo_ = (NSDictionary *)[result objectForKey:@"show"];
@@ -214,6 +218,11 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:{
+                
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
+                frame.frame = CGRectMake(14, 14, 90, 133);
+                [cell addSubview:frame];
+                
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 14, 87, 129)];
                 
                 NSString *url = [videoInfo_ objectForKey:@"ipad_poster"];
@@ -221,7 +230,7 @@
                     url = [videoInfo_ objectForKey:@"poster"];
                 }
 
-                [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
@@ -299,7 +308,9 @@
                 [cell addSubview:jianjie];
                 
                 [cell addSubview:summaryBg_];
-                 summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+                if (summary_ != nil) {
+                    summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
+                }
                 [cell addSubview:summaryLabel_];
                 //[cell addSubview:moreBtn_];
                 break;
@@ -438,13 +449,14 @@
                 if([responseCode isEqualToString:kSuccessResCode]){
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshFav"object:nil];
                     favCount_++;
+                     [self showOpSuccessModalView:1 with:ADDFAV];
                     [self.tableView reloadData];
                 } else {
-                    
+                    [self showOpFailureModalView:1 with:ADDFAV];
                 }
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
+                   [self showOpFailureModalView:1 with:ADDFAV];
             }];
             
             
@@ -456,12 +468,13 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
                     supportCount_ ++;
+                    [self showOpSuccessModalView:1 with:DING];
                     [self.tableView reloadData];
                 } else {
-                    
+                    [self showOpFailureModalView:1 with:DING];
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
+                    [self showOpFailureModalView:1 with:DING];
             }];
             
             

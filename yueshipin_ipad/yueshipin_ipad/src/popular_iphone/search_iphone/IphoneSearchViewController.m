@@ -16,6 +16,8 @@
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "UIImage+Scale.h"
+#import "AppDelegate.h"
+#import <QuartzCore/QuartzCore.h>   
 #define PAGESIZE 20
 @interface IphoneSearchViewController ()
 
@@ -103,6 +105,10 @@
             if(searchResult != nil && searchResult.count > 0){
                 [searchResults_ addObjectsFromArray:searchResult];
             }
+            else{
+                [self showFailureView:1];
+            
+            }
          }
         
         [tableList_ reloadData];
@@ -116,6 +122,37 @@
 
 
 }
+- (void)showFailureView:(float)closeTime
+{
+
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 50)];
+    label.backgroundColor = [UIColor blackColor];
+    label.font = [UIFont systemFontOfSize:13];
+    label.text = @"抱歉，未找到相关影片！";
+    label.textColor = [UIColor whiteColor];
+    label.numberOfLines = 0;
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.center = self.view.center;
+    label.alpha = 0.6;
+    label.layer.cornerRadius = 5;
+    label.center = self.view.center;
+    label.tag =19999;
+    [[AppDelegate instance].window addSubview:label];
+    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+}
+- (void)removeOverlay
+{
+    for(UIView *view in [AppDelegate instance].window.subviews ){
+        if (view.tag == 19999) {
+            [view removeFromSuperview];
+            break;
+        }
+        
+    }
+    
+}
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [searchResults_ count];

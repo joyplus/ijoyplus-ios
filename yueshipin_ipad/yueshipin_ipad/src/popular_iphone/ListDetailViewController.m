@@ -49,14 +49,9 @@
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
 
-    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+   }
 
-    [self.view setFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, 480)];
-    [self.tableView setFrame:CGRectMake(0, 0, 320, 480)];
-}
-//- (void)viewWillAppear:(BOOL)animated{
-//    self.tabBarController.tabBar.hidden = YES;
-//}
 
 - (void)viewWillAppear:(BOOL)animated {
     

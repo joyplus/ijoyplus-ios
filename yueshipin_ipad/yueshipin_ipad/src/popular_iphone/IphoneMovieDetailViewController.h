@@ -33,6 +33,7 @@
 @property (nonatomic, strong) UIImageView *summaryBg;
 @property (nonatomic, strong) UILabel *summaryLabel;
 @property (nonatomic, strong) UIButton *moreBtn;
+//- (void)showOpSuccessModalView:(int)closeTime;
 @end
 
 

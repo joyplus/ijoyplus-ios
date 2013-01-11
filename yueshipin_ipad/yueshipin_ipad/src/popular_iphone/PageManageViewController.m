@@ -341,12 +341,14 @@
 
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
+    searchViewCotroller.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
     
 }
 
 -(void)setting:(id)sender{
     IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
     
 }

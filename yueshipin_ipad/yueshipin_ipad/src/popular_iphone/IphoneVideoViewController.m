@@ -15,6 +15,8 @@
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
 #import "SendWeiboViewController.h"
+#define VIEWTAG   123654
+
 @interface IphoneVideoViewController ()
 
 @end
@@ -73,6 +75,53 @@
     
     return cell;
 }
+
+- (void)showOpSuccessModalView:(float)closeTime with:(int)type
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    view.tag = VIEWTAG;
+    [view setBackgroundColor:[UIColor clearColor]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
+    if (type == DING) {
+        temp.frame = CGRectMake(185, 180, 92, 27);
+    }
+    if (type == ADDFAV) {
+        temp.frame = CGRectMake(40, 180, 92, 27);
+    }
+    //temp.center = view.center;
+    [view addSubview:temp];
+    [[AppDelegate instance].window addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+}
+- (void)showOpFailureModalView:(float)closeTime with:(int)type
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    view.tag = VIEWTAG;
+    [view setBackgroundColor:[UIColor clearColor]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_fails.png"]];
+    if (type == DING) {
+        temp.frame = CGRectMake(185, 180, 92, 27);
+    }
+    if (type == ADDFAV) {
+        temp.frame = CGRectMake(40, 180, 92, 27);
+    }
+    //temp.center = view.center;
+    [view addSubview:temp];
+    [[AppDelegate instance].window addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+}
+- (void)removeOverlay
+{
+  for(UIView *view in [AppDelegate instance].window.subviews ){
+      if (view.tag == VIEWTAG) {
+          [view removeFromSuperview];
+          break;
+     }
+  
+  }
+    
+}
+
 
 -(void)share:(id)sender{
    

@@ -26,6 +26,8 @@
 #import "SearchPreViewController.h"
 #import "MBProgressHUD.h"
 #import "ProgramNavigationController.h"
+#import "TVDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -268,20 +270,52 @@
     //加载数据
     [self loadMyFavsData];
     [self loadPersonalData];
-    
-    NSArray *watchRecordArray = (NSArray *)[[CacheUtility sharedCache]loadFromCache:@"watch_record"];
-    sortedwatchRecordArray_ = [watchRecordArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-        NSDate *first = [DateUtility dateFromFormatString:[a objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"] ;
-        NSDate *second = [DateUtility dateFromFormatString:[b objectForKey:@"createDateStr"] formatString: @"yyyy-MM-dd HH:mm:ss"];
-        return [second compare:first];
-    }];
-    
-    
+    [self loadRecordData];
+    if ([sortedwatchRecordArray_ count]>0) {
+        [self.bgView addSubview:recordTableList_];
+    }
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(refreshFav) name:@"refreshFav" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordListReload) name:WATCH_HISTORY_REFRESH object:nil];
     
+}
+
+- (void)loadRecordData
+{
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
+    if(cacheResult != nil){
+        [self parseWatchResultData:cacheResult];
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [self parseWatchResultData:result];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+       
+    }];
+    
+}
+
+- (void)parseWatchResultData:(id)result
+{
+    NSString *responseCode = [result objectForKey:@"res_code"];
+    if(responseCode == nil){
+        [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
+        sortedwatchRecordArray_ = (NSArray *)[result objectForKey:@"histories"];
+        if(sortedwatchRecordArray_.count > 0){
+            [recordTableList_ reloadData];
+           
+        } 
+    }
+}
+
+-(void)recordListReload{
+    [self loadRecordData];
+    [recordTableList_ reloadData];
+
 }
 -(void)refreshFav{
     [self loadMyFavsData];
@@ -454,7 +488,7 @@
     if (tableView.tag == RECORD_TYPE) {
       
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-        cell.textLabel.text = [infoDic objectForKey:@"name"];
+        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         [cell.titleLab removeFromSuperview];
         [cell.actors removeFromSuperview];
@@ -492,10 +526,28 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     if (tableView.tag == Fav_TYPE){
-        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
-        detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
-        detailViewController.hidesBottomBarWhenPushed = YES;
-        [self.navigationController pushViewController:detailViewController animated:YES];
+        NSDictionary *dic = [favShowArr_ objectAtIndex:indexPath.row];
+        NSString *type = [dic objectForKey:@"content_type"];
+        if ([type isEqualToString:@"1"]) {
+            IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+            detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+        }
+        else if ([type isEqualToString:@"2"]){
+            TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+            detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];}
+        
+        else if ([type isEqualToString:@"3"]){
+            IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+            detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+        
+        }
+        
         
     }
     else if(tableView.tag == MYLIST_TYPE){
@@ -544,12 +596,12 @@
 -(void)continuePlay:(id)sender{
     int num = ((UIButton *)sender).tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
-    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
+    if([[item objectForKey:@"prod_type"] isEqualToString:@"1"]){
         MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = [item objectForKey:@"videoUrl"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
-        viewController.name = [item objectForKey:@"name"];
-        viewController.subname = [item objectForKey:@"subname"];
+        viewController.videoUrl = [item objectForKey:@"video_url"];
+        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] integerValue];
+        viewController.name = [item objectForKey:@"prod_name"];
+        viewController.subname = [item objectForKey:@"prod_subname"];
         [self presentViewController:viewController animated:YES completion:nil];
     } else {
         ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
