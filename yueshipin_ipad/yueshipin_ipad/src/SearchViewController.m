@@ -191,6 +191,7 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
+    [table reloadData];
     if([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
         return NO;
     } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
