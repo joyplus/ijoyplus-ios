@@ -15,6 +15,8 @@
 #import "AFSinaWeiboAPIClient.h"
 #import "ClauseViewController.h"
 #import "ActionUtility.h"
+#import "UMFeedback.h"
+#import "ChatViewController.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -228,9 +230,13 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         return;
     }
     [self closeMenu];
-    SuggestionViewController *viewController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
-    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+    ChatViewController *chatViewController = [[ChatViewController alloc] initWithNibName:@"ChatViewController" bundle:nil];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chatViewController];
+    navController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:navController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+//    SuggestionViewController *viewController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
+//    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+//    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
 - (void)commentBtnClicked

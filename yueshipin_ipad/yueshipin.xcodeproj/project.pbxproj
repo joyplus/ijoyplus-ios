@@ -180,6 +180,13 @@
 		EBB38D881696880100FD855E /* UIColor-SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D771696880100FD855E /* UIColor-SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D891696880100FD855E /* UIImage-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D791696880100FD855E /* UIImage-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB38D8F1696892900FD855E /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB38D8E1696892900FD855E /* DownloadItem.m */; };
+		EBB44CB516A3C3F70065A7BF /* ChatCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB44CB016A3C3F60065A7BF /* ChatCustomCell.m */; };
+		EBB44CB616A3C3F70065A7BF /* ChatCustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB44CB116A3C3F60065A7BF /* ChatCustomCell.xib */; };
+		EBB44CB716A3C3F70065A7BF /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB44CB316A3C3F70065A7BF /* ChatViewController.m */; };
+		EBB44CB816A3C3F70065A7BF /* ChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBB44CB416A3C3F70065A7BF /* ChatViewController.xib */; };
+		EBB44CC516A3C6E00065A7BF /* bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB44CC116A3C6E00065A7BF /* bubble.png */; };
+		EBB44CC616A3C6E00065A7BF /* bubbleSelf.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB44CC216A3C6E00065A7BF /* bubbleSelf.png */; };
+		EBB44CD116A3E9990065A7BF /* senditem.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB44CD016A3E9990065A7BF /* senditem.png */; };
 		EBB48B0A168D476C00DBED1C /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB48B09168D476C00DBED1C /* JSBadgeView.m */; };
 		EBB48B0D168D4F3800DBED1C /* SequenceData.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB48B0C168D4F3800DBED1C /* SequenceData.m */; };
 		EBB48B0F168D624200DBED1C /* download_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB48B0E168D624200DBED1C /* download_disabled@2x.png */; };
@@ -676,6 +683,15 @@
 		EBB38D791696880100FD855E /* UIImage-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage-SQLitePersistence.m"; sourceTree = "<group>"; };
 		EBB38D8D1696892900FD855E /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadItem.h; path = common/DownloadItem.h; sourceTree = "<group>"; };
 		EBB38D8E1696892900FD855E /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadItem.m; path = common/DownloadItem.m; sourceTree = "<group>"; };
+		EBB44CAF16A3C3F60065A7BF /* ChatCustomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCustomCell.h; sourceTree = "<group>"; };
+		EBB44CB016A3C3F60065A7BF /* ChatCustomCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatCustomCell.m; sourceTree = "<group>"; };
+		EBB44CB116A3C3F60065A7BF /* ChatCustomCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatCustomCell.xib; sourceTree = "<group>"; };
+		EBB44CB216A3C3F60065A7BF /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		EBB44CB316A3C3F70065A7BF /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
+		EBB44CB416A3C3F70065A7BF /* ChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatViewController.xib; sourceTree = "<group>"; };
+		EBB44CC116A3C6E00065A7BF /* bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubble.png; sourceTree = "<group>"; };
+		EBB44CC216A3C6E00065A7BF /* bubbleSelf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bubbleSelf.png; sourceTree = "<group>"; };
+		EBB44CD016A3E9990065A7BF /* senditem.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = senditem.png; sourceTree = "<group>"; };
 		EBB48B08168D476C00DBED1C /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
 		EBB48B09168D476C00DBED1C /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		EBB48B0B168D4F3800DBED1C /* SequenceData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SequenceData.h; path = common/component/SequenceData.h; sourceTree = "<group>"; };
@@ -1058,6 +1074,9 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBB44CD016A3E9990065A7BF /* senditem.png */,
+				EBB44CC116A3C6E00065A7BF /* bubble.png */,
+				EBB44CC216A3C6E00065A7BF /* bubbleSelf.png */,
 				EBD5DCF5169FCBEA003CCF64 /* drama_disabled@2x.png */,
 				EBD5DCF1169FB7C8003CCF64 /* drama_watched.png */,
 				EBA6E758169E8E4E00EC394D /* cache_video.png */,
@@ -1744,6 +1763,12 @@
 			children = (
 				EB14D462165B728E00CB3260 /* SettingsViewController.h */,
 				EB14D463165B728E00CB3260 /* SettingsViewController.m */,
+				EBB44CB216A3C3F60065A7BF /* ChatViewController.h */,
+				EBB44CB316A3C3F70065A7BF /* ChatViewController.m */,
+				EBB44CB416A3C3F70065A7BF /* ChatViewController.xib */,
+				EBB44CAF16A3C3F60065A7BF /* ChatCustomCell.h */,
+				EBB44CB016A3C3F60065A7BF /* ChatCustomCell.m */,
+				EBB44CB116A3C3F60065A7BF /* ChatCustomCell.xib */,
 				EB513F8A1676D19B0072E013 /* SuggestionViewController.h */,
 				EB513F8B1676D19B0072E013 /* SuggestionViewController.m */,
 				EB513F8F1676D29C0072E013 /* SuggestionViewController.xib */,
@@ -2188,6 +2213,11 @@
 				EBA6E75B169E8E4E00EC394D /* cache_video@2x.png in Resources */,
 				EBD5DCF2169FB7C8003CCF64 /* drama_watched.png in Resources */,
 				EBD5DCF6169FCBEA003CCF64 /* drama_disabled@2x.png in Resources */,
+				EBB44CB616A3C3F70065A7BF /* ChatCustomCell.xib in Resources */,
+				EBB44CB816A3C3F70065A7BF /* ChatViewController.xib in Resources */,
+				EBB44CC516A3C6E00065A7BF /* bubble.png in Resources */,
+				EBB44CC616A3C6E00065A7BF /* bubbleSelf.png in Resources */,
+				EBB44CD116A3E9990065A7BF /* senditem.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2318,6 +2348,8 @@
 				EBBA0D1F169945B100F15C77 /* ActionUtility.m in Sources */,
 				EBB93D72169BB0320017B5A5 /* ClauseViewController.m in Sources */,
 				EBB30562169D4E87005C5A30 /* MyMediaPlayerViewController.m in Sources */,
+				EBB44CB516A3C3F70065A7BF /* ChatCustomCell.m in Sources */,
+				EBB44CB716A3C3F70065A7BF /* ChatViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

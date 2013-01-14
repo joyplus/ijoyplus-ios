@@ -81,7 +81,7 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
-    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 30)];
+    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
     t.font = [UIFont boldSystemFontOfSize:18];
     t.textColor = [UIColor whiteColor];
     t.backgroundColor = [UIColor clearColor];
@@ -120,7 +120,7 @@
                 if([url rangeOfString:@"{now_date}"].location != NSNotFound){
                     formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
                 }
-                NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+                NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
                 [NSURLConnection connectionWithRequest:request delegate:self];
             }
         }

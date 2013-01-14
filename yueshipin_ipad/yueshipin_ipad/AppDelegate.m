@@ -14,6 +14,7 @@
 #import <Parse/Parse.h>
 #import "ActionUtility.h"
 #import "iRate.h"
+#import "UMFeedback.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -217,7 +218,9 @@
         self.showVideoSwitch = @"0";
     }
     self.showVideoSwitch = @"0";
-    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
+    if (![self.showVideoSwitch isEqualToString:@"0"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
+    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -294,7 +297,7 @@
         [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
-    
+
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
