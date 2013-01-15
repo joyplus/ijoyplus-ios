@@ -85,7 +85,7 @@
         
         [self addSubview:loadingActivityIndicator_];
         
-        int offSet = 0; //offSet = 0 is for iphone;offSet = 70 is for ipad;
+        int offSet = 5; //offSet = 0 is for iphone;offSet = 70 is for ipad;
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
             offSet = 70;
         }

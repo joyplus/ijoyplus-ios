@@ -29,6 +29,8 @@
     UIButton *button1_;
     UIButton *button2_;
     UIButton *button3_;
+    UIImageView *noRecord_;
+    UIImageView *noFav_;
 }
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
@@ -48,6 +50,8 @@
 @property (nonatomic, strong)UIButton *button1;
 @property (nonatomic, strong)UIButton *button2;
 @property (nonatomic, strong)UIButton *button3;
+@property (nonatomic, strong)UIImageView *noRecord;
+@property (nonatomic, strong)UIImageView *noFav;
 
 
 @end

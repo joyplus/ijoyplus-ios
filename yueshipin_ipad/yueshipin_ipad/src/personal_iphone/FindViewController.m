@@ -79,7 +79,7 @@
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 320, 350) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 320, 370) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;

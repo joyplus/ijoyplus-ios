@@ -110,7 +110,11 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     NSDictionary *item = [listArr_ objectAtIndex:indexPath.row];
     cell.label.text = [item objectForKey:@"prod_name"];
-    cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"star"]];
+    NSString *starsStr = [item objectForKey:@"star"];
+    if (starsStr == nil) {
+        starsStr =  [item objectForKey:@"stars"];
+    }
+    cell.actors.text = [NSString stringWithFormat:@"主演：%@",starsStr];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     NSString *type = [item objectForKey:@"prod_type" ];

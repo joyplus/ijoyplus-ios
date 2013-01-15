@@ -91,12 +91,14 @@
     }
     NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
     if (type_ == 0) {
-        cell.textLabel.text = [infoDic objectForKey:@"name"];
+        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         [cell.titleLab removeFromSuperview];
-        [cell.actors removeFromSuperview];
         
-        [cell.date removeFromSuperview];
+        if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
+            cell.actors.text  = [NSString stringWithFormat:@"第%@集",[infoDic objectForKey:@"prod_subname"]];
+            [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
+        }        [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
     }

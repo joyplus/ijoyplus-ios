@@ -290,21 +290,21 @@
         
     }
     
-    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 350) style:UITableViewStylePlain];
+    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 338) style:UITableViewStylePlain];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tvTableList.tag = TV_TYPE;
     [self.scrollView addSubview:self.tvTableList];
     
-    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 350) style:UITableViewStylePlain];
+    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 338) style:UITableViewStylePlain];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
     self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.movieTableList.tag = MOVIE_TYPE;
     [self.scrollView addSubview:self.movieTableList];
     
-    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 350) style:UITableViewStylePlain];
+    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 338) style:UITableViewStylePlain];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -412,7 +412,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
             cell.nameLabel.text = [item objectForKey:@"prod_name"];
-           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"picture_bg.png"]];
         
             return cell;
         }
@@ -483,12 +483,14 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat pageWidth = self.view.frame.size.width;
-    int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    [pageControl_ setCurrentPage: page] ;
-    [pageControl_ updateCurrentPageDisplay] ;
+    CGPoint offset = scrollView.contentOffset;
+    if (offset.x * offset.x> offset.y * offset.y) {
+        int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+        [pageControl_ setCurrentPage: page] ;
+        [pageControl_ updateCurrentPageDisplay] ;
+    }
+    
 }
-
-
 
 - (void)didReceiveMemoryWarning
 {

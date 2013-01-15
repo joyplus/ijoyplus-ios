@@ -53,6 +53,8 @@
 @synthesize button1 = button1_;
 @synthesize button2 = button2_;
 @synthesize button3 = button3_;
+@synthesize noRecord = noRecord_;
+@synthesize noFav = noFav_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -220,6 +222,13 @@
     self.bgView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:self.bgView];
     
+    noFav_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noFav.png"]];
+    noFav_.frame = CGRectMake(0, 0, 296, 180);
+    
+    noRecord_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noRecored.png"]];
+    noRecord_.frame = CGRectMake(0, 0, 296, 180);
+
+    
     self.recordTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
     self.recordTableList.dataSource = self;
     self.recordTableList.delegate = self;
@@ -234,15 +243,16 @@
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
     
-    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 37, 296, 150) style:UITableViewStylePlain];
+    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 37, 296, 180) style:UITableViewStylePlain];
     myTableList_.dataSource = self;
     myTableList_.delegate = self;
     myTableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     myTableList_.tag = MYLIST_TYPE;
     myTableList_.scrollEnabled = NO;
+    myTableList_.backgroundColor = [UIColor clearColor];
     
     
-    moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 293, 296, 45)];
+    moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 290, 296, 45)];
     moreView_.backgroundColor = [UIColor whiteColor];
     moreButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
@@ -274,6 +284,10 @@
     if ([sortedwatchRecordArray_ count]>0) {
         [self.bgView addSubview:recordTableList_];
     }
+    else{
+    
+        [self.bgView addSubview:noRecord_];
+    }
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
     [[NSNotificationCenter defaultCenter]
@@ -289,7 +303,7 @@
         [self parseWatchResultData:cacheResult];
     }
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [self parseWatchResultData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -306,7 +320,11 @@
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray_ = (NSArray *)[result objectForKey:@"histories"];
         if(sortedwatchRecordArray_.count > 0){
+            if (button1_.selected) {
+                [self Selectbutton:button1_];
+            }
             [recordTableList_ reloadData];
+            
            
         } 
     }
@@ -314,11 +332,18 @@
 
 -(void)recordListReload{
     [self loadRecordData];
+    if (button1_.selected) {
+        [self Selectbutton:button1_];
+    }
     [recordTableList_ reloadData];
+    
 
 }
 -(void)refreshFav{
     [self loadMyFavsData];
+    if (button2_.selected) {
+        [self Selectbutton:button2_];
+    }
     [favTableList_ reloadData];
 }
 -(void)search:(id)sender{
@@ -335,6 +360,7 @@
     [myListArr_ addObject:dic];
     
     [myTableList_ reloadData];
+    [self Selectbutton:button3_];
 
 }
 -(void)createList:(id)sender{
@@ -388,6 +414,11 @@
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];
+    [self.bgView setFrame:CGRectMake(12, 98, 296, 180)];
+    [moreView_ setFrame:CGRectMake(12, 290, 296, 45)];
+    [noRecord_ removeFromSuperview];
+    [noFav_ removeFromSuperview];
+    
     button1_.selected = NO;
     button2_.selected = NO;
     button3_.selected = NO;
@@ -398,6 +429,7 @@
         case 100:{
             button1_.selected = YES;
                 if ([self.sortedwatchRecordArray count] <= 3) {
+                    
                     [moreView_ removeFromSuperview];
                 }
                 else {
@@ -405,10 +437,16 @@
                     [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
                     [self.view addSubview:moreView_];
                 }
-                [createList_ removeFromSuperview];
-                [myTableList_ removeFromSuperview];
-                [self.bgView addSubview:self.recordTableList];
-                [self.recordTableList reloadData];
+
+                if ([sortedwatchRecordArray_ count] == 0) {
+                    [self.bgView addSubview:noRecord_];
+                }
+                else{
+                    [self.bgView addSubview:self.recordTableList];
+                    [self.recordTableList reloadData];
+                }
+                    
+                
             break;
         }
         //我的收藏
@@ -416,33 +454,50 @@
             button2_.selected = YES;
             if ([self.favArr count] <= 3) {
                 favShowArr_ = [NSArray arrayWithArray:self.favArr];
+               
                 [moreView_ removeFromSuperview];
             }
             else {
                 favShowArr_ = [NSArray arrayWithObjects:[self.favArr objectAtIndex:0],[self.favArr objectAtIndex:1],[self.favArr objectAtIndex:2], nil];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
+               
                 [self.view addSubview:moreView_];
             }
-            [createList_ removeFromSuperview];
-            [myTableList_ removeFromSuperview];
-            [self.bgView addSubview:self.favTableList];
-            [self.favTableList reloadData];
+
+            if ([favArr_ count]==0) {
+                [self.bgView addSubview:noFav_];
+            }
+            else{
+                [self.bgView addSubview:self.favTableList];
+                [self.favTableList reloadData];
+            }
+            
+           
             break;
         }
         //我的悦单
         case 102:{
             button3_.selected = YES;
-            if ([myListArr_ count] <= 2) {
-              
+            if ([myListArr_ count] <= 3) {
+                if ([myListArr_ count]== 0){
+                    [self.bgView setFrame:CGRectMake(12, 98, 296, 44)];
+                }
+                else{
+                    [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*[myListArr_ count])];
+                }
+                
                 [moreView_ removeFromSuperview];
             }
             else {
-               
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see_s.png"] forState:UIControlStateHighlighted];
+                [moreView_ setFrame:CGRectMake(12, 320, 296, 45)];
                 [self.view addSubview:moreView_];
             }
+            
+            
             [self.bgView addSubview:createList_];
             [self.bgView addSubview:myTableList_];
             break;
@@ -466,11 +521,11 @@
         return [favShowArr_ count];
     }
     if (tableView.tag == MYLIST_TYPE) {
-        if ([myListArr_ count] <= 2) {
+        if ([myListArr_ count] <= 3) {
             return [myListArr_ count];
         }
         else{
-            return 2;
+            return 3;
         }
     }
     
@@ -491,7 +546,12 @@
         cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         [cell.titleLab removeFromSuperview];
-        [cell.actors removeFromSuperview];
+        //[cell.actors removeFromSuperview];
+        if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
+            cell.actors.text  = [NSString stringWithFormat:@"第%@集",[infoDic objectForKey:@"prod_subname"]];
+            [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
+        }
+      
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
@@ -512,6 +572,7 @@
         cell.titleLab.text = [infoDic objectForKey:@"name"];
         cell.actors.text = [item objectForKey:@"prod_name"];
         cell.date.text = @"...";
+        [cell.date setFrame:CGRectMake(12, 42, 200, 15)];
         [cell.play  removeFromSuperview];
     
     }

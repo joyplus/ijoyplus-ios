@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "IphoneVideoViewController.h"
-
-@interface IphoneShowDetailViewController : IphoneVideoViewController{
+#import "MNMBottomPullToRefreshManager.h"
+@interface IphoneShowDetailViewController : IphoneVideoViewController<MNMBottomPullToRefreshManagerClient>{
     NSDictionary *infoDic_;
     NSDictionary *videoInfo_;
     NSArray *episodesArr_;
@@ -26,6 +26,7 @@
     UIImageView *summaryBg_;
     UILabel *summaryLabel_;
     UIButton *moreBtn_;
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -39,4 +40,5 @@
 @property (nonatomic, strong) UIImageView *summaryBg;
 @property (nonatomic, strong) UILabel *summaryLabel;
 @property (nonatomic, strong) UIButton *moreBtn;
+@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
 @end

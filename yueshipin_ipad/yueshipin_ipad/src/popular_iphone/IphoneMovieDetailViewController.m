@@ -78,6 +78,8 @@
         titleStr = [self.infoDic objectForKey:@"content_name"];
     }
     self.title = titleStr;
+    
+    commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
     
@@ -104,6 +106,9 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
+    
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
+   
 }
 
 -(void)back:(id)sender{
@@ -124,7 +129,7 @@
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
-        [self.tableView reloadData];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }
     else{
         
@@ -145,37 +150,41 @@
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
-        [self.tableView reloadData];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
     }];
     
 }
-- (void)loadComments
-{
-    commentArray_ = [NSMutableArray arrayWithCapacity:10];
+
+-(void)loadComments{
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:itemId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    int pageNum = ceil(commentArray_.count / 10.0)+1;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id",[NSNumber numberWithInt:pageNum], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", [self.infoDic objectForKey:@"prod_id"]];
-            [[CacheUtility sharedCache] putInCache:key result:result];
-            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            [commentArray_ removeAllObjects];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray_ addObjectsFromArray:tempArray];
+            NSArray *comments = (NSArray *)[result objectForKey:@"comments"];
+            if(comments != nil && comments.count > 0){
+                [commentArray_ addObjectsFromArray:comments];
+                
             }
-            [self.tableView reloadData];
         }
+       [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+       [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
-}
 
+}
+- (void)loadTable {
+    
+    [self.tableView reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
+    
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -343,7 +352,7 @@
         }
         else{
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(14, 0, 292, 26)];
-            view.backgroundColor = [UIColor whiteColor];
+            view.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
             [cell addSubview:view];
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
@@ -358,7 +367,7 @@
             
             int num = [relevantList_ count] > 5 ? 5:[relevantList_ count];
             if (num != indexPath.row) {
-                UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
+                 UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
                 line.frame = CGRectMake(25,25, 270, 1);
                 [cell addSubview:line];
             }
@@ -582,8 +591,8 @@
             summaryLabel_.frame = CGRectMake(28, 20, 264,90);
             //moreBtn_.frame = CGRectMake(288, 90, 18, 14);
         }
-        
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+    [self loadTable];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     
 }
 - (void)showPlayWebPage
@@ -644,4 +653,21 @@
     return videoUrl;
 }
 
+
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [self loadComments];
+
+}
 @end

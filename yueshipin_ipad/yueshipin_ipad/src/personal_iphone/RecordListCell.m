@@ -25,15 +25,17 @@
         self.actors = [[UILabel alloc] initWithFrame:CGRectMake(12, 31, 200, 15)];
         self.actors.font = [UIFont systemFontOfSize:12];
         self.actors.textColor = [UIColor grayColor];
+        actors_.backgroundColor = [UIColor clearColor];
         [self addSubview:self.actors];
         
         date_ = [[UILabel alloc] initWithFrame:CGRectMake(12, 45, 200, 15)];
         date_.font = [UIFont systemFontOfSize:12];
         date_.textColor = [UIColor grayColor];
+        date_.backgroundColor = [UIColor clearColor];
         [self addSubview:date_];
         
         play_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        play_.frame = CGRectMake(180, 18, 60, 30);
+        play_.frame = CGRectMake(210, 18, 60, 30);
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see.png"] forState:UIControlStateNormal];
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see_s.png"] forState:UIControlStateHighlighted];
         [self addSubview:play_];

@@ -76,6 +76,8 @@
     self.tableView.showsVerticalScrollIndicator = NO;
 
     self.title = [self.infoDic objectForKey:@"prod_name"];
+    
+    commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
 
@@ -102,6 +104,8 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
+    
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 }
 
 -(void)back:(id)sender{
@@ -118,7 +122,7 @@
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
-        [self.tableView reloadData];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }
     else{
         if(tempHUD == nil){
@@ -142,33 +146,60 @@
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
         [tempHUD hide:YES];
-        [self.tableView reloadData];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
     }];
     
 }
 
-- (void)loadComments
-{
-    commentArray_ = [NSMutableArray arrayWithCapacity:10];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//- (void)loadComments
+//{
+//    commentArray_ = [NSMutableArray arrayWithCapacity:10];
+//    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+//    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//        NSString *responseCode = [result objectForKey:@"res_code"];
+//        if(responseCode == nil){
+//            NSString *key = [NSString stringWithFormat:@"%@%@", @"show", [self.infoDic objectForKey:@"prod_id"]];
+//            [[CacheUtility sharedCache] putInCache:key result:result];
+//            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+//            [commentArray_ removeAllObjects];
+//            if(tempArray != nil && tempArray.count > 0){
+//                [commentArray_ addObjectsFromArray:tempArray];
+//            }
+//            [self.tableView reloadData];
+//        }
+//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
+//}
+-(void)loadComments{
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    int pageNum = ceil(commentArray_.count / 10.0)+1;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id",[NSNumber numberWithInt:pageNum], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSString *key = [NSString stringWithFormat:@"%@%@", @"show", [self.infoDic objectForKey:@"prod_id"]];
-            [[CacheUtility sharedCache] putInCache:key result:result];
-            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            [commentArray_ removeAllObjects];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray_ addObjectsFromArray:tempArray];
+            NSArray *comments = (NSArray *)[result objectForKey:@"comments"];
+            if(comments != nil && comments.count > 0){
+                [commentArray_ addObjectsFromArray:comments];
+                
             }
-            [self.tableView reloadData];
         }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
+    
 }
+- (void)loadTable {
+    [self.tableView reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
+}
+
 
 
 - (void)didReceiveMemoryWarning
@@ -219,18 +250,18 @@
         switch (indexPath.row) {
             case 0:{
                 
-                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
                 frame.frame = CGRectMake(14, 14, 90, 133);
                 [cell addSubview:frame];
                 
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 14, 87, 129)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 127)];
                 
                 NSString *url = [videoInfo_ objectForKey:@"ipad_poster"];
                 if(url == nil){
                     url = [videoInfo_ objectForKey:@"poster"];
                 }
 
-                [imageView setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
+                [imageView setImageWithURL:[NSURL URLWithString:url]];
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
@@ -499,7 +530,7 @@
         summaryLabel_.frame = CGRectMake(28, 20, 264,90);
         //moreBtn_.frame = CGRectMake(288, 90, 18, 14);
     }
-    
+    [self loadTable];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     
     
@@ -593,7 +624,7 @@
         [scrollView_ addSubview:button];
     }
     currentPage_ = 1;
-    next_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    next_ = [UIButton buttonWithType:UIButtonTypeCustom];
     next_.frame = CGRectMake( 273, 30, 20, 125);
     [next_ setTitle:@"PRE" forState:UIControlStateNormal];
     [next_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More1.png"] forState:UIControlStateNormal];
@@ -604,7 +635,7 @@
         next_.enabled = NO;
     }
 
-    pre_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    pre_ = [UIButton buttonWithType:UIButtonTypeCustom];
     pre_.frame = CGRectMake(0, 30, 20, 125);
     if (currentPage_ == 1) {
         pre_.enabled = NO;
@@ -681,4 +712,20 @@
     [self Play:playNum-1];
     
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [self loadComments];
+    
+}
+
 @end

@@ -75,7 +75,7 @@
     self.tableView.showsVerticalScrollIndicator = NO;
     
     self.title = [self.infoDic objectForKey:@"prod_name"];
-    
+    commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
     
@@ -103,6 +103,8 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
+    
+     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 
 }
 
@@ -114,17 +116,19 @@
 
 
 -(void)loadData{
+    
     relevantList_ = [NSArray array];
     MBProgressHUD *tempHUD;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
-        episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+       // episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
-        [self.tableView reloadData];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
 
     }
     else{
@@ -145,37 +149,84 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
         videoInfo_ = (NSDictionary *)[result objectForKey:@"tv"];
-        episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        //episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
-        [self.tableView reloadData];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
     }];
     
 }
 
-- (void)loadComments
-{
-    commentArray_ = [NSMutableArray arrayWithCapacity:10];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//将所有的剧集排序。
+-(void)SortEpisodes:(NSArray *)arr{
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES comparator:cmptr];
+    episodesArr_ = [arr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+
+}
+
+NSComparator cmptr = ^(id obj1, id obj2){
+    if ([obj1 integerValue] > [obj2 integerValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([obj1 integerValue] < [obj2 integerValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
+
+//- (void)loadComments
+//{
+//    commentArray_ = [NSMutableArray arrayWithCapacity:10];
+//    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+//    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//        NSString *responseCode = [result objectForKey:@"res_code"];
+//        if(responseCode == nil){
+//            NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
+//            [[CacheUtility sharedCache] putInCache:key result:result];
+//            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
+//            [commentArray_ removeAllObjects];
+//            if(tempArray != nil && tempArray.count > 0){
+//                [commentArray_ addObjectsFromArray:tempArray];
+//            }
+//            [self.tableView reloadData];
+//        }
+//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
+//}
+
+-(void)loadComments{
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    int pageNum = ceil(commentArray_.count / 10.0)+1;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id",[NSNumber numberWithInt:pageNum], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
-            [[CacheUtility sharedCache] putInCache:key result:result];
-            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            [commentArray_ removeAllObjects];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray_ addObjectsFromArray:tempArray];
+            NSArray *comments = (NSArray *)[result objectForKey:@"comments"];
+            if(comments != nil && comments.count > 0){
+                [commentArray_ addObjectsFromArray:comments];
+                
             }
-            [self.tableView reloadData];
         }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
+    
+}
+- (void)loadTable {
+    [self.tableView reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)didReceiveMemoryWarning
@@ -207,7 +258,13 @@
         return [relevantList_ count] > 5 ? 5:[relevantList_ count];
     }
     else if (section == 2){
-        return [commentArray_ count];
+        if ([commentArray_ count]>0) {
+            return [commentArray_ count]+1;
+        }
+        else{
+            return 0;
+        }
+
     }
     return 0;
 
@@ -580,7 +637,7 @@
         summaryLabel_.frame = CGRectMake(28, 20, 264,90);
        // moreBtn_.frame = CGRectMake(288, 90, 18, 14);
     }
-    
+    [self loadTable];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
     
     
@@ -669,14 +726,18 @@
          button.titleLabel.font = [UIFont systemFontOfSize:12];
         if (lastNum == i) {
              [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen.png"] forState:UIControlStateNormal];
-           
         }
         else{
             [button setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateNormal];
             [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg.png"] forState:UIControlStateNormal];
            
         }
-      [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen_s.png"] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen_s.png"] forState:UIControlStateHighlighted];
+         NSDictionary *oneEpisoder = [episodesArr_ objectAtIndex:i];
+        if ([oneEpisoder objectForKey:@"down_urls"]== nil && [oneEpisoder objectForKey:@"video_urls"] == nil) {
+            button.enabled = NO;
+        }
+     
       [scrollView_ addSubview:button];
     }
     for (int i = 0;i < pageCount_;i++){
@@ -740,4 +801,21 @@
     [self Play:playNum-1];
 
 }
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    
+    //[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+    //[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [self loadComments];
+    
+}
+
 @end
