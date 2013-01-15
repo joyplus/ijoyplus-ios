@@ -208,7 +208,7 @@
     showListView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     showListView.scrollEnabled = NO;
     showListView.backgroundColor = [UIColor clearColor];
-    [showListView setPagingEnabled:NO];
+    [showListView setPagingEnabled:YES];
     [self.bgScrollView addSubview:showListView];
 }
 
@@ -388,7 +388,7 @@
             btnAdded = YES;
             if(episodeArray.count > 5){
                 showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 5 * 32);
-                showListView.contentSize = showListView.frame.size;
+                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 350, showListView.frame.size.height);
                 
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];

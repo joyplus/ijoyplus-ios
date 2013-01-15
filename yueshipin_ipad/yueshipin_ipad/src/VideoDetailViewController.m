@@ -403,7 +403,6 @@
         viewController.subname = [NSString stringWithFormat:@"%i", num];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
-//        [self presentModalViewController:[[UINavigationController alloc]initWithRootViewController:viewController] animated:YES];
     }
 }
 
