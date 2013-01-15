@@ -84,7 +84,7 @@
     favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
-    summaryBg_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"brief"]];
+    summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 20, 292, 90);
     summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 20, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
@@ -188,6 +188,9 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
+            else{
+              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            }
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -268,23 +271,36 @@
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
                 actorsLabel.textColor = [UIColor grayColor];
                 actorsLabel.backgroundColor = [UIColor clearColor];
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
-               
                 
-                NSString *labelText = [NSString stringWithFormat:@"地区: %@\n导演: %@\n年代: %@",area,directors,date];
-                UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 66, 200, 60)];
-                infoLabel.font = [UIFont systemFontOfSize:12];
-                infoLabel.textColor = [UIColor grayColor];
-                infoLabel.backgroundColor = [UIColor clearColor];
-                infoLabel.text = labelText;
-                infoLabel.lineBreakMode = UILineBreakModeWordWrap;
-                infoLabel.numberOfLines = 0;
-                [cell addSubview:infoLabel];
+                UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 74, 200, 15)];
+                areaLabel.font = [UIFont systemFontOfSize:12];
+                areaLabel.textColor = [UIColor grayColor];
+                areaLabel.backgroundColor = [UIColor clearColor];
+                areaLabel.text = [NSString stringWithFormat:@"地区: %@",area];
+                
+                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 89, 200, 15)];
+                directorLabel.font = [UIFont systemFontOfSize:12];
+                directorLabel.textColor = [UIColor grayColor];
+                directorLabel.backgroundColor = [UIColor clearColor];
+                directorLabel.text = [NSString stringWithFormat:@"导演: %@",directors];
+                
+                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 104, 200, 15)];
+                dateLabel.font = [UIFont systemFontOfSize:12];
+                dateLabel.textColor = [UIColor grayColor];
+                dateLabel.backgroundColor = [UIColor clearColor];
+                dateLabel.text = [NSString stringWithFormat:@"年代: %@",date];
+                
+                
                 [cell addSubview:actorsLabel];
+                [cell addSubview:areaLabel];
+                [cell addSubview:directorLabel];
+                [cell addSubview:dateLabel];
                 
                 UIButton *play = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                 play.frame = CGRectMake(115, 28, 87, 27);

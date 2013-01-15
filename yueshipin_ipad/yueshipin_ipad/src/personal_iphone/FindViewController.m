@@ -164,6 +164,14 @@
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
    [searchBar setShowsCancelButton:YES animated:YES];
+    for (id view in searchBar.subviews) {
+    if ([view isKindOfClass:[UIButton class]]) {
+        [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"cancelSearch.png"] forState:UIControlStateNormal];
+        [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"cancelSearch_s.png"] forState:UIControlStateHighlighted];
+        [(UIButton *)view setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        ((UIButton *)view).titleLabel.font = [UIFont systemFontOfSize:13];
+    }
+}
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
     [searchBar setShowsCancelButton:NO animated:NO];
@@ -172,6 +180,9 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [searchResults_ count];
 }
+
+
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     

@@ -83,14 +83,15 @@
     [view setBackgroundColor:[UIColor clearColor]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
     if (type == DING) {
-        temp.frame = CGRectMake(185, 180, 92, 27);
+        temp.frame = CGRectMake(185, 110, 92, 27);
     }
     if (type == ADDFAV) {
-        temp.frame = CGRectMake(40, 180, 92, 27);
+        temp.frame = CGRectMake(40, 110, 92, 27);
     }
     //temp.center = view.center;
     [view addSubview:temp];
-    [[AppDelegate instance].window addSubview:view];
+    //[[AppDelegate instance].window addSubview:view];
+    [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
 }
 - (void)showOpFailureModalView:(float)closeTime with:(int)type
@@ -100,19 +101,20 @@
     [view setBackgroundColor:[UIColor clearColor]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_fails.png"]];
     if (type == DING) {
-        temp.frame = CGRectMake(185, 180, 92, 27);
+        temp.frame = CGRectMake(185, 110, 92, 27);
     }
     if (type == ADDFAV) {
-        temp.frame = CGRectMake(40, 180, 92, 27);
+        temp.frame = CGRectMake(40, 110, 92, 27);
     }
     //temp.center = view.center;
     [view addSubview:temp];
-    [[AppDelegate instance].window addSubview:view];
+    //[[AppDelegate instance].window addSubview:view];
+     [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
 }
 - (void)removeOverlay
 {
-  for(UIView *view in [AppDelegate instance].window.subviews ){
+  for(UIView *view in self.view.subviews ){
       if (view.tag == VIEWTAG) {
           [view removeFromSuperview];
           break;

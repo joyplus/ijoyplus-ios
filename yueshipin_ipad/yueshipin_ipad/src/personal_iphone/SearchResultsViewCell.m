@@ -21,6 +21,10 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        frame.frame = CGRectMake(13, 4, 62, 90);
+        [self addSubview:frame];
+        
         self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15, 6, 57, 84)];
         [self addSubview:self.imageview];
         

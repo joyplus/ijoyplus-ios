@@ -86,7 +86,7 @@
     favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
-    summaryBg_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"brief"]];
+    summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 20, 292, 90);
     summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 20, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
@@ -171,6 +171,10 @@
             if(comments != nil && comments.count > 0){
                 [commentArray_ addObjectsFromArray:comments];
                 
+            }
+            else{
+                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            
             }
         }
        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -264,25 +268,40 @@
                 if (actors == nil) {
                     actors = [self.infoDic objectForKey:@"star"];
                 }
+                
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
                 actorsLabel.textColor = [UIColor grayColor];
                 actorsLabel.backgroundColor = [UIColor clearColor];
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
                 
+                UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 74, 200, 15)];
+                areaLabel.font = [UIFont systemFontOfSize:12];
+                areaLabel.textColor = [UIColor grayColor];
+                areaLabel.backgroundColor = [UIColor clearColor];
+                areaLabel.text = [NSString stringWithFormat:@"地区: %@",area];
                 
-                NSString *labelText = [NSString stringWithFormat:@"地区: %@\n导演: %@\n年代: %@",area,directors,date];
-                UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 66, 200, 60)];
-                infoLabel.backgroundColor = [UIColor clearColor];
-                infoLabel.font = [UIFont systemFontOfSize:12];
-                infoLabel.textColor = [UIColor grayColor];
-                infoLabel.text = labelText;
-                infoLabel.lineBreakMode = UILineBreakModeWordWrap;
-                infoLabel.numberOfLines = 0;
-                [cell addSubview:infoLabel];
+                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 89, 200, 15)];
+                directorLabel.font = [UIFont systemFontOfSize:12];
+                directorLabel.textColor = [UIColor grayColor];
+                directorLabel.backgroundColor = [UIColor clearColor];
+                directorLabel.text = [NSString stringWithFormat:@"导演: %@",directors];
+                
+                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 104, 200, 15)];
+                dateLabel.font = [UIFont systemFontOfSize:12];
+                dateLabel.textColor = [UIColor grayColor];
+                dateLabel.backgroundColor = [UIColor clearColor];
+                dateLabel.text = [NSString stringWithFormat:@"年代: %@",date];
+                
+                
                 [cell addSubview:actorsLabel];
+                [cell addSubview:areaLabel];
+                [cell addSubview:directorLabel];
+                [cell addSubview:dateLabel];
+                
                 UIButton *play = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                 play.frame = CGRectMake(115, 28, 87, 27);
                 play.tag = 10001;
@@ -583,16 +602,16 @@
         if (moreBtn_.selected) {
             summaryBg_.frame = CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
             summaryLabel_.frame = CGRectMake(28, 23, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
-            //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
+            
             
         }
         else{
             summaryBg_.frame = CGRectMake(14, 20, 292, 90);
             summaryLabel_.frame = CGRectMake(28, 20, 264,90);
-            //moreBtn_.frame = CGRectMake(288, 90, 18, 14);
+            
         }
     [self loadTable];
-    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     
 }
 - (void)showPlayWebPage
@@ -607,8 +626,6 @@
     viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:pro animated:YES completion:nil];
-    //[self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
-    
 }
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo

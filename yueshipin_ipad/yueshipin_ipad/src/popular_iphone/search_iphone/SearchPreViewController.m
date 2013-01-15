@@ -51,7 +51,13 @@
         if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UITextField class]]) {
             searchField = [searchBar_.subviews objectAtIndex:i];
         }
+        if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UIButton class]]){
+            
+            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"cancel.png"] forState:UIControlStateNormal];
+            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"cancel_s.png"] forState:UIControlStateHighlighted];
+        }
     }
+    
     if(!(searchField == nil)) {
         [searchField.leftView setHidden:YES];
         [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang.png"] ];
@@ -73,6 +79,16 @@
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
     [searchBar setShowsCancelButton:YES animated:YES];
+    for (id view in searchBar.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"cancelSearch.png"] forState:UIControlStateNormal];
+            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"cancelSearch_s.png"] forState:UIControlStateHighlighted];
+            [(UIButton *)view setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+            ((UIButton *)view).titleLabel.font = [UIFont systemFontOfSize:13];
+        }
+    }
+    
+
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
     [searchBar setShowsCancelButton:NO animated:NO];

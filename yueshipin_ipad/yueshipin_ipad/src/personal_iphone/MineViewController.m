@@ -28,6 +28,8 @@
 #import "ProgramNavigationController.h"
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
+#import "AppDelegate.h"
+#import <QuartzCore/QuartzCore.h>
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -66,8 +68,9 @@
 }
 
 -(void)loadMyFavsData{
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.bgView];
-    [self.bgView addSubview:tempHUD];
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    //[self.bgView addSubview:tempHUD];
+    [[AppDelegate instance].window addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
@@ -94,8 +97,9 @@
 }
 
 -(void)loadPersonalData{
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.bgView];
-    [self.bgView addSubview:tempHUD];
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    //[self.bgView addSubview:tempHUD];
+    [[AppDelegate instance].window addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
@@ -220,6 +224,8 @@
         
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
     self.bgView.backgroundColor = [UIColor whiteColor];
+    bgView_.layer.borderWidth = 1;
+    bgView_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     [self.view addSubview:self.bgView];
     
     noFav_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noFav.png"]];
@@ -235,6 +241,7 @@
     self.recordTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.recordTableList.tag = RECORD_TYPE;
     self.recordTableList.scrollEnabled = NO;
+    self.recordTableList.backgroundColor = [UIColor clearColor];
     
     self.favTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
     self.favTableList.dataSource = self;
@@ -242,6 +249,7 @@
     self.favTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.favTableList.tag = Fav_TYPE;
     self.favTableList.scrollEnabled = NO;
+    self.favTableList.backgroundColor = [UIColor clearColor];
     
     myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 37, 296, 180) style:UITableViewStylePlain];
     myTableList_.dataSource = self;
@@ -254,6 +262,8 @@
     
     moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 290, 296, 45)];
     moreView_.backgroundColor = [UIColor whiteColor];
+    moreView_.layer.borderWidth = 1;
+    moreView_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     moreButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton_ setFrame:CGRectMake(5, 7, 284, 30)];
@@ -267,6 +277,8 @@
     
     userId_ = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     avatarImage_ = [[UIImageView alloc] initWithFrame:CGRectMake(22, 12, 43, 43)];
+    avatarImage_.layer.borderWidth = 1;
+    avatarImage_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     [self.view addSubview:avatarImage_];
@@ -414,6 +426,7 @@
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];
+    [createList_ removeFromSuperview];
     [self.bgView setFrame:CGRectMake(12, 98, 296, 180)];
     [moreView_ setFrame:CGRectMake(12, 290, 296, 45)];
     [noRecord_ removeFromSuperview];
@@ -431,6 +444,7 @@
                 if ([self.sortedwatchRecordArray count] <= 3) {
                     
                     [moreView_ removeFromSuperview];
+                    [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
                 }
                 else {
                     [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
@@ -443,6 +457,7 @@
                 }
                 else{
                     [self.bgView addSubview:self.recordTableList];
+                   // self.recordTableList.backgroundColor = [UIColor redColor];
                     [self.recordTableList reloadData];
                 }
                     
@@ -454,7 +469,7 @@
             button2_.selected = YES;
             if ([self.favArr count] <= 3) {
                 favShowArr_ = [NSArray arrayWithArray:self.favArr];
-               
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favShowArr_ count])];
                 [moreView_ removeFromSuperview];
             }
             else {
@@ -572,7 +587,7 @@
         cell.titleLab.text = [infoDic objectForKey:@"name"];
         cell.actors.text = [item objectForKey:@"prod_name"];
         cell.date.text = @"...";
-        [cell.date setFrame:CGRectMake(12, 42, 200, 15)];
+        [cell.date setFrame:CGRectMake(14, 42, 200, 15)];
         [cell.play  removeFromSuperview];
     
     }
@@ -616,6 +631,7 @@
         NSMutableArray *items = [NSMutableArray arrayWithArray:[infoDic objectForKey:@"items"]];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
         createMyListTwoViewController.listArr = items;
+        createMyListTwoViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
         createMyListTwoViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
         

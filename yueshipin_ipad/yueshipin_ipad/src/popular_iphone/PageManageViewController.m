@@ -269,7 +269,7 @@
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
-    
+    self.scrollView.bounces = NO;
     for (int i = 0; i < PAGE_NUM; i++) {
         UIImageView *titleName = titleName = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 90, 18)];
         if (i == 0) {

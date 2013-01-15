@@ -52,7 +52,7 @@
     nextBtn_.frame = CGRectMake(0, 0, 51, 31);
     nextBtn_.enabled = NO;
     [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next.png"] forState:UIControlStateNormal];
-    [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateNormal];
+    [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:nextBtn_];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
