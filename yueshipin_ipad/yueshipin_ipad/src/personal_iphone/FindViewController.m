@@ -41,6 +41,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.title = @"搜索";
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
@@ -57,7 +58,7 @@
     [rightButton addTarget:self action:@selector(Done:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 37, 30);
     [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateHighlighted];
     rightButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = nil;
     
@@ -161,6 +162,17 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
     [searchBar_ resignFirstResponder];
     [self Search];
+    [searchBar setShowsCancelButton:NO animated:YES];
+//    for (id view in searchBar.subviews) {
+//        if ([view isKindOfClass:[UIButton class]]) {
+//            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"cancelSearch.png"] forState:UIControlStateNormal];
+//            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"cancelSearch_s.png"] forState:UIControlStateHighlighted];
+//            [(UIButton *)view setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+//            ((UIButton *)view).titleLabel.font = [UIFont systemFontOfSize:13];
+//            ((UIButton *)view).enabled = YES;
+//        }
+//    }
+
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
    [searchBar setShowsCancelButton:YES animated:YES];

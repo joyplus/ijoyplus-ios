@@ -151,7 +151,6 @@
     FindViewController *findViewController = [[FindViewController alloc] init];
     findViewController.selectedArr = listArr_;
     findViewController.topicId = topicId_;
-    findViewController.title = self.title;
     [self.navigationController pushViewController:findViewController animated:YES];
 
 }

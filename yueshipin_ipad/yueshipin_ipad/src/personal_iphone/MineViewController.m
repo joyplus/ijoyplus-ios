@@ -554,9 +554,9 @@
     if (cell == nil) {
         cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-      cell.selectionStyle = UITableViewCellSelectionStyleNone;
+     
     if (tableView.tag == RECORD_TYPE) {
-      
+       cell.selectionStyle = UITableViewCellSelectionStyleNone;
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
@@ -650,14 +650,15 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
-        NSString *topicId = [infoDic objectForKey:@"topic_id"];
+        NSString *topicId = [infoDic objectForKey:@"id"];
         
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:topicId, @"topic_id", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if([responseCode isEqualToString:kSuccessResCode]){
                 [myListArr_ removeObjectAtIndex:indexPath.row];
-                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                [myTableList_ reloadData];
             }
             else {
                  [UIUtility showSystemError:self.view];
