@@ -177,10 +177,11 @@
     CGRect bound = self.view.bounds;
     playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:self.workingUrl];
     playerViewController.view.frame = CGRectMake(0, 0, bound.size.width, bound.size.height);
-    
+
     [self.view insertSubview:self.playerViewController.view belowSubview:loadingView];
     
     player = [playerViewController moviePlayer];
+
     [player prepareToPlay];
     player.useApplicationAudioSession = NO;
     lastPlayTime = (NSNumber*)[[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"%@_%@", self.prodId, self.subname]];

@@ -96,6 +96,7 @@
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
+    [[AppDelegate instance].rootViewController showIntroModalView:DOWNLOAD_SETTING_INTRO introImage:[UIImage imageNamed:@"download_setting_intro"]];
 }
 
 - (void)closeBtnClicked

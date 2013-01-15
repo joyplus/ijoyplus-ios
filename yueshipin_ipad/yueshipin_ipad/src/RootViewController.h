@@ -73,4 +73,6 @@
 - (void)pesentMyModalView:(UIViewController *)viewController;
 - (void)showDramaDownloadView:(NSString *)downloadingProdid title:(NSString *)title totalNumber:(int)totalNumber;
 - (void)showShowDownloadView:(NSString *)downloadingProdid title:(NSString *)title episodeArray:(NSArray *)episodeArray;
+- (void)showModalView:(UIImage *)image closeTime:(int)closeTime;
+- (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage;
 @end

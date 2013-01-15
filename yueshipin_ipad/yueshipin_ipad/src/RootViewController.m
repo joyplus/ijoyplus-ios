@@ -666,4 +666,52 @@
     UIScrollView *showListView = (UIScrollView *)[view viewWithTag:3268143];
     [showListView setContentOffset:CGPointMake(370*showPageNumber, 0) animated:YES];
 }
+
+- (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage
+{
+    @synchronized(self){
+        NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
+        if (![showMenuIntro isEqualToString:@"1"]) {
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
+            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
+            view.tag = 3268999;
+            [view setBackgroundColor:[UIColor clearColor]];
+            UIImageView *temp = [[UIImageView alloc]initWithImage:introImage];
+            temp.frame = view.frame;
+            [view addSubview:temp];
+            [self.view addSubview:view];
+            
+            UITapGestureRecognizer *closeModalViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeIntroModalView)];
+            closeModalViewGesture.numberOfTapsRequired = 1;
+            [view addGestureRecognizer:closeModalViewGesture];
+        }
+    }
+    
+}
+
+- (void)removeIntroModalView
+{
+    UIView *modalView = (UIView *)[self.view viewWithTag:3268999];
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        for (UIView *subview in modalView.subviews) {
+            [subview setAlpha:0];
+        }
+        [modalView setAlpha:0];
+    } completion:^(BOOL finished) {
+        [modalView removeFromSuperview];
+    }];
+}
+
+- (void)showModalView:(UIImage *)image closeTime:(int)closeTime
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    view.tag = 3268142;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:image];
+    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.center = view.center;
+    [view addSubview:temp];
+    [self.view addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+}
 @end

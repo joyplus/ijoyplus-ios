@@ -307,6 +307,9 @@
         }
     }
     [AppDelegate instance].closed = NO;
+    if (selectedIndex == 5) {        
+        [[AppDelegate instance].rootViewController showIntroModalView:WEIBO_INTRO introImage:[UIImage imageNamed:@"weibo_intro"]];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

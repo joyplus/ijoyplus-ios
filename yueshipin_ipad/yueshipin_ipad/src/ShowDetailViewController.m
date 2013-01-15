@@ -201,24 +201,40 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_WIDTH + 413, self.introContentTextView.frame.origin.y + 80, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 413, self.introContentTextView.frame.origin.y + 90, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
     
     showListView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     showListView.scrollEnabled = NO;
     showListView.backgroundColor = [UIColor clearColor];
-    [showListView setPagingEnabled:YES];
+    [showListView setPagingEnabled:NO];
     [self.bgScrollView addSubview:showListView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }
     if(video == nil){
         [self retrieveData];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if ([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch] && self.downloadBtn.enabled) {
+        NSString *playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
+        if (![playWithDownload isEqualToString:@"1"]) {
+            [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download_2"]];
+        }
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
+    } else {
+        [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO introImage:[UIImage imageNamed:@"play_intro"]];
     }
 }
 
@@ -232,7 +248,7 @@
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
                 self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:introContentHeight - 100];
             } completion:^(BOOL finished) {
             }];
@@ -241,7 +257,7 @@
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
                 self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
             } completion:^(BOOL finished) {
                 
@@ -465,12 +481,7 @@
 }
 
 - (void)nameBtnClicked:(UIButton *)btn{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [self playVideo:btn.tag - 1];
+    [super playVideo:btn.tag - 1];
 }
 
 - (NSMutableArray *)getEpisodes
@@ -511,8 +522,10 @@
     }
     if(showPageNumber == 0){
         [self.previousShowBtn setEnabled:NO];
+        [self.nextShowBtn setEnabled:YES];
     }
     if(showPageNumber == ceil(episodeArray.count / 5.0)-1){
+        [self.previousShowBtn setEnabled:YES];
         [self.nextShowBtn setEnabled:NO];
     }
 }
@@ -532,9 +545,9 @@
             if(tempArray != nil && tempArray.count > 0){
                 [commentArray addObjectsFromArray:tempArray];
             }
-            if(introContentHeight > 80){
+            if(introContentHeight > 90){
                 if(introExpand){
-                    [self repositElements:introContentHeight - 80];
+                    [self repositElements:introContentHeight - 90];
                 } else {
                     [self repositElements:0];
                 }
@@ -570,7 +583,7 @@
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
         } else {
-            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"pushed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
@@ -592,7 +605,7 @@
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
         } else {
-            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];

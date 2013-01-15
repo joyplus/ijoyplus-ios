@@ -375,13 +375,20 @@
         if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
             NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
             if(videoUrlArray.count > 0){
+                NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
                 for(NSDictionary *tempVideo in videoUrlArray){
                     NSArray *urls = [tempVideo objectForKey:@"urls"];
-                    for (NSDictionary *url in urls) {
-                        NSString *tempUrl = [url objectForKey:@"url"];
-                        if([self validadUrl:tempUrl]){
-                            [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                        }
+                    [urlsDicArray addObjectsFromArray:urls];
+                }
+                urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+                    NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
+                    NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
+                    return [second compare:first];
+                }];
+                for (NSDictionary *url in urlsDicArray) {
+                    NSString *tempUrl = [url objectForKey:@"url"];
+                    if([self validadUrl:tempUrl]){
+                        [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
                     }
                 }
             }
@@ -396,6 +403,7 @@
         viewController.subname = [NSString stringWithFormat:@"%i", num];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+//        [self presentModalViewController:[[UINavigationController alloc]initWithRootViewController:viewController] animated:YES];
     }
 }
 

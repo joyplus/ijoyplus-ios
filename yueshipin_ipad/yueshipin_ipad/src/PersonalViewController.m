@@ -265,7 +265,7 @@
         [self parseWatchResultData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:6], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseWatchResultData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

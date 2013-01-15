@@ -145,6 +145,7 @@
 {
     [super viewDidAppear:animated];
     [self updateDownloadNum:nil];
+    [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro"]];
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
