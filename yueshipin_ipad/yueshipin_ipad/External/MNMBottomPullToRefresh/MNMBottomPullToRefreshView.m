@@ -77,7 +77,6 @@
         arrowImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(130.0f, round(MM_FOOTER_VIEW_HEIGHT / 2.0f) - round(arrowImage.size.height / 2.0f), arrowImage.size.width, arrowImage.size.height)];
         arrowImageView_.contentMode = UIViewContentModeCenter;
         arrowImageView_.image = arrowImage;
-        
         [self addSubview:arrowImageView_];
         
         loadingActivityIndicator_ = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -86,7 +85,11 @@
         
         [self addSubview:loadingActivityIndicator_];
         
-        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame) + 70.0f, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, MM_FOOTER_VIEW_HEIGHT - 20.0f)];
+        int offSet = 5; //offSet = 0 is for iphone;offSet = 70 is for ipad;
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+            offSet = 70;
+        }
+        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame)+offSet, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, MM_FOOTER_VIEW_HEIGHT - 20.0f)];
         messageLabel_.backgroundColor = [UIColor clearColor];
         messageLabel_.textColor = [UIColor lightGrayColor];
         messageLabel_.font = [UIFont boldSystemFontOfSize:13.0f];

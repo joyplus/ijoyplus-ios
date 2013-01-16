@@ -28,6 +28,7 @@
 @implementation AppDelegate
 @synthesize window;
 @synthesize rootViewController;
+@synthesize tabBarView;
 @synthesize closed;
 @synthesize networkStatus;
 @synthesize hostReach;
@@ -169,6 +170,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+//    // Override point for customization after application launch.
+//    self.tabBarView = [[TabBarViewController alloc] init];
+//    self.window.rootViewController = self.tabBarView;
+
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
@@ -193,14 +199,19 @@
         [installation setBadge:0];
         [installation saveInBackground];
     }
-    [self customizeAppearance];
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    [self initAllDownloaders];
-    self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        [self customizeAppearance];
+        [self initAllDownloaders];
+        self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
+    } else {
+        self.rootViewController = [[TabBarViewController alloc] init];
+    }
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
+#import "TabBarViewController.h"
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "McDownload.h"
@@ -19,6 +20,8 @@
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) RootViewController *rootViewController;
+
+@property (strong, nonatomic) TabBarViewController *tabBarView;
 
 @property (assign, nonatomic) BOOL closed;
 

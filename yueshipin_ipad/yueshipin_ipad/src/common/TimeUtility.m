@@ -35,6 +35,7 @@
             str = [NSString stringWithFormat:@"0%i", num];
         } else {
             str = [NSString stringWithFormat:@"%i", num];
+            
         }
     } else{
         str = @"00";

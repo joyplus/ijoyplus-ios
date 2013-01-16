@@ -69,6 +69,7 @@
     _sinaweibo.delegate = self;
     
     if ([_sinaweibo isLoggedIn]) {
+        
         [AppDelegate instance].rootViewController.prodId = self.prodId;
         [AppDelegate instance].rootViewController.prodUrl = [video objectForKey:@"poster"];
         [AppDelegate instance].rootViewController.prodName = [video objectForKey:@"name"];
