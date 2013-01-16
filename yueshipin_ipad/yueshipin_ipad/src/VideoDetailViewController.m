@@ -20,6 +20,7 @@
 @synthesize prodId;
 @synthesize fromViewController;
 @synthesize type;
+@synthesize subname;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -400,7 +401,7 @@
         viewController.dramaDetailViewControllerDelegate = self;
         viewController.type = type;
         viewController.name = [video objectForKey:@"name"];
-        viewController.subname = [NSString stringWithFormat:@"%i", num];
+        viewController.subname = self.subname;
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }

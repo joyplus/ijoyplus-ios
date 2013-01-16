@@ -273,10 +273,13 @@
         [self retrieveTopsListData];
         [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     } else if(videoType == 1){
+        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveMovieTopsData];
     } else if(videoType == 2){
+        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveTvTopsData];
     } else if(videoType == 3){
+        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveShowTopsData];
     }
     _reloading = YES;
@@ -571,6 +574,7 @@
 - (void)listBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -583,6 +587,7 @@
 - (void)movieBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -595,6 +600,7 @@
 - (void)dramaBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -607,6 +613,7 @@
 - (void)showBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];

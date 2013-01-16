@@ -628,6 +628,7 @@
     [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
     [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:btn.tag]];
+    self.subname = btn.titleLabel.text;
     [super playVideo:btn.tag-1];
 }
 

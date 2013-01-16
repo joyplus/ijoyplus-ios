@@ -481,6 +481,7 @@
 }
 
 - (void)nameBtnClicked:(UIButton *)btn{
+    self.subname = btn.titleLabel.text;
     [super playVideo:btn.tag - 1];
 }
 

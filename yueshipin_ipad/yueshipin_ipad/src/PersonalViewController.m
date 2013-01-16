@@ -265,7 +265,7 @@
         [self parseWatchResultData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:6], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseWatchResultData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -452,7 +452,7 @@
     if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
         content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
-        content = [NSString stringWithFormat:@"已观看到第%@集 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
+        content = [NSString stringWithFormat:@"已观看到《第%@集》 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
         content = [NSString stringWithFormat:@"已观看《%@》 %@", [item objectForKey:@"prod_subname"], [TimeUtility formatTimeInSecond:number.doubleValue]];
     }

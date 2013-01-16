@@ -12,7 +12,7 @@
 
 @interface MyMediaPlayerViewController () <NSURLConnectionDelegate>
 
-
+@property (nonatomic, strong)NSLock *theLock;
 @property (atomic, strong)NSURL *workingUrl;
 @property (atomic) int errorUrlNum;
 @property (nonatomic, strong)MPMoviePlayerViewController *playerViewController;
@@ -37,6 +37,7 @@
 @synthesize type, currentNum, isDownloaded;
 @synthesize dramaDetailViewControllerDelegate;
 @synthesize lastPlayTime;
+@synthesize theLock;
 
 - (void)didReceiveMemoryWarning
 {
@@ -97,6 +98,8 @@
     UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithCustomView:myButton];
     self.navigationItem.leftBarButtonItem = customItem;
     
+    theLock = [[NSLock alloc]init];
+    
     loadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
     loadingView.backgroundColor = [UIColor blackColor];
     
@@ -138,23 +141,39 @@
     NSLog(@"error url");
     [connection cancel];
     //如果所有的视频地址都无效，则播放网页地址
-    errorUrlNum++;
-    if (errorUrlNum >= videoUrls.count) {
-        [self showWebView];
-    }
+    [self checkIfShowWebView];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     @synchronized(workingUrl){
         if(workingUrl == nil){
-            NSLog(@"working = %@", connection.originalRequest.URL);
-            workingUrl = connection.originalRequest.URL;
-            [self performSelectorOnMainThread:@selector(playVideo) withObject:nil waitUntilDone:NO];
-            [connection cancel];
+            NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
+            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
+            if (contentLength.intValue > 1000) {
+                NSLog(@"working = %@", connection.originalRequest.URL);
+                workingUrl = connection.originalRequest.URL;
+                [self performSelectorOnMainThread:@selector(playVideo) withObject:nil waitUntilDone:NO];
+                [connection cancel];
+            } else {
+                [self checkIfShowWebView];
+            }
         }
     }
 }
+
+- (void)checkIfShowWebView
+{
+    [theLock lock];
+    errorUrlNum++;
+    if (errorUrlNum == videoUrls.count) {
+        [self showWebView];
+    }
+    [theLock unlock];
+
+}
+
+
 
 - (void)showWebView
 {

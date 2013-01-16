@@ -36,6 +36,7 @@
     NSArray *episodeArray;
 }
 @property (strong, nonatomic)NSString *prodId;
+@property (nonatomic, strong)NSString *subname;
 @property (assign, nonatomic)int type;
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
 - (void)shareBtnClicked;
