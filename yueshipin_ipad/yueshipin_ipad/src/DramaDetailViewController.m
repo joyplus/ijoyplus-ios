@@ -483,7 +483,7 @@
                 }                
                 [btn setBackgroundImage:[[UIImage imageNamed:@"drama_disabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] forState:UIControlStateDisabled];
                 [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
-                [btn setTitleColor:[UIColor colorWithRed:55/255.0 green:100/255.0 blue:158/255.0 alpha:1] forState:UIControlStateHighlighted];
+                [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
                 [episodeView addSubview:btn];
             }

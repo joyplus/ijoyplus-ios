@@ -231,7 +231,7 @@
     [playerViewController dismissMoviePlayerViewControllerAnimated];
     playerViewController = nil;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
-    [self dismissViewControllerAnimated:YES completion:^{
+    [self dismissViewControllerAnimated:NO completion:^{
         [UIApplication sharedApplication].statusBarHidden = NO;
         if(!userClicked){
             [self.dramaDetailViewControllerDelegate playNextEpisode];
