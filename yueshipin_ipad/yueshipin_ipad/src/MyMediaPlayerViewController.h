@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GenericBaseViewController.h"
-#import "DramaDetailViewController.h"
+#import "VideoWebViewController.h"
 
 @interface MyMediaPlayerViewController : GenericBaseViewController
 
@@ -20,6 +20,7 @@
 @property (nonatomic)int type;
 @property (nonatomic)int currentNum;
 @property (nonatomic)BOOL isDownloaded;
-@property (nonatomic, weak)id <DramaDetailViewControllerDelegate>dramaDetailViewControllerDelegate;
+@property (nonatomic, weak)id <VideoWebViewControllerDelegate>videoWebViewControllerDelegate;
+@property (nonatomic)BOOL closeAll;
 
 @end

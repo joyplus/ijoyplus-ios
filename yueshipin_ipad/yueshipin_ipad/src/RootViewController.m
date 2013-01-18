@@ -392,7 +392,7 @@
     [self presentModalViewController:viewController animated:YES];
 }
 
-- (void)showDramaDownloadView:(NSString *)downloadingProdid title:(NSString *)title totalNumber:(int)totalNumber
+- (void)showDramaDownloadView:(NSString *)downloadingProdid video:(NSDictionary *)video
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
     view.tag = 3268142;
@@ -405,7 +405,7 @@
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
-    nameLabel.text = title;
+    nameLabel.text = [video objectForKey:@"name"];
     [nameLabel sizeToFit];
     nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
     [frame addSubview:nameLabel];
@@ -417,13 +417,14 @@
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:closeBtn];
     
-    dramaPageNum = ceil(totalNumber / 30.0);
+    NSArray *episodeArray = [video objectForKey:@"episodes"];
+    dramaPageNum = ceil(episodeArray.count / 30.0);
     for (int i = 0; i < dramaPageNum; i++) {
         UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         pageBtn.frame = CGRectMake(255 + i * (61 + 10), 320, 61, 27);
         pageBtn.tag = 1001 + i;
         [pageBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*30+1, (int)fmin((i+1)*30, totalNumber)] forState:UIControlStateNormal];
+        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*30+1, (int)fmin((i+1)*30, episodeArray.count)] forState:UIControlStateNormal];
         if(i == 0){
             [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
         } else {
@@ -447,23 +448,43 @@
     
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
     NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
-    for (int i = 0; i < totalNumber; i++) {
+    for (int i = 0; i < episodeArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag = i+1;
         int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*3.0));
         [btn setFrame:CGRectMake(pageNum*520 + (i % EPISODE_NUMBER_IN_ROW) * 52, floor((i%(EPISODE_NUMBER_IN_ROW*3))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 47, 38)];
-        if (i < EPISODE_NUMBER_IN_ROW-1) {
-            [btn setTitle:[NSString stringWithFormat:@"0%i", i+1] forState:UIControlStateNormal];
-        } else {
-            [btn setTitle:[NSString stringWithFormat:@"%i", i+1] forState:UIControlStateNormal];
-        }
+        NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
+        [btn setTitle:name forState:UIControlStateNormal];
         [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
         btn.contentEdgeInsets = UIEdgeInsetsMake(2, 0, 0, 0);
         btn.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download"] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_pressed"] forState:UIControlStateHighlighted];
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [btn setEnabled:NO];
+        NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            for(NSDictionary *tempVideo in videoUrlArray){
+                NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+                for(NSDictionary *url in urlArray){
+                    if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                        NSString *videoUrl = [url objectForKey:@"url"];
+                        NSString *formatUrl = [[videoUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+                        if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
+                            [btn setEnabled:YES];
+                            break;
+                        } else {
+                            [btn setEnabled:NO];
+                        }
+                    }
+                }
+                if(btn.enabled){
+                    break;
+                }
+            }
+        }
         for (SubdownloadItem *subitem in downloadingItems) {
             if(subitem.subitemId.intValue == i+1){
                 [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -480,12 +501,10 @@
 
 - (void)dramaDownload:(UIButton *)btn
 {
-    BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
-    if(success){
+   BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
+    if (success) {
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
-    } else {
-        [UIUtility showDownloadFailure:self.view];
     }
 }
 

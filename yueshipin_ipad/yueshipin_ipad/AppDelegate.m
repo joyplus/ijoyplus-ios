@@ -63,13 +63,11 @@
     if(item.type != 1){
         newdownloader.subidNum = ((SubdownloadItem *)item).pk;
     }
-    
-    NSURL *url = [NSURL URLWithString:item.url];
-    newdownloader.url = url;
+    newdownloader.downloadItem = item;
     newdownloader.fileName = item.fileName;
     newdownloader.status = 3;
     [self.downloaderArray addObject:newdownloader];
-    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];    
 }
 
 - (NSMutableArray *)getDownloaderQueue
@@ -103,6 +101,7 @@
     for (DownloadItem *item in allItem) {
         if(item.type == 1){
             McDownload *newdownloader = [[McDownload alloc] init];
+            newdownloader.downloadItem = item;
             newdownloader.idNum = item.itemId;
             NSURL *url = [NSURL URLWithString:item.url];
             newdownloader.url = url;
@@ -111,39 +110,45 @@
                 newdownloader.status = 1;
             } else if([item.downloadStatus isEqualToString:@"waiting"]){
                 newdownloader.status = 3;
-            } else if([item.downloadStatus isEqualToString:@"error"]){
+            } else if([item.downloadStatus hasPrefix:@"error"]){
                 newdownloader.status = 4;
             } else if([item.downloadStatus isEqualToString:@"done"]){
                 newdownloader.status = 2;
             } else {
                 newdownloader.status = 0;
             }
-            [self.downloaderArray addObject:newdownloader];
-        } else {
-            NSArray *subitems = [SubdownloadItem allObjects];
-            for(SubdownloadItem *subitem in subitems){
-                McDownload *newdownloader = [[McDownload alloc] init];
-                newdownloader.idNum = subitem.itemId;
-                newdownloader.subidNum = subitem.pk;
-                NSURL *url = [NSURL URLWithString:subitem.url];
-                newdownloader.url = url;
-                newdownloader.fileName = subitem.fileName;
-                if([subitem.downloadStatus isEqualToString:@"start"]){
-                    newdownloader.status = 1;
-                } else if([subitem.downloadStatus isEqualToString:@"waiting"]){
-                    newdownloader.status = 3;
-                } else if([subitem.downloadStatus isEqualToString:@"error"]){
-                    newdownloader.status = 4;
-                } else if([subitem.downloadStatus isEqualToString:@"done"]){
-                    newdownloader.status = 2;
-                } else {
-                    newdownloader.status = 0;
-                }
+            if(![item.downloadStatus isEqualToString:@"error938"] && ![item.downloadStatus isEqualToString:@"done"]){
                 [self.downloaderArray addObject:newdownloader];
             }
-            
         }
     }
+    NSArray *subitems = [SubdownloadItem allObjects];
+    for(SubdownloadItem *subitem in subitems){
+        McDownload *newdownloader = [[McDownload alloc] init];
+        newdownloader.downloadItem = subitem;
+        newdownloader.idNum = subitem.itemId;
+        newdownloader.subidNum = subitem.pk;
+        NSURL *url = [NSURL URLWithString:subitem.url];
+        newdownloader.url = url;
+        newdownloader.fileName = subitem.fileName;
+        if([subitem.downloadStatus isEqualToString:@"start"]){
+            newdownloader.status = 1;
+        } else if([subitem.downloadStatus isEqualToString:@"waiting"]){
+            newdownloader.status = 3;
+        } else if([subitem.downloadStatus hasPrefix:@"error"]){
+            newdownloader.status = 4;
+        } else if([subitem.downloadStatus isEqualToString:@"done"]){
+            newdownloader.status = 2;
+        } else {
+            newdownloader.status = 0;
+        }
+        if(![subitem.downloadStatus isEqualToString:@"error938"] && ![subitem.downloadStatus isEqualToString:@"done"]){
+            [self.downloaderArray addObject:newdownloader];
+        }
+    }
+    
+    
+    
 }
 
 - (void)customizeAppearance
@@ -176,7 +181,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
-    
     NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
@@ -217,7 +221,6 @@
     if(self.showVideoSwitch == nil){
         self.showVideoSwitch = @"0";
     }
-    self.showVideoSwitch = @"0";
     if (![self.showVideoSwitch isEqualToString:@"0"]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
     }

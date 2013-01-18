@@ -11,6 +11,7 @@
 #import "CommonHeader.h"
 #import "ListViewController.h"
 #import "MyMediaPlayerViewController.h"
+#import "VideoWebViewController.h"
 
 @interface VideoDetailViewController ()
 
@@ -354,56 +355,81 @@
         return;
     }
     // 网页地址
-    NSString *httpUrl;
-    NSArray *videoUrls = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
-    for (NSDictionary *videoUrl in videoUrls) {
-        NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
-        if([self validadUrl:url]){
-            httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            break;
+    NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
+    for (int i = num; i < episodeArray.count; i++) {
+        NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
+        BOOL found = NO;
+        for (NSDictionary *videoUrl in videoUrls) {
+            NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+            if([self validadUrl:url]){
+                NSString *httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                [httpUrlArray addObject:httpUrl];
+                found = YES;
+                break;
+            }
+        }
+        if (!found) {
+            [httpUrlArray addObject:@""];
         }
     }
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        if (httpUrl) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:httpUrl]];
+        if (httpUrlArray.count > 0) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[httpUrlArray objectAtIndex:0]]];
         } else {
             [UIUtility showPlayVideoFailure:self.view];
         }
     } else {
         // 视频地址
-        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-        // 1：直接播放网页。此处不行特殊处理，只要获取视频地址就可以了。
+        NSMutableArray *videoUrlsArray = [[NSMutableArray alloc]initWithCapacity:5];
         if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
-            NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-            if(videoUrlArray.count > 0){
-                NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
-                for(NSDictionary *tempVideo in videoUrlArray){
-                    NSArray *urls = [tempVideo objectForKey:@"urls"];
-                    [urlsDicArray addObjectsFromArray:urls];
-                }
-                urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-                    NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
-                    NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
-                    return [second compare:first];
-                }];
-                for (NSDictionary *url in urlsDicArray) {
-                    NSString *tempUrl = [url objectForKey:@"url"];
-                    if([self validadUrl:tempUrl]){
-                        [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+            for (int i = num; i < episodeArray.count; i++) {
+                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
+                NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
+                if(videoUrlArray.count > 0){
+                    NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
+                    for(NSDictionary *tempVideo in videoUrlArray){
+                        NSArray *urls = [tempVideo objectForKey:@"urls"];
+                        [urlsDicArray addObjectsFromArray:urls];
+                    }
+                    urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+                        NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
+                        NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
+                        return [second compare:first];
+                    }];
+                    for (NSDictionary *url in urlsDicArray) {
+                        NSString *tempUrl = [url objectForKey:@"url"];
+                        if([self validadUrl:tempUrl]){
+                            [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                        }
                     }
                 }
+                [videoUrlsArray addObject:urlsArray];
             }
         }
-        MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-        viewController.videoUrls = urlsArray;
-        viewController.videoHttpUrl = httpUrl;
-        viewController.prodId = self.prodId;
-        viewController.dramaDetailViewControllerDelegate = self;
-        viewController.type = type;
-        viewController.name = [video objectForKey:@"name"];
-        viewController.subname = self.subname;
-        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+
+        VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
+        webViewController.videoUrlsArray = videoUrlsArray;
+        webViewController.videoHttpUrlArray = httpUrlArray;
+        webViewController.prodId = self.prodId;
+        webViewController.type = type;
+        webViewController.startNum = num;
+        webViewController.dramaDetailViewControllerDelegate = self;
+        webViewController.subname = self.subname;
+        webViewController.video = video;
+        webViewController.name = [video objectForKey:@"name"];
+        webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
+        
+//        MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+//        viewController.videoUrls = urlsArray;
+//        viewController.videoHttpUrl = httpUrl;
+//        viewController.prodId = self.prodId;
+//        viewController.dramaDetailViewControllerDelegate = self;
+//        viewController.type = type;
+//        viewController.name = [video objectForKey:@"name"];
+//        viewController.subname = self.subname;
+//        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }
 }
 

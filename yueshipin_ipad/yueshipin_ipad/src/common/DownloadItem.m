@@ -16,5 +16,6 @@
 @synthesize downloadStatus;
 @synthesize fileName;
 @synthesize url;
+@synthesize urlArray;
 @synthesize type;
 @end

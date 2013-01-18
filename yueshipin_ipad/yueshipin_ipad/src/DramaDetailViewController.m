@@ -280,6 +280,15 @@
     }
 }
 
+- (void)changePlayingEpisodeBtn:(int)currentNum
+{
+    [self clearLastBtnImage];
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:currentNum+1]];
+    UIButton *btn = (UIButton *)[episodeView viewWithTag:currentNum+1];
+    [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+    [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
+}
+
 - (void)retrieveData
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -706,7 +715,7 @@
         return;
     }
     [AppDelegate instance].rootViewController.videoDetailDelegate = self;
-    [[AppDelegate instance].rootViewController showDramaDownloadView:self.prodId title:[video objectForKey:@"name"] totalNumber:totalEpisodeNumber];
+    [[AppDelegate instance].rootViewController showDramaDownloadView:self.prodId video:video];
 }
 
 - (BOOL)downloadDrama:(int)num
@@ -765,7 +774,7 @@
     subitem.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
     [self getDownloadUrls:num-1];
     if(downloadUrls.count > 0){
-        subitem.url = [downloadUrls objectAtIndex:0];
+        subitem.urlArray = downloadUrls;
         //        subitem.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
         [subitem save];
         [[AppDelegate instance] addToDownloaderArray:subitem];

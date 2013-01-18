@@ -52,8 +52,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    closeMenuRecognizer.delegate = self;
-    [self.view addGestureRecognizer:closeMenuRecognizer];
+//    closeMenuRecognizer.delegate = self;
+//    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
 }
@@ -65,6 +65,15 @@
     } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
         return NO;
     } else {
+        for (int i = 0; i < allItem.count; i++) {
+            CGPoint pt = [touch locationInView:self.view];
+            GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
+            CGPoint ptInbtn = [self.view convertPoint:pt toView:cell];
+            BOOL inor = [cell pointInside:ptInbtn withEvent:nil];
+            if (inor) {
+                return inor;
+            }        
+        }
         return YES;
     }
 }
@@ -169,13 +178,17 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
+    [super viewWillAppear:animated];
     if ([AppDelegate instance].closed) {
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
     } else {
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     _gmGridView.editing = NO;
+    if (allItem.count > 0) {
+        [editBtn setHidden:NO];
+        [nodownloadImage setHidden:YES];
+    }
     [self reloadItems];
 }
 
@@ -198,7 +211,11 @@
         DownloadItem *item = [allItem objectAtIndex:i];
         if ([item.itemId isEqualToString:aDownload.idNum]) {
             DownloadItem *item = [allItem objectAtIndex:i];
-            item.downloadStatus = @"error";
+            if(error == nil){
+                item.downloadStatus = @"error938";
+            } else {
+                item.downloadStatus = @"error";
+            }
             [item save];
         }
     }
@@ -328,12 +345,10 @@
     if (item.type == 1) {
         imageView.image = [UIImage imageNamed:@"movie_frame"];
         
-        if(![item.downloadStatus isEqualToString:@"done"]){
-            UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
-            bgLabel.tag = item.itemId.intValue + 30000000;
-            bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
-            [cell.contentView addSubview:bgLabel];
-        }
+        UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
+        bgLabel.tag = item.itemId.intValue + 30000000;
+        bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
+        [cell.contentView addSubview:bgLabel];
         
         UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
         progressLabel.tag = item.itemId.intValue + 10000000;
@@ -348,6 +363,8 @@
             progressLabel.text = @"下载完成";
         } else if([item.downloadStatus isEqualToString:@"waiting"]){
             progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
+        } else if([item.downloadStatus isEqualToString:@"error938"]){
+            progressLabel.text = @"下载片源失效";
         } else {
             progressLabel.text = @"下载失败";
         }
@@ -357,7 +374,7 @@
         progressLabel.shadowOffset = CGSizeMake(1, 1);
         [cell.contentView addSubview:progressLabel];
         
-        if(![item.downloadStatus isEqualToString:@"done"]){
+        if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
             UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 125, 98, 5)];
             progressView.progress = item.percentage/100.0;
             progressView.tag = item.itemId.intValue + 20000000;
@@ -456,6 +473,7 @@
             
             MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
             viewController.isDownloaded = YES;
+            viewController.closeAll = YES;
             NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
             [urlsArray addObject:filePath];
             viewController.videoUrls = urlsArray;
@@ -467,7 +485,10 @@
             [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
         } else {
             if(item.type == 1){
-                [self stopDownloading:position];
+                if (![item.downloadStatus hasPrefix:@"error938"]) {
+                    [self stopDownloading:position];
+                }
+                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
             } else {
                 SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
                 viewController.parentDelegate = self;

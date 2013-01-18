@@ -438,6 +438,7 @@
         viewController.videoHttpUrl = [item objectForKey:@"video_url"];
     }
     viewController.prodId = [item objectForKey:@"prod_id"];
+    viewController.closeAll = YES;
     viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
     viewController.name = [item objectForKey:@"prod_name"];
     viewController.subname = [item objectForKey:@"prod_subname"];

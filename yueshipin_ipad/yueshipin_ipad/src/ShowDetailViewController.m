@@ -679,7 +679,7 @@
     subitem.fileName = [NSString stringWithFormat:@"%@_%@%@", self.prodId, subitem.subitemId, @".mp4"];
     [self getDownloadUrls:num];
     if(downloadUrls.count > 0){
-        subitem.url = [downloadUrls objectAtIndex:0];
+        subitem.urlArray = downloadUrls;
         [subitem save];
         [[AppDelegate instance] addToDownloaderArray:subitem];
         [self updateBadgeIcon];

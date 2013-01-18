@@ -22,7 +22,7 @@
 
 @protocol DramaDetailViewControllerDelegate <NSObject>
 
-- (void)playNextEpisode;
+- (void)changePlayingEpisodeBtn:(int)currentNum;
 
 @end
 

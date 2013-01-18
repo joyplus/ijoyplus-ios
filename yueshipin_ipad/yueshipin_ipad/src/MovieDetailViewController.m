@@ -568,8 +568,9 @@
     item.type = 1;
     item.downloadStatus = @"waiting";
     item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-    item.url = [downloadUrls objectAtIndex:0];
-    //    item.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
+    item.urlArray = downloadUrls;
+//        item.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
+//    item.url = [downloadUrls objectAtIndex:0];
     [item save];
     [[AppDelegate instance] addToDownloaderArray:item];
     

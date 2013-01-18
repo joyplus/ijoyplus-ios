@@ -171,6 +171,11 @@
 {
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.itemId];
     subitems = [SubdownloadItem findByCriteria:subquery];
+    subitems = [subitems sortedArrayUsingComparator:^(SubdownloadItem *a, SubdownloadItem *b) {
+        NSNumber *first =  [NSNumber numberWithInt:a.subitemId.intValue];
+        NSNumber *second = [NSNumber numberWithInt:b.subitemId.intValue];
+        return [first compare:second];
+    }];
 }
 
 //下载失败
@@ -183,18 +188,16 @@
         [AppDelegate instance].currentDownloadingNum = 0;
     }
     for (int i = 0; i < subitems.count; i++) {
-        GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
-        UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.idNum.intValue + 20000000];
-        if(progressView != nil){
-            [progressView removeFromSuperview];
-            UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.idNum.intValue + 10000000];
-            progressLabel.text = @"下载失败";
-            progressView = nil;
-            SubdownloadItem *item = [subitems objectAtIndex:i];
+        SubdownloadItem *item = [subitems objectAtIndex:i];
+        if (error == nil) {
+            item.downloadStatus = @"error938";
+        } else {
             item.downloadStatus = @"error";
-            [item save];
-            [self reloadSubitems];
         }
+        [item save];
+        [self reloadSubitems];
+        [_gmGridView reloadData];
+        
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
 }
@@ -330,12 +333,10 @@
     [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [cell.contentView addSubview:contentImage];
     
-    if(![item.downloadStatus isEqualToString:@"done"]){
-        UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
-        bgLabel.tag = item.pk + 30000000;
-        bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
-        [cell.contentView addSubview:bgLabel];
-    }
+    UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
+    bgLabel.tag = item.pk + 30000000;
+    bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
+    [cell.contentView addSubview:bgLabel];
     
     UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
     progressLabel.tag = item.pk + 10000000;
@@ -350,6 +351,8 @@
         progressLabel.text = @"下载完成";
     } else if([item.downloadStatus isEqualToString:@"waiting"]){
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
+    } else if([item.downloadStatus isEqualToString:@"error938"]){
+        progressLabel.text = @"下载片源失效";
     } else {
         progressLabel.text = @"下载失败";
     }
@@ -358,7 +361,7 @@
     progressLabel.shadowOffset = CGSizeMake(1, 1);
     [cell.contentView addSubview:progressLabel];
     
-    if(![item.downloadStatus isEqualToString:@"done"]){
+    if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
         UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 125, 98, 2)];
         progressView.progress = item.percentage/100.0;
         progressView.tag = item.pk + 20000000;
@@ -444,6 +447,7 @@
             
             MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
             viewController.isDownloaded = YES;
+            viewController.closeAll = YES;
             NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
             [urlsArray addObject:filePath];
             viewController.videoUrls = urlsArray;
@@ -454,7 +458,9 @@
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
         } else {
-            [self videoImageClicked:position];
+            if (![item.downloadStatus hasPrefix:@"error938"]) {
+                [self videoImageClicked:position];
+            }
         }
     }
 }

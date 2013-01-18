@@ -20,6 +20,7 @@
 @property (nonatomic, strong)UIView *loadingView;
 @property (nonatomic, strong)UIWebView *webView;
 @property (nonatomic, strong)NSNumber *lastPlayTime;
+@property (nonatomic, strong)NSTimer *controlVisibilityTimer;
 @end
 
 @implementation MyMediaPlayerViewController
@@ -34,10 +35,11 @@
 @synthesize errorUrlNum;
 @synthesize prodId;
 @synthesize subname;
-@synthesize type, currentNum, isDownloaded;
-@synthesize dramaDetailViewControllerDelegate;
+@synthesize type, currentNum, isDownloaded, closeAll;
+@synthesize videoWebViewControllerDelegate;
 @synthesize lastPlayTime;
 @synthesize theLock;
+@synthesize controlVisibilityTimer;
 
 - (void)didReceiveMemoryWarning
 {
@@ -58,7 +60,7 @@
     playerViewController = nil;
     player = nil;
     lastPlayTime = nil;
-    dramaDetailViewControllerDelegate = nil;
+    videoWebViewControllerDelegate = nil;
     videoHttpUrl = nil;
     [videoUrls removeAllObjects];
     videoUrls = nil;
@@ -66,6 +68,7 @@
     [self.webView loadRequest: nil];
     [self.webView removeFromSuperview];
     self.webView = nil;
+    controlVisibilityTimer = nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -98,6 +101,8 @@
     UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithCustomView:myButton];
     self.navigationItem.leftBarButtonItem = customItem;
     
+    self.navigationItem.hidesBackButton = YES;
+    
     theLock = [[NSLock alloc]init];
     
     loadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
@@ -108,10 +113,10 @@
     [loadingView addSubview:imageView];
     [self.view addSubview:loadingView];
     
-    [myHUD showProgressBar:self.view];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playVideoFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moviePlayerPreloadFinish:) name:MPMoviePlayerContentPreloadDidFinishNotification object:nil];
     
+    [myHUD showProgressBar:self.view];
     if(videoUrls.count > 0){
         if (isDownloaded) {
             workingUrl = [[NSURL alloc] initFileURLWithPath:[videoUrls objectAtIndex:0]];
@@ -127,9 +132,36 @@
                 [NSURLConnection connectionWithRequest:request delegate:self];
             }
         }
-    } else {
-        [self showWebView];
-    }
+    } 
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showNavigationBar)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tapRecognizer];
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.alpha = 0;
+    [self.navigationController setNavigationBarHidden:NO];
+}
+
+- (void)showNavigationBar
+{
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.35];
+    [self.navigationController.navigationBar setAlpha:1];
+    [UIView commitAnimations];
+    [controlVisibilityTimer invalidate];
+    controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
+}
+- (void)hideNavigationBar
+{
+    [controlVisibilityTimer invalidate];
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.35];
+    [self.navigationController.navigationBar setAlpha:0];
+    [UIView commitAnimations];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -150,7 +182,7 @@
         if(workingUrl == nil){
             NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
             NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
-            if (contentLength.intValue > 1000) {
+            if (contentLength.intValue > 100) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
                 workingUrl = connection.originalRequest.URL;
                 [self performSelectorOnMainThread:@selector(playVideo) withObject:nil waitUntilDone:NO];
@@ -167,7 +199,13 @@
     [theLock lock];
     errorUrlNum++;
     if (errorUrlNum == videoUrls.count) {
-        [self showWebView];
+        if (closeAll) {
+            [self dismissModalViewControllerAnimated:NO];
+        } else {
+            [self closeCacheScreen];
+            [self.navigationController popViewControllerAnimated:NO];
+        }
+//        [self showWebView];
     }
     [theLock unlock];
 
@@ -228,16 +266,19 @@
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@", self.prodId, self.subname] result:lastPlayTime];
     [player stop];
-    [playerViewController dismissMoviePlayerViewControllerAnimated];
-    playerViewController = nil;
+//    [playerViewController.view removeFromSuperview];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
-    [self dismissViewControllerAnimated:NO completion:^{
-        [UIApplication sharedApplication].statusBarHidden = NO;
-        if(!userClicked){
-            [self.dramaDetailViewControllerDelegate playNextEpisode];
-        }
-    }];
+    if (closeAll) {
+        [self dismissModalViewControllerAnimated:NO];
+    } else {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    if(!userClicked){
+        [self.videoWebViewControllerDelegate playNextEpisode:++self.currentNum];
+    }
 }
+
+
 
 - (void)updateWatchRecord
 {
@@ -252,13 +293,13 @@
         }
         self.subname = self.subname == nil ? @"" : self.subname;
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-        NSString *tempProdType = @"1";
+        NSString *tempPlayType = @"1";
         NSString *tempUrl = workingUrl.absoluteString;
         if (workingUrl == nil) {
-            tempProdType = @"2";
+            tempPlayType = @"2";
             tempUrl = videoHttpUrl;
         }
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", tempProdType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", tempUrl, @"video_url", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", tempUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -281,6 +322,7 @@
 
 - (void)closeSelf
 {
+    closeAll = YES;
     [[NSNotificationCenter defaultCenter] postNotificationName:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 }
 
