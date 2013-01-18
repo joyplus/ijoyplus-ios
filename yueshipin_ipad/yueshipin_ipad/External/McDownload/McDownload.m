@@ -142,11 +142,7 @@
                 [self checkIfAllError:nil];
             }
         } else {
-            if(downloadItem.urlArray.count > 1){
-                [aconnection cancel];
-            } else {
-                [self proceedDownloading:response];
-            }
+            [self proceedDownloading:response];
         }
     }
 }

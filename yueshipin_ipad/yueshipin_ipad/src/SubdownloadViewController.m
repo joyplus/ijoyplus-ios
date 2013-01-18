@@ -189,16 +189,18 @@
     }
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *item = [subitems objectAtIndex:i];
-        if (error == nil) {
-            item.downloadStatus = @"error938";
-        } else {
-            item.downloadStatus = @"error";
+        if ([item.itemId isEqualToString:aDownload.idNum] && aDownload.subidNum == item.pk) {
+            if (error == nil) {
+                item.downloadStatus = @"error938";
+            } else {
+                item.downloadStatus = @"error";
+            }
+            [item save];
+            break;
         }
-        [item save];
-        [self reloadSubitems];
-        [_gmGridView reloadData];
-        
     }
+    [self reloadSubitems];
+    [_gmGridView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:ADD_NEW_DOWNLOAD_ITEM object:nil];
 }
 //下载结束

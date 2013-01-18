@@ -108,6 +108,11 @@
     }
 }
 
+- (void)hideAtOnce
+{
+    [HUD hide:YES];
+}
+
 - (void)hide
 {
     [HUD hide:YES afterDelay:0.2];
@@ -145,4 +150,5 @@
     [HUD show:YES];
     [HUD hide:YES afterDelay:3];
 }
+
 @end

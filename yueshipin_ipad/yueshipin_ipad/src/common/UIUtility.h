@@ -20,7 +20,7 @@
 + (void)showDownloadSuccess:(UIView *)view;
 + (void)showDownloadFailure:(UIView *)view;
 + (UIView *)getDotView:(int)radius;
-
+- (void)hideAtOnce;
 - (void)showProgressBar:(UIView *)view;
 - (void)hide;
 + (void)showPlayVideoFailure:(UIView *)view;

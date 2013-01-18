@@ -566,6 +566,8 @@
 
 - (void)playVideo
 {
+    UIButton *btn = (UIButton *)[showListView viewWithTag:1];
+    self.subname = btn.titleLabel.text;
     [super playVideo:0];
 }
 

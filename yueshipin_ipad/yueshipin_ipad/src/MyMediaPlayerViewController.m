@@ -199,19 +199,29 @@
     [theLock lock];
     errorUrlNum++;
     if (errorUrlNum == videoUrls.count) {
-        if (closeAll) {
-            [self dismissModalViewControllerAnimated:NO];
-        } else {
-            [self closeCacheScreen];
-            [self.navigationController popViewControllerAnimated:NO];
-        }
-//        [self showWebView];
+        [myHUD hideAtOnce];
+        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.opacity = 0.5;
+        HUD.labelText = @"即将使用网页播放";
+        [HUD show:YES];
+        [self performSelector:@selector(closeModalView) withObject:nil afterDelay:2.5];
     }
     [theLock unlock];
 
 }
 
-
+- (void)closeModalView
+{
+    if (closeAll) {
+        [self dismissModalViewControllerAnimated:NO];
+    } else {
+        [self closeCacheScreen];
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    //        [self showWebView];
+}
 
 - (void)showWebView
 {
