@@ -39,6 +39,7 @@
 @synthesize currentDownloadingNum;
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
+@synthesize closeVideoMode;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -178,6 +179,7 @@
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
+    self.closeVideoMode = @"0";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
@@ -217,9 +219,13 @@
     }
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
+        self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
     if(self.showVideoSwitch == nil){
         self.showVideoSwitch = @"0";
+    }
+    if(self.closeVideoMode == nil){
+        self.closeVideoMode = @"0";
     }
     if (![self.showVideoSwitch isEqualToString:@"0"]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];

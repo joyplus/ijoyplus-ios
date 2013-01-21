@@ -289,6 +289,20 @@
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
 }
 
+
+- (void)playNextEpisode
+{
+    id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
+    int lastNum = -1;
+    if(lastNumObj != nil){
+        lastNum = [lastNumObj integerValue];
+    }
+    if (lastNum >= 0 && lastNum+1 <= episodeArray.count) {
+        UIButton *currentBtn = (UIButton *)[episodeView viewWithTag:lastNum + 1];
+        [self dramaPlay:currentBtn];
+    }
+}
+
 - (void)retrieveData
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -643,12 +657,6 @@
 
 
 - (void)playVideo
-{   
-    UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:1];
-    [self dramaPlay:btn];
-}
-
-- (void)playNextEpisode
 {
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
@@ -656,10 +664,11 @@
         lastNum = [lastNumObj integerValue];
     }
     if (lastNum > 0 && lastNum <= episodeArray.count) {
-        UIButton *nextEpiBtn = (UIButton *)[episodeView viewWithTag:lastNum+1];
-        if(nextEpiBtn.enabled){
-            [self dramaPlay:nextEpiBtn];
-        }
+        UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:lastNum];
+        [self dramaPlay:btn];
+    } else {
+        UIButton *btn = (UIButton *)[self.bgScrollView viewWithTag:1];
+        [self dramaPlay:btn];
     }
 }
 

@@ -128,6 +128,7 @@
             viewController.type = self.type;
             viewController.name = [self.video objectForKey:@"name"];
             viewController.subname = self.subname;
+            viewController.dramaDetailViewControllerDelegate = self.dramaDetailViewControllerDelegate;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             [self.navigationController pushViewController:viewController animated:NO];
         }

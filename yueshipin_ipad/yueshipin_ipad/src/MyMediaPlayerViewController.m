@@ -40,6 +40,7 @@
 @synthesize lastPlayTime;
 @synthesize theLock;
 @synthesize controlVisibilityTimer;
+@synthesize dramaDetailViewControllerDelegate;
 
 - (void)didReceiveMemoryWarning
 {
@@ -275,16 +276,25 @@
     }
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@", self.prodId, self.subname] result:lastPlayTime];
+    [player pause];
     [player stop];
 //    [playerViewController.view removeFromSuperview];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
-    if (closeAll) {
+    if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]) {
         [self dismissModalViewControllerAnimated:NO];
-    } else {
-        [self.navigationController popViewControllerAnimated:NO];
+    } else{
+        if (closeAll) {
+            [self dismissModalViewControllerAnimated:NO];
+        } else {
+            [self.navigationController popViewControllerAnimated:NO];
+        }
     }
     if(!userClicked){
-        [self.videoWebViewControllerDelegate playNextEpisode:++self.currentNum];
+        if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]) {
+            [self.dramaDetailViewControllerDelegate playNextEpisode];
+        } else {
+            [self.videoWebViewControllerDelegate playNextEpisode:++self.currentNum];
+        }
     }
 }
 

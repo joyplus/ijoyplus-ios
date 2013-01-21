@@ -23,7 +23,7 @@
 @protocol DramaDetailViewControllerDelegate <NSObject>
 
 - (void)changePlayingEpisodeBtn:(int)currentNum;
-
+- (void)playNextEpisode;
 @end
 
 @interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate, McDownloadDelegate,  DramaDetailViewControllerDelegate>{

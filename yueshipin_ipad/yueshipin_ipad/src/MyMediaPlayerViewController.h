@@ -21,6 +21,7 @@
 @property (nonatomic)int currentNum;
 @property (nonatomic)BOOL isDownloaded;
 @property (nonatomic, weak)id <VideoWebViewControllerDelegate>videoWebViewControllerDelegate;
+@property (nonatomic, weak)id<DramaDetailViewControllerDelegate>dramaDetailViewControllerDelegate;
 @property (nonatomic)BOOL closeAll;
 
 @end
