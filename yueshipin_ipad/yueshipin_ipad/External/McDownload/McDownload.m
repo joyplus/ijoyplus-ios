@@ -13,6 +13,7 @@
 @interface McDownload () <NSURLConnectionDelegate>
 
 @property (atomic)int errorNum;
+@property (atomic)BOOL foundWorkingUrl;
 @property (nonatomic, strong)NSLock *theLock;
 @end
 
@@ -29,6 +30,7 @@
 @synthesize downloadItem;
 @synthesize errorNum;
 @synthesize theLock;
+@synthesize foundWorkingUrl;
 
 - (void)start
 {   
@@ -105,6 +107,7 @@
 
 - (void)stop
 {
+    foundWorkingUrl = NO;
     [connection cancel];
     connection = nil;
     [fileHandle closeFile];
@@ -133,6 +136,7 @@
             NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
             if (contentLength.intValue > 100) {
                 NSLog(@"download url = %@", aconnection.originalRequest.URL);
+                foundWorkingUrl = YES;
                 connection = aconnection;
                 url = aconnection.originalRequest.URL;
                 downloadItem.url = url.absoluteString;
@@ -142,7 +146,11 @@
                 [self checkIfAllError:nil];
             }
         } else {
-            [self proceedDownloading:response];
+            if(foundWorkingUrl){
+                [aconnection cancel];
+            } else {
+                [self proceedDownloading:response];
+            }
         }
     }
 }
