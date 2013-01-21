@@ -418,6 +418,12 @@
     [view addSubview:closeBtn];
     
     NSArray *episodeArray = [video objectForKey:@"episodes"];
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+        NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
+        NSNumber *second = [f numberFromString:[NSString stringWithFormat:@"%@", [b objectForKey:@"name"]]];
+        return [first compare:second];
+    }];
     dramaPageNum = ceil(episodeArray.count / 30.0);
     for (int i = 0; i < dramaPageNum; i++) {
         UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];

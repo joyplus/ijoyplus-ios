@@ -195,6 +195,13 @@
 - (void)reloadItems
 {
     allItem = [DownloadItem allObjects];
+    if (allItem.count == 0) {
+        [editBtn setHidden:YES];
+        [nodownloadImage setHidden:NO];
+    } else {
+        [editBtn setHidden:NO];
+        [nodownloadImage setHidden:YES];
+    }
     [_gmGridView reloadData];
 }
 
