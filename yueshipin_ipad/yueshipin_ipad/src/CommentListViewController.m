@@ -107,6 +107,11 @@
 
 - (void)showMoreBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [self retrieveComment];
 }
 
