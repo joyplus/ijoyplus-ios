@@ -100,6 +100,9 @@
 		EB6DEAC8165A34F200AF8003 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABE165A34F200AF8003 /* UIUtility.m */; };
 		EB6DEAD2165A367F00AF8003 /* GenericBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */; };
 		EB6DEAD9165A36E600AF8003 /* CommonHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAD8165A36E600AF8003 /* CommonHeader.m */; };
+		EB77C33616AFA53D00205DFC /* recommond_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB77C33316AFA53D00205DFC /* recommond_bt_pressed@2x.png */; };
+		EB77C33716AFA53D00205DFC /* recommond_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB77C33416AFA53D00205DFC /* recommond_bt@2x.png */; };
+		EB77C33816AFA53D00205DFC /* title_recommond@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB77C33516AFA53D00205DFC /* title_recommond@2x.png */; };
 		EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */; };
 		EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */; };
 		EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */; };
@@ -306,6 +309,10 @@
 		EBB93D7B169BB0A10017B5A5 /* clause_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB93D76169BB0A10017B5A5 /* clause_title@2x.png */; };
 		EBB93D7C169BB0A10017B5A5 /* clause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB93D77169BB0A10017B5A5 /* clause@2x.png */; };
 		EBB93D7D169BB0A10017B5A5 /* play_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB93D78169BB0A10017B5A5 /* play_disabled@2x.png */; };
+		EBB9B8DC16AF88A200175662 /* libUMAppNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB9B8D316AF88A200175662 /* libUMAppNetwork.a */; };
+		EBB9B8DD16AF88A200175662 /* UMUFP.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EBB9B8D416AF88A200175662 /* UMUFP.bundle */; };
+		EBB9B8E416AF893200175662 /* GridViewCellDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9B8E116AF893200175662 /* GridViewCellDemo.m */; };
+		EBB9B8E516AF893200175662 /* UMGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB9B8E316AF893200175662 /* UMGridViewController.m */; };
 		EBB9E0C216704BFB006ECEE8 /* collectinguser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0C016704BFB006ECEE8 /* collectinguser@2x.png */; };
 		EBB9E0C316704BFB006ECEE8 /* detail_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0C116704BFB006ECEE8 /* detail_bg@2x.png */; };
 		EBB9E0CD16706285006ECEE8 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0CB16706285006ECEE8 /* error.png */; };
@@ -579,6 +586,9 @@
 		EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericBaseViewController.m; sourceTree = "<group>"; };
 		EB6DEAD7165A36E600AF8003 /* CommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
 		EB6DEAD8165A36E600AF8003 /* CommonHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonHeader.m; sourceTree = "<group>"; };
+		EB77C33316AFA53D00205DFC /* recommond_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "recommond_bt_pressed@2x.png"; sourceTree = "<group>"; };
+		EB77C33416AFA53D00205DFC /* recommond_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "recommond_bt@2x.png"; sourceTree = "<group>"; };
+		EB77C33516AFA53D00205DFC /* title_recommond@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "title_recommond@2x.png"; sourceTree = "<group>"; };
 		EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
 		EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MNMBottomPullToRefreshArrow@2x.png"; sourceTree = "<group>"; };
 		EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshManager.h; sourceTree = "<group>"; };
@@ -841,6 +851,19 @@
 		EBB93D76169BB0A10017B5A5 /* clause_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clause_title@2x.png"; sourceTree = "<group>"; };
 		EBB93D77169BB0A10017B5A5 /* clause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clause@2x.png"; sourceTree = "<group>"; };
 		EBB93D78169BB0A10017B5A5 /* play_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_disabled@2x.png"; sourceTree = "<group>"; };
+		EBB9B8D316AF88A200175662 /* libUMAppNetwork.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMAppNetwork.a; sourceTree = "<group>"; };
+		EBB9B8D416AF88A200175662 /* UMUFP.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UMUFP.bundle; sourceTree = "<group>"; };
+		EBB9B8D516AF88A200175662 /* UMUFPBannerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPBannerView.h; sourceTree = "<group>"; };
+		EBB9B8D616AF88A200175662 /* UMUFPGridCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPGridCell.h; sourceTree = "<group>"; };
+		EBB9B8D716AF88A200175662 /* UMUFPGridView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPGridView.h; sourceTree = "<group>"; };
+		EBB9B8D816AF88A200175662 /* UMUFPHandleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPHandleView.h; sourceTree = "<group>"; };
+		EBB9B8D916AF88A200175662 /* UMUFPImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPImageView.h; sourceTree = "<group>"; };
+		EBB9B8DA16AF88A200175662 /* UMUFPTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPTableView.h; sourceTree = "<group>"; };
+		EBB9B8DB16AF88A200175662 /* UMUFPWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPWebView.h; sourceTree = "<group>"; };
+		EBB9B8E016AF893200175662 /* GridViewCellDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridViewCellDemo.h; sourceTree = "<group>"; };
+		EBB9B8E116AF893200175662 /* GridViewCellDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridViewCellDemo.m; sourceTree = "<group>"; };
+		EBB9B8E216AF893200175662 /* UMGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMGridViewController.h; sourceTree = "<group>"; };
+		EBB9B8E316AF893200175662 /* UMGridViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UMGridViewController.m; sourceTree = "<group>"; };
 		EBB9E0C016704BFB006ECEE8 /* collectinguser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collectinguser@2x.png"; sourceTree = "<group>"; };
 		EBB9E0C116704BFB006ECEE8 /* detail_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "detail_bg@2x.png"; sourceTree = "<group>"; };
 		EBB9E0CB16706285006ECEE8 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
@@ -1055,6 +1078,7 @@
 				EBB59CBE16670A3E00F646C7 /* libMobClickLibrary.a in Frameworks */,
 				EBB59CBF16670A3E00F646C7 /* libUMFeedback.a in Frameworks */,
 				EBBA85AF1688481300973BAA /* Parse.framework in Frameworks */,
+				EBB9B8DC16AF88A200175662 /* libUMAppNetwork.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1093,6 +1117,9 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EB77C33316AFA53D00205DFC /* recommond_bt_pressed@2x.png */,
+				EB77C33416AFA53D00205DFC /* recommond_bt@2x.png */,
+				EB77C33516AFA53D00205DFC /* title_recommond@2x.png */,
 				EBB73EB616A5067800475875 /* collected@2x.png */,
 				EBB73EB716A5067800475875 /* pushed@2x.png */,
 				EBB73EB416A503EA00475875 /* play_intro_with_download_2.png */,
@@ -1628,6 +1655,7 @@
 		EBB59CB816670A3E00F646C7 /* umeng */ = {
 			isa = PBXGroup;
 			children = (
+				EBB9B8D216AF88A200175662 /* UMUFP */,
 				EBB59CB916670A3E00F646C7 /* libMobClickLibrary.a */,
 				EBB59CBA16670A3E00F646C7 /* libUMFeedback.a */,
 				EBB59CBB16670A3E00F646C7 /* MobClick.h */,
@@ -1693,6 +1721,34 @@
 				EBB73312165C82D9008E407E /* ServiceConstants.m */,
 			);
 			path = service;
+			sourceTree = "<group>";
+		};
+		EBB9B8D216AF88A200175662 /* UMUFP */ = {
+			isa = PBXGroup;
+			children = (
+				EBB9B8DF16AF893200175662 /* GridView */,
+				EBB9B8D316AF88A200175662 /* libUMAppNetwork.a */,
+				EBB9B8D416AF88A200175662 /* UMUFP.bundle */,
+				EBB9B8D516AF88A200175662 /* UMUFPBannerView.h */,
+				EBB9B8D616AF88A200175662 /* UMUFPGridCell.h */,
+				EBB9B8D716AF88A200175662 /* UMUFPGridView.h */,
+				EBB9B8D816AF88A200175662 /* UMUFPHandleView.h */,
+				EBB9B8D916AF88A200175662 /* UMUFPImageView.h */,
+				EBB9B8DA16AF88A200175662 /* UMUFPTableView.h */,
+				EBB9B8DB16AF88A200175662 /* UMUFPWebView.h */,
+			);
+			path = UMUFP;
+			sourceTree = "<group>";
+		};
+		EBB9B8DF16AF893200175662 /* GridView */ = {
+			isa = PBXGroup;
+			children = (
+				EBB9B8E016AF893200175662 /* GridViewCellDemo.h */,
+				EBB9B8E116AF893200175662 /* GridViewCellDemo.m */,
+				EBB9B8E216AF893200175662 /* UMGridViewController.h */,
+				EBB9B8E316AF893200175662 /* UMGridViewController.m */,
+			);
+			path = GridView;
 			sourceTree = "<group>";
 		};
 		EBBA00FA1664BC510069FE7E /* Anypic */ = {
@@ -2255,6 +2311,10 @@
 				EBB73EB516A503EA00475875 /* play_intro_with_download_2.png in Resources */,
 				EBB73EB816A5067800475875 /* collected@2x.png in Resources */,
 				EBB73EB916A5067800475875 /* pushed@2x.png in Resources */,
+				EBB9B8DD16AF88A200175662 /* UMUFP.bundle in Resources */,
+				EB77C33616AFA53D00205DFC /* recommond_bt_pressed@2x.png in Resources */,
+				EB77C33716AFA53D00205DFC /* recommond_bt@2x.png in Resources */,
+				EB77C33816AFA53D00205DFC /* title_recommond@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2388,6 +2448,8 @@
 				EBB44CB516A3C3F70065A7BF /* ChatCustomCell.m in Sources */,
 				EBB44CB716A3C3F70065A7BF /* ChatViewController.m in Sources */,
 				EBB6775216A78F6A00B864A4 /* VideoWebViewController.m in Sources */,
+				EBB9B8E416AF893200175662 /* GridViewCellDemo.m in Sources */,
+				EBB9B8E516AF893200175662 /* UMGridViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2488,6 +2550,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
+					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
 				);
 				PRODUCT_NAME = yueshipin;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -2511,6 +2574,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng\"",
+					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
 				);
 				PRODUCT_NAME = yueshipin;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "05D29F90-C52A-4820-BC5D-AD466B2692DF";

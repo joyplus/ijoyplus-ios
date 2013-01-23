@@ -90,7 +90,7 @@
     NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:0]];
     NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
     [webView loadRequest:requestObj];
-    [webView setScalesPageToFit:YES];
+//    [webView setScalesPageToFit:YES];
     [self.view addSubview:webView];
     
     [self updateWatchRecord];

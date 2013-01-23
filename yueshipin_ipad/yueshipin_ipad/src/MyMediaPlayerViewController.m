@@ -133,18 +133,22 @@
                 [NSURLConnection connectionWithRequest:request delegate:self];
             }
         }
-    } 
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showNavigationBar)];
-    tapRecognizer.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tapRecognizer];
+        UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showNavigationBar)];
+        tapRecognizer.numberOfTapsRequired = 1;
+        [self.view addGestureRecognizer:tapRecognizer];
+    } else if (videoHttpUrl){
+        [self showWebView];
+    }
     
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.alpha = 0;
-    [self.navigationController setNavigationBarHidden:NO];
+    if(videoUrls.count > 0){
+        self.navigationController.navigationBar.alpha = 0;
+        [self.navigationController setNavigationBarHidden:NO];
+    }
 }
 
 - (void)showNavigationBar
@@ -154,7 +158,7 @@
     [self.navigationController.navigationBar setAlpha:1];
     [UIView commitAnimations];
     [controlVisibilityTimer invalidate];
-    controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
+    controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
 }
 - (void)hideNavigationBar
 {
@@ -235,6 +239,7 @@
         NSURL *url = [NSURL URLWithString:videoHttpUrl];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
         [webView loadRequest:requestObj];
+//        [webView setScalesPageToFit:YES];
         [self.view addSubview:webView];
     } else {
         [UIUtility showPlayVideoFailure:self.view];
@@ -267,9 +272,6 @@
 {
     BOOL userClicked = YES;
 	lastPlayTime = [NSNumber numberWithDouble:player.currentPlaybackTime];
-    NSLog(@"%f", player.duration);
-    NSLog(@"%f", lastPlayTime.doubleValue);
-    NSLog(@"%f", player.duration - lastPlayTime.doubleValue);
     if((player.duration - lastPlayTime.doubleValue <= 0.1 || lastPlayTime == nil) && player.duration > 0){
         lastPlayTime = [NSNumber numberWithInt:0];
         userClicked = NO;
@@ -277,9 +279,8 @@
     [self updateWatchRecord];
     [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@", self.prodId, self.subname] result:lastPlayTime];
     [player pause];
-    [player stop];
 //    [playerViewController.view removeFromSuperview];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
     if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]) {
         [self dismissModalViewControllerAnimated:NO];
     } else{
