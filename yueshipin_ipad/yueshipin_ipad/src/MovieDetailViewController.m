@@ -441,6 +441,7 @@
 
 - (void)playVideo
 {
+    self.subname = @"";
     [super playVideo:0];
 }
 

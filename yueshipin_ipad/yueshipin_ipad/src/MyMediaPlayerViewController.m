@@ -257,7 +257,8 @@
 
     [player prepareToPlay];
     player.useApplicationAudioSession = NO;
-    lastPlayTime = (NSNumber*)[[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"%@_%@", self.prodId, self.subname]];
+    NSString *key = [NSString stringWithFormat:@"%@_%@", self.prodId, self.subname];
+    lastPlayTime = [[CacheUtility sharedCache]loadFromCache:key];
     [player setInitialPlaybackTime: lastPlayTime.doubleValue];
     [player play];
 }
@@ -277,7 +278,8 @@
         userClicked = NO;
     }
     [self updateWatchRecord];
-    [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@", self.prodId, self.subname] result:lastPlayTime];
+    NSString *key = [NSString stringWithFormat:@"%@_%@", self.prodId, self.subname];
+    [[CacheUtility sharedCache] putInCache:key result:lastPlayTime];
     [player pause];
 //    [playerViewController.view removeFromSuperview];
 //    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
@@ -316,6 +318,7 @@
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         NSString *tempPlayType = @"1";
         NSString *tempUrl = workingUrl.absoluteString;
+        NSLog(@"%@", tempUrl);
         if (workingUrl == nil) {
             tempPlayType = @"2";
             tempUrl = videoHttpUrl;

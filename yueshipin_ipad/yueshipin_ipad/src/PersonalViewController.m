@@ -282,6 +282,13 @@
         [[CacheUtility sharedCache] putInCache:WATCH_RECORD_CACHE_KEY result:result];
         sortedwatchRecordArray = (NSArray *)[result objectForKey:@"histories"];
         if(sortedwatchRecordArray.count > 0){
+            for (NSDictionary *tempItem in sortedwatchRecordArray) {
+                NSString *tprodId = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"prod_id"]];
+                NSString *tsubname = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"prod_subname"]];
+                NSNumber *tplaybackTime = (NSNumber *)[tempItem objectForKey:@"playback_time"];
+                NSString *key = [NSString stringWithFormat:@"%@_%@", tprodId, tsubname];
+                [[CacheUtility sharedCache] putInCache:key result:tplaybackTime];
+            }
             [table reloadData];
             table.frame = CGRectMake(60, 325, 400, tableHeight);
         } else {

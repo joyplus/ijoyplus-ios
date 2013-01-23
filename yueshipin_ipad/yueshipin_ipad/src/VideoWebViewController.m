@@ -93,7 +93,11 @@
 //    [webView setScalesPageToFit:YES];
     [self.view addSubview:webView];
     
-    [self updateWatchRecord];
+    if (self.videoUrlsArray.count > 0) {
+        //如果有视频地址，就不用记录网页播放的记录
+    } else {
+        [self updateWatchRecord];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -131,6 +135,9 @@
             viewController.dramaDetailViewControllerDelegate = self.dramaDetailViewControllerDelegate;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             [self.navigationController pushViewController:viewController animated:NO];
+        } else {
+            //如果只有网页地址，记录网页地址播放记录
+            [self updateWatchRecord];
         }
     }
 }

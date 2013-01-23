@@ -482,6 +482,7 @@
 
 - (void)nameBtnClicked:(UIButton *)btn{
     self.subname = btn.titleLabel.text;
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
     [super playVideo:btn.tag - 1];
 }
 
@@ -566,9 +567,23 @@
 
 - (void)playVideo
 {
-    UIButton *btn = (UIButton *)[showListView viewWithTag:1];
-    self.subname = btn.titleLabel.text;
-    [super playVideo:0];
+    NSString *title = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId]];
+    int lastNum = 0;
+    if (title) {
+        for (int i = 0; i < episodeArray.count; i++) {
+            UIButton *tempbtn = (UIButton *)[showListView viewWithTag:i+1];
+            if ([tempbtn.titleLabel.text isEqualToString:title]) {
+                lastNum = i;
+                break;
+            }
+        }
+        self.subname = title;
+    } else {
+        UIButton *btn = (UIButton *)[showListView viewWithTag:1];
+        self.subname = btn.titleLabel.text;
+        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
+    }
+    [super playVideo:lastNum];
 }
 
 - (void)dingBtnClicked:(id)sender
