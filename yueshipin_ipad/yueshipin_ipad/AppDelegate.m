@@ -147,9 +147,6 @@
             [self.downloaderArray addObject:newdownloader];
         }
     }
-    
-    
-    
 }
 
 - (void)customizeAppearance
@@ -174,6 +171,15 @@
     }
 }
 
+- (void)saveChannelRecord
+{
+    NSString * appKey = @"efd3fb70a08b4a608fccd421f21a79e8";
+    NSString * deviceName = [[[UIDevice currentDevice] name] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString * udid = [[UIDevice currentDevice] uniqueIdentifier];
+    NSString * urlString = [NSString stringWithFormat:@"http://log.umtrack.com/ping/%@/?devicename=%@&udid=%@", appKey,deviceName,udid];
+    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL: [NSURL URLWithString:urlString]] delegate:nil];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
@@ -183,6 +189,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
+    [self saveChannelRecord];
     NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];

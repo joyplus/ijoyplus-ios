@@ -154,7 +154,7 @@
     [self.navigationController.navigationBar setAlpha:1];
     [UIView commitAnimations];
     [controlVisibilityTimer invalidate];
-    controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
+    controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(hideNavigationBar) userInfo:nil repeats:NO];
 }
 - (void)hideNavigationBar
 {
