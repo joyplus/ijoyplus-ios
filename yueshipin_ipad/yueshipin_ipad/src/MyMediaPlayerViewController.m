@@ -21,6 +21,7 @@
 @property (nonatomic, strong)UIWebView *webView;
 @property (nonatomic, strong)NSNumber *lastPlayTime;
 @property (nonatomic, strong)NSTimer *controlVisibilityTimer;
+@property (atomic)BOOL closed;
 @end
 
 @implementation MyMediaPlayerViewController
@@ -35,7 +36,7 @@
 @synthesize errorUrlNum;
 @synthesize prodId;
 @synthesize subname;
-@synthesize type, currentNum, isDownloaded, closeAll;
+@synthesize type, currentNum, isDownloaded, closeAll, closed;
 @synthesize videoWebViewControllerDelegate;
 @synthesize lastPlayTime;
 @synthesize theLock;
@@ -271,13 +272,16 @@
 
 - (void)playVideoFinished:(NSNotification *)theNotification//当点击Done按键或者播放完毕时调用此函数
 {
+    if (!closed) {
+        closed = YES;
+        [self updateWatchRecord];
+    }
     BOOL userClicked = YES;
 	lastPlayTime = [NSNumber numberWithDouble:player.currentPlaybackTime];
     if((player.duration - lastPlayTime.doubleValue <= 0.1 || lastPlayTime == nil) && player.duration > 0){
         lastPlayTime = [NSNumber numberWithInt:0];
         userClicked = NO;
     }
-    [self updateWatchRecord];
     NSString *key = [NSString stringWithFormat:@"%@_%@", self.prodId, self.subname];
     [[CacheUtility sharedCache] putInCache:key result:lastPlayTime];
     [player pause];
