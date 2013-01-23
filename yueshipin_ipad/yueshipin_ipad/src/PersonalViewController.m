@@ -198,7 +198,7 @@
         
         table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, 370) style:UITableViewStylePlain];
         [table setBackgroundColor:[UIColor whiteColor]];
-        [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+//        [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         table.layer.borderWidth  = 1;
         table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
         table.tableFooterView = [[UIView alloc] init];
@@ -355,9 +355,9 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    WatchRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
-        cell = [[WatchRecordCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 20)];
         movieNameLabel.backgroundColor = [UIColor clearColor];
@@ -399,7 +399,6 @@
         [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
     }
     playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
-    
     return cell;
 }
 
@@ -432,6 +431,7 @@
 
 - (void)playVideo:(UIButton *)btn
 {
+    [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
