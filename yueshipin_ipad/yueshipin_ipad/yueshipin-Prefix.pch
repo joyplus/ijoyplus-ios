@@ -12,3 +12,6 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#define kCurrentWindowHeight [[UIScreen mainScreen] applicationFrame].size.height
+#define kFullWindowHeight [[UIScreen mainScreen] bounds].size.height

@@ -50,19 +50,32 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
 
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-   }
 
+    listArr_ = [[NSMutableArray alloc]initWithCapacity:10];
+    [self initTopicData:self.topicId];
+    
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(reFreshAddFav) name:@"REFRESH_FAV" object:nil];
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(reFreshDing) name:@"REFRESH_SUPPORT" object:nil];
+}
 
+-(void)reFreshAddFav{
+   
+   [self initTopicData:self.topicId];
+   [self.tableView reloadData];
+
+}
+-(void)reFreshDing{
+   [self initTopicData:self.topicId];
+   [self.tableView reloadData];
+}
 - (void)viewWillAppear:(BOOL)animated {
     
-   // [(TabBarViewController*)self.tabBarController setTabBarHidden:YES];
     
 }
 -(void)initTopicData:(NSString *)topicId{
     MBProgressHUD *tempHUD;
-    if (listArr_ == nil) {
-           listArr_ = [[NSMutableArray alloc]initWithCapacity:10];
-    }
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId]];
     if(cacheResult != nil){
         NSString *responseCode = [cacheResult objectForKey:@"res_code"];
@@ -70,7 +83,9 @@
             NSArray *tempTopsArray = [cacheResult objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:cacheResult];
+                [listArr_ removeAllObjects];
                 [listArr_ addObjectsFromArray:tempTopsArray];
+                
             }
             }
         else {
@@ -95,7 +110,9 @@
             NSArray *tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:result];
+                [listArr_ removeAllObjects];
                 [listArr_ addObjectsFromArray:tempTopsArray];
+                
             }
             
         } else {
@@ -149,10 +166,8 @@
     cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"stars"]];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-    NSString *supportNum = [item objectForKey:@"support_num"];
-    cell.support.text = [NSString stringWithFormat:@"%@人顶",supportNum];
-    NSString *addFavNum = [item objectForKey:@"favority_num"];
-    cell.addFav.text = [NSString stringWithFormat:@"%@人收藏",addFavNum];
+    cell.support.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"support_num"]];
+    cell.addFav.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"favority_num"]];
     return cell;
 }
 
@@ -165,7 +180,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (Type_ == TV_TYPE) {
         TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];

@@ -43,7 +43,7 @@
 	// Do any additional setup after loading the view.
     self.title = @"搜索";
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -74,7 +74,7 @@
 
     [self.view addSubview:searchBar_];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, 320, 380) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 44, 320, kCurrentWindowHeight-88) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;

@@ -17,5 +17,7 @@
 @property (strong, nonatomic) NSMutableArray *listArr;
 @property (assign, nonatomic)int Type;
 @property (strong, nonatomic)NSString *topicId;
+@property (strong, nonatomic)NSMutableArray *supportArr;
+@property (strong, nonatomic)NSMutableArray *addFavArr;
 -(void)initTopicData:(NSString *)topicId;
 @end

@@ -12,7 +12,9 @@
 @interface IphoneSettingViewController : UIViewController<SinaWeiboDelegate, SinaWeiboRequestDelegate>{
     UISwitch *sinaSwith_;
      SinaWeibo *sinaweibo_;
+    UILabel *weiboName_;
 }
 @property (strong, nonatomic) UISwitch *sinaSwith;
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
+@property (strong, nonatomic) UILabel *weiboName;
 @end

@@ -25,6 +25,7 @@
         nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 113, 320, 15)];
         nameLabel_.backgroundColor = [UIColor clearColor];
         nameLabel_.textColor = [UIColor whiteColor];
+        nameLabel_.font = [UIFont systemFontOfSize:14];
         [self addSubview:nameLabel_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];

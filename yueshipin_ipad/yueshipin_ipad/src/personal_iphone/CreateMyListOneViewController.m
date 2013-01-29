@@ -12,6 +12,7 @@
 #import "CreateMyListTwoViewController.h"
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
+#import <QuartzCore/QuartzCore.h>
 @interface CreateMyListOneViewController ()
 
 @end
@@ -36,7 +37,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -77,12 +78,17 @@
     tv.textColor = [UIColor grayColor];
     titleTextField_ = [[UITextField alloc] initWithFrame:CGRectMake(20, 70, 280, 25)];
     titleTextField_.placeholder = @" 标题";
-    titleTextField_.backgroundColor = [UIColor whiteColor];
+    titleTextField_.layer.borderWidth = 1;
+    titleTextField_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
+    titleTextField_.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     titleTextField_.delegate = self;
     
     detailTextView_ = [[UITextView alloc] initWithFrame:CGRectMake(20, 105, 280, 90)];
     detailTextView_.delegate = self;
     detailTextView_.font = [UIFont systemFontOfSize:15];
+    detailTextView_.layer.borderWidth = 1;
+    detailTextView_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
+    detailTextView_.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     detailLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 100, 25)];
     detailLabel_.backgroundColor = [UIColor clearColor];
     detailLabel_.textColor = [UIColor grayColor];
