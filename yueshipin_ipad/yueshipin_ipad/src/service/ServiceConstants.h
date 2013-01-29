@@ -94,6 +94,8 @@ extern NSString *const kPathProgramView;
 
 extern NSString *const kPathProgramViewRecommend;
 
+extern NSString *const kPathProgramInvalid;
+
 //Search
 extern NSString *const kPathSearchTopKeywords;
 extern NSString *const kPathSearch;

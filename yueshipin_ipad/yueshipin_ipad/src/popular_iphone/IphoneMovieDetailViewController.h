@@ -25,7 +25,7 @@
     BOOL _reloading;
     NSUInteger reloads_;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
-     
+
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;

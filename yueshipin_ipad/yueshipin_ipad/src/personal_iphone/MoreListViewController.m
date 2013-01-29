@@ -16,6 +16,8 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "ProgramNavigationController.h"
+#import "TimeUtility.h"
+#import "UIImageView+WebCache.h"
 @interface MoreListViewController ()
 
 @end
@@ -34,7 +36,10 @@
 
 - (void)viewDidLoad
 {
-    if (type_ == 1) {
+    if(type_ == 0){
+       self.title = @"播放纪录";
+    }
+    else if (type_ == 1) {
        self.title = @"我的收藏";  
     }
     else if (type_ == 2){
@@ -85,40 +90,94 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
-    if (cell == nil) {
-        cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
+    
     NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
     if (type_ == 0) {
+        RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
+        if (cell == nil) {
+            cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
         cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         [cell.titleLab removeFromSuperview];
-        
-        if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
-            cell.actors.text  = [NSString stringWithFormat:@"第%@集",[infoDic objectForKey:@"prod_subname"]];
+         cell.actors.text  = [self composeContent:infoDic];
+        //if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
+           
             [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
-        }        [cell.date removeFromSuperview];
+        //}
+        [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
+        return cell;
     }
     else if (type_ == 1) {
-        cell.titleLab.text = [infoDic objectForKey:@"content_name"];
-        cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
-        cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
-        [cell.play removeFromSuperview];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+        for (UIView *view in cell.contentView.subviews) {
+            [view removeFromSuperview];
+        }
+        NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+        
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        frame.frame = CGRectMake(14, 6, 39, 49);
+        [cell.contentView addSubview:frame];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 36, 45)];
+        [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        [cell.contentView addSubview:imageView];
+        
+        UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 200, 15)];
+        titleLab.font = [UIFont systemFontOfSize:14];
+        titleLab.text = [infoDic objectForKey:@"content_name"];
+        titleLab.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:titleLab];
+        
+        UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(70, 26, 200, 15)];
+        actors.text = [NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+        actors.font = [UIFont systemFontOfSize:12];
+        actors.textColor = [UIColor grayColor];
+        actors.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:actors];
+        
+        UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(70, 38, 200, 15)];
+        date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        date.font = [UIFont systemFontOfSize:12];
+        date.textColor = [UIColor grayColor];
+        date.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:date];
+        
+        
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        line.frame = CGRectMake(0, 59, 320, 1);
+        [cell.contentView addSubview:line];
+        return cell;
+
     }
     else if (type_ == 2){
-        NSDictionary *item = [(NSMutableArray *)[infoDic objectForKey:@"items"] objectAtIndex:0];
+        RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
+        if (cell == nil) {
+            cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
         cell.titleLab.text = [infoDic objectForKey:@"name"];
-        cell.actors.text = [item objectForKey:@"prod_name"];
-        cell.date.text = @"...";
+         NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
+        if (items != nil && [items count] != 0) {
+         NSDictionary *item = [items objectAtIndex:0];
+         cell.actors.text = [item objectForKey:@"prod_name"];
+         [cell.actors setFrame:CGRectMake(12, 33, 200, 15)];
+         cell.date.text = @"...";
+         [cell.date setFrame:CGRectMake(14, 42, 200, 15)];
+        }
+
         [cell.play removeFromSuperview];
-    
+        
+        return cell;
+
     }
     
     
-    return cell;
+    return nil;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if (type_ == 2){
@@ -171,6 +230,20 @@
        // [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
     }
   
+}
+- (NSString *)composeContent:(NSDictionary *)item
+{
+    NSString *content;
+    int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+    if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
+        content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
+        content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
+        content = [NSString stringWithFormat:@"已观看《%d》 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
+    }
+    return content;
 }
 
 #pragma mark - Table view delegate

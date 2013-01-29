@@ -21,7 +21,13 @@
     UITableView *movieTableList_;
     UITableView *showTableList_;
     
+    UIButton *movieBtn_;
+    UIButton *tvBtn_;
+    UIButton *showBtn_;
     
+    UIImageView *slider_;
+    
+    UIImageView *pageMGIcon_;
 }
 @property (strong, nonatomic)UIScrollView *scrollView;
 @property (strong, nonatomic)DDPageControl *pageControl;
@@ -32,4 +38,9 @@
 @property (strong, nonatomic)UITableView *tvTableList;
 @property (strong, nonatomic)UITableView *movieTableList;
 @property (strong, nonatomic)UITableView *showTableList;
+@property (strong, nonatomic)UIButton *movieBtn;
+@property (strong, nonatomic)UIButton *tvBtn;
+@property (strong, nonatomic)UIButton *showBtn;
+@property (strong, nonatomic)UIImageView *slider;
+@property (strong, nonatomic)UIImageView *pageMGIcon;
 @end

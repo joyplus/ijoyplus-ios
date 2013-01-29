@@ -17,6 +17,7 @@
     NSString *summary_;
     UIScrollView *scrollView_;
     int pageCount_;
+    int page_;
     NSMutableArray *commentArray_;
     int favCount_;
     int supportCount_;
@@ -26,6 +27,20 @@
     UILabel *summaryLabel_;
     UIButton *moreBtn_;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    
+    UIScrollView *scrollViewUp_;
+    UIScrollView *scrollViewDown_;
+    
+    UIScrollView *scrollViewUpDL_;
+    UIScrollView *scrollViewDownDL_;
+    
+    int currentPage_;
+    int currentPageDownLoad_;
+    UIButton *next_;
+    UIButton *pre_;
+    UIButton *nextDL_;
+    UIButton *preDL_;
+    BOOL isDownLoad_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
@@ -38,5 +53,13 @@
 @property (nonatomic, strong) UIImageView *summaryBg;
 @property (nonatomic, strong) UILabel *summaryLabel;
 @property (nonatomic, strong) UIButton *moreBtn;
+@property (nonatomic, strong) UIScrollView *scrollViewUp;
+@property (nonatomic, strong) UIScrollView *scrollViewDown;
+@property (nonatomic, strong) UIScrollView *scrollViewUpDL;
+@property (nonatomic, strong) UIScrollView *scrollViewDownDL;
+@property (nonatomic, strong) UIButton *next;
+@property (nonatomic, strong) UIButton *pre;
+@property (nonatomic, strong) UIButton *nextDL;
+@property (nonatomic, strong) UIButton *preDL;
 @end
 

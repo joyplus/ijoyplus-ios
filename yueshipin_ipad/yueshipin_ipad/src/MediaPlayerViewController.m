@@ -161,6 +161,7 @@
     [self dismissViewControllerAnimated:YES completion:^{
         if(!userClicked){
             [self.dramaDetailViewControllerDelegate playNextEpisode:self.currentNum];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"PLAY_NEXT" object:[NSNumber numberWithInt:self.currentNum]];
         }
     }];
 }

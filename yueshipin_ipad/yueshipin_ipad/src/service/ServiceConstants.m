@@ -98,6 +98,8 @@ NSString *const kPathProgramView = @"/joyplus-service/index.php/program/view";
 
 NSString *const kPathProgramViewRecommend = @"/joyplus-service/index.php/program/viewRecommend";
 
+NSString *const kPathProgramInvalid = @"/joyplus-service/index.php/program/invalid";
+
 //Search
 NSString *const kPathSearchTopKeywords = @"/joyplus-service/index.php/search/topKeywords";
 NSString *const kPathSearch = @"/joyplus-service/index.php/search";
