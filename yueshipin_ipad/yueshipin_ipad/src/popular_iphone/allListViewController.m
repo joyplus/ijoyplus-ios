@@ -18,6 +18,7 @@
 #import "SearchPreViewController.h"
 #import "UIUtility.h"
 #import "UIImage+Scale.h"
+#import "IphoneDownloadViewController.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 @interface allListViewController ()
@@ -97,7 +98,7 @@
 {
     [super viewDidLoad];
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    backGround.frame = CGRectMake(0, 0, 320, 480);
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
     UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
     titleText.backgroundColor = [UIColor clearColor];
@@ -118,13 +119,14 @@
 
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 40, 30);
+    rightButton.frame = CGRectMake(0, 0, 50, 44);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"downloadicon.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
-    self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 380) style:UITableViewStylePlain];
+    self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-88) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
     self.tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -153,10 +155,13 @@
 }
 
 -(void)setting:(id)sender{
-    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
-    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
-
+//    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+//    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+    
+    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
+    downloadViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:downloadViewController animated:YES];
 }
 
 
@@ -219,10 +224,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     NSDictionary *item = [self.listArray objectAtIndex:indexPath.row];
-    NSMutableArray *items = [item objectForKey:@"items"];
     ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-    listDetailViewController.listArr = items;
     listDetailViewController.Type = MOVIE_TYPE;
+    listDetailViewController.topicId = [item objectForKey:@"id"];
     listDetailViewController.title = [item objectForKey:@"name"];
     listDetailViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:listDetailViewController animated:YES];
@@ -273,11 +277,6 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-//    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-//        [UIUtility showNetWorkError:self.view];
-//        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-//        return;
-//    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

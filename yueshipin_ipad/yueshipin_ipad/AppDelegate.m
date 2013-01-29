@@ -180,13 +180,14 @@
     }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
+    [self initAllDownloaders];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         [self customizeAppearance];
-        [self initAllDownloaders];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     } else {
         self.rootViewController = [[TabBarViewController alloc] init];
+        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
+        [self.downLoadManager resumeDownLoad];
     }
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];

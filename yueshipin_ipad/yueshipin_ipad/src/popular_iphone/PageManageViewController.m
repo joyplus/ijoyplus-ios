@@ -36,7 +36,11 @@
 @synthesize tvListArr = tvListArr_;
 @synthesize movieListArr = movieListArr_;
 @synthesize showListArr = showListArr_;
-
+@synthesize movieBtn = movieBtn_;
+@synthesize tvBtn = tvBtn_;
+@synthesize showBtn = showBtn_;
+@synthesize slider = slider_;
+@synthesize pageMGIcon = pageMGIcon_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -264,47 +268,76 @@
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
 	// Do any additional setup after loading the view.
-    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 380)];
-    self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, 380);
+    self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, kCurrentWindowHeight-88-30)];
+    self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight-88-30);
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
     self.scrollView.bounces = NO;
-    for (int i = 0; i < PAGE_NUM; i++) {
-        UIImageView *titleName = titleName = [[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 90, 18)];
-        if (i == 0) {
-            titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_1.png"];
-        }
-        else if(i == 1){
-            titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_2.png"];
-        
-        }
-        else if (i == 2){
-            titleName.image = [UIImage imageNamed:@"top_biao_ti_xiao_3.png"];
-        }
-        
-        UIImageView *titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_biao_ti_top.png"]];
-        titleView.frame = CGRectMake(320*i, 0, 320, 30);
-        [titleView addSubview:titleName];
-        [self.scrollView addSubview:titleView];
-        
-    }
+
+    UIImageView *scrBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_bg.png"]];
+    scrBg.userInteractionEnabled = YES;
+    scrBg.frame = CGRectMake(0, 0, 320, 30);
     
-    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 30,320 , 338) style:UITableViewStylePlain];
+    movieBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateNormal];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateSelected];
+    movieBtn_.frame = CGRectMake(0, 0, 106, 30);
+    movieBtn_.tag = 0;
+    [movieBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
+     movieBtn_.backgroundColor = [UIColor clearColor];
+     movieBtn_.adjustsImageWhenHighlighted = NO;
+    movieBtn_.selected = YES;
+    
+    tvBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series.png"] forState:UIControlStateNormal];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateHighlighted];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateSelected];
+    tvBtn_.frame = CGRectMake(106, 0, 108, 30);
+    tvBtn_.tag = 1;
+    [tvBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
+    tvBtn_.backgroundColor = [UIColor clearColor];
+    tvBtn_.adjustsImageWhenHighlighted = NO;
+    
+    showBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show.png"] forState:UIControlStateNormal];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateHighlighted];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateSelected];
+    showBtn_.frame = CGRectMake(214, 0, 106, 30);
+    showBtn_.tag = 2;
+    [showBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
+    showBtn_.backgroundColor = [UIColor clearColor];
+    showBtn_.adjustsImageWhenHighlighted = NO;
+    
+    slider_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_s.png"]];
+    slider_.frame = CGRectMake(4, 28, 88, 2);
+    
+    pageMGIcon_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_s_icon.png"]];
+    pageMGIcon_.frame = CGRectMake(6, 1, 23, 27);
+    [scrBg addSubview:movieBtn_];
+    [scrBg addSubview:tvBtn_];
+    [scrBg addSubview:showBtn_];
+    [scrBg addSubview:pageMGIcon_];
+    [scrBg addSubview:slider_];
+    scrBg.backgroundColor = [UIColor redColor];
+    [self.view addSubview:scrBg];
+    
+    self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tvTableList.tag = TV_TYPE;
     [self.scrollView addSubview:self.tvTableList];
     
-    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 30,320 , 338) style:UITableViewStylePlain];
+    self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
     self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.movieTableList.tag = MOVIE_TYPE;
     [self.scrollView addSubview:self.movieTableList];
     
-    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 30,320 , 338) style:UITableViewStylePlain];
+    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -313,32 +346,46 @@
     
     [self.view addSubview:self.scrollView];
     
-    UIView *pageColBg = [[UIView alloc] initWithFrame:CGRectMake(125, 328, 70, 26)];
+ //   UIView *pageColBg = [[UIView alloc] initWithFrame:CGRectMake(125, kCurrentWindowHeight-132, 70, 26)];
     
-    pageColBg.backgroundColor = [UIColor colorWithRed:75/255.0 green:75/255.0 blue:75/255.0 alpha: 1.0f];
-    pageColBg.alpha = 0.5;
-    [self.view addSubview:pageColBg];
-    pageControl_ = [[DDPageControl alloc] init] ;
-    [pageControl_ setCenter: CGPointMake(pageColBg.center.x, pageColBg.center.y)] ;
-    [pageControl_ setNumberOfPages: 3] ;
-    [pageControl_ setCurrentPage: 0] ;
-    [pageControl_ addTarget: self action: @selector(changePage:) forControlEvents: UIControlEventValueChanged] ;
-    [pageControl_ setDefersCurrentPageDisplay: YES] ;
-    [pageControl_ setType: DDPageControlTypeOnFullOffEmpty] ;
-    [pageControl_ setOnColor: [UIColor colorWithRed:24/255.0 green:112/255.0 blue:195/255.0 alpha: 1.0f]] ;
-
-    [pageControl_ setOffColor: [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha: 1.0f]] ;
-    
-    [pageControl_ setIndicatorDiameter: 7.0f] ;
-    [pageControl_ setIndicatorSpace: 8.0f] ;
-    [self.view addSubview:pageControl_];
+//    pageColBg.backgroundColor = [UIColor colorWithRed:75/255.0 green:75/255.0 blue:75/255.0 alpha: 1.0f];
+//    pageColBg.alpha = 0.5;
+//    [self.view addSubview:pageColBg];
+//    pageControl_ = [[DDPageControl alloc] init] ;
+//    [pageControl_ setCenter: CGPointMake(pageColBg.center.x, pageColBg.center.y)] ;
+//    [pageControl_ setNumberOfPages: 3] ;
+//    [pageControl_ setCurrentPage: 0] ;
+//    [pageControl_ addTarget: self action: @selector(changePage:) forControlEvents: UIControlEventValueChanged] ;
+//    [pageControl_ setDefersCurrentPageDisplay: YES] ;
+//    [pageControl_ setType: DDPageControlTypeOnFullOffEmpty] ;
+//    [pageControl_ setOnColor: [UIColor colorWithRed:24/255.0 green:112/255.0 blue:195/255.0 alpha: 1.0f]] ;
+//
+//    [pageControl_ setOffColor: [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha: 1.0f]] ;
+//    
+//    [pageControl_ setIndicatorDiameter: 7.0f] ;
+//    [pageControl_ setIndicatorSpace: 8.0f] ;
+//    [self.view addSubview:pageControl_];
     
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
     
 }
+-(void)buttonChange:(UIButton *)btn{
+    int page = btn.tag;
+    movieBtn_.selected = NO;
+    tvBtn_.selected = NO;
+    showBtn_.selected = NO;
+    btn.selected = YES;
+        
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.3f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
+    [UIView commitAnimations];
+    
 
+}
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
@@ -433,21 +480,19 @@
     int tableViewTag = tableView.tag;
     if (tableViewTag == TV_TYPE) {
         NSDictionary *item = [self.tvListArr objectAtIndex:indexPath.row];
-        NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-        listDetailViewController.listArr = items;
         listDetailViewController.title = [item objectForKey:@"name"];
+        listDetailViewController.topicId = [item objectForKey:@"id"];
         listDetailViewController.Type = TV_TYPE;
         listDetailViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
     else if (tableViewTag == MOVIE_TYPE){
         NSDictionary *item = [self.movieListArr objectAtIndex:indexPath.row];
-        NSMutableArray *items = [item objectForKey:@"items"];
         ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-        listDetailViewController.listArr = items;
         listDetailViewController.title = [item objectForKey:@"name"];
-         listDetailViewController.hidesBottomBarWhenPushed = YES;
+        listDetailViewController.topicId = [item objectForKey:@"id"];
+        listDetailViewController.hidesBottomBarWhenPushed = YES;
         listDetailViewController.Type = MOVIE_TYPE;
         [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
@@ -465,20 +510,20 @@
 }
 
 
--(void)changePage:(UIPageControl *)PageControl {
-    int whichPage = PageControl.currentPage;
-
-    [UIView beginAnimations:nil context:NULL];
-
-    [UIView setAnimationDuration:0.3f];
-
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-
-    [self.scrollView setContentOffset:CGPointMake(320.0f * whichPage, 0.0f) animated:YES];
-
-    [UIView commitAnimations];
-
-}
+//-(void)changePage:(UIPageControl *)PageControl {
+//    int whichPage = PageControl.currentPage;
+//
+//    [UIView beginAnimations:nil context:NULL];
+//
+//    [UIView setAnimationDuration:0.3f];
+//
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//
+//    [self.scrollView setContentOffset:CGPointMake(320.0f * whichPage, 0.0f) animated:YES];
+//
+//    [UIView commitAnimations];
+//
+//}
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
@@ -486,8 +531,37 @@
     CGPoint offset = scrollView.contentOffset;
     if (offset.x * offset.x> offset.y * offset.y) {
         int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-        [pageControl_ setCurrentPage: page] ;
-        [pageControl_ updateCurrentPageDisplay] ;
+//        [pageControl_ setCurrentPage: page] ;
+//        [pageControl_ updateCurrentPageDisplay] ;
+       
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.2f];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+        slider_.frame = CGRectMake(4*(page+1)+106*page, 28, 88, 2);
+        [UIView commitAnimations];
+        
+        movieBtn_.selected = NO;
+        tvBtn_.selected = NO;
+        showBtn_.selected = NO;
+        switch (page) {
+            case 0:{
+                movieBtn_.selected = YES;
+                pageMGIcon_.frame = CGRectMake(6, 1, 23, 27);
+                break;
+            }
+            case 1:{
+                tvBtn_.selected = YES;
+                 pageMGIcon_.frame = CGRectMake(106, 1, 23, 27);
+                break;
+            }
+            case 2:{
+                showBtn_.selected = YES;
+                 pageMGIcon_.frame = CGRectMake(219, 1, 23, 27);
+                break;
+            }
+            default:
+                break;
+        }
     }
     
 }

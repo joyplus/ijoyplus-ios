@@ -22,6 +22,9 @@
 #import "UIImage+Scale.h"
 #import "AFSinaWeiboAPIClient.h"
 #import "UMFeedback.h"
+#import <QuartzCore/QuartzCore.h>
+#import "ActionUtility.h"
+#import "CacheUtility.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -29,7 +32,7 @@
 @implementation IphoneSettingViewController
 @synthesize sinaSwith = sinaSwith_;
 @synthesize sinaweibo = sinaweibo_;
-
+@synthesize weiboName = weiboName_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -42,6 +45,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = @"设置";
+    
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 40, 30);
@@ -51,24 +57,30 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
     UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 17, 296, 59)];
-    view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];;
+    view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
+    view1.layer.borderWidth = 1;
+    view1.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     UIImageView *sinaWeibo = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 272, 33)];
     sinaWeibo.image = [UIImage imageNamed:@"my_s_xinlang.png"];
     [view1 addSubview:sinaWeibo];
+    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 18, 120, 22)];
+    weiboName_.backgroundColor = [UIColor clearColor];
+    weiboName_.textColor = [UIColor blueColor];
+    weiboName_.font = [UIFont systemFontOfSize:13];
+    [view1 addSubview:weiboName_];
     sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 16, 50, 22)];
     [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
     [view1 addSubview:sinaSwith_];
-    
-    self.title = @"设置";
     sinaweibo_ = [AppDelegate instance].sinaweibo;
     sinaweibo_.delegate = self;
     if([sinaweibo_ isLoggedIn]){
         sinaSwith_.on = YES;
-        //NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
+        NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
+        weiboName_.text = [NSString stringWithFormat:@"(%@)",username];;
     }
 
     [self.view addSubview:view1];
@@ -76,6 +88,8 @@
     
     UIView *view2 = [[UIView alloc] initWithFrame:CGRectMake(12, 86, 296, 59)];
     view2.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
+    view2.layer.borderWidth = 1;
+    view2.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     [self.view addSubview:view2];
     
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -88,7 +102,9 @@
     
     
     UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 172)];
-    view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];;
+    view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
+    view3.layer.borderWidth = 1;
+    view3.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     [self.view addSubview:view3];
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeCustom];
     feedBack.frame = CGRectMake(24, 168, 273, 33);
@@ -253,6 +269,17 @@
    
     [self removeAuthData];
     sinaSwith_.on = NO;
+    [[ContainerUtility sharedInstance] removeObjectForKey:kUserId];
+    [[ContainerUtility sharedInstance] removeObjectForKey:kUserAvatarUrl];
+    [[ContainerUtility sharedInstance] removeObjectForKey:kUserNickName];
+    [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
+    [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+    [ActionUtility generateUserId:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
+    }];
+    weiboName_.text = @"";
+   
+
 }
 
 - (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
@@ -290,25 +317,30 @@
     {
         NSString *username = [userInfo objectForKey:@"screen_name"];
         [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
-        
+        weiboName_.text = [NSString stringWithFormat:@"(%@)",username];
         NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
+         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:userId, @"pre_user_id", [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
                 NSString *user_id = [result objectForKey:@"user_id"];
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
+                [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
+                [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                    
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                     
                 }];
             }
+            
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
         }];

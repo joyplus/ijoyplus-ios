@@ -30,7 +30,7 @@
     self.title = @"搜索";
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];

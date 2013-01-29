@@ -1,4 +1,4 @@
-//
+  //
 //  MovieDetailViewController.m
 //  yueshipin
 //
@@ -83,8 +83,8 @@
     [self loadData];
     [self loadComments];
     
-    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
-    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
+//    favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
+//    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 20, 292, 90);
@@ -129,6 +129,8 @@
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
+        favCount_ = [[videoInfo_ objectForKey:@"favority_num"] integerValue];
+        supportCount_ = [[videoInfo_ objectForKey:@"support_num"] integerValue];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }
     else{
@@ -150,6 +152,8 @@
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
+        favCount_ = [[videoInfo_ objectForKey:@"favority_num"] integerValue];
+        supportCount_ = [[videoInfo_ objectForKey:@"support_num"] integerValue];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
@@ -278,19 +282,19 @@
                 actorsLabel.backgroundColor = [UIColor clearColor];
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
                 
-                UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 74, 200, 15)];
+                UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 77, 200, 15)];
                 areaLabel.font = [UIFont systemFontOfSize:12];
                 areaLabel.textColor = [UIColor grayColor];
                 areaLabel.backgroundColor = [UIColor clearColor];
                 areaLabel.text = [NSString stringWithFormat:@"地区: %@",area];
                 
-                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 89, 200, 15)];
+                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 95, 200, 15)];
                 directorLabel.font = [UIFont systemFontOfSize:12];
                 directorLabel.textColor = [UIColor grayColor];
                 directorLabel.backgroundColor = [UIColor clearColor];
                 directorLabel.text = [NSString stringWithFormat:@"导演: %@",directors];
                 
-                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 104, 200, 15)];
+                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 113, 200, 15)];
                 dateLabel.font = [UIFont systemFontOfSize:12];
                 dateLabel.textColor = [UIColor grayColor];
                 dateLabel.backgroundColor = [UIColor clearColor];
@@ -300,42 +304,84 @@
                 [cell addSubview:actorsLabel];
                 [cell addSubview:areaLabel];
                 [cell addSubview:directorLabel];
-                [cell addSubview:dateLabel];
+                [cell addSubview:dateLabel];;
                 
-                UIButton *play = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                play.frame = CGRectMake(115, 28, 87, 27);
+                UIButton *play = [UIButton buttonWithType:UIButtonTypeCustom];
+                play.frame = CGRectMake(124, 155, 87, 27);
                 play.tag = 10001;
-                //[play setTitle:@"播放视频" forState:UIControlStateNormal];
-                [play setImage:[UIImage imageNamed:@"tab2_detailed_common_play_video.png"] forState:UIControlStateNormal];
-                [play setImage:[UIImage imageNamed:@"tab2_detailed_common_play_video_s.png"] forState:UIControlStateHighlighted];
+                [play setImage:[UIImage imageNamed:@"play_video.png"] forState:UIControlStateNormal];
+                [play setImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame = CGRectMake(14, 152, 142, 27);
+                addFav.frame = CGRectMake(116, 20, 89, 27);
                 addFav.tag = 10002;
-                [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
-                [addFav setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"] forState:UIControlStateNormal];
+                [addFav setBackgroundImage:[UIImage imageNamed:@"addFav.png"] forState:UIControlStateNormal];
+                [addFav setBackgroundImage:[UIImage imageNamed:@"addFav_pressed.png"] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"]forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
                 [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                addFav.titleLabel.font = [UIFont systemFontOfSize:14];
+                addFav.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:addFav];
                 
                 UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
-                support.frame = CGRectMake(165, 152, 142, 27);
+                support.frame = CGRectMake(219, 20, 80, 27);
                 support.tag = 10003;
-                [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend.png"] forState:UIControlStateNormal];
-                [support setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_common_favorite&recommend_s.png"] forState:UIControlStateHighlighted];
-                [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"]forState:UIControlStateNormal];
+                [support setBackgroundImage:[UIImage imageNamed:@"collect.png"] forState:UIControlStateNormal];
+                [support setBackgroundImage:[UIImage imageNamed:@"collect_pressed.png"] forState:UIControlStateHighlighted];
+                [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
                 [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                support.titleLabel.font = [UIFont systemFontOfSize:14];
+                support.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:support];
+                
+                
+                UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
+                downLoad.frame = CGRectMake(225, 155, 74, 28);
+                downLoad.tag = 10004;
+                if ([self getDownloadUrl] == nil) {
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
+                    downLoad.enabled = NO;
+                }
+                else{
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
+                
+                }
+                [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
+                [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
+                downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
+                [cell addSubview:downLoad];
+                
+                NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+                if (itemId == nil) {
+                    itemId = [self.infoDic objectForKey:@"content_id"];
+                }
+                NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
+                NSArray *tempArr = [DownloadItem findByCriteria:subquery];
+                if ([tempArr count] >0) {
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
+                    downLoad.selected = YES;
+                    downLoad.adjustsImageWhenHighlighted = NO;
+                }
+
+                
+                UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
+                report.frame = CGRectMake(15, 155, 96, 28);
+                report.tag = 10005;
+                [report setBackgroundImage:[UIImage imageNamed:@"report.png"] forState:UIControlStateNormal];
+                [report setBackgroundImage:[UIImage imageNamed:@"report_pressed.png"] forState:UIControlStateHighlighted];
+                [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
+                report.titleLabel.font = [UIFont systemFontOfSize:14];
+                [cell addSubview:report];
                 
                 break;
             }
@@ -362,6 +408,7 @@
     }
     else if (indexPath.section == 1){
         
+        int num = [relevantList_ count] > 5 ? 5:[relevantList_ count];
         if (indexPath.row == 0) {
             UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
@@ -370,9 +417,30 @@
             [cell addSubview:view];
         }
         else{
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(14, 0, 292, 26)];
-            view.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-            [cell addSubview:view];
+           
+            UIButton *bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            bgBtn.tag = indexPath.row -1;
+            bgBtn.frame = CGRectMake(14, 0, 292, 26);
+            if (num == 1) {
+                [bgBtn setBackgroundImage:[UIImage imageNamed:@"summryBg.png"] forState:UIControlStateNormal];
+            }
+            else{
+                if (indexPath.row == 1) {
+                    [bgBtn setBackgroundImage:[UIImage imageNamed:@"more_bg_1.png"] forState:UIControlStateNormal];
+                }
+                else if (indexPath.row == num){
+                    [bgBtn setBackgroundImage:[UIImage imageNamed:@"more_bg_3.png"] forState:UIControlStateNormal];
+                }
+                else{
+                    [bgBtn setBackgroundImage:[UIImage imageNamed:@"more_bg_2.png"] forState:UIControlStateNormal];
+                }
+                
+            }
+            [bgBtn setBackgroundImage:[UIImage imageNamed:@"selectBg.png"] forState:UIControlStateHighlighted];
+            [bgBtn addTarget:self action:@selector(didSelect:) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:bgBtn];
+
+            
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
             label.font = [UIFont systemFontOfSize:15];
@@ -384,7 +452,6 @@
             push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];
             [cell addSubview:push];
             
-            int num = [relevantList_ count] > 5 ? 5:[relevantList_ count];
             if (num != indexPath.row) {
                  UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
                 line.frame = CGRectMake(25,25, 270, 1);
@@ -499,20 +566,31 @@
     
 }
 
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
-    if (indexPath.section == 1) {
-        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-        ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-        listDetail.title = [dic objectForKey:@"t_name"];
-        listDetail.topicId = [dic objectForKey:@"t_id"];
-        listDetail.Type = 9001;
-        [listDetail initTopicData:listDetail.topicId];
-        [self.navigationController pushViewController:listDetail animated:YES];
-    }
+-(void)didSelect:
+(UIButton *)btn{
+    int num = btn.tag;
+    NSDictionary *dic = [relevantList_ objectAtIndex:num];
+    ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+    listDetail.title = [dic objectForKey:@"t_name"];
+    listDetail.topicId = [dic objectForKey:@"t_id"];
+    listDetail.Type = 9001;
+    [self.navigationController pushViewController:listDetail animated:YES];
 
 }
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//
+//    if (indexPath.section == 1) {
+//        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
+//        ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+//        listDetail.title = [dic objectForKey:@"t_name"];
+//        listDetail.topicId = [dic objectForKey:@"t_id"];
+//        listDetail.Type = 9001;
+//        [listDetail initTopicData:listDetail.topicId];
+//        [self.navigationController pushViewController:listDetail animated:YES];
+//    }
+//
+//}
 
 
 -(void)action:(id)sender {
@@ -556,17 +634,17 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                   
                 if([responseCode isEqualToString:kSuccessResCode]){
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshFav"object:nil];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
                     favCount_++;
-                    [self showOpSuccessModalView:1 with:ADDFAV];
+                    [self showOpSuccessModalView:1 with:DING];
                     [self.tableView reloadData];
                 
                 } else {
-                    [self showOpFailureModalView:1 with:ADDFAV];
+                    [self showOpFailureModalView:1 with:DING];
                 }
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:ADDFAV];
+                   [self showOpFailureModalView:1 with:DING];
             }];
             
             
@@ -578,6 +656,7 @@
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
                     supportCount_ ++;
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUPPORT" object:nil];
                     [self showOpSuccessModalView:1 with:DING];
                     [self.tableView reloadData];
                 } else {
@@ -590,11 +669,61 @@
             
             break;
         }
+        case 10004:{
+            if (button.selected) {
+                return;
+            }
+            button.selected = YES;
+            [button setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];
+            [button setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
+            button.adjustsImageWhenHighlighted = NO;
             
+            NSString *url = [self getDownloadUrl];
+            if (url == nil || [url isEqualToString:@""]) {
+                NSLog(@"Get the download url is failed");
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"暂无下载地址" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+                [alert show];
+                return;
+            }
+            NSString *name = [videoInfo_ objectForKey:@"name"];
+            if (name == nil || [name isEqualToString:@""]) {
+                NSLog(@"Get the download name is failed");
+                return;
+            }
+            NSString *prodId = [videoInfo_ objectForKey:@"id"];
+            if (prodId == nil || [prodId isEqualToString:@""]) {
+                NSLog(@"Get the download prodId is failed");
+                return;
+            }
+            NSString *imgUrl = [self.infoDic objectForKey:@"prod_pic_url"];
+            NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
+            break;
+        }
+        case 10005:{
+            
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey,@"app_key",[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//                NSString *responseCode = [result objectForKey:@"res_code"];
+//                if([responseCode isEqualToString:kSuccessResCode]){
+//                     [self showOpSuccessModalView:1 with:ADDFAV];
+//                }
+//                else {
+//                    [self showOpFailureModalView:1 with:ADDFAV];
+//                }
+                 [self showOpSuccessModalView:3 with:ADDFAV];
+                
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                [self showOpFailureModalView:1 with:ADDFAV];
+            }];
+
+            break;
+        }
         default:
             break;
     }
 }
+
 
 -(void)more{
    
@@ -672,6 +801,92 @@
 
 
 
+-(NSString *)getVideoUrl{
+    NSString *videoUrl = nil;
+    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+      
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                videoUrl = [self parseVideoUrl:tempVideo];
+                break;
+            }
+        }
+        if(videoUrl == nil){
+            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
+        }
+    }
+    return videoUrl;
+}
+
+-(NSString *)getDownloadUrl{
+    NSString *downloadUrl = nil;
+    
+    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        for(NSDictionary *tempVideo in videoUrlArray){
+            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                downloadUrl = [self parseDownloadUrl:tempVideo];
+                break;
+            }
+        }
+        if(downloadUrl == nil){
+            downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+        }
+    }
+    return downloadUrl;
+
+}
+- (NSString *)parseDownloadUrl:(NSDictionary *)tempVideo
+{
+    NSString *videoUrl;
+    NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+    for(NSDictionary *url in urlArray){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+            break;
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    
+    
+    if(videoUrl == nil){
+        if(urlArray.count > 0){
+            for(NSDictionary *url in urlArray){
+                if (![[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                     videoUrl = [url objectForKey:@"url"];
+                }
+            
+            }
+        }
+    }
+    return videoUrl;
+    
+    
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     

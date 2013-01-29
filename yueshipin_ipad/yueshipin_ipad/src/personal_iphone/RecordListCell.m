@@ -20,6 +20,8 @@
     if (self) {
         self.frame = CGRectMake(0, 0, 296, 60);
         self.titleLab = [[UILabel alloc] initWithFrame:CGRectMake(12, 14, 200, 15)];
+        self.titleLab.font = [UIFont systemFontOfSize:14];
+        titleLab_.backgroundColor = [UIColor clearColor];
         [self addSubview:self.titleLab];
         
         self.actors = [[UILabel alloc] initWithFrame:CGRectMake(12, 31, 200, 15)];
@@ -35,7 +37,7 @@
         [self addSubview:date_];
         
         play_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        play_.frame = CGRectMake(210, 18, 60, 30);
+        play_.frame = CGRectMake(230, 18, 60, 30);
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see.png"] forState:UIControlStateNormal];
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see_s.png"] forState:UIControlStateHighlighted];
         [self addSubview:play_];

@@ -30,6 +30,10 @@
 #import "IphoneShowDetailViewController.h"
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SinaWeibo.h"
+#import "AppDelegate.h"
+#import "TimeUtility.h"
+#import "UIImageView+WebCache.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -57,6 +61,7 @@
 @synthesize button3 = button3_;
 @synthesize noRecord = noRecord_;
 @synthesize noFav = noFav_;
+@synthesize noPersonalList = noPersonalList_;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,12 +74,12 @@
 
 -(void)loadMyFavsData{
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    //[self.bgView addSubview:tempHUD];
-    [[AppDelegate instance].window addSubview:tempHUD];
+    [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    NSString *test = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey,@"app_key",(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -86,6 +91,10 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
+        if (button2_.selected) {
+            [self Selectbutton:button2_];
+        }
+        [favTableList_ reloadData];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.favArr == nil){
@@ -98,16 +107,13 @@
 
 -(void)loadPersonalData{
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    //[self.bgView addSubview:tempHUD];
-    [[AppDelegate instance].window addSubview:tempHUD];
+    [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        if (myListArr_ == nil) {
-            myListArr_  = [NSMutableArray arrayWithCapacity:10];
-        }
+        myListArr_  = [NSMutableArray arrayWithCapacity:10];
         [tempHUD hide:YES];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
@@ -210,17 +216,6 @@
     [self.view addSubview:button3_];
     
     [self Selectbutton:button1_];
-//    NSArray *itemsArr = [NSArray arrayWithObjects:@"播放纪录",@"我的收藏",@"我的悦单", nil];
-//    self.segControl = [[UISegmentedControl alloc] initWithItems:itemsArr];
-//    self.segControl.frame = CGRectMake(12, 40, 296, 51);
-//    self.segControl.tintColor =  [UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1.0];
-//    self.segControl.segmentedControlStyle = UISegmentedControlStyleBar;
-//    [self.segControl setImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forSegmentAtIndex:0];
-//    [self.segControl setImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forSegmentAtIndex:1];
-//    [self.segControl setImage:[self scaleFromImage:[UIImage imageNamed:@"tab3_page1_icon.png"] toSize:CGSizeMake(99, 52)] forSegmentAtIndex:2];
-//    [self.segControl addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventValueChanged];
-//    self.segControl.selectedSegmentIndex = 0;
-//    [self.view addSubview:self.segControl];
         
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
     self.bgView.backgroundColor = [UIColor whiteColor];
@@ -233,8 +228,10 @@
     
     noRecord_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noRecored.png"]];
     noRecord_.frame = CGRectMake(0, 0, 296, 180);
-
     
+    noPersonalList_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noPersonalList.png"]];
+    noPersonalList_.frame = CGRectMake(0, 45, 296, 180);
+     
     self.recordTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
     self.recordTableList.dataSource = self;
     self.recordTableList.delegate = self;
@@ -297,22 +294,30 @@
         [self.bgView addSubview:recordTableList_];
     }
     else{
-    
+        [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
         [self.bgView addSubview:noRecord_];
     }
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
     [[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(refreshFav) name:@"refreshFav" object:nil];
+     addObserver:self selector:@selector(refreshFav) name:@"REFRESH_FAV" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordListReload) name:WATCH_HISTORY_REFRESH object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
 }
-
+-(void)refreshSinaWeibo{
+    NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
+    [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
+    nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
+    [self loadMyFavsData];
+    [self loadPersonalData];
+    [self loadRecordData];
+}
 - (void)loadRecordData
 {
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
     if(cacheResult != nil){
-        [self parseWatchResultData:cacheResult];
+        //[self parseWatchResultData:cacheResult];
     }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
@@ -353,10 +358,6 @@
 }
 -(void)refreshFav{
     [self loadMyFavsData];
-    if (button2_.selected) {
-        [self Selectbutton:button2_];
-    }
-    [favTableList_ reloadData];
 }
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
@@ -431,6 +432,7 @@
     [moreView_ setFrame:CGRectMake(12, 290, 296, 45)];
     [noRecord_ removeFromSuperview];
     [noFav_ removeFromSuperview];
+    [noPersonalList_ removeFromSuperview];
     
     button1_.selected = NO;
     button2_.selected = NO;
@@ -457,7 +459,6 @@
                 }
                 else{
                     [self.bgView addSubview:self.recordTableList];
-                   // self.recordTableList.backgroundColor = [UIColor redColor];
                     [self.recordTableList reloadData];
                 }
                     
@@ -468,12 +469,10 @@
         case 101:{
             button2_.selected = YES;
             if ([self.favArr count] <= 3) {
-                favShowArr_ = [NSArray arrayWithArray:self.favArr];
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favShowArr_ count])];
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
                 [moreView_ removeFromSuperview];
             }
             else {
-                favShowArr_ = [NSArray arrayWithObjects:[self.favArr objectAtIndex:0],[self.favArr objectAtIndex:1],[self.favArr objectAtIndex:2], nil];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
                
@@ -497,6 +496,7 @@
             if ([myListArr_ count] <= 3) {
                 if ([myListArr_ count]== 0){
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 44)];
+                    [self.bgView addSubview:noPersonalList_];
                 }
                 else{
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*[myListArr_ count])];
@@ -533,11 +533,23 @@
         }
     }
     if (tableView.tag == Fav_TYPE) {
-        return [favShowArr_ count];
+        if ([favArr_ count] <= 3) {
+            return [favArr_ count];
+        }
+        else{
+            return 3;
+        }
+
     }
     if (tableView.tag == MYLIST_TYPE) {
         if ([myListArr_ count] <= 3) {
-            return [myListArr_ count];
+            if ([myListArr_ count] == 0) {
+                return 0;
+            }
+            else{
+               return [myListArr_ count];
+            }
+           
         }
         else{
             return 3;
@@ -550,48 +562,96 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"Cell";
-    RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-     
+        
     if (tableView.tag == RECORD_TYPE) {
+        RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+
        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
         cell.textLabel.font = [UIFont systemFontOfSize:15];
         [cell.titleLab removeFromSuperview];
-        //[cell.actors removeFromSuperview];
-        if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
-            cell.actors.text  = [NSString stringWithFormat:@"第%@集",[infoDic objectForKey:@"prod_subname"]];
+        
+        //if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
+            cell.actors.text  = [self composeContent:infoDic];
             [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
-        }
+        //}
       
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
-        
+        return cell;
     }
     else if (tableView.tag == Fav_TYPE){
-        NSDictionary *infoDic = [favShowArr_ objectAtIndex:indexPath.row];
-        cell.titleLab.text = [infoDic objectForKey:@"content_name"];
-        cell.actors.text =[NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
-        cell.date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
-        [cell.play  removeFromSuperview];
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+        for (UIView *view in cell.contentView.subviews) {
+            [view removeFromSuperview];
+        }
+        NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
         
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        frame.frame = CGRectMake(14, 6, 39, 49);
+        [cell.contentView addSubview:frame];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 36, 45)];
+        [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        [cell.contentView addSubview:imageView];
+        
+        UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 200, 15)];
+        titleLab.font = [UIFont systemFontOfSize:14];
+        titleLab.text = [infoDic objectForKey:@"content_name"];
+        titleLab.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:titleLab];
+        
+        UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(70, 26, 200, 15)];
+        actors.text = [NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+        actors.font = [UIFont systemFontOfSize:12];
+        actors.textColor = [UIColor grayColor];
+        actors.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:actors];
+        
+       UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(70, 38, 200, 15)];
+        date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        date.font = [UIFont systemFontOfSize:12];
+        date.textColor = [UIColor grayColor];
+        date.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:date];
+        
+               
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        line.frame = CGRectMake(0, 59, 320, 1);
+        [cell.contentView addSubview:line];
+        return cell;
     }
     else if (tableView.tag == MYLIST_TYPE){
+        RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+
     
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
-        NSDictionary *item = [(NSMutableArray *)[infoDic objectForKey:@"items"] objectAtIndex:0];
+        NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
         cell.titleLab.text = [infoDic objectForKey:@"name"];
-        cell.actors.text = [item objectForKey:@"prod_name"];
-        cell.date.text = @"...";
-        [cell.date setFrame:CGRectMake(14, 42, 200, 15)];
+        if (items != nil && [items count] != 0) {
+            NSDictionary *item = [items objectAtIndex:0];
+            cell.actors.text = [item objectForKey:@"prod_name"];
+            [cell.actors setFrame:CGRectMake(12, 33, 200, 15)];
+            cell.date.text = @"...";
+            [cell.date setFrame:CGRectMake(14, 42, 200, 15)];
+        }
+       
         [cell.play  removeFromSuperview];
+        return cell;
     
     }
-    return cell;
+    return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -602,23 +662,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     if (tableView.tag == Fav_TYPE){
-        NSDictionary *dic = [favShowArr_ objectAtIndex:indexPath.row];
+        NSDictionary *dic = [favArr_ objectAtIndex:indexPath.row];
         NSString *type = [dic objectForKey:@"content_type"];
         if ([type isEqualToString:@"1"]) {
             IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
-            detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+            detailViewController.infoDic = [favArr_ objectAtIndex:indexPath.row];
             detailViewController.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:detailViewController animated:YES];
         }
         else if ([type isEqualToString:@"2"]){
             TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
-            detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+            detailViewController.infoDic = [favArr_ objectAtIndex:indexPath.row];
             detailViewController.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:detailViewController animated:YES];}
         
         else if ([type isEqualToString:@"3"]){
             IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
-            detailViewController.infoDic = [favShowArr_ objectAtIndex:indexPath.row];
+            detailViewController.infoDic = [favArr_ objectAtIndex:indexPath.row];
             detailViewController.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:detailViewController animated:YES];
         
@@ -651,6 +711,9 @@
     if (editingStyle == UITableViewCellEditingStyleDelete){
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
         NSString *topicId = [infoDic objectForKey:@"id"];
+        if (topicId == nil) {
+            topicId = [infoDic objectForKey:@"topic_id"];
+        }
         
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:topicId, @"topic_id", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -659,6 +722,7 @@
                 [myListArr_ removeObjectAtIndex:indexPath.row];
                 //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                 [myTableList_ reloadData];
+                [self Selectbutton:button3_];
             }
             else {
                  [UIUtility showSystemError:self.view];
@@ -669,6 +733,23 @@
 
         
     }
+}
+
+- (NSString *)composeContent:(NSDictionary *)item
+{
+    NSString *content;
+   
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+    if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
+        content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
+        int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
+        content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
+    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
+        int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
+        content = [NSString stringWithFormat:@"已观看《%d》 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
+    }
+    return content;
 }
 
 -(void)continuePlay:(id)sender{
@@ -690,7 +771,6 @@
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
         [self presentViewController:pro animated:YES completion:nil];
-        //[self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
     }
 
     

@@ -15,6 +15,8 @@
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
 #import "SendWeiboViewController.h"
+#import "ActionUtility.h"
+#import <QuartzCore/QuartzCore.h>
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -81,15 +83,27 @@
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
-    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
-    if (type == DING) {
-        temp.frame = CGRectMake(185, 110, 92, 27);
-    }
+   
     if (type == ADDFAV) {
-        temp.frame = CGRectMake(40, 110, 92, 27);
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 80)];
+        label.numberOfLines = 0;
+        label.lineBreakMode = NSLineBreakByWordWrapping;
+        label.text = @"您提交的错误我们已经收到，我们会尽快处理，谢谢您的支持.";
+        label.center = view.center;
+        label.textAlignment = NSTextAlignmentCenter;
+        label.font = [UIFont boldSystemFontOfSize:12];
+        label.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];
+        label.layer.cornerRadius = 4;
+        label.textColor = [UIColor whiteColor];
+        [view addSubview:label];
     }
-    //temp.center = view.center;
-    [view addSubview:temp];
+    if (type == DING ) {
+         UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
+        temp.frame = CGRectMake(0, 0, 92, 27);
+        temp.center = view.center;
+        [view addSubview:temp];
+    }
+    
     //[[AppDelegate instance].window addSubview:view];
     [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
@@ -101,14 +115,14 @@
     [view setBackgroundColor:[UIColor clearColor]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_fails.png"]];
     if (type == DING) {
-        temp.frame = CGRectMake(185, 110, 92, 27);
+        temp.frame = CGRectMake(0, 0, 92, 27);
+        temp.center = view.center;
     }
     if (type == ADDFAV) {
-        temp.frame = CGRectMake(40, 110, 92, 27);
+        temp.frame = CGRectMake(16, 110, 92, 27);
     }
-    //temp.center = view.center;
     [view addSubview:temp];
-    //[[AppDelegate instance].window addSubview:view];
+  
      [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
 }
@@ -166,6 +180,12 @@
 - (void)sinaweiboDidLogOut:(SinaWeibo *)sinaweibo{
     NSLog(@"sinaweiboDidLogOut");
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
+    [[ContainerUtility sharedInstance] removeObjectForKey:kUserAvatarUrl];
+    [[ContainerUtility sharedInstance] removeObjectForKey:kUserNickName];
+    [ActionUtility generateUserId:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
+    }];
+    
 }
 
 - (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo{
@@ -196,7 +216,7 @@
         [[ContainerUtility sharedInstance] setAttribute:username forKey:kUserNickName];
         NSString *avatarUrl = [userInfo objectForKey:@"avatar_large"];
         [[ContainerUtility sharedInstance] setAttribute:avatarUrl forKey:kUserAvatarUrl];
-        
+         [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];

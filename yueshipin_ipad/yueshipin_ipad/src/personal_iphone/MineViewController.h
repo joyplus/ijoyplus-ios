@@ -31,6 +31,7 @@
     UIButton *button3_;
     UIImageView *noRecord_;
     UIImageView *noFav_;
+    UIImageView *noPersonalList_;
 }
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
@@ -52,6 +53,7 @@
 @property (nonatomic, strong)UIButton *button3;
 @property (nonatomic, strong)UIImageView *noRecord;
 @property (nonatomic, strong)UIImageView *noFav;
+@property (nonatomic, strong)UIImageView *noPersonalList;
 
 
 @end

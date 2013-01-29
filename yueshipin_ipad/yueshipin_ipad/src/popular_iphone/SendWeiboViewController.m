@@ -44,7 +44,7 @@
     [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    backGround.frame = CGRectMake(0, 0, 320, 480);
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
     
     UIImageView *shareImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"share_bg.png"]];

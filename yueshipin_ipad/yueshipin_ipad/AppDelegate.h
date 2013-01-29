@@ -12,6 +12,7 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "McDownload.h"
+#import "DownLoadManager.h"
 
 @class RootViewController;
 
@@ -34,6 +35,8 @@
 @property (assign, atomic) int currentDownloadingNum;
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
+
+@property (strong, nonatomic)DownLoadManager *downLoadManager;
 
 - (NSMutableArray *)getDownloaderQueue;
 - (void)addToDownloaderArray:(DownloadItem *)item;

@@ -24,8 +24,8 @@ body {
     width: 100%;
     height: 45px;
     line-height: 45px;
-    /*background: url('../img/titleBar.png') no-repeat left top;*/
-    background-color: #272a32;
+    background: url('../img/NavBar.png') no-repeat left top;
+    /*background-color: #272a32;*/
     background-size: 100% 45px;
     /*background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222));
 background-image:-moz-linear-gradient(top, #999, #666 2%, #222);
@@ -49,7 +49,7 @@ background-image:-o-linear-gradient(top, #999, #666 2%, #222);*/
     left: 0;
     width: 100%;
     height: 43px;
-    /*background: url('../img/bar.png') no-repeat left top;*/
+    background: url('../img/bar.png') no-repeat left top;
 
     background-color: #f1f1f1;
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(241, 241, 241)),to(rgb(194, 198, 207)));
@@ -199,10 +199,10 @@ line-height: 20px;
 .button {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background: rgba(255, 255, 255, 0.0) url('../img/back.png') no-repeat 0 0;
-    background-size: 52px 32px;
+    background-size: 20px 17px;
     background-position: center center;
-    width: 53px;
-    height: 33px;
+    width: 40px;
+    height: 30px;
 }
 
 .button:active, .button.active {
@@ -212,10 +212,10 @@ line-height: 20px;
 .button_en {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background: rgba(255, 255, 255, 0.0) url('../img/back_en.png') no-repeat 0 0;
-    background-size: 52px 32px;
+    background-size: 20px 17px;
     background-position: center center;
-    width: 53px;
-    height: 33px;
+    width: 40px;
+    height: 30px;
 }
 
 .button_en:active, .button_en.active {

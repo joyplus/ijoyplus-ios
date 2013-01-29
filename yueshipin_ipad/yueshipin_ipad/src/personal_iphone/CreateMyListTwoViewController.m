@@ -11,7 +11,7 @@
 #import "SearchResultsViewCell.h"
 #import "UIImageView+WebCache.h"
 #import "UIImage+Scale.h"
-
+#import <QuartzCore/QuartzCore.h>
 @interface CreateMyListTwoViewController ()
 
 @end
@@ -35,7 +35,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -57,7 +57,9 @@
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     UIView *whiteBg = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 45)];
-    whiteBg.backgroundColor = [UIColor whiteColor];
+    whiteBg.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
+    whiteBg.layer.borderWidth = 1;
+    whiteBg.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton addTarget:self action:@selector(AddMore:) forControlEvents:UIControlEventTouchUpInside];
     [moreButton setFrame:CGRectMake(5, 7, 284, 30)];
@@ -66,7 +68,7 @@
     [whiteBg addSubview:moreButton];
     [self.view addSubview:whiteBg];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(12, 55, 296, 350) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(12, 55, 296, kCurrentWindowHeight-101) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
