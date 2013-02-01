@@ -152,6 +152,13 @@
     }
     [self reloadItems];
     [AppDelegate instance].downloadManager.delegate = self;
+    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
 }
 
 - (void)reloadItems
@@ -186,13 +193,7 @@
             item.downloadStatus = @"done";
             item.percentage = 100;
             [item save];
-            GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
-            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:operationId.intValue + 20000000];
-            if(progressView != nil){
-                [progressView removeFromSuperview];
-                UILabel *progressLabel = (UILabel *)[cell viewWithTag:operationId.intValue + 10000000];
-                progressLabel.text = [NSString stringWithFormat:@"下载完成"];
-            }
+            [_gmGridView reloadData];
             [[AppDelegate instance].downloadManager startDownloadingThreads];
             break;
         }
@@ -293,7 +294,9 @@
         UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
         bgLabel.tag = item.itemId.intValue + 30000000;
         bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
-        [cell.contentView addSubview:bgLabel];
+        if(![item.downloadStatus isEqualToString:@"done"]){
+            [cell.contentView addSubview:bgLabel];
+        }
         
         UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
         progressLabel.tag = item.itemId.intValue + 10000000;
@@ -305,7 +308,7 @@
         } else if([item.downloadStatus isEqualToString:@"stop"]){
             progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
         } else if([item.downloadStatus isEqualToString:@"done"]){
-            progressLabel.text = @"下载完成";
+//            progressLabel.text = @"下载完成";
         } else if([item.downloadStatus isEqualToString:@"waiting"]){
             progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
         } else if([item.downloadStatus isEqualToString:@"error"]){
@@ -315,7 +318,9 @@
         progressLabel.textAlignment = NSTextAlignmentCenter;
         progressLabel.shadowColor = [UIColor blackColor];
         progressLabel.shadowOffset = CGSizeMake(1, 1);
-        [cell.contentView addSubview:progressLabel];
+        if(![item.downloadStatus isEqualToString:@"done"]){
+            [cell.contentView addSubview:progressLabel];
+        }
         
         if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
             UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(5, 125, 94, 5)];

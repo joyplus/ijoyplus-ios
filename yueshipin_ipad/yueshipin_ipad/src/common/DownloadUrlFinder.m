@@ -30,6 +30,7 @@
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:tempUrl]];
         [NSURLConnection connectionWithRequest:request delegate:self];
     } else {
+        NSLog(@"no download url");
         item.downloadStatus = @"error";
     }
 }
@@ -42,6 +43,8 @@
             NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
             NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
             if (contentLength.intValue > 100 && ![contentType hasPrefix:@"text/html"]) {
+                workingUrl = [item.urlArray objectAtIndex:urlIndex];
+                NSLog(@"working url = %@", workingUrl);
                 item.url = [item.urlArray objectAtIndex:urlIndex];
                 [item save];
                 [[AppDelegate instance].downloadManager startDownloadingThreads];

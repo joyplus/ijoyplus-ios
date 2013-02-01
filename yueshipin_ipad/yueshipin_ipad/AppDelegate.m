@@ -235,6 +235,12 @@
         [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
+    [self performSelector:@selector(triggerDownload) withObject:self afterDelay:10];
+}
+
+- (void)triggerDownload
+{
+    [downloadManager startDownloadingThreads];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -267,7 +273,7 @@
     networkStatus = [curReach currentReachabilityStatus];
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
-        [downloadManager startDownloadingThreads];
+        [self downloadManager];
         [ActionUtility generateUserId:nil];
     }
 }
