@@ -197,10 +197,10 @@ static NSString *const iRateMacAppStoreURLFormat = @"macappstore://itunes.apple.
         self.onlyPromptIfMainWindowIsAvailable = YES;
         self.promptAgainForEachNewVersion = YES;
         self.promptAtLaunch = YES;
-        self.usesUntilPrompt = 10;
-        self.eventsUntilPrompt = 10;
-        self.daysUntilPrompt = 10.0f;
-        self.remindPeriod = 1.0f;
+        self.usesUntilPrompt = 5;
+        self.eventsUntilPrompt = 5;
+        self.daysUntilPrompt = 5;
+        self.remindPeriod = 5;
         self.verboseLogging = NO;
         self.previewMode = NO;
         
@@ -738,7 +738,7 @@ static NSString *const iRateMacAppStoreURLFormat = @"macappstore://itunes.apple.
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.messageTitle
                                                         message:self.message
                                                        delegate:self
-                                              cancelButtonTitle:self.cancelButtonLabel
+                                              cancelButtonTitle:nil
                                               otherButtonTitles:self.rateButtonLabel, nil];
         if (self.remindButtonLabel)
         {

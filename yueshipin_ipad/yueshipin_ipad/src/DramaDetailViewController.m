@@ -10,6 +10,7 @@
 #import "CommonHeader.h"
 #import "CommentListViewController.h"
 #import "SublistViewController.h"
+#import "DownloadUrlFinder.h"
 
 #define DEFAULT_POSITION_Y 600
 #define EPISODE_NUMBER_IN_ROW 5
@@ -765,6 +766,7 @@
     item.type = 2;
     item.downloadStatus = @"stop";
     [item save];
+    [[AppDelegate instance].downloadItems addObject:item];
 }
 
 - (BOOL)addSubdownloadItem:(int)num
@@ -784,9 +786,11 @@
     [self getDownloadUrls:num-1];
     if(downloadUrls.count > 0){
         subitem.urlArray = downloadUrls;
-        //        subitem.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
+        DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
+        finder.item = subitem;
+        [finder setupWorkingUrl];
         [subitem save];
-        [[AppDelegate instance] addToDownloaderArray:subitem];
+        [[AppDelegate instance].subdownloadItems addObject:subitem];
         [self updateBadgeIcon];
         return YES;
     } else {

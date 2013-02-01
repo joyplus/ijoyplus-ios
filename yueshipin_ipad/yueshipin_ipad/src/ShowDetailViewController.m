@@ -9,6 +9,7 @@
 #import "ShowDetailViewController.h"
 #import "CommonHeader.h"
 #import "CommentListViewController.h"
+#import "DownloadUrlFinder.h"
 
 #define DEFAULT_POSOTION_Y 585
 
@@ -678,6 +679,7 @@
     item.type = 3;
     item.downloadStatus = @"stop";
     [item save];
+    [[AppDelegate instance].downloadItems addObject:item];
 }
 
 - (BOOL)addSubdownloadItem:(int)num
@@ -698,7 +700,10 @@
     if(downloadUrls.count > 0){
         subitem.urlArray = downloadUrls;
         [subitem save];
-        [[AppDelegate instance] addToDownloaderArray:subitem];
+        DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
+        finder.item = subitem;
+        [finder setupWorkingUrl];
+        [[AppDelegate instance].subdownloadItems addObject:subitem];
         [self updateBadgeIcon];
         return YES;
     } else {
