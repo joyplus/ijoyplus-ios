@@ -16,6 +16,8 @@
 #define CHANNEL_ID @""
 // for 91 Store
 //#define CHANNEL_ID @"91store"
+// for PP Live
+//#define CHANNEL_ID @"pp"
 
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"
@@ -67,7 +69,7 @@
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
 #define WATCH_HISTORY_REFRESH @"PersonalWatchHistoryViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
-#define ADD_NEW_DOWNLOAD_ITEM @"add_new_download_item"
+
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
 #define RELOAD_MENU_ITEM @"reload_menu_item"
 

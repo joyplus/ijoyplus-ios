@@ -447,6 +447,9 @@
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
+		EBC129FE16BA1B5D0041F213 /* DownloadUrlFinder.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC129FD16BA1B5D0041F213 /* DownloadUrlFinder.m */; };
+		EBC12A0916BA46300041F213 /* AFDownloadRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC12A0816BA462F0041F213 /* AFDownloadRequestOperation.m */; };
+		EBC12A0D16BA5F0E0041F213 /* DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC12A0C16BA5F0E0041F213 /* DownloadManager.m */; };
 		EBD5DCF2169FB7C8003CCF64 /* drama_watched.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD5DCF1169FB7C8003CCF64 /* drama_watched.png */; };
 		EBD5DCF6169FCBEA003CCF64 /* drama_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD5DCF5169FCBEA003CCF64 /* drama_disabled@2x.png */; };
 		EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */; };
@@ -1024,6 +1027,12 @@
 		EBBDCE34166C590200C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomColoredAccessory.h; sourceTree = "<group>"; };
 		EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomColoredAccessory.m; sourceTree = "<group>"; };
+		EBC129FC16BA1B5D0041F213 /* DownloadUrlFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadUrlFinder.h; sourceTree = "<group>"; };
+		EBC129FD16BA1B5D0041F213 /* DownloadUrlFinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadUrlFinder.m; sourceTree = "<group>"; };
+		EBC12A0716BA462F0041F213 /* AFDownloadRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFDownloadRequestOperation.h; sourceTree = "<group>"; };
+		EBC12A0816BA462F0041F213 /* AFDownloadRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFDownloadRequestOperation.m; sourceTree = "<group>"; };
+		EBC12A0B16BA5F0E0041F213 /* DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadManager.h; sourceTree = "<group>"; };
+		EBC12A0C16BA5F0E0041F213 /* DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadManager.m; sourceTree = "<group>"; };
 		EBD5DCF1169FB7C8003CCF64 /* drama_watched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_watched.png; sourceTree = "<group>"; };
 		EBD5DCF5169FCBEA003CCF64 /* drama_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_disabled@2x.png"; sourceTree = "<group>"; };
 		EBF3A95E166301F100EBF56D /* DramaDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaDetailViewController.h; sourceTree = "<group>"; };
@@ -1533,6 +1542,12 @@
 				EB6DEAD8165A36E600AF8003 /* CommonHeader.m */,
 				EBBA0D1D169945B100F15C77 /* ActionUtility.h */,
 				EBBA0D1E169945B100F15C77 /* ActionUtility.m */,
+				EBC129FC16BA1B5D0041F213 /* DownloadUrlFinder.h */,
+				EBC129FD16BA1B5D0041F213 /* DownloadUrlFinder.m */,
+				EBC12A0B16BA5F0E0041F213 /* DownloadManager.h */,
+				EBC12A0C16BA5F0E0041F213 /* DownloadManager.m */,
+				EBC12A0716BA462F0041F213 /* AFDownloadRequestOperation.h */,
+				EBC12A0816BA462F0041F213 /* AFDownloadRequestOperation.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -2450,6 +2465,9 @@
 				EBB6775216A78F6A00B864A4 /* VideoWebViewController.m in Sources */,
 				EBB9B8E416AF893200175662 /* GridViewCellDemo.m in Sources */,
 				EBB9B8E516AF893200175662 /* UMGridViewController.m in Sources */,
+				EBC129FE16BA1B5D0041F213 /* DownloadUrlFinder.m in Sources */,
+				EBC12A0916BA46300041F213 /* AFDownloadRequestOperation.m in Sources */,
+				EBC12A0D16BA5F0E0041F213 /* DownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

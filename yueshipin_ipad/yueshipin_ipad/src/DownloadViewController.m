@@ -13,15 +13,15 @@
 #import "SubdownloadViewController.h"
 #import "SQLiteInstanceManager.h"
 #import "MyMediaPlayerViewController.h"
+#import "AFDownloadRequestOperation.h"
 
-@interface DownloadViewController ()<McDownloadDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
+@interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
     UIImageView *topIcon;
     UIImageView *bgImage;
     UIImageView *nodownloadImage;
     
     int leftWidth;
-    NSArray *allItem;
     
     UIButton *editBtn;
     UIButton *doneBtn;;
@@ -43,7 +43,6 @@
 {
     topImage = nil;
     bgImage = nil;
-    allItem = nil;
     _gmGridView = nil;
     
     [super viewDidUnload];
@@ -65,7 +64,7 @@
     } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
         return NO;
     } else {
-        for (int i = 0; i < allItem.count; i++) {
+        for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
             CGPoint pt = [touch locationInView:self.view];
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
             CGPoint ptInbtn = [self.view convertPoint:pt toView:cell];
@@ -119,7 +118,6 @@
         [self.view addSubview:doneBtn];
         
         [self reloadItems];
-        [self startDownloadingThreads];
         GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 610)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
@@ -134,47 +132,10 @@
         _gmGridView.actionDelegate = self;
         _gmGridView.dataSource = self;
         _gmGridView.mainSuperView = self.view;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startDownloadingThreads) name:ADD_NEW_DOWNLOAD_ITEM object:nil];
     }
     return self;
 }
 
-- (void)startDownloadingThread:(NSArray *)downLoaderArray startType:(int)startType
-{
-    for (McDownload *downloader in downLoaderArray) {
-        downloader.delegate = self;
-        if(downloader.status == startType){
-            if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
-                [AppDelegate instance].currentDownloadingNum++;
-                for (int i = 0; i < allItem.count; i++) {
-                    DownloadItem *item = [allItem objectAtIndex:i];
-                    if ([item.itemId isEqualToString:downloader.idNum]) {
-                        item.downloadStatus = @"start";
-                        [item save];
-                        break;
-                    }
-                }
-                downloader.status = 1;
-                [downloader start];
-            }
-        }
-    }
-}
-- (void)startDownloadingThreads
-{
-    allItem = [DownloadItem allObjects];
-    if (allItem.count > 0) {
-        [editBtn setHidden:NO];
-        [nodownloadImage setHidden:YES];
-    } else {
-        [editBtn setHidden:YES];
-        [nodownloadImage setHidden:NO];
-    }
-    NSArray *downLoaderArray = [[AppDelegate instance] getDownloaderQueue];
-    [self startDownloadingThread:downLoaderArray startType:1]; // start
-    [self startDownloadingThread:downLoaderArray startType:3]; // waiting
-}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -185,17 +146,17 @@
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     _gmGridView.editing = NO;
-    if (allItem.count > 0) {
+    if ([AppDelegate instance].downloadItems.count > 0) {
         [editBtn setHidden:NO];
         [nodownloadImage setHidden:YES];
     }
     [self reloadItems];
+    [AppDelegate instance].downloadManager.delegate = self;
 }
 
 - (void)reloadItems
 {
-    allItem = [DownloadItem allObjects];
-    if (allItem.count == 0) {
+    if ([AppDelegate instance].downloadItems.count == 0) {
         [editBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
     } else {
@@ -205,115 +166,92 @@
     [_gmGridView reloadData];
 }
 
-//下载失败
-- (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
+- (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
-    NSLog(@"下载失败 %@", error);
-    aDownload.status = 4;
     [AppDelegate instance].currentDownloadingNum--;
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
     }
-    for (int i = 0; i < allItem.count; i++) {
-        DownloadItem *item = [allItem objectAtIndex:i];
-        if ([item.itemId isEqualToString:aDownload.idNum]) {
-            DownloadItem *item = [allItem objectAtIndex:i];
-            if(error == nil){
-                item.downloadStatus = @"error938";
-            } else {
-                item.downloadStatus = @"error";
-            }
-            [item save];
-        }
-    }
-    [self startDownloadingThreads];
-    [self reloadItems];
-}
-//下载结束
-- (void)downloadFinished:(McDownload *)aDownload
-{
-    NSLog(@"下载完成");
-    aDownload.status = 2;
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
-    for (int i = 0; i < allItem.count; i++) {
-        DownloadItem *item = [allItem objectAtIndex:i];
-        if ([item.itemId isEqualToString:aDownload.idNum]) {
-            item.percentage = 100;
-            item.downloadStatus = @"done";
-            [item save];
-        }
-    }
-    [self startDownloadingThreads];
-    [self reloadItems];
 }
 
-//下载开始(responseHeaders为服务器返回的下载文件的信息)
-- (void)downloadBegin:(McDownload *)aDownload didReceiveResponseHeaders:(NSURLResponse *)responseHeaders
+- (void)downloadSuccess:(NSString *)operationId
 {
-    NSLog(@"下载开始");
-}
-//更新下载的进度
-- (void)downloadProgressChange:(McDownload *)aDownload progress:(double)newProgress
-{
-    for (int i = 0; i < allItem.count; i++) {
-        DownloadItem *item = [allItem objectAtIndex:i];
-        if ([item.itemId isEqualToString:aDownload.idNum]) {
-            item.downloadStatus = @"start";
-            item.percentage = (int)(newProgress * 100);
+    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+            [AppDelegate instance].currentDownloadingNum--;
+            if([AppDelegate instance].currentDownloadingNum < 0){
+                [AppDelegate instance].currentDownloadingNum = 0;
+            }
+            item.downloadStatus = @"done";
+            item.percentage = 100;
             [item save];
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
-            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:aDownload.idNum.intValue + 20000000];
+            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:operationId.intValue + 20000000];
             if(progressView != nil){
-                progressView.progress = newProgress;
-                UILabel *progressLabel = (UILabel *)[cell viewWithTag:aDownload.idNum.intValue + 10000000];
-                progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", (int)(newProgress*100)];
+                [progressView removeFromSuperview];
+                UILabel *progressLabel = (UILabel *)[cell viewWithTag:operationId.intValue + 10000000];
+                progressLabel.text = [NSString stringWithFormat:@"下载完成"];
             }
+            [[AppDelegate instance].downloadManager startDownloadingThreads];
             break;
         }
     }
 }
 
-- (void)stopDownloading:(NSInteger)index
+- (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    if(index >= allItem.count){
+    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+            if (progress * 100 - item.percentage > 5) {
+                NSLog(@"percent = %f", progress);
+                item.percentage = (int)(progress*100);
+                [item save];
+            }
+            GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
+            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:operationId.intValue + 20000000];
+            if(progressView != nil){
+                progressView.progress = progress;
+                UILabel *progressLabel = (UILabel *)[cell viewWithTag:operationId.intValue + 10000000];
+                progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", (int)(progress*100)];
+            }
+            break;
+            
+        }
+    }
+}
+
+- (void)movieImageClicked:(NSInteger)index
+{
+    if(index >= [AppDelegate instance].downloadItems.count){
         return;
     }
     GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:index];
-    DownloadItem *item = [allItem objectAtIndex:index];
-    NSArray *downloaderArray = [[AppDelegate instance] getDownloaderQueue];
-    for (McDownload *tempdownloder in downloaderArray) {
-        if([tempdownloder.idNum isEqualToString:item.itemId]){
-            UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.itemId.intValue + 10000000];
-            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.itemId.intValue + 20000000];
-            item.percentage = (int)(progressView.progress*100);
-            if(tempdownloder.status != 0){
-                progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
-                item.downloadStatus = @"stop";
-                [item save];
-                [AppDelegate instance].currentDownloadingNum--;
-                if([AppDelegate instance].currentDownloadingNum < 0){
-                    [AppDelegate instance].currentDownloadingNum = 0;
-                }
-                tempdownloder.status = 0;
-                [tempdownloder stop];
-            } else {
-                progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
-                item.downloadStatus = @"waiting";
-                [item save];
-                tempdownloder.status = 3;
-            }
-            break;
+    DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:index];
+    UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.itemId.intValue + 10000000];
+    UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.itemId.intValue + 20000000];
+    item.percentage = (int)(progressView.progress*100);
+    if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]){
+        [[AppDelegate instance].downloadManager stopDownloading];
+        progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
+        item.downloadStatus = @"stop";
+        [item save];
+        [AppDelegate instance].currentDownloadingNum--;
+        if([AppDelegate instance].currentDownloadingNum < 0){
+            [AppDelegate instance].currentDownloadingNum = 0;
         }
+    } else if([item.downloadStatus isEqualToString:@"stop"]){
+        progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
+        item.downloadStatus = @"waiting";
+        [item save];
     }
-    [self startDownloadingThreads];
+    [[AppDelegate instance].downloadManager startDownloadingThreads];
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return fmax([allItem count], 9);
+    return fmax([[AppDelegate instance].downloadItems count], 9);
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
@@ -323,7 +261,7 @@
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
-    if(index >= allItem.count){
+    if(index >= [AppDelegate instance].downloadItems.count){
         return nil;
     }
     CGSize size = [self sizeForItemsInGMGridView:gridView];
@@ -337,7 +275,7 @@
         view.backgroundColor = [UIColor clearColor];
         cell.contentView = view;
     }
-    DownloadItem *item = [allItem objectAtIndex:index];
+    DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:index];
     
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -370,10 +308,8 @@
             progressLabel.text = @"下载完成";
         } else if([item.downloadStatus isEqualToString:@"waiting"]){
             progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
-        } else if([item.downloadStatus isEqualToString:@"error938"]){
+        } else if([item.downloadStatus isEqualToString:@"error"]){
             progressLabel.text = @"下载片源失效";
-        } else {
-            progressLabel.text = @"下载失败";
         }
         
         progressLabel.textAlignment = NSTextAlignmentCenter;
@@ -382,7 +318,7 @@
         [cell.contentView addSubview:progressLabel];
         
         if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
-            UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(3, 125, 98, 5)];
+            UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(5, 125, 94, 5)];
             progressView.progress = item.percentage/100.0;
             progressView.tag = item.itemId.intValue + 20000000;
             [cell.contentView addSubview:progressView];
@@ -405,50 +341,57 @@
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
-    DownloadItem *item = [allItem objectAtIndex:index];
-    
-    [[AppDelegate instance] deleteDownloaderInQueue:item];
-    
+    DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:index];
+    [[AppDelegate instance].downloadItems removeObject:item];
     [item deleteObject];
+    if ([item.downloadStatus isEqualToString:@"start"]) {
+        [[AppDelegate instance].downloadManager stopDownloading];
+        [AppDelegate instance].currentDownloadingNum--;
+        if([AppDelegate instance].currentDownloadingNum < 0){
+            [AppDelegate instance].currentDownloadingNum = 0;
+        }
+    }
     
     NSString *extension = @"mp4";
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
     NSEnumerator *e = [contents objectEnumerator];
     NSString *filename;
     while ((filename = [e nextObject])) {
         if(item.type == 1){
             if ([filename hasPrefix:[NSString stringWithFormat:@"%@.%@", item.itemId, extension]]) {
-                [[AppDelegate instance] deleteDownloaderInQueue:item];
                 [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
             }
         } else {
             if ([filename hasPrefix:[NSString stringWithFormat:@"%@_", item.itemId]]) {
-                [[AppDelegate instance] deleteDownloaderInQueue:item];
                 [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
             }
         }
     }
     
-    if ([item.downloadStatus isEqualToString:@"start"]) {
-        [AppDelegate instance].currentDownloadingNum--;
-        if([AppDelegate instance].currentDownloadingNum < 0){
-            [AppDelegate instance].currentDownloadingNum = 0;
+    NSMutableArray *tempsubitems = [[NSMutableArray alloc]initWithCapacity:10];
+    for (SubdownloadItem *subitem in [AppDelegate instance].subdownloadItems) {
+        if ([subitem.itemId isEqualToString:item.itemId]) {
+            [tempsubitems addObject:subitem];
+            [subitem deleteObject];
         }
     }
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", item.itemId];
-    NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
-    for (SubdownloadItem *subitem in downloadingItems) {
-        [subitem deleteObject];
-        [[AppDelegate instance] deleteDownloaderInQueue: subitem];
+    [[AppDelegate instance].subdownloadItems removeObjectsInArray:tempsubitems];
+    for (SubdownloadItem *subitem in tempsubitems) {
+        if ([subitem.downloadStatus isEqualToString:@"start"]) {
+            [[AppDelegate instance].downloadManager stopDownloading];
+            [AppDelegate instance].currentDownloadingNum--;
+            if([AppDelegate instance].currentDownloadingNum < 0){
+                [AppDelegate instance].currentDownloadingNum = 0;
+            }
+        }
     }
+    
     item = nil;
-    allItem = [DownloadItem allObjects];
-    if (allItem.count > 0) {
-        [self startDownloadingThreads];
+    if ([AppDelegate instance].downloadItems.count > 0) {
+        [[AppDelegate instance].downloadManager startDownloadingThreads];
     } else {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
@@ -459,8 +402,8 @@
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     [self closeMenu];
-    if(position < allItem.count){
-        DownloadItem *item = [allItem objectAtIndex:position];
+    if(position < [AppDelegate instance].downloadItems.count){
+        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
             NSString *extension = @"mp4";
             NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -492,8 +435,8 @@
             [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
         } else {
             if(item.type == 1){
-                if (![item.downloadStatus hasPrefix:@"error938"]) {
-                    [self stopDownloading:position];
+                if (![item.downloadStatus hasPrefix:@"error"]) {
+                    [self movieImageClicked:position];
                 }
                 [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
             } else {

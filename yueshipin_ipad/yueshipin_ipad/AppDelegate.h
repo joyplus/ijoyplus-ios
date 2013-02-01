@@ -11,10 +11,11 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "McDownload.h"
+#import "DownloadManager.h"
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, McDownloadDelegate, UIAlertViewDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -33,9 +34,10 @@
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
 
-- (NSMutableArray *)getDownloaderQueue;
-- (void)addToDownloaderArray:(DownloadItem *)item;
-- (void)deleteDownloaderInQueue:(DownloadItem *)item;
+@property (strong, nonatomic) DownloadManager *downloadManager;
+@property (strong, nonatomic) NSMutableArray *downloadItems;
+@property (strong, nonatomic) NSMutableArray *subdownloadItems;
+
 + (AppDelegate *) instance;
 
 - (BOOL)isParseReachable;
