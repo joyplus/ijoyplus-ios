@@ -99,11 +99,10 @@
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
-    downloadingItem.downloadStatus = @"error";
-    [downloadingItem save];
-    [downloadingOperation pause];
-    [downloadingOperation cancel];
-    [self startDownloadingThreads];
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId

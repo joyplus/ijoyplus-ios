@@ -738,7 +738,7 @@ static NSString *const iRateMacAppStoreURLFormat = @"macappstore://itunes.apple.
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:self.messageTitle
                                                         message:self.message
                                                        delegate:self
-                                              cancelButtonTitle:self.cancelButtonLabel
+                                              cancelButtonTitle:nil
                                               otherButtonTitles:self.rateButtonLabel, nil];
         if (self.remindButtonLabel)
         {

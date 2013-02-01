@@ -235,7 +235,6 @@
         [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
-
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
