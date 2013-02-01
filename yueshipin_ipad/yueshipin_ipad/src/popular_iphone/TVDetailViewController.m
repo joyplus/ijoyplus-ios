@@ -7,21 +7,13 @@
 //
 
 #import "TVDetailViewController.h"
-#import "UIImageView+WebCache.h"
-#import "AFServiceAPIClient.h"
-#import "ServiceConstants.h"
-#import "CacheUtility.h"
-#import "CMConstants.h"
-#import "MediaPlayerViewController.h"
 #import "AppDelegate.h"
-#import "ProgramViewController.h"
-#import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
+#import "CommonHeader.h"
 #import "CacheUtility.h"
-#import "AppDelegate.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
 
@@ -31,7 +23,6 @@
 
 @synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
-@synthesize episodesArr = episodesArr_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
 @synthesize scrollView = scrollView_;
@@ -70,7 +61,7 @@
     [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
-    
+    self.navigationItem.hidesBackButton = YES;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
@@ -84,7 +75,13 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
     
-    self.title = [self.infoDic objectForKey:@"prod_name"];
+    NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    self.title = titleStr;
+    name_ = self.title;
+    type_ = 2;
     
     currentPage_ = 1;
     isDownLoad_ = NO;
@@ -123,6 +120,10 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
 
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
@@ -165,7 +166,7 @@
         videoInfo_ = (NSDictionary *)[result objectForKey:@"tv"];
         //episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
-        NSLog(@"episodes count is %d",[episodesArr_ count]);
+        NSLog(@"161 count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
@@ -195,32 +196,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
     return (NSComparisonResult)NSOrderedSame;
 };
 
-//- (void)loadComments
-//{
-//    commentArray_ = [NSMutableArray arrayWithCapacity:10];
-//    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-//    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//        NSString *responseCode = [result objectForKey:@"res_code"];
-//        if(responseCode == nil){
-//            NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
-//            [[CacheUtility sharedCache] putInCache:key result:result];
-//            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-//            [commentArray_ removeAllObjects];
-//            if(tempArray != nil && tempArray.count > 0){
-//                [commentArray_ addObjectsFromArray:tempArray];
-//            }
-//            [self.tableView reloadData];
-//        }
-//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-//        
-//    }];
-//}
 
 -(void)loadComments{
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
     }
+    self.prodId = itemId;
     int pageNum = ceil(commentArray_.count / 10.0)+1;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id",[NSNumber numberWithInt:pageNum], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramComments parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -397,7 +379,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:downLoad];
+                //[cell addSubview:downLoad];
                 
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(15, 155, 96, 28);
@@ -641,14 +623,14 @@ NSComparator cmptr = ^(id obj1, id obj2){
         if(videoUrl == nil){
             [self showPlayWebPage];
         } else {
-            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = videoUrl;
-            viewController.type = 2;
-            viewController.name = [videoInfo_ objectForKey:@"name"];
-            viewController.prodId = [videoInfo_ objectForKey:@"id"];
-            viewController.currentNum = number;
-            viewController.subname = [NSString stringWithFormat:@"%d", number];
-            [self presentViewController:viewController animated:YES completion:nil];
+//            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+//            viewController.videoUrl = videoUrl;
+//            viewController.type = 2;
+//            viewController.name = [videoInfo_ objectForKey:@"name"];
+//            viewController.prodId = [videoInfo_ objectForKey:@"id"];
+//            viewController.currentNum = number;
+//            viewController.subname = [NSString stringWithFormat:@"%d", number];
+//            [self presentViewController:viewController animated:YES completion:nil];
         }
     }else {
         [self showPlayWebPage];
@@ -657,17 +639,20 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 
 -(void)playNext:(id)sender{
+     
     int total = [episodesArr_ count];
      NSNumber *num = ((NSNotification *)sender).object;
     int nowN = [num intValue];
     nowN++;
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:nowN]];
     if (total-1 < nowN) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"亲，没有更多的剧集了。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"亲，没有更多的剧集了。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+//        [alert show];
         return;
     }
     else{
-      [self Play:nowN];
+        [self playVideo:nowN];
+        [self.tableView reloadData];
     }
    
 }
@@ -675,7 +660,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            [self Play:1];
+            //[self Play:1];
+            [self playVideo:0];
             break;
         }
         case 10002:{
@@ -747,7 +733,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         case 10005:{
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey,@"app_key",[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 //                NSString *responseCode = [result objectForKey:@"res_code"];
 //                if([responseCode isEqualToString:kSuccessResCode]){
@@ -815,13 +801,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (moreBtn_.selected) {
         summaryBg_.frame = CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
         summaryLabel_.frame = CGRectMake(28, 23, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
-       //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
-        
+      
     }
     else{
         summaryBg_.frame = CGRectMake(14, 20, 292, 90);
         summaryLabel_.frame = CGRectMake(28, 20, 264,90);
-       // moreBtn_.frame = CGRectMake(288, 90, 18, 14);
     }
     [self loadTable];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
@@ -831,17 +815,15 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)showPlayWebPage
 {
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSDictionary *episode = [episodesArr_ objectAtIndex:0];
-    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
-    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [videoInfo_ objectForKey:@"name"];
-    viewController.type = 1;
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-    [self presentViewController:pro animated:YES completion:nil];
-    //[self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
-    
+//    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+//    NSDictionary *episode = [episodesArr_ objectAtIndex:0];
+//    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
+//    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
+//    viewController.title = [videoInfo_ objectForKey:@"name"];
+//    viewController.type = 1;
+//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
+//    [self presentViewController:pro animated:YES completion:nil];
 }
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
@@ -886,10 +868,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
     return videoUrl;
 }
 
--(NSString *)getDownloadUrl{
+-(BOOL)isDownloadUrlEnable:(int)num{
     NSString *downloadUrl = nil;
     
-    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
+    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
             if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
@@ -901,7 +883,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
             downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
         }
     }
-    return downloadUrl;
+    if (downloadUrl == nil) {
+        return NO;
+    }
+    else{
+        return YES;
+    }
     
 }
 - (NSString *)parseDownloadUrl:(NSDictionary *)tempVideo
@@ -909,14 +896,14 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSString *videoUrl;
     NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
     for(NSDictionary *url in urlArray){
-        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
             break;
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -924,7 +911,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -932,7 +919,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -943,7 +930,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if(videoUrl == nil){
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
-                if (![[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                if (![[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
                 }
                 
@@ -1218,19 +1205,26 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button addTarget:self action:@selector(download:) forControlEvents:UIControlEventTouchUpInside];
         [button setBackgroundImage:[UIImage imageNamed:@"undownload.png"] forState:UIControlStateNormal];
-        [button setBackgroundImage:[UIImage imageNamed:@"downloaded_2.png"] forState:UIControlStateDisabled];
+        [button setBackgroundImage:[UIImage imageNamed:@"downloaded_2.png"] forState:UIControlStateSelected];
         [button setBackgroundImage:[UIImage imageNamed:@"downloaded.png"] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageNamed:@"download_disable.png"] forState:UIControlStateDisabled];
         
         for (NSString *str in EpisodeIdArr) {
             if ([str  intValue] == (i+1)) {
-                button.enabled = NO;
+                button.selected = YES;
                 [button setTitleEdgeInsets:UIEdgeInsetsMake(3, 20, 13, 20)];
                 break;
             }
-        }        
+        }
+        
+        if ( ![self isDownloadUrlEnable:i]) {
+            button.enabled = NO;
+        }
+        
         [scrollViewDownDL_ addSubview:button];
     }
     [bgView addSubview:scrollViewDownDL_];
@@ -1431,13 +1425,15 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
-    
-    [self Play:playNum-1];
-   // [self selectToDownLoad:playNum-1];
-
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:playNum-1]];
+    [self playVideo:playNum-1];
+    [self.tableView reloadData];
 }
 -(void)download:(UIButton *)btn{
-    btn.enabled = NO;
+    if (btn.selected) {
+        return;
+    }
+    btn.selected = YES;
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(3, 20, 13, 20)];
     int downloadNum = btn.tag;
     [self selectToDownLoad:downloadNum-1];

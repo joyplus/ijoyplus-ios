@@ -51,12 +51,7 @@
     titleIMG.frame = CGRectMake(15, 12, 77, 17);
     [self.view addSubview:titleIMG];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 29, 320, kCurrentWindowHeight-73) style:UITableViewStylePlain];
-    tableList_.dataSource = self;
-    tableList_.delegate = self;
-    tableList_.backgroundColor = [UIColor clearColor];
-    tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.view addSubview:tableList_];
+    
     
     EpisodeIdArr_ = [NSMutableArray arrayWithCapacity:5];
     for (SubdownloadItem *item in [self readDataFromDB]) {
@@ -64,6 +59,17 @@
         [EpisodeIdArr_ addObject:episodeId];
     }
     
+    UIImageView *tableBg = [[UIImageView alloc] initWithFrame:CGRectMake(5, 29, 310,kCurrentWindowHeight-73)];
+    UIImage *bgImg = [UIImage imageNamed:@"list_bg.png"];
+    tableBg.image = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
+    [self.view addSubview:tableBg];
+    
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 34, 320, kCurrentWindowHeight-78) style:UITableViewStylePlain];
+    tableList_.dataSource = self;
+    tableList_.delegate = self;
+    tableList_.backgroundColor = [UIColor clearColor];
+    tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:tableList_];
 }
 -(void)back:(id)sender{
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -85,12 +91,11 @@
     for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
-     NSDictionary *itemDic = [listArr_ objectAtIndex:indexPath.row];
+    NSDictionary *itemDic = [listArr_ objectAtIndex:indexPath.row];
     NSString *cellTitle = [NSString stringWithFormat:@"%@", [itemDic objectForKey:@"name"]];
-    UIImageView *cellBgIMG = [[UIImageView alloc] initWithFrame:CGRectMake(2, 0,316 , cell.frame.size.height)];
-    
+
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(10, 5, 300, 35);
+    btn.frame = CGRectMake(16, 2.5, 290, 35);
     btn.tag = indexPath.row;
     BOOL isDownload = NO;
     for (NSString *str in EpisodeIdArr_) {
@@ -102,10 +107,14 @@
     if (isDownload) {
         btn.selected = YES;
     }
+    if (![self isDownloadUrlEnable:indexPath.row]) {
+        btn.enabled = NO;
+    }
     [btn setBackgroundImage:[UIImage imageNamed:@"show_undownload.png"] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"show_download_pressed.png"] forState:UIControlStateHighlighted];
     [btn setBackgroundImage:[UIImage imageNamed:@"show_download.png"] forState:UIControlStateSelected];
-    btn.adjustsImageWhenHighlighted = NO;
+    [btn setBackgroundImage:[UIImage imageNamed:@"show_disable.png"] forState:UIControlStateDisabled];
+     btn.adjustsImageWhenHighlighted = NO;
     [btn setTitle:cellTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -113,30 +122,6 @@
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];
     [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
-
-    
-    int num = [listArr_ count];
-    if (num == 1) {
-        cellBgIMG.image = [UIImage imageNamed:@"list_bg_centre.png"];
-    }
-    else{
-        if (indexPath.row == 0) {
-              btn.frame = CGRectMake(10, 5, 300, 35);
-             cellBgIMG.frame = CGRectMake(2, 0, 316, 42.5);
-             cellBgIMG.image = [UIImage imageNamed:@"list_bg_top.png"];
-        }
-        else if (indexPath.row == num-1){
-            btn.frame = CGRectMake(10, 2.5, 300, 35);
-            cellBgIMG.frame = CGRectMake(2, 0, 316, 42.5);
-            cellBgIMG.image = [UIImage imageNamed:@"list_bg_bottom.png"];
-        }
-        else{
-              btn.frame = CGRectMake(10, 2.5, 300, 35);
-             cellBgIMG.frame = CGRectMake(2, 0, 316, 40);
-             cellBgIMG.image = [UIImage imageNamed:@"list_bg_centre.png"];
-        }
-    }
-    [cell.contentView addSubview:cellBgIMG];
     
     [cell.contentView addSubview:btn];
  
@@ -145,21 +130,22 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    int num = [listArr_ count];
-    if (num == 1) {
-       return 45;
-    }
-    else{
-        if (indexPath.row == 0) {
-            return 42.5;
-        }
-        else if (indexPath.row == num-1){
-            return 42.5;
-        }
-        else{
-            return 40;
-        }
-    }
+//    int num = [listArr_ count];
+//    if (num == 1) {
+//       return 45;
+//    }
+//    else{
+//        if (indexPath.row == 0) {
+//            return 42.5;
+//        }
+//        else if (indexPath.row == num-1){
+//            return 42.5;
+//        }
+//        else{
+//            return 40;
+//        }
+//    }
+    return 40;
 
 }
 
@@ -205,10 +191,10 @@
         NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,videoUrl,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];    }
 }
--(NSString *)getDownloadUrl{
+
+-(BOOL)isDownloadUrlEnable:(int)num{
     NSString *downloadUrl = nil;
-    
-    NSArray *videoUrlArray = [[listArr_ objectAtIndex:0] objectForKey:@"down_urls"];
+    NSArray *videoUrlArray = [[listArr_ objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
             if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
@@ -220,7 +206,12 @@
             downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
         }
     }
-    return downloadUrl;
+    if (downloadUrl == nil) {
+        return NO;
+    }
+    else{
+        return YES;
+    }
     
 }
 
@@ -229,14 +220,14 @@
     NSString *videoUrl;
     NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
     for(NSDictionary *url in urlArray){
-        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
             break;
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -244,7 +235,7 @@
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -252,7 +243,7 @@
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -263,7 +254,7 @@
     if(videoUrl == nil){
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
-                if (![[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                if (![[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
                 }
                 

@@ -34,7 +34,6 @@
 
 @interface HomeViewController (){
     UIView *backgroundView;
-    UIButton *menuBtn;
     UIImageView *sloganImageView;
     UIButton *searchBtn;
     UIView *contentView;
@@ -97,12 +96,6 @@
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [backgroundView addSubview:bgImage];
         
-		menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [menuBtn setBackgroundColor:[UIColor clearColor]];
-        menuBtn.frame = CGRectMake(0, 28, 60, 60);
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
-        [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [backgroundView addSubview:menuBtn];
         
         sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];
@@ -152,6 +145,7 @@
 {
     [super viewDidAppear:animated];
     [self updateDownloadNum:nil];
+    [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro"]];
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
@@ -279,10 +273,13 @@
         [self retrieveTopsListData];
         [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     } else if(videoType == 1){
+        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveMovieTopsData];
     } else if(videoType == 2){
+        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveTvTopsData];
     } else if(videoType == 3){
+        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveShowTopsData];
     }
     _reloading = YES;
@@ -577,6 +574,7 @@
 - (void)listBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -589,6 +587,7 @@
 - (void)movieBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -601,6 +600,7 @@
 - (void)dramaBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -613,6 +613,7 @@
 - (void)showBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];

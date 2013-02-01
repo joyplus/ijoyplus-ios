@@ -7,13 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DownloadItem.h"
 
 @protocol McDownloadDelegate;
 @interface McDownload : NSObject 
 {    
 	__unsafe_unretained id<McDownloadDelegate> delegate;      
-    BOOL       overwrite;                        
-	NSURL      *url;
+    BOOL       overwrite;
 	NSString   *fileName;
     NSString   *filePath;
     unsigned long long fileSize;
@@ -36,7 +36,8 @@
 /*
  下载的地址,当下载地址为nil，下载失败
  */
-@property (nonatomic, strong) NSURL *url;
+@property (atomic, strong) NSURL *url;
+@property (nonatomic, strong) DownloadItem *downloadItem;
 /*
  下载文件的名字名，默认为下载原文件名
  */

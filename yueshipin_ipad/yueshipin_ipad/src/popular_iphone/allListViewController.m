@@ -19,6 +19,7 @@
 #import "UIUtility.h"
 #import "UIImage+Scale.h"
 #import "IphoneDownloadViewController.h"
+#import "DownLoadManager.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 @interface allListViewController ()
@@ -30,6 +31,7 @@
 @synthesize tableList = tableList_;
 @synthesize pullToRefreshManager = pullToRefreshManager_;
 @synthesize refreshHeaderView = refreshHeaderView_;
+@synthesize customNavigationButtonView = customNavigationButtonView_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -114,17 +116,27 @@
     [leftButton setImage:[UIImage imageNamed:@"top_search_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
-    
+    self.navigationItem.hidesBackButton = YES;
     
 
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 50, 44);
+    rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"downloadicon.png"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
+    [rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateNormal];
+    //[rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
+    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
+    
+//    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
+//    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
+//    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
+//    [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+//    [self setWarningNum];
+//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+//    self.navigationItem.rightBarButtonItem = rightButtonItem;
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-88) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
@@ -145,8 +157,12 @@
     }
     [refreshHeaderView_ refreshLastUpdatedDate];
     
+    
 }
+-(void)setWarningNum{
+    customNavigationButtonView_.warningNumber = [DownLoadManager downloadTaskCount];
 
+}
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
@@ -155,13 +171,13 @@
 }
 
 -(void)setting:(id)sender{
-//    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
-//    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
     
-    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
-    downloadViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:downloadViewController animated:YES];
+//    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
+//    downloadViewController.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:downloadViewController animated:YES];
 }
 
 

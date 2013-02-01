@@ -299,7 +299,7 @@
         if(cell == nil){
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:noRecordCellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(140, 0, 300, 40)];
+            UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(140, 40, 300, 40)];
             [label setBackgroundColor:[UIColor clearColor]];
             label.textColor = CMConstants.grayColor;
             label.font = [UIFont systemFontOfSize: 16];

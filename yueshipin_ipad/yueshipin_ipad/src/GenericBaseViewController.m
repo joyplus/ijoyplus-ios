@@ -54,6 +54,12 @@
     swipeCloseMenuRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(closeMenu)];
     swipeCloseMenuRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
     swipeCloseMenuRecognizer.numberOfTouchesRequired=1;
+    
+    menuBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    menuBtn.frame = CGRectMake(0, 28, 60, 60);
+    [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
+    [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)viewDidUnload
@@ -64,6 +70,7 @@
     openMenuRecognizer = nil;
     closeMenuRecognizer = nil;
     swipeCloseMenuRecognizer = nil;
+    menuBtn = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,6 +82,7 @@
 - (void)closeMenu
 {
     [AppDelegate instance].closed = YES;
+    [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:YES isStackStartView:YES];
 }
 
@@ -82,7 +90,13 @@
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeAllSubviewInSlider];
     [AppDelegate instance].closed = ![AppDelegate instance].closed;
+    if ([AppDelegate instance].closed) {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    } else {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
+    }
     [[AppDelegate instance].rootViewController.stackScrollViewController menuToggle:[AppDelegate instance].closed isStackStartView:YES];
+    [[AppDelegate instance].rootViewController showIntroModalView:DOWNLOAD_SETTING_INTRO introImage:[UIImage imageNamed:@"download_setting_intro"]];
 }
 
 - (void)closeBtnClicked

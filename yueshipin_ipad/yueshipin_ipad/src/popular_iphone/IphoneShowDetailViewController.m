@@ -12,9 +12,7 @@
 #import "ServiceConstants.h"
 #import "CacheUtility.h"
 #import "CMConstants.h"
-#import "MediaPlayerViewController.h"
 #import "AppDelegate.h"
-#import "ProgramViewController.h"
 #import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
@@ -28,7 +26,6 @@
 
 @synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
-@synthesize episodesArr = episodesArr_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
 @synthesize scrollView = scrollView_;
@@ -62,6 +59,7 @@
     [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
+    self.navigationItem.hidesBackButton = YES;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
@@ -75,7 +73,13 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
 
-    self.title = [self.infoDic objectForKey:@"prod_name"];
+    NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    self.title = titleStr;
+    type_ = 3;
+    name_ = self.title;
     
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
@@ -108,6 +112,11 @@
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 }
 
+- (void)viewWillAppear:(BOOL)animated{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
+
 -(void)back:(id)sender{
     
     [self.navigationController popViewControllerAnimated:YES];
@@ -138,6 +147,7 @@
     if (proId == nil) {
         proId =  [self.infoDic objectForKey:@"content_id"];
     }
+    prodId_ = proId;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
@@ -343,7 +353,7 @@
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:downLoad];
+                //[cell addSubview:downLoad];
                 
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(15, 155, 96, 28);
@@ -489,11 +499,11 @@
         if(videoUrl == nil){
             [self showPlayWebPage:number];
         } else {
-            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = videoUrl;
-            viewController.type = 1;
-            viewController.name = [videoInfo_ objectForKey:@"name"];
-            [self presentViewController:viewController animated:YES completion:nil];
+//            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
+//            viewController.videoUrl = videoUrl;
+//            viewController.type = 1;
+//            viewController.name = [videoInfo_ objectForKey:@"name"];
+//            [self presentViewController:viewController animated:YES completion:nil];
         }
     }else {
         [self showPlayWebPage:number];
@@ -503,7 +513,8 @@
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            [self Play:1];
+            //[self Play:0];
+            [self playVideo:0];
             break;
         }
         case 10002:{
@@ -565,7 +576,7 @@
         }
         case 10005:{
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey,@"app_key",[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 //                NSString *responseCode = [result objectForKey:@"res_code"];
 //                if([responseCode isEqualToString:kSuccessResCode]){
@@ -609,17 +620,15 @@
 
 - (void)showPlayWebPage:(int)num
 {
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSDictionary *episode = [episodesArr_ objectAtIndex:num];
-    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
-    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [videoInfo_ objectForKey:@"name"];
-    viewController.type = 1;
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-    [self presentViewController:pro animated:YES completion:nil];
-    //[self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
-    
+//    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
+//    NSDictionary *episode = [episodesArr_ objectAtIndex:num];
+//    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
+//    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
+//    viewController.title = [videoInfo_ objectForKey:@"name"];
+//    viewController.type = 1;
+//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
+//    [self presentViewController:pro animated:YES completion:nil];
 }
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
@@ -779,9 +788,8 @@
 }
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
-    
-    [self Play:playNum-1];
-    
+    //[self Play:playNum-1];
+    [self playVideo:playNum-1];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{

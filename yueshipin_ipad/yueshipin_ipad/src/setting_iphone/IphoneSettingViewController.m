@@ -69,8 +69,8 @@
     [view1 addSubview:sinaWeibo];
     weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 18, 120, 22)];
     weiboName_.backgroundColor = [UIColor clearColor];
-    weiboName_.textColor = [UIColor blueColor];
-    weiboName_.font = [UIFont systemFontOfSize:13];
+    weiboName_.textColor =  [UIColor colorWithRed:54/255.0 green:98/255.0 blue:156/255.0 alpha:1];
+    weiboName_.font = [UIFont boldSystemFontOfSize:13];
     [view1 addSubview:weiboName_];
     sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 16, 50, 22)];
     [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];

@@ -8,8 +8,6 @@
 
 #import "ShowDetailViewController.h"
 #import "CommonHeader.h"
-#import "ProgramViewController.h"
-#import "MediaPlayerViewController.h"
 #import "CommentListViewController.h"
 
 #define DEFAULT_POSOTION_Y 585
@@ -96,6 +94,8 @@
 {
     [super viewDidLoad];
     
+    self.type = 3;
+    
     self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
     
@@ -112,7 +112,7 @@
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateHighlighted];
+    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
     [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.playRoundBtn.center = self.filmImage.center;
@@ -201,7 +201,7 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_WIDTH + 413, self.introContentTextView.frame.origin.y + 80, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 413, self.introContentTextView.frame.origin.y + 90, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
     
@@ -214,11 +214,27 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }
     if(video == nil){
         [self retrieveData];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if ([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch] && self.downloadBtn.enabled) {
+        NSString *playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
+        if (![playWithDownload isEqualToString:@"1"]) {
+            [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download_2"]];
+        }
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
+    } else {
+        [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO introImage:[UIImage imageNamed:@"play_intro"]];
     }
 }
 
@@ -232,7 +248,7 @@
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
                 self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:introContentHeight - 100];
             } completion:^(BOOL finished) {
             }];
@@ -241,7 +257,7 @@
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
                 self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 80, introBtn.frame.size.width, introBtn.frame.size.height);
+                introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
             } completion:^(BOOL finished) {
                 
@@ -372,7 +388,7 @@
             btnAdded = YES;
             if(episodeArray.count > 5){
                 showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 5 * 32);
-                showListView.contentSize = showListView.frame.size;
+                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 350, showListView.frame.size.height);
                 
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
@@ -465,12 +481,9 @@
 }
 
 - (void)nameBtnClicked:(UIButton *)btn{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [self playVideo:btn.tag - 1];
+    self.subname = btn.titleLabel.text;
+    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
+    [super playVideo:btn.tag - 1];
 }
 
 - (NSMutableArray *)getEpisodes
@@ -511,8 +524,10 @@
     }
     if(showPageNumber == 0){
         [self.previousShowBtn setEnabled:NO];
+        [self.nextShowBtn setEnabled:YES];
     }
     if(showPageNumber == ceil(episodeArray.count / 5.0)-1){
+        [self.previousShowBtn setEnabled:YES];
         [self.nextShowBtn setEnabled:NO];
     }
 }
@@ -532,9 +547,9 @@
             if(tempArray != nil && tempArray.count > 0){
                 [commentArray addObjectsFromArray:tempArray];
             }
-            if(introContentHeight > 80){
+            if(introContentHeight > 90){
                 if(introExpand){
-                    [self repositElements:introContentHeight - 80];
+                    [self repositElements:introContentHeight - 90];
                 } else {
                     [self repositElements:0];
                 }
@@ -552,100 +567,23 @@
 
 - (void)playVideo
 {
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [self playVideo:0];
-}
-
-- (void)playVideo:(NSInteger)num
-{
-    if(num < 0 || num >= episodeArray.count){
-        return;
-    }
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
-        willPlayIndex = num;
-        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
-                                                          delegate:self
-                                                 cancelButtonTitle:@"取消"
-                                                 otherButtonTitles:@"确定", nil];
-        [alertView show];
-    } else {
-        [self willPlayVideo:num];
-    }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
-    }
-}
-
-- (void)willPlayVideo:(NSInteger)num
-{
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
-        NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-        if([StringUtility stringIsEmpty:url]){
-            url = @"";
-        }
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    } else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
-        [self gotoWebsite:num];
-    } else {
-        [self playVideoInDefault:num];
-    }
-}
-
-- (void)playVideoInDefault:(NSInteger)num
-{
-    NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
+    NSString *title = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId]];
+    int lastNum = 0;
+    if (title) {
+        for (int i = 0; i < episodeArray.count; i++) {
+            UIButton *tempbtn = (UIButton *)[showListView viewWithTag:i+1];
+            if ([tempbtn.titleLabel.text isEqualToString:title]) {
+                lastNum = i;
                 break;
             }
         }
-        if(videoUrl == nil){
-            if (videoUrlArray.count > 0) {
-                videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-            }
-        }
-        if(videoUrl == nil){
-            [self gotoWebsite:num];
-        } else {
-            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-            viewController.videoUrl = videoUrl;
-            viewController.prodId = self.prodId;
-            viewController.type = 3;
-            viewController.name = [video objectForKey:@"name"];
-            viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-        }
-    }else {
-        [self gotoWebsite:num];
+        self.subname = title;
+    } else {
+        UIButton *btn = (UIButton *)[showListView viewWithTag:1];
+        self.subname = btn.titleLabel.text;
+        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
     }
-}
-
-- (void)gotoWebsite:(NSInteger)num
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSArray *urlArray = [[episodeArray objectAtIndex:num] objectForKey:@"video_urls"];
-    NSString *url = [[urlArray objectAtIndex:0] objectForKey:@"url"];
-    if([StringUtility stringIsEmpty:url]){
-        url = @"";
-    }
-    viewController.prodId = self.prodId;
-    viewController.programUrl = url;
-    viewController.title = [video objectForKey:@"name"];
-    viewController.type = 3;
-    viewController.subname = [[episodeArray objectAtIndex:num] objectForKey:@"name"];
-    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+    [super playVideo:lastNum];
 }
 
 - (void)dingBtnClicked:(id)sender
@@ -663,7 +601,7 @@
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
         } else {
-            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"pushed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
@@ -685,7 +623,7 @@
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
         } else {
-            [[AppDelegate instance].rootViewController showFailureModalView:1.5];
+            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
@@ -758,7 +696,7 @@
     subitem.fileName = [NSString stringWithFormat:@"%@_%@%@", self.prodId, subitem.subitemId, @".mp4"];
     [self getDownloadUrls:num];
     if(downloadUrls.count > 0){
-        subitem.url = [downloadUrls objectAtIndex:0];
+        subitem.urlArray = downloadUrls;
         [subitem save];
         [[AppDelegate instance] addToDownloaderArray:subitem];
         [self updateBadgeIcon];

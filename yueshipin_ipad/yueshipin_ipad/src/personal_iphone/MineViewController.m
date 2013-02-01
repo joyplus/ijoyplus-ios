@@ -8,23 +8,13 @@
 
 #import "MineViewController.h"
 #import "RecordListCell.h"
-#import "AFServiceAPIClient.h"
-#import "ServiceConstants.h"
 #import "IphoneSettingViewController.h"
 #import "MoreListViewController.h"
 #import "IphoneMovieDetailViewController.h"
-#import "ContainerUtility.h"
-#import "CMConstants.h"
-#import "UIImageView+WebCache.h"
-#import "CacheUtility.h"
 #import "CreateMyListOneViewController.h"
 #import "CreateMyListTwoViewController.h"
-#import "DateUtility.h"
-#import "MediaPlayerViewController.h"
-#import "ProgramViewController.h"
 #import "UIImage+Scale.h"
 #import "SearchPreViewController.h"
-#import "MBProgressHUD.h"
 #import "ProgramNavigationController.h"
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
@@ -32,8 +22,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SinaWeibo.h"
 #import "AppDelegate.h"
-#import "TimeUtility.h"
-#import "UIImageView+WebCache.h"
+#import "CommonHeader.h"
+#import "MyMediaPlayerViewController.h"
+#import "CustomNavigationViewController.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -78,8 +69,7 @@
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    NSString *test = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey,@"app_key",(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -91,7 +81,7 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
-        if (button2_.selected) {
+        if (!button2_.enabled) {
             [self Selectbutton:button2_];
         }
         [favTableList_ reloadData];
@@ -184,38 +174,37 @@
     
     button1_ = [UIButton buttonWithType:UIButtonTypeCustom];
     button1_.frame = CGRectMake(12, 40, 99, 51);
-    button1_.selected = YES;
     button1_.tag = 100;
     [button1_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
     [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forState:UIControlStateNormal];
     [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"] forState:UIControlStateHighlighted];
-    [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]forState:UIControlStateSelected];
-    button1_.adjustsImageWhenHighlighted = NO;
+    [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]forState:UIControlStateDisabled];
+    button1_.enabled = NO;
+    button1_.adjustsImageWhenDisabled = NO;
 
-    
     button2_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [button2_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forState:UIControlStateNormal];
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"] forState:UIControlStateHighlighted];
-    [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]forState:UIControlStateSelected];
+    [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]forState:UIControlStateDisabled];
     button2_.frame = CGRectMake(111, 40, 99, 51);
     button2_.tag = 101;
-    button2_.adjustsImageWhenHighlighted = NO;
+    button2_.adjustsImageWhenDisabled = NO;
     
     button3_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [button3_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forState:UIControlStateNormal];
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"] forState:UIControlStateHighlighted];
-    [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]forState:UIControlStateSelected];
+    [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]forState:UIControlStateDisabled];
     button3_.frame = CGRectMake(210, 40, 99, 51);
     button3_.tag = 102;
-    button3_.adjustsImageWhenHighlighted = NO;
+    button3_.adjustsImageWhenDisabled = NO;
      
     [self.view addSubview:button1_];
     [self.view addSubview:button2_];
     [self.view addSubview:button3_];
     
-    [self Selectbutton:button1_];
+   [self Selectbutton:button1_];
         
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
     self.bgView.backgroundColor = [UIColor whiteColor];
@@ -305,6 +294,13 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
 }
+
+- (void)viewWillAppear:(BOOL)animated{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
+
+
 -(void)refreshSinaWeibo{
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
@@ -317,7 +313,13 @@
 {
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
     if(cacheResult != nil){
-        //[self parseWatchResultData:cacheResult];
+        @try {
+            [self parseWatchResultData:cacheResult];
+        }
+        @catch (NSException *exception) {
+             NSLog(@"MineViewCintroller line:312 Exception: %@", exception); 
+        }
+        
     }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
@@ -337,7 +339,7 @@
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray_ = (NSArray *)[result objectForKey:@"histories"];
         if(sortedwatchRecordArray_.count > 0){
-            if (button1_.selected) {
+            if (!button1_.enabled) {
                 [self Selectbutton:button1_];
             }
             [recordTableList_ reloadData];
@@ -349,7 +351,7 @@
 
 -(void)recordListReload{
     [self loadRecordData];
-    if (button1_.selected) {
+    if (!button1_.enabled) {
         [self Selectbutton:button1_];
     }
     [recordTableList_ reloadData];
@@ -383,7 +385,7 @@
 
 }
 -(void)seeMore:(id)sender{
-    if (button1_.selected) {
+    if (!button1_.enabled) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         if ([sortedwatchRecordArray_ count]>10) {
             NSMutableArray *temParr = [NSMutableArray arrayWithCapacity:10];
@@ -398,13 +400,13 @@
         moreListViewController.type = RECORD_TYPE;
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
-    else if (button2_.selected) {
+    else if (!button2_.enabled) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         moreListViewController.listArr = favArr_;
         moreListViewController.type = Fav_TYPE;
         [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
-    else if(button3_.selected){
+    else if(!button3_.enabled){
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         moreListViewController.listArr = myListArr_;
          moreListViewController.type = MYLIST_TYPE;
@@ -434,15 +436,15 @@
     [noFav_ removeFromSuperview];
     [noPersonalList_ removeFromSuperview];
     
-    button1_.selected = NO;
-    button2_.selected = NO;
-    button3_.selected = NO;
+    button1_.enabled = YES;
+    button2_.enabled = YES;
+    button3_.enabled = YES;
 
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         //播放纪录
         case 100:{
-            button1_.selected = YES;
+            button1_.enabled = NO;
                 if ([self.sortedwatchRecordArray count] <= 3) {
                     
                     [moreView_ removeFromSuperview];
@@ -467,7 +469,7 @@
         }
         //我的收藏
         case 101:{
-            button2_.selected = YES;
+            button2_.enabled = NO;
             if ([self.favArr count] <= 3) {
                 [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
                 [moreView_ removeFromSuperview];
@@ -492,7 +494,7 @@
         }
         //我的悦单
         case 102:{
-            button3_.selected = YES;
+            button3_.enabled = NO;
             if ([myListArr_ count] <= 3) {
                 if ([myListArr_ count]== 0){
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 44)];
@@ -751,29 +753,34 @@
     }
     return content;
 }
+    
+
+
 
 -(void)continuePlay:(id)sender{
     int num = ((UIButton *)sender).tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
-    if([[item objectForKey:@"prod_type"] isEqualToString:@"1"]){
-        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = [item objectForKey:@"video_url"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] integerValue];
-        viewController.name = [item objectForKey:@"prod_name"];
-        viewController.subname = [item objectForKey:@"prod_subname"];
-        [self presentViewController:viewController animated:YES completion:nil];
-    } else {
-        ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-        viewController.programUrl = [item objectForKey:@"videoUrl"];
-        viewController.title = [item objectForKey:@"name"];
-        viewController.subname = [item objectForKey:@"subname"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"type"]] integerValue];
-        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-        [self presentViewController:pro animated:YES completion:nil];
-    }
 
+    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
+        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+        [urlsArray addObject:[item objectForKey:@"video_url"]];
+        viewController.videoUrls = urlsArray;
+    } else {
+        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
+    }
     
+   
+    
+    viewController.prodId = [item objectForKey:@"prod_id"];
+    viewController.closeAll = YES;
+    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+    viewController.name = [item objectForKey:@"prod_name"];
+    viewController.subname = [item objectForKey:@"prod_subname"];
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+    viewController.playTime = [NSString stringWithFormat:@"上次播放播放至: %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+    //viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [self presentViewController:[[CustomNavigationViewController alloc]initWithRootViewController:viewController] animated:YES completion:nil];
 
 }
 - (void)didReceiveMemoryWarning

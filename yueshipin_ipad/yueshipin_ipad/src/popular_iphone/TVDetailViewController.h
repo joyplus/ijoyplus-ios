@@ -12,7 +12,6 @@
 @interface TVDetailViewController :IphoneVideoViewController<MNMBottomPullToRefreshManagerClient>{
     NSDictionary *infoDic_;
     NSDictionary *videoInfo_;
-    NSArray *episodesArr_;
     int videoType_;
     NSString *summary_;
     UIScrollView *scrollView_;
@@ -44,7 +43,6 @@
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
-@property (nonatomic, strong) NSArray *episodesArr;
 @property (nonatomic, assign) int videoType;
 @property (nonatomic, strong) NSString *summary;
 @property (nonatomic, strong) UIScrollView *scrollView;

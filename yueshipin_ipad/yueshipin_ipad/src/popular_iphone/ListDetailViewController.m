@@ -48,7 +48,7 @@
     [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
-
+    self.navigationItem.hidesBackButton = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
     listArr_ = [[NSMutableArray alloc]initWithCapacity:10];

@@ -12,15 +12,14 @@
 #import "ServiceConstants.h"
 #import "CacheUtility.h"
 #import "CMConstants.h"
-#import "MediaPlayerViewController.h"
 #import "AppDelegate.h"
-#import "ProgramViewController.h"
 #import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
+#import "IphonePlayVideoViewController.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -29,7 +28,6 @@
 
 @synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
-@synthesize episodesArr = episodesArr_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
 @synthesize commentArray =commentArray_;
@@ -61,6 +59,7 @@
     [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
+    self.navigationItem.hidesBackButton = YES;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
@@ -78,6 +77,8 @@
         titleStr = [self.infoDic objectForKey:@"content_name"];
     }
     self.title = titleStr;
+    name_ = self.title;
+    type_ = 1;
     
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
@@ -110,6 +111,10 @@
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
    
 }
+- (void)viewWillAppear:(BOOL)animated{
+   [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
 
 -(void)back:(id)sender{
     
@@ -122,6 +127,7 @@
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
     }
+    prodId_ = itemId;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"movie",itemId ];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
@@ -358,7 +364,7 @@
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:downLoad];
+               // [cell addSubview:downLoad];
                 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
                 if (itemId == nil) {
@@ -577,55 +583,12 @@
     [self.navigationController pushViewController:listDetail animated:YES];
 
 }
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//
-//    if (indexPath.section == 1) {
-//        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-//        ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-//        listDetail.title = [dic objectForKey:@"t_name"];
-//        listDetail.topicId = [dic objectForKey:@"t_id"];
-//        listDetail.Type = 9001;
-//        [listDetail initTopicData:listDetail.topicId];
-//        [self.navigationController pushViewController:listDetail animated:YES];
-//    }
-//
-//}
-
 
 -(void)action:(id)sender {
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
-            if(videoUrlArray.count > 0){
-                NSString *videoUrl = nil;
-                for(NSDictionary *tempVideo in videoUrlArray){
-                    if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                        videoUrl = [self parseVideoUrl:tempVideo];
-                        break;
-                    }
-                }
-                if(videoUrl == nil){
-                    videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-                }
-                if(videoUrl == nil){
-                    [self showPlayWebPage];
-                } else {
-                    MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-                    viewController.videoUrl = videoUrl;
-                    viewController.type = 1;
-                    viewController.name = [videoInfo_ objectForKey:@"name"];
-                    viewController.prodId = [videoInfo_ objectForKey:@"id"];
-                    viewController.subname = [NSString stringWithFormat:@"%d", 1];
-                    
-                    [self presentViewController:viewController animated:YES completion:nil];
-                }
-            }else {
-                [self showPlayWebPage];
-            }
-            
-            
+            [self playVideo:0];
             break;
         }
         case 10002:{
@@ -696,21 +659,18 @@
                 return;
             }
             NSString *imgUrl = [self.infoDic objectForKey:@"prod_pic_url"];
+            if (imgUrl == nil) {
+                imgUrl = [self.infoDic objectForKey:@"content_pic_url"];;
+            }
             NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
             break;
         }
         case 10005:{
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:kAppKey,@"app_key",[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//                NSString *responseCode = [result objectForKey:@"res_code"];
-//                if([responseCode isEqualToString:kSuccessResCode]){
-//                     [self showOpSuccessModalView:1 with:ADDFAV];
-//                }
-//                else {
-//                    [self showOpFailureModalView:1 with:ADDFAV];
-//                }
+
                  [self showOpSuccessModalView:3 with:ADDFAV];
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -723,7 +683,6 @@
             break;
     }
 }
-
 
 -(void)more{
    
@@ -743,19 +702,7 @@
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
     
 }
-- (void)showPlayWebPage
-{
-    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-    NSDictionary *episode = [episodesArr_ objectAtIndex:0];
-    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
-    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
-    viewController.title = [videoInfo_ objectForKey:@"name"];
-    viewController.type = 1;
-    viewController.prodId = [videoInfo_ objectForKey:@"id"];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-    [self presentViewController:pro animated:YES completion:nil];
-}
+
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
 {
@@ -842,14 +789,14 @@
     NSString *videoUrl;
     NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
     for(NSDictionary *url in urlArray){
-        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
             break;
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -857,7 +804,7 @@
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -865,7 +812,7 @@
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&![@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -876,7 +823,7 @@
     if(videoUrl == nil){
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
-                if (![[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                      videoUrl = [url objectForKey:@"url"];
                 }
             

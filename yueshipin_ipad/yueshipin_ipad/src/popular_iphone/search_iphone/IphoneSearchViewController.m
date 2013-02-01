@@ -12,7 +12,6 @@
 #import "MBProgressHUD.h"
 #import "ListDetailViewCell.h"
 #import "UIImageView+WebCache.h"
-#import "ItemDetailViewController.h"
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "UIImage+Scale.h"

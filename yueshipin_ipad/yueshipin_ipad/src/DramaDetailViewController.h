@@ -8,13 +8,7 @@
 
 #import "VideoDetailViewController.h" 
 
-@protocol DramaDetailViewControllerDelegate <NSObject>
-
-- (void)playNextEpisode:(int)currentNum;
-
-@end
-
-@interface DramaDetailViewController : VideoDetailViewController <DramaDetailViewControllerDelegate>
+@interface DramaDetailViewController : VideoDetailViewController
 
 @property (weak, nonatomic) IBOutlet UIScrollView *bgScrollView;
 @property (weak, nonatomic) IBOutlet UIImageView *placeholderImage;

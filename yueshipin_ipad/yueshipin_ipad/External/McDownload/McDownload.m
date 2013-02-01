@@ -10,6 +10,13 @@
 
 #define kTHDownLoadTask_TempSuffix  @".TempDownload"
 
+@interface McDownload () <NSURLConnectionDelegate>
+
+@property (atomic)int errorNum;
+@property (atomic)BOOL foundWorkingUrl;
+@property (nonatomic, strong)NSLock *theLock;
+@end
+
 @implementation McDownload
 @synthesize idNum;
 @synthesize subidNum;
@@ -20,40 +27,23 @@
 @synthesize fileName;
 @synthesize filePath;
 @synthesize fileSize;
-
-- (id)initWithUrl:(NSURL *)aUrl
-{
-    self = [super init];
-    if (self)
-    {
-        url = aUrl;
-    }
-    return self;
-}
+@synthesize downloadItem;
+@synthesize errorNum;
+@synthesize theLock;
+@synthesize foundWorkingUrl;
 
 - (void)start
-{
-    //当url为空的时间，返回失败
-    if (!url)
-    {
-        if ([delegate respondsToSelector:@selector(downloadFaild:didFailWithError:)]) 
-        {
-            NSError *error = [NSError errorWithDomain:@"Url can not be nil!" code:110 userInfo:nil];
-            [delegate downloadFaild:self didFailWithError:error];
-        }
-    }
-    
-    //未指定文件名
-    if (!fileName)
-    {
-        NSString *urlStr = [url absoluteString];
-        fileName = [urlStr lastPathComponent];
-        if ([fileName length] > 32) fileName = [fileName substringFromIndex:[fileName length]-32];
-    }
+{   
+    //    //未指定文件名
+    //    if (!fileName)
+    //    {
+    //        NSString *urlStr = [url absoluteString];
+    //        fileName = [urlStr lastPathComponent];
+    //        if ([fileName length] > 32) fileName = [fileName substringFromIndex:[fileName length]-32];
+    //    }
     
     //未指定路径
-    if (!filePath) 
-    {
+    if (!filePath){
         NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *documentsDir = [documentPaths objectAtIndex:0];
         filePath = documentsDir;
@@ -65,29 +55,23 @@
 	temporaryPath=[destinationPath stringByAppendingFormat:kTHDownLoadTask_TempSuffix];
     
     //处理如果文件已经存在的情况
-    if ([[NSFileManager defaultManager] fileExistsAtPath:destinationPath]) 
-    {
-        if (overwrite) 
-        {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:destinationPath]){
+        if (overwrite){
             [[NSFileManager defaultManager] removeItemAtPath:destinationPath error:nil];
-        }else
-        {
+        }else{
             if ([delegate respondsToSelector:@selector(downloadProgressChange:progress:)])
                 [delegate downloadProgressChange:self progress:1.0];
-            if ([delegate respondsToSelector:@selector(downloadFinished:)]) 
+            if ([delegate respondsToSelector:@selector(downloadFinished:)])
                 [delegate downloadFinished:self];
             return;
         }
     }
     
     //缓存文件不存在，则创建缓存文件
-    if (![[NSFileManager defaultManager] fileExistsAtPath:temporaryPath]) 
-    {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:temporaryPath]){
         BOOL createSucces = [[NSFileManager defaultManager] createFileAtPath:temporaryPath contents:nil attributes:nil];
-        if (!createSucces)
-        {
-            if ([delegate respondsToSelector:@selector(downloadFaild:didFailWithError:)]) 
-            {
+        if (!createSucces){
+            if ([delegate respondsToSelector:@selector(downloadFaild:didFailWithError:)]){
                 NSError *error = [NSError errorWithDomain:@"Temporary File can not be create!" code:111 userInfo:nil];
                 [delegate downloadFaild:self didFailWithError:error];
             }
@@ -102,14 +86,28 @@
     NSString *range = [NSString stringWithFormat:@"bytes=%llu-",offset];
     
     //设置下载的一些属性
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request addValue:range forHTTPHeaderField:@"Range"];
-    [connection cancel];
-    connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+    if(url){
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+        [request addValue:range forHTTPHeaderField:@"Range"];
+        [connection cancel];
+        connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+    } else {
+        for (NSString *tempUrl in downloadItem.urlArray) {
+            int nowDate = [[NSDate date] timeIntervalSince1970];
+            NSString *formattedUrl = tempUrl;
+            if([tempUrl rangeOfString:@"{now_date}"].location != NSNotFound){
+                formattedUrl = [tempUrl stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+            }
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:formattedUrl]];
+            [request addValue:range forHTTPHeaderField:@"Range"];
+            [NSURLConnection connectionWithRequest:request delegate:self];
+        }
+    }
 }
 
 - (void)stop
 {
+    foundWorkingUrl = NO;
     [connection cancel];
     connection = nil;
     [fileHandle closeFile];
@@ -122,8 +120,7 @@
     [[NSFileManager defaultManager] removeItemAtPath:destinationPath error:nil];
     [[NSFileManager defaultManager] removeItemAtPath:temporaryPath error:nil];
     
-    if ([delegate respondsToSelector:@selector(downloadProgressChange:progress:)])
-    {
+    if ([delegate respondsToSelector:@selector(downloadProgressChange:progress:)]){
         [delegate downloadProgressChange:self progress:0];
     }
 }
@@ -131,47 +128,90 @@
 #pragma mark -
 #pragma mark NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)connection:(NSURLConnection *)aconnection didReceiveResponse:(NSURLResponse *)response
 {
-    if ([response expectedContentLength] != NSURLResponseUnknownLength) 
-        fileSize = (unsigned long long)[response expectedContentLength]+offset;
+    @synchronized(url){
+        if(url == nil){
+            NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
+            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
+            if (contentLength.intValue > 100) {
+                NSLog(@"download url = %@", aconnection.originalRequest.URL);
+                foundWorkingUrl = YES;
+                connection = aconnection;
+                url = aconnection.originalRequest.URL;
+                downloadItem.url = url.absoluteString;
+                [downloadItem save];
+                [self proceedDownloading:response];
+            } else {
+                [self checkIfAllError:nil];
+            }
+        } else {
+            if(foundWorkingUrl){
+                [aconnection cancel];
+            } else {
+                [self proceedDownloading:response];
+            }
+        }
+    }
+}
 
-    
-	if ([delegate respondsToSelector:@selector(downloadBegin:didReceiveResponseHeaders:)]) 
-    {
-		[delegate downloadBegin:self didReceiveResponseHeaders:response];
-	}
+- (void)proceedDownloading:(NSURLResponse *)response
+{
+    if ([response expectedContentLength] != NSURLResponseUnknownLength){
+        fileSize = (unsigned long long)[response expectedContentLength]+offset;
+    }
+    if ([delegate respondsToSelector:@selector(downloadBegin:didReceiveResponseHeaders:)]){
+        [delegate downloadBegin:self didReceiveResponseHeaders:response];
+    }
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)aData
 {
-    [fileHandle writeData:aData];
-    offset = [fileHandle offsetInFile];
-
-    if ([delegate respondsToSelector:@selector(downloadProgressChange:progress:)])
-    {
-        double progress = offset*1.0/fileSize;
-        [delegate downloadProgressChange:self progress:progress];
+    if (url) {
+        [fileHandle writeData:aData];
+        offset = [fileHandle offsetInFile];
+        
+        if ([delegate respondsToSelector:@selector(downloadProgressChange:progress:)]){
+            double progress = offset*1.0/fileSize;
+            [delegate downloadProgressChange:self progress:progress];
+        }
     }
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    [fileHandle closeFile];
-    if ([delegate respondsToSelector:@selector(downloadFaild:didFailWithError:)]) 
-    {
-		[delegate downloadFaild:self didFailWithError:error];
-	}
+    [self checkIfAllError:error];
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    [fileHandle closeFile];
-    [[NSFileManager defaultManager] moveItemAtPath:temporaryPath toPath:destinationPath error:nil];
-	if ([delegate respondsToSelector:@selector(downloadFinished:)]) 
-    {        
-		[delegate downloadFinished:self];
-	}
+    if (url) {
+        [fileHandle closeFile];
+        [[NSFileManager defaultManager] moveItemAtPath:temporaryPath toPath:destinationPath error:nil];
+        if ([delegate respondsToSelector:@selector(downloadFinished:)]) {
+            [delegate downloadFinished:self];
+        }
+    }
+}
+
+- (void)checkIfAllError:(NSError *)error
+{
+    [theLock lock];
+    errorNum++;
+    if (errorNum == downloadItem.urlArray.count || downloadItem.urlArray.count == 1) {
+        [fileHandle closeFile];
+        if ([delegate respondsToSelector:@selector(downloadFaild:didFailWithError:)])
+        {
+            if(error == nil){
+                downloadItem.downloadStatus = @"error938";
+            } else {
+                downloadItem.downloadStatus = @"error";
+            }
+            [downloadItem save];
+            [delegate downloadFaild:self didFailWithError:error];
+        }
+    }
+    [theLock unlock];
 }
 
 @end

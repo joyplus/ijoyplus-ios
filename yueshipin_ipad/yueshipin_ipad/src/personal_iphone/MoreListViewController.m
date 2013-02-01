@@ -10,14 +10,15 @@
 #import "RecordListCell.h"
 #import "IphoneMovieDetailViewController.h"
 #import "CreateMyListTwoViewController.h"
-#import "MediaPlayerViewController.h"
-#import "ProgramViewController.h"
 #import "UIImage+Scale.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "ProgramNavigationController.h"
 #import "TimeUtility.h"
 #import "UIImageView+WebCache.h"
+#import "CommonHeader.h"
+#import "MyMediaPlayerViewController.h"
+#import "CustomNavigationViewController.h"
 @interface MoreListViewController ()
 
 @end
@@ -60,7 +61,12 @@
     [super viewDidLoad];
 
 }
- 
+
+- (void)viewWillAppear:(BOOL)animated{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+}
+
 -(void)back:(id)sender{
     [self dismissViewControllerAnimated:YES completion:nil];
 
@@ -211,24 +217,23 @@
 -(void)continuePlay:(id)sender{
     int num = ((UIButton *)sender).tag;
     NSDictionary *item = [listArr_ objectAtIndex:num];
-    if([[item objectForKey:@"play_type"] isEqualToString:@"1"]){
-        MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-        viewController.videoUrl = [item objectForKey:@"video_url"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-        viewController.name = [item objectForKey:@"prod_name"];
-        viewController.subname = [item objectForKey:@"prod_subname"];
-        [self presentViewController:viewController animated:YES completion:nil];
+    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
+        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+        [urlsArray addObject:[item objectForKey:@"video_url"]];
+        viewController.videoUrls = urlsArray;
     } else {
-        ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-        viewController.programUrl = [item objectForKey:@"video_url"];
-        viewController.title = [item objectForKey:@"prod_name"];
-        viewController.subname = [item objectForKey:@"prod_subname"];
-        viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-        [self presentViewController:pro animated:YES completion:nil];
-       // [self presentViewController:[[UINavigationController alloc] initWithRootViewController:viewController] animated:YES completion:nil];
+        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
     }
+    viewController.prodId = [item objectForKey:@"prod_id"];
+    viewController.closeAll = YES;
+    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+    viewController.name = [item objectForKey:@"prod_name"];
+    viewController.subname = [item objectForKey:@"prod_subname"];
+    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+    viewController.playTime = [NSString stringWithFormat:@"上次播放播放至: %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+    //viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [self presentViewController:[[CustomNavigationViewController alloc]initWithRootViewController:viewController] animated:YES completion:nil];
   
 }
 - (NSString *)composeContent:(NSDictionary *)item

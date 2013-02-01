@@ -17,6 +17,10 @@
 #import "SendWeiboViewController.h"
 #import "ActionUtility.h"
 #import <QuartzCore/QuartzCore.h>
+#import "VideoWebViewController.h"
+#import "CustomNavigationViewController.h"
+#import "CacheUtility.h"
+#import "TimeUtility.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -26,7 +30,12 @@
 @implementation IphoneVideoViewController
 @synthesize mySinaWeibo = _mySinaWeibo;
 @synthesize infoDic = _infoDic;
-
+@synthesize episodesArr = episodesArr_;
+@synthesize prodId = prodId_;
+@synthesize subName = subName_;
+@synthesize name = name_;
+@synthesize videoUrlsArray = videoUrlsArray_;
+@synthesize httpUrlArray = httpUrlArray_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -152,8 +161,7 @@
             [_mySinaWeibo logIn];
            
         }
-    
-    
+ 
 }
 
 #pragma mark - SinaWeibo Delegate
@@ -247,44 +255,105 @@
     }
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (BOOL)validadUrl:(NSString *)originalUrl
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    NSString *formatUrl = [[originalUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+    if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
+        return YES;
+    }
+    return NO;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+-(void)playVideo:(int)num{
+    if (num < 0 || num >= episodesArr_.count) {
+        return;
+    }
+    // 网页地址
+    httpUrlArray_ = [[NSMutableArray alloc]initWithCapacity:5];
+    for (int i = 0; i < episodesArr_.count; i++) {
+        NSArray *videoUrls = [[episodesArr_ objectAtIndex:i] objectForKey:@"video_urls"];
+    
+        BOOL found = NO;
+        for (NSDictionary *videoUrl in videoUrls) {
+            NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+            if([self validadUrl:url]){
+                NSString *httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                [httpUrlArray_ addObject:httpUrl];
+                found = YES;
+                break;
+            }
+        }
+        if (!found) {
+            [httpUrlArray_ addObject:@""];
+        }
+    }
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        if (httpUrlArray_.count > 0) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[httpUrlArray_ objectAtIndex:0]]];
+        } else {
+            [UIUtility showPlayVideoFailure:self.view];
+        }
+    } else {
+        // 视频地址
+        videoUrlsArray_ = [[NSMutableArray alloc]initWithCapacity:5];
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
+            for (int i = 0; i < episodesArr_.count; i++) {
+                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
+                NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:i] objectForKey:@"down_urls"];
+                if(videoUrlArray.count > 0){
+                    NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
+                    for(NSDictionary *tempVideo in videoUrlArray){
+                        NSArray *urls = [tempVideo objectForKey:@"urls"];
+                        [urlsDicArray addObjectsFromArray:urls];
+                    }
+                    urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
+                        NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
+                        NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
+                        return [second compare:first];
+                    }];
+                    for (NSDictionary *url in urlsDicArray) {
+                        NSString *tempUrl = [url objectForKey:@"url"];
+                        if([self validadUrl:tempUrl]){
+                            [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                        }
+                    }
+                }
+                [videoUrlsArray_ addObject:urlsArray];
+            }
+        }
+       
+        VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
+        webViewController.videoUrlsArray = videoUrlsArray_;
+        webViewController.videoHttpUrlArray = httpUrlArray_;
+        webViewController.prodId = self.prodId;
+        webViewController.type = type_;
+        webViewController.startNum = num;
+       // webViewController.dramaDetailViewControllerDelegate = self;
+        webViewController.subname = [NSString stringWithFormat:@"%d",num];
+        webViewController.playTime = [self getRecordInfo:num];
+        webViewController.name = name_;
+        webViewController.currentNum = num;
+        NSLog(@"now play is %d",num);
+        //webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);CustomNavigationViewController
+       [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:webViewController] animated:YES completion:nil];
+    }
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
+-(NSString*)getRecordInfo:(int)num{
+    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
+    NSString *content = nil;
+    NSString *time = [TimeUtility formatTimeInSecond:cacheResult.doubleValue];
+    if ([time isEqualToString:@"00:00"]) {
+        content = @"即将播出";
+    }
+    else{
+        content = [NSString stringWithFormat:@"上次播放播放至: %@",time];
+    }
+    return content;
+    
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+
 
 #pragma mark - Table view delegate
 

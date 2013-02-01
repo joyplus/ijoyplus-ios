@@ -314,7 +314,7 @@
     slider_.frame = CGRectMake(4, 28, 88, 2);
     
     pageMGIcon_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_s_icon.png"]];
-    pageMGIcon_.frame = CGRectMake(6, 1, 23, 27);
+    pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
     [scrBg addSubview:movieBtn_];
     [scrBg addSubview:tvBtn_];
     [scrBg addSubview:showBtn_];
@@ -546,17 +546,17 @@
         switch (page) {
             case 0:{
                 movieBtn_.selected = YES;
-                pageMGIcon_.frame = CGRectMake(6, 1, 23, 27);
+                pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
                 break;
             }
             case 1:{
                 tvBtn_.selected = YES;
-                 pageMGIcon_.frame = CGRectMake(106, 1, 23, 27);
+                 pageMGIcon_.frame = CGRectMake(109, 3, 15, 24);
                 break;
             }
             case 2:{
                 showBtn_.selected = YES;
-                 pageMGIcon_.frame = CGRectMake(219, 1, 23, 27);
+                 pageMGIcon_.frame = CGRectMake(222, 3, 15, 24);
                 break;
             }
             default:
