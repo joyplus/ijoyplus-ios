@@ -85,11 +85,9 @@
 - (id)initWithParentView:(UIView *)parentView alignment:(JSBadgeViewAlignment)alignment
 {
     if ((self = [self initWithFrame:CGRectZero]))
-    {
-        self.badgeAlignment = alignment;
+    {   self.badgeAlignment = alignment;
         [parentView addSubview:self];
     }
-    
     return self;
 }
 
@@ -168,7 +166,6 @@
     newFrame.origin.y += _badgePositionAdjustment.y;
     
     self.frame = CGRectIntegral(newFrame);
-    
     [self setNeedsDisplay];
 }
 

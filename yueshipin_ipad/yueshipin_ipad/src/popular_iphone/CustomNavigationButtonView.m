@@ -13,7 +13,7 @@
 @synthesize buttonLabel = buttonLabel_;
 @synthesize button = button_;
 @synthesize warningNumber = warningNumber_;
-
+@synthesize badgeView;
 /**
  * @brief
  *
@@ -83,6 +83,11 @@
     
     [self addSubview:self.button];
     [self addSubview:self.buttonLabel];
+    
+    badgeView = [[JSBadgeView alloc] initWithParentView:self alignment:JSBadgeViewAlignmentTopCenter];
+    badgeView.badgePositionAdjustment = CGPointMake(14, 5);
+    badgeView.badgeText = @"";
+    //[badgeView setHidden:NO];
 }
 
 
@@ -105,8 +110,8 @@
             [self addSubview:messageImage_];
 
         }
-        // numLabel_.text = [NSString stringWithFormat:@"%d",warningNumber];
-        
+            //numLabel_.text = [NSString stringWithFormat:@"%d",warningNumber];
+    
     }else{
         if (messageImage_ != nil) {
             //numLabel_.text = [NSString stringWithFormat:@"%d",warningNumber];
@@ -116,6 +121,6 @@
             messageImage_ = nil;
         }
     }
-    warningNumber_ = warningNumber;
+    warningNumber_ = warningNumber; 
 }
 @end

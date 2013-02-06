@@ -51,6 +51,7 @@
 @property (nonatomic, weak)id <SubdownloadingDelegate>subdownloadingDelegate;
 @property (nonatomic, strong) NSString *operationId;
 @property (nonatomic, strong) NSString *suboperationId;
+@property (nonatomic, strong) NSString *operationStatus;
 /**
  A String value that defines the target path or directory.
  

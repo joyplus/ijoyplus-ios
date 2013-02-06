@@ -254,7 +254,7 @@
     if(videoUrl == nil){
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
-                if (![[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
+                if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
                 }
                 
