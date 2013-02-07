@@ -364,7 +364,7 @@
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-               // [cell addSubview:downLoad];
+                [cell addSubview:downLoad];
                 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
                 if (itemId == nil) {
@@ -669,7 +669,7 @@
         case 10005:{
             
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 
                  [self showOpSuccessModalView:3 with:ADDFAV];
                 

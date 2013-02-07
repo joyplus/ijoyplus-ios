@@ -573,15 +573,14 @@
 
        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
-        cell.textLabel.font = [UIFont systemFontOfSize:15];
-        [cell.titleLab removeFromSuperview];
-        
-        //if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
-            cell.actors.text  = [self composeContent:infoDic];
-            [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
-        //}
-      
+//        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
+//        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
+        cell.titleLab.frame = CGRectMake(10, 24, 220, 15);
+
+        cell.actors.text  = [self composeContent:infoDic];
+        [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
+     
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
@@ -748,8 +747,8 @@
         int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
-        int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
-        content = [NSString stringWithFormat:@"已观看《%d》 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
+        //int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
+        content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }

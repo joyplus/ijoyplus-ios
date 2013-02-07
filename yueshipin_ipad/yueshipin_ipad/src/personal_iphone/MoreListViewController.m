@@ -103,9 +103,11 @@
         if (cell == nil) {
             cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
-        cell.textLabel.font = [UIFont systemFontOfSize:15];
-        [cell.titleLab removeFromSuperview];
+//        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
+//        cell.textLabel.font = [UIFont systemFontOfSize:15];
+//        //[cell.titleLab removeFromSuperview];
+        cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
+        cell.titleLab.frame = CGRectMake(10, 24, 220, 15);
          cell.actors.text  = [self composeContent:infoDic];
         //if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
            
@@ -246,7 +248,7 @@
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
-        content = [NSString stringWithFormat:@"已观看《%d》 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
+        content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }

@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "McDownload.h"
 #import "SubdownloadItem.h"
 @protocol DownloadManagerDelegate <NSObject>
 
@@ -17,7 +16,7 @@
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
 @end
 
-@interface DownLoadManager : NSObject<McDownloadDelegate>{
+@interface DownLoadManager : NSObject{
    // id <DownloadManagerDelegate>downLoadMGdelegate_;
     NSThread *downloadThread_;
     NSString *downloadId_;
@@ -25,6 +24,7 @@
     NSArray *allSubItems_;
     DownloadItem *downloadItem_;
     SubdownloadItem *subdownloadItem_;
+    int preProgress_;
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;

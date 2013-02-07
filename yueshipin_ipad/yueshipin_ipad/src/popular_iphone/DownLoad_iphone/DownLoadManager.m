@@ -9,6 +9,7 @@
 #import "DownLoadManager.h"
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
+#import "AFDownloadRequestOperation.h"
 static DownLoadManager *downLoadManager_ = nil;
 static NSMutableArray *downLoadQueue_ = nil;
 @implementation DownLoadManager
@@ -33,6 +34,11 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 
 -(void)addtoDownLoadQueue:(id)sender{
+    if ([self getFreeSpace]< 500) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"剩余磁盘容量已不足500M." delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     NSArray *infoArr = (NSArray *)((NSNotification *)sender).object;
     NSString *prodId = [infoArr objectAtIndex:0];
     NSString *urlStr = [infoArr objectAtIndex:1];
@@ -40,15 +46,12 @@ static NSMutableArray *downLoadQueue_ = nil;
     NSString *imgUrl = [infoArr objectAtIndex:3];
     NSString *type = [infoArr objectAtIndex:4];
     
-    if ([type isEqualToString:@"1"]) {
-        McDownload *mcDownload = [[McDownload alloc] init];
-        mcDownload.delegate = self;
-        mcDownload.idNum = prodId;
-        mcDownload.url = [NSURL URLWithString:urlStr];
-        mcDownload.fileName = [fileName stringByAppendingFormat:@"%@",@".mp4"];
-        mcDownload.status = 3;
-        [downLoadQueue_ addObject:mcDownload];
-        
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    AFDownloadRequestOperation *downloadingOperation = nil;
+    NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [documentPaths objectAtIndex:0];
+    NSString *filePath = nil;
+    if ([type isEqualToString:@"1"]){
         DownloadItem *item = [[DownloadItem alloc]init];
         item.itemId = prodId;
         item.name = fileName;
@@ -56,10 +59,15 @@ static NSMutableArray *downLoadQueue_ = nil;
         item.type = 1;
         item.url = urlStr;
         item.imageUrl = imgUrl;
-        item.downloadStatus = @"wait";
+        item.downloadStatus = @"waiting";
         [item save];
-    }
-    else{
+        
+        filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,prodId];
+        downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+        downloadingOperation.operationId = prodId;
+        
+        
+    } else {
         NSArray *itemArr = [DownloadItem allObjects];
         BOOL isHave = NO;
         for (DownloadItem *item in itemArr) {
@@ -75,6 +83,7 @@ static NSMutableArray *downLoadQueue_ = nil;
             item.imageUrl = imgUrl;
             [item save];
         }
+
         SubdownloadItem *subItem = [[SubdownloadItem alloc] init];
         subItem.itemId = prodId;
         subItem.percentage = 0;
@@ -84,51 +93,51 @@ static NSMutableArray *downLoadQueue_ = nil;
         int num = [[infoArr objectAtIndex:5] intValue];
         num++;
         subItem.name = [fileName stringByAppendingFormat:@"_%d",num];
-        subItem.subitemId = [prodId stringByAppendingFormat:@"_%d",num];
-        subItem.downloadStatus = @"wait";
+        subItem.subitemId = [NSString stringWithFormat:@"%@_%d",prodId,num];
+        subItem.downloadStatus = @"waiting";
         [subItem save];
-        
-        McDownload *mcDownload = [[McDownload alloc] init];
-        mcDownload.delegate = self;
-        mcDownload.idNum =[prodId stringByAppendingFormat:@"_%d",num];
-        mcDownload.url = [NSURL URLWithString:urlStr];
-        mcDownload.fileName = [fileName stringByAppendingFormat:@"_%d%@",num,@".mp4"];
-        mcDownload.status = 3;
-        [downLoadQueue_ addObject:mcDownload];
+        filePath = [NSString stringWithFormat:@"%@/%@_%d.mp4", documentsDir, prodId,num];
+        downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+        downloadingOperation.operationId = [NSString stringWithFormat:@"%@_%d",prodId,num];
     }
-
-    
+       downloadingOperation.operationStatus = @"waiting";
+      [downLoadQueue_ addObject:downloadingOperation];
+  
         [self startDownLoad];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
     
 }
 
 -(void)resumeDownLoad{
- NSArray *allItems = [DownloadItem allObjects];
+    [downLoadQueue_ removeAllObjects];
+    NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [documentPaths objectAtIndex:0];
+    
+    NSArray *allItems = [DownloadItem allObjects];
     for ( DownloadItem *item in allItems) {
         if (item.type == 1) {
             if (![item.downloadStatus isEqualToString:@"finish"]) {
-                McDownload *mcDownload = [[McDownload alloc] init];
-                mcDownload.delegate = self;
-                mcDownload.idNum = item.itemId;
-                mcDownload.url = [NSURL URLWithString:item.url];
-                mcDownload.fileName = [item.name stringByAppendingString:@".mp4"];
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:item.url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+                 NSString *filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,item.itemId];
+                 AFDownloadRequestOperation *downloadingOperation= [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+               
+                downloadingOperation.operationId = item.itemId;
                 if ([item.downloadStatus isEqualToString:@"stop"]) {
-                    mcDownload.status = 0;
+                    downloadingOperation.operationStatus = @"stop";
                 }
                 else if ([item.downloadStatus isEqualToString:@"loading"]) {
-                    mcDownload.status = 1;
+                    downloadingOperation.operationStatus = @"loading";
                 }
                 else if ([item.downloadStatus isEqualToString:@"finish"]) {
-                    mcDownload.status = 2;
+                    downloadingOperation.operationStatus = @"finish";
                 }
-                else if ([item.downloadStatus isEqualToString:@"wait"]) {
-                    mcDownload.status = 3;
+                else if ([item.downloadStatus isEqualToString:@"waiting"]) {
+                    downloadingOperation.operationStatus = @"waiting";
                 }
                 else if ([item.downloadStatus isEqualToString:@"fail"]) {
-                    mcDownload.status = 4;
+                    downloadingOperation.operationStatus = @"fail";
                 }
-                [downLoadQueue_ addObject:mcDownload];
+                [downLoadQueue_ addObject:downloadingOperation];
             }
         }
         else{
@@ -136,28 +145,30 @@ static NSMutableArray *downLoadQueue_ = nil;
             NSArray *tempArr = [SubdownloadItem findByCriteria:subquery];
             
             for (SubdownloadItem *sub in tempArr) {
-                McDownload *mcDownload = [[McDownload alloc] init];
-                mcDownload.delegate = self;
-                mcDownload.idNum = sub.subitemId;
-                mcDownload.url = [NSURL URLWithString:sub.url];
-                mcDownload.fileName = [sub.name stringByAppendingString:@".mp4"];
+                
+                NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:sub.url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+                NSString *filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir,sub.subitemId];
+                AFDownloadRequestOperation *downloadingOperation= [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+                //downloadingOperation.operationId = [NSString stringWithFormat:@"%d_%d",[sub.subitemId intValue]/10,[sub.subitemId intValue]%10];
+                downloadingOperation.operationId = sub.subitemId;
+            
                 if ([sub.downloadStatus isEqualToString:@"stop"]) {
-                    mcDownload.status = 0;
+                    downloadingOperation.operationStatus = @"stop";
                 }
                 else if ([sub.downloadStatus isEqualToString:@"loading"]) {
-                    mcDownload.status = 1;
+                    downloadingOperation.operationStatus = @"loading";
                 }
                 else if ([sub.downloadStatus isEqualToString:@"finish"]) {
-                    mcDownload.status = 2;
+                    downloadingOperation.operationStatus = @"finish";
                 }
-                else if ([sub.downloadStatus isEqualToString:@"wait"]) {
-                    mcDownload.status = 3;
+                else if ([sub.downloadStatus isEqualToString:@"waiting"]) {
+                    downloadingOperation.operationStatus = @"waiting";
                 }
                 else if ([sub.downloadStatus isEqualToString:@"fail"]) {
-                    mcDownload.status = 4;
+                    downloadingOperation.operationStatus = @"fail";
                 }
 
-                [downLoadQueue_ addObject:mcDownload];
+                [downLoadQueue_ addObject:downloadingOperation];
                 
             }
         
@@ -166,18 +177,18 @@ static NSMutableArray *downLoadQueue_ = nil;
     
     }
     BOOL isdownloading = NO;
-    for (McDownload *downloadItem in downLoadQueue_) {
-        if (downloadItem.status == 1 ) {    //0:stop 1:start 2:done 3: waiting 4:error
-            [downloadItem start];
+    for (AFDownloadRequestOperation *downloadItem in downLoadQueue_) {
+        if (downloadItem.operationStatus == @"loading" ) {    //0:stop 1:start 2:done 3: waiting 4:error
+             [self beginDownloadTask:downloadItem];
             isdownloading = YES;
             break;
         }
     }
     
     if (!isdownloading) {
-        for (McDownload *downloadItem in downLoadQueue_) {
-            if (downloadItem.status == 3 || downloadItem.status == 4 ) {    //0:stop 1:start 2:done 3: waiting 4:error
-                [downloadItem start];
+        for (AFDownloadRequestOperation *downloadItem in downLoadQueue_) {
+            if (downloadItem.operationStatus == @"waiting"|| downloadItem.operationStatus == @"error" ) {    //0:stop 1:start 2:done 3: waiting 4:error
+                [self beginDownloadTask:downloadItem];
                 break;
             }
         }
@@ -187,204 +198,182 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 -(void)startDownLoad{
     BOOL isDownloading = NO;
-    for (McDownload *downloadItem in downLoadQueue_){
-        if (downloadItem.status == 1) {
+    for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+        if (downloadRequestOperation.operationStatus == @"loading") {
             isDownloading = YES;
             break;
         }
     
     }
     if (!isDownloading) {
-        for (McDownload *downloadItem in downLoadQueue_) {
-            if (/*downloadItem.status == 1 ||*/ downloadItem.status == 3 || downloadItem.status == 4 ) {
-                [downloadItem start];
-                 break;
+        for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+            if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error") {
+    
+                [self beginDownloadTask:downloadRequestOperation];
+                break;
             }
+            
         }
     }
     
 }
 
-#pragma mark -
-#pragma mark McDownloadDelegate
-//下载开始
-- (void)downloadBegin:(McDownload *)aDownload didReceiveResponseHeaders:(NSURLResponse *)responseHeaders{
-    downloadId_ = aDownload.idNum;
-    aDownload.status = 1;
-    NSRange range = [aDownload.idNum rangeOfString:@"_"];
+
+-(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
+    
+    [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Successfully downloaded file id %@", downloadRequestOperation.operationId);
+        
+        if ([downLoadQueue_ containsObject:operation]) {
+            [downLoadQueue_ removeObject:operation];
+        }
+        
+        NSRange range = [downloadId_ rangeOfString:@"_"];
+        if (range.location == NSNotFound){
+             [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"finish" withPercentage:100];
+             [self.downLoadMGdelegate downloadFinishwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+            
+        }
+        else{
+            [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"finish" withPercentage:100];
+            [self.downLoadMGdelegate downloadFinishwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+            
+        }
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
+        
+        [self startDownLoad];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        [operation cancel];
+        downloadRequestOperation.operationStatus = @"fail";
+        NSRange range = [downloadId_ rangeOfString:@"_"];
+        if (range.location == NSNotFound){
+             [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
+             [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+            
+        }
+        else{
+             [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
+             [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+            
+        }
+        
+        if ([downLoadQueue_ containsObject:operation]) {
+            int index = [downLoadQueue_ indexOfObject:operation];
+            index++;
+            if (index < [downLoadQueue_ count]) {
+                AFDownloadRequestOperation *downloadOperation = [downLoadQueue_ objectAtIndex:index];
+                [downloadOperation start];
+            }
+        }
+
+    }];
+    
+    [downloadRequestOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+        
+        float percentDone = totalBytesReadForFile/(float)totalBytesExpectedToReadForFile;
+           
+            NSRange range = [downloadId_ rangeOfString:@"_"];
+            if (range.location == NSNotFound) {
+             int count = (int)(percentDone*100) - downloadItem_.percentage;
+                NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
+                downloadItem_.percentage = (int)(percentDone*100);
+                if (count >= 1){     
+                    [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneDownloadViewController"];
+                    if (count >=5) {
+                        [downloadItem_ save];
+                    }
+                }
+            }else{
+                 int count = (int)(percentDone*100) - subdownloadItem_.percentage;
+                 NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
+                 subdownloadItem_.percentage = (int)(percentDone*100);
+                  if (count >= 1) {
+                    [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+                    if (count >=5) {
+                        [subdownloadItem_ save];
+                    }
+                }
+         }
+            
+      }];
+    
+    [downloadRequestOperation start];
+    downloadId_ = downloadRequestOperation.operationId;
+    downloadRequestOperation.operationStatus = @"loading";
+     NSRange range = [downloadId_ rangeOfString:@"_"];
     if (range.location == NSNotFound) {
+         [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:0];
+         [self.downLoadMGdelegate downloadBeginwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+
+    }
+    else{
+        [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:0];
+        [self.downLoadMGdelegate downloadBeginwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+
+    }
+    
+    
+}
+
+-(void)saveDataBaseIntable:(NSString *)tableName withId:(NSString *)itenId withStatus:(NSString *)status withPercentage:(int)percentage{
+    if (tableName == @"DownloadItem") {
         allItems_ = [DownloadItem allObjects];
         for (DownloadItem *item in allItems_) {
-                if ([item.itemId isEqualToString:aDownload.idNum]) {
-                    item.downloadStatus = @"loading";
-                    item.percentage = 0;
-                    downloadItem_ = item;
-                    [item save];
-                    [self.downLoadMGdelegate downloadBeginwithId:item.itemId inClass:@"IphoneDownloadViewController"];
-                    break;
+            if ([item.itemId isEqualToString:itenId]) {
+                item.downloadStatus = status;
+                if (percentage >= 0) {
+                item.percentage = percentage;
                 }
-                    
+                if (percentage == 0) {
+                    downloadItem_ = item;
+                }
+                [item save];
+                break;
+            }
+            
         }
+
     }
-   else{
+    else if (tableName == @"SubdownloadItem"){
         allSubItems_ = [SubdownloadItem allObjects];
         for (SubdownloadItem *item in allSubItems_) {
-                if ([item.subitemId isEqualToString:aDownload.idNum]) {
-                    item.downloadStatus = @"loading";
-                    item.percentage = 0;
-                    subdownloadItem_ = item;
-                    [item save];
-                    [self.downLoadMGdelegate downloadBeginwithId:item.subitemId inClass:@"IphoneSubdownloadViewController"];
-                    break;
+            if ([item.subitemId isEqualToString:itenId]){
+                item.downloadStatus = status;
+                if (percentage >= 0) {
+                    item.percentage = percentage;
                 }
-        }
-    
-    }
-
-}
-
-//下载失败
-- (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error{
-    aDownload.status = 4;
-    NSRange range = [aDownload.idNum rangeOfString:@"_"];
-    if (range.location == NSNotFound){
-        NSArray *allItems = [DownloadItem allObjects];
-        for (DownloadItem *item in allItems) {
-            if ([item.itemId isEqualToString:aDownload.idNum]) {
-                item.downloadStatus = @"fail";
-                [item save];
-                [self.downLoadMGdelegate downloadFailedwithId:item.itemId inClass:@"IphoneDownloadViewController"];
-                break;
-            }
-        }
-      
-
-    }
-    else{
-    
-        NSArray *allItems = [SubdownloadItem allObjects];
-        for (SubdownloadItem *item in allItems) {
-            if ([item.subitemId isEqualToString:aDownload.idNum]) {
-                item.downloadStatus = @"fail";
-                [item save];
-                [self.downLoadMGdelegate downloadFailedwithId:item.subitemId inClass:@"IphoneSubdownloadViewController"];
-                break;
-            }
-        }
-
-    }
-    
-    if ([downLoadQueue_ containsObject:aDownload]) {
-        int index = [downLoadQueue_ indexOfObject:downLoadQueue_];
-        index++;
-        if (index < [downLoadQueue_ count]) {
-            McDownload *mcdownload = [downLoadQueue_ objectAtIndex:index];
-            [mcdownload start];
-        }
-    }
-    
-}
-
-//下载结束
-- (void)downloadFinished:(McDownload *)aDownload{
-    if ([downLoadQueue_ containsObject:aDownload]) {
-        [downLoadQueue_ removeObject:aDownload];
-    }
-    
-    NSRange range = [aDownload.idNum rangeOfString:@"_"];
-    if (range.location == NSNotFound){
-        NSArray *allItems = [DownloadItem allObjects];
-        for (DownloadItem *item in allItems) {
-            if ([item.itemId isEqualToString:aDownload.idNum]) {
-                item.downloadStatus = @"finish";
-                item.percentage = 100;
-                [self.downLoadMGdelegate downloadFinishwithId:item.itemId inClass:@"IphoneDownloadViewController"];
+                if (percentage == 0) {
+                    subdownloadItem_ = item;
+                }
                 [item save];
                 break;
             }
         }
-        
-    }
-    else{
-        
-        NSArray *allItems = [SubdownloadItem allObjects];
-        for (SubdownloadItem *item in allItems) {
-            if ([item.subitemId isEqualToString:aDownload.idNum]) {
-                item.downloadStatus = @"finish";
-                 item.percentage = 100;
-                [self.downLoadMGdelegate downloadFinishwithId:item.subitemId inClass:@"IphoneSubdownloadViewController"];
-                //[item save];
-                break;
-            }
-        }
-        
+
+    
+    
     }
 
-    [self startDownLoad];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
 }
-//更新下载的进度
-- (void)downloadProgressChange:(McDownload *)aDownload progress:(double)newProgress{
-    if (aDownload.idNum != downloadId_) {
-        return;
-    }
-   
-    NSRange range = [aDownload.idNum rangeOfString:@"_"];
-    if (range.location == NSNotFound){
-        int count = (int)(newProgress*100) - downloadItem_.percentage;
-        if (count >= 1){
-        [self.downLoadMGdelegate reFreshProgress:newProgress withId:downloadId_ inClass:@"IphoneDownloadViewController"];
-             NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(newProgress*100));
-            downloadItem_.percentage = (int)(newProgress*100);
-            if (count >=5) {
-                [downloadItem_ save];
-            }
-        }
-        
-    }
-    else{
 
-//        NSString *subquery = [NSString stringWithFormat:@"WHERE subitem_id = '%@'", aDownload.idNum];
-//        NSArray *tempArr = [SubdownloadItem findByCriteria:subquery];
-//        if (tempArr != nil && [tempArr count]>0) {
-//             SubdownloadItem *item = [tempArr objectAtIndex:0];
-//            int oldProgress = item.percentage;
-//            if (((int)(newProgress*100) - oldProgress) >= 1) {
-//                item.percentage = (int)(newProgress*100);
-//                [self.downLoadMGdelegate reFreshProgress:newProgress withId:item.subitemId inClass:@"IphoneSubdownloadViewController"];
-//                //[item save];
-//            }
-//
-//        }
-        int count = (int)(newProgress*100) - subdownloadItem_.percentage;
-        if (count >= 1){
-            [self.downLoadMGdelegate reFreshProgress:newProgress withId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
-             NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(newProgress*100));
-            subdownloadItem_.percentage = (int)(newProgress*100);
-            if (count >=5) {
-                [subdownloadItem_ save];
-            }
-        }
-        
-        
-    }
-}
 
 //停止下载并清除缓存
 +(void)stopAndClear:(NSString *)downloadId{
-    McDownload *mcDownload = nil;
-    for (McDownload *mc in downLoadQueue_) {
-        if ([mc.idNum isEqualToString:downloadId]) {
-            mcDownload = mc;
+    AFDownloadRequestOperation *downloadOperation = nil;
+    for (AFDownloadRequestOperation *mc in downLoadQueue_) {
+        if ([mc.operationId isEqualToString:downloadId]) {
+            downloadOperation = mc;
             break;
         }
     }
-    if (mcDownload != nil) {
-         [mcDownload stopAndClear];
-        [downLoadQueue_ removeObject:mcDownload];
+    if (downloadOperation != nil) {
+         [downloadOperation pause];
+         [downloadOperation cancel];
+        [downLoadQueue_ removeObject:downloadOperation];
     }
     [[DownLoadManager defaultDownLoadManager] startDownLoad];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
+   // [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
 }
 
 //停止下载不清除缓存
@@ -397,58 +386,97 @@ static NSMutableArray *downLoadQueue_ = nil;
         [[DownLoadManager defaultDownLoadManager].subdownloadItem save];
     }
     
-    McDownload *mcDownload = nil;
-    for (McDownload *mc in downLoadQueue_) {
-        if ([mc.idNum isEqualToString:downloadId]) {
-            mcDownload = mc;
+   AFDownloadRequestOperation *downloadOperation = nil;
+    for (AFDownloadRequestOperation *mc in downLoadQueue_) {
+        if ([mc.operationId isEqualToString:downloadId]) {
+            downloadOperation = mc;
             break;
         }
     }
-    if (mcDownload != nil) {
-        [mcDownload stop];
-        mcDownload.status = 0;
-        for (McDownload *mc in downLoadQueue_) {
-            if (mc.status != 0 && mc.status != 4) {//0:stop 1:start 2:done 3: waiting 4:error
-                [mc start];
+    if (downloadOperation != nil) {
+        downloadOperation.operationStatus = @"stop";
+        [downloadOperation pause];
+        [downloadOperation cancel];
+        
+        //AFDownloadRequestOperation cancel 之后就不能再连接了，重新初始化一个新的AFDownloadRequestOperation对象，替换原有对象；
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:downloadOperation.request.URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+        AFDownloadRequestOperation *newDownloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:downloadOperation.targetPath shouldResume:YES];
+        newDownloadingOperation.operationId = downloadOperation.operationId;
+        newDownloadingOperation.operationStatus = @"stop";
+        int index = [downLoadQueue_ indexOfObject:downloadOperation];
+        [downLoadQueue_ replaceObjectAtIndex:index withObject:newDownloadingOperation];
+        
+        BOOL isloading = NO;
+        for (AFDownloadRequestOperation *mc in downLoadQueue_){
+            if (mc.operationStatus == @"loading") {
+                isloading = YES;
                 break;
             }
+        }
+        
+        if (!isloading) {
+            for (AFDownloadRequestOperation *mc in downLoadQueue_) {
+                if (mc.operationStatus != @"stop" && mc.operationStatus != @"error") {
+                    [[DownLoadManager defaultDownLoadManager] beginDownloadTask:mc];
+                    break;
+                }
+            }
+
         }
     }
 
 }
 +(void)continueDownload:(NSString *)downloadId{
-    for (McDownload *mc in downLoadQueue_) {
-        if ([mc.idNum isEqualToString:downloadId]) {
-            mc.status = 3;
+    for (AFDownloadRequestOperation *mc in downLoadQueue_) {
+        if ([mc.operationId isEqualToString:downloadId]) {
+            mc.operationStatus = @"waiting";
             break;
         }
     
     }
     BOOL isLoading = NO;
-    for (McDownload *mc in downLoadQueue_){
-        if (mc.status == 1) {
+    for (AFDownloadRequestOperation *mc in downLoadQueue_){
+        if (mc.operationStatus == @"loading") {
             isLoading = YES;
             break;
         }
     }
     if (!isLoading) {
-        for (McDownload *mc in downLoadQueue_) {
-            if (mc.status != 0 && mc.status != 4) {
-                [mc start];
+        for (AFDownloadRequestOperation *mc in downLoadQueue_) {
+            if (mc.operationStatus != @"stop" && mc.operationStatus != @"error") {
+                [[DownLoadManager defaultDownLoadManager] beginDownloadTask:mc];
                 break;
             }
         }
     }
+  
     
 }
 
 +(int)downloadTaskCount{
     int count = 0;
-    for (McDownload *mc in downLoadQueue_) {
-        if (mc.status != 2) { //0:stop 1:start 2:done 3: waiting 4:error
+    for (AFDownloadRequestOperation *mc in downLoadQueue_) {
+        if (mc.operationStatus != @"finish") { //0:stop 1:start 2:done 3: waiting 4:error
             count++;
         }
     }
     return count;
+}
+
+-(float)getFreeSpace{
+    NSError *error = nil;
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    if (dictionary) {
+          
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+       return [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f;
+    }
+    return 0.0;
+
+
 }
 @end

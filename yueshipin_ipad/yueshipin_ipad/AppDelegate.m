@@ -144,8 +144,8 @@
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     } else {
         self.rootViewController = [[TabBarViewController alloc] init];
-//        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
-//        [self.downLoadManager resumeDownLoad];
+        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
+        [self.downLoadManager resumeDownLoad];
     }
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];

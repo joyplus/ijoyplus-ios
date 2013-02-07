@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "JSBadgeView.h"
 @interface CustomNavigationButtonView : UIView {
 	UILabel* buttonLabel_;
 	UIButton* button_;
@@ -17,7 +18,7 @@
 @property (nonatomic,retain) UILabel* buttonLabel;
 @property (nonatomic,retain) UIButton* button;
 @property (nonatomic,assign) NSInteger warningNumber;
-
+@property (nonatomic,strong) JSBadgeView* badgeView;
 - (void)initUI:(UINavigationController*)navigationController withText:(NSString*)text;
 @end
 

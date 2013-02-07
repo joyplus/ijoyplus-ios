@@ -111,7 +111,9 @@
 }
 
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className{
+   
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
+        
         NSArray *arr = [itemId componentsSeparatedByString:@"_"];
         int num = [[arr objectAtIndex:0] intValue]*10+[[arr objectAtIndex:1] intValue];
         for (UILabel *label in progressLabelArr_) {
@@ -167,7 +169,7 @@
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         
-        [gMGridView_ reloadData];
+        [self reloadDataSource];
     }
     
 }
@@ -247,7 +249,7 @@
         progressLabel.text = [NSString stringWithFormat:@"暂停下载：%i%%", downloadItem.percentage];
     } else if([downloadItem.downloadStatus isEqualToString:@"finish"]){
         progressLabel.text = @"";
-    } else if([downloadItem.downloadStatus isEqualToString:@"wait"]){
+    } else if([downloadItem.downloadStatus isEqualToString:@"waiting"]){
         progressLabel.text = [NSString stringWithFormat:@"等待下载：%i%%", downloadItem.percentage];
     } else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
         progressLabel.text = [NSString stringWithFormat:@"正在下载：%i%%",downloadItem.percentage];
@@ -273,6 +275,10 @@
 
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index{
+    if (index >= [itemArr_ count]) {
+        return;
+    }
+    
     [itemArr_ removeObjectAtIndex:index];
     NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
     NSArray *arr = [SubdownloadItem findByCriteria:query];
@@ -280,7 +286,7 @@
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
-    NSString *fileName = [item.name stringByAppendingString:@".mp4"];
+    NSString *fileName = [item.subitemId stringByAppendingString:@".mp4"];
     //对于错误信息
     NSError *error;
     // 创建文件管理器
@@ -291,7 +297,7 @@
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
     for (NSString *nameStr in fileList) {
-        if ([nameStr isEqualToString:fileName]) {
+        if ([nameStr hasPrefix:fileName]) {
             NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
             [fileMgr removeItemAtPath:deleteFilePath error:&error];
             break;
@@ -315,9 +321,12 @@
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position{
     
+    if (position >= [itemArr_ count]) {
+        return;
+    }
     SubdownloadItem *downloadItem = [itemArr_ objectAtIndex:position];
     if ([downloadItem.downloadStatus isEqualToString:@"finish"]) {
-        NSString *fileName = [downloadItem.name stringByAppendingString:@".mp4"];
+        NSString *fileName = [downloadItem.subitemId stringByAppendingString:@".mp4"];
         NSError *error;
         // 创建文件管理器
         NSFileManager *fileMgr = [NSFileManager defaultManager];
@@ -362,17 +371,53 @@
         }
 
     }
-   else if ([downloadItem.downloadStatus isEqualToString:@"wait"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
+   else if ([downloadItem.downloadStatus isEqualToString:@"waiting"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
         downloadItem.downloadStatus = @"stop";
         [downloadItem save];
         [DownLoadManager stop:downloadItem.subitemId];
-        [self reloadDataSource];
+       
+       NSArray *arr = [downloadItem.subitemId componentsSeparatedByString:@"_"];
+       int num = [[arr objectAtIndex:0] intValue]*10+[[arr objectAtIndex:1] intValue];
+       for (UILabel *label in progressLabelArr_) {
+           if (label.tag == num) {
+               label.text =  [NSString stringWithFormat:@"暂停下载：%i%%", downloadItem.percentage];
+               break;
+           }
+       }
+       
+       for (UIProgressView *progressView in progressArr_) {
+           if (progressView.tag == num) {
+               progressView.progress = downloadItem.percentage/100.0;
+               break;
+           }
+           
+       }
+
+       // [self reloadDataSource];
     }
     else if ([downloadItem.downloadStatus isEqualToString:@"stop"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
-        downloadItem.downloadStatus = @"wait";
+        downloadItem.downloadStatus = @"waiting";
         [downloadItem save];
-        [DownLoadManager continueDownload:downloadItem.subitemId];
-        [self reloadDataSource];
+       
+        
+        NSArray *arr = [downloadItem.subitemId componentsSeparatedByString:@"_"];
+        int num = [[arr objectAtIndex:0] intValue]*10+[[arr objectAtIndex:1] intValue];
+        for (UILabel *label in progressLabelArr_) {
+            if (label.tag == num) {
+                label.text =  [NSString stringWithFormat:@"等待下载：%i%%", downloadItem.percentage];
+                break;
+            }
+        }
+        
+        for (UIProgressView *progressView in progressArr_) {
+            if (progressView.tag == num) {
+                progressView.progress = downloadItem.percentage/100.0;
+                break;
+            }
+            
+        }
+     [DownLoadManager continueDownload:downloadItem.subitemId];
+        //[self reloadDataSource];
     }
 
 

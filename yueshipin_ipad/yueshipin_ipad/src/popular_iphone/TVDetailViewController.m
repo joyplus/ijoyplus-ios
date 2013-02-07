@@ -51,6 +51,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, 480);
     
@@ -379,7 +380,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                //[cell addSubview:downLoad];
+                [cell addSubview:downLoad];
                 
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(15, 155, 96, 28);
@@ -734,7 +735,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         case 10005:{
             
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 //                NSString *responseCode = [result objectForKey:@"res_code"];
 //                if([responseCode isEqualToString:kSuccessResCode]){
 //                    [self showOpSuccessModalView:1 with:ADDFAV];
@@ -930,7 +931,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if(videoUrl == nil){
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
-                if (![[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
+                if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
                 }
                 
