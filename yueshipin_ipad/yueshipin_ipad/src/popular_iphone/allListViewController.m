@@ -132,7 +132,11 @@
     customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
     [customNavigationButtonView_ initUI:self.navigationController withText:nil];
     customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
-    [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+   [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [customNavigationButtonView_ addGestureRecognizer:tapGesture];
     NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
     int num = 0;
     if (numStr != nil) {

@@ -73,13 +73,19 @@
     [myButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithCustomView:myButton];
     self.navigationItem.leftBarButtonItem = customItem;
-    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
-    t.font = [UIFont boldSystemFontOfSize:18];
-    t.textColor = [UIColor whiteColor];
-    t.backgroundColor = [UIColor clearColor];
-    t.textAlignment = UITextAlignmentCenter;
-    t.text = self.name;
-    self.navigationItem.titleView = t;
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
+        t.font = [UIFont boldSystemFontOfSize:18];
+        t.textColor = [UIColor whiteColor];
+        t.backgroundColor = [UIColor clearColor];
+        t.textAlignment = UITextAlignmentCenter;
+        t.text = self.name;
+        self.navigationItem.titleView = t;
+        
+    }else{
+        self.title = self.name;
+    }
     [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)] forBarMetrics:UIBarMetricsDefault];
     CGRect bound = [UIScreen mainScreen].bounds;
 	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width)];

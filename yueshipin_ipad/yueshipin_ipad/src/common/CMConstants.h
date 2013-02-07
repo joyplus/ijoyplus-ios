@@ -86,7 +86,7 @@
 #define APPIRATER_APP_ID				587246114
 
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch"
-#define CLOSE_VIDEO_MODE @"closeVideoMode1"
+#define CLOSE_VIDEO_MODE @"closeVideoMode2"
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 
