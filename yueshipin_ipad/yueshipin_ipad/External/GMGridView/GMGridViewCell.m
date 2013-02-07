@@ -86,6 +86,7 @@
         self.deleteButtonIcon = nil;
         self.deleteButtonOffset = CGPointMake(-5, -5);
         self.deleteButton.alpha = 0;
+        self.deleteButton.backgroundColor = [UIColor clearColor];
         [self addSubview:deleteButton];
         [deleteButton addTarget:self action:@selector(actionDelete) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -185,6 +186,7 @@
                                          offset.y, 
                                          self.deleteButton.frame.size.width, 
                                          self.deleteButton.frame.size.height);
+
 }
 
 - (CGPoint)deleteButtonOffset
@@ -208,10 +210,10 @@
     }
     else
     {
-        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x, 
+        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x,
                                              self.deleteButton.frame.origin.y, 
-                                             35, 
-                                             35);
+                                             50,
+                                             50);
         
         [self.deleteButton setTitle:@"X" forState:UIControlStateNormal];
         [self.deleteButton setBackgroundColor:[UIColor lightGrayColor]];

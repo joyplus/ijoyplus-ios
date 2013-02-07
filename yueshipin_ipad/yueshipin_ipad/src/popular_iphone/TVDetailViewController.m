@@ -1071,6 +1071,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     scrollViewDown_.contentSize = CGSizeMake(285*pageCount_, 84);
     scrollViewDown_.pagingEnabled = YES;
     scrollViewDown_.bounces = NO;
+    scrollViewDown_.delegate = self;
+    //scrollViewDown_.scrollEnabled = NO;
+    scrollViewDown_.tag = 99999;
     scrollViewDown_.showsHorizontalScrollIndicator = NO;
     
     NSString *cacheKey = [NSString stringWithFormat:@"drama_epi_%@",[videoInfo_ objectForKey:@"id"]];
@@ -1190,6 +1193,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     scrollViewDownDL_.contentSize = CGSizeMake(285*pageCount_, 84);
     scrollViewDownDL_.pagingEnabled = YES;
     scrollViewDownDL_.bounces = NO;
+    scrollViewDownDL_.delegate = self;
     scrollViewDownDL_.showsHorizontalScrollIndicator = NO;
     
     NSString *cacheKey = [NSString stringWithFormat:@"drama_epi_%@",[videoInfo_ objectForKey:@"id"]];
@@ -1443,13 +1447,19 @@ NSComparator cmptr = ^(id obj1, id obj2){
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     //[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
     //[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
     [pullToRefreshManager_ tableViewReleased];
+    
+    if (scrollView.tag == 99999) {
+        CGPoint point = scrollView.contentOffset;
+        NSLog(@"scroll scroll scroll scroll x:%f y:%f" ,point.x,point.y);
+        //[scrollViewUp_ setContentOffset:CGPointMake(point.x +52, 0.0f) animated:YES];
+    }
+
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {

@@ -35,6 +35,7 @@
     
     int currentPage_;
     int currentPageDownLoad_;
+    int downScrollCount_;
     UIButton *next_;
     UIButton *pre_;
     UIButton *nextDL_;
