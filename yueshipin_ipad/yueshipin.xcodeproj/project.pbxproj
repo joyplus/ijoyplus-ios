@@ -95,6 +95,10 @@
 		220E4969169BF0E400A29756 /* UIView+GMGridViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4964169BF0E400A29756 /* UIView+GMGridViewAdditions.m */; };
 		22196D8D1697DE74008E6D62 /* wyatt_video_title.png in Resources */ = {isa = PBXBuildFile; fileRef = 22196D8C1697DE74008E6D62 /* wyatt_video_title.png */; };
 		22211B8B16B9369A00A9498B /* download_disable@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22211B8A16B9369A00A9498B /* download_disable@2x.png */; };
+		2226B9E516C0F2DD0068A8FA /* my_setting_app_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2226B9E316C0F2DD0068A8FA /* my_setting_app_s@2x.png */; };
+		2226B9E616C0F2DD0068A8FA /* my_setting_app@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2226B9E416C0F2DD0068A8FA /* my_setting_app@2x.png */; };
+		2226B9F716C0F3F20068A8FA /* AppRecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */; };
+		2226B9F916C0F5C60068A8FA /* jing_pin_tui_jian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2226B9F816C0F5C60068A8FA /* jing_pin_tui_jian@2x.png */; };
 		22343DC716BBF7B800AFE83A /* iphone_cache_video2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22343DC616BBF7B800AFE83A /* iphone_cache_video2@2x.png */; };
 		22343DC916BBFB0B00AFE83A /* iphone_cache_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22343DC816BBFB0B00AFE83A /* iphone_cache_video@2x.png */; };
 		22343DD516BC007C00AFE83A /* NewDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343DD216BC007C00AFE83A /* NewDownloadManager.m */; };
@@ -857,6 +861,11 @@
 		220E4964169BF0E400A29756 /* UIView+GMGridViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+GMGridViewAdditions.m"; sourceTree = "<group>"; };
 		22196D8C1697DE74008E6D62 /* wyatt_video_title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wyatt_video_title.png; sourceTree = "<group>"; };
 		22211B8A16B9369A00A9498B /* download_disable@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_disable@2x.png"; sourceTree = "<group>"; };
+		2226B9E316C0F2DD0068A8FA /* my_setting_app_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_setting_app_s@2x.png"; sourceTree = "<group>"; };
+		2226B9E416C0F2DD0068A8FA /* my_setting_app@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "my_setting_app@2x.png"; sourceTree = "<group>"; };
+		2226B9F516C0F3F10068A8FA /* AppRecommendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRecommendViewController.h; sourceTree = "<group>"; };
+		2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRecommendViewController.m; sourceTree = "<group>"; };
+		2226B9F816C0F5C60068A8FA /* jing_pin_tui_jian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "jing_pin_tui_jian@2x.png"; sourceTree = "<group>"; };
 		22343DC616BBF7B800AFE83A /* iphone_cache_video2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphone_cache_video2@2x.png"; sourceTree = "<group>"; };
 		22343DC816BBFB0B00AFE83A /* iphone_cache_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iphone_cache_video@2x.png"; sourceTree = "<group>"; };
 		22343DD116BC007C00AFE83A /* NewDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDownloadManager.h; sourceTree = "<group>"; };
@@ -1876,6 +1885,8 @@
 				22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */,
 				E73688111695C5B300549C74 /* StatementsViewController.h */,
 				E73688121695C5B300549C74 /* StatementsViewController.m */,
+				2226B9F516C0F3F10068A8FA /* AppRecommendViewController.h */,
+				2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */,
 			);
 			path = setting_iphone;
 			sourceTree = "<group>";
@@ -1895,6 +1906,9 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				2226B9F816C0F5C60068A8FA /* jing_pin_tui_jian@2x.png */,
+				2226B9E316C0F2DD0068A8FA /* my_setting_app_s@2x.png */,
+				2226B9E416C0F2DD0068A8FA /* my_setting_app@2x.png */,
 				22343DC816BBFB0B00AFE83A /* iphone_cache_video@2x.png */,
 				22343DC616BBF7B800AFE83A /* iphone_cache_video2@2x.png */,
 				22B0464016BB7475005966B8 /* remind@2x.png */,
@@ -3486,6 +3500,9 @@
 				22B0464116BB7475005966B8 /* remind@2x.png in Resources */,
 				22343DC716BBF7B800AFE83A /* iphone_cache_video2@2x.png in Resources */,
 				22343DC916BBFB0B00AFE83A /* iphone_cache_video@2x.png in Resources */,
+				2226B9E516C0F2DD0068A8FA /* my_setting_app_s@2x.png in Resources */,
+				2226B9E616C0F2DD0068A8FA /* my_setting_app@2x.png in Resources */,
+				2226B9F916C0F5C60068A8FA /* jing_pin_tui_jian@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3661,6 +3678,7 @@
 				22343DD516BC007C00AFE83A /* NewDownloadManager.m in Sources */,
 				22343DD616BC007C00AFE83A /* DownloadUrlFinder.m in Sources */,
 				22343DDA16BC026500AFE83A /* AFDownloadRequestOperation.m in Sources */,
+				2226B9F716C0F3F20068A8FA /* AppRecommendViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -119,24 +119,38 @@
     self.navigationItem.hidesBackButton = YES;
     
 
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 40, 30);
-    rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateNormal];
-    //[rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
-    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-    self.navigationItem.rightBarButtonItem = rightButtonItem;
-    
-//    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
-//    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
-//    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
-//    [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-//    [self setWarningNum];
-//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+//    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+//    rightButton.frame = CGRectMake(0, 0, 40, 30);
+//    rightButton.backgroundColor = [UIColor clearColor];
+//    [rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateNormal];
+//    //[rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
+//    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
+//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
 //    self.navigationItem.rightBarButtonItem = rightButtonItem;
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
+    
+    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
+    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
+    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
+    [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
+    int num = 0;
+    if (numStr != nil) {
+        num = [numStr intValue];
+    }
+    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
+    if (num >0 && num <10) {
+        customNavigationButtonView_.badgeView.hidden = NO;
+        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
+    }
+    else if (num >=10){
+        customNavigationButtonView_.warningNumber = num;
+    }
+
+    //[self setWarningNum];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-88) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
@@ -160,7 +174,25 @@
     
 }
 -(void)setWarningNum{
-    customNavigationButtonView_.warningNumber = [DownLoadManager downloadTaskCount];
+     NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
+    int num = 0;
+    if (numStr != nil) {
+        num = [numStr intValue];
+    }
+     num++;
+    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
+    if (num >0 && num <10) {
+        customNavigationButtonView_.badgeView.hidden = NO;
+        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
+        [customNavigationButtonView_.badgeView setNeedsLayout];
+        customNavigationButtonView_.warningNumber = 0;
+    }
+    else if (num >=10){
+        customNavigationButtonView_.warningNumber = num;
+        customNavigationButtonView_.badgeView.badgeText = @"";
+        customNavigationButtonView_.badgeView.hidden = YES;
+    }
+     
 
 }
 -(void)search:(id)sender{
@@ -171,13 +203,19 @@
 }
 
 -(void)setting:(id)sender{
-    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
-    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+//    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+//    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
     
-//    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
-//    downloadViewController.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:downloadViewController animated:YES];
+    
+//    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+    customNavigationButtonView_.warningNumber = 0;
+    customNavigationButtonView_.badgeView.badgeText = @"";
+    customNavigationButtonView_.badgeView.hidden = YES;
+    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",0]];
+    
+    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
+    downloadViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:downloadViewController animated:YES];
 }
 
 

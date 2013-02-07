@@ -44,7 +44,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 @end
 
 @implementation AFDownloadRequestOperation
-@synthesize downloadingDelegate, subdownloadingDelegate, operationId, suboperationId;
+@synthesize downloadingDelegate, subdownloadingDelegate, operationId, suboperationId, operationStatus;
 @synthesize targetPath = _targetPath;
 @synthesize tempPath = _tempPath;
 @synthesize totalContentLength = _totalContentLength;
