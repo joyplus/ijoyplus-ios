@@ -351,7 +351,11 @@
                 downLoad.tag = 10004;
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
+                [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
+                if (![self isDownloadUrlEnable]) {
+                    downLoad.enabled = NO;
+                }
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:downLoad];
                 
@@ -671,6 +675,79 @@
         }
     }
     return videoUrl;
+}
+-(BOOL)isDownloadUrlEnable{
+    NSString *downloadUrl = nil;
+    for (int i = 0; i <[episodesArr_ count]; i++) {
+        NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:i] objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            for(NSDictionary *tempVideo in videoUrlArray){
+                if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
+                    downloadUrl = [self parseDownloadUrl:tempVideo];
+                    break;
+                }
+            }
+            if(downloadUrl == nil){
+                downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            }
+        }
+        if (downloadUrl != nil ) {
+            return YES;
+        }
+    }
+    return NO;
+    
+}
+
+- (NSString *)parseDownloadUrl:(NSDictionary *)tempVideo
+{
+    NSString *videoUrl;
+    NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+    for(NSDictionary *url in urlArray){
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+            break;
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    if(videoUrl == nil){
+        for(NSDictionary *url in urlArray){
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+        }
+    }
+    
+    
+    if(videoUrl == nil){
+        if(urlArray.count > 0){
+            for(NSDictionary *url in urlArray){
+                if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
+                    videoUrl = [url objectForKey:@"url"];
+                }
+                
+            }
+        }
+    }
+    return videoUrl;
+    
+    
 }
 
 -(UIView *)showEpisodesplayView{

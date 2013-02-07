@@ -87,14 +87,19 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:[UIColor whiteColor]];
+
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
+        t.font = [UIFont boldSystemFontOfSize:18];
+        t.textColor = [UIColor whiteColor];
+        t.backgroundColor = [UIColor clearColor];
+        t.textAlignment = UITextAlignmentCenter;
+        t.text = self.name;
+        self.navigationItem.titleView = t;
     
-    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
-    t.font = [UIFont boldSystemFontOfSize:18];
-    t.textColor = [UIColor whiteColor];
-    t.backgroundColor = [UIColor clearColor];
-    t.textAlignment = UITextAlignmentCenter;
-    t.text = self.name;
-    self.navigationItem.titleView = t;
+    }else{
+        self.title = self.name;
+    }
     
     UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
     myButton.frame = CGRectMake(0, 0, 56, 29);

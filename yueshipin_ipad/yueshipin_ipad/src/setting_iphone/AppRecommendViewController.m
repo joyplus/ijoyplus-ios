@@ -46,11 +46,11 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
     bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
-    UIImageView *appRecommedV = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 109, 24)];
-    appRecommedV.image = [UIImage imageNamed:@"jing_pin_tui_jian.png"];
-    [self.view addSubview:appRecommedV];
+//    UIImageView *appRecommedV = [[UIImageView alloc] initWithFrame:CGRectMake(20, 10, 109, 24)];
+//    appRecommedV.image = [UIImage imageNamed:@"jing_pin_tui_jian.png"];
+//    [self.view addSubview:appRecommedV];
     
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(10, 44,300, kCurrentWindowHeight -54) appkey:umengAppKey slotId:nil currentViewController:self];
+    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(10, 24,300, kCurrentWindowHeight -34) appkey:umengAppKey slotId:nil currentViewController:self];
     [_mGridView setBackgroundColor:[UIColor clearColor]];
     _mGridView.datasource = self;
     _mGridView.delegate = self;
