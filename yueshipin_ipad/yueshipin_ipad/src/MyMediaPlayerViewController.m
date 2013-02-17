@@ -117,7 +117,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
       loadingView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.height, self.view.bounds.size.width)];
       imageView = [[UIImageView alloc]initWithFrame:loadingView.frame];
-      imageView.image = [UIImage imageNamed:@"cache_video"];
+      imageView.image = [UIImage imageNamed:@"cache_video@2x.jpg"];
     } else{
         loadingView = [[UIView alloc]initWithFrame:CGRectMake(-13, 0, self.view.bounds.size.height+44, self.view.bounds.size.width)];
         imageView = [[UIImageView alloc]initWithFrame:loadingView.frame];
