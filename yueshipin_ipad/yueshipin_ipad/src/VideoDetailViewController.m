@@ -279,17 +279,6 @@
     }
 }
 
-- (void)downloadBegin:(McDownload *)aDownload didReceiveResponseHeaders:(NSURLResponse *)responseHeaders
-{
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"开始下载" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-}
-
-- (void)downloadFaild:(McDownload *)aDownload didFailWithError:(NSError *)error
-{
-    [[AppDelegate instance].rootViewController showFailureModalView:1.5];
-}
-
 - (void)getDownloadUrls:(int)num
 {
     if(num < 0 || num >=episodeArray.count){

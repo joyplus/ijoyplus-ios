@@ -10,7 +10,6 @@
 #import "UIImageView+WebCache.h"
 #import "DownloadItem.h"
 #import "DownLoadManager.h"
-#import "McDownload.h"
 #import "IphoneSubdownloadViewController.h"
 #import "AppDelegate.h"
 #import "MyMediaPlayerViewController.h"
