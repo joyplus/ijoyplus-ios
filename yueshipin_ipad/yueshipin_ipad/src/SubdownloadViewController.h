@@ -8,7 +8,6 @@
 
 #import "GenericBaseViewController.h"
 #import "MenuViewController.h"
-#import "McDownload.h"
 #import "DownloadViewController.h"
 
 @interface SubdownloadViewController : GenericBaseViewController

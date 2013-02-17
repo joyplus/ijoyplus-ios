@@ -9,7 +9,6 @@
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
 #import "SlideBaseViewController.h"
-#import "McDownload.h"
 
 @protocol VideoDetailViewControllerDelegate <NSObject>
 
@@ -26,12 +25,11 @@
 - (void)playNextEpisode;
 @end
 
-@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate, McDownloadDelegate,  DramaDetailViewControllerDelegate>{
+@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate>{
     SinaWeibo *_sinaweibo;
     NSDictionary *video;
     NSArray *topics;
     NSInteger willPlayIndex;
-    McDownload  *downloader;
     NSMutableArray *downloadUrls;
     NSArray *episodeArray;
 }
