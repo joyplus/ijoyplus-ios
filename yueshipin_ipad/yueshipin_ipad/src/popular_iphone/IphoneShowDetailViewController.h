@@ -26,6 +26,7 @@
     UILabel *summaryLabel_;
     UIButton *moreBtn_;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    BOOL isloaded_ ;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;

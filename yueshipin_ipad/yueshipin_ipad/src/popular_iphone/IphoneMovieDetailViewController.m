@@ -80,6 +80,8 @@
     name_ = self.title;
     type_ = 1;
     
+    isLoaded_ = NO;
+    
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
@@ -131,6 +133,7 @@
     NSString *key = [NSString stringWithFormat:@"%@%@", @"movie",itemId ];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
+        isLoaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"movie"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -153,6 +156,7 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
+        isLoaded_ = YES;
         videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -364,8 +368,10 @@
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:downLoad];
-                
+                if (isLoaded_) {
+                      [cell addSubview:downLoad];
+                }
+
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
                 if (itemId == nil) {
                     itemId = [self.infoDic objectForKey:@"content_id"];

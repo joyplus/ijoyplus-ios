@@ -81,6 +81,7 @@
     type_ = 3;
     name_ = self.title;
     
+    isloaded_ = NO;
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
@@ -127,6 +128,7 @@
     NSString *key = [NSString stringWithFormat:@"%@%@", @"show", [self.infoDic objectForKey:@"prod_id"]];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
+        isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"show"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
@@ -151,6 +153,7 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
+        isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[result objectForKey:@"show"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
@@ -357,8 +360,11 @@
                     downLoad.enabled = NO;
                 }
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:downLoad];
                 
+                if (isloaded_) {
+                    [cell addSubview:downLoad];
+                }
+    
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(15, 155, 96, 28);
                 report.tag = 10005;
