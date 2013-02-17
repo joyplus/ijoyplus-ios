@@ -65,7 +65,6 @@
 		220E4919169BEE4B00A29756 /* SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4907169BEE4B00A29756 /* SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		220E491A169BEE4B00A29756 /* UIColor-SQLitePersistentObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4909169BEE4B00A29756 /* UIColor-SQLitePersistentObject.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		220E491B169BEE4B00A29756 /* UIImage-SQLitePersistence.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E490B169BEE4B00A29756 /* UIImage-SQLitePersistence.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		220E491F169BEE5C00A29756 /* McDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E491E169BEE5C00A29756 /* McDownload.m */; };
 		220E4923169BEE6D00A29756 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4922169BEE6D00A29756 /* JSBadgeView.m */; };
 		220E4925169BEE8C00A29756 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220E4924169BEE8C00A29756 /* Parse.framework */; };
 		220E4927169BEEF100A29756 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 220E4926169BEEF100A29756 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -813,8 +812,6 @@
 		220E4909169BEE4B00A29756 /* UIColor-SQLitePersistentObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor-SQLitePersistentObject.m"; sourceTree = "<group>"; };
 		220E490A169BEE4B00A29756 /* UIImage-SQLitePersistence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage-SQLitePersistence.h"; sourceTree = "<group>"; };
 		220E490B169BEE4B00A29756 /* UIImage-SQLitePersistence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage-SQLitePersistence.m"; sourceTree = "<group>"; };
-		220E491D169BEE5C00A29756 /* McDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McDownload.h; sourceTree = "<group>"; };
-		220E491E169BEE5C00A29756 /* McDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McDownload.m; sourceTree = "<group>"; };
 		220E4921169BEE6D00A29756 /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
 		220E4922169BEE6D00A29756 /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		220E4924169BEE8C00A29756 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -1050,8 +1047,8 @@
 		22CE9F71169AF04800D4FC76 /* tab2_detailed_common_writing1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab2_detailed_common_writing1.png; sourceTree = "<group>"; };
 		22CE9F73169AF2D200D4FC76 /* tab2_detailed_common_jian_tou.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab2_detailed_common_jian_tou.png; sourceTree = "<group>"; };
 		22D11DAD16A641A200B49FFD /* Default_5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default_5@2x.png"; sourceTree = "<group>"; };
-		22D11DAE16A641A200B49FFD /* Icon-54.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-54.png"; sourceTree = "<group>"; };
-		22D11DAF16A641A200B49FFD /* Icon-114@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-114@2x.png"; sourceTree = "<group>"; };
+		22D11DAE16A641A200B49FFD /* Icon-54.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-54.png"; path = "yueshipin_ipad/Resource/Resource_iphone/Icon-54.png"; sourceTree = "<group>"; };
+		22D11DAF16A641A200B49FFD /* Icon-114@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-114@2x.png"; path = "yueshipin_ipad/Resource/Resource_iphone/Icon-114@2x.png"; sourceTree = "<group>"; };
 		22D11DB316A641D900B49FFD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		22DD7B2516A5321800FEE8F0 /* summryBg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = summryBg.png; sourceTree = "<group>"; };
 		22DD7B2616A5321800FEE8F0 /* summryBg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "summryBg@2x.png"; sourceTree = "<group>"; };
@@ -1709,15 +1706,6 @@
 			path = SQLLite3;
 			sourceTree = "<group>";
 		};
-		220E491C169BEE5C00A29756 /* McDownload */ = {
-			isa = PBXGroup;
-			children = (
-				220E491D169BEE5C00A29756 /* McDownload.h */,
-				220E491E169BEE5C00A29756 /* McDownload.m */,
-			);
-			path = McDownload;
-			sourceTree = "<group>";
-		};
 		220E4920169BEE6D00A29756 /* JSBadgeView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1976,8 +1964,6 @@
 				22770DC116A68FB30015842B /* more_bg_3.png */,
 				22770DC216A68FB30015842B /* more_bg_3@2x.png */,
 				22D11DAD16A641A200B49FFD /* Default_5@2x.png */,
-				22D11DAE16A641A200B49FFD /* Icon-54.png */,
-				22D11DAF16A641A200B49FFD /* Icon-114@2x.png */,
 				22DD7B2916A5422000FEE8F0 /* cancelSearch_s.png */,
 				22DD7B2A16A5422000FEE8F0 /* cancelSearch_s@2x.png */,
 				22DD7B2B16A5422000FEE8F0 /* cancelSearch.png */,
@@ -2141,7 +2127,6 @@
 				22F08FBA16AEA6E800C16AD2 /* DDProgressView */,
 				220E4958169BF0E400A29756 /* GMGridView */,
 				220E4920169BEE6D00A29756 /* JSBadgeView */,
-				220E491C169BEE5C00A29756 /* McDownload */,
 				220E48EB169BEE4B00A29756 /* SQLLite3 */,
 				EBB59CB816670A3E00F646C7 /* umeng */,
 				EB82016C1665D41F0015F447 /* SSCheckBoxView */,
@@ -2472,6 +2457,8 @@
 				22F3E98A169D1806002723AF /* Default.png */,
 				EBB9E0DC167090FD006ECEE8 /* Icon-72@2x.png */,
 				EBB9E0DA167090F4006ECEE8 /* Icon-72.png */,
+				22D11DAE16A641A200B49FFD /* Icon-54.png */,
+				22D11DAF16A641A200B49FFD /* Icon-114@2x.png */,
 				EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */,
 				EB9382A21668A1CC0046A3B1 /* Default-Landscape~ipad.png */,
 				EB6DEA72165A2F1A00AF8003 /* yueshipin_ipad */,
@@ -3643,7 +3630,6 @@
 				220E4919169BEE4B00A29756 /* SQLitePersistentObject.m in Sources */,
 				220E491A169BEE4B00A29756 /* UIColor-SQLitePersistentObject.m in Sources */,
 				220E491B169BEE4B00A29756 /* UIImage-SQLitePersistence.m in Sources */,
-				220E491F169BEE5C00A29756 /* McDownload.m in Sources */,
 				220E4923169BEE6D00A29756 /* JSBadgeView.m in Sources */,
 				220E493E169BF05500A29756 /* ActionUtility.m in Sources */,
 				220E4947169BF07F00A29756 /* DownloadHandler.m in Sources */,

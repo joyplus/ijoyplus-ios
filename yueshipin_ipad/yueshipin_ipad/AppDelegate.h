@@ -11,7 +11,6 @@
 #import "TabBarViewController.h"
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
-#import "McDownload.h"
 #import "DownLoadManager.h"
 #import "NewDownloadManager.h"
 
