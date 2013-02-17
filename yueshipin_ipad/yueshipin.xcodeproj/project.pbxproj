@@ -475,6 +475,7 @@
 		EB63D4CB16D07A0200B642C7 /* top_setting_common@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB63D3DC16D07A0200B642C7 /* top_setting_common@2x.png */; };
 		EB63D4CC16D07A0200B642C7 /* undownload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB63D3DD16D07A0200B642C7 /* undownload@2x.png */; };
 		EB63D4CD16D07A0200B642C7 /* wyatt_video_title.png in Resources */ = {isa = PBXBuildFile; fileRef = EB63D3DE16D07A0200B642C7 /* wyatt_video_title.png */; };
+		EB63D4CF16D07EA700B642C7 /* Icon-144@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB63D4CE16D07EA700B642C7 /* Icon-144@2x.png */; };
 		EB6DEA6D165A2F1A00AF8003 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */; };
 		EB6DEA6F165A2F1A00AF8003 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */; };
 		EB6DEA71165A2F1A00AF8003 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB6DEA70165A2F1A00AF8003 /* CoreGraphics.framework */; };
@@ -658,7 +659,6 @@
 		EBB9E0D716706ABA006ECEE8 /* about_content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0D316706AB9006ECEE8 /* about_content@2x.png */; };
 		EBB9E0D916706ABA006ECEE8 /* about_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0D516706ABA006ECEE8 /* about_title@2x.png */; };
 		EBB9E0DB167090F5006ECEE8 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0DA167090F4006ECEE8 /* Icon-72.png */; };
-		EBB9E0DD167090FE006ECEE8 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB9E0DC167090FD006ECEE8 /* Icon-72@2x.png */; };
 		EBBA00BF166488D70069FE7E /* DingListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBA00BD166488D70069FE7E /* DingListViewController.m */; };
 		EBBA00D3166496600069FE7E /* collect_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA00CD166496600069FE7E /* collect_title@2x.png */; };
 		EBBA00D4166496600069FE7E /* list_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBA00CE166496600069FE7E /* list_title@2x.png */; };
@@ -1312,6 +1312,7 @@
 		EB63D3DC16D07A0200B642C7 /* top_setting_common@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "top_setting_common@2x.png"; path = "yueshipin_ipad/Resource_iphone/top_setting_common@2x.png"; sourceTree = SOURCE_ROOT; };
 		EB63D3DD16D07A0200B642C7 /* undownload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "undownload@2x.png"; path = "yueshipin_ipad/Resource_iphone/undownload@2x.png"; sourceTree = SOURCE_ROOT; };
 		EB63D3DE16D07A0200B642C7 /* wyatt_video_title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wyatt_video_title.png; path = yueshipin_ipad/Resource_iphone/wyatt_video_title.png; sourceTree = SOURCE_ROOT; };
+		EB63D4CE16D07EA700B642C7 /* Icon-144@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-144@2x.png"; sourceTree = "<group>"; };
 		EB6DEA68165A2F1A00AF8003 /* yueshipin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yueshipin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1547,7 +1548,6 @@
 		EBB9E0D316706AB9006ECEE8 /* about_content@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "about_content@2x.png"; sourceTree = "<group>"; };
 		EBB9E0D516706ABA006ECEE8 /* about_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "about_title@2x.png"; sourceTree = "<group>"; };
 		EBB9E0DA167090F4006ECEE8 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		EBB9E0DC167090FD006ECEE8 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		EBBA00BC166488D70069FE7E /* DingListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DingListViewController.h; sourceTree = "<group>"; };
 		EBBA00BD166488D70069FE7E /* DingListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DingListViewController.m; sourceTree = "<group>"; };
 		EBBA00CD166496600069FE7E /* collect_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collect_title@2x.png"; sourceTree = "<group>"; };
@@ -2491,8 +2491,8 @@
 				22D11DB316A641D900B49FFD /* Default-568h@2x.png */,
 				22F3E98C169D1815002723AF /* Default@2x.png */,
 				22F3E98A169D1806002723AF /* Default.png */,
-				EBB9E0DC167090FD006ECEE8 /* Icon-72@2x.png */,
 				EBB9E0DA167090F4006ECEE8 /* Icon-72.png */,
+				EB63D4CE16D07EA700B642C7 /* Icon-144@2x.png */,
 				EB63D2EC16D079D400B642C7 /* Icon-54.png */,
 				EB63D2ED16D079D400B642C7 /* Icon-114@2x.png */,
 				EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */,
@@ -3160,7 +3160,6 @@
 				EBB9E0D716706ABA006ECEE8 /* about_content@2x.png in Resources */,
 				EBB9E0D916706ABA006ECEE8 /* about_title@2x.png in Resources */,
 				EBB9E0DB167090F5006ECEE8 /* Icon-72.png in Resources */,
-				EBB9E0DD167090FE006ECEE8 /* Icon-72@2x.png in Resources */,
 				EBB5AF151671C68800AD15C9 /* show_placeholder@2x.png in Resources */,
 				EBB5AF171671EC8E00AD15C9 /* list_background@2x.png in Resources */,
 				EBBCDBB71675901C006E2F64 /* drama_btn.png in Resources */,
@@ -3538,6 +3537,7 @@
 				EB63D4CB16D07A0200B642C7 /* top_setting_common@2x.png in Resources */,
 				EB63D4CC16D07A0200B642C7 /* undownload@2x.png in Resources */,
 				EB63D4CD16D07A0200B642C7 /* wyatt_video_title.png in Resources */,
+				EB63D4CF16D07EA700B642C7 /* Icon-144@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
