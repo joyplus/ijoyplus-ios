@@ -24,6 +24,7 @@
     BOOL _reloading;
     NSUInteger reloads_;
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    BOOL isLoaded_;
 
 }
 @property (nonatomic, strong) NSDictionary *infoDic;

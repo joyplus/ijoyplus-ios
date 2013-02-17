@@ -22,6 +22,7 @@
 #import "DownLoadManager.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
+#define TV_TYPE 9000
 @interface allListViewController ()
 
 @end
@@ -280,10 +281,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *item = [self.listArray objectAtIndex:indexPath.row];
     ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-    listDetailViewController.Type = MOVIE_TYPE;
+    NSString *type = [item objectForKey:@"prod_type"];
+    if ([type isEqualToString:@"1"]) {
+        listDetailViewController.Type = MOVIE_TYPE;
+    }
+    else if ([type isEqualToString:@"2"]){
+        listDetailViewController.Type = TV_TYPE;
+    }
+    
     listDetailViewController.topicId = [item objectForKey:@"id"];
     listDetailViewController.title = [item objectForKey:@"name"];
     listDetailViewController.hidesBottomBarWhenPushed = YES;

@@ -13,11 +13,15 @@
 #define MOVIE_POSTER_HEIGHT 100 
 
 // for App Store
-#define CHANNEL_ID @""
+//#define CHANNEL_ID @""
 // for 91 Store
 //#define CHANNEL_ID @"91store"
 // for PP Live
 //#define CHANNEL_ID @"pp"
+// for sohu 
+//#define CHANNEL_ID @"b005001"
+
+#define CHANNEL_ID @"b002001"
 
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"

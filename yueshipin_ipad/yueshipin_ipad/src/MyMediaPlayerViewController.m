@@ -131,7 +131,7 @@
     loadingView.backgroundColor = [UIColor blackColor];
     [loadingView addSubview:imageView];
     UILabel *playtimeLab = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-    playtimeLab.center = CGPointMake([AppDelegate instance].window.bounds.size.height/2, 240);
+    playtimeLab.center = CGPointMake(10+kFullWindowHeight/2, 240);
     playtimeLab.text = playTime;
     playtimeLab.backgroundColor = [UIColor clearColor];
     playtimeLab.textColor = [UIColor whiteColor];

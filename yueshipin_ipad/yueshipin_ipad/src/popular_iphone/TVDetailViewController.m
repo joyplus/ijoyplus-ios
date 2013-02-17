@@ -86,6 +86,7 @@
     
     currentPage_ = 1;
     isDownLoad_ = NO;
+    isloaded_ = NO;
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
@@ -138,6 +139,7 @@
     NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil){
+        isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
        // episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
          [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
@@ -164,6 +166,7 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
+        isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[result objectForKey:@"tv"];
         //episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
@@ -380,8 +383,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
-                [cell addSubview:downLoad];
-                
+                if (isloaded_) {
+                     [cell addSubview:downLoad];
+                }
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(15, 155, 96, 28);
                 report.tag = 10005;
@@ -1023,7 +1027,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
     scrollViewUp_ = [[UIScrollView alloc] initWithFrame:CGRectMake(22, 13, 260, 20)];
     scrollViewUp_.backgroundColor = [UIColor clearColor];
-    scrollViewUp_.contentSize = CGSizeMake(208*page_, 20);
+    scrollViewUp_.contentSize = CGSizeMake(260*page_, 20);
+  
     scrollViewUp_.pagingEnabled = YES;
     scrollViewUp_.bounces = NO;
     scrollViewUp_.showsHorizontalScrollIndicator = NO;
@@ -1147,7 +1152,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
     scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(22, 42, 260, 20)];
     scrollViewUpDL_.backgroundColor = [UIColor clearColor];
-    scrollViewUpDL_.contentSize = CGSizeMake(208*page_, 20);
+    scrollViewUpDL_.contentSize = CGSizeMake(260*page_, 20);
     scrollViewUpDL_.pagingEnabled = YES;
     scrollViewUpDL_.bounces = NO;
     scrollViewUpDL_.showsHorizontalScrollIndicator = NO;

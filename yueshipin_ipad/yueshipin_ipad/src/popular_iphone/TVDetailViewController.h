@@ -41,6 +41,7 @@
     UIButton *nextDL_;
     UIButton *preDL_;
     BOOL isDownLoad_;
+    BOOL isloaded_;
 }
 @property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
