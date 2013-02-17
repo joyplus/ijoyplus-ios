@@ -122,9 +122,9 @@
         loadingView = [[UIView alloc]initWithFrame:CGRectMake(-13, 0, self.view.bounds.size.height+44, self.view.bounds.size.width)];
         imageView = [[UIImageView alloc]initWithFrame:loadingView.frame];
         if([AppDelegate instance].window.bounds.size.height == 568){
-            imageView.image = [UIImage imageNamed:@"iphone_cache_video"];
+            imageView.image = [UIImage imageNamed:@"iphone_cache_video@2x.jpg"];
         } else {
-            imageView.image = [UIImage imageNamed:@"iphone_cache_video2"];
+            imageView.image = [UIImage imageNamed:@"iphone_cache_video2@2x.jpg"];
         }
     }
     //
