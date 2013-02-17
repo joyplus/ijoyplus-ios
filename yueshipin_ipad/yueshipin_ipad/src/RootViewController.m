@@ -111,7 +111,7 @@
 	rootView.autoresizingMask = UIViewAutoresizingFlexibleWidth + UIViewAutoresizingFlexibleHeight;
 	[rootView setBackgroundColor:[UIColor clearColor]];
     
-    UIImageView *bgImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"background"]];
+    UIImageView *bgImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"background@2x.jpg"]];
     bgImageView.frame = CGRectMake(rootView.frame.origin.x, rootView.frame.origin.y-2, rootView.frame.size.width, 750);
     [rootView addSubview:bgImageView];
 	
