@@ -347,7 +347,7 @@
         content = @"即将播出";
     }
     else{
-        content = [NSString stringWithFormat:@"上次播放播放至: %@",time];
+        content = [NSString stringWithFormat:@"上次播放至: %@",time];
     }
     return content;
     

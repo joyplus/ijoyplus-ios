@@ -170,7 +170,6 @@
         videoInfo_ = (NSDictionary *)[result objectForKey:@"tv"];
         //episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
-        NSLog(@"161 count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
@@ -308,7 +307,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
+                if (directors == nil) {
+                    directors = [self.infoDic objectForKey:@"director"];
+                }
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
+                if (actors == nil) {
+                    actors = [self.infoDic objectForKey:@"star"];
+                }
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
                 NSString *area = [self.infoDic objectForKey:@"area"];
                 

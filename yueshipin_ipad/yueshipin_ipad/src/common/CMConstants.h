@@ -21,7 +21,7 @@
 // for sohu 
 //#define CHANNEL_ID @"b005001"
 
-#define CHANNEL_ID @"b002001"
+#define CHANNEL_ID @"b006001"
 
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"

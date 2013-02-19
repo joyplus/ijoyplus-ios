@@ -293,7 +293,7 @@
 - (void)playVideo{
     CGRect bound = self.view.bounds;
     playerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL:self.workingUrl];
-    playerViewController.view.frame = CGRectMake(0, 0, bound.size.width, bound.size.height);
+    playerViewController.view.frame = CGRectMake(0, -20, bound.size.width, bound.size.height+20);
     playerViewController.moviePlayer.scalingMode = MPMovieScalingModeNone;
     [self.view insertSubview:self.playerViewController.view belowSubview:loadingView];
     

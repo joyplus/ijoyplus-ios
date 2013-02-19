@@ -103,19 +103,18 @@
         if (cell == nil) {
             cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-//        cell.textLabel.text = [infoDic objectForKey:@"prod_name"];
-//        cell.textLabel.font = [UIFont systemFontOfSize:15];
-//        //[cell.titleLab removeFromSuperview];
+
         cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
         cell.titleLab.frame = CGRectMake(10, 24, 220, 15);
          cell.actors.text  = [self composeContent:infoDic];
-        //if ([[infoDic objectForKey:@"prod_type"] isEqualToString:@"2"]) {
-           
-            [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
-        //}
+        [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
+         cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.deleteBtn addTarget:self action:@selector(deleteRow:) forControlEvents:UIControlEventTouchUpInside];
+        cell.deleteBtn.hidden = YES;
+        [cell addCustomGestureRecognizer];
         return cell;
     }
     else if (type_ == 1) {
@@ -136,13 +135,13 @@
         [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         [cell.contentView addSubview:imageView];
         
-        UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 200, 15)];
+        UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 170, 15)];
         titleLab.font = [UIFont systemFontOfSize:14];
         titleLab.text = [infoDic objectForKey:@"content_name"];
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];
         
-        UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(70, 26, 200, 15)];
+        UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(70, 26, 170, 15)];
         actors.text = [NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
         actors.font = [UIFont systemFontOfSize:12];
         actors.textColor = [UIColor grayColor];
@@ -188,31 +187,67 @@
     return nil;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (type_ == 2){
+    if (type_ == 2 || type_ == 2 ){
         return YES;
     }
     return NO;
+    
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
-        NSString *topicId = [infoDic objectForKey:@"topic_id"];
         
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:topicId, @"topic_id", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            NSString *responseCode = [result objectForKey:@"res_code"];
-            if([responseCode isEqualToString:kSuccessResCode]){
-                [listArr_ removeObjectAtIndex:indexPath.row];
-                [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        switch (type_) {
+//            case 0:
+//            {
+//                NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+//                NSString *topicId = [infoDic objectForKey:@"prod_id"];
+//                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+//                [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//                    [listArr_ removeObjectAtIndex:indexPath.row];
+//                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+//                }];
+//                break;
+//            }
+            case 1:
+            {
+                NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+                NSString *topicId = [infoDic objectForKey:@"content_id"];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    [listArr_ removeObjectAtIndex:indexPath.row];
+                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV" object:nil];
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                break;
             }
-            else {
-                [UIUtility showSystemError:self.view];
+            case 2:
+            {
+                NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+                NSString *topicId = [infoDic objectForKey:@"topic_id"];
+                
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:topicId, @"topic_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    NSString *responseCode = [result objectForKey:@"res_code"];
+                    if([responseCode isEqualToString:kSuccessResCode]){
+                        [listArr_ removeObjectAtIndex:indexPath.row];
+                        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    }
+                    else {
+                        [UIUtility showSystemError:self.view];
+                    }
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showSystemError:self.view];
+                }];
+
+                break;
             }
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            [UIUtility showSystemError:self.view];
-        }];
-           
+            default:
+                break;
+        }
+                   
     }
 }
 
@@ -233,10 +268,22 @@
     viewController.name = [item objectForKey:@"prod_name"];
     viewController.subname = [item objectForKey:@"prod_subname"];
     NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
-    viewController.playTime = [NSString stringWithFormat:@"上次播放播放至: %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+    viewController.playTime = [NSString stringWithFormat:@"上次播放至: %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
     //viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [self presentViewController:[[CustomNavigationViewController alloc]initWithRootViewController:viewController] animated:YES completion:nil];
   
+}
+
+-(void)deleteRow:(UIButton *)btn{
+    NSDictionary *infoDic = [listArr_ objectAtIndex:btn.tag];
+    NSString *topicId = [infoDic objectForKey:@"prod_id"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [listArr_ removeObjectAtIndex:btn.tag];
+        [self.tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];    
 }
 - (NSString *)composeContent:(NSDictionary *)item
 {

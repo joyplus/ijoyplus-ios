@@ -13,9 +13,12 @@
     UILabel *actors_;
     UILabel *date_;
     UIButton *play_;
+    UIButton *deleteBtn_;
 }
 @property (nonatomic, strong)UILabel *titleLab;
 @property (nonatomic, strong)UILabel *actors;
 @property (nonatomic, strong)UILabel *date;
 @property (nonatomic, strong)UIButton *play;
+@property (nonatomic, strong)UIButton *deleteBtn;
+-(void)addCustomGestureRecognizer;
 @end

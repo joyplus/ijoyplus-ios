@@ -12,7 +12,7 @@
 
     UISegmentedControl *segControl_;
     UIView *bgView_;
-    NSArray *sortedwatchRecordArray_;
+    NSMutableArray *sortedwatchRecordArray_;
     NSMutableArray *favArr_;
     NSArray *favShowArr_;
     NSMutableArray *myListArr_;
@@ -35,7 +35,7 @@
 }
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
-@property (nonatomic, strong)NSArray *sortedwatchRecordArray;
+@property (nonatomic, strong)NSMutableArray *sortedwatchRecordArray;
 @property (nonatomic, strong)NSMutableArray *favArr;
 @property (nonatomic, strong)NSArray *favShowArr;
 @property (nonatomic, strong)NSMutableArray *myListArr;

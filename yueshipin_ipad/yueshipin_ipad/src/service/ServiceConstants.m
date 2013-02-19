@@ -121,4 +121,5 @@ NSString *const kPathRemoveItem = @"/joyplus-service/index.php/top/removeItem";
 NSString *const kPathFeekback = @"/joyplus-service/index.php/user/feedback";
 NSString *const kPathPlayHistory = @"/joyplus-service/index.php/user/playHistories";
 NSString *const kPathAddPlayHistory = @"/joyplus-service/index.php/program/play";
+NSString *const kPathHiddenPlay =  @"/joyplus-service/index.php/program/hiddenPlay";
 

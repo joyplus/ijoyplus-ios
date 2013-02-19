@@ -18,6 +18,7 @@
     NSURL *imageUrl_;
     NSMutableArray *progressArr_;
     NSMutableArray *progressLabelArr_;
+    NSMutableArray *statusImgArr_;
     DownLoadManager *downLoadManager_;
 }
 
@@ -28,4 +29,5 @@
 @property (nonatomic, strong)NSURL *imageUrl;
 @property (nonatomic, strong)NSMutableArray *progressArr;
 @property (nonatomic, strong)NSMutableArray *progressLabelArr;
+@property (nonatomic, strong)NSMutableArray *statusImgArr;
 @end

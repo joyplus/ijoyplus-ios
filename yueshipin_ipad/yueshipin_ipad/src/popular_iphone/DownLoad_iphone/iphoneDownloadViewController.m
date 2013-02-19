@@ -25,6 +25,7 @@
 @synthesize diskUsedProgress = diskUsedProgress_;
 @synthesize progressLabelArr = progressLabelArr_;
 @synthesize downLoadManager = downLoadManager_;
+@synthesize statusImgArr = statusImgArr_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -71,6 +72,7 @@
     itemArr_ = [NSMutableArray arrayWithArray:[DownloadItem allObjects]];
     progressArr_ = [NSMutableArray arrayWithCapacity:5];
     progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];
+    statusImgArr_ = [NSMutableArray arrayWithCapacity:5];
     GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-30)];
     gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     gmGridView.backgroundColor = [UIColor clearColor];
@@ -141,6 +143,7 @@
 -(void)initData{
     progressArr_ = [NSMutableArray arrayWithCapacity:5];
     progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];
+    statusImgArr_ = [NSMutableArray arrayWithCapacity:5];
     itemArr_ = [NSMutableArray arrayWithArray:[DownloadItem allObjects]];
 }
 -(void)reloadDataSource{
@@ -176,9 +179,16 @@
                 label.text = [NSString stringWithFormat:@"正在下载：0%%"];
                 break;
             
-        }
-    
+        }   
       }
+        
+        for (UIImageView *imgV in statusImgArr_) {
+            if (imgV.tag == [itemId intValue]) {
+                imgV.image = [UIImage imageNamed:@"download_loading.png"];
+                break;
+            }
+        }
+
    }
     
 }
@@ -295,13 +305,22 @@
         [progressLabelArr_ addObject:progressLabel];
         [cell.contentView addSubview:progressLabel];
         
+        UIImageView *statusImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+        statusImg.tag = [downloadItem.itemId intValue];
+        statusImg.center = CGPointMake(cell.contentView.center.x, cell.contentView.center.y-10);
+        [statusImgArr_ addObject:statusImg];
+        [cell.contentView addSubview:statusImg];
+        
         if([downloadItem.downloadStatus isEqualToString:@"loading"]){
+            statusImg.image = [UIImage imageNamed:@"download_loading.png"];
             progressLabel.text = [NSString stringWithFormat:@"正在下载：%i%%", downloadItem.percentage];
         } else if([downloadItem.downloadStatus isEqualToString:@"stop"]){
+            statusImg.image = [UIImage imageNamed:@"download_stop.png"];
             progressLabel.text = [NSString stringWithFormat:@"暂停下载：%i%%", downloadItem.percentage];
         } else if([downloadItem.downloadStatus isEqualToString:@"finish"]){
             progressLabel.text = @"";
         } else if([downloadItem.downloadStatus isEqualToString:@"waiting"]){
+            statusImg.image = [UIImage imageNamed:@"download_wait.png"];
             progressLabel.text = [NSString stringWithFormat:@"等待下载：%i%%", downloadItem.percentage];
         } else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
            progressLabel.text = [NSString stringWithFormat:@"正在下载：%i%%",downloadItem.percentage];
@@ -320,6 +339,21 @@
             [cell.contentView addSubview:progressView];
         }
        
+    }
+    else{
+    
+        NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",downloadItem.itemId];
+        NSArray *arr = [SubdownloadItem findByCriteria:query];
+        UILabel *labeltotal = [[UILabel alloc] initWithFrame:CGRectMake(2, 82, 67, 20)];
+        labeltotal.text = [NSString stringWithFormat:@"共%d集",[arr count]];
+        labeltotal.textColor = [UIColor whiteColor];
+        labeltotal.textAlignment = NSTextAlignmentCenter;
+        labeltotal.backgroundColor = [UIColor blackColor];
+        labeltotal.alpha = 0.6;
+        labeltotal.font = [UIFont systemFontOfSize:12];
+        [cell.contentView addSubview:labeltotal];
+       
+    
     }
     
     return cell;
@@ -429,6 +463,13 @@
                }
            }
            
+           for (UIImageView *imgV in statusImgArr_) {
+               if (imgV.tag == [item.itemId intValue]) {
+                   imgV.image = [UIImage imageNamed:@"download_stop.png"];
+                   break;
+               }
+           }
+           
            for (UIProgressView *progressView in progressArr_) {
                if (progressView.tag == [item.itemId intValue]) {
                    progressView.progress = item.percentage/100.0;
@@ -436,7 +477,7 @@
                }
            }
             
-           // [self reloadDataSource];
+          // [self reloadDataSource];
         }
        else if ([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"]){
            item.downloadStatus = @"waiting";
@@ -444,6 +485,13 @@
            for (UILabel *label in progressLabelArr_) {
                if (label.tag == [item.itemId intValue]) {
                    label.text =  [NSString stringWithFormat:@"等待下载：%i%%", item.percentage];
+                   break;
+               }
+           }
+           
+           for (UIImageView *imgV in statusImgArr_) {
+               if (imgV.tag == [item.itemId intValue]) {
+                   imgV.image = [UIImage imageNamed:@"download_wait.png"];
                    break;
                }
            }
