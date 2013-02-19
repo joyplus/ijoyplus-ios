@@ -327,9 +327,9 @@
         webViewController.videoHttpUrlArray = httpUrlArray_;
         webViewController.prodId = self.prodId;
         webViewController.type = type_;
-        webViewController.startNum = num;
+//        webViewController.startNum = num;
        // webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.subname = [NSString stringWithFormat:@"%d",num];
+//        webViewController.subname = [NSString stringWithFormat:@"%d",num];
         webViewController.playTime = [self getRecordInfo:num];
         webViewController.name = name_;
         webViewController.currentNum = num;

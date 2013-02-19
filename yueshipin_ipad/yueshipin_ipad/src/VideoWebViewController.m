@@ -10,6 +10,7 @@
 #import "MyMediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "UIImage+Scale.h"
+#import "AVPlayerDemoPlaybackViewController.h"
 
 @interface VideoWebViewController ()
 
@@ -23,8 +24,8 @@
 @synthesize videoHttpUrlArray;
 @synthesize name;
 @synthesize prodId;
-@synthesize subname,playTime;
-@synthesize type, currentNum, isDownloaded, startNum;
+@synthesize subnameArray,playTime;
+@synthesize type, currentNum, isDownloaded;
 @synthesize appeared;
 @synthesize videoUrlsArray;
 @synthesize dramaDetailViewControllerDelegate;
@@ -45,7 +46,7 @@
     videoHttpUrlArray = nil;
     name = nil;
     prodId = nil;
-    subname = nil;
+    subnameArray = nil;
     [videoHttpUrlArray removeAllObjects];
     videoHttpUrlArray = nil;
 }
@@ -113,12 +114,6 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     }
-    if (!appeared) {
-        appeared = YES;
-        if (self.videoUrlsArray.count > 0) {
-            [self performSelector:@selector(showMediaPlayer) withObject:nil afterDelay:0.5];
-        }
-    }
     
 
 }
@@ -126,6 +121,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if (!appeared) {
+        appeared = YES;
+        if (self.videoUrlsArray.count > 0) {
+            [self performSelector:@selector(showMediaPlayer) withObject:nil afterDelay:0.5];
+        }
+    }
 }
 
 - (void)showMediaPlayer
@@ -133,20 +134,29 @@
     if (self.currentNum < self.videoUrlsArray.count) {
         NSArray *tempVideoUrlsArray = [self.videoUrlsArray objectAtIndex:self.currentNum];
         if(tempVideoUrlsArray.count > 0){
-            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-            viewController.currentNum = self.currentNum;
-            viewController.videoUrls = [self.videoUrlsArray objectAtIndex:self.currentNum];
-            viewController.videoHttpUrl = [self.videoHttpUrlArray objectAtIndex:self.currentNum];
-            viewController.prodId = self.prodId;
+            AVPlayerDemoPlaybackViewController *viewController = [[AVPlayerDemoPlaybackViewController alloc]init];
             viewController.videoWebViewControllerDelegate = self;
+            viewController.currentNum = self.currentNum;
+            viewController.videoUrls = videoUrlsArray;
+            viewController.name = [self.video objectForKey:@"name"];
+            viewController.subnameArray = self.subnameArray;
             viewController.type = self.type;
-            //viewController.name = [self.video objectForKey:@"name"];
-            viewController.name = self.name;
-            viewController.subname = self.subname;
-            viewController.dramaDetailViewControllerDelegate = self.dramaDetailViewControllerDelegate;
-            viewController.playTime = playTime;
-           // viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-            [self.navigationController pushViewController:viewController animated:NO];
+//            [self.navigationController pushViewController:viewController animated:NO];
+            [self presentViewController:viewController animated:NO completion:nil];
+//            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+//            viewController.currentNum = self.currentNum;
+//            viewController.videoUrls = [self.videoUrlsArray objectAtIndex:self.currentNum];
+//            viewController.videoHttpUrl = [self.videoHttpUrlArray objectAtIndex:self.currentNum];
+//            viewController.prodId = self.prodId;
+//            viewController.videoWebViewControllerDelegate = self;
+//            viewController.type = self.type;
+//            //viewController.name = [self.video objectForKey:@"name"];
+//            viewController.name = self.name;
+//            viewController.subname = self.subname;
+//            viewController.dramaDetailViewControllerDelegate = self.dramaDetailViewControllerDelegate;
+//            viewController.playTime = playTime;
+//           // viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//            [self.navigationController pushViewController:viewController animated:NO];
         } else {
             //如果只有网页地址，记录网页地址播放记录
             [self updateWatchRecord];
@@ -162,7 +172,7 @@
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
         [self.webView loadRequest:requestObj];
         if([self.dramaDetailViewControllerDelegate respondsToSelector:@selector(changePlayingEpisodeBtn:)]){
-            [self.dramaDetailViewControllerDelegate changePlayingEpisodeBtn:self.startNum + self.currentNum];
+            [self.dramaDetailViewControllerDelegate changePlayingEpisodeBtn:self.currentNum];
         }
         [self showMediaPlayer];
     }
@@ -170,21 +180,21 @@
 
 - (void)closeSelf
 {
-    [self dismissModalViewControllerAnimated:NO];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)updateWatchRecord
 {
-    if (self.currentNum < self.videoUrlsArray.count) {
-        self.subname = self.subname == nil ? @"" : self.subname;
-        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"zz%@", error);
-        }];
-    }
+//    if (self.currentNum < self.videoUrlsArray.count) {
+//        self.subname = self.subname == nil ? @"" : self.subname;
+//        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+//        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
+//        [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+//        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+//            NSLog(@"zz%@", error);
+//        }];
+//    }
 }
 
 - (void) hideGradientBackground:(UIView*)theView
