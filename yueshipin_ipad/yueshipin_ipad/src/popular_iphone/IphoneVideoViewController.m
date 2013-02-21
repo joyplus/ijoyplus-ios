@@ -21,6 +21,7 @@
 #import "CustomNavigationViewController.h"
 #import "CacheUtility.h"
 #import "TimeUtility.h"
+#import "UIImage+Scale.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -36,6 +37,7 @@
 @synthesize name = name_;
 @synthesize videoUrlsArray = videoUrlsArray_;
 @synthesize httpUrlArray = httpUrlArray_;
+@synthesize isNotification = isNotification_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -49,11 +51,9 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    if (isNotification_) {
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+    }
 }
 
 - (void)didReceiveMemoryWarning

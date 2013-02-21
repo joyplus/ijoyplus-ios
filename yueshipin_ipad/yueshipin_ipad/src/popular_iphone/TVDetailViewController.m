@@ -70,8 +70,6 @@
     [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
-    _infoDic = self.infoDic;
-    
     self.tableView.backgroundView = backGround;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -128,7 +126,13 @@
 }
 
 -(void)back:(id)sender{
-    [self.navigationController popViewControllerAnimated:YES];
+    if (!isNotification_) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else{
+        
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 
@@ -141,7 +145,7 @@
     if(cacheResult != nil){
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
-       // episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+       
          [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -168,7 +172,9 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[result objectForKey:@"tv"];
-        //episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        if (isNotification_) {
+            [self notificationData];
+        }
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
@@ -179,7 +185,11 @@
     }];
     
 }
-
+-(void)notificationData{
+    infoDic_ = videoInfo_;
+    self.title = [infoDic_ objectForKey:@"name"];
+    [self loadTable];
+}
 //将所有的剧集排序。
 -(void)SortEpisodes:(NSArray *)arr{
     
@@ -302,7 +312,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (imgUrl == nil) {
                     imgUrl = [self.infoDic objectForKey:@"content_pic_url"];
                 }
-                
+                if (imgUrl == nil) {
+                    imgUrl = [self.infoDic objectForKey:@"poster"];
+                }
                 [imageView setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
                 [cell addSubview:imageView];
                 
@@ -1114,9 +1126,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen_s.png"] forState:UIControlStateHighlighted];
         NSDictionary *oneEpisoder = [episodesArr_ objectAtIndex:i];
-        if ([oneEpisoder objectForKey:@"down_urls"]== nil && [oneEpisoder objectForKey:@"video_urls"] == nil) {
+        if (![self isWacthEnbled:oneEpisoder]) {
             button.enabled = NO;
-            [button setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+            [button setBackgroundImage:[UIImage imageNamed:@"download_disable.png"] forState:UIControlStateDisabled];
+            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
         }
       
         [scrollViewDown_ addSubview:button];
@@ -1124,6 +1137,29 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [bgView addSubview:scrollViewDown_];
 
     return bgView;
+}
+
+-(BOOL)isWacthEnbled:(NSDictionary *)oneEpisoder{
+    NSArray *down_urls = [oneEpisoder objectForKey:@"down_urls"];
+    NSDictionary *dic = [down_urls objectAtIndex:0];
+    NSArray *urlInfoArr = [dic objectForKey:@"urls"];
+    for (NSDictionary *urlinfo  in urlInfoArr) {
+        NSString *urlStr = [urlinfo objectForKey:@"url"];
+        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+            return YES;
+        }
+    
+    }
+    NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
+    for (NSDictionary *urlinfo  in video_urls) {
+        NSString *urlStr = [urlinfo objectForKey:@"url"];
+        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+            return YES;
+        }
+        
+    }
+    return NO;
+
 }
 
 -(UIView *)showDownLoadEpisodes{

@@ -8,13 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
-
-@interface IphoneSettingViewController : UIViewController<SinaWeiboDelegate, SinaWeiboRequestDelegate>{
+#import "UMUFPGridView.h"
+@interface IphoneSettingViewController : UIViewController<SinaWeiboDelegate, SinaWeiboRequestDelegate,GridViewDelegate,GridViewDataSource,UMUFPTableViewDataLoadDelegate>{
     UISwitch *sinaSwith_;
      SinaWeibo *sinaweibo_;
     UILabel *weiboName_;
+    
+    UMUFPGridView *_mGridView;
 }
 @property (strong, nonatomic) UISwitch *sinaSwith;
 @property (strong, nonatomic) SinaWeibo *sinaweibo;
 @property (strong, nonatomic) UILabel *weiboName;
+
+@property (nonatomic, strong)UMUFPGridView *mGridView;
 @end

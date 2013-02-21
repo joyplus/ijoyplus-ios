@@ -171,6 +171,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    
 
     [super viewWillAppear:animated];
     if(videoUrls.count > 0){
@@ -349,14 +350,18 @@
             [self.dramaDetailViewControllerDelegate playNextEpisode];
             }
             else{
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"PLAY_NEXT" object:[NSNumber numberWithInt:self.currentNum]];
+                if (type == 2) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"PLAY_NEXT" object:[NSNumber numberWithInt:self.currentNum]];
+                }
             }
         } else {
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
                 [self.videoWebViewControllerDelegate playNextEpisode:self.currentNum+1];
             }
             else{
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"PLAY_NEXT" object:[NSNumber numberWithInt:self.currentNum]];
+                if (type == 2) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"PLAY_NEXT" object:[NSNumber numberWithInt:self.currentNum]];
+                }
             }
         }
     }

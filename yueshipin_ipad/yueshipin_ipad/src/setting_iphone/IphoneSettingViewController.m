@@ -26,6 +26,8 @@
 #import "ActionUtility.h"
 #import "CacheUtility.h"
 #import "AppRecommendViewController.h"
+#import "UMUFPGridCell.h"
+#import "GridViewCellDemo.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -34,6 +36,11 @@
 @synthesize sinaSwith = sinaSwith_;
 @synthesize sinaweibo = sinaweibo_;
 @synthesize weiboName = weiboName_;
+
+@synthesize mGridView = _mGridView;
+
+static int NUMBER_OF_COLUMNS = 3;
+static int NUMBER_OF_APPS_PERPAGE = 9;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -61,6 +68,12 @@
     bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:bg];
     
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-44)];
+    scrollView.backgroundColor = [UIColor clearColor];
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.contentSize = CGSizeMake(320, kFullWindowHeight+160);
+    [self.view addSubview:scrollView];
+    
     UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 17, 296, 59)];
     view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view1.layer.borderWidth = 1;
@@ -84,75 +97,96 @@
         weiboName_.text = [NSString stringWithFormat:@"(%@)",username];;
     }
 
-    [self.view addSubview:view1];
+    [scrollView addSubview:view1];
    
     
     UIView *view2 = [[UIView alloc] initWithFrame:CGRectMake(12, 86, 296, 59)];
     view2.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view2.layer.borderWidth = 1;
     view2.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    [self.view addSubview:view2];
+    [scrollView addSubview:view2];
     
-    
-    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 59)];
-    view4.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-    view4.layer.borderWidth = 1;
-    view4.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    [self.view addSubview:view4];
     
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
-    clearCache.frame = CGRectMake(24, 169, 273, 33);
+    clearCache.frame = CGRectMake(24, 100, 273, 33);
     // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache.png"] forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache_s.png"] forState:UIControlStateHighlighted];
     [clearCache addTarget:self action:@selector(clearCache:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:clearCache];
+    [scrollView addSubview:clearCache];
     
-    UIButton *appRecommed = [UIButton buttonWithType:UIButtonTypeCustom];
-    appRecommed.frame = CGRectMake(24, 100, 273, 33);
-    //[appRecommed setTitle:@"精品推荐" forState:UIControlStateNormal];
-    [appRecommed setBackgroundImage:[UIImage imageNamed:@"my_setting_app.png"] forState:UIControlStateNormal];
-    [appRecommed setBackgroundImage:[UIImage imageNamed:@"my_setting_app_s.png"] forState:UIControlStateHighlighted];
-    [appRecommed addTarget:self action:@selector(appRecommed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:appRecommed];
+//    UIButton *appRecommed = [UIButton buttonWithType:UIButtonTypeCustom];
+//    appRecommed.frame = CGRectMake(24, 100, 273, 33);
+//    //[appRecommed setTitle:@"精品推荐" forState:UIControlStateNormal];
+//    [appRecommed setBackgroundImage:[UIImage imageNamed:@"my_setting_app.png"] forState:UIControlStateNormal];
+//    [appRecommed setBackgroundImage:[UIImage imageNamed:@"my_setting_app_s.png"] forState:UIControlStateHighlighted];
+//    [appRecommed addTarget:self action:@selector(appRecommed:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:appRecommed];
     
     
-    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 224, 296, 172)];
+    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 172)];
     view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view3.layer.borderWidth = 1;
     view3.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    [self.view addSubview:view3];
+    [scrollView addSubview:view3];
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeCustom];
-    feedBack.frame = CGRectMake(24, 237, 273, 33);
+    feedBack.frame = CGRectMake(24, 168, 273, 33);
    // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other.png"] forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other_s.png"] forState:UIControlStateHighlighted];
     [feedBack addTarget:self action:@selector(feedBack:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:feedBack];
+    [scrollView addSubview:feedBack];
     
     UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
-    suggest.frame = CGRectMake(24, 277, 273, 33);
+    suggest.frame = CGRectMake(24, 208, 273, 33);
     //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
     [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:suggest];
+    [scrollView addSubview:suggest];
     
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(24, 355, 273, 33);
+    aboutUs.frame = CGRectMake(24, 286, 273, 33);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
     [aboutUs addTarget:self action:@selector(aboutUs:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:aboutUs];
+    [scrollView addSubview:aboutUs];
     
     UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    careUs.frame = CGRectMake(24, 316, 273, 33);
+    careUs.frame = CGRectMake(24, 247, 273, 33);
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
     [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:careUs];
-	// Do any additional setup after loading the view.
+    [scrollView addSubview:careUs];
+	
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 335, 135, 15)];
+    label.font = [UIFont systemFontOfSize:13];
+    label.textColor = [UIColor colorWithRed:94/255.0 green:94/255.0 blue:94/255.0 alpha:1];
+    label.backgroundColor = [UIColor clearColor];
+    label.text = @"★精品推荐★";
+    [scrollView addSubview:label];
+    
+    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 356, 296, 260)];
+    view4.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
+    view4.layer.borderWidth = 1;
+    view4.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
+    
+    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(0, 4,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+    [_mGridView setBackgroundColor:[UIColor clearColor]];
+    _mGridView.datasource = self;
+    _mGridView.delegate = self;
+    _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
+    _mGridView.autoresizesSubviews = NO;
+    _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    
+    [_mGridView requestPromoterDataInBackground];
+    
+    [view4 addSubview:_mGridView];
+    [scrollView addSubview:view4];
+    
+   
+    
 }
 
 -(void)back:(id)sender{
@@ -377,5 +411,69 @@
         
     }
 }
+
+
+#pragma mark GridViewDataSource
+- (NSInteger)numberOfColumsInGridView:(UMUFPGridView *)gridView{
+    
+    return NUMBER_OF_COLUMNS;
+}
+
+- (NSInteger)numberOfAppsPerPage:(UMUFPGridView *)gridView
+{
+    return NUMBER_OF_APPS_PERPAGE;
+}
+
+- (UIView *)gridView:(UMUFPGridView *)gridView cellForRowAtIndexPath:(IndexPath *)indexPath{
+    
+    GridViewCellDemo *view = [[GridViewCellDemo alloc] initWithIdentifier:nil];
+    
+    return view;
+}
+
+-(void)gridView:(UMUFPGridView *)gridView relayoutCellSubview:(UIView *)view withIndexPath:(IndexPath *)indexPath{
+    
+    int arrIndex = [gridView arrayIndexForIndexPath:indexPath];
+    if (arrIndex < [_mGridView.mPromoterDatas count])
+    {
+        NSDictionary *promoter = [_mGridView.mPromoterDatas objectAtIndex:arrIndex];
+        
+        GridViewCellDemo *imageViewCell = (GridViewCellDemo *)view;
+        imageViewCell.indexPath = indexPath;
+        imageViewCell.titleLabel.text = [promoter valueForKey:@"title"];
+        
+        [imageViewCell.imageView setImageURL:[NSURL URLWithString:[promoter valueForKey:@"icon"]]];
+    }
+}
+- (CGFloat)gridView:(UMUFPGridView *)gridView heightForRowAtIndexPath:(IndexPath *)indexPath
+{
+    return 80.0f;
+}
+
+- (void)gridView:(UMUFPGridView *)gridView didSelectRowAtIndexPath:(IndexPath *)indexPath
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    int arrIndex = [gridView arrayIndexForIndexPath:indexPath];
+    if (arrIndex < [_mGridView.mPromoterDatas count])
+    {
+        NSDictionary *promoter = [_mGridView.mPromoterDatas objectAtIndex:arrIndex];
+        NSString *url = [promoter valueForKey:@"url"];
+        NSLog(@"%@", url);
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }
+}
+
+- (void)UMUFPGridViewDidLoadDataFinish:(UMUFPGridView *)gridView promotersAmount:(NSInteger)promotersAmount
+{
+    NSLog(@"%s, %d", __PRETTY_FUNCTION__, promotersAmount);
+    
+    [gridView reloadData];
+}
+
+- (void)UMUFPGridView:(UMUFPGridView *)gridView didLoadDataFailWithError:(NSError *)error
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+}
+
 
 @end

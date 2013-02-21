@@ -119,17 +119,6 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
-
-//    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-//    rightButton.frame = CGRectMake(0, 0, 40, 30);
-//    rightButton.backgroundColor = [UIColor clearColor];
-//    [rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateNormal];
-//    //[rightButton setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
-//    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
-//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-//    self.navigationItem.rightBarButtonItem = rightButtonItem;
-    
     customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
     [customNavigationButtonView_ initUI:self.navigationController withText:nil];
     customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
@@ -208,11 +197,6 @@
 }
 
 -(void)setting:(id)sender{
-//    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
-//    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
-    
-    
-//    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
     customNavigationButtonView_.warningNumber = 0;
     customNavigationButtonView_.badgeView.badgeText = @"";
     customNavigationButtonView_.badgeView.hidden = YES;

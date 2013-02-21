@@ -303,12 +303,31 @@ static NSMutableArray *downLoadQueue_ = nil;
     downloadRequestOperation.operationStatus = @"loading";
      NSRange range = [downloadId_ rangeOfString:@"_"];
     if (range.location == NSNotFound) {
-         [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:0];
+         NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",downloadId_];
+         NSArray *itemArr = [DownloadItem findByCriteria:query];
+        if ([itemArr count]>0) {
+            int percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
+             downloadItem_ = (DownloadItem *)[itemArr objectAtIndex:0];
+            [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:percet];
+        }
+        else{
+            [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:0];
+        }
+        
          [self.downLoadMGdelegate downloadBeginwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
 
     }
     else{
-        [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:0];
+        NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",downloadId_];
+        NSArray *itemArr = [SubdownloadItem findByCriteria:query];
+        if ([itemArr count]>0) {
+            int percet = ((SubdownloadItem *)[itemArr objectAtIndex:0]).percentage;
+            subdownloadItem_ = (SubdownloadItem *)[itemArr objectAtIndex:0];
+            [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:percet];
+        }
+        else{
+            [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"loading" withPercentage:0];
+        }
         [self.downLoadMGdelegate downloadBeginwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
 
     }
@@ -324,10 +343,12 @@ static NSMutableArray *downLoadQueue_ = nil;
                 item.downloadStatus = status;
                 if (percentage >= 0) {
                 item.percentage = percentage;
+                    
                 }
                 if (percentage == 0) {
                     downloadItem_ = item;
                 }
+               // downloadItem_ = item;
                 [item save];
                 break;
             }
@@ -346,6 +367,7 @@ static NSMutableArray *downLoadQueue_ = nil;
                 if (percentage == 0) {
                     subdownloadItem_ = item;
                 }
+                //subdownloadItem_ = item;
                 [item save];
                 break;
             }

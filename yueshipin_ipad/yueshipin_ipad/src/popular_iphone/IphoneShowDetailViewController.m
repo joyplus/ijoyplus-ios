@@ -119,8 +119,13 @@
 }
 
 -(void)back:(id)sender{
-    
-    [self.navigationController popViewControllerAnimated:YES];
+    if (!isNotification_) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else{
+        
+        [self dismissModalViewControllerAnimated:YES];
+    }
 }
 
 -(void)loadData{
@@ -155,6 +160,9 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[result objectForKey:@"show"];
+        if (isNotification_) {
+            [self notificationData];
+        }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -166,26 +174,12 @@
     
 }
 
-//- (void)loadComments
-//{
-//    commentArray_ = [NSMutableArray arrayWithCapacity:10];
-//    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
-//    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//        NSString *responseCode = [result objectForKey:@"res_code"];
-//        if(responseCode == nil){
-//            NSString *key = [NSString stringWithFormat:@"%@%@", @"show", [self.infoDic objectForKey:@"prod_id"]];
-//            [[CacheUtility sharedCache] putInCache:key result:result];
-//            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-//            [commentArray_ removeAllObjects];
-//            if(tempArray != nil && tempArray.count > 0){
-//                [commentArray_ addObjectsFromArray:tempArray];
-//            }
-//            [self.tableView reloadData];
-//        }
-//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-//        
-//    }];
-//}
+-(void)notificationData{
+    infoDic_ = videoInfo_;
+    self.title = [infoDic_ objectForKey:@"name"];
+    [self loadTable];
+}
+
 -(void)loadComments{
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {

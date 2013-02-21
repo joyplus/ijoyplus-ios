@@ -74,6 +74,9 @@
     [self addGestureRecognizer:leftSwipeRecognizer];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(recover:)];
+    if ([[[UIDevice currentDevice]systemVersion] floatValue]< 6.0) {
+        tapGesture.delegate = self;
+    }
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [self addGestureRecognizer:tapGesture];
@@ -100,6 +103,15 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    
+    if ([touch.view isKindOfClass:[UIButton class]]) { 
+        return NO;
+    }
+    return YES;
 }
 
 @end

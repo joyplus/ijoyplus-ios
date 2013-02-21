@@ -12,7 +12,9 @@
 #import "MineViewController.h"
 #import "navigationViewController.h"
 #import "UIImage+Scale.h"
-
+#import "IphoneMovieDetailViewController.h"
+#import "TVDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
 @interface TabBarViewController ()
 
 @end
@@ -26,7 +28,7 @@
         // Custom initialization
         
         allListViewController *allListview = [[allListViewController alloc] init];
-        navigationViewController *allListNav = [[navigationViewController alloc] initWithRootViewController:allListview];
+        UINavigationController *allListNav = [[UINavigationController alloc] initWithRootViewController:allListview];
         [allListNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
        
         PageManageViewController *pageView = [[PageManageViewController alloc] init];
@@ -50,10 +52,43 @@
         self.tabBar.selectedImageTintColor = [UIColor whiteColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];
-     
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentView:) name:@"push_notification" object:nil];
+        
     }
     return self;
 }
+
+-(void)presentView:(NSNotification *)notification{
+    NSDictionary *infoDic = [notification userInfo];
+    NSString *type = [infoDic objectForKey:@"prod_type"];
+    switch ([type intValue]) {
+        case 1:{
+            IphoneMovieDetailViewController *iphoneMovieDetailViewController = [[IphoneMovieDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+            iphoneMovieDetailViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
+            iphoneMovieDetailViewController.isNotification = YES;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
+            break;
+        }
+        case 2:{
+            TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+            tvDetailViewController.infoDic = infoDic;
+            tvDetailViewController.isNotification = YES;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            
+            break;
+        }
+        case 3:{
+            IphoneShowDetailViewController *iphoneShowDetailViewController = [[IphoneShowDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+            iphoneShowDetailViewController.infoDic = infoDic;
+            iphoneShowDetailViewController.isNotification = YES;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneShowDetailViewController] animated:YES completion:nil];
+            break;
+        }
+        default:
+            break;
+    }
+    }
+
 - (void)setNoHighlightTabBar
 
 {
@@ -118,6 +153,25 @@
         
     }
 }
+
+-(BOOL)shouldAutorotate {
+    
+    return NO;
+    
+}
+
+-(NSUInteger)supportedInterfaceOrientations {
+    
+    return UIInterfaceOrientationMaskPortrait;
+    
+}
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    
+    return UIInterfaceOrientationPortrait;
+    
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];

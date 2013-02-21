@@ -20,6 +20,7 @@
     NSString *name_;
     NSMutableArray *videoUrlsArray_;
     NSMutableArray *httpUrlArray_;
+    BOOL isNotification_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
@@ -29,6 +30,7 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSMutableArray *videoUrlsArray;
 @property (nonatomic, strong) NSMutableArray *httpUrlArray;
+@property (nonatomic, assign) BOOL isNotification;
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;

@@ -68,7 +68,6 @@
     [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
-    _infoDic = self.infoDic;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -120,8 +119,14 @@
 }
 
 -(void)back:(id)sender{
+    if (!isNotification_) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else{
     
-    [self.navigationController popViewControllerAnimated:YES];
+        [self dismissModalViewControllerAnimated:YES];
+    }
+
 }
 
 -(void)loadData{
@@ -130,6 +135,7 @@
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
     }
+    
     prodId_ = itemId;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"movie",itemId ];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
@@ -154,11 +160,14 @@
         }
     }
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
         isLoaded_ = YES;
         videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
+        if (isNotification_) {
+            [self notificationData];
+        }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
@@ -171,7 +180,11 @@
     }];
     
 }
-
+-(void)notificationData{
+    infoDic_ = videoInfo_;
+    self.title = [infoDic_ objectForKey:@"name"];
+    [self loadTable];
+}
 -(void)loadComments{
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
@@ -270,6 +283,9 @@
                 NSString *imageUrl = [self.infoDic objectForKey:@"prod_pic_url"];
                 if (imageUrl == nil) {
                     imageUrl = [self.infoDic objectForKey:@"content_pic_url"];
+                }
+                if (imageUrl == nil) {
+                    imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
                 [cell addSubview:imageView];
@@ -855,4 +871,5 @@
     [self loadComments];
 
 }
+
 @end
