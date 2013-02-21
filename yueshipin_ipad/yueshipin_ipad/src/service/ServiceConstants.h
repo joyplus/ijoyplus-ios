@@ -116,3 +116,5 @@ extern NSString *const kPathRemoveItem;
 extern NSString *const kPathFeekback;
 extern NSString *const kPathPlayHistory;
 extern NSString *const kPathAddPlayHistory;
+extern NSString *const kPathHiddenPlay;
+extern NSString *const kPathRemoveAllPlay;

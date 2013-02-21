@@ -1,6 +1,6 @@
 /*
 
-File: AVPlayerDemoPlaybackViewController.h
+File: AVPlayerViewController.h
 
 Abstract: UIViewController managing a playback view, thumbnail view, and associated playback UI.
 
@@ -52,17 +52,18 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "VideoWebViewController.h"
+#import "AVPlayerView.h"
 
-@protocol AVPlayerDemoPlaybackViewControllerDelegate <NSObject>
+@protocol AVPlayerViewControllerDelegate <NSObject>
 
 - (void)playOneEpisode:(int)num;
 
 @end
 
 @class AVQueuePlayer;
-@class AVPlayerDemoPlaybackView;
+@class AVPlayerView;
 
-@interface AVPlayerDemoPlaybackViewController : UIViewController <AVPlayerDemoPlaybackViewControllerDelegate>
+@interface AVPlayerViewController : UIViewController <AVPlayerViewControllerDelegate>
 {
 @private
 	float mRestoreAfterScrubbingRate;
@@ -82,7 +83,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, copy) NSURL* URL;
 @property (readwrite, retain, setter=setPlayer:, getter=player) AVPlayer* mPlayer;
 @property (strong) AVPlayerItem* mPlayerItem;
-@property (nonatomic, strong) AVPlayerDemoPlaybackView *mPlaybackView;
+@property (nonatomic, strong) AVPlayerView *mPlaybackView;
 @property (nonatomic, strong) UIToolbar *mToolbar;
 @property (nonatomic, strong) UIButton *mPrevButton;
 @property (nonatomic, strong) UIButton *mNextButton;

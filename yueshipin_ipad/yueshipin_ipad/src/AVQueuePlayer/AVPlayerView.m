@@ -1,5 +1,5 @@
 
-#import "AVPlayerDemoPlaybackView.h"
+#import "AVPlayerView.h"
 #import <AVFoundation/AVFoundation.h>
 
 /* ---------------------------------------------------------
@@ -12,7 +12,7 @@
 **  that is used for this purpose.
 ** ------------------------------------------------------- */
 
-@implementation AVPlayerDemoPlaybackView
+@implementation AVPlayerView
 
 + (Class)layerClass
 {

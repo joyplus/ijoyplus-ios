@@ -8,6 +8,12 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
+#import <QuartzCore/QuartzCore.h>
+
+typedef enum _fade_orientation {
+    FADE_TOPNBOTTOM = 0,
+    FADE_LEFTNRIGHT
+} fade_orientation;
 
 @interface PersonalViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 

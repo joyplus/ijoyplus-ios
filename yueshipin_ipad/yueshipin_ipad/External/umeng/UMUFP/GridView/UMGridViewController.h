@@ -14,5 +14,5 @@
     int count;
     UMUFPGridView *_mGridView;
 }
-
+- (id)initWithFrame:(CGRect)frame;
 @end

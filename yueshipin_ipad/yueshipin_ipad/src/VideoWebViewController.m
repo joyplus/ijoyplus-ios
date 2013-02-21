@@ -10,7 +10,7 @@
 #import "MyMediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "UIImage+Scale.h"
-#import "AVPlayerDemoPlaybackViewController.h"
+#import "AVPlayerViewController.h"
 
 @interface VideoWebViewController ()
 
@@ -145,7 +145,7 @@
     if (self.currentNum < self.videoUrlsArray.count) {
         NSArray *tempVideoUrlsArray = [self.videoUrlsArray objectAtIndex:self.currentNum];
         if(tempVideoUrlsArray.count > 0){
-            AVPlayerDemoPlaybackViewController *viewController = [[AVPlayerDemoPlaybackViewController alloc]init];
+            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.videoWebViewControllerDelegate = self;
             viewController.currentNum = self.currentNum;
             viewController.videoUrls = videoUrlsArray;

@@ -53,7 +53,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 
 @class AVPlayer;
 
-@interface AVPlayerDemoPlaybackView : UIView
+@interface AVPlayerView : UIView
 
 @property (nonatomic, retain) AVPlayer* player;
 

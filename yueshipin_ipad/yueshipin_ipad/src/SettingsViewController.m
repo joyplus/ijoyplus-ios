@@ -97,9 +97,16 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
-        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 120, 370, 79)];
+        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 120, 370, 90)];
         sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
+        
+        UILabel *tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(40, 60, 300, 30)];
+        tipLabel.backgroundColor = [UIColor clearColor];
+        [tipLabel setFont:[UIFont systemFontOfSize:13]];
+        tipLabel.textColor = [UIColor lightGrayColor];
+        tipLabel.text = @"绑定后，可以在多个设备间同步您的记录。";
+        [sinaWeiboBg addSubview:tipLabel];
         
         sinaWeiboImg = [[UIImageView alloc]initWithFrame:CGRectMake(100, 134, 334, 45)];
         sinaWeiboImg.image = [UIImage imageNamed:@"weibo"];
@@ -114,63 +121,52 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(340, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
         [self.view addSubview:sinaSwitch];
-        
-        applicationsImg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 210, 370, 79)];
-        applicationsImg.image = [UIImage imageNamed:@"setting_cell_bg"];
-        [self.view addSubview:applicationsImg];
-        
-        applicationsBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        applicationsBtn.frame = CGRectMake(100, 230, 334, 40);
-        [applicationsBtn setBackgroundImage:[UIImage imageNamed:@"recommond_bt"] forState:UIControlStateNormal];
-        [applicationsBtn setBackgroundImage:[UIImage imageNamed:@"recommond_bt_pressed"] forState:UIControlStateHighlighted];
-        [applicationsBtn addTarget:self action:@selector(applicationBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:applicationsBtn];
-        
-        clearCacheBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 300, 370, 79)];
+                       
+        clearCacheBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 220, 370, 79)];
         clearCacheBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:clearCacheBg];
         
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearCacheBtn.frame = CGRectMake(100, 320, 334, 40);
+        clearCacheBtn.frame = CGRectMake(100, 240, 334, 40);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
-        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 396, 372, 267)];
+        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 267)];
         aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] ;
         [self.view addSubview:aboutBg];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(100, 415, 334, 40);
+        suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(100, 462, 334, 40);
+        commentBtn.frame = CGRectMake(100, 372, 334, 40);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        followBtn.frame = CGRectMake(100, 509, 334, 40);
+        followBtn.frame = CGRectMake(100, 419, 334, 40);
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow"] forState:UIControlStateNormal];
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow_pressed"] forState:UIControlStateHighlighted];
         [followBtn addTarget:self action:@selector(followBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:followBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(100, 556, 334, 40);
+        aboutBtn.frame = CGRectMake(100, 466, 334, 40);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:aboutBtn];
         
         speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        speakBtn.frame = CGRectMake(100, 603, 334, 40);
+        speakBtn.frame = CGRectMake(100, 513, 334, 40);
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
         [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -267,12 +263,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:reviewURL]];
 }
 
-- (void)applicationBtnClicked
-{
-    UMGridViewController *viewController = [[UMGridViewController alloc] init];
-    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-}
 - (void)aboutBtnClicked
 {
     [self closeMenu];

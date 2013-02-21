@@ -7,7 +7,7 @@
 //
 
 #import "GenericBaseViewController.h"
-#import "AVPlayerDemoPlaybackViewController.h"
+#import "AVPlayerViewController.h"
 
 #define EPISODE_TABLE_WIDTH  175
 #define EPISODE_TABLE_CELL_HEIGHT 50
@@ -17,5 +17,5 @@
 @property (nonatomic) int type;
 @property (nonatomic, strong) NSArray *episodeArray;
 @property (nonatomic, strong) UITableView *table;
-@property (nonatomic, weak) id <AVPlayerDemoPlaybackViewControllerDelegate> delegate;
+@property (nonatomic, weak) id <AVPlayerViewControllerDelegate> delegate;
 @end

@@ -24,45 +24,51 @@
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
-@interface PersonalViewController (){
+@interface PersonalViewController () <MNMBottomPullToRefreshManagerClient>
+{
     UIView *backgroundView;
-
     UIImageView *topImage;
     UIImageView *bgImage;
-    
     UITableView *table;
-    
     UIImageView *avatarImage;
-    
     UILabel *nameLabel;
     UIButton *editBtn;
-    
     UIImageView *personalImage;
-    
     UILabel *supportLabel;
     UIButton *supportBtn;
     UILabel *collectionLabel;
     UIButton *collectionBtn;
     UILabel *listLabel;
     UIButton *listBtn;
-    
     UIImageView *myRecordImage;
     UIButton *createBtn;
-    UIButton *importDoubanBtn;
-    
+    UIButton *removeAllBtn;
     UIImageView *tableBgImage;
-    
     NSArray *sortedwatchRecordArray;
     int tableHeight;
-    
     BOOL accessed;
-    
     UIButton *clickedBtn;
+    UIImageView *tableBg;
 }
 
+@property (nonatomic, retain) UIColor* fadeColor;
+@property (nonatomic, retain) UIColor* baseColor;
+@property (nonatomic, retain) CAGradientLayer *g2;
+@property (nonatomic, retain) UIView* bottomFadingView;
+@property (nonatomic, assign) fade_orientation fadeOrientation;
+@property (nonatomic, strong) NSTimer *editingTimer;
+@property (nonatomic, strong) MNMBottomPullToRefreshManager *pullToRefreshManager_;
+@property (nonatomic) NSUInteger reloads_;
 @end
 
 @implementation PersonalViewController
+@synthesize fadeColor = fadeColor_;
+@synthesize baseColor = baseColor_;
+@synthesize g2 = g2_;
+@synthesize bottomFadingView;
+@synthesize editingTimer;
+@synthesize pullToRefreshManager_, reloads_;
+@synthesize fadeOrientation = fadeOrientation_;
 
 - (void)didReceiveMemoryWarning
 {
@@ -75,6 +81,13 @@
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WATCH_HISTORY_REFRESH object:nil];
+    self.fadeColor = nil;
+    self.baseColor = nil;
+    self.g2 = nil;
+    tableBg = nil;
+    bottomFadingView = nil;
+    editingTimer = nil;
+    pullToRefreshManager_ = nil;
     backgroundView = nil;
     menuBtn = nil;
     topImage = nil;
@@ -92,7 +105,7 @@
     listBtn = nil;
     myRecordImage = nil;
     createBtn = nil;
-    importDoubanBtn = nil;
+    removeAllBtn = nil;
     tableBgImage = nil;
     sortedwatchRecordArray = nil;
     clickedBtn = nil;
@@ -182,30 +195,40 @@
         [self.view addSubview:myRecordImage];
         
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        //        createBtn.frame = CGRectMake(210, 282, 104, 31);
         createBtn.frame = CGRectMake(358, 282, 104, 31);
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
         [createBtn addTarget:self action:@selector(createBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:createBtn];
         
-        importDoubanBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        importDoubanBtn.frame = CGRectMake(320, 282, 142, 31);
-        [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban"] forState:UIControlStateNormal];
-        [importDoubanBtn setBackgroundImage:[UIImage imageNamed:@"import_douban_pressed"] forState:UIControlStateHighlighted];
-        [importDoubanBtn addTarget:self action:@selector(importDoubanBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        //        [self.view addSubview:importDoubanBtn];
+        removeAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        removeAllBtn.frame = CGRectMake(252, 282, 96, 31);
+        [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play1"] forState:UIControlStateNormal];
+        [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play_pressed"] forState:UIControlStateHighlighted];
+        [removeAllBtn addTarget:self action:@selector(removeAllBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:removeAllBtn];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, 370) style:UITableViewStylePlain];
-        [table setBackgroundColor:[UIColor whiteColor]];
-//        [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-        table.layer.borderWidth  = 1;
-        table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+        tableHeight = 370;
+        table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, tableHeight) style:UITableViewStylePlain];
+        [table setBackgroundColor:[UIColor clearColor]];
         table.tableFooterView = [[UIView alloc] init];
-		[table setDelegate:self];
-		[table setDataSource:self];
-        [table setScrollEnabled:NO];
+        table.showsVerticalScrollIndicator = NO;
+        [table setDelegate:self];
+        [table setDataSource:self];
+        [table setScrollEnabled:YES];
+        tableBg = [[UIImageView alloc]initWithFrame:table.frame];
+        tableBg.image = [UIImage imageNamed:@"watch_record_bg"];
+        [self.view addSubview:tableBg];
         [self.view addSubview:table];
+        
+        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+
+        self.baseColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
+        bottomFadingView = [[UIView alloc]initWithFrame:CGRectZero];
+        [bottomFadingView setBackgroundColor: [UIColor yellowColor]];
+        self.g2.frame = CGRectMake(60, 325 + tableHeight - 80, 400, 80);
+        [bottomFadingView.layer insertSublayer:self.g2 atIndex:0];
+        [self.view addSubview:bottomFadingView];
     }
     return self;
 }
@@ -219,7 +242,15 @@
 //    closeMenuRecognizer.delegate = self;
 //    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    swipeCloseMenuRecognizer.delegate = self;
     [self.view addGestureRecognizer:openMenuRecognizer];
+    
+    reloads_ = 2;
+}
+
+- (void)loadTable {
+    [table reloadData];
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -244,9 +275,15 @@
     if(sortedwatchRecordArray.count > 0){
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
+        [tableBg setHidden:NO];
+        [bottomFadingView setHidden:NO];
+        [removeAllBtn setHidden:NO];
     } else {
+        [removeAllBtn setHidden:YES];
+        [tableBg setHidden:YES];
         [myRecordImage setHidden:YES];
         [table setHidden:YES];
+        [bottomFadingView setHidden:YES];
     }
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
@@ -258,6 +295,12 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    [editingTimer invalidate];
+}
+
 - (void)parseWatchHistory
 {
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:WATCH_RECORD_CACHE_KEY];
@@ -265,7 +308,7 @@
         [self parseWatchResultData:cacheResult];
     }
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseWatchResultData:result];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -289,11 +332,12 @@
                 NSString *key = [NSString stringWithFormat:@"%@_%@", tprodId, tsubname];
                 [[CacheUtility sharedCache] putInCache:key result:tplaybackTime];
             }
-            [table reloadData];
-            table.frame = CGRectMake(60, 325, 400, tableHeight);
-        } else {
-            tableHeight = 0;
-            table.frame = CGRectMake(60, 325, 400, tableHeight);
+            if (sortedwatchRecordArray.count > 10) {
+                [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+            } else {
+                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            }
+            [self loadTable];
         }
     }
 }
@@ -336,6 +380,45 @@
 {
     [self parseWatchHistory];
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [pullToRefreshManager_ tableViewScrolled];
+}
+ 
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullToRefreshManager_ tableViewReleased];
+}
+
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        return;
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", [NSNumber numberWithInteger:reloads_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        NSArray *tempArray;
+        if(responseCode == nil){
+            tempArray = (NSArray *)[result objectForKey:@"histories"];
+            if(tempArray.count > 0){
+                NSMutableArray *tempMutableArray = [[NSMutableArray alloc]initWithArray:sortedwatchRecordArray];
+                [tempMutableArray addObjectsFromArray:tempArray];
+                sortedwatchRecordArray = tempMutableArray;
+                reloads_ ++;
+            }
+        } else {
+            
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        if(tempArray.count < 10){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
+}
+
 
 #pragma mark -
 #pragma mark Table view data source
@@ -477,13 +560,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 0){
-        tableHeight = 0;
-    }
     NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
     NSString *content = [self composeContent:item];
     CGSize size = [self calculateContentSize:content width:280];
-    tableHeight += size.height + 40;
     return size.height + 40;
 }
 
@@ -551,5 +630,90 @@
         }
     }
 }
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(sortedwatchRecordArray.count > 0){
+        editingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(showReplayBtn) userInfo:nil repeats:YES];
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        UIButton *btn = (UIButton *)[cell viewWithTag:1002];
+        [btn setHidden:YES];
+        return UITableViewCellEditingStyleDelete;
+    } else {
+        return  UITableViewCellEditingStyleNone;
+    }
+}
+
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row >= 0 && indexPath.row < sortedwatchRecordArray.count ){
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            [self removeRow:indexPath.row];
+            NSMutableArray *tempArray = [[NSMutableArray alloc]initWithArray:sortedwatchRecordArray];
+            [tempArray removeObjectAtIndex:indexPath.row];
+            sortedwatchRecordArray = tempArray;
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self loadTable];
+        }
+    }
+}
+
+- (void)showReplayBtn
+{
+    if (![table isEditing]) {
+        for (int i = 0; i < sortedwatchRecordArray.count; i++) {
+            UITableViewCell *cell = [table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+            UIButton *btn = (UIButton *)[cell viewWithTag:1002];
+            [btn setHidden:NO];
+        }
+    }
+}
+
+-(void)removeRow:(int)index{
+    NSDictionary *infoDic = [sortedwatchRecordArray objectAtIndex:index];
+    NSString *topicId = [infoDic objectForKey:@"prod_id"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
+- (void)removeAllBtnClicked
+{
+    sortedwatchRecordArray = [[NSArray alloc]init];
+    [self loadTable];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
+//    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+//        [self loadTable];
+//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//    }];
+}
+
+//Sets fadeColor to be 10% alpha of baseColor
+-(UIColor*)fadeColor {
+    if (fadeColor_ == nil) {
+        const CGFloat* components = CGColorGetComponents(self.baseColor.CGColor);
+        fadeColor_ = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:CGColorGetAlpha(self.baseColor.CGColor)*.1];
+    }
+    return fadeColor_;
+}
+
+-(CAGradientLayer*)g2 {
+    if (g2_ == nil) {
+        g2_ = [CAGradientLayer layer];
+        
+        if (self.fadeOrientation == FADE_LEFTNRIGHT) {
+            g2_.startPoint = CGPointMake(0, 0.5);
+            g2_.endPoint = CGPointMake(1.0, 0.5);
+        }
+        
+        g2_.colors = [NSArray arrayWithObjects: (id)[self.fadeColor CGColor],(id)[self.baseColor CGColor], nil];
+    }
+    return g2_;
+} 
+
 
 @end

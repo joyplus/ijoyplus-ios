@@ -1,6 +1,6 @@
 
-#import "AVPlayerDemoPlaybackViewController.h"
-#import "AVPlayerDemoPlaybackView.h"
+#import "AVPlayerViewController.h"
+#import "AVPlayerView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "EpisodeListViewController.h"
 #import "CommonHeader.h"
@@ -24,7 +24,7 @@ NSString * const kRateKey			= @"rate";
 NSString * const kCurrentItemKey	= @"currentItem";
 
 
-@interface AVPlayerDemoPlaybackViewController () <UIGestureRecognizerDelegate>
+@interface AVPlayerViewController () <UIGestureRecognizerDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) UIToolbar *topToolbar;
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, strong) MPVolumeView *volumeSlider;
@@ -54,7 +54,7 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) CMTime resolutionLastPlaytime;
 @end
 
-@interface AVPlayerDemoPlaybackViewController (Player)
+@interface AVPlayerViewController (Player)
 - (void)removePlayerTimeObserver;
 - (CMTime)playerItemDuration;
 - (BOOL)isPlaying;
@@ -68,7 +68,7 @@ static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPla
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 
 #pragma mark -
-@implementation AVPlayerDemoPlaybackViewController
+@implementation AVPlayerViewController
 @synthesize mPlayer, mPlayerItem, mPlaybackView;
 @synthesize mToolbar, topToolbar, mPlayButton, mStopButton, mScrubber, mNextButton, mPrevButton, volumeSlider, mSwitchButton;
 @synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, videoUrls, selectButton;
@@ -115,6 +115,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.mPlayButton = nil;
     self.mStopButton = nil;
     self.mScrubber = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [super viewDidUnload];
 }
 
@@ -143,7 +144,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapRecognizer.delegate = self;
     tapRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapRecognizer];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
+}
 
+- (void)wifiNotAvailable
+{
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                       message:@"当前网络为非Wifi环境，您确定要继续播放吗？"
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"确定", nil];
+    [alertView show];
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0){
+        [self performSelector:@selector(closeSelf)];
+    }
 }
 
 - (void)getAirplayDeviceType
@@ -180,14 +199,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         } else {
             theLock = [[NSLock alloc]init];
             NSArray *temp = [[videoUrls objectAtIndex:currentNum] objectForKey:resolution];
-            for (NSString *url in temp) {
-                int nowDate = [[NSDate date] timeIntervalSince1970];
-                NSString *formattedUrl = url;
-                if([url rangeOfString:@"{now_date}"].location != NSNotFound){
-                    formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+            if (temp.count > 0) {
+                for (NSString *url in temp) {
+                    int nowDate = [[NSDate date] timeIntervalSince1970];
+                    NSString *formattedUrl = url;
+                    if([url rangeOfString:@"{now_date}"].location != NSNotFound){
+                        formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+                    }
+                    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+                    [NSURLConnection connectionWithRequest:request delegate:self];
                 }
-                NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
-                [NSURLConnection connectionWithRequest:request delegate:self];
+            } else {
+                [self performSelector:@selector(closeSelf)];
             }
         }
     } else if (videoHttpUrl){
@@ -300,6 +323,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (contentLength.intValue > 100) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
                 workingUrl = connection.originalRequest.URL;
+//                workingUrl = [NSURL URLWithString:@"http://g3.letv.cn/28/24/55/letv-uts/1822176-AVC-537353-AAC-31586-6295720-462913429-02ab01d89abc3724e6e500eeaaaeac76-1361194696895.flv?format=0&tag=ios?_r0.9717524535953999&ijoyplustype=m3u8"];
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
                 [connection cancel];
             } else {
@@ -341,7 +365,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)showPlayVideoView
 {
     mPlayer = nil;
-    mPlaybackView = [[AVPlayerDemoPlaybackView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
+    mPlaybackView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
     mPlaybackView.backgroundColor = [UIColor clearColor];
 	[self.view addSubview:mPlaybackView];
 }
@@ -865,7 +889,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 @end
 
-@implementation AVPlayerDemoPlaybackViewController (Player)
+@implementation AVPlayerViewController (Player)
 
 #pragma mark Player Item
 

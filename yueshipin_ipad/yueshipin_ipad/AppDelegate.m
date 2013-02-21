@@ -154,7 +154,8 @@
 }
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
-    NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
+//    NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
+    NSString *appKey = kDefaultAppKey;
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
@@ -292,6 +293,9 @@
         NSLog(@"Network is fine.");
         [self triggerDownload];
         [ActionUtility generateUserId:nil];
+        if (![self isWifiReachable]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:nil];
+        }
     }
 }
 
