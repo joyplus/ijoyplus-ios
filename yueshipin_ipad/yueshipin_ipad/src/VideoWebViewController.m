@@ -124,7 +124,18 @@
     if (!appeared) {
         appeared = YES;
         if (self.videoUrlsArray.count > 0) {
-            [self performSelector:@selector(showMediaPlayer) withObject:nil afterDelay:0.5];
+            UIView *blackView = [[UIView alloc]initWithFrame:self.view.frame];
+            blackView.backgroundColor = [UIColor blackColor];
+            blackView.alpha = 0;
+            [self.view addSubview:blackView];
+            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+                self.navigationController.navigationBar.alpha = 0;
+                blackView.alpha = 1;
+            } completion:^(BOOL finished) {
+                [self showMediaPlayer];
+                self.navigationController.navigationBar.alpha = 1;
+                [blackView removeFromSuperview];
+            }];
         }
     }
 }
@@ -141,7 +152,7 @@
             viewController.name = [self.video objectForKey:@"name"];
             viewController.subnameArray = self.subnameArray;
             viewController.type = self.type;
-//            [self.navigationController pushViewController:viewController animated:NO];
+            viewController.prodId = self.prodId;
             [self presentViewController:viewController animated:NO completion:nil];
 //            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
 //            viewController.currentNum = self.currentNum;
@@ -174,7 +185,6 @@
         if([self.dramaDetailViewControllerDelegate respondsToSelector:@selector(changePlayingEpisodeBtn:)]){
             [self.dramaDetailViewControllerDelegate changePlayingEpisodeBtn:self.currentNum];
         }
-        [self showMediaPlayer];
     }
 }
 

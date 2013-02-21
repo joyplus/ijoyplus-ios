@@ -450,10 +450,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
-        }];
-        
-        
-        
+        }]; 
     }
 }
 

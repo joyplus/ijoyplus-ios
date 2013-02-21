@@ -439,7 +439,12 @@
         [nextBtn setHidden:NO];
         [previousBtn setHidden:NO];
     }
-    [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
+    if ((int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20) > 0) {
+        [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
+    } else {
+        [nextBtn setHidden:YES];
+    }
+    
     [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
 }
 

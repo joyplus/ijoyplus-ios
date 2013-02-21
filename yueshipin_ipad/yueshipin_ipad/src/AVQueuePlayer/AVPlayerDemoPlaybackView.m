@@ -24,7 +24,7 @@
 	return [(AVPlayerLayer*)[self layer] player];
 }
 
-- (void)setPlayer:(AVQueuePlayer*)player
+- (void)setPlayer:(AVPlayer*)player
 {
 	[(AVPlayerLayer*)[self layer] setPlayer:player];
 }
@@ -35,6 +35,23 @@
 {
 	AVPlayerLayer *playerLayer = (AVPlayerLayer*)[self layer];
 	playerLayer.videoGravity = fillMode;
+    // Workaround a bug in iOS 5.0
+    float avFoundationVersion = [[[NSBundle bundleForClass:[AVPlayerLayer class]] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey] floatValue];
+    if (avFoundationVersion < 292.24f)
+    {
+        @try
+        {
+            NSString *contentLayerKeyPath = [NSString stringWithFormat:@"%1$@%2$@.%3$@%2$@", @"player", [@"layer" capitalizedString], @"content"]; // playerLayer.contentLayer
+            CALayer *contentLayer = [playerLayer valueForKeyPath:contentLayerKeyPath];
+            if ([contentLayer isKindOfClass:[CALayer class]])
+                [contentLayer addAnimation:[CABasicAnimation animation] forKey:@"sublayerTransform"];
+        }
+        @catch (NSException *exception)
+        {
+        }
+        self.bounds = self.bounds;
+    }
+
 }
 
 @end

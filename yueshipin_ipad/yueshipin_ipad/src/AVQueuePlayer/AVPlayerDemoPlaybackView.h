@@ -51,13 +51,13 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 
 #import <UIKit/UIKit.h>
 
-@class AVQueuePlayer;
+@class AVPlayer;
 
 @interface AVPlayerDemoPlaybackView : UIView
 
-@property (nonatomic, retain) AVQueuePlayer* player;
+@property (nonatomic, retain) AVPlayer* player;
 
-- (void)setPlayer:(AVQueuePlayer*)player;
+- (void)setPlayer:(AVPlayer*)player;
 - (void)setVideoFillMode:(NSString *)fillMode;
 
 @end
