@@ -245,10 +245,12 @@
     [cell.contentView addSubview:contentImage];
     
     NSString *numStr = [[downloadItem.subitemId componentsSeparatedByString:@"_"] lastObject];
-    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(2, 108, 67, 15)];
+    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(-4, 108, 78, 15)];
     nameLbl.font = [UIFont systemFontOfSize:13];
     nameLbl.backgroundColor = [UIColor clearColor];
     nameLbl.textAlignment = NSTextAlignmentCenter;
+    nameLbl.lineBreakMode = UILineBreakModeTailTruncation;
+    nameLbl.numberOfLines = 0;
     if (downloadItem.type == 2) {
      
         NSString *sub_name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
@@ -256,9 +258,11 @@
         nameLbl.text = [NSString stringWithFormat:@"第%d集",++num];
     }
     else if (downloadItem.type == 3){
-     nameLbl.text =  [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+        nameLbl.text =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
     }
-   
+    if ([nameLbl.text length]>5) {
+        nameLbl.frame = CGRectMake(-4, 108, 78, 30);
+    }
     
     nameLbl.textColor = [UIColor blackColor];
     [cell.contentView addSubview:nameLbl];
