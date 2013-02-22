@@ -110,6 +110,8 @@
 		22BA95F316D205BE00A774D8 /* download_loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F016D205BE00A774D8 /* download_loading@2x.png */; };
 		22BA95F416D205BE00A774D8 /* download_stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F116D205BE00A774D8 /* download_stop@2x.png */; };
 		22BA95F516D205BE00A774D8 /* download_wait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F216D205BE00A774D8 /* download_wait@2x.png */; };
+		22BC875416D7373300EEDC67 /* clear_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */; };
+		22BC875516D7373300EEDC67 /* clear_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875316D7373300EEDC67 /* clear_bt@2x.png */; };
 		22CE9F32169A729300D4FC76 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F31169A729300D4FC76 /* UIImage+Scale.m */; };
 		22CE9F5C169AA7FD00D4FC76 /* SendWeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */; };
 		22D11DB416A641D900B49FFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D11DB316A641D900B49FFD /* Default-568h@2x.png */; };
@@ -806,6 +808,8 @@
 		22BA95F016D205BE00A774D8 /* download_loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_loading@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_loading@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BA95F116D205BE00A774D8 /* download_stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_stop@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_stop@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BA95F216D205BE00A774D8 /* download_wait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_wait@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_wait@2x.png"; sourceTree = SOURCE_ROOT; };
+		22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
+		22BC875316D7373300EEDC67 /* clear_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt@2x.png"; sourceTree = SOURCE_ROOT; };
 		22CE9F30169A729300D4FC76 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		22CE9F31169A729300D4FC76 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
 		22CE9F5A169AA7FD00D4FC76 /* SendWeiboViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendWeiboViewController.h; sourceTree = "<group>"; };
@@ -1726,6 +1730,8 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */,
+				22BC875316D7373300EEDC67 /* clear_bt@2x.png */,
 				22350CE216D31F62009676C6 /* dele_bt_pressed@2x.png */,
 				22350CE316D31F62009676C6 /* dele_bt@2x.png */,
 				22BA95F016D205BE00A774D8 /* download_loading@2x.png */,
@@ -3154,6 +3160,8 @@
 				22BA95F516D205BE00A774D8 /* download_wait@2x.png in Resources */,
 				22350CE416D31F62009676C6 /* dele_bt_pressed@2x.png in Resources */,
 				22350CE516D31F62009676C6 /* dele_bt@2x.png in Resources */,
+				22BC875416D7373300EEDC67 /* clear_bt_pressed@2x.png in Resources */,
+				22BC875516D7373300EEDC67 /* clear_bt@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

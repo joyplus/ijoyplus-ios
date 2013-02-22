@@ -60,10 +60,11 @@
     if (type_ == 0) {
         UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [clearButton addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
-        clearButton.frame = CGRectMake(0, 0, 40, 30);
+        clearButton.frame = CGRectMake(0, 0, 54, 31);
         clearButton.backgroundColor = [UIColor clearColor];
-        //[clearButton setImage:[UIImage imageNamed:@"top_return_common.png"]forState:UIControlStateNormal];
-        [clearButton setTitle:@"clear" forState:UIControlStateNormal];
+        [clearButton setImage:[UIImage imageNamed:@"clear_bt.png"]forState:UIControlStateNormal];
+        [clearButton setImage:[UIImage imageNamed:@"clear_bt_pressed.png"]forState:UIControlStateHighlighted];
+        //[clearButton setTitle:@"clear" forState:UIControlStateNormal];
         UIBarButtonItem *clearButtonItem = [[UIBarButtonItem alloc] initWithCustomView:clearButton];
         self.navigationItem.rightBarButtonItem = clearButtonItem;
     }
@@ -296,9 +297,23 @@
     }];    
 }
 -(void)clear{
+   // NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
+    for (NSDictionary *dic in listArr_) {
+        NSString *type = [dic objectForKey:@"prod_type"];
+        NSString *prodId = [dic objectForKey:@"prod_id"];
+        NSString *subName = [dic objectForKey:@"prod_subname"];
+        if ([type isEqualToString:@"1"]) {
+            [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%d",prodId,0]];
+        }
+        else if([type isEqualToString:@"2"]|| [type isEqualToString:@"3"]){
+            [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%@",prodId,subName]];
+        }
+        
+    }
+    return;
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"user_id", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         [self dismissViewControllerAnimated:YES completion:nil];
         

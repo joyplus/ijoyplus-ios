@@ -338,14 +338,14 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:(NSArray *)[result objectForKey:@"histories"]];
-        if(sortedwatchRecordArray_.count > 0){
-            if (!button1_.enabled) {
-                [self Selectbutton:button1_];
-            }
+        //if(sortedwatchRecordArray_.count > 0){
+            //if (!button1_.enabled) {
+            [self Selectbutton:button1_];
+           // }
             [recordTableList_ reloadData];
             
            
-        } 
+        //}
     }
 }
 
