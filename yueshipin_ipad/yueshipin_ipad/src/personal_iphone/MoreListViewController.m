@@ -57,14 +57,24 @@
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
+    if (type_ == 0) {
+        UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [clearButton addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
+        clearButton.frame = CGRectMake(0, 0, 40, 30);
+        clearButton.backgroundColor = [UIColor clearColor];
+        //[clearButton setImage:[UIImage imageNamed:@"top_return_common.png"]forState:UIControlStateNormal];
+        [clearButton setTitle:@"clear" forState:UIControlStateNormal];
+        UIBarButtonItem *clearButtonItem = [[UIBarButtonItem alloc] initWithCustomView:clearButton];
+        self.navigationItem.rightBarButtonItem = clearButtonItem;
+    }
+    
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [super viewDidLoad];
 
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    
 }
 
 -(void)back:(id)sender{
@@ -187,7 +197,7 @@
     return nil;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (type_ == 2 || type_ == 2 ){
+    if (type_ == 1 || type_ == 2 ){
         return YES;
     }
     return NO;
@@ -284,6 +294,17 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
     }];    
+}
+-(void)clear{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"user_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+
 }
 - (NSString *)composeContent:(NSDictionary *)item
 {

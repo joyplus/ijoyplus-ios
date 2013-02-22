@@ -117,8 +117,12 @@
         
         NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",itemId];
         NSArray *itemArr = [SubdownloadItem findByCriteria:query];
-        int percet = ((SubdownloadItem *)[itemArr objectAtIndex:0]).percentage;
         
+        int percet = 0;
+        if ([itemArr count] >0) {
+            percet = ((SubdownloadItem *)[itemArr objectAtIndex:0]).percentage;
+        }
+       
         NSArray *arr = [itemId componentsSeparatedByString:@"_"];
         int num = [[arr objectAtIndex:0] intValue]*10+[[arr objectAtIndex:1] intValue];
         for (UILabel *label in progressLabelArr_) {
@@ -293,8 +297,11 @@
         progressLabel.text = [NSString stringWithFormat:@"下载至:%i%%", downloadItem.percentage];
         labelDown.text = @"暂停";
         [cell.contentView addSubview:labelDown];
-        [cell.contentView addSubview:progressLabel];
         
+        if (downloadItem.percentage > 0) {
+            [cell.contentView addSubview:progressLabel];
+        }
+   
     } else if([downloadItem.downloadStatus isEqualToString:@"finish"]){
         progressLabel.text = @"";
         

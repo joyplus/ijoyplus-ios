@@ -175,7 +175,10 @@
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className{
     NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",itemId];
     NSArray *itemArr = [DownloadItem findByCriteria:query];
-    int percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
+    int percet = 0;
+    if ([itemArr count] >0) {
+        percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
+    }
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
         for (UILabel *label in progressLabelArr_) {
             if (label.tag == [itemId intValue]) {           
@@ -345,10 +348,14 @@
              [cell.contentView addSubview:progressLabel];
         } else if([downloadItem.downloadStatus isEqualToString:@"stop"]){
             statusImg.image = [UIImage imageNamed:@"download_stop.png"];
+           
             progressLabel.text = [NSString stringWithFormat:@"下载至:%i%%", downloadItem.percentage];
             labelDown.text = @"暂停";
             [cell.contentView addSubview:labelDown];
-             [cell.contentView addSubview:progressLabel];
+            if (downloadItem.percentage > 0) {
+                 [cell.contentView addSubview:progressLabel];
+            }
+        
         } else if([downloadItem.downloadStatus isEqualToString:@"finish"]){
             progressLabel.text = @"";
         } else if([downloadItem.downloadStatus isEqualToString:@"waiting"]){

@@ -7,7 +7,6 @@
 //
 
 #import "RecordListCell.h"
-
 @implementation RecordListCell
 @synthesize titleLab = titleLab_;
 @synthesize actors = actors_;
@@ -53,9 +52,6 @@
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 59, 320, 1);
         [self addSubview:line];
-        
-       
-        
         
     }
     return self;
@@ -105,13 +101,12 @@
     // Configure the view for the selected state
 }
 
-
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    
-    if ([touch.view isKindOfClass:[UIButton class]]) { 
-        return NO;
-    }
+   if ([touch.view isKindOfClass:[UIButton class]]) {
+            return NO;
+       }
     return YES;
 }
+
 
 @end
