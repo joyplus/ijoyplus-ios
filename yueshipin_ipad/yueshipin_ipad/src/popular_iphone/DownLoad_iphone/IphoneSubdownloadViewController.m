@@ -249,7 +249,17 @@
     nameLbl.font = [UIFont systemFontOfSize:13];
     nameLbl.backgroundColor = [UIColor clearColor];
     nameLbl.textAlignment = NSTextAlignmentCenter;
-    nameLbl.text = [NSString stringWithFormat:@"第%@集",numStr];
+    if (downloadItem.type == 2) {
+     
+        NSString *sub_name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+        int num = [sub_name intValue];
+        nameLbl.text = [NSString stringWithFormat:@"第%d集",++num];
+    }
+    else if (downloadItem.type == 3){
+     nameLbl.text =  [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+    }
+   
+    
     nameLbl.textColor = [UIColor blackColor];
     [cell.contentView addSubview:nameLbl];
     

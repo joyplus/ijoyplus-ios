@@ -79,7 +79,10 @@ static NSMutableArray *downLoadQueue_ = nil;
         if (!isHave) {
             DownloadItem *item = [[DownloadItem alloc]init];
             item.itemId = prodId;
-            item.name = fileName;
+            if ([fileName rangeOfString:@"_"].location != NSNotFound) {
+                item.name = [[fileName componentsSeparatedByString:@"_"] objectAtIndex:0];
+            }
+            
             item.imageUrl = imgUrl;
             [item save];
         }
@@ -92,7 +95,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         subItem.imageUrl = imgUrl;
         int num = [[infoArr objectAtIndex:5] intValue];
         num++;
-        subItem.name = [fileName stringByAppendingFormat:@"_%d",num];
+        subItem.name = fileName;
         subItem.subitemId = [NSString stringWithFormat:@"%@_%d",prodId,num];
         subItem.downloadStatus = @"waiting";
         [subItem save];

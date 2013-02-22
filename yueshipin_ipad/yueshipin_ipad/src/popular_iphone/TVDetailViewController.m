@@ -799,7 +799,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [alert show];
         return;
     }
-    NSString *name = [videoInfo_ objectForKey:@"name"];
+    NSString *name = [NSString stringWithFormat:@"%@_%d",[videoInfo_ objectForKey:@"name"],num];
     if (name == nil || [name isEqualToString:@""]) {
         NSLog(@"Get the download name is failed");
         return;

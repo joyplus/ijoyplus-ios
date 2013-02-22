@@ -178,7 +178,8 @@
             [alert show];
             return;
         }
-        NSString *name = self.title;
+        NSString *sub_name = [[listArr_ objectAtIndex:num] objectForKey:@"name"];
+        NSString *name = [NSString stringWithFormat:@"%@_%@",self.title,sub_name];
         if (name == nil || [name isEqualToString:@""]) {
             NSLog(@"Get the download name is failed");
             return;
