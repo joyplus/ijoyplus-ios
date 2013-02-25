@@ -10,7 +10,6 @@
 #import "allListViewController.h"
 #import "PageManageViewController.h"
 #import "MineViewController.h"
-#import "navigationViewController.h"
 #import "UIImage+Scale.h"
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
@@ -32,11 +31,11 @@
         [allListNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
        
         PageManageViewController *pageView = [[PageManageViewController alloc] init];
-        navigationViewController *sortNav = [[navigationViewController alloc] initWithRootViewController:pageView];
+        UINavigationController *sortNav = [[UINavigationController alloc] initWithRootViewController:pageView];
         [sortNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)]forBarMetrics:UIBarMetricsDefault];
         
         MineViewController *mineview = [[MineViewController alloc] init];
-        navigationViewController *mineNav = [[navigationViewController alloc] initWithRootViewController:mineview];
+        UINavigationController *mineNav = [[UINavigationController alloc] initWithRootViewController:mineview];
         [mineNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
         
         UIImage *tabBackground = [[UIImage imageNamed:@"tab_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];

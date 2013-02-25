@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface navigationViewController : UINavigationController{
+@interface CustomNavigationViewControllerPortrait : UINavigationController
 
-    int viewType_;
-}
-@property (nonatomic,assign) int viewType;
 @end

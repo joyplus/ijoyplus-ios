@@ -25,6 +25,7 @@
 #import "CommonHeader.h"
 #import "MyMediaPlayerViewController.h"
 #import "CustomNavigationViewController.h"
+#import "CustomNavigationViewControllerPortrait.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -398,19 +399,19 @@
             moreListViewController.listArr = sortedwatchRecordArray_;
         }
         moreListViewController.type = RECORD_TYPE;
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+        [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
     else if (!button2_.enabled) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         moreListViewController.listArr = favArr_;
         moreListViewController.type = Fav_TYPE;
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+        [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     }
     else if(!button3_.enabled){
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         moreListViewController.listArr = myListArr_;
          moreListViewController.type = MYLIST_TYPE;
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
+        [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:moreListViewController] animated:YES completion:nil];
     
     }
 
