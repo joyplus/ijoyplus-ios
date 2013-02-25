@@ -11,7 +11,7 @@
 #import "CommonHeader.h"
 #import "ListViewController.h"
 #import "MyMediaPlayerViewController.h"
-#import "VideoWebViewController.h"
+#import "AvVideoWebViewController.h"
 
 @interface VideoDetailViewController ()
 
@@ -383,7 +383,7 @@
             }
         }
         
-        VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
+        AvVideoWebViewController *webViewController = [[AvVideoWebViewController alloc] init];
         webViewController.videoHttpUrlArray = httpUrlArray;
         webViewController.prodId = self.prodId;
         webViewController.hasVideoUrls = hasVideoUrls;

@@ -55,6 +55,7 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic) CMTime resolutionLastPlaytime;
 @property (nonatomic) int resolutionNum;
+@property (nonatomic, strong) NSURLRequest *request;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -81,7 +82,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize episodeListviewController, subnameArray, lastPlayTime, resolutionLastPlaytime;
 @synthesize resolutionPopTipView, biaoqingBtn, chaoqingBtn, gaoqingBtn, routeBtn;
 @synthesize vidoeTitle, videoWebViewControllerDelegate, airplayDeviceName, deviceOutputType;
-@synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
+@synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name, request;
 
 #pragma mark
 #pragma mark View Controller
@@ -118,8 +119,99 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.mPlayButton = nil;
     self.mStopButton = nil;
     self.mScrubber = nil;
+    topToolbar = nil;
+    bottomView = nil;
+    volumeSlider = nil;
+    routeBtn = nil;
+    currentPlaybackTimeLabel = nil;
+    totalTimeLabel = nil;
+    volumeBtn = nil;
+    selectButton = nil;
+    qualityBtn = nil;
+    playCacheView = nil;
+    theLock = nil;
+    controlVisibilityTimer = nil;
+    myHUD = nil;
+    episodeListviewController = nil;
+    resolutionPopTipView = nil;
+    biaoqingBtn = nil;
+    gaoqingBtn = nil;
+    chaoqingBtn = nil;
+    vidoeTitle = nil;
+    airplayDeviceName = nil;
+    deviceOutputType = nil;
+    applyTvView = nil;
+    tipLabel = nil;
+    subnameArray = nil;
+    videoUrlsArray = nil;
+    prodId = nil;
+    name = nil;
+    subname = nil;
+    video = nil;
+    videoHttpUrl = nil;
+    self.URL = nil;
+    mPlayer = nil;
+    mPlayerItem = nil;
+    mPlaybackView = nil;
+    mToolbar = nil;
+    mPrevButton = nil;
+    mNextButton = nil;
+    mSwitchButton = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [super viewDidUnload];
+}
+
+- (void)dealloc
+{
+    [self removePlayerTimeObserver];
+	[mPlayer removeObserver:self forKeyPath:@"rate"];
+	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
+	[mPlayer pause];
+    topToolbar = nil;
+    self.mPlaybackView = nil;
+    self.mToolbar = nil;
+    self.mPlayButton = nil;
+    self.mStopButton = nil;
+    self.mScrubber = nil;
+    topToolbar = nil;
+    bottomView = nil;
+    volumeSlider = nil;
+    routeBtn = nil;
+    currentPlaybackTimeLabel = nil;
+    totalTimeLabel = nil;
+    volumeBtn = nil;
+    selectButton = nil;
+    qualityBtn = nil;
+    playCacheView = nil;
+    theLock = nil;
+    controlVisibilityTimer = nil;
+    myHUD = nil;
+    episodeListviewController = nil;
+    resolutionPopTipView = nil;
+    biaoqingBtn = nil;
+    gaoqingBtn = nil;
+    chaoqingBtn = nil;
+    vidoeTitle = nil;
+    airplayDeviceName = nil;
+    deviceOutputType = nil;
+    applyTvView = nil;
+    tipLabel = nil;
+    subnameArray = nil;
+    videoUrlsArray = nil;
+    prodId = nil;
+    name = nil;
+    subname = nil;
+    video = nil;
+    videoHttpUrl = nil;
+    self.URL = nil;
+    mPlayer = nil;
+    mPlayerItem = nil;
+    mPlaybackView = nil;
+    mToolbar = nil;
+    mPrevButton = nil;
+    mNextButton = nil;
+    mSwitchButton = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
 }
 
 - (void)viewDidLoad
@@ -169,10 +261,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self resignFirstResponder];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+-(BOOL)shouldAutorotate {
+    
     return YES;
+    
 }
+
+-(NSUInteger)supportedInterfaceOrientations {
+    
+    return UIInterfaceOrientationMaskLandscape;
+    
+}
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
+    return UIInterfaceOrientationLandscapeRight;
+    
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight;
+}
+
 
 - (void)playVideo
 {
@@ -226,13 +334,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }
         } else {
             [myHUD hide:NO];
-            tipLabel.text = @"该视频已失效，即将使用网页播放";
+            tipLabel.text = @"即将使用网页播放";
             [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
         }
     } else {
         // TODO: should close screen
         [myHUD hide:NO];
-        tipLabel.text = @"该视频已失效，即将使用网页播放";
+        tipLabel.text = @"即将使用网页播放";
         [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
     }
 }
@@ -294,6 +402,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)parseResolutionNum
 {
+    resolutionNum = 0;
     NSArray *temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:CHAO_QING];
     if (temp.count > 0) {
         resolutionNum++;
@@ -352,7 +461,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSArray *tempArray = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:resolution];
     if (errorUrlNum == tempArray.count) {
         [myHUD hide:NO];
-        tipLabel.text = @"该视频已失效，即将使用网页播放。";
+        tipLabel.text = @"即将使用网页播放";
         [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
     }
     [theLock unlock];
@@ -414,7 +523,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     vidoeTitle.textAlignment = UITextAlignmentCenter;
     [topToolbar addSubview:vidoeTitle];
     
-    if (type == 2 || type == 3) {
+    if ((type == 2 || type == 3) && !isDownloaded) {
         selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         selectButton.frame = CGRectMake(topToolbar.frame.size.width - 20 - 100, 0, 100, BUTTON_HEIGHT);
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
@@ -541,7 +650,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
     [qualityBtn addTarget:self action:@selector(qualityBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:qualityBtn];
-    if (resolutionNum > 1) {
+    if (resolutionNum > 1 && !isDownloaded) {
         [qualityBtn setHidden:NO];
     }
 }
@@ -561,21 +670,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [topToolbar setHidden:NO];
         [bottomView setHidden:NO];
         [resolutionPopTipView setHidden:NO];
+        UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
+        if (epsideArrayView) {
+            epsideArrayView.alpha = 1;
+            [epsideArrayView setHidden:NO];
+        }
         [self resetControlVisibilityTimer];
     } else {
         [controlVisibilityTimer invalidate];
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
             UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
-            if (epsideArrayView == nil) {
-                topToolbar.alpha = 0;
+            if (epsideArrayView) {
+                epsideArrayView.alpha = 0;
             }
+            topToolbar.alpha = 0;
             bottomView.alpha = 0;
             resolutionPopTipView.alpha = 0;
         } completion:^(BOOL finished) {
             UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
-            if (epsideArrayView == nil) {
-                [topToolbar setHidden:YES];
+            if (epsideArrayView) {
+                [epsideArrayView setHidden:YES];
             }
+            [topToolbar setHidden:YES];
             [resolutionPopTipView setHidden:YES];
             [bottomView setHidden:YES];
         }];
@@ -596,11 +712,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)showPlayCacheView
 {
-    if (playCacheView == nil) {
-        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
-    } else {
-        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(playCacheView.frame.origin.x, playCacheView.frame.origin.y, playCacheView.frame.size.width, playCacheView.frame.size.height)];
-    }
+    CGRect bounds = [UIScreen mainScreen].bounds;
+    playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width - 24)];
     playCacheView.backgroundColor = [UIColor blackColor];
     if (topToolbar) {
         [self.view insertSubview:playCacheView belowSubview:topToolbar];
@@ -729,7 +842,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (type == 1) {
         lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@", self.prodId];
     } else {
-        lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, [subnameArray objectAtIndex:currentNum]];
+        lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
     }
     [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: [NSNumber numberWithFloat: CMTimeGetSeconds(mPlayer.currentTime)]];
 }
@@ -884,6 +997,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         resolution = CHAO_QING;
         [btn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateNormal];
     }
+    [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
+    [resolutionPopTipView dismissAnimated:YES];
+    resolutionPopTipView = nil;
     resolutionLastPlaytime = [mPlayer currentTime];
     [self preparePlayVideo];
 }
@@ -946,7 +1062,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             duration = CMTimeGetSeconds(playerDuration);
         }
         
-        NSString *subname = [subnameArray objectAtIndex:currentNum];
+        subname = [subnameArray objectAtIndex:currentNum];
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         NSString *tempPlayType = @"1";
         NSString *tempUrl = workingUrl.absoluteString; //This url should be useless. In order to simplify the replay logic, we will don't use the url any more.
@@ -971,7 +1087,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (type == 1) {
         lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@", self.prodId];
     } else {
-        lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, [subnameArray objectAtIndex:currentNum]];
+        lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
     }
     NSNumber *seconds = [[CacheUtility sharedCache]loadFromCache:lastPlaytimeCacheKey];
     lastPlayTime = CMTimeMakeWithSeconds(seconds.doubleValue, NSEC_PER_SEC);
@@ -1299,7 +1415,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //											  otherButtonTitles:nil];
 //	[alertView show];
     [myHUD hide:NO];
-    tipLabel.text = @"该视频已失效，即将使用网页播放";
+    tipLabel.text = @"即将使用网页播放";
     [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
 }
 
@@ -1509,12 +1625,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     [playCacheView setAlpha:0];
                 } completion:^(BOOL finished) {
                     [playCacheView removeFromSuperview];
-//                    topToolbar.alpha = 1;
-//                    bottomView.alpha = 1;
-//                    resolutionPopTipView.alpha = 0.9;
-//                    [topToolbar setHidden:NO];
-//                    [bottomView setHidden:NO];
-//                    [resolutionPopTipView setHidden:NO];
+                    [playCacheView setHidden:YES];
+                    playCacheView = nil;
                     [self resetControlVisibilityTimer];
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                 }];

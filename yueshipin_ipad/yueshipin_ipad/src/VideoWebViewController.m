@@ -10,28 +10,24 @@
 #import "MyMediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "UIImage+Scale.h"
-#import "AVPlayerViewController.h"
 
 @interface VideoWebViewController ()
 
 @property (nonatomic, strong)UIWebView *webView;
 @property (nonatomic)BOOL appeared;
-@property (nonatomic, strong)NSMutableArray *subnameArray;
 @end
 
 @implementation VideoWebViewController
 @synthesize video;
 @synthesize webView;
 @synthesize videoHttpUrlArray;
-@synthesize prodId;
-@synthesize playTime;
-@synthesize type, currentNum, isDownloaded;
-@synthesize appeared;
-@synthesize dramaDetailViewControllerDelegate;
-@synthesize hasVideoUrls;
-@synthesize subnameArray;
-@synthesize subname;
 @synthesize name;
+@synthesize prodId;
+@synthesize subname,playTime;
+@synthesize type, currentNum, isDownloaded, startNum;
+@synthesize appeared;
+@synthesize videoUrlsArray;
+@synthesize dramaDetailViewControllerDelegate;
 
 
 - (void)didReceiveMemoryWarning
@@ -47,7 +43,9 @@
     video = nil;
     [videoHttpUrlArray removeAllObjects];
     videoHttpUrlArray = nil;
+    name = nil;
     prodId = nil;
+    subname = nil;
     [videoHttpUrlArray removeAllObjects];
     videoHttpUrlArray = nil;
 }
@@ -76,19 +74,17 @@
     UIBarButtonItem *customItem = [[UIBarButtonItem alloc] initWithCustomView:myButton];
     self.navigationItem.leftBarButtonItem = customItem;
     
-    if (name == nil) {
-        name = [video objectForKey:@"name"];
-    }
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
         t.font = [UIFont boldSystemFontOfSize:18];
         t.textColor = [UIColor whiteColor];
         t.backgroundColor = [UIColor clearColor];
         t.textAlignment = UITextAlignmentCenter;
-        t.text = [NSString stringWithFormat:@"%@", name];
-        self.navigationItem.titleView = t;        
+        t.text = self.name;
+        self.navigationItem.titleView = t;
+        
     }else{
-        self.title = [NSString stringWithFormat:@"%@", name];
+        self.title = self.name;
     }
     [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)] forBarMetrics:UIBarMetricsDefault];
     CGRect bound = [UIScreen mainScreen].bounds;
@@ -96,20 +92,15 @@
     [webView setBackgroundColor:[UIColor clearColor]];
     webView.scalesPageToFit = YES;
     [self hideGradientBackground:webView];
-    if (videoHttpUrlArray.count > 0) {        
-        NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:0]];
-        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-        [webView loadRequest:requestObj];
-    }
+    NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:0]];
+    NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+    [webView loadRequest:requestObj];
     [webView setScalesPageToFit:YES];
     [self.view addSubview:webView];
     
-    if (!hasVideoUrls) {
-        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for (NSDictionary *oneEpisode in [video objectForKey:@"episodes"]) {
-            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-            [subnameArray addObject:tempName];
-        }
+    if (self.videoUrlsArray.count > 0) {
+        //如果有视频地址，就不用记录网页播放的记录
+    } else {
         [self updateWatchRecord];
     }
 }
@@ -122,79 +113,78 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     }
+    if (!appeared) {
+        appeared = YES;
+        if (self.videoUrlsArray.count > 0) {
+            [self performSelector:@selector(showMediaPlayer) withObject:nil afterDelay:0.5];
+        }
+    }
+    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if (!appeared) {
-        appeared = YES;
-        if (hasVideoUrls > 0) {
-            UIView *blackView = [[UIView alloc]initWithFrame:self.view.frame];
-            blackView.backgroundColor = [UIColor blackColor];
-            blackView.alpha = 0;
-            [self.view addSubview:blackView];
-            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-                self.navigationController.navigationBar.alpha = 0;
-                blackView.alpha = 1;
-            } completion:^(BOOL finished) {
-                [self showMediaPlayer];
-                self.navigationController.navigationBar.alpha = 1;
-                [blackView removeFromSuperview];
-            }];
-        }
-    }
 }
 
 - (void)showMediaPlayer
 {
-    if (hasVideoUrls) {
-        AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
-        viewController.videoWebViewControllerDelegate = self;
-        viewController.currentNum = self.currentNum;
-        viewController.video = video;
-        viewController.type = self.type;
-        viewController.prodId = self.prodId;
-        viewController.name = name;
-        viewController.subname = subname;
-        if (video == nil) {//如果是从播放历史里来，就关闭网页和视频
-            viewController.closeAll = YES;
+    if (self.currentNum < self.videoUrlsArray.count) {
+        NSArray *tempVideoUrlsArray = [self.videoUrlsArray objectAtIndex:self.currentNum];
+        if(tempVideoUrlsArray.count > 0){
+            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+            viewController.currentNum = self.currentNum;
+            viewController.videoUrls = [self.videoUrlsArray objectAtIndex:self.currentNum];
+            viewController.videoHttpUrl = [self.videoHttpUrlArray objectAtIndex:self.currentNum];
+            viewController.prodId = self.prodId;
+            viewController.videoWebViewControllerDelegate = self;
+            viewController.type = self.type;
+            //viewController.name = [self.video objectForKey:@"name"];
+            viewController.name = self.name;
+            viewController.subname = self.subname;
+            viewController.dramaDetailViewControllerDelegate = self.dramaDetailViewControllerDelegate;
+            viewController.playTime = playTime;
+           // viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+            [self.navigationController pushViewController:viewController animated:NO];
+        } else {
+            //如果只有网页地址，记录网页地址播放记录
+            [self updateWatchRecord];
         }
-        [self.navigationController pushViewController:viewController animated:NO];
     }
 }
 
 - (void)playNextEpisode:(int)nextEpisodeNum
 {
     self.currentNum = nextEpisodeNum;
-    if (self.currentNum < videoHttpUrlArray.count) {
+    if (self.currentNum < self.videoUrlsArray.count){
         NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:self.currentNum]];
         NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
         [self.webView loadRequest:requestObj];
-    }
-    if([self.dramaDetailViewControllerDelegate respondsToSelector:@selector(changePlayingEpisodeBtn:)]){
-        [self.dramaDetailViewControllerDelegate changePlayingEpisodeBtn:self.currentNum];
-    } else {
-        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:currentNum+1]];
+        if([self.dramaDetailViewControllerDelegate respondsToSelector:@selector(changePlayingEpisodeBtn:)]){
+            [self.dramaDetailViewControllerDelegate changePlayingEpisodeBtn:self.startNum + self.currentNum];
+        }
+        [self showMediaPlayer];
     }
 }
 
 - (void)closeSelf
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:NO];
 }
 
 - (void)updateWatchRecord
 {
-        NSString *subname = [subnameArray objectAtIndex:currentNum];
+    if (self.currentNum < self.videoUrlsArray.count) {
+        self.subname = self.subname == nil ? @"" : self.subname;
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", self.name, @"prod_name", self.subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", @"2", @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", [videoHttpUrlArray objectAtIndex:self.currentNum], @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
             [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"zz%@", error);
         }];
+    }
 }
 
 - (void) hideGradientBackground:(UIView*)theView

@@ -365,9 +365,10 @@
             NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
             [urlsArray addObject:filePath];
             viewController.videoUrlsArray = urlsArray;
-            viewController.type = 1;
+            viewController.type = 3;
             viewController.name = self.titleContent;
             viewController.subname = item.name;
+            viewController.currentNum = 0;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {

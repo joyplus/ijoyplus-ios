@@ -16,7 +16,7 @@
 #import "MovieDetailViewController.h"
 #import "ShowDetailViewController.h"
 #import "MyMediaPlayerViewController.h"
-
+#import "AvVideoWebViewController.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -56,7 +56,6 @@
 @property (nonatomic, retain) CAGradientLayer *g2;
 @property (nonatomic, retain) UIView* bottomFadingView;
 @property (nonatomic, assign) fade_orientation fadeOrientation;
-@property (nonatomic, strong) NSTimer *editingTimer;
 @property (nonatomic, strong) MNMBottomPullToRefreshManager *pullToRefreshManager_;
 @property (nonatomic) NSUInteger reloads_;
 @end
@@ -66,7 +65,6 @@
 @synthesize baseColor = baseColor_;
 @synthesize g2 = g2_;
 @synthesize bottomFadingView;
-@synthesize editingTimer;
 @synthesize pullToRefreshManager_, reloads_;
 @synthesize fadeOrientation = fadeOrientation_;
 
@@ -86,7 +84,6 @@
     self.g2 = nil;
     tableBg = nil;
     bottomFadingView = nil;
-    editingTimer = nil;
     pullToRefreshManager_ = nil;
     backgroundView = nil;
     menuBtn = nil;
@@ -298,7 +295,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:YES];
-    [editingTimer invalidate];
 }
 
 - (void)parseWatchHistory
@@ -332,7 +328,7 @@
                 NSString *key = [NSString stringWithFormat:@"%@_%@", tprodId, tsubname];
                 [[CacheUtility sharedCache] putInCache:key result:tplaybackTime];
             }
-            if (sortedwatchRecordArray.count > 10) {
+            if (sortedwatchRecordArray.count >= 10) {
                 [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
             } else {
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
@@ -540,7 +536,7 @@
         [httpUrlArray addObject:[item objectForKey:@"video_url"]];
         hasVideoUrls = NO;
     }
-    VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
+    AvVideoWebViewController *webViewController = [[AvVideoWebViewController alloc] init];
     webViewController.videoHttpUrlArray = httpUrlArray;
     webViewController.name = [item objectForKey:@"prod_name"];
     webViewController.subname = [item objectForKey:@"prod_subname"];
@@ -649,10 +645,6 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     if(sortedwatchRecordArray.count > 0){
-        editingTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(showReplayBtn) userInfo:nil repeats:YES];
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UIButton *btn = (UIButton *)[cell viewWithTag:1002];
-        [btn setHidden:YES];
         return UITableViewCellEditingStyleDelete;
     } else {
         return  UITableViewCellEditingStyleNone;
@@ -674,21 +666,23 @@
                 [table setHidden:YES];
                 [bottomFadingView setHidden:YES];
             }
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self loadTable];
         }
     }
 }
 
-- (void)showReplayBtn
+- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (![table isEditing]) {
-        for (int i = 0; i < sortedwatchRecordArray.count; i++) {
-            UITableViewCell *cell = [table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-            UIButton *btn = (UIButton *)[cell viewWithTag:1002];
-            [btn setHidden:NO];
-        }
-    }
+    UITableViewCell *cell = [table cellForRowAtIndexPath:indexPath];
+    UIButton *btn = (UIButton *)[cell viewWithTag:1002];
+    [btn setHidden:YES];
+}
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [table cellForRowAtIndexPath:indexPath];
+    UIButton *btn = (UIButton *)[cell viewWithTag:1002];
+    [btn setHidden:NO];
 }
 
 -(void)removeRow:(int)index{
