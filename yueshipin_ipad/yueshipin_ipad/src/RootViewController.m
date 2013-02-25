@@ -378,17 +378,11 @@
 - (void)removeOverlay
 {
     UIView *view = (UIView *)[self.view viewWithTag:3268142];
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-        for(UIView *subview in view.subviews){
-            subview.alpha = 0;
-        }
-        view.alpha = 0 ;
-    } completion:^(BOOL finished) {
-        for(UIView *subview in view.subviews){
-            [subview removeFromSuperview];
-        }
-        [view removeFromSuperview];      
-    }];
+    for(UIView *subview in view.subviews){
+        [subview removeFromSuperview];
+    }
+    [view removeFromSuperview];
+    view = nil;
 }
 
 - (void)pesentMyModalView:(UIViewController *)viewController

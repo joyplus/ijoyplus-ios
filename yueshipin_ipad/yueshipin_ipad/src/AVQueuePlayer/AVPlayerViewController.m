@@ -11,6 +11,7 @@
 #define BOTTOM_TOOLBAR_HEIGHT 100
 #define BUTTON_HEIGHT 50
 #define EPISODE_ARRAY_VIEW_TAG 76892367
+#define PLAY_CACHE_VIEW 234238494
 
 /* Asset keys */
 NSString * const kTracksKey         = @"tracks";
@@ -49,6 +50,7 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) UIView *applyTvView;
 @property (nonatomic, strong) UILabel *tipLabel;
 @property (nonatomic, strong) NSMutableArray *subnameArray;
+@property (nonatomic, strong) UILabel *nameLabel;
 @property (atomic, strong) NSURL *workingUrl;
 @property (atomic) int errorUrlNum;
 @property (nonatomic) NSString *resolution;
@@ -76,7 +78,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize mPlayer, mPlayerItem, mPlaybackView;
 @synthesize mToolbar, topToolbar, mPlayButton, mStopButton, mScrubber, mNextButton, mPrevButton, volumeSlider, mSwitchButton;
 @synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, videoUrlsArray, selectButton;
-@synthesize playCacheView, resolution, videoHttpUrl;
+@synthesize playCacheView, resolution, videoHttpUrl, nameLabel;
 @synthesize type, isDownloaded, currentNum, errorUrlNum, theLock, closeAll;
 @synthesize workingUrl, myHUD, bottomView, controlVisibilityTimer;
 @synthesize episodeListviewController, subnameArray, lastPlayTime, resolutionLastPlaytime;
@@ -168,6 +170,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
 	[mPlayer pause];
     topToolbar = nil;
+    nameLabel = nil;
     self.mPlaybackView = nil;
     self.mToolbar = nil;
     self.mPlayButton = nil;
@@ -712,51 +715,55 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)showPlayCacheView
 {
-    CGRect bounds = [UIScreen mainScreen].bounds;
-    playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width - 24)];
-    playCacheView.backgroundColor = [UIColor blackColor];
-    if (topToolbar) {
-        [self.view insertSubview:playCacheView belowSubview:topToolbar];
-    } else {
-        [self.view addSubview:playCacheView];
+    playCacheView = [self.view viewWithTag:PLAY_CACHE_VIEW];
+    if (playCacheView == nil) {
+        CGRect bounds = [UIScreen mainScreen].bounds;
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width - 24)];
+        playCacheView.tag = PLAY_CACHE_VIEW;
+        playCacheView.backgroundColor = [UIColor blackColor];
+        if (topToolbar) {
+            [self.view insertSubview:playCacheView belowSubview:topToolbar];
+        } else {
+            [self.view addSubview:playCacheView];
+        }
+        
+        nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
+        nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.6);
+        nameLabel.backgroundColor = [UIColor clearColor];
+        nameLabel.font = [UIFont systemFontOfSize:25];
+        if (video != nil) {
+            name = [video objectForKey:@"name"];
+            subname = [subnameArray objectAtIndex:self.currentNum];
+        }
+        nameLabel.textAlignment = NSTextAlignmentCenter;
+        nameLabel.textColor = [UIColor whiteColor];
+        if (type == 2) {
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
+        } else if(type == 3){
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
+        } else {
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
+            vidoeTitle.text = [video objectForKey:@"name"];
+        }
+        [playCacheView addSubview:nameLabel];
+        
+        tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
+        tipLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 1.4);
+        tipLabel.backgroundColor = [UIColor clearColor];
+        tipLabel.font = [UIFont systemFontOfSize:15];
+        tipLabel.text = @"正在加载，请稍等";
+        tipLabel.textAlignment = NSTextAlignmentCenter;
+        tipLabel.textColor = [UIColor whiteColor];
+        [playCacheView addSubview:tipLabel];
+        
+        myHUD = [[MBProgressHUD alloc] initWithView:playCacheView];
+        myHUD.frame = CGRectMake(myHUD.frame.origin.x, myHUD.frame.origin.y + 130, myHUD.frame.size.width, myHUD.frame.size.height);
+        [playCacheView addSubview:myHUD];
+        myHUD.opacity = 0;
+        [myHUD show:YES];
     }
-    
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
-    nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.6);
-    nameLabel.backgroundColor = [UIColor clearColor];
-    nameLabel.font = [UIFont systemFontOfSize:25];
-    if (video != nil) {
-        name = [video objectForKey:@"name"];
-        subname = [subnameArray objectAtIndex:self.currentNum];
-    }
-    if (type == 2) {
-        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
-    } else if(type == 3){
-        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
-    } else {
-        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
-        vidoeTitle.text = [video objectForKey:@"name"];
-    }
-    nameLabel.textAlignment = NSTextAlignmentCenter;
-    nameLabel.textColor = [UIColor whiteColor];
-    [playCacheView addSubview:nameLabel];
-    
-    tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
-    tipLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 1.4);
-    tipLabel.backgroundColor = [UIColor clearColor];
-    tipLabel.font = [UIFont systemFontOfSize:15];
-    tipLabel.text = @"正在加载，请稍等";
-    tipLabel.textAlignment = NSTextAlignmentCenter;
-    tipLabel.textColor = [UIColor whiteColor];
-    [playCacheView addSubview:tipLabel];
-    
-    myHUD = [[MBProgressHUD alloc] initWithView:playCacheView];
-    myHUD.frame = CGRectMake(myHUD.frame.origin.x, myHUD.frame.origin.y + 130, myHUD.frame.size.width, myHUD.frame.size.height);
-    [playCacheView addSubview:myHUD];
-    myHUD.opacity = 0;
-    [myHUD show:YES];
 }
 
 
@@ -784,10 +791,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         mPlayer = nil;
         if (video != nil && subnameArray.count > self.currentNum) {
             if (type == 2) {
-                vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", [video objectForKey:@"name"], [subnameArray objectAtIndex:self.currentNum]];
+                subname = [subnameArray objectAtIndex:self.currentNum];
+                nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
+                vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
             } else if(type == 3){
-                vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", [video objectForKey:@"name"], [subnameArray objectAtIndex:self.currentNum]];
+                nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
+                vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
             } else {
+                nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
                 vidoeTitle.text = [video objectForKey:@"name"];
             }
         }
@@ -1327,6 +1338,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)playOneEpisode:(int)num
 {
     currentNum = num;
+    [self resetControlVisibilityTimer];
     [self preparePlayVideo];
 }
 

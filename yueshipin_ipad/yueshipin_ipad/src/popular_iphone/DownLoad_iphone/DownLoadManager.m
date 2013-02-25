@@ -279,7 +279,7 @@ static NSMutableArray *downLoadQueue_ = nil;
             NSRange range = [downloadId_ rangeOfString:@"_"];
             if (range.location == NSNotFound) {
              int count = (int)(percentDone*100) - downloadItem_.percentage;
-                NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
+//                NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
                 downloadItem_.percentage = (int)(percentDone*100);
                 if (count >= 1){     
                     [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneDownloadViewController"];
@@ -289,7 +289,7 @@ static NSMutableArray *downLoadQueue_ = nil;
                 }
             }else{
                  int count = (int)(percentDone*100) - subdownloadItem_.percentage;
-                 NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
+//                 NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
                  subdownloadItem_.percentage = (int)(percentDone*100);
                   if (count >= 1) {
                     [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
