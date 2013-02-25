@@ -196,7 +196,7 @@
 }
 
 - (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView.tag == 0) {
+    if (type_ == 0) {
         RecordListCell *cell = (RecordListCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.play.hidden = YES;
         
@@ -204,7 +204,7 @@
 }
 
 - (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (tableView.tag == 0) {
+    if (type_ == 0) {
         RecordListCell *cell = (RecordListCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.play.hidden = NO;
     }
