@@ -298,30 +298,39 @@
 
 
 -(void)clear{
-   // NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
-    for (NSDictionary *dic in listArr_) {
-        NSString *type = [dic objectForKey:@"prod_type"];
-        NSString *prodId = [dic objectForKey:@"prod_id"];
-        NSString *subName = [dic objectForKey:@"prod_subname"];
-        if ([type isEqualToString:@"1"]) {
-            [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%d",prodId,0]];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"确定清除播放记录？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+    [alert show];
+    
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        for (NSDictionary *dic in listArr_) {
+            NSString *type = [dic objectForKey:@"prod_type"];
+            NSString *prodId = [dic objectForKey:@"prod_id"];
+            NSString *subName = [dic objectForKey:@"prod_subname"];
+            if ([type isEqualToString:@"1"]) {
+                [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%d",prodId,0]];
+            }
+            else if([type isEqualToString:@"2"]|| [type isEqualToString:@"3"]){
+                [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%@",prodId,subName]];
+            }
+            
         }
-        else if([type isEqualToString:@"2"]|| [type isEqualToString:@"3"]){
-            [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%@",prodId,subName]];
-        }
-        
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"user_id", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
+            
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+
     }
-    return;
-    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"user_id", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
-        [self dismissViewControllerAnimated:YES completion:nil];
-        
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    }];
 
 }
+
 - (NSString *)composeContent:(NSDictionary *)item
 {
     NSString *content;
