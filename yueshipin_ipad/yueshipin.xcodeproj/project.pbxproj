@@ -99,7 +99,7 @@
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
 		2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */; };
 		2281DA6216AD25D800333353 /* IphoneDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */; };
-		229CA6AF16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 229CA6AE16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.m */; };
+		229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */; };
 		22AAA4B81697D42E00333F76 /* CreateMyListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */; };
 		22AFAECB16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AFAECA16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m */; };
 		22B0463D16BB65FF005966B8 /* CustomNavigationButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0463A16BB65FF005966B8 /* CustomNavigationButtonView.m */; };
@@ -835,8 +835,8 @@
 		2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownlooadViewController.m; sourceTree = "<group>"; };
 		2281DA6016AD25D800333353 /* IphoneDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneDownloadViewController.h; sourceTree = "<group>"; };
 		2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneDownloadViewController.m; sourceTree = "<group>"; };
-		229CA6AD16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationViewControllerPortrait.h; sourceTree = "<group>"; };
-		229CA6AE16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationViewControllerPortrait.m; sourceTree = "<group>"; };
+		229CA6D216DB78AF00C60661 /* CustomNavigationViewControllerPortrait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationViewControllerPortrait.h; sourceTree = "<group>"; };
+		229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationViewControllerPortrait.m; sourceTree = "<group>"; };
 		22AAA4B61697D42D00333F76 /* CreateMyListOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateMyListOneViewController.h; sourceTree = "<group>"; };
 		22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateMyListOneViewController.m; sourceTree = "<group>"; };
 		22AFAEC916B7AF7F0092A8D6 /* IphonePlayVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphonePlayVideoViewController.h; sourceTree = "<group>"; };
@@ -1733,8 +1733,8 @@
 		22FEEE4316899AE000A71EF4 /* popular_iphone */ = {
 			isa = PBXGroup;
 			children = (
-				229CA6AD16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.h */,
-				229CA6AE16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.m */,
+				229CA6D216DB78AF00C60661 /* CustomNavigationViewControllerPortrait.h */,
+				229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */,
 				22FEEEE1168D4C5C00A71EF4 /* IphoneShowDetailViewController.h */,
 				22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */,
 				2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */,
@@ -3541,15 +3541,12 @@
 				22343DD616BC007C00AFE83A /* DownloadUrlFinder.m in Sources */,
 				22343DDA16BC026500AFE83A /* AFDownloadRequestOperation.m in Sources */,
 				2226B9F716C0F3F20068A8FA /* AppRecommendViewController.m in Sources */,
-<<<<<<< HEAD
 				EB02F65016DAFFF0001C2E3A /* AVPlayerView.m in Sources */,
 				EB02F65116DAFFF0001C2E3A /* AVPlayerViewController.m in Sources */,
 				EB02F65216DAFFF0001C2E3A /* EpisodeListViewController.m in Sources */,
 				EB02F6A616DB00ED001C2E3A /* CMPopTipView.m in Sources */,
 				EB02F6AE16DB024D001C2E3A /* VideoWebViewController.m in Sources */,
-=======
-				229CA6AF16DB6D4300C60661 /* CustomNavigationViewControllerPortrait.m in Sources */,
->>>>>>> iphone code commit
+				229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
