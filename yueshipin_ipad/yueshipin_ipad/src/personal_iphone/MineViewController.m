@@ -581,12 +581,7 @@
      
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
-        cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
-        cell.deleteBtn.tag = indexPath.row;
-        cell.deleteBtn.hidden = YES;
-        [cell.deleteBtn addTarget:self action:@selector(deleteRow:) forControlEvents:UIControlEventTouchUpInside];
-        [cell addCustomGestureRecognizer];
         return cell;
     }
     else if (tableView.tag == Fav_TYPE){
@@ -704,30 +699,46 @@
 
 
 }
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView.tag == Fav_TYPE ||tableView.tag == MYLIST_TYPE) {
-        return YES;
+- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == RECORD_TYPE) {
+        RecordListCell *cell = (RecordListCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.play.hidden = YES;
+        
     }
-    return NO;
 }
+
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == RECORD_TYPE) {
+        RecordListCell *cell = (RecordListCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.play.hidden = NO;
+    }
+    
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    return YES;
+}
+
+
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
 
         switch (tableView.tag) {
-//            case RECORD_TYPE:
-//            {
-//                NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-//                NSString *topicId = [infoDic objectForKey:@"prod_id"];
-//                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
-//                [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//                    [sortedwatchRecordArray_ removeObjectAtIndex:indexPath.row];
-//                    [tableView reloadData];
-//                    [self Selectbutton:button1_];
-//                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-//                }];
-//                break;
-//            }
+            case RECORD_TYPE:
+            {
+                NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
+                NSString *topicId = [infoDic objectForKey:@"prod_id"];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    [sortedwatchRecordArray_ removeObjectAtIndex:indexPath.row];
+                    [tableView reloadData];
+                    [self Selectbutton:button1_];
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                break;
+            }
             case Fav_TYPE:
             {
                 NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
@@ -823,18 +834,7 @@
 
 }
 
--(void)deleteRow:(UIButton *)btn{
-    NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:btn.tag];
-    NSString *topicId = [infoDic objectForKey:@"prod_id"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [sortedwatchRecordArray_ removeObjectAtIndex:btn.tag];
-        [recordTableList_ reloadData];
-        [self Selectbutton:button1_];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    }];
 
-}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

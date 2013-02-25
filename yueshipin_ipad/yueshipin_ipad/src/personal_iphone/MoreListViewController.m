@@ -121,11 +121,8 @@
         [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
-         cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.deleteBtn addTarget:self action:@selector(deleteRow:) forControlEvents:UIControlEventTouchUpInside];
-        cell.deleteBtn.hidden = YES;
-        [cell addCustomGestureRecognizer];
+       
         return cell;
     }
     else if (type_ == 1) {
@@ -197,11 +194,24 @@
     
     return nil;
 }
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (type_ == 1 || type_ == 2 ){
-        return YES;
+
+- (void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == 0) {
+        RecordListCell *cell = (RecordListCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.play.hidden = YES;
+        
     }
-    return NO;
+}
+
+- (void)tableView:(UITableView*)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == 0) {
+        RecordListCell *cell = (RecordListCell *)[tableView cellForRowAtIndexPath:indexPath];
+        cell.play.hidden = NO;
+    }
+    
+}
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
     
 }
 
@@ -209,18 +219,19 @@
     if (editingStyle == UITableViewCellEditingStyleDelete){
         
         switch (type_) {
-//            case 0:
-//            {
-//                NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
-//                NSString *topicId = [infoDic objectForKey:@"prod_id"];
-//                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
-//                [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//                    [listArr_ removeObjectAtIndex:indexPath.row];
-//                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-//                }];
-//                break;
-//            }
+            case 0:
+            {
+                NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
+                NSString *topicId = [infoDic objectForKey:@"prod_id"];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    [listArr_ removeObjectAtIndex:indexPath.row];
+                    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                break;
+            }
             case 1:
             {
                 NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
@@ -285,17 +296,7 @@
   
 }
 
--(void)deleteRow:(UIButton *)btn{
-    NSDictionary *infoDic = [listArr_ objectAtIndex:btn.tag];
-    NSString *topicId = [infoDic objectForKey:@"prod_id"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [listArr_ removeObjectAtIndex:btn.tag];
-        [self.tableView reloadData];
-        [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-    }];    
-}
+
 -(void)clear{
    // NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
     for (NSDictionary *dic in listArr_) {
