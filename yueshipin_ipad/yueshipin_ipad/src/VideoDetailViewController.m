@@ -369,81 +369,30 @@
             [UIUtility showPlayVideoFailure:self.view];
         }
     } else {
-        // 视频地址
-        NSMutableArray *videoUrlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
-            for (int i = 0; i < episodeArray.count; i++) {
-                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-                NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
-                if(videoUrlArray.count > 0){
-                    NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
-                    for(NSDictionary *tempVideo in videoUrlArray){
-                        NSArray *urls = [tempVideo objectForKey:@"urls"];
-                        [urlsDicArray addObjectsFromArray:urls];
-                    }
-//                    urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-//                        NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
-//                        NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
-//                        return [second compare:first];
-//                    }];
-                    NSMutableDictionary *urlArrayDictionary = [[NSMutableDictionary alloc]initWithCapacity:3];
-                    NSMutableArray *gaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
-                    NSMutableArray *biaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
-                    NSMutableArray *chaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
-                    NSMutableArray *liuchangArray = [[NSMutableArray alloc]initWithCapacity:3];
-                    for (NSDictionary *url in urlsDicArray) {
-                        NSString *tempType = [url objectForKey:@"type"];
-                        NSString *tempUrl = [url objectForKey:@"url"];
-                        if([self validadUrl:tempUrl]){
-                            if ([tempType isEqualToString:GAO_QING]) {
-                                [gaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];                                
-                            } else if ([tempType isEqualToString:BIAO_QING]) {
-                                [biaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];  
-                            } else if ([tempType isEqualToString:CHAO_QING]) {
-                                [chaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];  
-                            } else if ([tempType isEqualToString:LIU_CHANG]) {
-                                [liuchangArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];  
-                            }
-                        }
-                    }
-                    [urlArrayDictionary setValue:gaoqingArray forKey:GAO_QING];
-                    [urlArrayDictionary setValue:biaoqingArray forKey:BIAO_QING];
-                    [urlArrayDictionary setValue:chaoqingArray forKey:CHAO_QING];
-                    [urlArrayDictionary setValue:liuchangArray forKey:LIU_CHANG];
-                    [videoUrlsArray addObject:urlArrayDictionary];
+        BOOL hasVideoUrls = NO;
+        for (int i = 0; i < episodeArray.count; i++) {
+            NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+            if(videoUrlArray.count > 0){
+                for(NSDictionary *tempVideo in videoUrlArray){
+                    hasVideoUrls = YES;
+                    break;
                 }
+            }
+            if (hasVideoUrls) {
+                break;
             }
         }
         
-        NSMutableArray *subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for (NSDictionary *oneEpisode in episodeArray) {
-            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-            [subnameArray addObject:tempName];
-        }
-        
         VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
-        webViewController.videoUrlsArray = videoUrlsArray;
         webViewController.videoHttpUrlArray = httpUrlArray;
         webViewController.prodId = self.prodId;
+        webViewController.hasVideoUrls = hasVideoUrls;
         webViewController.type = type;
         webViewController.currentNum = num;
         webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.subnameArray = subnameArray;
         webViewController.video = video;
-        webViewController.name = [video objectForKey:@"name"];
         webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
-        
-//        MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//        viewController.videoUrls = urlsArray;
-//        viewController.videoHttpUrl = httpUrl;
-//        viewController.prodId = self.prodId;
-//        viewController.dramaDetailViewControllerDelegate = self;
-//        viewController.type = type;
-//        viewController.name = [video objectForKey:@"name"];
-//        viewController.subname = self.subname;
-//        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }
 }
 

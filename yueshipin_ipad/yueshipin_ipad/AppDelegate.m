@@ -154,8 +154,8 @@
 }
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
-//    NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
-    NSString *appKey = kDefaultAppKey;
+    NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
+//    NSString *appKey = kDefaultAppKey;
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];

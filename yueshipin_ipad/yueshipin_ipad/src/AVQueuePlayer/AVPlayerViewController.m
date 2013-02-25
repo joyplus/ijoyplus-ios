@@ -47,11 +47,14 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) NSString *airplayDeviceName;
 @property (nonatomic, strong) NSString *deviceOutputType;
 @property (nonatomic, strong) UIView *applyTvView;
+@property (nonatomic, strong) UILabel *tipLabel;
+@property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (atomic, strong) NSURL *workingUrl;
 @property (atomic) int errorUrlNum;
 @property (nonatomic) NSString *resolution;
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic) CMTime resolutionLastPlaytime;
+@property (nonatomic) int resolutionNum;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -71,14 +74,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @implementation AVPlayerViewController
 @synthesize mPlayer, mPlayerItem, mPlaybackView;
 @synthesize mToolbar, topToolbar, mPlayButton, mStopButton, mScrubber, mNextButton, mPrevButton, volumeSlider, mSwitchButton;
-@synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, videoUrls, selectButton;
+@synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, videoUrlsArray, selectButton;
 @synthesize playCacheView, resolution, videoHttpUrl;
 @synthesize type, isDownloaded, currentNum, errorUrlNum, theLock, closeAll;
 @synthesize workingUrl, myHUD, bottomView, controlVisibilityTimer;
-@synthesize episodeListviewController, name, subnameArray, lastPlayTime, resolutionLastPlaytime;
+@synthesize episodeListviewController, subnameArray, lastPlayTime, resolutionLastPlaytime;
 @synthesize resolutionPopTipView, biaoqingBtn, chaoqingBtn, gaoqingBtn, routeBtn;
 @synthesize vidoeTitle, videoWebViewControllerDelegate, airplayDeviceName, deviceOutputType;
-@synthesize prodId, applyTvView;
+@synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 
 #pragma mark
 #pragma mark View Controller
@@ -127,7 +130,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self loadLastPlaytime];
     resolution = GAO_QING;
     [self showPlayVideoView];
-    [self playVideo];
+    if (isDownloaded) {
+        workingUrl = [[NSURL alloc] initFileURLWithPath:[videoUrlsArray objectAtIndex:0]];
+        [self setURL:workingUrl];
+    } else {
+        [self playVideo];
+    }
     [self customizeTopToolbar];
     [self customizeBottomToolbar];
     
@@ -146,79 +154,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.view addGestureRecognizer:tapRecognizer];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
 }
-
-- (void)wifiNotAvailable
-{
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                       message:@"当前网络为非Wifi环境，您确定要继续播放吗？"
-                                                      delegate:self
-                                             cancelButtonTitle:@"取消"
-                                             otherButtonTitles:@"确定", nil];
-    [alertView show];
-}
-
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if(buttonIndex == 0){
-        [self performSelector:@selector(closeSelf)];
-    }
-}
-
-- (void)getAirplayDeviceType
-{
-//    if ([[AirPlayDetector defaultDetector] isAirPlayAvailable]) {
-        CFDictionaryRef currentRouteDescriptionDictionary = nil;
-        UInt32 dataSize = sizeof(currentRouteDescriptionDictionary);
-        AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &currentRouteDescriptionDictionary);
-        if (currentRouteDescriptionDictionary) {
-            CFArrayRef outputs = CFDictionaryGetValue(currentRouteDescriptionDictionary, kAudioSession_AudioRouteKey_Outputs);
-            if(CFArrayGetCount(outputs) > 0) {
-                CFDictionaryRef currentOutput = CFArrayGetValueAtIndex(outputs, 0);
-                //Get the output type (will show airplay / hdmi etc
-                CFStringRef outputType = CFDictionaryGetValue(currentOutput, kAudioSession_AudioRouteKey_Type);
-                //If you're using Apple TV as your ouput - this will get the name of it (Apple TV Kitchen) etc
-                CFStringRef outputName = CFDictionaryGetValue(currentOutput, @"RouteDetailedDescription_Name");
-                deviceOutputType = (__bridge NSString *)outputType;
-                airplayDeviceName = (__bridge NSString*)outputName;
-                NSLog(@"%@  %@", deviceOutputType, airplayDeviceName);
-                CFRelease(outputType);
-                CFRelease(outputName);
-            }
-        }
-//    }
-}
-
-- (void)playVideo
-{
-    if(videoUrls.count > 0){
-        [self showPlayCacheView];
-        if (isDownloaded) {
-            workingUrl = [[NSURL alloc] initFileURLWithPath:[videoUrls objectAtIndex:0]];
-            [self setURL:workingUrl];
-        } else {
-            theLock = [[NSLock alloc]init];
-            NSArray *temp = [[videoUrls objectAtIndex:currentNum] objectForKey:resolution];
-            if (temp.count > 0) {
-                for (NSString *url in temp) {
-                    int nowDate = [[NSDate date] timeIntervalSince1970];
-                    NSString *formattedUrl = url;
-                    if([url rangeOfString:@"{now_date}"].location != NSNotFound){
-                        formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
-                    }
-                    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
-                    [NSURLConnection connectionWithRequest:request delegate:self];
-                }
-            } else {
-                [self performSelector:@selector(closeSelf)];
-            }
-        }
-    } else if (videoHttpUrl){
-        //        [self showWebView];
-    }
-}
-
-- (BOOL) canBecomeFirstResponder {return YES;}
 
 - (void) viewDidAppear: (BOOL) animated {
     [super viewDidAppear:animated];
@@ -239,6 +174,193 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     return YES;
 }
 
+- (void)playVideo
+{
+    if (video == nil) {
+        [self showPlayCacheView];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                if (type == 1) {
+                    video = (NSDictionary *)[result objectForKey:@"movie"];
+                } else if (type == 2){
+                    video = (NSDictionary *)[result objectForKey:@"tv"];
+                } else if (type == 3){
+                    video = (NSDictionary *)[result objectForKey:@"show"];
+                }
+                [self parseVideoData:[video objectForKey:@"episodes"]];
+                [self parseCurrentNum];
+                [self parseResolutionNum];
+                [self willPlayVideo];
+            } else {
+                [UIUtility showSystemError:self.view];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [UIUtility showSystemError:self.view];
+        }];
+    } else {
+        [self parseVideoData:[video objectForKey:@"episodes"]];
+        [self parseResolutionNum];
+        [self showPlayCacheView];
+        [self willPlayVideo];
+    }
+    
+}
+
+- (void)willPlayVideo
+{
+    if(videoUrlsArray.count > 0){
+        theLock = [[NSLock alloc]init];
+        NSArray *temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:resolution];
+        if (temp.count > 0) {
+            for (NSString *url in temp) {
+                int nowDate = [[NSDate date] timeIntervalSince1970];
+                NSString *formattedUrl = url;
+                if([url rangeOfString:@"{now_date}"].location != NSNotFound){
+                    formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+                }
+                NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+                [NSURLConnection connectionWithRequest:request delegate:self];
+            }
+        } else {
+            [myHUD hide:NO];
+            tipLabel.text = @"该视频已失效，即将使用网页播放";
+            [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
+        }
+    } else {
+        // TODO: should close screen
+        [myHUD hide:NO];
+        tipLabel.text = @"该视频已失效，即将使用网页播放";
+        [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
+    }
+}
+
+- (void)parseVideoData:(NSArray *)episodeArray
+{
+    // 视频地址
+    videoUrlsArray = [[NSMutableArray alloc]initWithCapacity:5];
+    for (int i = 0; i < episodeArray.count; i++) {
+        NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
+            for(NSDictionary *tempVideo in videoUrlArray){
+                NSArray *urls = [tempVideo objectForKey:@"urls"];
+                [urlsDicArray addObjectsFromArray:urls];
+            }
+            NSMutableDictionary *urlArrayDictionary = [[NSMutableDictionary alloc]initWithCapacity:3];
+            NSMutableArray *gaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
+            NSMutableArray *biaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
+            NSMutableArray *chaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
+            NSMutableArray *liuchangArray = [[NSMutableArray alloc]initWithCapacity:3];
+            for (NSDictionary *url in urlsDicArray) {
+                NSString *tempType = [url objectForKey:@"type"];
+                NSString *tempUrl = [url objectForKey:@"url"];
+                if([self validadUrl:tempUrl]){
+                    if ([tempType isEqualToString:GAO_QING]) {
+                        [gaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                    } else if ([tempType isEqualToString:BIAO_QING]) {
+                        [biaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                    } else if ([tempType isEqualToString:CHAO_QING]) {
+                        [chaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                    } else if ([tempType isEqualToString:LIU_CHANG]) {
+                        [liuchangArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
+                    }
+                }
+            }
+            [urlArrayDictionary setValue:gaoqingArray forKey:GAO_QING];
+            [biaoqingArray addObjectsFromArray: liuchangArray];//combine biaoqing and liuchang
+            [urlArrayDictionary setValue:biaoqingArray forKey:BIAO_QING];
+            [urlArrayDictionary setValue:chaoqingArray forKey:CHAO_QING];
+            [videoUrlsArray addObject:urlArrayDictionary];
+        }
+    }
+    
+    subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+    for (NSDictionary *oneEpisode in episodeArray) {
+        NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+        [subnameArray addObject:tempName];
+    }
+    
+}
+
+- (void)parseCurrentNum
+{
+    if (subnameArray.count > 0) {
+        currentNum = [subnameArray indexOfObject:subname];
+    }
+}
+
+- (void)parseResolutionNum
+{
+    NSArray *temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:CHAO_QING];
+    if (temp.count > 0) {
+        resolutionNum++;
+        resolution = CHAO_QING;
+    }
+    temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:BIAO_QING];
+    if (temp.count > 0) {
+        resolutionNum++;
+        resolution = BIAO_QING;
+    }
+    temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:GAO_QING];
+    if (temp.count > 0) {
+        resolutionNum++;
+        resolution = GAO_QING;
+    }
+    if (resolutionNum > 1) {
+        [qualityBtn setHidden:NO];
+    }
+    
+}
+
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    NSLog(@"error url");
+    [connection cancel];
+    //如果所有的视频地址都无效，则播放网页地址
+    [self checkIfShowWebView];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    @synchronized(workingUrl){
+        if(workingUrl == nil){
+            NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
+            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
+            if (contentLength.intValue > 100) {
+                NSLog(@"working = %@", connection.originalRequest.URL);
+                workingUrl = connection.originalRequest.URL;
+                //                workingUrl = [NSURL URLWithString:@"http://g3.letv.cn/28/24/55/letv-uts/1822176-AVC-537353-AAC-31586-6295720-462913429-02ab01d89abc3724e6e500eeaaaeac76-1361194696895.flv?format=0&tag=ios?_r0.9717524535953999&ijoyplustype=m3u8"];
+                [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+                [connection cancel];
+            } else {
+                [self checkIfShowWebView];
+            }
+        } else {
+            [connection cancel];
+        }
+    }
+}
+
+- (void)checkIfShowWebView
+{
+    [theLock lock];
+    errorUrlNum++;
+    NSArray *tempArray = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:resolution];
+    if (errorUrlNum == tempArray.count) {
+        [myHUD hide:NO];
+        tipLabel.text = @"该视频已失效，即将使用网页播放。";
+        [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
+    }
+    [theLock unlock];
+    
+}
+
+- (BOOL) canBecomeFirstResponder {return YES;}
+
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
     if([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
@@ -252,8 +374,175 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else if ([NSStringFromClass([touch.view class]) isEqualToString:@"UIToolbar"]){
         [self resetControlVisibilityTimer];
         return NO;
+    } else if ([NSStringFromClass([touch.view class]) isEqualToString:@"UISlider"]){
+        [self resetControlVisibilityTimer];
+        return NO;
     }else {
         return YES;
+    }
+}
+
+- (void)customizeTopToolbar
+{
+    topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+    [topToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:30/255.0 green:30/255.0 blue:30/255.0 alpha:0.5] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    [self.view addSubview:topToolbar];
+    
+    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeButton.frame = CGRectMake(20, 3, 67, 44);
+    [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt"] forState:UIControlStateNormal];
+    [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt_pressed"] forState:UIControlStateHighlighted];
+    [closeButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
+    [topToolbar addSubview:closeButton];
+    
+    vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, TOP_TOOLBAR_HEIGHT)];
+    vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
+    if (video != nil) {
+        name = [video objectForKey:@"name"];
+        subname = [subnameArray objectAtIndex:self.currentNum];
+    }
+    if (type == 2) {
+        vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
+    } else if(type == 3){
+        vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
+    } else {
+        vidoeTitle.text = name;
+    }
+    vidoeTitle.font = [UIFont boldSystemFontOfSize:18];
+    vidoeTitle.textColor = [UIColor lightGrayColor];
+    vidoeTitle.backgroundColor = [UIColor clearColor];
+    vidoeTitle.textAlignment = UITextAlignmentCenter;
+    [topToolbar addSubview:vidoeTitle];
+    
+    if (type == 2 || type == 3) {
+        selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        selectButton.frame = CGRectMake(topToolbar.frame.size.width - 20 - 100, 0, 100, BUTTON_HEIGHT);
+        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
+        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt_pressed"] forState:UIControlStateHighlighted];
+        [selectButton addTarget:self action:@selector(showEpisodeListView) forControlEvents:UIControlEventTouchUpInside];
+        [topToolbar addSubview:selectButton];
+    }
+}
+
+- (void)customizeBottomToolbar
+{
+    bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.width - BOTTOM_TOOL_VIEW_HEIGHT, self.view.frame.size.height, BOTTOM_TOOL_VIEW_HEIGHT)];
+    bottomView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    [self.view addSubview:bottomView];
+    
+    currentPlaybackTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 80, 30)];
+    [currentPlaybackTimeLabel setBackgroundColor:[UIColor clearColor]];
+    [currentPlaybackTimeLabel setFont:[UIFont boldSystemFontOfSize:15]];
+    currentPlaybackTimeLabel.textColor = [UIColor whiteColor];
+    currentPlaybackTimeLabel.text = @"00:00:00";
+    [bottomView addSubview:currentPlaybackTimeLabel];
+    
+    totalTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(bottomView.frame.size.width - 80 - 20, 10, 80, 30)];
+    [totalTimeLabel setTextAlignment:NSTextAlignmentRight];
+    [totalTimeLabel setBackgroundColor:[UIColor clearColor]];
+    [totalTimeLabel setFont:[UIFont boldSystemFontOfSize:15]];
+    totalTimeLabel.textColor = [UIColor whiteColor];
+    totalTimeLabel.text = @"";
+    [bottomView addSubview:totalTimeLabel];
+    
+    mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width - currentPlaybackTimeLabel.frame.size.width * 2 - 60 , 10)];
+    [mScrubber setEnabled:NO];
+    mScrubber.center = CGPointMake(bottomView.center.x, (BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)/2);
+    [mScrubber setThumbImage: [UIImage imageNamed:@"progress_thumb"] forState:UIControlStateNormal];
+    [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchCancel];
+    [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpInside];
+    [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpOutside];
+    [mScrubber addTarget:self action:@selector(beginScrubbing:) forControlEvents:UIControlEventTouchDown];
+    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventTouchDragInside];
+    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventValueChanged];
+    [bottomView addSubview:mScrubber];
+    
+    
+    mToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0.0f, BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT, bottomView.frame.size.width, BOTTOM_TOOLBAR_HEIGHT)];
+    [mToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.8] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    [bottomView addSubview:mToolbar];
+    
+    mSwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    mSwitchButton.frame = CGRectMake(20, 25, 29, BUTTON_HEIGHT);
+    [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
+    [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
+    [mSwitchButton addTarget:self action:@selector(switchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:mSwitchButton];
+    
+    routeBtn = [[MPVolumeView alloc] initWithFrame:CGRectMake(mSwitchButton.frame.origin.x + mSwitchButton.frame.size.width + 20, 25, BUTTON_HEIGHT, BUTTON_HEIGHT)];
+    [routeBtn setBackgroundColor:[UIColor clearColor]];
+    [routeBtn setShowsVolumeSlider:NO];
+    [routeBtn setShowsRouteButton:YES];
+    [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
+    [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt_pressed"] forState:UIControlStateHighlighted];
+    [mToolbar addSubview:routeBtn];
+    
+    mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    mPlayButton.frame = CGRectMake(0, 0, 45, BUTTON_HEIGHT);
+    [mPlayButton setHidden:YES];
+    [mPlayButton setEnabled:NO];
+    mPlayButton.center = CGPointMake(bottomView.frame.size.width/2, BOTTOM_TOOLBAR_HEIGHT/2);
+    [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt"] forState:UIControlStateNormal];
+    [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt_pressed"] forState:UIControlStateHighlighted];
+    [mPlayButton addTarget:self action:@selector(playBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:mPlayButton];
+    
+    mStopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    mStopButton.frame = mPlayButton.frame;
+    [mStopButton setEnabled:NO];
+    [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt"] forState:UIControlStateNormal];
+    [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt_pressed"] forState:UIControlStateHighlighted];
+    [mStopButton addTarget:self action:@selector(stopBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:mStopButton];
+    
+    mPrevButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [mPrevButton setEnabled:NO];
+    mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
+    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt"] forState:UIControlStateNormal];
+    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_pressed"] forState:UIControlStateHighlighted];
+    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_disabled"] forState:UIControlStateDisabled];
+    [mPrevButton addTarget:self action:@selector(prevBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:mPrevButton];
+    
+    mNextButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [mNextButton setEnabled:NO];
+    mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
+    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt"] forState:UIControlStateNormal];
+    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_pressed"] forState:UIControlStateHighlighted];
+    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_disabled"] forState:UIControlStateDisabled];
+    [mNextButton addTarget:self action:@selector(nextBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:mNextButton];
+    
+    volumeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    volumeBtn.frame = CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 40, mPlayButton.frame.origin.y, 27, BUTTON_HEIGHT);
+    [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
+    [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
+    [volumeBtn addTarget:self action:@selector(volumeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:volumeBtn];
+    
+    volumeSlider = [[MPVolumeView alloc] initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
+    [volumeSlider setBackgroundColor:[UIColor clearColor]];
+    [volumeSlider setShowsVolumeSlider:YES];
+    [volumeSlider setShowsRouteButton:NO];
+    [mToolbar addSubview:volumeSlider];
+    
+    //    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
+    //    [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+    //    [bottomView addSubview:volumeSlider];
+    
+    [self initScrubberTimer];
+	[self syncPlayPauseButtons];
+	[self syncScrubber];
+    
+    qualityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [qualityBtn setHidden:YES];
+    qualityBtn.frame = CGRectMake(mToolbar.frame.size.width - 100 - 20, mPlayButton.frame.origin.y, 100, BUTTON_HEIGHT);
+    [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
+    [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
+    [qualityBtn addTarget:self action:@selector(qualityBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:qualityBtn];
+    if (resolutionNum > 1) {
+        [qualityBtn setHidden:NO];
     }
 }
 
@@ -293,86 +582,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)switchBtnClicked
-{
-    if([((AVPlayerLayer *)[mPlaybackView layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt"] forState:UIControlStateNormal];
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt_pressed"] forState:UIControlStateHighlighted];
-        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspectFill];
-    } else {
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
-        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspect];
-    }    
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"error url");
-    [connection cancel];
-    //如果所有的视频地址都无效，则播放网页地址
-    [self checkIfShowWebView];
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    @synchronized(workingUrl){
-        if(workingUrl == nil){
-            NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
-            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
-            if (contentLength.intValue > 100) {
-                NSLog(@"working = %@", connection.originalRequest.URL);
-                workingUrl = connection.originalRequest.URL;
-//                workingUrl = [NSURL URLWithString:@"http://g3.letv.cn/28/24/55/letv-uts/1822176-AVC-537353-AAC-31586-6295720-462913429-02ab01d89abc3724e6e500eeaaaeac76-1361194696895.flv?format=0&tag=ios?_r0.9717524535953999&ijoyplustype=m3u8"];
-                [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
-                [connection cancel];
-            } else {
-                [self checkIfShowWebView];
-            }
-        } else {
-            [connection cancel];
-        }
-    }
-}
-
-- (void)checkIfShowWebView
-{
-    [theLock lock];
-    errorUrlNum++;
-    if (errorUrlNum == videoUrls.count) {
-        [myHUD hide:NO];
-        MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];
-        [self.view addSubview:HUD];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.opacity = 0.5;
-        HUD.labelText = @"即将使用网页播放";
-        [HUD show:YES];
-        [self performSelector:@selector(closeModalView) withObject:nil afterDelay:2.5];
-    }
-    [theLock unlock];
-    
-}
-
-- (void)closeModalView
-{
-    if (closeAll) {
-        [self dismissModalViewControllerAnimated:NO];
-    } else {
-        [self.navigationController popViewControllerAnimated:NO];
-    }
-}
-
 - (void)showPlayVideoView
 {
     mPlayer = nil;
     mPlaybackView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
     mPlaybackView.backgroundColor = [UIColor clearColor];
-	[self.view addSubview:mPlaybackView];
+    if (bottomView) {
+        [self.view insertSubview:mPlaybackView aboveSubview:bottomView];
+    } else {
+        [self.view addSubview:mPlaybackView];
+    }
 }
 
 - (void)showPlayCacheView
 {
-    playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
+    if (playCacheView == nil) {
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
+    } else {
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(playCacheView.frame.origin.x, playCacheView.frame.origin.y, playCacheView.frame.size.width, playCacheView.frame.size.height)];
+    }
     playCacheView.backgroundColor = [UIColor blackColor];
     if (topToolbar) {
         [self.view insertSubview:playCacheView belowSubview:topToolbar];
@@ -384,21 +612,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.6);
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.font = [UIFont systemFontOfSize:25];
+    if (video != nil) {
+        name = [video objectForKey:@"name"];
+        subname = [subnameArray objectAtIndex:self.currentNum];
+    }
     if (type == 2) {
-        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
+        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
+        vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
     } else if(type == 3){
-        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
+        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
+        vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
     } else {
-        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",self.name];
-        vidoeTitle.text = self.name;
+        nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
+        vidoeTitle.text = [video objectForKey:@"name"];
     }
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.textColor = [UIColor whiteColor];
     [playCacheView addSubview:nameLabel];
     
-    UILabel *tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 40)];
+    tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
     tipLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 1.4);
     tipLabel.backgroundColor = [UIColor clearColor];
     tipLabel.font = [UIFont systemFontOfSize:15];
@@ -415,227 +647,56 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 
-- (void)customizeTopToolbar
-{
-    topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    [topToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:30/255.0 green:30/255.0 blue:30/255.0 alpha:0.5] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    [self.view addSubview:topToolbar];
-    
-    UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(20, 0, 67, BUTTON_HEIGHT);
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt"] forState:UIControlStateNormal];
-    [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt_pressed"] forState:UIControlStateHighlighted];
-    [closeButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
-    [topToolbar addSubview:closeButton];
-    
-    vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, TOP_TOOLBAR_HEIGHT)];
-    vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
-    if (type == 2) {
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
-    } else if(type == 3){
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", self.name, [self.subnameArray objectAtIndex:self.currentNum]];      
-    } else {
-        vidoeTitle.text = self.name;
-    }
-    vidoeTitle.font = [UIFont boldSystemFontOfSize:18];
-    vidoeTitle.textColor = [UIColor lightGrayColor];
-    vidoeTitle.backgroundColor = [UIColor clearColor];
-    vidoeTitle.textAlignment = UITextAlignmentCenter;
-    [topToolbar addSubview:vidoeTitle];
-
-    
-    if (type == 2 || type == 3) {
-        selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        selectButton.frame = CGRectMake(topToolbar.frame.size.width - 20 - 100, 0, 100, BUTTON_HEIGHT);
-        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
-        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt_pressed"] forState:UIControlStateHighlighted];
-        [selectButton addTarget:self action:@selector(showEpisodeListView) forControlEvents:UIControlEventTouchUpInside];
-        [topToolbar addSubview:selectButton];
-    }
-}
-
-- (void)customizeBottomToolbar
-{
-    bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.width - BOTTOM_TOOL_VIEW_HEIGHT, self.view.frame.size.height, BOTTOM_TOOL_VIEW_HEIGHT)];
-    bottomView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
-    [self.view addSubview:bottomView];
-    
-    currentPlaybackTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 80, 30)];
-    [currentPlaybackTimeLabel setBackgroundColor:[UIColor clearColor]];
-    [currentPlaybackTimeLabel setFont:[UIFont boldSystemFontOfSize:15]];
-    currentPlaybackTimeLabel.textColor = [UIColor whiteColor];
-    currentPlaybackTimeLabel.text = @"00:00:00";
-    [bottomView addSubview:currentPlaybackTimeLabel];
-    
-    totalTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(bottomView.frame.size.width - 80 - 20, 10, 80, 30)];
-    [totalTimeLabel setTextAlignment:NSTextAlignmentRight];
-    [totalTimeLabel setBackgroundColor:[UIColor clearColor]];
-    [totalTimeLabel setFont:[UIFont boldSystemFontOfSize:15]];
-    totalTimeLabel.textColor = [UIColor whiteColor];
-    totalTimeLabel.text = @"";
-    [bottomView addSubview:totalTimeLabel];
-    
-    mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width - currentPlaybackTimeLabel.frame.size.width * 2 - 60 , 10)];
-    mScrubber.center = CGPointMake(bottomView.center.x, (BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)/2);
-    [mScrubber setThumbImage: [UIImage imageNamed:@"progress_thumb"] forState:UIControlStateNormal];
-    [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchCancel];
-    [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpInside];
-    [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpOutside];
-    [mScrubber addTarget:self action:@selector(beginScrubbing:) forControlEvents:UIControlEventTouchDown];
-    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventTouchDragInside];
-    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventValueChanged];
-    [bottomView addSubview:mScrubber];
-    
-    mToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0.0f, BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT, bottomView.frame.size.width, BOTTOM_TOOLBAR_HEIGHT)];
-    [mToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.8] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
-    [bottomView addSubview:mToolbar];
-    
-    mSwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    mSwitchButton.frame = CGRectMake(20, 25, 29, BUTTON_HEIGHT);
-    [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
-    [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
-    [mSwitchButton addTarget:self action:@selector(switchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:mSwitchButton];
-    
-    routeBtn = [[MPVolumeView alloc] initWithFrame:CGRectMake(mSwitchButton.frame.origin.x + mSwitchButton.frame.size.width + 20, 25, BUTTON_HEIGHT, BUTTON_HEIGHT)];
-    [routeBtn setBackgroundColor:[UIColor clearColor]];
-    [routeBtn setShowsVolumeSlider:NO];
-    [routeBtn setShowsRouteButton:YES];
-    [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
-    [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt_pressed"] forState:UIControlStateHighlighted];
-    [mToolbar addSubview:routeBtn];
-
-    mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    mPlayButton.frame = CGRectMake(0, 0, 45, BUTTON_HEIGHT);
-    [mPlayButton setHidden:YES];
-    [mPlayButton setEnabled:NO];
-    mPlayButton.center = CGPointMake(bottomView.frame.size.width/2, BOTTOM_TOOLBAR_HEIGHT/2);
-    [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt"] forState:UIControlStateNormal];
-    [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt_pressed"] forState:UIControlStateHighlighted];
-    [mPlayButton addTarget:self action:@selector(playBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:mPlayButton];
-    
-    mStopButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    mStopButton.frame = mPlayButton.frame;
-    [mStopButton setEnabled:NO];
-    [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt"] forState:UIControlStateNormal];
-    [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt_pressed"] forState:UIControlStateHighlighted];
-    [mStopButton addTarget:self action:@selector(stopBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:mStopButton];
-    
-    mPrevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mPrevButton setEnabled:NO];
-    mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
-    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt"] forState:UIControlStateNormal];
-    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_pressed"] forState:UIControlStateHighlighted];
-    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_disabled"] forState:UIControlStateDisabled];
-    [mPrevButton addTarget:self action:@selector(prevBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:mPrevButton];
-    
-    mNextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mNextButton setEnabled:NO];
-    mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
-    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt"] forState:UIControlStateNormal];
-    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_pressed"] forState:UIControlStateHighlighted];
-    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_disabled"] forState:UIControlStateHighlighted];
-    [mNextButton addTarget:self action:@selector(nextBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:mNextButton];
-    
-    volumeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    volumeBtn.frame = CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 40, mPlayButton.frame.origin.y, 27, BUTTON_HEIGHT);
-    [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
-    [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
-    [volumeBtn addTarget:self action:@selector(volumeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:volumeBtn];
-    
-    volumeSlider = [[MPVolumeView alloc] initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
-    [volumeSlider setBackgroundColor:[UIColor clearColor]];
-    [volumeSlider setShowsVolumeSlider:YES];
-    [volumeSlider setShowsRouteButton:NO];
-    [mToolbar addSubview:volumeSlider];
-    
-//    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
-//    [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
-//    [bottomView addSubview:volumeSlider];
-    
-    [self initScrubberTimer];
-	[self syncPlayPauseButtons];
-	[self syncScrubber];
-    
-    qualityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    qualityBtn.frame = CGRectMake(mToolbar.frame.size.width - 100 - 20, mPlayButton.frame.origin.y, 100, BUTTON_HEIGHT);
-    [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
-    [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
-    [qualityBtn addTarget:self action:@selector(qualityBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    [mToolbar addSubview:qualityBtn];
-}
-
 - (void)nextBtnClicked
 {
     currentNum++;
+    [self disablePlayerButtons];
+    [self disableScrubber];
     [self preparePlayVideo];
 }
 
 - (void)prevBtnClicked
 {
     currentNum--;
+    [self disablePlayerButtons];
+    [self disableScrubber];
     [self preparePlayVideo];
 }
 
 - (void)preparePlayVideo
 {
-    if (currentNum >=0 && currentNum < videoUrls.count) {
+    if (currentNum >=0 && currentNum < videoUrlsArray.count) {
         workingUrl = nil;
         [mPlayer pause];
-        if (type == 2) {
-            vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
-        } else if(type == 3){
-            vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", self.name, [self.subnameArray objectAtIndex:self.currentNum]];
-        } else {
-            vidoeTitle.text = self.name;
+        mPlayer = nil;
+        if (video != nil && subnameArray.count > self.currentNum) {
+            if (type == 2) {
+                vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", [video objectForKey:@"name"], [subnameArray objectAtIndex:self.currentNum]];
+            } else if(type == 3){
+                vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", [video objectForKey:@"name"], [subnameArray objectAtIndex:self.currentNum]];
+            } else {
+                vidoeTitle.text = [video objectForKey:@"name"];
+            }
         }
         [self playVideo];
     }
 }
 
-#pragma mark Asset URL
-
-- (void)setURL:(NSURL*)URL
-{
-	if (mURL != URL)
-	{
-		mURL = URL;
-		
-        /*
-         Create an asset for inspection of a resource referenced by a given URL.
-         Load the values for the asset keys "tracks", "playable".
-         */
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
-        
-        NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
-        
-        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
-        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
-         ^{		 
-             dispatch_async( dispatch_get_main_queue(), 
-                            ^{
-                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
-                            });
-         }];
-	}
-}
-
-- (NSURL*)URL
-{
-	return mURL;
-}
-
-#pragma mark -
-#pragma mark Movie controller methods
-
 #pragma mark
 #pragma mark Button Action Methods
+
+- (void)switchBtnClicked
+{
+    if([((AVPlayerLayer *)[mPlaybackView layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt"] forState:UIControlStateNormal];
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt_pressed"] forState:UIControlStateHighlighted];
+        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspectFill];
+    } else {
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
+        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspect];
+    }
+}
 
 - (void)playBtnClicked:(id)sender
 {
@@ -673,6 +734,237 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: [NSNumber numberWithFloat: CMTimeGetSeconds(mPlayer.currentTime)]];
 }
 
+
+- (void)closeSelf
+{
+    [self updateWatchRecord];
+    [mStopButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    [self saveLastPlaytime];
+    mPlayer = nil;
+    [controlVisibilityTimer invalidate];
+    if (type == 2 || type == 3) {
+        [videoWebViewControllerDelegate playNextEpisode:currentNum];
+    }
+    if (closeAll) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+}
+
+- (void)showEpisodeListView
+{
+    [self resetControlVisibilityTimer];
+    UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
+    if (epsideArrayView) {
+        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
+        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
+            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+        } completion:^(BOOL finished) {
+            [epsideArrayView removeFromSuperview];
+        }];
+    } else {
+        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt_pressed"] forState:UIControlStateNormal];
+        episodeListviewController.currentNum = currentNum;
+        episodeListviewController.episodeArray = subnameArray;
+        [self.view addSubview:episodeListviewController.view];
+        [episodeListviewController.table reloadData];
+        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^{
+            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
+            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
+        } completion:^(BOOL finished) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
+            [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        }];
+    }
+}
+
+- (void)qualityBtnClicked:(UIButton *)btn
+{
+    [self resetControlVisibilityTimer];
+    if (resolutionPopTipView) {
+        [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
+        [resolutionPopTipView dismissAnimated:YES];
+        resolutionPopTipView = nil;
+    } else {
+        [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateNormal];
+        UIView *contentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 360, 130)];
+        if (resolutionNum == 2) {
+            contentView.frame = CGRectMake(0, 0, 240, 130);
+        }
+        contentView.backgroundColor = [UIColor clearColor];
+        
+        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 320, 30)];
+        tLabel.backgroundColor = [UIColor clearColor];
+        tLabel.font = [UIFont systemFontOfSize:20];
+        tLabel.text = @"请选择影片清晰度：";
+        tLabel.textAlignment = NSTextAlignmentLeft;
+        tLabel.textColor = [UIColor whiteColor];
+        [contentView addSubview:tLabel];
+        
+        NSArray *temp1 = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:BIAO_QING];
+        if (temp1.count > 0) {
+            biaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            biaoqingBtn.tag = 111001;
+            biaoqingBtn.frame = CGRectMake(40, 50, 40, BUTTON_HEIGHT);
+            [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
+            [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt_pressed"] forState:UIControlStateHighlighted];
+            [biaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [contentView addSubview:biaoqingBtn];
+        }
+        
+        NSArray *temp2 = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:GAO_QING];
+        if (temp2.count > 0) {
+            gaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            gaoqingBtn.frame = CGRectMake(160, 50, 40, BUTTON_HEIGHT);
+            gaoqingBtn.tag = 111002;
+            [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];
+            [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateHighlighted];
+            [gaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [contentView addSubview:gaoqingBtn];
+        }
+        
+        NSArray *temp3 = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:CHAO_QING];
+        if (temp3.count > 0) {
+            chaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            chaoqingBtn.frame = CGRectMake(280, 50, 40, BUTTON_HEIGHT);
+            chaoqingBtn.tag = 111003;
+            [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
+            [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateHighlighted];
+            [chaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [contentView addSubview:chaoqingBtn];
+        }
+        if (resolutionNum == 3) {
+            UIView *separatorView = [[UIView alloc]initWithFrame:CGRectMake(120, 65, 1, 40)];
+            separatorView.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
+            [contentView addSubview:separatorView];
+            
+            UIView *separatorView1 = [[UIView alloc]initWithFrame:CGRectMake(240, 65, 1, 40)];
+            separatorView1.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
+            [contentView addSubview:separatorView1];
+        } else if (resolutionNum == 2){
+            if (temp1.count > 0 && temp2.count > 0) {
+                biaoqingBtn.frame = CGRectMake(40, 50, 40, BUTTON_HEIGHT);
+                gaoqingBtn.frame = CGRectMake(160, 50, 40, BUTTON_HEIGHT);
+            } else if (temp1.count > 0 && temp3.count > 0) {
+                biaoqingBtn.frame = CGRectMake(40, 50, 40, BUTTON_HEIGHT);
+                chaoqingBtn.frame = CGRectMake(160, 50, 40, BUTTON_HEIGHT);
+            } else if (temp2.count > 0 && temp3.count > 0) {
+                gaoqingBtn.frame = CGRectMake(40, 50, 40, BUTTON_HEIGHT);
+                chaoqingBtn.frame = CGRectMake(160, 50, 40, BUTTON_HEIGHT);
+            }
+            UIView *separatorView = [[UIView alloc]initWithFrame:CGRectMake(120, 65, 1, 40)];
+            separatorView.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
+            [contentView addSubview:separatorView];
+        }
+        resolutionPopTipView = [[CMPopTipView alloc] initWithCustomView:contentView];
+        resolutionPopTipView.backgroundColor = [UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:1];
+        //    resolutionPopTipView.delegate = self;
+        resolutionPopTipView.disableTapToDismiss = YES;
+        resolutionPopTipView.animation = CMPopTipAnimationPop;
+        [resolutionPopTipView presentPointingAtView:btn inView:self.view animated:YES];
+        resolutionPopTipView.frame = CGRectMake(bottomView.frame.size.width - resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.origin.y - 70, resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.size.height);
+    }
+}
+
+- (void)resolutionBtnClicked:(UIButton *)btn
+{
+    [self resetControlVisibilityTimer];
+    [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
+    [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
+    [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
+    if (btn.tag == 111001) {
+        resolution = BIAO_QING;
+        [btn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt_pressed"] forState:UIControlStateNormal];
+    } else if (btn.tag == 111002) {
+        resolution = GAO_QING;
+        [btn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];
+    } else if (btn.tag == 111003) {
+        resolution = CHAO_QING;
+        [btn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateNormal];
+    }
+    resolutionLastPlaytime = [mPlayer currentTime];
+    [self preparePlayVideo];
+}
+
+- (void)volumeBtnClicked:(UIButton *)btn
+{
+    //    AVURLAsset *asset = [[mPlayer currentItem] asset];
+    //    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
+    //
+    //    // Mute all the audio tracks
+    //    NSMutableArray *allAudioParams = [NSMutableArray array];
+    //    for (AVAssetTrack *track in audioTracks) {
+    //        AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
+    //        [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+    //        [audioInputParams setTrackID:[track trackID]];
+    //        [allAudioParams addObject:audioInputParams];
+    //    }
+    //    AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
+    //    [audioZeroMix setInputParameters:allAudioParams];
+    //
+    //    [[mPlayer currentItem] setAudioMix:audioZeroMix];
+    
+    //    float volume = 0.0f;
+    //
+    //    AVPlayerItem *currentItem = mPlayer.currentItem;
+    //    NSArray *audioTracks = mPlayer.currentItem.tracks;
+    //
+    //    NSMutableArray *allAudioParams = [NSMutableArray array];
+    //
+    //    for (AVPlayerItemTrack *track in audioTracks)
+    //    {
+    //        if ([track.assetTrack.mediaType isEqual:AVMediaTypeAudio])
+    //        {
+    //            AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
+    //            [audioInputParams setVolume:volume atTime:kCMTimeZero];
+    //            [audioInputParams setTrackID:[track.assetTrack trackID]];
+    //            [allAudioParams addObject:audioInputParams];
+    //        }
+    //    }
+    //
+    //    if ([allAudioParams count] > 0) {
+    //        AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
+    //        [audioMix setInputParameters:allAudioParams];
+    //        [currentItem setAudioMix:audioMix];
+    //    }
+    //    [mPlayer play];
+    
+}
+
+- (void)updateWatchRecord
+{
+    if(!isDownloaded){
+        int playbackTime = 0;
+        if(CMTimeGetSeconds(mPlayer.currentTime) > 0){
+            playbackTime = CMTimeGetSeconds(mPlayer.currentTime);
+        }
+        double duration = 0;
+        CMTime playerDuration = [self playerItemDuration];
+        if (CMTIME_IS_VALID(playerDuration)) {
+            duration = CMTimeGetSeconds(playerDuration);
+        }
+        
+        NSString *subname = [subnameArray objectAtIndex:currentNum];
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+        NSString *tempPlayType = @"1";
+        NSString *tempUrl = workingUrl.absoluteString; //This url should be useless. In order to simplify the replay logic, we will don't use the url any more.
+        NSLog(@"%@", tempUrl);
+        if (workingUrl == nil) {
+            tempPlayType = @"2";
+            tempUrl = videoHttpUrl;
+        }
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", tempUrl, @"video_url", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
+            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"zz%@", error);
+        }];
+    }
+}
+
 - (void)loadLastPlaytime
 {
     NSString *lastPlaytimeCacheKey;
@@ -687,6 +979,37 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark -
 #pragma mark Play, Stop buttons
+
+- (void)setURL:(NSURL*)URL
+{
+	if (mURL != URL)
+	{
+		mURL = URL;
+		
+        /*
+         Create an asset for inspection of a resource referenced by a given URL.
+         Load the values for the asset keys "tracks", "playable".
+         */
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
+        
+        NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
+        
+        /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
+        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
+         ^{
+             dispatch_async( dispatch_get_main_queue(),
+                            ^{
+                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
+                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
+                            });
+         }];
+	}
+}
+
+- (NSURL*)URL
+{
+	return mURL;
+}
 
 /* Show the stop button in the movie player controller. */
 -(void)showStopButton
@@ -717,9 +1040,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)enablePlayerButtons
 {
-    self.mPlayButton.enabled = YES;
-    self.mStopButton.enabled = YES;
-    if (subnameArray.count > 0){
+    mPlayButton.enabled = YES;
+    mStopButton.enabled = YES;
+    [qualityBtn setEnabled:YES];
+    if (subnameArray.count > 0 && type != 1){
         if (currentNum == 0) {
             [mPrevButton setEnabled:NO];
             [mNextButton setEnabled:YES];
@@ -738,6 +1062,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)disablePlayerButtons
 {
+    [qualityBtn setEnabled:NO];
     self.mPlayButton.enabled = NO;
     self.mStopButton.enabled = NO;
     [mPrevButton setEnabled:NO];
@@ -839,6 +1164,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 /* The user has released the movie thumb control to stop scrubbing through the movie. */
 - (void)endScrubbing:(id)sender
 {
+    [self resetControlVisibilityTimer]; 
 	if (!mTimeObserver)
 	{
 		CMTime playerDuration = [self playerItemDuration];
@@ -887,11 +1213,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     currentNum = num;
     [self preparePlayVideo];
 }
-@end
-
-@implementation AVPlayerViewController (Player)
-
-#pragma mark Player Item
 
 - (BOOL)isPlaying
 {
@@ -971,12 +1292,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self disablePlayerButtons];
     
     /* Display the error. */
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
-														message:[error localizedFailureReason]
-													   delegate:nil
-											  cancelButtonTitle:@"OK"
-											  otherButtonTitles:nil];
-	[alertView show];
+//	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
+//														message:[error localizedFailureReason]
+//													   delegate:nil
+//											  cancelButtonTitle:@"OK"
+//											  otherButtonTitles:nil];
+//	[alertView show];
+    [myHUD hide:NO];
+    tipLabel.text = @"该视频已失效，即将使用网页播放";
+    [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
 }
 
 
@@ -1164,7 +1488,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
             case AVPlayerStatusReadyToPlay:
             {
-                /* Once the AVPlayerItem becomes ready to play, i.e. 
+                /* Once the AVPlayerItem becomes ready to play, i.e.
                  [playerItem status] == AVPlayerItemStatusReadyToPlay,
                  its duration can be fetched from the item. */
                 CMTime playerDuration = [self playerItemDuration];
@@ -1176,10 +1500,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
                 
                 [self initScrubberTimer];
-                
                 [self enableScrubber];
                 [self enablePlayerButtons];
-                [bottomView setHidden:NO];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {
                         [subview setAlpha:0];
@@ -1187,9 +1509,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     [playCacheView setAlpha:0];
                 } completion:^(BOOL finished) {
                     [playCacheView removeFromSuperview];
-                    [self showToolview];
+//                    topToolbar.alpha = 1;
+//                    bottomView.alpha = 1;
+//                    resolutionPopTipView.alpha = 0.9;
+//                    [topToolbar setHidden:NO];
+//                    [bottomView setHidden:NO];
+//                    [resolutionPopTipView setHidden:NO];
                     [self resetControlVisibilityTimer];
-                    [videoWebViewControllerDelegate playNextEpisode:currentNum];
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                 }];
             }
@@ -1239,169 +1565,59 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
 }
 
-- (void)closeSelf
+//=====================Utility methods========================
+
+- (void)wifiNotAvailable
 {
-    [mStopButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-    [self saveLastPlaytime];
-    mPlayer = nil;
-    [controlVisibilityTimer invalidate];
-    [self dismissModalViewControllerAnimated:YES];
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                       message:@"当前网络为非Wifi环境，您确定要继续播放吗？"
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"确定", nil];
+    [alertView show];
 }
 
-- (void)showEpisodeListView
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [self resetControlVisibilityTimer];
-    UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
-    if (epsideArrayView) {
-        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
-        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
-        } completion:^(BOOL finished) {
-            [epsideArrayView removeFromSuperview];
-        }];
-    } else {
-        [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt_pressed"] forState:UIControlStateNormal];
-        episodeListviewController.currentNum = currentNum;
-        episodeListviewController.episodeArray = subnameArray;
-        [self.view addSubview:episodeListviewController.view];
-        [episodeListviewController.table reloadData];
-        [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^{
-            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
-            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
-        } completion:^(BOOL finished) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
-            [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-        }];
+    if(buttonIndex == 0){
+        [self closeSelf];
     }
 }
 
-- (void)qualityBtnClicked:(UIButton *)btn
+- (void)getAirplayDeviceType
 {
-    [self resetControlVisibilityTimer];
-    if (resolutionPopTipView) {
-        [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
-        [resolutionPopTipView dismissAnimated:YES];
-        resolutionPopTipView = nil;
-    } else {
-        [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateNormal];
-        UIView *contentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 360, 130)];
-        contentView.backgroundColor = [UIColor clearColor];
-        
-        UILabel *tLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, 320, 30)];
-        tLabel.backgroundColor = [UIColor clearColor];
-        tLabel.font = [UIFont systemFontOfSize:20];
-        tLabel.text = @"请选择影片清晰度：";
-        tLabel.textAlignment = NSTextAlignmentLeft;
-        tLabel.textColor = [UIColor whiteColor];
-        [contentView addSubview:tLabel];
-        
-        biaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        biaoqingBtn.tag = 111001;
-        biaoqingBtn.frame = CGRectMake(40, 50, 40, BUTTON_HEIGHT);
-        [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
-        [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt_pressed"] forState:UIControlStateHighlighted];
-        [biaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [contentView addSubview:biaoqingBtn];
-        
-        UIView *separatorView = [[UIView alloc]initWithFrame:CGRectMake(120, 65, 1, 40)];
-        separatorView.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
-        [contentView addSubview:separatorView];
-        
-        gaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        gaoqingBtn.frame = CGRectMake(160, 50, 40, BUTTON_HEIGHT);
-        gaoqingBtn.tag = 111002;
-        [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];
-        [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateHighlighted];
-        [gaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [contentView addSubview:gaoqingBtn];
-        
-        UIView *separatorView1 = [[UIView alloc]initWithFrame:CGRectMake(240, 65, 1, 40)];
-        separatorView1.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
-        [contentView addSubview:separatorView1];
-        
-        chaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        chaoqingBtn.frame = CGRectMake(280, 50, 40, BUTTON_HEIGHT);
-        chaoqingBtn.tag = 111003;
-        [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
-        [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateHighlighted];
-        [chaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [contentView addSubview:chaoqingBtn];
-        
-        resolutionPopTipView = [[CMPopTipView alloc] initWithCustomView:contentView];
-        resolutionPopTipView.backgroundColor = [UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:1];
-        //    resolutionPopTipView.delegate = self;
-        resolutionPopTipView.disableTapToDismiss = YES;
-        resolutionPopTipView.animation = CMPopTipAnimationPop;
-        [resolutionPopTipView presentPointingAtView:btn inView:self.view animated:YES];
-        resolutionPopTipView.frame = CGRectMake(bottomView.frame.size.width - resolutionPopTipView.frame.size.width + 10, resolutionPopTipView.frame.origin.y - 70, resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.size.height);
+    //    if ([[AirPlayDetector defaultDetector] isAirPlayAvailable]) {
+    CFDictionaryRef currentRouteDescriptionDictionary = nil;
+    UInt32 dataSize = sizeof(currentRouteDescriptionDictionary);
+    AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &currentRouteDescriptionDictionary);
+    if (currentRouteDescriptionDictionary) {
+        CFArrayRef outputs = CFDictionaryGetValue(currentRouteDescriptionDictionary, kAudioSession_AudioRouteKey_Outputs);
+        if(CFArrayGetCount(outputs) > 0) {
+            CFDictionaryRef currentOutput = CFArrayGetValueAtIndex(outputs, 0);
+            //Get the output type (will show airplay / hdmi etc
+            CFStringRef outputType = CFDictionaryGetValue(currentOutput, kAudioSession_AudioRouteKey_Type);
+            //If you're using Apple TV as your ouput - this will get the name of it (Apple TV Kitchen) etc
+            CFStringRef outputName = CFDictionaryGetValue(currentOutput, @"RouteDetailedDescription_Name");
+            deviceOutputType = (__bridge NSString *)outputType;
+            airplayDeviceName = (__bridge NSString*)outputName;
+            NSLog(@"%@  %@", deviceOutputType, airplayDeviceName);
+            CFRelease(outputType);
+            CFRelease(outputName);
+        }
     }
+    //    }
 }
 
-- (void)resolutionBtnClicked:(UIButton *)btn
+
+- (BOOL)validadUrl:(NSString *)originalUrl
 {
-    [self resetControlVisibilityTimer];
-    [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
-    [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
-    [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
-    if (btn.tag == 111001) {
-        resolution = BIAO_QING;
-        [btn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt_pressed"] forState:UIControlStateNormal];
-    } else if (btn.tag == 111002) {
-        resolution = GAO_QING;
-        [btn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];
-    } else if (btn.tag == 111003) {
-        resolution = CHAO_QING;
-        [btn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateNormal];
+    NSString *formatUrl = [[originalUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+    if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
+        return YES;
     }
-    resolutionLastPlaytime = [mPlayer currentTime];
-    [self preparePlayVideo];
+    return NO;
 }
-
-- (void)volumeBtnClicked:(UIButton *)btn
-{
-//    AVURLAsset *asset = [[mPlayer currentItem] asset];
-//    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
-//    
-//    // Mute all the audio tracks
-//    NSMutableArray *allAudioParams = [NSMutableArray array];
-//    for (AVAssetTrack *track in audioTracks) {
-//        AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
-//        [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
-//        [audioInputParams setTrackID:[track trackID]];
-//        [allAudioParams addObject:audioInputParams];
-//    }
-//    AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
-//    [audioZeroMix setInputParameters:allAudioParams];
-//    
-//    [[mPlayer currentItem] setAudioMix:audioZeroMix];
-    
-//    float volume = 0.0f;
-//    
-//    AVPlayerItem *currentItem = mPlayer.currentItem;
-//    NSArray *audioTracks = mPlayer.currentItem.tracks;
-//    
-//    NSMutableArray *allAudioParams = [NSMutableArray array];
-//    
-//    for (AVPlayerItemTrack *track in audioTracks)
-//    {
-//        if ([track.assetTrack.mediaType isEqual:AVMediaTypeAudio])
-//        {
-//            AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
-//            [audioInputParams setVolume:volume atTime:kCMTimeZero];
-//            [audioInputParams setTrackID:[track.assetTrack trackID]];
-//            [allAudioParams addObject:audioInputParams];
-//        }
-//    }
-//    
-//    if ([allAudioParams count] > 0) {
-//        AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
-//        [audioMix setInputParameters:allAudioParams];
-//        [currentItem setAudioMix:audioMix];
-//    }
-//    [mPlayer play];
-
-}
-
+//=====================End Utility methods========================
 @end
 

@@ -83,13 +83,14 @@
         nameLabel.font = [UIFont systemFontOfSize:18];
         nameLabel.tag = 1001;
         nameLabel.frame = CGRectMake(5, 5, EPISODE_TABLE_WIDTH - 10, EPISODE_TABLE_CELL_HEIGHT - 10);
-        nameLabel.textAlignment = NSTextAlignmentCenter;
         [cell.contentView addSubview:nameLabel];
     }
     UILabel *nameLabel  = (UILabel *)[cell viewWithTag:1001];
     if (type == 2) {
+        nameLabel.textAlignment = NSTextAlignmentCenter;
         nameLabel.text = [NSString stringWithFormat:@"第%@集", [self.episodeArray objectAtIndex:indexPath.row]];
     } else if(type == 3){
+        nameLabel.textAlignment = NSTextAlignmentLeft;
         nameLabel.text = [NSString stringWithFormat:@"%@", [self.episodeArray objectAtIndex:indexPath.row]];
     }
     if (indexPath.row == currentNum) {

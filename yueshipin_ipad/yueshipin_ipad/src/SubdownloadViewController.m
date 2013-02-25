@@ -10,7 +10,7 @@
 #import "CommonHeader.h"
 #import "SubdownloadItem.h"
 #import "GMGridView.h"
-#import "MyMediaPlayerViewController.h"
+#import "AVPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
 
 @interface SubdownloadViewController ()<SubdownloadingDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
@@ -358,19 +358,18 @@
                     break;
                 }
             }
-            
-            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+    
+            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.isDownloaded = YES;
             viewController.closeAll = YES;
             NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
             [urlsArray addObject:filePath];
-            viewController.videoUrls = urlsArray;
-            viewController.prodId = item.itemId;
-            viewController.type = item.type;
+            viewController.videoUrlsArray = urlsArray;
+            viewController.type = 1;
             viewController.name = self.titleContent;
             viewController.subname = item.name;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-            [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {
             if (![item.downloadStatus hasPrefix:@"error"]) {
                 [self videoImageClicked:position];

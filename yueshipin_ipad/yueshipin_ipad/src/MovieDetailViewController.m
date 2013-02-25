@@ -577,7 +577,7 @@
     [[AppDelegate instance].downloadItems addObject:item];
 //    [[AppDelegate instance] addToDownloaderArray:item];
 //    NSArray *tempArray = [NSArray arrayWithObjects:@"http://m.youku.com/wap/pvs?id=XNDY3NjU0ODIw&format=3gphd", @"http://122.228.96.165/12/17/21/2121689937.9.mp4?crypt=308351d1aa7f2e614&b=2000&gn=860&nc=1&bf=25&p2p=1&video_type=mp4&check=0&tm=1351771200&key=65c1e799be39e051e4ee093f2377309c&lgn=letv&proxy=1945014827&cipi=1945093243&tag=mobile&np=1&vtype=mp4&ptype=s1&level=350&t=1351674133&cid=&vid=&sign=mb&dname=mobile", nil];
-//    NSArray *tempArray = [NSArray arrayWithObjects:@"http://m.youku.com/wap/pvs?id=XNDY3NjU0ODIw&format=3gphd", nil];
+//    NSArray *tempArray = [NSArray arrayWithObjects:@"http://api.joyplus.tv/joyplus-service/video/t.mp4", nil];
 //
 //    item.urlArray = tempArray;
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];

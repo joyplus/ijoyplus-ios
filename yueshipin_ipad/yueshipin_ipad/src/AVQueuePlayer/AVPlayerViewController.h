@@ -72,11 +72,12 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
     NSURL* mURL;
 }
 @property (nonatomic) int type;
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSMutableArray *videoUrlsArray;
 @property (nonatomic, strong) NSString *prodId;
-@property (nonatomic, strong) NSArray *videoUrls;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *subname;
+@property (nonatomic, strong) NSDictionary *video;
 @property (nonatomic, strong) NSString *videoHttpUrl;
-@property (nonatomic, strong) NSArray *subnameArray;
 @property (nonatomic)BOOL closeAll;
 @property (nonatomic) int currentNum;
 @property (nonatomic)BOOL isDownloaded;
@@ -91,7 +92,6 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, strong) UIButton *mStopButton;
 @property (nonatomic, strong) UIButton *mSwitchButton;
 @property (nonatomic, strong) UISlider *mScrubber;
-
 @property (nonatomic, weak)id <VideoWebViewControllerDelegate>videoWebViewControllerDelegate;
 
 @end

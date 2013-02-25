@@ -519,21 +519,37 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
-    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
-        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-        [urlsArray addObject:[item objectForKey:@"video_url"]];
-        viewController.videoUrls = urlsArray;
-    } else {
-        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
+//    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+//    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
+//        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+//        [urlsArray addObject:[item objectForKey:@"video_url"]];
+//        viewController.videoUrls = urlsArray;
+//    } else {
+//        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
+//    }
+//    viewController.prodId = [item objectForKey:@"prod_id"];
+//    viewController.closeAll = YES;
+//    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+//    viewController.name = [item objectForKey:@"prod_name"];
+//    viewController.subname = [item objectForKey:@"prod_subname"];
+//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+    BOOL hasVideoUrls = YES;
+    NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:1];
+    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"2"]){
+        [httpUrlArray addObject:[item objectForKey:@"video_url"]];
+        hasVideoUrls = NO;
     }
-    viewController.prodId = [item objectForKey:@"prod_id"];
-    viewController.closeAll = YES;
-    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-    viewController.name = [item objectForKey:@"prod_name"];
-    viewController.subname = [item objectForKey:@"prod_subname"];
-    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+    VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
+    webViewController.videoHttpUrlArray = httpUrlArray;
+    webViewController.name = [item objectForKey:@"prod_name"];
+    webViewController.subname = [item objectForKey:@"prod_subname"];
+    webViewController.prodId = [item objectForKey:@"prod_id"];
+    webViewController.hasVideoUrls = hasVideoUrls;
+    webViewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
+    webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
+
 }
 
 - (NSString *)composeContent:(NSDictionary *)item
@@ -651,6 +667,13 @@
             NSMutableArray *tempArray = [[NSMutableArray alloc]initWithArray:sortedwatchRecordArray];
             [tempArray removeObjectAtIndex:indexPath.row];
             sortedwatchRecordArray = tempArray;
+            if (sortedwatchRecordArray.count == 0) {
+                [removeAllBtn setHidden:YES];
+                [tableBg setHidden:YES];
+                [myRecordImage setHidden:YES];
+                [table setHidden:YES];
+                [bottomFadingView setHidden:YES];
+            }
             [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self loadTable];
         }
@@ -685,11 +708,16 @@
     [self loadTable];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
-//    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//        [self loadTable];
-//    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-//        
-//    }];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [removeAllBtn setHidden:YES];
+        [tableBg setHidden:YES];
+        [myRecordImage setHidden:YES];
+        [table setHidden:YES];
+        [bottomFadingView setHidden:YES];
+        [self loadTable];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 //Sets fadeColor to be 10% alpha of baseColor
