@@ -12,7 +12,6 @@
 @synthesize actors = actors_;
 @synthesize date = date_;
 @synthesize play = play_;
-@synthesize deleteBtn = deleteBtn_;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -41,14 +40,6 @@
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see_s.png"] forState:UIControlStateHighlighted];
         [self addSubview:play_];
         
-        deleteBtn_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        deleteBtn_.frame = CGRectMake(240, 14, 48, 32);
-        //[deleteBtn_ setTitle:@"delete" forState:UIControlStateNormal];
-        deleteBtn_.hidden = YES;
-        [deleteBtn_ setBackgroundImage:[UIImage imageNamed:@"dele_bt.png"] forState:UIControlStateNormal];
-        [deleteBtn_ setBackgroundImage:[UIImage imageNamed:@"dele_bt_pressed.png"] forState:UIControlStateHighlighted];
-        [self addSubview:deleteBtn_];
-        
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 59, 320, 1);
         [self addSubview:line];
@@ -56,57 +47,5 @@
     }
     return self;
 }
--(void)addCustomGestureRecognizer{
-    UISwipeGestureRecognizer *rightSwipeRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
-    
-    [rightSwipeRecognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
-    
-    [self addGestureRecognizer:rightSwipeRecognizer];
-    
-    UISwipeGestureRecognizer *leftSwipeRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
-    
-    [leftSwipeRecognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
-    
-    [self addGestureRecognizer:leftSwipeRecognizer];
-    
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(recover:)];
-    if ([[[UIDevice currentDevice]systemVersion] floatValue]< 6.0) {
-        tapGesture.delegate = self;
-    }
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [self addGestureRecognizer:tapGesture];
-}
--(void)handleSwipeFrom:(id)sender{
-    if (play_.hidden) {
-        play_.hidden = NO;
-        deleteBtn_.hidden = YES;
-
-    }
-    else{
-        play_.hidden = YES;
-        deleteBtn_.hidden = NO;
-
-    }
-    
-}
--(void)recover:(id)sender{
-    play_.hidden = NO;
-    deleteBtn_.hidden = YES;
-}
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-   if ([touch.view isKindOfClass:[UIButton class]]) {
-            return NO;
-       }
-    return YES;
-}
-
 
 @end
