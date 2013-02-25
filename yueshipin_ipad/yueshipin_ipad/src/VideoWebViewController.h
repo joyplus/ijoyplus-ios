@@ -19,13 +19,12 @@
 
 @property (nonatomic, strong)NSDictionary *video;
 @property (nonatomic, strong)NSMutableArray *videoHttpUrlArray;
-@property (nonatomic, strong)NSString *name;
-@property (nonatomic, strong) NSMutableArray *videoUrlsArray;
 @property (nonatomic, strong)NSString *prodId;
+@property (nonatomic, strong)NSString *name;
 @property (nonatomic, strong)NSString *subname;
 @property (nonatomic)int type;
-@property (nonatomic)int startNum;
 @property (nonatomic)BOOL isDownloaded;
+@property (nonatomic) BOOL hasVideoUrls;
 @property (nonatomic)int currentNum;
 @property (nonatomic, strong)NSString *playTime;
 @property (nonatomic, weak)id<DramaDetailViewControllerDelegate>dramaDetailViewControllerDelegate;

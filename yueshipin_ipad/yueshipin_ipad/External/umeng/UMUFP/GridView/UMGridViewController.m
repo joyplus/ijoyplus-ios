@@ -10,13 +10,15 @@
 #import "UMUFPImageView.h"
 #import <QuartzCore/QuartzCore.h>
 #import "CMConstants.h"
-
+#import "AppDelegate.h"
 #import "UMUFPGridCell.h"
 #import "GridViewCellDemo.h"
 
 @interface UMGridViewController (){
-    UIImageView *titleImage;
+    UIImageView *topImage;
     UIButton *closeBtn;
+    UIView *backgroundView;
+    UIImageView *bgImage;
 }
 @end
 
@@ -28,7 +30,6 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    titleImage = nil;
     closeBtn = nil;
     _mGridView.delegate = nil;
     _mGridView.datasource = nil;
@@ -80,42 +81,58 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
 //    }
 }
 
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super init]) {
+		[self.view setFrame:frame];
+        [self.view setBackgroundColor:[UIColor clearColor]];
+        backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
+        [backgroundView setBackgroundColor:[UIColor clearColor]];
+        [self.view addSubview:backgroundView];
+        
+        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
+        bgImage.image = [UIImage imageNamed:@"left_background"];
+        [backgroundView addSubview:bgImage];
+        
+        [self.view addSubview:menuBtn];
+        
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 197, 34)];
+        topImage.image = [UIImage imageNamed:@"title_recommond"];
+        [self.view addSubview:topImage];
+        self.view.autoresizesSubviews = YES;
+        
+        UIApplication *application = [UIApplication sharedApplication];
+        [self updateNumberOfColumns:application.statusBarOrientation];
+        
+        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH - 10, 115, self.view.frame.size.width - LEFT_WIDTH*2, self.view.frame.size.height-145) appkey:umengAppKey slotId:nil currentViewController:self];
+        [_mGridView setBackgroundColor:[UIColor clearColor]];
+        _mGridView.datasource = self;
+        _mGridView.delegate = self;
+        _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
+        _mGridView.autoresizesSubviews = NO;
+        _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        
+        [_mGridView requestPromoterDataInBackground];
+        
+        [self.view addSubview:_mGridView];
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 104, 27)];
-    titleImage.image = [UIImage imageNamed:@"title_recommond"];
-    [self.view addSubview:titleImage];
-    
-    closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(465, 20, 40, 42);
-    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
-    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
-    [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:closeBtn];
-    
-    self.navigationItem.title = @"精彩推荐";
-    self.view.autoresizesSubviews = YES;
-    
-    self.view.backgroundColor = [UIColor colorWithRed:0.921 green:0.921 blue:0.921 alpha:1.0];
-    
-    UIApplication *application = [UIApplication sharedApplication];
-    [self updateNumberOfColumns:application.statusBarOrientation];
-    
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH - 10, 90, self.view.frame.size.width - LEFT_WIDTH*2, self.view.frame.size.height-120) appkey:umengAppKey slotId:nil currentViewController:self];
-    [_mGridView setBackgroundColor:[UIColor clearColor]];
-    _mGridView.datasource = self;
-    _mGridView.delegate = self;
-    _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
-    _mGridView.autoresizesSubviews = NO;
-    _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
-    [_mGridView requestPromoterDataInBackground];
-    
-    [self.view addSubview:_mGridView];
-    
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:openMenuRecognizer];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ([AppDelegate instance].closed) {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
+    } else {
+        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

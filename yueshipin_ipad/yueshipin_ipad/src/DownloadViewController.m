@@ -14,6 +14,7 @@
 #import "SQLiteInstanceManager.h"
 #import "MyMediaPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
+#import "AVPlayerViewController.h"
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
@@ -426,18 +427,24 @@
                 }
             }
             
-            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+//            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+//            viewController.prodId = item.itemId;
+//            viewController.type = 1;
+//            viewController.name = item.name;
+//            viewController.subname = @"";
+//            
+//            [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+            
+            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.isDownloaded = YES;
             viewController.closeAll = YES;
             NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
             [urlsArray addObject:filePath];
-            viewController.videoUrls = urlsArray;
-            viewController.prodId = item.itemId;
+            viewController.videoUrlsArray = urlsArray;
             viewController.type = 1;
             viewController.name = item.name;
-            viewController.subname = @"";
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-            [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {
             if(item.type == 1){
                 if (![item.downloadStatus hasPrefix:@"error"]) {

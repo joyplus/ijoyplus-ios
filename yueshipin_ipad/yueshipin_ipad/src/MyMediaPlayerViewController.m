@@ -96,7 +96,6 @@
         t.textAlignment = UITextAlignmentCenter;
         t.text = self.name;
         self.navigationItem.titleView = t;
-    
     }else{
         self.title = self.name;
     }

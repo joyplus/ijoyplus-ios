@@ -323,15 +323,15 @@
         }
        
         VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
-        webViewController.videoUrlsArray = videoUrlsArray_;
+//        webViewController.videoUrlsArray = videoUrlsArray_;
         webViewController.videoHttpUrlArray = httpUrlArray_;
         webViewController.prodId = self.prodId;
         webViewController.type = type_;
-        webViewController.startNum = num;
+//        webViewController.startNum = num;
        // webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.subname = [NSString stringWithFormat:@"%d",num];
+//        webViewController.subname = [NSString stringWithFormat:@"%d",num];
         webViewController.playTime = [self getRecordInfo:num];
-        webViewController.name = name_;
+//        webViewController.name = name_;
         webViewController.currentNum = num;
         NSLog(@"now play is %d",num);
         //webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);CustomNavigationViewController

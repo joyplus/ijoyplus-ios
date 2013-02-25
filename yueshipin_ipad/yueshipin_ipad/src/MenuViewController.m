@@ -45,6 +45,7 @@
 #import "SearchViewController.h"
 #import "PersonalViewController.h"
 #import "DownloadViewController.h"
+#import "UMGridViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
@@ -54,6 +55,7 @@
     SearchViewController *searchViewController;
     PersonalViewController *personalViewController;
     DownloadViewController *downloadViewController;
+    UMGridViewController *appViewController;
     NSInteger selectedIndex;
     JSBadgeView *badgeView;
 }
@@ -81,6 +83,7 @@
     searchViewController = nil;
     personalViewController = nil;
     badgeView = nil;
+    appViewController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RELOAD_MENU_ITEM object:nil];
 }
@@ -134,6 +137,8 @@
     settingsViewController = [[SettingsViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     
     downloadViewController = [[DownloadViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    
+    appViewController = [[UMGridViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
 }
 
 - (void)viewDidLoad {
@@ -181,7 +186,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 6;
+    return 7;
 }
 
 
@@ -243,6 +248,9 @@
             [cell setSelectedBackgroundView:bgView];
         }
     } else if(indexPath.row == 4){
+        imageView.image = [UIImage imageNamed:@"recommend_icon"];
+        label.text = @"精品推荐";
+    } else if(indexPath.row == 5){
         UIView* bgView = [[UIView alloc] init];
 		[bgView setBackgroundColor:[UIColor clearColor]];
         [cell setSelectedBackgroundView:bgView];
@@ -273,6 +281,8 @@
             return nil;
         }
     } else if(selectedIndex == 4){
+        return appViewController;
+    } else if(selectedIndex == 5){
         return nil;
     } else {
         return settingsViewController;
@@ -282,7 +292,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     selectedIndex = indexPath.row;
-    if(selectedIndex == 4){
+    if(selectedIndex == 5){
         return;
     }
     if(selectedIndex == 3){
@@ -300,23 +310,23 @@
     }
     UIViewController *viewController = [self getViewControllerByIndex];
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
-    if(selectedIndex < 4){
+    if(selectedIndex < 5){
         Reachability *hostReach = [Reachability reachabilityForInternetConnection];
         if([hostReach currentReachabilityStatus] == NotReachable) {
             [UIUtility showNetWorkError:viewController.view];
         }
     }
     [AppDelegate instance].closed = NO;
-    if (selectedIndex == 5) {        
+    if (selectedIndex == 6) {
         [[AppDelegate instance].rootViewController showIntroModalView:WEIBO_INTRO introImage:[UIImage imageNamed:@"weibo_intro"]];
     }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.row == 4){
+    if(indexPath.row == 5){
         CGRect frame = [UIScreen mainScreen].bounds;
-        return frame.size.width - 60 * 5 - 50;
+        return frame.size.width - 60 * 6 - 50;
     } else {
         return 60;
     }

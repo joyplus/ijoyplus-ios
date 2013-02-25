@@ -346,7 +346,7 @@
     }
     // 网页地址
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
-    for (int i = num; i < episodeArray.count; i++) {
+    for (int i = 0; i < episodeArray.count; i++) {
         NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
         BOOL found = NO;
         for (NSDictionary *videoUrl in videoUrls) {
@@ -369,57 +369,30 @@
             [UIUtility showPlayVideoFailure:self.view];
         }
     } else {
-        // 视频地址
-        NSMutableArray *videoUrlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
-            for (int i = num; i < episodeArray.count; i++) {
-                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-                NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
-                if(videoUrlArray.count > 0){
-                    NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
-                    for(NSDictionary *tempVideo in videoUrlArray){
-                        NSArray *urls = [tempVideo objectForKey:@"urls"];
-                        [urlsDicArray addObjectsFromArray:urls];
-                    }
-                    urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-                        NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
-                        NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
-                        return [second compare:first];
-                    }];
-                    for (NSDictionary *url in urlsDicArray) {
-                        NSString *tempUrl = [url objectForKey:@"url"];
-                        if([self validadUrl:tempUrl]){
-                            [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                        }
-                    }
+        BOOL hasVideoUrls = NO;
+        for (int i = 0; i < episodeArray.count; i++) {
+            NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+            if(videoUrlArray.count > 0){
+                for(NSDictionary *tempVideo in videoUrlArray){
+                    hasVideoUrls = YES;
+                    break;
                 }
-                [videoUrlsArray addObject:urlsArray];
+            }
+            if (hasVideoUrls) {
+                break;
             }
         }
-
+        
         VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
-        webViewController.videoUrlsArray = videoUrlsArray;
         webViewController.videoHttpUrlArray = httpUrlArray;
         webViewController.prodId = self.prodId;
+        webViewController.hasVideoUrls = hasVideoUrls;
         webViewController.type = type;
-        webViewController.startNum = num;
+        webViewController.currentNum = num;
         webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.subname = self.subname;
         webViewController.video = video;
-        webViewController.name = [video objectForKey:@"name"];
         webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
-        
-//        MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//        viewController.videoUrls = urlsArray;
-//        viewController.videoHttpUrl = httpUrl;
-//        viewController.prodId = self.prodId;
-//        viewController.dramaDetailViewControllerDelegate = self;
-//        viewController.type = type;
-//        viewController.name = [video objectForKey:@"name"];
-//        viewController.subname = self.subname;
-//        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }
 }
 
