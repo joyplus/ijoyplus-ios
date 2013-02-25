@@ -451,9 +451,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             } else {
                 [self checkIfShowWebView];
             }
-        } else {
-            [connection cancel];
-        }
+        } 
     }
 }
 
