@@ -18,7 +18,6 @@
 				<string>Icon-72@2x.png</string>
 				<string>Icon-54.png</string>
 				<string>Icon-114@2x.png</string>
-				<string>Icon-144@2x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
 			<true/>
@@ -33,7 +32,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.6alpha</string>
+	<string>0.9.7</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -46,7 +45,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.9.6alpha</string>
+	<string>0.9.7</string>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSHasLocalizedDisplayName</key>
