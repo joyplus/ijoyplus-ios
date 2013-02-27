@@ -75,7 +75,7 @@
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
-#define RELOAD_MENU_ITEM @"reload_menu_item"
+#define RELOAD_MENU_ITEM @ "reload_menu_item"
 
 #define WATCH_RECORD_NUMBER 5
 
@@ -89,8 +89,8 @@
 
 #define APPIRATER_APP_ID				587246114
 
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch"
-#define CLOSE_VIDEO_MODE @"closeVideoMode2"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch1"
+#define CLOSE_VIDEO_MODE @"closeVideoMode"
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 

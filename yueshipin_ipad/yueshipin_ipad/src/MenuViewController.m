@@ -224,7 +224,7 @@
         imageView.image = [UIImage imageNamed:@"searching_icon"];
         label.text = @"搜索";
     } else if(indexPath.row == 3){
-        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
             imageView.image = [UIImage imageNamed:@"download_icon"];
             label.text = @"缓存视频";
             if(badgeView == nil){
@@ -240,13 +240,13 @@
                 [badgeView setHidden:NO];
                 badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
             }
-        } else{
-            imageView.image = nil;
-            label.text = @"";
-            UIView* bgView = [[UIView alloc] init];
-            [bgView setBackgroundColor:[UIColor clearColor]];
-            [cell setSelectedBackgroundView:bgView];
-        }
+//        } else{
+//            imageView.image = nil;
+//            label.text = @"";
+//            UIView* bgView = [[UIView alloc] init];
+//            [bgView setBackgroundColor:[UIColor clearColor]];
+//            [cell setSelectedBackgroundView:bgView];
+//        }
     } else if(indexPath.row == 4){
         imageView.image = [UIImage imageNamed:@"recommend_icon"];
         label.text = @"精品推荐";
@@ -275,11 +275,11 @@
     } else if(selectedIndex == 2){
         return searchViewController;
     } else if(selectedIndex == 3){
-        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
             return downloadViewController;
-        } else {
-            return nil;
-        }
+//        } else {
+//            return nil;
+//        }
     } else if(selectedIndex == 4){
         return appViewController;
     } else if(selectedIndex == 5){
@@ -296,9 +296,9 @@
         return;
     }
     if(selectedIndex == 3){
-        if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-            return;
-        }
+//        if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//            return;
+//        }
         SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
         if(newNum.newDownloadItemNum > 0){
             [badgeView setHidden:YES];

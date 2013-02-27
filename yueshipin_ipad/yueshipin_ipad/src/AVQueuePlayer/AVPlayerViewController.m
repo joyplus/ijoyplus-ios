@@ -445,7 +445,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (contentLength.intValue > 100) {
                 NSLog(@"working = %@", connection.originalRequest.URL);
                 workingUrl = connection.originalRequest.URL;
-                //                workingUrl = [NSURL URLWithString:@"http://g3.letv.cn/28/24/55/letv-uts/1822176-AVC-537353-AAC-31586-6295720-462913429-02ab01d89abc3724e6e500eeaaaeac76-1361194696895.flv?format=0&tag=ios?_r0.9717524535953999&ijoyplustype=m3u8"];
+//                workingUrl = [NSURL URLWithString:@"http://g3.letv.cn/24/34/17/letv-uts/1759559-AVC-536779-AAC-31586-6836000-502123506-c5c7ddad20556d60749b47b9684ae920-1359970061330.flv?format=0&tag=ios?_r0.13101591216400266"];
                 [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
                 [connection cancel];
             } else {
@@ -579,12 +579,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [mSwitchButton addTarget:self action:@selector(switchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mSwitchButton];
     
-    routeBtn = [[MPVolumeView alloc] initWithFrame:CGRectMake(mSwitchButton.frame.origin.x + mSwitchButton.frame.size.width + 20, 25, BUTTON_HEIGHT, BUTTON_HEIGHT)];
+    routeBtn = [[MPVolumeView alloc] initWithFrame:CGRectMake(mSwitchButton.frame.origin.x + mSwitchButton.frame.size.width + 20, 25, 37, BUTTON_HEIGHT)];
     [routeBtn setBackgroundColor:[UIColor clearColor]];
     [routeBtn setShowsVolumeSlider:NO];
     [routeBtn setShowsRouteButton:YES];
-    [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
-    [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt_pressed"] forState:UIControlStateHighlighted];
+    for (UIView *asubview in routeBtn.subviews) {
+        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+            UIButton *btn = (UIButton *)asubview;
+            btn.frame = CGRectMake(0, 0, 37, BUTTON_HEIGHT);
+            [btn setImage:nil forState:UIControlStateNormal];
+            [btn setImage:nil forState:UIControlStateHighlighted];
+            [btn setImage:nil forState:UIControlStateSelected];
+            [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_pressed"] forState:UIControlStateHighlighted];
+            break;
+        }
+    }
     [mToolbar addSubview:routeBtn];
     
     mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -809,15 +819,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)switchBtnClicked
 {
-    if([((AVPlayerLayer *)[mPlaybackView layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt"] forState:UIControlStateNormal];
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt_pressed"] forState:UIControlStateHighlighted];
-        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspectFill];
-    } else {
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
-        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
-        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspect];
+    for (UIView *asubview in routeBtn.subviews) {
+        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+            UIButton *btn = (UIButton *)asubview;
+            [btn sendActionsForControlEvents:UIControlEventTouchUpInside];
+            break;
+        }
     }
+//    if([((AVPlayerLayer *)[mPlaybackView layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
+//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt"] forState:UIControlStateNormal];
+//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt_pressed"] forState:UIControlStateHighlighted];
+//        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspectFill];
+//    } else {
+//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
+//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
+//        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspect];
+//    }
 }
 
 - (void)playBtnClicked:(id)sender
@@ -1585,11 +1602,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (tempView == nil) {
             [mPlaybackView addSubview:applyTvView];
         }
-        [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateNormal];
+        for (UIView *asubview in routeBtn.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateNormal];
+                break;
+            }
+        }
     } else {
         UIView *tempView = [mPlaybackView viewWithTag:9585403];
         [tempView removeFromSuperview];
-        [routeBtn setRouteButtonImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
+        for (UIView *asubview in routeBtn.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
+                break;
+            }
+        }
     }
     
 	/* AVPlayerItem "status" property value observer. */

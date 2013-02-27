@@ -207,7 +207,7 @@
 {
     self.dramaDetailViewControllerDelegate = nil;
 //    [self dismissModalViewControllerAnimated:YES];
-    [[AppDelegate instance].rootViewController dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)updateWatchRecord
