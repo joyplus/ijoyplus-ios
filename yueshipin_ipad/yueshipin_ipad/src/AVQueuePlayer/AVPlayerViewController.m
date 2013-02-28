@@ -884,10 +884,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (type == 2 || type == 3) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
-    if (closeAll) {
+    if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        [self.navigationController popViewControllerAnimated:NO];
+        if (closeAll) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } else {
+            [self.navigationController popViewControllerAnimated:NO];
+        }
     }
 }
 

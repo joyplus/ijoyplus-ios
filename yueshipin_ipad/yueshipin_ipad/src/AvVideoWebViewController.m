@@ -149,21 +149,19 @@
     [super viewDidAppear:animated];
     if (!appeared) {
         appeared = YES;
-        if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
-            if (hasVideoUrls > 0) {
-                UIView *blackView = [[UIView alloc]initWithFrame:self.view.frame];
-                blackView.backgroundColor = [UIColor blackColor];
-                blackView.alpha = 0;
-                [self.view addSubview:blackView];
-                [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-                    self.navigationController.navigationBar.alpha = 0;
-                    blackView.alpha = 1;
-                } completion:^(BOOL finished) {
-                    [self showMediaPlayer];
-                    self.navigationController.navigationBar.alpha = 1;
-                    [blackView removeFromSuperview];
-                }];
-            }
+        if (hasVideoUrls > 0) {
+            UIView *blackView = [[UIView alloc]initWithFrame:self.view.frame];
+            blackView.backgroundColor = [UIColor blackColor];
+            blackView.alpha = 0;
+            [self.view addSubview:blackView];
+            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+                self.navigationController.navigationBar.alpha = 0;
+                blackView.alpha = 1;
+            } completion:^(BOOL finished) {
+                [self showMediaPlayer];
+                self.navigationController.navigationBar.alpha = 1;
+                [blackView removeFromSuperview];
+            }];
         }
     }
 }
