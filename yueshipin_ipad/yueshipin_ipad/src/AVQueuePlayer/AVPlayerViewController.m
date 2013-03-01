@@ -819,22 +819,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)switchBtnClicked
 {
-    for (UIView *asubview in routeBtn.subviews) {
-        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
-            UIButton *btn = (UIButton *)asubview;
-            [btn sendActionsForControlEvents:UIControlEventTouchUpInside];
-            break;
-        }
+    if([((AVPlayerLayer *)[mPlaybackView layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt"] forState:UIControlStateNormal];
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt_pressed"] forState:UIControlStateHighlighted];
+        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspectFill];
+    } else {
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
+        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
+        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspect];
     }
-//    if([((AVPlayerLayer *)[mPlaybackView layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
-//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt"] forState:UIControlStateNormal];
-//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"reduce_bt_pressed"] forState:UIControlStateHighlighted];
-//        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspectFill];
-//    } else {
-//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
-//        [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
-//        [mPlaybackView setVideoFillMode: AVLayerVideoGravityResizeAspect];
-//    }
 }
 
 - (void)playBtnClicked:(id)sender
