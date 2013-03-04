@@ -14,6 +14,7 @@
 #import "UIImageView+WebCache.h"
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
 #import "UIImage+Scale.h"
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>   
@@ -188,6 +189,11 @@
     }
     else if ([typeStr isEqualToString:@"2"]){
         TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+        detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    else if ([typeStr isEqualToString:@"3"]){
+        IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
         detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
     }
