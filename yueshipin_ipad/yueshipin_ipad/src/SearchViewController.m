@@ -59,6 +59,7 @@
         [self.view addSubview:topImage];
         
         sBar = [[CustomSearchBar alloc]initWithFrame:CGRectMake(leftWidth, 115, 372, 38)];
+        sBar.placeholder = @"请输入片名/导演/主演";
         sBar.delegate = self;
         [self.view addSubview:sBar];
         

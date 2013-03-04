@@ -39,10 +39,11 @@
 {
     @synchronized(workingUrl){
         if(workingUrl == nil){
+            NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
             NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
-            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
+            int status_Code = HTTPResponse.statusCode;
             NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-            if (contentLength.intValue > 100 && ![contentType hasPrefix:@"text/html"]) {
+            if (status_Code >= 200 && status_Code <= 299  && ![contentType hasPrefix:@"text/html"]) {
                 workingUrl = [item.urlArray objectAtIndex:urlIndex];
                 NSLog(@"working url = %@", workingUrl);
                 item.url = [item.urlArray objectAtIndex:urlIndex];

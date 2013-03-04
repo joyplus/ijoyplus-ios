@@ -89,7 +89,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     UIButton *myButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    myButton.frame = CGRectMake(0, 0, 56, 29);
+    myButton.frame = CGRectMake(0, 2, 56, 40);
     [myButton setBackgroundImage:[UIImage imageNamed:@"left_btn"] forState:UIControlStateNormal];
     [myButton setBackgroundImage:[UIImage imageNamed:@"left_btn_pressed"] forState:UIControlStateHighlighted];
     [myButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];

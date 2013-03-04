@@ -438,9 +438,7 @@
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.isDownloaded = YES;
             viewController.closeAll = YES;
-            NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-            [urlsArray addObject:filePath];
-            viewController.videoUrlsArray = urlsArray;
+            viewController.videoUrl = filePath;
             viewController.type = 1;
             viewController.name = item.name;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);

@@ -72,10 +72,10 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
     NSURL* mURL;
 }
 @property (nonatomic) int type;
-@property (nonatomic, strong) NSMutableArray *videoUrlsArray;
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *subname;
+@property (nonatomic, strong) NSString *videoUrl;
 @property (nonatomic, strong) NSDictionary *video;
 @property (nonatomic, strong) NSString *videoHttpUrl;
 @property (nonatomic)BOOL closeAll;

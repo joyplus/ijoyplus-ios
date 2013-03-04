@@ -12,6 +12,8 @@
 #define BUTTON_HEIGHT 50
 #define EPISODE_ARRAY_VIEW_TAG 76892367
 #define PLAY_CACHE_VIEW 234238494
+#define RESOLUTION_KEY @"resolution_key"
+#define URL_KEY @"url_key"
 
 /* Asset keys */
 NSString * const kTracksKey         = @"tracks";
@@ -36,7 +38,6 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) UIButton *selectButton;
 @property (nonatomic, strong) UIButton *qualityBtn;
 @property (nonatomic, strong) UIView *playCacheView;
-@property (nonatomic, strong) NSLock *theLock;
 @property (nonatomic, strong) NSTimer *controlVisibilityTimer;
 @property (nonatomic, strong) MBProgressHUD *myHUD;
 @property (nonatomic, strong) EpisodeListViewController *episodeListviewController;
@@ -51,13 +52,18 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) UILabel *tipLabel;
 @property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) NSMutableArray *superClearArr;
+@property (nonatomic, strong) NSMutableArray *highClearArr;
+@property (nonatomic, strong) NSMutableArray *plainClearArr;
+@property (nonatomic, strong) NSMutableArray *combinedArr;
+@property (nonatomic, strong) NSString *defaultErrorMessage;
+@property (nonatomic) int combinedIndex;
+@property (nonatomic, strong) NSMutableDictionary *urlArrayDictionary;
 @property (atomic, strong) NSURL *workingUrl;
-@property (atomic) int errorUrlNum;
 @property (nonatomic) NSString *resolution;
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic) CMTime resolutionLastPlaytime;
 @property (nonatomic) int resolutionNum;
-@property (nonatomic, strong) NSURLRequest *request;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -77,14 +83,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @implementation AVPlayerViewController
 @synthesize mPlayer, mPlayerItem, mPlaybackView;
 @synthesize mToolbar, topToolbar, mPlayButton, mStopButton, mScrubber, mNextButton, mPrevButton, volumeSlider, mSwitchButton;
-@synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, videoUrlsArray, selectButton;
+@synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, selectButton;
 @synthesize playCacheView, resolution, videoHttpUrl, nameLabel;
-@synthesize type, isDownloaded, currentNum, errorUrlNum, theLock, closeAll;
+@synthesize type, isDownloaded, currentNum, closeAll;
 @synthesize workingUrl, myHUD, bottomView, controlVisibilityTimer;
 @synthesize episodeListviewController, subnameArray, lastPlayTime, resolutionLastPlaytime;
 @synthesize resolutionPopTipView, biaoqingBtn, chaoqingBtn, gaoqingBtn, routeBtn;
 @synthesize vidoeTitle, videoWebViewControllerDelegate, airplayDeviceName, deviceOutputType;
-@synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name, request;
+@synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
+@synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
+@synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 
 #pragma mark
 #pragma mark View Controller
@@ -94,7 +102,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]))
 	{
 		mPlayer = nil;
-		
 		[self setWantsFullScreenLayout:YES];
 	}
 	
@@ -111,55 +118,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)viewDidUnload
 {
-    [self removePlayerTimeObserver];
-	[mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-	[mPlayer pause];
-    topToolbar = nil;
-    self.mPlaybackView = nil;
-    self.mToolbar = nil;
-    self.mPlayButton = nil;
-    self.mStopButton = nil;
-    self.mScrubber = nil;
-    topToolbar = nil;
-    bottomView = nil;
-    volumeSlider = nil;
-    routeBtn = nil;
-    currentPlaybackTimeLabel = nil;
-    totalTimeLabel = nil;
-    volumeBtn = nil;
-    selectButton = nil;
-    qualityBtn = nil;
-    playCacheView = nil;
-    theLock = nil;
-    controlVisibilityTimer = nil;
-    myHUD = nil;
-    episodeListviewController = nil;
-    resolutionPopTipView = nil;
-    biaoqingBtn = nil;
-    gaoqingBtn = nil;
-    chaoqingBtn = nil;
-    vidoeTitle = nil;
-    airplayDeviceName = nil;
-    deviceOutputType = nil;
-    applyTvView = nil;
-    tipLabel = nil;
-    subnameArray = nil;
-    videoUrlsArray = nil;
-    prodId = nil;
-    name = nil;
-    subname = nil;
-    video = nil;
-    videoHttpUrl = nil;
-    self.URL = nil;
-    mPlayer = nil;
-    mPlayerItem = nil;
-    mPlaybackView = nil;
-    mToolbar = nil;
-    mPrevButton = nil;
-    mNextButton = nil;
-    mSwitchButton = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [super viewDidUnload];
 }
 
@@ -169,6 +127,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	[mPlayer removeObserver:self forKeyPath:@"rate"];
 	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
 	[mPlayer pause];
+    [superClearArr removeAllObjects];
+    [plainClearArr removeAllObjects];
+    [highClearArr removeAllObjects];
+    superClearArr = nil;
+    plainClearArr = nil;
+    highClearArr = nil;
     topToolbar = nil;
     nameLabel = nil;
     self.mPlaybackView = nil;
@@ -186,7 +150,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     selectButton = nil;
     qualityBtn = nil;
     playCacheView = nil;
-    theLock = nil;
     controlVisibilityTimer = nil;
     myHUD = nil;
     episodeListviewController = nil;
@@ -200,7 +163,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     applyTvView = nil;
     tipLabel = nil;
     subnameArray = nil;
-    videoUrlsArray = nil;
     prodId = nil;
     name = nil;
     subname = nil;
@@ -226,7 +188,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     resolution = GAO_QING;
     [self showPlayVideoView];
     if (isDownloaded) {
-        workingUrl = [[NSURL alloc] initFileURLWithPath:[videoUrlsArray objectAtIndex:0]];
+        workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
         [self setURL:workingUrl];
     } else {
         [self playVideo];
@@ -248,11 +210,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapRecognizer];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
+    
+    defaultErrorMessage = @"即将使用网页播放";
 }
 
 - (void) viewDidAppear: (BOOL) animated {
     [super viewDidAppear:animated];
-    [ [UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+    [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
 }
 
@@ -260,7 +224,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
 	[super viewWillDisappear:animated];
 	[mPlayer pause];
-    [ [UIApplication sharedApplication] endReceivingRemoteControlEvents];
+    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
 }
 
@@ -303,7 +267,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self parseVideoData:[video objectForKey:@"episodes"]];
                 [self parseCurrentNum];
                 [self parseResolutionNum];
-                [self willPlayVideo];
+                [self sendRequest];
             } else {
                 [UIUtility showSystemError:self.view];
             }
@@ -315,85 +279,117 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self parseVideoData:[video objectForKey:@"episodes"]];
         [self parseResolutionNum];
         [self showPlayCacheView];
-        [self willPlayVideo];
+        [self sendRequest];
     }
     
-}
-
-- (void)willPlayVideo
-{
-    if(videoUrlsArray.count > 0){
-        theLock = [[NSLock alloc]init];
-        NSArray *temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:resolution];
-        if (temp.count > 0) {
-            for (NSString *url in temp) {
-                int nowDate = [[NSDate date] timeIntervalSince1970];
-                NSString *formattedUrl = url;
-                if([url rangeOfString:@"{now_date}"].location != NSNotFound){
-                    formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
-                }
-                NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
-                [NSURLConnection connectionWithRequest:request delegate:self];
-            }
-        } else {
-            [myHUD hide:NO];
-            tipLabel.text = @"即将使用网页播放";
-            [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
-        }
-    } else {
-        // TODO: should close screen
-        [myHUD hide:NO];
-        tipLabel.text = @"即将使用网页播放";
-        [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
-    }
 }
 
 - (void)parseVideoData:(NSArray *)episodeArray
 {
     // 视频地址
-    videoUrlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-    for (int i = 0; i < episodeArray.count; i++) {
-        NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
-        if(videoUrlArray.count > 0){
-            NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
-            for(NSDictionary *tempVideo in videoUrlArray){
-                NSArray *urls = [tempVideo objectForKey:@"urls"];
-                [urlsDicArray addObjectsFromArray:urls];
+    NSDictionary *episodesInfo = [episodeArray objectAtIndex:currentNum];
+    NSArray *down_load_urls = [episodesInfo objectForKey:@"down_urls"];
+    NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
+    for (NSDictionary *dic in down_load_urls) {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        NSString *source_str = [temp_dic objectForKey:@"source"];
+        if ([source_str isEqualToString:@"letv"]) {
+            [temp_dic setObject:@"1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"fengxing"]){
+            [temp_dic setObject:@"2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qiyi"]){
+            [temp_dic setObject:@"3" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"youku"]){
+            [temp_dic setObject:@"4" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sinahd"]){
+            [temp_dic setObject:@"5" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sohu"]){
+            [temp_dic setObject:@"6" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"56"]){
+            [temp_dic setObject:@"7" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qq"]){
+            [temp_dic setObject:@"8" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pptv"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"m1905"]){
+            [temp_dic setObject:@"10" forKey:@"level"];
+        }
+        [tempSortArr addObject:temp_dic];
+    }
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:cmpStr];
+    NSMutableArray *sortEpisodesArr_ = [NSMutableArray arrayWithArray:[tempSortArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    
+    if (superClearArr == nil) {  //存放某一剧集所有来源的超清的地址;
+        superClearArr = [NSMutableArray arrayWithCapacity:5];
+    }
+    [superClearArr removeAllObjects];
+    
+    if (highClearArr == nil) {  //存放某一剧集所有来源的高清的地址;
+        highClearArr = [NSMutableArray arrayWithCapacity:5];
+    }
+    [highClearArr removeAllObjects];
+    
+    if (plainClearArr == nil) {  //存放某一剧集所有来源的标清的地址;
+        plainClearArr = [NSMutableArray arrayWithCapacity:5];
+    }
+    [plainClearArr removeAllObjects];
+    
+    for (NSDictionary *url_info_dic in sortEpisodesArr_) {
+        NSArray *urls = [url_info_dic objectForKey:@"urls"];
+        for (NSDictionary *url_dic in urls) {
+            NSString *type_str = [[url_dic objectForKey:@"type"] lowercaseString];
+            NSString *url_str = [url_dic objectForKey:@"url"];
+            if ([type_str isEqualToString:CHAO_QING]) {
+                [superClearArr addObject:url_str];
             }
-            NSMutableDictionary *urlArrayDictionary = [[NSMutableDictionary alloc]initWithCapacity:3];
-            NSMutableArray *gaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
-            NSMutableArray *biaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
-            NSMutableArray *chaoqingArray = [[NSMutableArray alloc]initWithCapacity:3];
-            NSMutableArray *liuchangArray = [[NSMutableArray alloc]initWithCapacity:3];
-            for (NSDictionary *url in urlsDicArray) {
-                NSString *tempType = [url objectForKey:@"type"];
-                NSString *tempUrl = [url objectForKey:@"url"];
-                if([self validadUrl:tempUrl]){
-                    if ([tempType isEqualToString:GAO_QING]) {
-                        [gaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                    } else if ([tempType isEqualToString:BIAO_QING]) {
-                        [biaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                    } else if ([tempType isEqualToString:CHAO_QING]) {
-                        [chaoqingArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                    } else if ([tempType isEqualToString:LIU_CHANG]) {
-                        [liuchangArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                    }
-                }
+            else if ([type_str isEqualToString:GAO_QING]){
+                [highClearArr addObject:url_str];
             }
-            [urlArrayDictionary setValue:gaoqingArray forKey:GAO_QING];
-            [biaoqingArray addObjectsFromArray: liuchangArray];//combine biaoqing and liuchang
-            [urlArrayDictionary setValue:biaoqingArray forKey:BIAO_QING];
-            [urlArrayDictionary setValue:chaoqingArray forKey:CHAO_QING];
-            [videoUrlsArray addObject:urlArrayDictionary];
+            else if ([type_str isEqualToString:BIAO_QING]||[type_str isEqualToString:LIU_CHANG]){
+                [plainClearArr addObject:url_str];
+            }
         }
     }
-    
-    subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-    for (NSDictionary *oneEpisode in episodeArray) {
-        NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-        [subnameArray addObject:tempName];
+    if (urlArrayDictionary == nil) {
+        urlArrayDictionary = [[NSMutableDictionary alloc]initWithCapacity:3];
     }
+    [urlArrayDictionary removeAllObjects];
+    [urlArrayDictionary setValue:highClearArr forKey:GAO_QING];
+    [urlArrayDictionary setValue:plainClearArr forKey:BIAO_QING];
+    [urlArrayDictionary setValue:superClearArr forKey:CHAO_QING];
     
+    if (subnameArray == nil) {        
+        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+        for (NSDictionary *oneEpisode in episodeArray) {
+            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+            [subnameArray addObject:tempName];
+        }
+    }
+    if (combinedArr == nil) {
+        combinedArr = [[NSMutableArray alloc]initWithCapacity:10];
+    }
+    [combinedArr removeAllObjects];
+    combinedIndex = 0;
+    [self createCombinedArray:GAO_QING urlArray:highClearArr];
+    [self createCombinedArray:CHAO_QING urlArray:superClearArr];
+    [self createCombinedArray:BIAO_QING urlArray:plainClearArr];
+}
+
+- (void)createCombinedArray:(NSString *)resolutionKey urlArray:(NSMutableArray *)urlArray
+{
+    for (NSString *urlstr in urlArray) {
+        NSDictionary *tempDic = [NSDictionary dictionaryWithObjectsAndKeys:resolutionKey, RESOLUTION_KEY, urlstr, URL_KEY, nil];
+        [combinedArr addObject:tempDic];
+    }    
 }
 
 - (void)parseCurrentNum
@@ -406,17 +402,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)parseResolutionNum
 {
     resolutionNum = 0;
-    NSArray *temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:CHAO_QING];
-    if (temp.count > 0) {
-        resolutionNum++;
-        resolution = CHAO_QING;
-    }
-    temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:BIAO_QING];
+    NSArray *temp = [urlArrayDictionary objectForKey:BIAO_QING];
     if (temp.count > 0) {
         resolutionNum++;
         resolution = BIAO_QING;
     }
-    temp = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:GAO_QING];
+    temp = [urlArrayDictionary objectForKey:CHAO_QING];
+    if (temp.count > 0) {
+        resolutionNum++;
+        resolution = CHAO_QING;
+    }
+    temp = [urlArrayDictionary objectForKey:GAO_QING];
     if (temp.count > 0) {
         resolutionNum++;
         resolution = GAO_QING;
@@ -427,46 +423,70 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
 }
 
+- (void)sendRequest
+{
+    if (combinedIndex < combinedArr.count) {
+        NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+        resolution = [tempDic objectForKey:RESOLUTION_KEY];
+        NSString *url = [tempDic objectForKey:URL_KEY];
+        int nowDate = [[NSDate date] timeIntervalSince1970];
+        NSString *formattedUrl = url;
+        if([url rangeOfString:@"{now_date}"].location != NSNotFound){
+            formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+        }
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
+        [NSURLConnection connectionWithRequest:request delegate:self];
+    } else {
+        [myHUD hide:NO];
+        tipLabel.text = defaultErrorMessage;
+        if ([defaultErrorMessage hasPrefix:@"即"]) {
+            [self performSelector:@selector(showWebView) withObject:nil afterDelay:2];
+        }
+    }
+}
+
+- (void)showWebView
+{
+    [self updateWatchRecord];
+    [mStopButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+    [self saveLastPlaytime];
+    mPlayer = nil;
+    [controlVisibilityTimer invalidate];
+    if (type == 2 || type == 3) {
+        [videoWebViewControllerDelegate playNextEpisode:currentNum];
+    }
+    if (closeAll) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    
+}
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     NSLog(@"error url");
     [connection cancel];
     //如果所有的视频地址都无效，则播放网页地址
-    [self checkIfShowWebView];
+    combinedIndex++;
+    [self sendRequest];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    @synchronized(workingUrl){
-        if(workingUrl == nil){
-            NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
-            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
-            if (contentLength.intValue > 100) {
-                NSLog(@"working = %@", connection.originalRequest.URL);
-                workingUrl = connection.originalRequest.URL;
-//                workingUrl = [NSURL URLWithString:@"http://g3.letv.cn/24/34/17/letv-uts/1759559-AVC-536779-AAC-31586-6836000-502123506-c5c7ddad20556d60749b47b9684ae920-1359970061330.flv?format=0&tag=ios?_r0.13101591216400266"];
-                [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
-                [connection cancel];
-            } else {
-                [self checkIfShowWebView];
-            }
-        } 
+    NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
+    NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
+    NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
+    int status_Code = HTTPResponse.statusCode;
+    if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"]) {
+        NSLog(@"working = %@", connection.originalRequest.URL);
+        workingUrl = connection.originalRequest.URL;
+        [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+        [connection cancel];
+    } else {
+        combinedIndex++;
+        [self sendRequest];
     }
-}
-
-- (void)checkIfShowWebView
-{
-    [theLock lock];
-    errorUrlNum++;
-    NSArray *tempArray = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:resolution];
-    if (errorUrlNum == tempArray.count) {
-        [myHUD hide:NO];
-        tipLabel.text = @"即将使用网页播放";
-        [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
-    }
-    [theLock unlock];
-    
 }
 
 - (BOOL) canBecomeFirstResponder {return YES;}
@@ -573,6 +593,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [bottomView addSubview:mToolbar];
     
     mSwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [mSwitchButton setEnabled:NO];
     mSwitchButton.frame = CGRectMake(20, 25, 29, BUTTON_HEIGHT);
     [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
     [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
@@ -646,9 +667,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [volumeSlider setShowsRouteButton:NO];
     [mToolbar addSubview:volumeSlider];
     
-    //    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
-    //    [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
-    //    [bottomView addSubview:volumeSlider];
+//    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
+//    [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+//    [bottomView addSubview:volumeSlider];
     
     [self initScrubberTimer];
 	[self syncPlayPauseButtons];
@@ -656,6 +677,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     qualityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [qualityBtn setHidden:YES];
+    [qualityBtn setEnabled:NO];
     qualityBtn.frame = CGRectMake(mToolbar.frame.size.width - 100 - 20, mPlayButton.frame.origin.y, 100, BUTTON_HEIGHT);
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
@@ -700,10 +722,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         } completion:^(BOOL finished) {
             UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
             if (epsideArrayView) {
-                [epsideArrayView setHidden:YES];
+                [epsideArrayView removeFromSuperview];
+                episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
+                episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+                [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
             }
             [topToolbar setHidden:YES];
-            [resolutionPopTipView setHidden:YES];
+            [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
+            [resolutionPopTipView dismissAnimated:NO];
+            resolutionPopTipView = nil;
             [bottomView setHidden:YES];
         }];
     }
@@ -778,9 +805,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)nextBtnClicked
 {
     currentNum++;
-    [self disablePlayerButtons];
-    [self disableScrubber];
-    [self preparePlayVideo];
+    if ((type == 2 || type == 3) && subnameArray.count > self.currentNum) {
+        episodeListviewController.currentNum = currentNum;
+        [episodeListviewController.table reloadData];
+        [self disablePlayerButtons];
+        [self disableScrubber];
+        [self preparePlayVideo];
+    } else {
+        currentNum--;
+        [self closeSelf];
+    }
 }
 
 - (void)prevBtnClicked
@@ -793,25 +827,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)preparePlayVideo
 {
-    if (currentNum >=0 && currentNum < videoUrlsArray.count) {
+    if (video != nil && subnameArray.count > self.currentNum) {
         workingUrl = nil;
         [mPlayer pause];
         mPlayer = nil;
-        if (video != nil && subnameArray.count > self.currentNum) {
-            if (type == 2) {
-                subname = [subnameArray objectAtIndex:self.currentNum];
-                nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
-                vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
-            } else if(type == 3){
-                nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
-                vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
-            } else {
-                nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
-                vidoeTitle.text = [video objectForKey:@"name"];
-            }
+        if (type == 2) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
+        } else if(type == 3){
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
+        } else {
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
+            vidoeTitle.text = [video objectForKey:@"name"];
         }
-        [self playVideo];
     }
+    [self playVideo];
 }
 
 #pragma mark
@@ -902,6 +934,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }];
     } else {
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt_pressed"] forState:UIControlStateNormal];
+        [episodeListviewController.view setHidden:NO];
+        episodeListviewController.view.alpha = 1;
         episodeListviewController.currentNum = currentNum;
         episodeListviewController.episodeArray = subnameArray;
         [self.view addSubview:episodeListviewController.view];
@@ -939,7 +973,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         tLabel.textColor = [UIColor whiteColor];
         [contentView addSubview:tLabel];
         
-        NSArray *temp1 = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:BIAO_QING];
+        NSArray *temp1 = [urlArrayDictionary objectForKey:BIAO_QING];
         if (temp1.count > 0) {
             biaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             biaoqingBtn.tag = 111001;
@@ -950,18 +984,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [contentView addSubview:biaoqingBtn];
         }
         
-        NSArray *temp2 = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:GAO_QING];
+        NSArray *temp2 = [urlArrayDictionary objectForKey:GAO_QING];
         if (temp2.count > 0) {
             gaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             gaoqingBtn.frame = CGRectMake(160, 50, 40, BUTTON_HEIGHT);
             gaoqingBtn.tag = 111002;
-            [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];
+            [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
             [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateHighlighted];
             [gaoqingBtn addTarget:self action:@selector(resolutionBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
             [contentView addSubview:gaoqingBtn];
         }
         
-        NSArray *temp3 = [[videoUrlsArray objectAtIndex:currentNum] objectForKey:CHAO_QING];
+        NSArray *temp3 = [urlArrayDictionary objectForKey:CHAO_QING];
         if (temp3.count > 0) {
             chaoqingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             chaoqingBtn.frame = CGRectMake(280, 50, 40, BUTTON_HEIGHT);
@@ -994,13 +1028,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             separatorView.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
             [contentView addSubview:separatorView];
         }
+        if ([resolution isEqualToString:BIAO_QING]) {
+            [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt_pressed"] forState:UIControlStateNormal];
+        } else if ([resolution isEqualToString:CHAO_QING]){
+            [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateNormal];
+        } else {
+            [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];            
+        }
         resolutionPopTipView = [[CMPopTipView alloc] initWithCustomView:contentView];
         resolutionPopTipView.backgroundColor = [UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:1];
         //    resolutionPopTipView.delegate = self;
         resolutionPopTipView.disableTapToDismiss = YES;
         resolutionPopTipView.animation = CMPopTipAnimationPop;
         [resolutionPopTipView presentPointingAtView:btn inView:self.view animated:YES];
-        resolutionPopTipView.frame = CGRectMake(bottomView.frame.size.width - resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.origin.y - 70, resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.size.height);
+        resolutionPopTipView.frame = CGRectMake(bottomView.frame.size.width - resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.origin.y, resolutionPopTipView.frame.size.width, resolutionPopTipView.frame.size.height);
     }
 }
 
@@ -1010,40 +1051,54 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
     [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
+    combinedIndex = 0;
+    if (combinedArr == nil) {
+        combinedArr = [[NSMutableArray alloc]initWithCapacity:3];
+    }
+    [combinedArr removeAllObjects];
     if (btn.tag == 111001) {
         resolution = BIAO_QING;
+        [self createCombinedArray:BIAO_QING urlArray:plainClearArr];
         [btn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt_pressed"] forState:UIControlStateNormal];
     } else if (btn.tag == 111002) {
         resolution = GAO_QING;
+        [self createCombinedArray:GAO_QING urlArray:highClearArr];
         [btn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt_pressed"] forState:UIControlStateNormal];
     } else if (btn.tag == 111003) {
         resolution = CHAO_QING;
+        [self createCombinedArray:CHAO_QING urlArray:superClearArr];
         [btn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt_pressed"] forState:UIControlStateNormal];
     }
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [resolutionPopTipView dismissAnimated:YES];
     resolutionPopTipView = nil;
     resolutionLastPlaytime = [mPlayer currentTime];
-    [self preparePlayVideo];
+    
+    workingUrl = nil;
+    [mPlayer pause];
+    mPlayer = nil;
+    defaultErrorMessage = @"此分辨率已失效，请选择其他分辨率。";
+    [self showPlayCacheView];
+    [self sendRequest];
 }
 
 - (void)volumeBtnClicked:(UIButton *)btn
 {
-    //    AVURLAsset *asset = [[mPlayer currentItem] asset];
-    //    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
-    //
-    //    // Mute all the audio tracks
-    //    NSMutableArray *allAudioParams = [NSMutableArray array];
-    //    for (AVAssetTrack *track in audioTracks) {
-    //        AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
-    //        [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
-    //        [audioInputParams setTrackID:[track trackID]];
-    //        [allAudioParams addObject:audioInputParams];
-    //    }
-    //    AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
-    //    [audioZeroMix setInputParameters:allAudioParams];
-    //
-    //    [[mPlayer currentItem] setAudioMix:audioZeroMix];
+//        AVURLAsset *asset = [[mPlayer currentItem] asset];
+//        NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
+//    
+//        // Mute all the audio tracks
+//        NSMutableArray *allAudioParams = [NSMutableArray array];
+//        for (AVAssetTrack *track in audioTracks) {
+//            AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
+//            [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+//            [audioInputParams setTrackID:[track trackID]];
+//            [allAudioParams addObject:audioInputParams];
+//        }
+//        AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
+//        [audioZeroMix setInputParameters:allAudioParams];
+//    
+//        [[mPlayer currentItem] setAudioMix:audioZeroMix];
     
     //    float volume = 0.0f;
     //
@@ -1182,6 +1237,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPlayButton.enabled = YES;
     mStopButton.enabled = YES;
     [qualityBtn setEnabled:YES];
+    [mSwitchButton setEnabled:YES];
+//    for (UIView *asubview in routeBtn.subviews) {
+//        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+//            UIButton *btn = (UIButton *)asubview;
+//            btn.frame = CGRectMake(0, 0, 37, BUTTON_HEIGHT);
+//            [btn setEnabled:YES];
+//            break;
+//        }
+//    }
     if (subnameArray.count > 0 && type != 1){
         if (currentNum == 0) {
             [mPrevButton setEnabled:NO];
@@ -1350,6 +1414,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)playOneEpisode:(int)num
 {
     currentNum = num;
+    currentPlaybackTimeLabel.text = @"";
+    [mPlayButton setEnabled:NO];
+    [mNextButton setEnabled:NO];
+    [mPrevButton setEnabled:NO];
+    [mSwitchButton setEnabled:NO];
+    [qualityBtn setEnabled:NO];
     [self resetControlVisibilityTimer];
     [self preparePlayVideo];
 }
@@ -1412,40 +1482,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 #pragma mark Loading the Asset Keys Asynchronously
 
 #pragma mark -
-#pragma mark Error Handling - Preparing Assets for Playback Failed
-
-/* --------------------------------------------------------------
- **  Called when an asset fails to prepare for playback for any of
- **  the following reasons:
- ** 
- **  1) values of asset keys did not load successfully, 
- **  2) the asset keys did load successfully, but the asset is not 
- **     playable
- **  3) the item did not become ready to play. 
- ** ----------------------------------------------------------- */
-
--(void)assetFailedToPrepareForPlayback:(NSError *)error
-{
-    [self removePlayerTimeObserver];
-    [self syncScrubber];
-    [self disableScrubber];
-    [self disablePlayerButtons];
-    
-    /* Display the error. */
-//	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[error localizedDescription]
-//														message:[error localizedFailureReason]
-//													   delegate:nil
-//											  cancelButtonTitle:@"OK"
-//											  otherButtonTitles:nil];
-//	[alertView show];
-    [myHUD hide:NO];
-    tipLabel.text = @"即将使用网页播放";
-    [self performSelector:@selector(closeSelf) withObject:nil afterDelay:2];
-}
-
-
-#pragma mark Prepare to play asset, URL
-
 /*
  Invoked at the completion of the loading of the values for all keys on the asset that we require.
  Checks whether loading was successfull and whether the asset is playable.
@@ -1454,35 +1490,39 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
 {
     /* Make sure that the value of each key has loaded successfully. */
-	for (NSString *thisKey in requestedKeys)
-	{
-		NSError *error = nil;
-		AVKeyValueStatus keyStatus = [asset statusOfValueForKey:thisKey error:&error];
-		if (keyStatus == AVKeyValueStatusFailed)
-		{
-			[self assetFailedToPrepareForPlayback:error];
-			return;
-		}
-		/* If you are also implementing -[AVAsset cancelLoading], add your code here to bail out properly in the case of cancellation. */
-	}
-    
-    /* Use the AVAsset playable property to detect whether the asset can be played. */
-    if (!asset.playable) 
-    {
-        /* Generate an error describing the failure. */
-		NSString *localizedDescription = NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
-		NSString *localizedFailureReason = NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
-		NSDictionary *errorDict = [NSDictionary dictionaryWithObjectsAndKeys:
-								   localizedDescription, NSLocalizedDescriptionKey, 
-								   localizedFailureReason, NSLocalizedFailureReasonErrorKey, 
-								   nil];
-		NSError *assetCannotBePlayedError = [NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
-        
-        /* Display the error to the user. */
-        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
-        
-        return;
-    }
+//	for (NSString *thisKey in requestedKeys)
+//	{
+//		NSError *error = nil;
+//		AVKeyValueStatus keyStatus = [asset statusOfValueForKey:thisKey error:&error];
+//		if (keyStatus == AVKeyValueStatusFailed)
+//		{
+////			[self assetFailedToPrepareForPlayback:error];
+//            NSLog(@"%@", error);
+//            [self performSelectorOnMainThread:@selector(checkNextUrlToPlay) withObject:nil waitUntilDone:NO];
+//			return;
+//		}
+//		/* If you are also implementing -[AVAsset cancelLoading], add your code here to bail out properly in the case of cancellation. */
+//	}
+//    
+//    /* Use the AVAsset playable property to detect whether the asset can be played. */
+//    if (!asset.playable) 
+//    {
+//        /* Generate an error describing the failure. */
+//		NSString *localizedDescription = NSLocalizedString(@"Item cannot be played", @"Item cannot be played description");
+//		NSString *localizedFailureReason = NSLocalizedString(@"The assets tracks were loaded, but could not be made playable.", @"Item cannot be played failure reason");
+//		NSDictionary *errorDict = [NSDictionary dictionaryWithObjectsAndKeys:
+//								   localizedDescription, NSLocalizedDescriptionKey, 
+//								   localizedFailureReason, NSLocalizedFailureReasonErrorKey, 
+//								   nil];
+//		NSError *assetCannotBePlayedError = [NSError errorWithDomain:@"StitchedStreamPlayer" code:0 userInfo:errorDict];
+//        
+//        /* Display the error to the user. */
+////        [self assetFailedToPrepareForPlayback:assetCannotBePlayedError];
+//        NSLog(@"%@", assetCannotBePlayedError);
+//        [self performSelectorOnMainThread:@selector(checkNextUrlToPlay) withObject:nil waitUntilDone:NO];
+//        
+//        return;
+//    }
 	
 	/* At this point we're ready to set up for playback of the asset. */
     	
@@ -1556,19 +1596,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 #pragma mark Key Value Observer for player rate, currentItem, player item status
 
-/* ---------------------------------------------------------
-**  Called when the value at the specified key path relative
-**  to the given object has changed. 
-**  Adjust the movie play and pause button controls when the 
-**  player item "status" value changes. Update the movie 
-**  scrubber control when the player item is ready to play.
-**  Adjust the movie scrubber control when the player item 
-**  "rate" value changes. For updates of the player
-**  "currentItem" property, set the AVPlayer for which the 
-**  player layer displays visual output.
-**  NOTE: this method is invoked on the main queue.
-** ------------------------------------------------------- */
-
 - (void)observeValueForKeyPath:(NSString*) path 
 			ofObject:(id)object 
 			change:(NSDictionary*)change 
@@ -1602,6 +1629,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         for (UIView *asubview in routeBtn.subviews) {
             if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
                 UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
                 [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateNormal];
                 break;
             }
@@ -1612,6 +1642,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         for (UIView *asubview in routeBtn.subviews) {
             if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
                 UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
                 [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
                 break;
             }
@@ -1626,8 +1659,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         switch (status)
         {
-            /* Indicates that the status of the player is not yet known because 
-             it has not tried to load new media resources for playback */
             case AVPlayerStatusUnknown:
             {
                 [self removePlayerTimeObserver];
@@ -1640,9 +1671,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
             case AVPlayerStatusReadyToPlay:
             {
-                /* Once the AVPlayerItem becomes ready to play, i.e.
-                 [playerItem status] == AVPlayerItemStatusReadyToPlay,
-                 its duration can be fetched from the item. */
                 CMTime playerDuration = [self playerItemDuration];
                 double duration = 0;
                 if (CMTIME_IS_VALID(playerDuration)) {
@@ -1672,7 +1700,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             case AVPlayerStatusFailed:
             {
                 AVPlayerItem *playerItem = (AVPlayerItem *)object;
-                [self assetFailedToPrepareForPlayback:playerItem.error];
+                NSLog(@"%@", playerItem.error);
+                combinedIndex++;
+                [self performSelectorOnMainThread:@selector(sendRequest) withObject:nil waitUntilDone:NO];
             }
             break;
         }
@@ -1699,9 +1729,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         {
             /* Set the AVPlayer for which the player layer displays visual output. */
             [mPlaybackView setPlayer:mPlayer];
-            
-            /* Specifies that the player should preserve the video’s aspect ratio and
-             fit the video within the layer’s bounds. */
             [mPlaybackView setVideoFillMode:AVLayerVideoGravityResizeAspect];
             
             [self syncPlayPauseButtons];
@@ -1766,6 +1793,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     return NO;
 }
+
+NSComparator cmpStr = ^(id obj1, id obj2){
+    if ([obj1 integerValue] > [obj2 integerValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([obj1 integerValue] < [obj2 integerValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
+
 //=====================End Utility methods========================
 @end
 
