@@ -169,6 +169,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     video = nil;
     videoHttpUrl = nil;
     self.URL = nil;
+    [mPlayer removeObserver:self forKeyPath:@"rate"];
+	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
+	[mPlayer pause];
     mPlayer = nil;
     mPlayerItem = nil;
     mPlaybackView = nil;
@@ -910,9 +913,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     [self updateWatchRecord];
     [self saveLastPlaytime];
-    [self removePlayerTimeObserver];
-	[mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
 	[mPlayer pause];
     mPlayer = nil;
     [controlVisibilityTimer invalidate];
