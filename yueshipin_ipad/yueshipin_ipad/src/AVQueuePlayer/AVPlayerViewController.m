@@ -376,7 +376,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (video != nil) {
         name = [video objectForKey:@"name"];
-        subname = [subnameArray objectAtIndex:self.currentNum];
+        if (self.currentNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+        }
     }
     [self loadLastPlaytime];
     if (combinedArr == nil) {
