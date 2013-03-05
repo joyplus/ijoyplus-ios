@@ -321,13 +321,13 @@
         [[CacheUtility sharedCache] putInCache:WATCH_RECORD_CACHE_KEY result:result];
         sortedwatchRecordArray = (NSArray *)[result objectForKey:@"histories"];
         if(sortedwatchRecordArray.count > 0){
-            for (NSDictionary *tempItem in sortedwatchRecordArray) {
-                NSString *tprodId = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"prod_id"]];
-                NSString *tsubname = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"prod_subname"]];
-                NSNumber *tplaybackTime = (NSNumber *)[tempItem objectForKey:@"playback_time"];
-                NSString *key = [NSString stringWithFormat:@"%@_%@", tprodId, tsubname];
-                [[CacheUtility sharedCache] putInCache:key result:tplaybackTime];
-            }
+//            for (NSDictionary *tempItem in sortedwatchRecordArray) {
+//                NSString *tprodId = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"prod_id"]];
+//                NSString *tsubname = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"prod_subname"]];
+//                NSNumber *tplaybackTime = (NSNumber *)[tempItem objectForKey:@"playback_time"];
+//                NSString *key = [NSString stringWithFormat:@"%@_%@", tprodId, tsubname];
+//                [[CacheUtility sharedCache] putInCache:key result:tplaybackTime];
+//            }
             if (sortedwatchRecordArray.count >= 10) {
                 [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
             } else {
@@ -629,7 +629,7 @@
             viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
             viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
-        } else if([prodType isEqualToString:@"2"]){
+        } else if([prodType isEqualToString:@"2"]  || [prodType isEqualToString:@"131"]){
             DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
             viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
             viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);

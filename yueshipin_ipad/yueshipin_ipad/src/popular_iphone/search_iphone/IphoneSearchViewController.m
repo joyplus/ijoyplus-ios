@@ -95,7 +95,7 @@
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3,131", @"type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
@@ -187,7 +187,7 @@
         detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
     }
-    else if ([typeStr isEqualToString:@"2"]){
+    else if ([typeStr isEqualToString:@"2"]||[typeStr isEqualToString:@"131"]){
         TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
         detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
@@ -197,6 +197,7 @@
         detailViewController.infoDic = [searchResults_ objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
     }
+ 
     
     
 }

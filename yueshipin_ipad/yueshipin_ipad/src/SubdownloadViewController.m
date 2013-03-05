@@ -367,6 +367,7 @@
             viewController.name = self.titleContent;
             viewController.subname = item.name;
             viewController.currentNum = 0;
+            viewController.prodId = itemId;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {

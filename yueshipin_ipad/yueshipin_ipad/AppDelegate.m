@@ -15,6 +15,7 @@
 #import "ActionUtility.h"
 #import "iRate.h"
 #import "UMFeedback.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -105,11 +106,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//    // Override point for customization after application launch.
-//    self.tabBarView = [[TabBarViewController alloc] init];
-//    self.window.rootViewController = self.tabBarView;
-
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
@@ -149,13 +145,12 @@
     }
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];
-    
     return YES;
 }
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
-    //NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
+//    NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];

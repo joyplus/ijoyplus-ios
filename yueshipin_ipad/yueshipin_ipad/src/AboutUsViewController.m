@@ -7,9 +7,6 @@
 //
 
 #import "AboutUsViewController.h"
-#import "MovieDetailViewController.h"
-#import "DramaDetailViewController.h"
-#import "ShowDetailViewController.h"
 
 @interface AboutUsViewController (){
     UIImageView *titleImage;

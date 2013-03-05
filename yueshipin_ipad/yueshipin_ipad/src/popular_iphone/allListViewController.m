@@ -272,7 +272,7 @@
     if ([type isEqualToString:@"1"]) {
         listDetailViewController.Type = MOVIE_TYPE;
     }
-    else if ([type isEqualToString:@"2"]){
+    else if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]){
         listDetailViewController.Type = TV_TYPE;
     }
     

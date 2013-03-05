@@ -7,9 +7,6 @@
 //
 
 #import "ClauseViewController.h"
-#import "MovieDetailViewController.h"
-#import "DramaDetailViewController.h"
-#import "ShowDetailViewController.h"
 
 @interface ClauseViewController (){
     UIScrollView *bgScrollView;

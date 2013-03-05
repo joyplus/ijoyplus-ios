@@ -425,22 +425,14 @@
                     filePath = [documentsDirectory stringByAppendingPathComponent:filename];
                     break;
                 }
-            }
-            
-//            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//            viewController.prodId = item.itemId;
-//            viewController.type = 1;
-//            viewController.name = item.name;
-//            viewController.subname = @"";
-//            
-//            [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
-            
+            }     
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.isDownloaded = YES;
             viewController.closeAll = YES;
             viewController.videoUrl = filePath;
             viewController.type = 1;
             viewController.name = item.name;
+            viewController.prodId = item.itemId;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {

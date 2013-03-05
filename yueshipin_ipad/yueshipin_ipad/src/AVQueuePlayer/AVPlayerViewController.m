@@ -123,10 +123,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)dealloc
 {
-    [self removePlayerTimeObserver];
-	[mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-	[mPlayer pause];
     [superClearArr removeAllObjects];
     [plainClearArr removeAllObjects];
     [highClearArr removeAllObjects];
@@ -135,6 +131,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     highClearArr = nil;
     topToolbar = nil;
     nameLabel = nil;
+    [combinedArr removeAllObjects];
+    combinedArr = nil;
+    videoUrl = nil;
+    defaultErrorMessage = nil;
     self.mPlaybackView = nil;
     self.mToolbar = nil;
     self.mPlayButton = nil;
@@ -184,10 +184,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
-    [self loadLastPlaytime];
+    defaultErrorMessage = @"即将使用网页播放";
     resolution = GAO_QING;
     [self showPlayVideoView];
     if (isDownloaded) {
+        [self loadLastPlaytime];
         workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
         [self setURL:workingUrl];
     } else {
@@ -211,7 +212,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.view addGestureRecognizer:tapRecognizer];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
     
-    defaultErrorMessage = @"即将使用网页播放";
 }
 
 - (void) viewDidAppear: (BOOL) animated {
@@ -374,6 +374,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [subnameArray addObject:tempName];
         }
     }
+    if (video != nil) {
+        name = [video objectForKey:@"name"];
+        subname = [subnameArray objectAtIndex:self.currentNum];
+    }
+    [self loadLastPlaytime];
     if (combinedArr == nil) {
         combinedArr = [[NSMutableArray alloc]initWithCapacity:10];
     }
@@ -476,9 +481,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
     NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
+    NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
     NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
     int status_Code = HTTPResponse.statusCode;
-    if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"]) {
+    if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
         NSLog(@"working = %@", connection.originalRequest.URL);
         workingUrl = connection.originalRequest.URL;
         [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
@@ -527,10 +533,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, TOP_TOOLBAR_HEIGHT)];
     vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
-    if (video != nil) {
-        name = [video objectForKey:@"name"];
-        subname = [subnameArray objectAtIndex:self.currentNum];
-    }
     if (type == 2) {
         vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
     } else if(type == 3){
@@ -665,6 +667,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [volumeSlider setBackgroundColor:[UIColor clearColor]];
     [volumeSlider setShowsVolumeSlider:YES];
     [volumeSlider setShowsRouteButton:NO];
+    [self disableVolumeSlider];
     [mToolbar addSubview:volumeSlider];
     
 //    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
@@ -788,7 +791,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         tipLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 1.4);
         tipLabel.backgroundColor = [UIColor clearColor];
         tipLabel.font = [UIFont systemFontOfSize:15];
-        tipLabel.text = @"正在加载，请稍等";
         tipLabel.textAlignment = NSTextAlignmentCenter;
         tipLabel.textColor = [UIColor whiteColor];
         [playCacheView addSubview:tipLabel];
@@ -797,8 +799,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         myHUD.frame = CGRectMake(myHUD.frame.origin.x, myHUD.frame.origin.y + 130, myHUD.frame.size.width, myHUD.frame.size.height);
         [playCacheView addSubview:myHUD];
         myHUD.opacity = 0;
-        [myHUD show:YES];
     }
+    tipLabel.text = @"正在加载，请稍等";
+    [myHUD show:YES];
 }
 
 
@@ -810,6 +813,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [episodeListviewController.table reloadData];
         [self disablePlayerButtons];
         [self disableScrubber];
+        [self disableVolumeSlider];
         [self preparePlayVideo];
     } else {
         currentNum--;
@@ -822,6 +826,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     currentNum--;
     [self disablePlayerButtons];
     [self disableScrubber];
+    [self disableVolumeSlider];
     [self preparePlayVideo];
 }
 
@@ -902,11 +907,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)closeSelf
 {
     [self updateWatchRecord];
-    [mStopButton sendActionsForControlEvents:UIControlEventTouchUpInside];
     [self saveLastPlaytime];
+    [self removePlayerTimeObserver];
+	[mPlayer removeObserver:self forKeyPath:@"rate"];
+	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
+	[mPlayer pause];
     mPlayer = nil;
     [controlVisibilityTimer invalidate];
-    if (type == 2 || type == 3) {
+    if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
     if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
@@ -1238,14 +1246,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mStopButton.enabled = YES;
     [qualityBtn setEnabled:YES];
     [mSwitchButton setEnabled:YES];
-//    for (UIView *asubview in routeBtn.subviews) {
-//        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
-//            UIButton *btn = (UIButton *)asubview;
-//            btn.frame = CGRectMake(0, 0, 37, BUTTON_HEIGHT);
-//            [btn setEnabled:YES];
-//            break;
-//        }
-//    }
+    for (UIView *asubview in routeBtn.subviews) {
+        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+            UIButton *btn = (UIButton *)asubview;
+            [btn setImage:nil forState:UIControlStateNormal];
+            [btn setImage:nil forState:UIControlStateHighlighted];
+            [btn setImage:nil forState:UIControlStateSelected];
+            [btn setEnabled:YES];
+            break;
+        }
+    }
     if (subnameArray.count > 0 && type != 1){
         if (currentNum == 0) {
             [mPrevButton setEnabled:NO];
@@ -1409,6 +1419,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)disableScrubber
 {
     self.mScrubber.enabled = NO;    
+}
+
+-(void)enableVolumeSlider
+{
+    for (UIView *view in [volumeSlider subviews]){
+		if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
+			UISlider *tempSlider = (UISlider *) view;
+            tempSlider.enabled = YES;
+		}
+	}
+}
+
+- (void)disableVolumeSlider
+{
+    for (UIView *view in [volumeSlider subviews]){
+		if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
+			UISlider *tempSlider = (UISlider *) view;
+            tempSlider.enabled = NO;
+		}
+	}
 }
 
 - (void)playOneEpisode:(int)num
@@ -1633,6 +1663,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [btn setImage:nil forState:UIControlStateHighlighted];
                 [btn setImage:nil forState:UIControlStateSelected];
                 [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
                 break;
             }
         }
@@ -1646,6 +1677,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [btn setImage:nil forState:UIControlStateHighlighted];
                 [btn setImage:nil forState:UIControlStateSelected];
                 [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
                 break;
             }
         }
@@ -1663,8 +1695,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             {
                 [self removePlayerTimeObserver];
                 [self syncScrubber];
-                
                 [self disableScrubber];
+                [self disableVolumeSlider];
                 [self disablePlayerButtons];
             }
             break;
@@ -1681,6 +1713,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 [self initScrubberTimer];
                 [self enableScrubber];
+                [self enableVolumeSlider];
                 [self enablePlayerButtons];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {
@@ -1724,6 +1757,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         {
             [self disablePlayerButtons];
             [self disableScrubber];
+            [self disableVolumeSlider];
         }
         else /* Replacement of player currentItem has occurred */
         {

@@ -1279,6 +1279,8 @@ NSMutableArray* recursionCheck;
 }
 - (void)dealloc 
 {
+    for  (NSString *oneProp in [[self class] propertiesWithEncodedTypes])
+        [self removeObserver:self forKeyPath:oneProp];
 	[[self class] unregisterObject:self];
 	[super dealloc];
 }

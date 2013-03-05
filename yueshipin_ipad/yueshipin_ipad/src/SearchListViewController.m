@@ -89,7 +89,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [myHUD showProgressBar:self.view];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3,131", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -331,7 +331,7 @@
             viewController.fromViewController = self;
             viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
-        } else if([type isEqualToString:@"2"]){
+        } else if([type isEqualToString:@"2"] || [type isEqualToString:@"131"]){
             DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
             viewController.prodId = prodId;
             viewController.fromViewController = self;
@@ -365,7 +365,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3,131", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempArray;

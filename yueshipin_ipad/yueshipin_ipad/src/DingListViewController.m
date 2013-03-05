@@ -352,7 +352,7 @@
             viewController.fromViewController = self;
             viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
-        } else if([type isEqualToString:@"2"]){
+        } else if([type isEqualToString:@"2"] || [type isEqualToString:@"131"]){
             DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
             viewController.prodId = prodId;
             viewController.fromViewController = self;

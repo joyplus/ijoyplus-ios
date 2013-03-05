@@ -1191,7 +1191,7 @@
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
-    } else if([prodType isEqualToString:@"2"]){
+    } else if([prodType isEqualToString:@"2"] || [prodType isEqualToString:@"131"]){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
         viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
