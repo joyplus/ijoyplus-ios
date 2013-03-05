@@ -200,7 +200,7 @@
         
         removeAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         removeAllBtn.frame = CGRectMake(252, 282, 96, 31);
-        [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play1"] forState:UIControlStateNormal];
+        [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play"] forState:UIControlStateNormal];
         [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play_pressed"] forState:UIControlStateHighlighted];
         [removeAllBtn addTarget:self action:@selector(removeAllBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:removeAllBtn];
