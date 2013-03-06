@@ -26,7 +26,6 @@
 
 @implementation IphoneMovieDetailViewController
 
-@synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
@@ -164,9 +163,13 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
         isLoaded_ = YES;
+        
         videoInfo_ = (NSDictionary *)[result objectForKey:@"movie"];
         if (isNotification_) {
             [self notificationData];
+        }
+        else{
+            self.infoDic = videoInfo_;
         }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -189,6 +192,9 @@
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
     }
     int pageNum = ceil(commentArray_.count / 10.0)+1;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id",[NSNumber numberWithInt:pageNum], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
@@ -392,6 +398,9 @@
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
                 if (itemId == nil) {
                     itemId = [self.infoDic objectForKey:@"content_id"];
+                }
+                if (itemId == nil) {
+                    itemId = [self.infoDic objectForKey:@"id"];
                 }
                 NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
                 NSArray *tempArr = [DownloadItem findByCriteria:subquery];
@@ -615,7 +624,7 @@
             break;
         }
         case 10002:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                   
@@ -637,7 +646,7 @@
             break;
         }
         case 10003:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
@@ -683,14 +692,17 @@
             }
             NSString *imgUrl = [self.infoDic objectForKey:@"prod_pic_url"];
             if (imgUrl == nil) {
-                imgUrl = [self.infoDic objectForKey:@"content_pic_url"];;
+                imgUrl = [self.infoDic objectForKey:@"content_pic_url"];
+            }
+            if (imgUrl == nil) {
+                imgUrl = [self.infoDic objectForKey:@"poster"];
             }
             NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
             break;
         }
         case 10005:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 
                  [self showOpSuccessModalView:3 with:ADDFAV];

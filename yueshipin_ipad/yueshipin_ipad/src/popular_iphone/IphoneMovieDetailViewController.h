@@ -10,7 +10,6 @@
 #import "IphoneVideoViewController.h"
 #import "MNMBottomPullToRefreshManager.h"
 @interface IphoneMovieDetailViewController : IphoneVideoViewController< MNMBottomPullToRefreshManagerClient>{
-    NSDictionary *infoDic_;
     NSDictionary *videoInfo_;
     int videoType_;
     NSString *summary_;
@@ -27,7 +26,6 @@
     BOOL isLoaded_;
 
 }
-@property (nonatomic, strong) NSDictionary *infoDic;
 @property (nonatomic, strong) NSDictionary *videoInfo;
 @property (nonatomic, assign) int videoType;
 @property (nonatomic, strong) NSString *summary;

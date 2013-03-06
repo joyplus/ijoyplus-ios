@@ -11,8 +11,8 @@
 #define DING 1
 #define ADDFAV  2
 @interface IphoneVideoViewController : UITableViewController<SinaWeiboDelegate,SinaWeiboRequestDelegate>{
-     SinaWeibo *_mySinaWeibo;
-    NSDictionary *_infoDic;
+    SinaWeibo *_mySinaWeibo;
+    NSDictionary *infoDic_;
     NSArray *episodesArr_;
     NSString *prodId_;
     NSString *subName_;

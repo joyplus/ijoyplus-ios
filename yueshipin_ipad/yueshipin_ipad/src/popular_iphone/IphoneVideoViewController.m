@@ -30,7 +30,7 @@
 
 @implementation IphoneVideoViewController
 @synthesize mySinaWeibo = _mySinaWeibo;
-@synthesize infoDic = _infoDic;
+@synthesize infoDic = infoDic_;
 @synthesize episodesArr = episodesArr_;
 @synthesize prodId = prodId_;
 @synthesize subName = subName_;
@@ -154,7 +154,7 @@
         _mySinaWeibo.delegate = self;
         if ([_mySinaWeibo isLoggedIn]) {
             SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
-            sendV.infoDic = _infoDic;
+            sendV.infoDic = infoDic_;
             [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
         }
         else{
@@ -168,7 +168,7 @@
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo{
     
     SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
-    sendV.infoDic = _infoDic;
+    sendV.infoDic = infoDic_;
     [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
     
     NSDictionary *authData = [NSDictionary dictionaryWithObjectsAndKeys:

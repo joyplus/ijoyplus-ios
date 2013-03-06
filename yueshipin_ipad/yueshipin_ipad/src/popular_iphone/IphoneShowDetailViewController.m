@@ -24,7 +24,6 @@
 
 @implementation IphoneShowDetailViewController
 
-@synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
@@ -68,7 +67,6 @@
     [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
-    _infoDic = self.infoDic;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -163,6 +161,9 @@
         if (isNotification_) {
             [self notificationData];
         }
+        else{
+            infoDic_ = videoInfo_;
+        }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -184,6 +185,9 @@
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
     }
     int pageNum = ceil(commentArray_.count / 10.0)+1;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id",[NSNumber numberWithInt:pageNum], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
@@ -522,7 +526,7 @@
             break;
         }
         case 10002:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
@@ -542,7 +546,7 @@
             break;
         }
         case 10003:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
@@ -568,6 +572,9 @@
             if (itemId == nil) {
                 itemId = [self.infoDic objectForKey:@"content_id"];
             }
+            if (itemId == nil) {
+                 itemId = [self.infoDic objectForKey:@"id"];
+            }
             showDownlooadViewController.prodId = itemId;
             showDownlooadViewController.listArr =  [NSMutableArray arrayWithArray:episodesArr_];
             NSString *url = [videoInfo_ objectForKey:@"ipad_poster"];
@@ -580,7 +587,7 @@
         }
         case 10005:{
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 //                NSString *responseCode = [result objectForKey:@"res_code"];
 //                if([responseCode isEqualToString:kSuccessResCode]){

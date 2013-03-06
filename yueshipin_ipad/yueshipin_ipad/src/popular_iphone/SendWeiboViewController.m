@@ -57,7 +57,7 @@
     
     self.title = [infoDic_ objectForKey:@"prod_name"];
     textView_ = [[UITextView alloc] initWithFrame:CGRectMake(20, 50, 280, 80)];
-    textView_.text = [NSString stringWithFormat:@"我刚看了<%@>,分享一下吧。",[infoDic_ objectForKey:@"prod_name"]];
+    textView_.text = [NSString stringWithFormat:@"我刚看了#%@#，分享一下吧。",[infoDic_ objectForKey:@"name"]];
     [textView_ becomeFirstResponder];
     UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
     share.frame = CGRectMake(220, 150, 80, 32);

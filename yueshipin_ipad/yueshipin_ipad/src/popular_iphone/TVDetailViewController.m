@@ -21,7 +21,6 @@
 
 @implementation TVDetailViewController
 
-@synthesize infoDic = infoDic_;
 @synthesize videoInfo = videoInfo_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
@@ -175,6 +174,9 @@
         if (isNotification_) {
             [self notificationData];
         }
+        else{
+            infoDic_ = videoInfo_;
+        }
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
@@ -214,6 +216,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
     }
     self.prodId = itemId;
     int pageNum = ceil(commentArray_.count / 10.0)+1;
@@ -687,7 +692,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             break;
         }
         case 10002:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
@@ -709,7 +714,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             break;
         }
         case 10003:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 if([responseCode isEqualToString:kSuccessResCode]){
@@ -755,7 +760,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         case 10005:{
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[self.infoDic objectForKey:@"prod_id"], @"prod_id", nil];
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 //                NSString *responseCode = [result objectForKey:@"res_code"];
 //                if([responseCode isEqualToString:kSuccessResCode]){
@@ -812,6 +817,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSString *imgUrl =[self.infoDic objectForKey:@"prod_pic_url"];
     if (imgUrl == nil) {
         imgUrl = [self.infoDic objectForKey:@"content_pic_url"];
+    }
+    if (imgUrl == nil) {
+        imgUrl = [self.infoDic objectForKey:@"poster"];
     }
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,videoUrl,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num], nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
@@ -1265,7 +1273,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [button setBackgroundImage:[UIImage imageNamed:@"download_disable.png"] forState:UIControlStateDisabled];
         
         for (NSString *str in EpisodeIdArr) {
-            if ([str  intValue] == (i+1)) {
+            if ([str  intValue] == i) {
                 button.selected = YES;
                 [button setTitleEdgeInsets:UIEdgeInsetsMake(3, 20, 13, 20)];
                 break;
@@ -1287,6 +1295,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
     }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
+    }
+
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
     NSArray *tempArr = [SubdownloadItem findByCriteria:subquery];
     return tempArr;
