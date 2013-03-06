@@ -648,7 +648,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
     [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt"] forState:UIControlStateNormal];
     [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_pressed"] forState:UIControlStateHighlighted];
-    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_disabled"] forState:UIControlStateDisabled];
     [mPrevButton addTarget:self action:@selector(prevBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mPrevButton];
     
@@ -657,14 +656,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
     [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt"] forState:UIControlStateNormal];
     [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_pressed"] forState:UIControlStateHighlighted];
-    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_disabled"] forState:UIControlStateDisabled];
     [mNextButton addTarget:self action:@selector(nextBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mNextButton];
     
     volumeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     volumeBtn.frame = CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 40, mPlayButton.frame.origin.y, 27, BUTTON_HEIGHT);
     [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
-    [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
+    [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt"] forState:UIControlStateHighlighted];
     [volumeBtn addTarget:self action:@selector(volumeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:volumeBtn];
     
