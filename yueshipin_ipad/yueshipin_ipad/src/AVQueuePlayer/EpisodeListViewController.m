@@ -94,9 +94,9 @@
         nameLabel.text = [NSString stringWithFormat:@"%@", [self.episodeArray objectAtIndex:indexPath.row]];
     }
     if (indexPath.row == currentNum) {
-        nameLabel.textColor = [UIColor colorWithRed:0/255.0 green:73/255.0 blue:254/255.0 alpha:1];
+        nameLabel.textColor = [UIColor colorWithRed:255/255.0 green:145/255.0 blue:0 alpha:1];
     } else {
-        nameLabel.textColor = [UIColor colorWithRed:144/255.0 green:144/255.0 blue:144/255.0 alpha:1];        
+        nameLabel.textColor = [UIColor colorWithRed:144/255.0 green:144/255.0 blue:144/255.0 alpha:1];
     }
     return cell;
 }
