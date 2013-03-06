@@ -159,10 +159,10 @@
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
-    if(self.showVideoSwitch == nil){
+    if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
     }
-    if(self.closeVideoMode == nil){
+    if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
     }
     if (![self.showVideoSwitch isEqualToString:@"0"]) {
