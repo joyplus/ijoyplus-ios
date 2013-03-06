@@ -145,6 +145,14 @@
     }
     self.window.rootViewController = self.rootViewController;
     [self.window makeKeyAndVisible];
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    NSError *setCategoryError = nil;
+    BOOL success = [audioSession setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+    if (!success) {NSLog(@"%@", setCategoryError);}
+    NSError *activationError = nil;
+    success = [audioSession setActive:YES error:&activationError];
+    if (!success) {NSLog(@"%@", activationError);}
     return YES;
 }
 
