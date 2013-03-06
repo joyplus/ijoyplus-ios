@@ -85,7 +85,7 @@
     badgeView = nil;
     appViewController = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RELOAD_MENU_ITEM object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:RELOAD_MENU_ITEM object:nil];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -120,7 +120,7 @@
         selectedIndex = 0;
         [self initMenuController];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:RELOAD_MENU_ITEM object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:RELOAD_MENU_ITEM object:nil];
 	}
     return self;
 }
