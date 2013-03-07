@@ -71,6 +71,7 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    keyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     sBar.text = keyword;
     [self closeMenu];
     [self addKeyToLocalHistory:keyword];

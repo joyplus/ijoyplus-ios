@@ -303,33 +303,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *source_str = [temp_dic objectForKey:@"source"];
         if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"fengxing"]){
+        } else if ([source_str isEqualToString:@"fengxing"]){
             [temp_dic setObject:@"2" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"qiyi"]){
+        } else if ([source_str isEqualToString:@"qiyi"]){
             [temp_dic setObject:@"3" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"youku"]){
+        } else if ([source_str isEqualToString:@"youku"]){
             [temp_dic setObject:@"4" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"sinahd"]){
+        } else if ([source_str isEqualToString:@"sinahd"]){
             [temp_dic setObject:@"5" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"sohu"]){
+        } else if ([source_str isEqualToString:@"sohu"]){
             [temp_dic setObject:@"6" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"56"]){
+        } else if ([source_str isEqualToString:@"56"]){
             [temp_dic setObject:@"7" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"qq"]){
+        } else if ([source_str isEqualToString:@"qq"]){
             [temp_dic setObject:@"8" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"pptv"]){
+        } else if ([source_str isEqualToString:@"pptv"]){
             [temp_dic setObject:@"9" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"m1905"]){
+        } else if ([source_str isEqualToString:@"m1905"]){
             [temp_dic setObject:@"10" forKey:@"level"];
+        }else if ([source_str isEqualToString:@"pps"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
         } else {
             [temp_dic setObject:@"100" forKey:@"level"];
         }
@@ -1482,7 +1475,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)playOneEpisode:(int)num
 {
     currentNum = num;
-    currentPlaybackTimeLabel.text = @"";
+    currentPlaybackTimeLabel.text = @"00:00:00";
     [mPlayButton setEnabled:NO];
     [mNextButton setEnabled:NO];
     [mPrevButton setEnabled:NO];
@@ -1768,7 +1761,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
                     if ([source_str isEqualToString:@"letv"]) {
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
                     } else if ([source_str isEqualToString:@"fengxing"]){
                         sourceImage.image = [UIImage imageNamed:@""];
                     } else if ([source_str isEqualToString:@"qiyi"]){
@@ -1786,6 +1779,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([source_str isEqualToString:@"pptv"]){
                         sourceImage.image = [UIImage imageNamed:@""];
                     } else if ([source_str isEqualToString:@"m1905"]){
+                        sourceImage.image = [UIImage imageNamed:@""];
+                    } else if ([source_str isEqualToString:@"pps"]){
                         sourceImage.image = [UIImage imageNamed:@""];
                     } else {
                         exists = NO;

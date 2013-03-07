@@ -407,6 +407,7 @@
                     int pageNum = floor(i/5.0);
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
                     [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
@@ -438,6 +439,7 @@
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
                     }
+                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     [nameBtn setTitle:name forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
