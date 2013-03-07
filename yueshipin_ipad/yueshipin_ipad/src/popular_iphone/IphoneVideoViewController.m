@@ -22,6 +22,9 @@
 #import "CacheUtility.h"
 #import "TimeUtility.h"
 #import "UIImage+Scale.h"
+#import "IphoneAVPlayerViewController.h"
+#import "IphoneWebPlayerViewController.h"
+#import "CustomNavigationViewController.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -255,88 +258,20 @@
     }
 }
 
-- (BOOL)validadUrl:(NSString *)originalUrl
-{
-    NSString *formatUrl = [[originalUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
-    if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
-        return YES;
-    }
-    return NO;
-}
 
 -(void)playVideo:(int)num{
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    // 网页地址
-    httpUrlArray_ = [[NSMutableArray alloc]initWithCapacity:5];
-    for (int i = 0; i < episodesArr_.count; i++) {
-        NSArray *videoUrls = [[episodesArr_ objectAtIndex:i] objectForKey:@"video_urls"];
     
-        BOOL found = NO;
-        for (NSDictionary *videoUrl in videoUrls) {
-            NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
-            if([self validadUrl:url]){
-                NSString *httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-                [httpUrlArray_ addObject:httpUrl];
-                found = YES;
-                break;
-            }
-        }
-        if (!found) {
-            [httpUrlArray_ addObject:@""];
-        }
-    }
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        if (httpUrlArray_.count > 0) {
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[httpUrlArray_ objectAtIndex:0]]];
-        } else {
-            [UIUtility showPlayVideoFailure:self.view];
-        }
-    } else {
-        // 视频地址
-        videoUrlsArray_ = [[NSMutableArray alloc]initWithCapacity:5];
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) { // 0:先播放视频，再播放网页
-            for (int i = 0; i < episodesArr_.count; i++) {
-                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:5];
-                NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:i] objectForKey:@"down_urls"];
-                if(videoUrlArray.count > 0){
-                    NSMutableArray *urlsDicArray = [[NSMutableArray alloc]initWithCapacity:5];
-                    for(NSDictionary *tempVideo in videoUrlArray){
-                        NSArray *urls = [tempVideo objectForKey:@"urls"];
-                        [urlsDicArray addObjectsFromArray:urls];
-                    }
-                    urlsDicArray = [urlsDicArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
-                        NSNumber *first =  [NSString stringWithFormat:@"%@", [a objectForKey:@"file"]];
-                        NSNumber *second = [NSString stringWithFormat:@"%@", [b objectForKey:@"file"]];
-                        return [second compare:first];
-                    }];
-                    for (NSDictionary *url in urlsDicArray) {
-                        NSString *tempUrl = [url objectForKey:@"url"];
-                        if([self validadUrl:tempUrl]){
-                            [urlsArray addObject:[tempUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]];
-                        }
-                    }
-                }
-                [videoUrlsArray_ addObject:urlsArray];
-            }
-        }
-       
-        VideoWebViewController *webViewController = [[VideoWebViewController alloc] init];
-        webViewController.videoUrlsArray = videoUrlsArray_;
-        webViewController.videoHttpUrlArray = httpUrlArray_;
-        webViewController.prodId = self.prodId;
-        webViewController.type = type_;
-        webViewController.startNum = num;
-       // webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.subname = [NSString stringWithFormat:@"%d",num];
-        webViewController.playTime = [self getRecordInfo:num];
-        webViewController.name = name_;
-        webViewController.currentNum = num;
-        NSLog(@"now play is %d",num);
-        //webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);CustomNavigationViewController
-       [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:webViewController] animated:YES completion:nil];
-    }
+    IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+    iphoneWebPlayerViewController.playNum = num;
+    iphoneWebPlayerViewController.nameStr = name_;
+    iphoneWebPlayerViewController.episodesArr = episodesArr_;
+    iphoneWebPlayerViewController.videoType = type_;
+    iphoneWebPlayerViewController.prodId = prodId_;
+    [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+    
 }
 
 -(NSString*)getRecordInfo:(int)num{
@@ -355,17 +290,71 @@
 
 
 
-#pragma mark - Table view delegate
++(NSDictionary *)commonGetPlayUrls:(NSArray *)videoInfoDic{
+//    NSMutableDictionary *source_type = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"",@"letv",@"",@"fengxing",@"",@"qiyi",@"",@"youku",@"",@"sinahd",@"",@"sohu",@"",@"56",@"",@"qq",@"",@"pptv",@"",@"m1905", nil];
+//    
+//    NSMutableDictionary *super_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
+//    NSMutableDictionary *high_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
+//    NSMutableDictionary *plain_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+   
+    for (NSDictionary *dic in videoInfoDic) {
+        NSArray *infoArr = [dic objectForKey:@"down_urls"];
+        for (NSDictionary *url_dic in infoArr) {
+            NSString *source_str = [url_dic objectForKey:@"source"];
+            NSArray *urlsArr = [url_dic objectForKey:@"urls"];
+            
+            if ([source_str isEqualToString:@"letv"]) {
+                for (NSDictionary *clear_info in urlsArr) {
+                    NSString *clear_type = [[clear_info objectForKey:@"type"] lowercaseString];
+                    NSString *url = [clear_info objectForKey:@"url"];
+                    if ([clear_type isEqualToString:@"hd2"]) {
+                        
+                    }
+                    else if ([clear_type isEqualToString:@"mp4"]){
+                    
+                    }
+                    else if ([clear_type isEqualToString:@"flv"]||[clear_type isEqualToString:@"3gp"]){
+                        
+                    }
+                }
+                
+            }
+            else if ([source_str isEqualToString:@"fengxing"]){
+            
+            }
+            else if ([source_str isEqualToString:@"qiyi"]){
+                
+            }
+            else if ([source_str isEqualToString:@"youku"]){
+                
+            }
+            else if ([source_str isEqualToString:@"sinahd"]){
+                
+            }
+            else if ([source_str isEqualToString:@"sohu"]){
+                
+            }
+            else if ([source_str isEqualToString:@"56"]){
+                
+            }
+            else if ([source_str isEqualToString:@"qq"]){
+                
+            }
+            else if ([source_str isEqualToString:@"pptv"]){
+                
+            }
+            else if ([source_str isEqualToString:@"m1905"]){
+                
+            }
+            
+        
+        }
+    }
+    return nil;
+ 
 }
+
+
 
 @end

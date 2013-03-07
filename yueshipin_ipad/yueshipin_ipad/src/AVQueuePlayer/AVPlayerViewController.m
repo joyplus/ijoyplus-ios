@@ -16,15 +16,15 @@
 #define URL_KEY @"url_key"
 
 /* Asset keys */
-NSString * const kTracksKey         = @"tracks";
-NSString * const kPlayableKey		= @"playable";
+static NSString * const kTracksKey         = @"tracks";
+static NSString * const kPlayableKey		= @"playable";
 
 /* PlayerItem keys */
-NSString * const kStatusKey         = @"status";
+static NSString * const kStatusKey         = @"status";
 
 /* AVPlayer keys */
-NSString * const kRateKey			= @"rate";
-NSString * const kCurrentItemKey	= @"currentItem";
+static NSString * const kRateKey			= @"rate";
+static NSString * const kCurrentItemKey	= @"currentItem";
 
 
 @interface AVPlayerViewController () <UIGestureRecognizerDelegate, UIAlertViewDelegate>
