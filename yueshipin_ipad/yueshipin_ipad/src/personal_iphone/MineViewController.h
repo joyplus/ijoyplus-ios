@@ -26,7 +26,6 @@
     NSString *userId_;
     UIButton *createList_;
     UIImageView *noRecordBg_;
-    UIButton *button1_;
     UIButton *button2_;
     UIButton *button3_;
     UIImageView *noRecord_;

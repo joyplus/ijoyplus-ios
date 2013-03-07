@@ -19,6 +19,7 @@
 #import "CommonHeader.h"
 #import "MyMediaPlayerViewController.h"
 #import "CustomNavigationViewController.h"
+#import "IphoneWebPlayerViewController.h"
 @interface MoreListViewController ()
 
 @end
@@ -274,25 +275,41 @@
 }
 
 -(void)continuePlay:(id)sender{
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:tempHUD];
+    tempHUD.labelText = @"加载中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
     int num = ((UIButton *)sender).tag;
     NSDictionary *item = [listArr_ objectAtIndex:num];
-    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
-        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-        [urlsArray addObject:[item objectForKey:@"video_url"]];
-        viewController.videoUrls = urlsArray;
-    } else {
-        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
-    }
-    viewController.prodId = [item objectForKey:@"prod_id"];
-    viewController.closeAll = YES;
-    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-    viewController.name = [item objectForKey:@"prod_name"];
-    viewController.subname = [item objectForKey:@"prod_subname"];
-    NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
-    viewController.playTime = [NSString stringWithFormat:@"上次播放至: %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
-    //viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-    [self presentViewController:[[CustomNavigationViewController alloc]initWithRootViewController:viewController] animated:YES completion:nil];
+    int type = [[item objectForKey:@"prod_type"] intValue];
+    NSString *prodId = [item objectForKey:@"prod_id"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [tempHUD hide:YES];
+        NSDictionary *videoInfo = nil;
+        if (type == 1) {
+            videoInfo = (NSDictionary *)[result objectForKey:@"movie"];
+        }
+        else if(type == 2){
+            videoInfo = (NSDictionary *)[result objectForKey:@"tv"];
+        }
+        else if (type == 3){
+            videoInfo = (NSDictionary *)[result objectForKey:@"show"];
+        }
+        // NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
+        IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+        iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
+        iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
+        iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
+        iphoneWebPlayerViewController.videoType = type;
+        iphoneWebPlayerViewController.prodId = prodId;
+        [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [tempHUD hide:YES];
+    }];
+
   
 }
 

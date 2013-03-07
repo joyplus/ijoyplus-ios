@@ -170,6 +170,7 @@
         }
         else{
             self.infoDic = videoInfo_;
+
         }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
         summary_ = [videoInfo_ objectForKey:@"summary"];
