@@ -562,7 +562,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     sourceImage.center = CGPointMake(sourceImage.center.x, TOP_TOOLBAR_HEIGHT/2);
     [topToolbar addSubview:sourceImage];
     
-    vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, TOP_TOOLBAR_HEIGHT)];
+    vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, TOP_TOOLBAR_HEIGHT)];
     vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
     if (type == 2) {
         vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
@@ -790,9 +790,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     playCacheView = [self.view viewWithTag:PLAY_CACHE_VIEW];
     if (playCacheView == nil) {
         CGRect bounds = [UIScreen mainScreen].bounds;
-        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width - 24)];
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width)];
         playCacheView.tag = PLAY_CACHE_VIEW;
-        playCacheView.backgroundColor = [UIColor blackColor];
+        playCacheView.backgroundColor = [UIColor clearColor];
         if (topToolbar) {
             [self.view insertSubview:playCacheView belowSubview:topToolbar];
         } else {
@@ -807,7 +807,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
         nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.90);
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.font = [UIFont systemFontOfSize:20];
+        nameLabel.font = [UIFont systemFontOfSize:18];
         if (video != nil) {
             name = [video objectForKey:@"name"];
             subname = [subnameArray objectAtIndex:self.currentNum];
@@ -833,7 +833,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             lastLabel.textAlignment = NSTextAlignmentCenter;
             lastLabel.textColor = [UIColor lightGrayColor];
             lastLabel.text = [NSString stringWithFormat:@"上次播放到 %@", [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime)]];
-            lastLabel.font = [UIFont systemFontOfSize:16];
+            lastLabel.font = [UIFont systemFontOfSize:15];
             [playCacheView addSubview:lastLabel];
         }
         
@@ -1754,14 +1754,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self enableVolumeSlider];
                 [self enablePlayerButtons];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-//                    for (UIView *subview in playCacheView.subviews) {
-//                        [subview setAlpha:0];
-//                    }
-//                    [playCacheView setAlpha:0];
+                    for (UIView *subview in playCacheView.subviews) {
+                        [subview setAlpha:0];
+                    }
+                    [playCacheView setAlpha:0];
                 } completion:^(BOOL finished) {
-//                    [playCacheView removeFromSuperview];
-//                    [playCacheView setHidden:YES];
-//                    playCacheView = nil;
+                    [playCacheView removeFromSuperview];
+                    [playCacheView setHidden:YES];
+                    playCacheView = nil;
                     [self resetControlVisibilityTimer];
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                     NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
