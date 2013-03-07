@@ -13,6 +13,7 @@
 #import "IphoneSubdownloadViewController.h"
 #import "AppDelegate.h"
 #import "MyMediaPlayerViewController.h"
+#import "IphoneAVPlayerViewController.h"
 @interface IphoneDownloadViewController ()
 
 @end
@@ -462,18 +463,23 @@
                 }
             }
             if (playPath) {
-                MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-                viewController.isDownloaded = YES;
-                viewController.closeAll = YES;
-                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-                [urlsArray addObject:playPath];
-                viewController.videoUrls = urlsArray;
-                viewController.prodId = item.itemId;
-                //viewController.type = 1;
-                viewController.name = item.name;
-                viewController.subname = @"";
-                viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-                [self presentViewController:viewController animated:YES completion:nil];
+//                MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
+//                viewController.isDownloaded = YES;
+//                viewController.closeAll = YES;
+//                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
+//                [urlsArray addObject:playPath];
+//                viewController.videoUrls = urlsArray;
+//                viewController.prodId = item.itemId;
+//                //viewController.type = 1;
+//                viewController.name = item.name;
+//                viewController.subname = @"";
+//                viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+//                [self presentViewController:viewController animated:YES completion:nil];
+                
+                IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
+                iphoneAVPlayerViewController.local_file_path = playPath;
+                iphoneAVPlayerViewController.islocalFile = YES;
+                [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
             }
             else{
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"未找到影片" delegate:self

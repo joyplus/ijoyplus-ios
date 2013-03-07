@@ -115,15 +115,16 @@
     
      pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playNext:) name:@"PLAY_NEXT" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRecord) name:WATCH_HISTORY_REFRESH object:nil];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+   
 }
-
+-(void)refreshRecord{
+    [self.tableView reloadData];
+}
 -(void)back:(id)sender{
     if (!isNotification_) {
         [self.navigationController popViewControllerAnimated:YES];
@@ -619,70 +620,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [self.navigationController pushViewController:listDetail animated:YES];
     
 }
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//   
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    if (indexPath.section == 1) {
-//        NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row -1];
-//        ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
-//        listDetail.topicId = [dic objectForKey:@"t_id"];
-//        listDetail.Type = 9000;
-//        [listDetail initTopicData:listDetail.topicId];
-//        [self.navigationController pushViewController:listDetail animated:YES];
-//    }
-//    
-//}
 
--(void)Play:(int)number{
-    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", [videoInfo_ objectForKey:@"id"]] result:[NSNumber numberWithInt:number]];
-    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:number] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
-                break;
-            }
-        }
-        if(videoUrl == nil){
-            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-        }
-        if(videoUrl == nil){
-            [self showPlayWebPage];
-        } else {
-//            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-//            viewController.videoUrl = videoUrl;
-//            viewController.type = 2;
-//            viewController.name = [videoInfo_ objectForKey:@"name"];
-//            viewController.prodId = [videoInfo_ objectForKey:@"id"];
-//            viewController.currentNum = number;
-//            viewController.subname = [NSString stringWithFormat:@"%d", number];
-//            [self presentViewController:viewController animated:YES completion:nil];
-        }
-    }else {
-        [self showPlayWebPage];
-    }
-    [self.tableView reloadData];
-}
 
--(void)playNext:(id)sender{
-     
-    int total = [episodesArr_ count];
-     NSNumber *num = ((NSNotification *)sender).object;
-    int nowN = [num intValue];
-    nowN++;
-    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:nowN]];
-    if (total-1 < nowN) {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"亲，没有更多的剧集了。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-//        [alert show];
-        return;
-    }
-    else{
-        [self playVideo:nowN];
-        [self.tableView reloadData];
-    }
-   
-}
 -(void)action:(id)sender {
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
@@ -843,18 +782,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
 }
 
-- (void)showPlayWebPage
-{
-//    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-//    NSDictionary *episode = [episodesArr_ objectAtIndex:0];
-//    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
-//    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
-//    viewController.title = [videoInfo_ objectForKey:@"name"];
-//    viewController.type = 1;
-//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-//    [self presentViewController:pro animated:YES completion:nil];
-}
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
 {
@@ -971,75 +898,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
     
 }
-
-/*
--(void)showEpisodesplayView{
-    int count = [episodesArr_ count];
-    
-    pageCount_ = (count%15 == 0 ? (count/15):(count/15)+1);
-    
-    scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, 125)];
-    scrollView_.contentSize = CGSizeMake(320*pageCount_, 125);
-    scrollView_.pagingEnabled = YES;
-    scrollView_.showsHorizontalScrollIndicator = NO; 
-    NSString *cacheKey = [NSString stringWithFormat:@"drama_epi_%@",[videoInfo_ objectForKey:@"id"]];
-    
-    NSString *playNum = [[CacheUtility sharedCache]loadFromCache:cacheKey];
-    int lastNum = -1;
-    if (playNum != nil) {
-        lastNum = [playNum intValue];
-    }
-    for (int i = 0; i < count; i++) {
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake((i/15)*320+20+(i%5)*59, (i%15/5)*32, 54, 28);
-        button.tag = i+1;
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [button addTarget:self action:@selector(episodesPlay:) forControlEvents:UIControlEventTouchUpInside];
-         button.titleLabel.font = [UIFont systemFontOfSize:12];
-        if (lastNum == i) {
-             [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen.png"] forState:UIControlStateNormal];
-        }
-        else{
-            [button setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateNormal];
-            [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg.png"] forState:UIControlStateNormal];
-           
-        }
-        [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen_s.png"] forState:UIControlStateHighlighted];
-         NSDictionary *oneEpisoder = [episodesArr_ objectAtIndex:i];
-        if ([oneEpisoder objectForKey:@"down_urls"]== nil && [oneEpisoder objectForKey:@"video_urls"] == nil) {
-            button.enabled = NO;
-            [button setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-        }
-         
-      [scrollView_ addSubview:button];
-    }
-    for (int i = 0;i < pageCount_;i++){
-        if (i < pageCount_-1) {
-            UIButton *Next = [UIButton buttonWithType:UIButtonTypeCustom];
-            Next.frame = CGRectMake( 320 *i+250, 107, 55, 13);
-            Next.tag = i+1;
-            [Next setTitle:@"后15集>" forState:UIControlStateNormal];
-            Next.titleLabel.font = [UIFont systemFontOfSize:12];
-            [Next setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [Next addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchUpInside];
-            [scrollView_ addSubview:Next];
-        }
-        
-        if (i >=1) {
-            UIButton *pre = [UIButton buttonWithType:UIButtonTypeCustom];
-            pre.frame = CGRectMake(320*i+20, 107, 55, 13);
-            pre.tag = i-1;
-            [pre setTitle:@"<前15集" forState:UIControlStateNormal];
-            pre.titleLabel.font = [UIFont systemFontOfSize:12];
-            [pre setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [pre addTarget:self action:@selector(pre:) forControlEvents:UIControlEventTouchUpInside];
-            [scrollView_ addSubview:pre];
-        }
-        
-    }
-}
- */
 
 -(UIView *)showEpisodes{
     int count = [episodesArr_ count];
