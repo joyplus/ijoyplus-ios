@@ -608,7 +608,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         [tempSortArr addObject:temp_dic];
     }
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:cmpStr];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:cmpString];
     sortEpisodesArr_ = [NSMutableArray arrayWithArray:[tempSortArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
     
     if (superClearArr == nil) {  //存放某一剧集所有来源的超清的地址;
@@ -646,7 +646,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
 }
 
-    NSComparator cmpStr = ^(id obj1, id obj2){
+    NSComparator cmpString = ^(id obj1, id obj2){
         if ([obj1 integerValue] > [obj2 integerValue]) {
             return (NSComparisonResult)NSOrderedDescending;
         } 
