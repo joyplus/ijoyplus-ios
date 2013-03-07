@@ -162,34 +162,6 @@
     return YES;
 }
 
-- (void)showStatement
-{
-    AHAlertView *alert = [[AHAlertView alloc] initWithTitle:@"免 责 条 款" message:nil];
-    alert.frame = CGRectMake(alert.frame.origin.x, alert.frame.origin.y, 350, 400);
-    [self applyCustomAlertAppearance];
-    [alert setCancelButtonTitle:@"接 受" block:^{
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:@"statement"];
-    }];
-    UITextView *textView = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, alert.frame.size.width - 25, alert.frame.size.height - 110)];
-    textView.font = [UIFont systemFontOfSize:14];
-    textView.text = [self getContent];
-    textView.layer.cornerRadius = 2;
-    textView.layer.masksToBounds = YES;
-    alert.contentTextView = textView;
-    [alert show];
-}
-
-- (void)applyCustomAlertAppearance
-{
-	[[AHAlertView appearance] setContentInsets:UIEdgeInsetsMake(12, 18, 12, 18)];
-	[[AHAlertView appearance] setBackgroundImage:[UIImage imageNamed:@"custom-dialog-background"]];	
-	UIEdgeInsets buttonEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
-	[[AHAlertView appearance] setCancelButtonBackgroundImage:[[UIImage imageNamed:@"custom-cancel-normal"] resizableImageWithCapInsets:buttonEdgeInsets]
-													forState:UIControlStateNormal];
-	[[AHAlertView appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont boldSystemFontOfSize:19], UITextAttributeFont, [UIColor whiteColor], UITextAttributeTextColor, [UIColor blackColor], UITextAttributeTextShadowColor, [NSValue valueWithCGSize:CGSizeMake(0, -1)], UITextAttributeTextShadowOffset, nil]];
-	[[AHAlertView appearance] setButtonTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont boldSystemFontOfSize:18], UITextAttributeFont, [UIColor whiteColor], UITextAttributeTextColor, [UIColor blackColor], UITextAttributeTextShadowColor, [NSValue valueWithCGSize:CGSizeMake(0, -1)], UITextAttributeTextShadowOffset, nil]];
-}
-
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
 //    NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
@@ -346,6 +318,35 @@
 {
     return [self.sinaweibo handleOpenURL:url];
 }
+
+- (void)showStatement
+{
+    AHAlertView *alert = [[AHAlertView alloc] initWithTitle:@"免 责 条 款" message:nil];
+    alert.frame = CGRectMake(alert.frame.origin.x, alert.frame.origin.y, 350, 400);
+    [self applyCustomAlertAppearance];
+    [alert setCancelButtonTitle:@"接 受" block:^{
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:@"statement"];
+    }];
+    UITextView *textView = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, alert.frame.size.width - 25, alert.frame.size.height - 110)];
+    textView.font = [UIFont systemFontOfSize:14];
+    textView.text = [self getContent];
+    textView.layer.cornerRadius = 2;
+    textView.layer.masksToBounds = YES;
+    alert.contentTextView = textView;
+    [alert show];
+}
+
+- (void)applyCustomAlertAppearance
+{
+	[[AHAlertView appearance] setContentInsets:UIEdgeInsetsMake(12, 18, 12, 18)];
+	[[AHAlertView appearance] setBackgroundImage:[UIImage imageNamed:@"custom-dialog-background"]];
+	UIEdgeInsets buttonEdgeInsets = UIEdgeInsetsMake(8, 8, 8, 8);
+	[[AHAlertView appearance] setCancelButtonBackgroundImage:[[UIImage imageNamed:@"custom-cancel-normal"] resizableImageWithCapInsets:buttonEdgeInsets]
+													forState:UIControlStateNormal];
+	[[AHAlertView appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont boldSystemFontOfSize:19], UITextAttributeFont, [UIColor whiteColor], UITextAttributeTextColor, [UIColor blackColor], UITextAttributeTextShadowColor, [NSValue valueWithCGSize:CGSizeMake(0, -1)], UITextAttributeTextShadowOffset, nil]];
+	[[AHAlertView appearance] setButtonTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont boldSystemFontOfSize:18], UITextAttributeFont, [UIColor whiteColor], UITextAttributeTextColor, [UIColor blackColor], UITextAttributeTextShadowColor, [NSValue valueWithCGSize:CGSizeMake(0, -1)], UITextAttributeTextShadowOffset, nil]];
+}
+
 
 - (NSString *)getContent
 {
