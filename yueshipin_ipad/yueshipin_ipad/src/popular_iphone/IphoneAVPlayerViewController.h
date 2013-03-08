@@ -10,6 +10,7 @@
 #import "AVPlayerView.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MBProgressHUD.h"
+#import <MediaPlayer/MediaPlayer.h>
 @interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     UIToolbar *topToolBar_;
     UIToolbar *bottomToolBar_;
@@ -62,6 +63,10 @@
     NSString *webPlayUrl_;
     
     NSTimer *timeLabelTimer_;
+    
+    MPVolumeView *volumeView_;
+    UILabel *airPlayLabel_;
+    
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -97,6 +102,8 @@
 @property (nonatomic, strong)  NSString *prodId;
 @property (nonatomic, strong) NSString *webPlayUrl;
 @property (nonatomic, assign) CMTime lastPlayTime;
+@property (nonatomic, strong) MPVolumeView *volumeView;
+@property (nonatomic, strong) UILabel *airPlayLabel;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

@@ -9,13 +9,13 @@
 #import "IphoneAVPlayerViewController.h"
 #import "UIUtility.h"
 #import "TimeUtility.h"
-#import <MediaPlayer/MediaPlayer.h>
 #import "AppDelegate.h"
 #import "ContainerUtility.h"
 #import "CMConstants.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "CacheUtility.h"
+#import "Reachability.h"
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -74,6 +74,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize webPlayUrl = webPlayUrl_;
 @synthesize lastPlayTime = lastPlayTime_;
 @synthesize timeLabelTimer = timeLabelTimer_;
+@synthesize volumeView = volumeView_;
+@synthesize airPlayLabel = airPlayLabel_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -303,6 +305,36 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                         change:(NSDictionary*)change
                        context:(void*)context
 {
+    if (mPlayer.airPlayVideoActive) {
+        [avplayerView_ addSubview:airPlayLabel_];
+        for (UIView *asubview in volumeView_.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
+                [btn setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt_light"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
+                break;
+            }
+        }
+    }
+    else{
+        [airPlayLabel_ removeFromSuperview];
+        for (UIView *asubview in volumeView_.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
+                [btn setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
+                break;
+            }
+        }
+    }
+    
+    
 	/* AVPlayerItem "status" property value observer. */
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
@@ -546,16 +578,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [myHUD show:YES];
     [self.view addSubview:myHUD];
 
-//    UILabel *lodingLbel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-//    lodingLbel.center = CGPointMake(myHUD.frame.size.width/2, 110);
-//    lodingLbel.text = @"正在加载,请稍等...";
-//    lodingLbel.font = [UIFont systemFontOfSize:13];
-//    lodingLbel.backgroundColor = [UIColor clearColor];
-//    lodingLbel.textColor = [UIColor whiteColor];
-//    lodingLbel.textAlignment = NSTextAlignmentCenter;
-//    [myHUD addSubview:lodingLbel];
+    UILabel *lodingLbel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    lodingLbel.center = CGPointMake(playCacheView_.center.x, 60);
+    NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
+    if ([str isEqualToString:@"00:00"]) {
+        lodingLbel.text = @"即将播出";
+    }
+    else{
+        lodingLbel.text = [NSString stringWithFormat:@"上次播放至: %@",str];
+    }
+    
+    lodingLbel.font = [UIFont systemFontOfSize:13];
+    lodingLbel.backgroundColor = [UIColor clearColor];
+    lodingLbel.textColor = [UIColor whiteColor];
+    lodingLbel.textAlignment = NSTextAlignmentCenter;
+    [playCacheView_ addSubview:lodingLbel];
 
 }
+
+
 -(void)showTopToolBar{
     topToolBar_.hidden = NO;
     [self.view bringSubviewToFront:topToolBar_];
@@ -603,8 +644,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         else if ([source_str isEqualToString:@"pptv"]){
             [temp_dic setObject:@"9" forKey:@"level"];
         }
-        else if ([source_str isEqualToString:@"m1905"]){
+        else if ([source_str isEqualToString:@"pps"]){
             [temp_dic setObject:@"10" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"m1905"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
         }
         [tempSortArr addObject:temp_dic];
     }
@@ -628,22 +672,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (NSDictionary *url_info_dic in sortEpisodesArr_) {
         NSArray *urls = [url_info_dic objectForKey:@"urls"];
+        NSString *sourceStr = [url_info_dic objectForKey:@"source"];
         for (NSDictionary *url_dic in urls) {
             NSString *type_str = [[url_dic objectForKey:@"type"]lowercaseString];
             NSString *url_str =  [url_dic objectForKey:@"url"];
+            
+            NSMutableDictionary *urlandSource = [NSMutableDictionary dictionaryWithCapacity:5];
+            [urlandSource setObject:sourceStr forKey:@"source"];
+            [urlandSource setObject:url_str forKey:@"url"];
+           
             if ([type_str isEqualToString:@"hd2"]) {
-                [superClearArr addObject:url_str];
+                 [superClearArr addObject:urlandSource];
             }
             else if ([type_str isEqualToString:@"mp4"]){
-                [highClearArr addObject:url_str];
+                [highClearArr addObject:urlandSource];
             }
             else if ([type_str isEqualToString:@"flv"]||[type_str isEqualToString:@"3gp"]){
-                [plainClearArr addObject:url_str];
+                [plainClearArr addObject:urlandSource];
             }
         }
-    }
-    
-    
+    } 
 }
 
     NSComparator cmpString = ^(id obj1, id obj2){
@@ -664,7 +712,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     switch (clear_type) {
         case PLAIN_CLEAR:{
             if ([plainClearArr count] > 0) {
-                url = [plainClearArr objectAtIndex:0];
+                url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -677,7 +725,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case HIGH_CLEAR:{
             if ([highClearArr count] > 0) {
-                url = [highClearArr objectAtIndex:0];
+                url = [[highClearArr objectAtIndex:0] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -691,7 +739,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         case SUPER_CLEAR:{
             
             if ([superClearArr count] > 0) {
-                url = [superClearArr objectAtIndex:0];
+                url = [[superClearArr objectAtIndex:0] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -705,18 +753,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         default:{
              // 播放顺序:高清-超清-标清;
             if ([highClearArr count] > 0) {
-                url = [highClearArr objectAtIndex:0];
+                url = [[highClearArr objectAtIndex:0] objectForKey:@"url"];
             }
             else if ([superClearArr count] > 0) {
-                url = [superClearArr objectAtIndex:0];
+                url = [[superClearArr objectAtIndex:0] objectForKey:@"url"];
             }
             else if ([plainClearArr count] > 0) {
-                url = [plainClearArr objectAtIndex:0];
+                url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
             }
             
             //url =  @"http://115.238.173.139:80/play/42c906c95416b06db24f609ff70c09ab3fc4a010.mp4";
             if(url != nil){
-                //[self setURL:[NSURL URLWithString:url]];
                 [self sendHttpRequest:url];
             }
             else{
@@ -736,7 +783,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     switch (clear_type) {
         case PLAIN_CLEAR:{
             if ([plainClearArr count] >  play_url_index) {
-                NSString *url = [plainClearArr objectAtIndex:play_url_index];
+                NSString *url = [[plainClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -749,7 +796,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case HIGH_CLEAR:{
             if ([highClearArr count] > play_url_index ) {
-                NSString *url = [plainClearArr objectAtIndex:play_url_index];
+                NSString *url = [[plainClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -761,7 +808,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case SUPER_CLEAR:{
             if ([superClearArr count] > play_url_index ) {
-                NSString *url = [plainClearArr objectAtIndex:play_url_index];
+                NSString *url = [[plainClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -786,7 +833,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }
             
             if (play_url_index < [playUrlArr count ]) {
-                NSString *url = [playUrlArr objectAtIndex:play_url_index];
+                NSString *url = [[playUrlArr objectAtIndex:play_url_index] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -802,24 +849,34 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)sendHttpRequest:(NSString *)str{
-    str = [str stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-    NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:str] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
-    [NSURLConnection connectionWithRequest:request delegate:self];
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable){
+        str = [str stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        NSLog(@"The request url is %@",str);
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:str] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
+        [NSURLConnection connectionWithRequest:request delegate:self];
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+    
+    }
+    
 
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     NSLog(@"iphoneAvplayerViewController didFailWithError:%@",error);
     [self retryUrltoPlay];
 }
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
     int status_Code = HTTPResponse.statusCode;
-    NSLog(@"iphoneAvplayerViewController didReceiveResponse code:%d the url is %@",status_Code,response.URL);
     if (status_Code >= 200 && status_Code <= 299) {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
         if (![content_type hasPrefix:@"text/html"]) {
-             [self setURL:response.URL];
+             [self setURL:connection.originalRequest.URL];
              return;
         }
     
@@ -880,6 +937,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapGesture.numberOfTouchesRequired = 1;
     [avplayerView_ addGestureRecognizer:tapGesture];
     [self.view addSubview:avplayerView_];
+    
+    airPlayLabel_ = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
+    airPlayLabel_.center = CGPointMake(avplayerView_.center.x, avplayerView_.center.y);
+    airPlayLabel_.backgroundColor = [UIColor clearColor];
+    airPlayLabel_.textColor = [UIColor lightGrayColor];
+    airPlayLabel_.text = @"此视频正在通过 AirPlay 播放。";
+    airPlayLabel_.font = [UIFont systemFontOfSize:15];
+    airPlayLabel_.textAlignment = NSTextAlignmentCenter;
 
 }
 
@@ -994,6 +1059,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self clearSelectView];
     
+    volumeView_ = [ [MPVolumeView alloc] initWithFrame:CGRectMake(60, 7, 30, 30)];
+    volumeView_.backgroundColor = [UIColor clearColor];
+    [volumeView_ setShowsVolumeSlider:NO];
+    [volumeView_ setShowsRouteButton:YES];
+    for (UIView *asubview in volumeView_.subviews) {
+        if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+            UIButton *btn = (UIButton *)asubview;
+            btn.backgroundColor = [UIColor clearColor];
+            btn.frame = CGRectMake(0, 0, 33, 27);
+            [btn setImage:nil forState:UIControlStateNormal];
+            [btn setImage:nil forState:UIControlStateHighlighted];
+            [btn setImage:nil forState:UIControlStateSelected];
+            [btn setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt_light"] forState:UIControlStateHighlighted];
+            break;
+        }
+    }
+    [bottomToolBar_ addSubview:volumeView_];
+    
 }
 
 -(void)clearSelectView{
@@ -1079,10 +1163,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
             [self updateWatchRecord];
+            
+            [avplayerView_.layer removeFromSuperlayer];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player.currentItem removeObserver:self forKeyPath:@"status"];
             [self.player  pause];
-            [avplayerView_.layer removeFromSuperlayer];
             mPlayerItem = nil;
             mPlayer = nil;
            
@@ -1260,9 +1345,67 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 
 }
+-(UIImage *)getVideoSource:(NSString *)urlStr{
+    NSString *source_str = nil;
+    NSMutableArray *playUrlArr = [NSMutableArray arrayWithCapacity:5];
+    
+    if ([highClearArr count]>0) {
+        [playUrlArr addObjectsFromArray:highClearArr];
+    }
+    if ([superClearArr count]>0) {
+        [playUrlArr addObjectsFromArray:superClearArr];
+    }
+    
+    if ([plainClearArr count]>0) {
+        [playUrlArr addObjectsFromArray:plainClearArr];
+    }
+    for (NSMutableDictionary *dic in playUrlArr) {
+        if ([[dic objectForKey:@"url"] isEqualToString:urlStr]) {
+            source_str = [dic objectForKey:@"source"];
+            break;
+        }
+    }
+    UIImage *logoImg = nil;
+    if ([source_str isEqualToString:@"letv"]) {
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"fengxing"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"qiyi"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"youku"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"sinahd"]){
+       logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"sohu"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"56"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"qq"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"pptv"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"pps"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
+    else if ([source_str isEqualToString:@"m1905"]){
+        logoImg = [UIImage imageNamed:@""];
+    }
 
+    return logoImg;
+
+}
 - (void)updateWatchRecord
 {
+   
     if(!islocalFile_){
         int playbackTime = 0;
         if(CMTimeGetSeconds([mPlayer currentTime])> 0){
@@ -1280,7 +1423,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             tempPlayType = @"2";
             playUrl = webPlayUrl_;
         }
-    
+        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:playbackTime] ];
+        
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
@@ -1376,11 +1520,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)dealloc{
-    
+    [avplayerView_.layer removeFromSuperlayer];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
     [self.player  pause];
-    [avplayerView_.layer removeFromSuperlayer];
     mPlayerItem = nil;
     mPlayer = nil;
    

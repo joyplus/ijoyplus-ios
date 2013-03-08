@@ -270,91 +270,17 @@
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
+    iphoneWebPlayerViewController.playBackTime = [self getRecordInfo:num];
     [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
     
 }
 
--(NSString*)getRecordInfo:(int)num{
+-(NSNumber*)getRecordInfo:(int)num{
     NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
-    NSString *content = nil;
-    NSString *time = [TimeUtility formatTimeInSecond:cacheResult.doubleValue];
-    if ([time isEqualToString:@"00:00"]) {
-        content = @"即将播出";
-    }
-    else{
-        content = [NSString stringWithFormat:@"上次播放至: %@",time];
-    }
-    return content;
+
+    return cacheResult;
     
 }
-
-
-
-+(NSDictionary *)commonGetPlayUrls:(NSArray *)videoInfoDic{
-//    NSMutableDictionary *source_type = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"",@"letv",@"",@"fengxing",@"",@"qiyi",@"",@"youku",@"",@"sinahd",@"",@"sohu",@"",@"56",@"",@"qq",@"",@"pptv",@"",@"m1905", nil];
-//    
-//    NSMutableDictionary *super_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
-//    NSMutableDictionary *high_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
-//    NSMutableDictionary *plain_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
-
-   
-    for (NSDictionary *dic in videoInfoDic) {
-        NSArray *infoArr = [dic objectForKey:@"down_urls"];
-        for (NSDictionary *url_dic in infoArr) {
-            NSString *source_str = [url_dic objectForKey:@"source"];
-            NSArray *urlsArr = [url_dic objectForKey:@"urls"];
-            
-            if ([source_str isEqualToString:@"letv"]) {
-                for (NSDictionary *clear_info in urlsArr) {
-                    NSString *clear_type = [[clear_info objectForKey:@"type"] lowercaseString];
-                    NSString *url = [clear_info objectForKey:@"url"];
-                    if ([clear_type isEqualToString:@"hd2"]) {
-                        
-                    }
-                    else if ([clear_type isEqualToString:@"mp4"]){
-                    
-                    }
-                    else if ([clear_type isEqualToString:@"flv"]||[clear_type isEqualToString:@"3gp"]){
-                        
-                    }
-                }
-                
-            }
-            else if ([source_str isEqualToString:@"fengxing"]){
-            
-            }
-            else if ([source_str isEqualToString:@"qiyi"]){
-                
-            }
-            else if ([source_str isEqualToString:@"youku"]){
-                
-            }
-            else if ([source_str isEqualToString:@"sinahd"]){
-                
-            }
-            else if ([source_str isEqualToString:@"sohu"]){
-                
-            }
-            else if ([source_str isEqualToString:@"56"]){
-                
-            }
-            else if ([source_str isEqualToString:@"qq"]){
-                
-            }
-            else if ([source_str isEqualToString:@"pptv"]){
-                
-            }
-            else if ([source_str isEqualToString:@"m1905"]){
-                
-            }
-            
-        
-        }
-    }
-    return nil;
- 
-}
-
 
 
 @end
