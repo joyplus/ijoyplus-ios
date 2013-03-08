@@ -187,6 +187,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mNextButton = nil;
     mSwitchButton = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 - (void)viewDidLoad
@@ -220,8 +221,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapRecognizer.delegate = self;
     tapRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapRecognizer];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 - (void) viewDidAppear: (BOOL) animated {
@@ -1160,6 +1161,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)volumeSliderValueChanged
 {
     [self setVolumeValue:volumeSlider.value];
+    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+}
+
+- (void)systemVolumeChanged:(id)obj
+{
+    volumeSlider.value = [MPMusicPlayerController applicationMusicPlayer].volume;
     [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
 }
 
