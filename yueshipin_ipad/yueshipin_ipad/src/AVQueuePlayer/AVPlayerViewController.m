@@ -706,7 +706,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [volumeSlider setMinimumTrackImage:minImage forState:UIControlStateNormal];
     [volumeSlider setMaximumTrackImage:maxImage forState:UIControlStateNormal];
     [volumeSlider setThumbImage: [UIImage imageNamed:@"volume_thumb"] forState:UIControlStateNormal];
-    volumeSlider.value = [MPMusicPlayerController applicationMusicPlayer].volume;
+    volumeSlider.value = [AppDelegate instance].mediaVolumeValue;
     [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
     [bottomView addSubview:volumeSlider];
     
@@ -1160,6 +1160,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)volumeSliderValueChanged
 {
     [self setVolumeValue:volumeSlider.value];
+    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
 }
 
 - (void)setVolumeValue:(float)value
@@ -1767,7 +1768,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     [self resetControlVisibilityTimer];
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                     NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
-                    NSLog(@"%i", combinedIndex);
+                    NSLog(@"%@", tempDic);
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
                     if ([source_str isEqualToString:@"letv"]) {

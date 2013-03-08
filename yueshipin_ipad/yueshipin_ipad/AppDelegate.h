@@ -36,6 +36,7 @@
 @property (assign, atomic) int currentDownloadingNum;
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
+@property (nonatomic) float mediaVolumeValue;
 
 @property (strong, nonatomic)DownLoadManager *downLoadManager;
 

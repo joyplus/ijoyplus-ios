@@ -17,6 +17,7 @@
 #import "UMFeedback.h"
 #import <AVFoundation/AVFoundation.h>
 #import "AHAlertView.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -47,6 +48,7 @@
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
+@synthesize mediaVolumeValue;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -159,6 +161,8 @@
     if (![statement isEqualToString:@"1"]) {
         [self showStatement];
     }
+    
+    mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
     return YES;
 }
 
