@@ -539,7 +539,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [closeButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     [topToolbar addSubview:closeButton];
     
-    sourceLabel = [[UILabel alloc]initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width + 20, 10, 50, 30)];
+    sourceLabel = [[UILabel alloc]initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width + 20, 10, 45, 30)];
     [sourceLabel setFont:[UIFont systemFontOfSize:15]];
     [sourceLabel setBackgroundColor:[UIColor clearColor]];
     [sourceLabel setText:@"来源："];
@@ -549,7 +549,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [sourceLabel setTextColor:[UIColor colorWithRed:228/255.0 green:228/255.0 blue:228/255.0 alpha:1]];
     [topToolbar addSubview:sourceLabel];
     
-    sourceImage = [[UIImageView alloc]initWithFrame:CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 10, 60, 30)];
+    sourceImage = [[UIImageView alloc]initWithFrame:CGRectZero];
     sourceImage.image = [UIImage imageNamed:@"play_pic"];
     [sourceImage setHidden:YES];
     sourceImage.center = CGPointMake(sourceImage.center.x, TOP_TOOLBAR_HEIGHT/2);
@@ -1761,31 +1761,32 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
                     if ([source_str isEqualToString:@"letv"]) {
-                        sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"fengxing"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"qiyi"]){
-                       sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"youku"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 10, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"sinahd"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"sohu"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 10, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"56"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"qq"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"pptv"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"m1905"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 15, 16, 53, 18);
                     } else if ([source_str isEqualToString:@"pps"]){
-                        sourceImage.image = [UIImage imageNamed:@""];
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
                     } else {
                         exists = NO;
                     }
                     if (exists) {
+                        sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
                         [sourceLabel setHidden:NO];
                         [sourceImage setHidden:NO];
                     }

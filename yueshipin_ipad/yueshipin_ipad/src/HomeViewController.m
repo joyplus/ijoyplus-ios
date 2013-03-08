@@ -56,6 +56,7 @@
     MNMBottomPullToRefreshManager *showPullToRefreshManager_;
     NSUInteger reloads_;
     NSUInteger showReloads;
+    int showTopicId;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     int pageSize;
@@ -174,7 +175,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self retrieveLunboData];
     timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
@@ -357,12 +357,12 @@
                 [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
             }];
         } else {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:showReloads], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
-            [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:showReloads], @"page_num", [NSNumber numberWithInt:10], @"page_size", [NSNumber numberWithInt:showTopicId], @"top_id", nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 NSArray *tempTopsArray;
                 if(responseCode == nil){
-                    tempTopsArray = [result objectForKey:@"tops"];
+                    tempTopsArray = [result objectForKey:@"items"];
                     if(tempTopsArray.count > 0){
                         [showTopsArray addObjectsFromArray:tempTopsArray];
                         showReloads ++;
@@ -376,7 +376,7 @@
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-            }];
+            }];            
         }
     }
 }
@@ -538,6 +538,7 @@
     if(responseCode == nil){
         NSArray *tempTopsArray = [result objectForKey:@"tops"];
         if(tempTopsArray.count > 0){
+            showTopicId = [[[tempTopsArray objectAtIndex:0] objectForKey:@"id"] integerValue];
             NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
             if(tempArray.count > 0) {
                 [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
@@ -618,7 +619,7 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
-    [self closeMenu];
+    [self closeMenu];     
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -661,7 +662,7 @@
 - (void)showBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
-    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];      
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
@@ -669,7 +670,11 @@
     }
     videoType = 3;
     [self initTopButtonImage];
-    [self retrieveShowTopsData];
+    if (showTopsArray.count == 0) {
+        [self retrieveShowTopsData];
+    } else {
+        [self loadTable];
+    }
 }
 
 - (void)searchBtnClicked

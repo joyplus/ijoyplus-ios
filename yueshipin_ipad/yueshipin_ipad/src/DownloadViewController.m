@@ -15,17 +15,20 @@
 #import "MyMediaPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
 #import "AVPlayerViewController.h"
+#import "DDProgressView.h"
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
     UIImageView *topIcon;
     UIImageView *bgImage;
     UIImageView *nodownloadImage;
-    
+    float totalSpace_;
+    float totalFreeSpace_;
     int leftWidth;
     
     UIButton *editBtn;
-    UIButton *doneBtn;;
+    UIButton *doneBtn;
+    DDProgressView *diskUsedProgress_;
     
     __gm_weak GMGridView *_gmGridView;
 }
@@ -119,9 +122,9 @@
         [self.view addSubview:doneBtn];
         
         [self reloadItems];
-        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 610)];
+        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 580)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        gmGridView.backgroundColor = [UIColor clearColor];
+        gmGridView.backgroundColor = [UIColor yellowColor];
         [self.view addSubview:gmGridView];
         _gmGridView = gmGridView;
         
@@ -133,6 +136,33 @@
         _gmGridView.actionDelegate = self;
         _gmGridView.dataSource = self;
         _gmGridView.mainSuperView = self.view;
+        
+        UIView *spaceView = [[UIView alloc]initWithFrame:CGRectMake(8, self.view.frame.size.height - 75, self.view.frame.size.width- 18, 45)];
+        spaceView.backgroundColor = [UIColor redColor];
+        [self.view addSubview:spaceView];
+               
+        float percent = [self getFreeDiskspacePercent];
+        UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 25)];
+        diskFrame.image = [[UIImage imageNamed:@"tab2_download_2"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 5, 10, 5)];
+        diskFrame.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
+        [spaceView addSubview:diskFrame];
+        
+        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 28, 27)];
+        diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
+        diskUsedProgress_.progress = percent;
+        diskUsedProgress_.innerColor = [UIColor colorWithRed:100/255.0 green:165/255.0 blue:248/255.0 alpha:1];
+        diskUsedProgress_.outerColor = [UIColor clearColor];
+        [spaceView addSubview:diskUsedProgress_];
+        
+        UILabel *spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 25)];
+        spaceInfoLabel.text = [NSString stringWithFormat:@"总空间:%0.2fGB/剩余%0.2fGB",totalSpace_,totalFreeSpace_];
+        [spaceInfoLabel sizeToFit];
+        spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
+        spaceInfoLabel.backgroundColor = [UIColor clearColor];
+        spaceInfoLabel.font = [UIFont systemFontOfSize:11];
+        spaceInfoLabel.textColor = [UIColor whiteColor];
+        spaceInfoLabel.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
+        [spaceView addSubview:spaceInfoLabel];
     }
     return self;
 }
@@ -467,6 +497,22 @@
     _gmGridView.editing = NO;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
+}
+
+
+-(float)getFreeDiskspacePercent
+{
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    if (dictionary) {
+        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalSpace_ = [fileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
+        totalFreeSpace_ = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
+    }
+    float percent = (totalSpace_-totalFreeSpace_)/totalSpace_;
+    return percent;
 }
 
 @end
