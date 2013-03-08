@@ -124,7 +124,7 @@
         [self reloadItems];
         GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 580)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        gmGridView.backgroundColor = [UIColor yellowColor];
+        gmGridView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:gmGridView];
         _gmGridView = gmGridView;
         
@@ -137,9 +137,13 @@
         _gmGridView.dataSource = self;
         _gmGridView.mainSuperView = self.view;
         
-        UIView *spaceView = [[UIView alloc]initWithFrame:CGRectMake(8, self.view.frame.size.height - 75, self.view.frame.size.width- 18, 45)];
-        spaceView.backgroundColor = [UIColor redColor];
+        UIView *spaceView = [[UIView alloc]initWithFrame:CGRectMake(8, self.view.frame.size.height - 75, self.view.frame.size.width- 17, 45)];
+        spaceView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
         [self.view addSubview:spaceView];
+        
+        UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width, 2)];
+        lineImage.image = [[UIImage imageNamed:@"download_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
+        [spaceView addSubview:lineImage];
                
         float percent = [self getFreeDiskspacePercent];
         UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 25)];

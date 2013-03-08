@@ -358,7 +358,7 @@
             }];
         } else {
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:showReloads], @"page_num", [NSNumber numberWithInt:10], @"page_size", [NSNumber numberWithInt:showTopicId], @"top_id", nil];
-            [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            [[AFServiceAPIClient sharedClient] getPath:kPathShowTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 NSString *responseCode = [result objectForKey:@"res_code"];
                 NSArray *tempTopsArray;
                 if(responseCode == nil){
@@ -1186,7 +1186,7 @@
     
     UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
     [tempNameLabel setText:[item objectForKey:@"prod_name"]];
-    [tempNameLabel sizeToFit];
+//    [tempNameLabel sizeToFit];
     
     UIImageView *overLayImage = (UIImageView *)[cell viewWithTag:2131];
     if(selectedRowNumber == indexPath.row && lastSelectedOverlay == overLayImage){

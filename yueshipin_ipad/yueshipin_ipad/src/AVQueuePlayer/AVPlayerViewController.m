@@ -66,6 +66,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int resolutionNum;
 @property (nonatomic, strong) UILabel *sourceLabel;
 @property (nonatomic, strong) UIImageView *sourceImage;
+@property (nonatomic, strong) UILabel *sourceName;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -95,7 +96,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
-@synthesize sourceImage, sourceLabel;
+@synthesize sourceImage, sourceLabel, sourceName;
 
 #pragma mark
 #pragma mark View Controller
@@ -131,6 +132,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [highClearArr removeAllObjects];
     sourceLabel = nil;
     sourceImage = nil;
+    sourceName = nil;
     superClearArr = nil;
     plainClearArr = nil;
     highClearArr = nil;
@@ -554,6 +556,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [sourceImage setHidden:YES];
     sourceImage.center = CGPointMake(sourceImage.center.x, TOP_TOOLBAR_HEIGHT/2);
     [topToolbar addSubview:sourceImage];
+    
+    sourceName = [[UILabel alloc]initWithFrame:CGRectZero];
+    [sourceName setFont:[UIFont systemFontOfSize:13]];
+    [sourceName setBackgroundColor:[UIColor clearColor]];
+    [sourceName setHidden:YES];
+    [sourceName setTextColor:[UIColor colorWithRed:228/255.0 green:228/255.0 blue:228/255.0 alpha:1]];
+    [topToolbar addSubview:sourceName];
     
     vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, TOP_TOOLBAR_HEIGHT)];
     vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
@@ -1758,37 +1767,63 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     [self resetControlVisibilityTimer];
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                     NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+                    NSLog(@"%i", combinedIndex);
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
                     if ([source_str isEqualToString:@"letv"]) {
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"乐视";
                     } else if ([source_str isEqualToString:@"fengxing"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"风行";
                     } else if ([source_str isEqualToString:@"qiyi"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"奇艺";
                     } else if ([source_str isEqualToString:@"youku"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 10, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 5, 0, 45, 20);
+                        sourceName.text = @"优酷";
                     } else if ([source_str isEqualToString:@"sinahd"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"新浪";
                     } else if ([source_str isEqualToString:@"sohu"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 10, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 5, 0, 45, 20);
+                        sourceName.text = @"搜狐";
                     } else if ([source_str isEqualToString:@"56"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"我乐";
                     } else if ([source_str isEqualToString:@"qq"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"腾讯";
                     } else if ([source_str isEqualToString:@"pptv"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"PPTV";
                     } else if ([source_str isEqualToString:@"m1905"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 15, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 5, 0, 45, 20);
+                        sourceName.text = @"M1905";
                     } else if ([source_str isEqualToString:@"pps"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
+                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
+                        sourceName.text = @"PPS";
                     } else {
                         exists = NO;
                     }
                     if (exists) {
                         sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
+                        sourceName.center = CGPointMake(sourceName.center.x, TOP_TOOLBAR_HEIGHT/2);
+                        sourceName.backgroundColor = [UIColor clearColor];
                         [sourceLabel setHidden:NO];
                         [sourceImage setHidden:NO];
+                        [sourceName setHidden:NO];
                     }
                 }];
             }
