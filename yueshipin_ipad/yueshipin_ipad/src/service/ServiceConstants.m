@@ -8,8 +8,8 @@
 
 #import "ServiceConstants.h"
 
-//NSString *const kDefaultAppKey  = @"ijoyplus_ios_001";
-NSString *const kDefaultAppKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";
+NSString *const kDefaultAppKey  = @"ijoyplus_ios_001";
+//NSString *const kDefaultAppKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";
 
 NSString *const kSuccessResCode  = @"00000";
 

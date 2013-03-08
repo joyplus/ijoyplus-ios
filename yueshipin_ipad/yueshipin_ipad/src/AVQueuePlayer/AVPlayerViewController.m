@@ -57,6 +57,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) NSMutableArray *plainClearArr;
 @property (nonatomic, strong) NSMutableArray *combinedArr;
 @property (nonatomic, strong) NSString *defaultErrorMessage;
+@property (nonatomic) BOOL resolutionInvalid;
 @property (nonatomic) int combinedIndex;
 @property (nonatomic, strong) NSMutableDictionary *urlArrayDictionary;
 @property (atomic, strong) NSURL *workingUrl;
@@ -96,7 +97,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
-@synthesize sourceImage, sourceLabel, sourceName;
+@synthesize sourceImage, sourceLabel, sourceName, resolutionInvalid;
 
 #pragma mark
 #pragma mark View Controller
@@ -455,6 +456,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         [myHUD hide:NO];
         tipLabel.text = defaultErrorMessage;
+        resolutionInvalid = YES;
         if ([defaultErrorMessage hasPrefix:@"即"]) {
             [self performSelector:@selector(showWebView) withObject:nil afterDelay:2];
         }
@@ -1133,8 +1135,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [resolutionPopTipView dismissAnimated:YES];
     resolutionPopTipView = nil;
-    resolutionLastPlaytime = [mPlayer currentTime];
-    
+    if (!resolutionInvalid) { //如果分辨率已失效，不记录播放时间
+        resolutionLastPlaytime = [mPlayer currentTime];
+    }
     workingUrl = nil;
     [mPlayer pause];
     mPlayer = nil;
@@ -1493,6 +1496,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     currentNum = num;
     currentPlaybackTimeLabel.text = @"00:00:00";
+    mScrubber.value = 0;
     [mPlayButton setEnabled:NO];
     [mNextButton setEnabled:NO];
     [mPrevButton setEnabled:NO];
@@ -1665,7 +1669,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self syncPlayPauseButtons];
     }
 	
-    [mScrubber setValue:0.0];
+
 }
 
 #pragma mark -
@@ -1757,8 +1761,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     duration = CMTimeGetSeconds(playerDuration);
                 }
                 totalTimeLabel.text = [TimeUtility formatTimeInSecond:duration];
-                currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
-                
                 [self initScrubberTimer];
                 [self enableScrubber];
                 [self enableVolumeSlider];
@@ -1769,10 +1771,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     }
                     [playCacheView setAlpha:0];
                 } completion:^(BOOL finished) {
+                    currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
                     [playCacheView removeFromSuperview];
                     [playCacheView setHidden:YES];
                     playCacheView = nil;
                     [self resetControlVisibilityTimer];
+                    resolutionInvalid = NO;
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                     NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
                     NSLog(@"%@", tempDic);
