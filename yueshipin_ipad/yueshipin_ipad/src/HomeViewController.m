@@ -53,7 +53,9 @@
     NSArray *lunboArray;
     int videoType; // 0: 悦单 1: 电影 2: 电视剧 3: 综艺
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    MNMBottomPullToRefreshManager *showPullToRefreshManager_;
     NSUInteger reloads_;
+    NSUInteger showReloads;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     int pageSize;
@@ -122,7 +124,10 @@
         [backgroundView addSubview:bottomImageView];
         
         pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        showPullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
         reloads_ = 2;
+        showReloads = 2;
         if (_refreshHeaderView == nil) {
             EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
             view.backgroundColor = [UIColor clearColor];
@@ -139,6 +144,7 @@
 - (void)loadTable {
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
+    [showPullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -268,18 +274,23 @@
 
 - (void)reloadTableViewDataSource{
     reloads_ = 2;
+    showReloads = 2;
     [self retrieveLunboData];
 	if(videoType == 0){
         [self retrieveTopsListData];
         [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     } else if(videoType == 1){
         [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveMovieTopsData];
     } else if(videoType == 2){
         [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveTvTopsData];
     } else if(videoType == 3){
         [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
         [self retrieveShowTopsData];
     }
     _reloading = YES;
@@ -318,31 +329,56 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        [UIUtility showNetWorkError:self.view];
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-        return;
-    }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSString *responseCode = [result objectForKey:@"res_code"];
-        NSArray *tempTopsArray;
-        if(responseCode == nil){
-            tempTopsArray = [result objectForKey:@"tops"];
-            if(tempTopsArray.count > 0){
-                [topsArray addObjectsFromArray:tempTopsArray];
-                reloads_ ++;
-            }
+    if (videoType == 0 || videoType == 3) {
+        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+            [UIUtility showNetWorkError:self.view];
+            [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+            return;
+        }        
+        if (videoType == 0) {
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                NSArray *tempTopsArray;
+                if(responseCode == nil){
+                    tempTopsArray = [result objectForKey:@"tops"];
+                    if(tempTopsArray.count > 0){
+                        [topsArray addObjectsFromArray:tempTopsArray];
+                        reloads_ ++;
+                    }
+                } else {
+                    
+                }
+                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+                if(tempTopsArray.count < pageSize){
+                    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+            }];
         } else {
-            
+            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:showReloads], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+            [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                NSString *responseCode = [result objectForKey:@"res_code"];
+                NSArray *tempTopsArray;
+                if(responseCode == nil){
+                    tempTopsArray = [result objectForKey:@"tops"];
+                    if(tempTopsArray.count > 0){
+                        [showTopsArray addObjectsFromArray:tempTopsArray];
+                        showReloads ++;
+                    }
+                } else {
+                    
+                }
+                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+                if(tempTopsArray.count < 10){
+                    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                }
+            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+            }];
         }
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-        if(tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-    }];
+    }
 }
 
 - (void)parseTopsListData:(id)result
@@ -482,7 +518,7 @@
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [tempHUD hide:YES];
     } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseShowTopsData:result];
             [tempHUD hide:YES];
@@ -507,11 +543,14 @@
                 [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
                 [showTopsArray addObjectsFromArray:tempArray];
             }
+            if (tempArray.count < 10) {
+                [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            }
         }
     } else {
         [UIUtility showSystemError:self.view];
     }
-    [table reloadData];
+    [self loadTable];
 }
 
 - (void)updateScrollView
@@ -547,8 +586,11 @@
     } else {
         [self closeMenu];
         [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
-        if(videoType == 0)
+        if(videoType == 0){
             [pullToRefreshManager_ tableViewScrolled];
+        } else if(videoType == 3){
+            [showPullToRefreshManager_ tableViewScrolled];
+        }
         
     }
 }
@@ -565,8 +607,11 @@
         [self closeMenu];
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
-        if(videoType == 0)
+        if(videoType == 0){
             [pullToRefreshManager_ tableViewReleased];
+        } else if(videoType == 3){
+            [showPullToRefreshManager_ tableViewReleased];
+        }
     }
 }
 
@@ -575,6 +620,7 @@
 {
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -588,6 +634,7 @@
 {
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -601,6 +648,7 @@
 {
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -614,6 +662,7 @@
 {
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];

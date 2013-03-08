@@ -321,7 +321,7 @@
 
 - (void)showStatement
 {
-    AHAlertView *alert = [[AHAlertView alloc] initWithTitle:@"免 责 条 款" message:nil];
+    AHAlertView *alert = [[AHAlertView alloc] initWithTitle:@"免 责 声 明" message:nil];
     alert.frame = CGRectMake(alert.frame.origin.x, alert.frame.origin.y, 350, 400);
     [self applyCustomAlertAppearance];
     [alert setCancelButtonTitle:@"接 受" block:^{
