@@ -31,6 +31,9 @@
 @end
 
 @implementation PageManageViewController
+@synthesize movieTableList = movieTableList_;
+@synthesize tvTableList = tvTableList_;
+@synthesize showTableList = showTableList_;
 @synthesize scrollView = scrollView_;
 @synthesize pageControl = pageControl_;
 @synthesize tvListArr = tvListArr_;
@@ -45,6 +48,7 @@
 @synthesize refreshHeaderViewForShowList = refreshHeaderViewForShowList_;
 @synthesize refreshHeaderViewForTvList = refreshHeaderViewForTvList_;
 @synthesize showTopId = showTopId_;
+@synthesize pullToRefreshManager = pullToRefreshManager_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -174,6 +178,7 @@
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     
+    self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -191,7 +196,7 @@
             }
         }
         
-        [self.showTableList reloadData];
+        [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -199,6 +204,7 @@
         if(self.showListArr == nil){
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
     }];
     
@@ -215,16 +221,18 @@
             NSArray *tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [self.showListArr addObjectsFromArray:tempTopsArray];
-                }      
+            }
+            else{
+                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                
+            }
         }
         
-        [self.showTableList reloadData];
-        
+        [self loadTable:SHOW_TYPE];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-        if(self.showListArr == nil){
-            self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
-        }
+        [self loadTable:SHOW_TYPE];
+        
     }];
     
     
@@ -335,42 +343,38 @@
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.showTableList.tag = SHOW_TYPE;
     [self.scrollView addSubview:self.showTableList];
-     self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
-    
-    
     [self.view addSubview:self.scrollView];
-
-       
     //添加上，下拉刷新控件
     
-//    if (refreshHeaderViewForMovieList_ == nil) {
-//        refreshHeaderViewForMovieList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - movieTableList_.bounds.size.height, self.view.frame.size.width, movieTableList_.bounds.size.height)];
-//        refreshHeaderViewForMovieList_.backgroundColor = [UIColor clearColor];
-//        refreshHeaderViewForMovieList_.delegate = self;
-//        [movieTableList_ addSubview:refreshHeaderViewForMovieList_];
-//        [refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
-//        movieLoadCount_ = 1;
-//    }
-//
-//    if (refreshHeaderViewForTvList_ == nil) {
-//        refreshHeaderViewForTvList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - tvTableList_.bounds.size.height, self.view.frame.size.width, tvTableList_.bounds.size.height)];
-//        refreshHeaderViewForTvList_.backgroundColor = [UIColor clearColor];
-//        refreshHeaderViewForTvList_.delegate = self;
-//        [tvTableList_ addSubview:refreshHeaderViewForTvList_];
-//        [refreshHeaderViewForTvList_ refreshLastUpdatedDate];
-//        tvLoadCount_ = 1;
-//    }
+    if (refreshHeaderViewForMovieList_ == nil) {
+        refreshHeaderViewForMovieList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - movieTableList_.bounds.size.height, self.view.frame.size.width, movieTableList_.bounds.size.height)];
+        refreshHeaderViewForMovieList_.backgroundColor = [UIColor clearColor];
+        refreshHeaderViewForMovieList_.delegate = self;
+        [movieTableList_ addSubview:refreshHeaderViewForMovieList_];
+        [refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
+        movieLoadCount_ = 1;
+    }
 
-//    if (refreshHeaderViewForShowList_ == nil) {
-//        refreshHeaderViewForShowList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(640.0f,100, self.view.frame.size.width, showTableList_.bounds.size.height)];
-//        refreshHeaderViewForShowList_.backgroundColor = [UIColor redColor];
-//        refreshHeaderViewForShowList_.delegate = self;
-//        [showTableList_ addSubview:refreshHeaderViewForShowList_];
-//        [showTableList_ addSubview:refreshHeaderViewForShowList_];
-//        [refreshHeaderViewForShowList_ refreshLastUpdatedDate];
-//        showLoadCount_ = 1;
-//    }
-//    self.scrollView.backgroundColor = [UIColor redColor];
+    if (refreshHeaderViewForTvList_ == nil) {
+        refreshHeaderViewForTvList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - tvTableList_.bounds.size.height, self.view.frame.size.width, tvTableList_.bounds.size.height)];
+        refreshHeaderViewForTvList_.backgroundColor = [UIColor clearColor];
+        refreshHeaderViewForTvList_.delegate = self;
+        [tvTableList_ addSubview:refreshHeaderViewForTvList_];
+        [refreshHeaderViewForTvList_ refreshLastUpdatedDate];
+        tvLoadCount_ = 1;
+    }
+
+    if (refreshHeaderViewForShowList_ == nil) {
+        refreshHeaderViewForShowList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, 0.0f -showTableList_.bounds.size.height, self.view.frame.size.width, showTableList_.bounds.size.height)];
+        refreshHeaderViewForShowList_.backgroundColor = [UIColor clearColor];
+        refreshHeaderViewForShowList_.delegate = self;
+        [showTableList_ addSubview:refreshHeaderViewForShowList_];
+        [refreshHeaderViewForShowList_ refreshLastUpdatedDate];
+        showLoadCount_ = 1;
+    }
+    
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:showTableList_ withClient:self];
+    
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
@@ -523,6 +527,8 @@
 
 }
 
+#pragma mark -
+#pragma mark ScrollViewDelegate Methods
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat pageWidth = self.view.frame.size.width;
@@ -562,7 +568,7 @@
     
 }
 
-/*
+
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
   
     switch (aScrollView.tag) {
@@ -582,6 +588,8 @@
             break;
     }
     
+    [pullToRefreshManager_ tableViewReleased];
+    
 }
 
 #pragma mark -
@@ -589,16 +597,13 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
     if (view == refreshHeaderViewForMovieList_) {
-        movieLoadCount_++;
         [self loadMovieTopsData];
     }
     else if (view == refreshHeaderViewForTvList_){
-        tvLoadCount_++;
         [self loadTVTopsData];
     }
     else if (view == refreshHeaderViewForShowList_){
-        showLoadCount_++;
-        [self loadMoreShowTopsData];
+        [self loadShowTopsData];
     
     }
     
@@ -624,12 +629,36 @@
 	
 	//  model should call this when its done loading
 	reloading_ = NO;
-//	[refreshHeaderViewForMovieList_ egoRefreshScrollViewDataSourceDidFinishedLoading:movieTableList_];
-//    [refreshHeaderViewForTvList_ egoRefreshScrollViewDataSourceDidFinishedLoading:tvTableList_];
+	[refreshHeaderViewForMovieList_ egoRefreshScrollViewDataSourceDidFinishedLoading:movieTableList_];
+    [refreshHeaderViewForTvList_ egoRefreshScrollViewDataSourceDidFinishedLoading:tvTableList_];
     [refreshHeaderViewForShowList_ egoRefreshScrollViewDataSourceDidFinishedLoading:showTableList_];
 	
 }
-*/
+
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    showLoadCount_++;
+    [self loadMoreShowTopsData];
+    
+}
+
+- (void)loadTable:(int)type {
+    
+    if (type == MOVIE_TYPE) {
+        [movieTableList_ reloadData];
+    }
+    else if (type == TV_TYPE){
+        [tvTableList_ reloadData];
+    }
+    else if (type == SHOW_TYPE){
+        [showTableList_ reloadData];
+    }
+    [pullToRefreshManager_ tableViewReloadFinished];
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

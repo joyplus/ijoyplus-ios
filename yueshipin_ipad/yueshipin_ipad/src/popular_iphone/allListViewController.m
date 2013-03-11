@@ -80,12 +80,13 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [self parseTopsListData:result];
         [tempHUD hide:YES];
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.listArray == nil){
             self.listArray = [[NSMutableArray alloc]initWithCapacity:10];
         }
+         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         [tempHUD hide:YES];
     }];
 

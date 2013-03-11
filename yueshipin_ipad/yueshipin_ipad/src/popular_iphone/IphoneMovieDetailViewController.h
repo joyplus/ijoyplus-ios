@@ -35,7 +35,6 @@
 @property (nonatomic, strong) UILabel *summaryLabel;
 @property (nonatomic, strong) UIButton *moreBtn;
 @property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
-//- (void)showOpSuccessModalView:(int)closeTime;
 @end
 
 

@@ -34,6 +34,8 @@
     EGORefreshTableHeaderView *refreshHeaderViewForTvList_;
     EGORefreshTableHeaderView *refreshHeaderViewForShowList_;
     
+    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    
     BOOL reloading_;
     int movieLoadCount_;
     int tvLoadCount_;
@@ -59,4 +61,6 @@
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForMovieList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForTvList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForShowList;
+
+@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
 @end
