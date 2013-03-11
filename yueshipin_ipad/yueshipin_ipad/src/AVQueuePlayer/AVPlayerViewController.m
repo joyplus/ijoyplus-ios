@@ -67,7 +67,6 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int resolutionNum;
 @property (nonatomic, strong) UILabel *sourceLabel;
 @property (nonatomic, strong) UIImageView *sourceImage;
-@property (nonatomic, strong) UILabel *sourceName;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -97,7 +96,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
-@synthesize sourceImage, sourceLabel, sourceName, resolutionInvalid;
+@synthesize sourceImage, sourceLabel, resolutionInvalid;
 
 #pragma mark
 #pragma mark View Controller
@@ -133,7 +132,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [highClearArr removeAllObjects];
     sourceLabel = nil;
     sourceImage = nil;
-    sourceName = nil;
     superClearArr = nil;
     plainClearArr = nil;
     highClearArr = nil;
@@ -534,20 +532,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)customizeTopToolbar
 {
     topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    [topToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:30/255.0 green:30/255.0 blue:30/255.0 alpha:0.5] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    [topToolbar setBackgroundImage:[[UIImage imageNamed:@"top_toolbar_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 5, 5, 5)] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:topToolbar];
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(20, 5, 60, 40);
+    closeButton.frame = CGRectMake(20, 7, 58, 38);
     [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt"] forState:UIControlStateNormal];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt_pressed"] forState:UIControlStateHighlighted];
     [closeButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     [topToolbar addSubview:closeButton];
     
-    sourceLabel = [[UILabel alloc]initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width + 20, 10, 45, 30)];
+    sourceLabel = [[UILabel alloc]initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width + 20, 10, 40, 30)];
     [sourceLabel setFont:[UIFont systemFontOfSize:15]];
     [sourceLabel setBackgroundColor:[UIColor clearColor]];
-    [sourceLabel setText:@"来源："];
+    [sourceLabel setText:@"来源: "];
     [sourceLabel sizeToFit];
     sourceLabel.center = CGPointMake(sourceLabel.center.x, TOP_TOOLBAR_HEIGHT/2);
     [sourceLabel setHidden:YES];
@@ -559,13 +557,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [sourceImage setHidden:YES];
     sourceImage.center = CGPointMake(sourceImage.center.x, TOP_TOOLBAR_HEIGHT/2);
     [topToolbar addSubview:sourceImage];
-    
-    sourceName = [[UILabel alloc]initWithFrame:CGRectZero];
-    [sourceName setFont:[UIFont systemFontOfSize:13]];
-    [sourceName setBackgroundColor:[UIColor clearColor]];
-    [sourceName setHidden:YES];
-    [sourceName setTextColor:[UIColor colorWithRed:228/255.0 green:228/255.0 blue:228/255.0 alpha:1]];
-    [topToolbar addSubview:sourceName];
     
     vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, TOP_TOOLBAR_HEIGHT)];
     vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
@@ -595,8 +586,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)customizeBottomToolbar
 {
     bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.width - BOTTOM_TOOL_VIEW_HEIGHT, self.view.frame.size.height, BOTTOM_TOOL_VIEW_HEIGHT)];
-    bottomView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+    bottomView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:bottomView];
+    
+    UIImageView *bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width, BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)];
+    bgImageView.image = [[UIImage imageNamed:@"slider_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    [bottomView addSubview:bgImageView];
     
     currentPlaybackTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 80, 30)];
     [currentPlaybackTimeLabel setBackgroundColor:[UIColor clearColor]];
@@ -617,7 +612,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [mScrubber setEnabled:NO];
     mScrubber.center = CGPointMake(bottomView.center.x, (BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)/2);
     UIImage *minImage = [[UIImage imageNamed:@"progress_slider_min"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
-    UIImage *maxImage = [[UIImage imageNamed:@"progress_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
+    UIImage *maxImage;
+    if (ver >= 6.0){
+        maxImage = [[UIImage imageNamed:@"progress_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
+    } else {
+        maxImage = [[UIImage imageNamed:@"progress_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    }
     [mScrubber setMinimumTrackImage:minImage forState:UIControlStateNormal];
     [mScrubber setMaximumTrackImage:maxImage forState:UIControlStateNormal];
     [mScrubber setThumbImage: [UIImage imageNamed:@"progress_thumb"] forState:UIControlStateNormal];
@@ -705,7 +706,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
    
     volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 90, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
     minImage = [[UIImage imageNamed:@"volume_slider_min"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
-    maxImage = [[UIImage imageNamed:@"volume_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    if (ver >= 6.0){
+        maxImage = [[UIImage imageNamed:@"volume_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
+    } else {
+        maxImage = [[UIImage imageNamed:@"volume_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    }
     [volumeSlider setMinimumTrackImage:minImage forState:UIControlStateNormal];
     [volumeSlider setMaximumTrackImage:maxImage forState:UIControlStateNormal];
     [volumeSlider setThumbImage: [UIImage imageNamed:@"volume_thumb"] forState:UIControlStateNormal];
@@ -864,6 +869,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     [self resetControlVisibilityTimer];
     currentNum++;
+    currentPlaybackTimeLabel.text = @"00:00:00";
+    mScrubber.value = 0;
     if ((type == 2 || type == 3) && subnameArray.count > self.currentNum) {
         episodeListviewController.currentNum = currentNum;
         [episodeListviewController.table reloadData];
@@ -1783,59 +1790,34 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
                     if ([source_str isEqualToString:@"letv"]) {
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"乐视";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
                     } else if ([source_str isEqualToString:@"fengxing"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"风行";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
                     } else if ([source_str isEqualToString:@"qiyi"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"奇艺";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
                     } else if ([source_str isEqualToString:@"youku"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 10, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 5, 0, 45, 20);
-                        sourceName.text = @"优酷";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 86, 17);
                     } else if ([source_str isEqualToString:@"sinahd"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"新浪";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 23, 17);
                     } else if ([source_str isEqualToString:@"sohu"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 10, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 5, 0, 45, 20);
-                        sourceName.text = @"搜狐";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 43, 17);
                     } else if ([source_str isEqualToString:@"56"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"我乐";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 54, 17);
                     } else if ([source_str isEqualToString:@"qq"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"腾讯";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
                     } else if ([source_str isEqualToString:@"pptv"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"PPTV";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 56, 17);
                     } else if ([source_str isEqualToString:@"m1905"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 15, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 5, 0, 45, 20);
-                        sourceName.text = @"M1905";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 16, 45, 17);
                     } else if ([source_str isEqualToString:@"pps"]){
-                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width - 20, 16, 53, 18);
-                        sourceName.frame = CGRectMake(sourceImage.frame.origin.x + sourceImage.frame.size.width - 10, 0, 45, 20);
-                        sourceName.text = @"PPS";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 53, 17);
                     } else {
                         exists = NO;
                     }
                     if (exists) {
                         sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
-                        sourceName.center = CGPointMake(sourceName.center.x, TOP_TOOLBAR_HEIGHT/2);
-                        sourceName.backgroundColor = [UIColor clearColor];
                         [sourceLabel setHidden:NO];
                         [sourceImage setHidden:NO];
-                        [sourceName setHidden:NO];
                     }
                 }];
             }

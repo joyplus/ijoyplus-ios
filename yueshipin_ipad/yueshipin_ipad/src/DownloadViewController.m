@@ -62,7 +62,7 @@
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateStorage) name:UPDATE_DISK_STORAGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch

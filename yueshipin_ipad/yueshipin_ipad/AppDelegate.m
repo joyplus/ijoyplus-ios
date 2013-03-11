@@ -335,6 +335,7 @@
     UITextView *textView = [[UITextView alloc]initWithFrame:CGRectMake(10, 40, alert.frame.size.width - 25, alert.frame.size.height - 110)];
     textView.font = [UIFont systemFontOfSize:14];
     textView.text = [self getContent];
+    textView.editable = NO;
     textView.layer.cornerRadius = 2;
     textView.layer.masksToBounds = YES;
     alert.contentTextView = textView;
