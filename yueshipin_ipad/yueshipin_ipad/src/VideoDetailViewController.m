@@ -301,15 +301,8 @@
 
 - (void)updateBadgeIcon
 {
-    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
-    if (newNum == nil) {
-        newNum = [[SequenceData alloc]initWithType:0];
-        newNum.newDownloadItemNum = 1;
-    } else {
-        newNum.newDownloadItemNum++;
-    }
-    [newNum save];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
 }
 
 - (void)playVideo:(int)num

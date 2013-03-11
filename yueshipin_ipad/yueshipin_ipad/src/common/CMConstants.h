@@ -75,7 +75,7 @@
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
-//#define RELOAD_MENU_ITEM @ "reload_menu_item"
+#define RELOAD_MENU_ITEM @ "reload_menu_item"
 #define UPDATE_DISK_STORAGE @"update_disk_storage"
 
 #define WATCH_RECORD_NUMBER 5

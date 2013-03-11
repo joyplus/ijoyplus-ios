@@ -12,4 +12,5 @@
 
 + (void)generateUserId:(void (^)(void))completion;
 + (UIImage*) thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time;
++ (int)getDownloadingItemNumber;
 @end

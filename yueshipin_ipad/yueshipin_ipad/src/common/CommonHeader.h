@@ -26,8 +26,8 @@
 #import "MNMBottomPullToRefreshManager.h"
 #import "MBProgressHUD.h"
 #import "SlideBaseViewController.h"
-#import "SequenceData.h"
 #import "JSBadgeView.h"
+#import "ActionUtility.h"
 @interface CommonHeader : NSObject
 
 @end

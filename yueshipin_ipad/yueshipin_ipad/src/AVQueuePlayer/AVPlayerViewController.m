@@ -1172,6 +1172,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     [self setVolumeValue:volumeSlider.value];
     [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+    [MPMusicPlayerController applicationMusicPlayer].volume = volumeSlider.value;
 }
 
 - (void)systemVolumeChanged:(id)obj

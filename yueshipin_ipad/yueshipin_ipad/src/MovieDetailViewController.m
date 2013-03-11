@@ -14,7 +14,6 @@
 #import "ListViewController.h"
 #import "DownloadItem.h"
 #import "DownloadHandler.h"
-#import "SequenceData.h"
 #import "DownloadUrlFinder.h"
 #define DEFAULT_POSOTION_Y 585
 

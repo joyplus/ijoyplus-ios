@@ -126,7 +126,6 @@
 		220E493E169BF05500A29756 /* ActionUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E493D169BF05500A29756 /* ActionUtility.m */; };
 		220E4947169BF07F00A29756 /* DownloadHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4940169BF07F00A29756 /* DownloadHandler.m */; };
 		220E4948169BF07F00A29756 /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4942169BF07F00A29756 /* RadioButton.m */; };
-		220E4949169BF07F00A29756 /* SequenceData.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4944169BF07F00A29756 /* SequenceData.m */; };
 		220E494A169BF07F00A29756 /* SubdownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4946169BF07F00A29756 /* SubdownloadItem.m */; };
 		220E494D169BF08600A29756 /* DownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E494C169BF08600A29756 /* DownloadItem.m */; };
 		220E4953169BF0B300A29756 /* DownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220E4950169BF0B300A29756 /* DownloadViewController.m */; };
@@ -731,6 +730,8 @@
 		EBBCDC0F1675F00D006E2F64 /* push_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDC0A1675F00D006E2F64 /* push_pressed.png */; };
 		EBBCDC101675F00E006E2F64 /* share_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDC0B1675F00D006E2F64 /* share_pressed.png */; };
 		EBBCDC111675F00E006E2F64 /* share.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDC0C1675F00D006E2F64 /* share.png */; };
+		EBBD9E2916EDD80900AF96E0 /* progress_thumb_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */; };
+		EBBD9E2A16EDD80900AF96E0 /* progress_thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */; };
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
@@ -921,8 +922,6 @@
 		220E4940169BF07F00A29756 /* DownloadHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHandler.m; sourceTree = "<group>"; };
 		220E4941169BF07F00A29756 /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
 		220E4942169BF07F00A29756 /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
-		220E4943169BF07F00A29756 /* SequenceData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequenceData.h; sourceTree = "<group>"; };
-		220E4944169BF07F00A29756 /* SequenceData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SequenceData.m; sourceTree = "<group>"; };
 		220E4945169BF07F00A29756 /* SubdownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubdownloadItem.h; sourceTree = "<group>"; };
 		220E4946169BF07F00A29756 /* SubdownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdownloadItem.m; sourceTree = "<group>"; };
 		220E494B169BF08600A29756 /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadItem.h; path = yueshipin_ipad/src/common/DownloadItem.h; sourceTree = SOURCE_ROOT; };
@@ -1661,6 +1660,8 @@
 		EBBCDC0A1675F00D006E2F64 /* push_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = push_pressed.png; sourceTree = "<group>"; };
 		EBBCDC0B1675F00D006E2F64 /* share_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_pressed.png; sourceTree = "<group>"; };
 		EBBCDC0C1675F00D006E2F64 /* share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share.png; sourceTree = "<group>"; };
+		EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = progress_thumb_pressed.png; sourceTree = "<group>"; };
+		EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = progress_thumb.png; sourceTree = "<group>"; };
 		EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSearchViewController.h; sourceTree = "<group>"; };
 		EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSearchViewController.m; sourceTree = "<group>"; };
 		EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
@@ -2259,6 +2260,8 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */,
+				EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */,
 				EB6298ED16EDC1E800BFB30B /* slider_bg@2x.png */,
 				EB6298EB16EDBD8A00BFB30B /* top_toolbar_bg@2x.png */,
 				EB6298DF16EDBA4800BFB30B /* pause_bt_pressed.png */,
@@ -2851,8 +2854,6 @@
 				220E4940169BF07F00A29756 /* DownloadHandler.m */,
 				220E4941169BF07F00A29756 /* RadioButton.h */,
 				220E4942169BF07F00A29756 /* RadioButton.m */,
-				220E4943169BF07F00A29756 /* SequenceData.h */,
-				220E4944169BF07F00A29756 /* SequenceData.m */,
 				220E4945169BF07F00A29756 /* SubdownloadItem.h */,
 				220E4946169BF07F00A29756 /* SubdownloadItem.m */,
 				EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */,
@@ -3695,6 +3696,8 @@
 				EB6298EA16EDBA4900BFB30B /* prev_bt.png in Resources */,
 				EB6298EC16EDBD8A00BFB30B /* top_toolbar_bg@2x.png in Resources */,
 				EB6298EE16EDC1E800BFB30B /* slider_bg@2x.png in Resources */,
+				EBBD9E2916EDD80900AF96E0 /* progress_thumb_pressed.png in Resources */,
+				EBBD9E2A16EDD80900AF96E0 /* progress_thumb.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3838,7 +3841,6 @@
 				220E493E169BF05500A29756 /* ActionUtility.m in Sources */,
 				220E4947169BF07F00A29756 /* DownloadHandler.m in Sources */,
 				220E4948169BF07F00A29756 /* RadioButton.m in Sources */,
-				220E4949169BF07F00A29756 /* SequenceData.m in Sources */,
 				220E494A169BF07F00A29756 /* SubdownloadItem.m in Sources */,
 				220E494D169BF08600A29756 /* DownloadItem.m in Sources */,
 				220E4953169BF0B300A29756 /* DownloadViewController.m in Sources */,

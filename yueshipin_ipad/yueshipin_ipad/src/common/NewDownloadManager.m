@@ -30,6 +30,7 @@
     [self startDownloadingThread:[AppDelegate instance].subdownloadItems type:@"start"];
     [self startDownloadingThread:[AppDelegate instance].downloadItems type:@"waiting"];
     [self startDownloadingThread:[AppDelegate instance].subdownloadItems type:@"waiting"];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
 }
 
 - (void)startDownloadingThread:(NSArray *)allItem type:(NSString *)type

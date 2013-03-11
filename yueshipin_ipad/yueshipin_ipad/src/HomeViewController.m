@@ -151,25 +151,33 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self updateDownloadNum:nil];
     [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro"]];
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
 {
-    if(badgeView == nil){
-        badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
-        badgeView.badgePositionAdjustment = CGPointMake(-10, 7);
-        badgeView.badgeText = @"0";
-        [badgeView setHidden:YES];
+    if(badgeView){
+        [badgeView removeFromSuperview];
+        badgeView = nil;
     }
-    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
-    if(newNum == nil || newNum.newDownloadItemNum == 0){
+    badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
+    badgeView.badgePositionAdjustment = CGPointMake(-10, 7);
+    badgeView.badgeText = @"0";
+    [badgeView setHidden:YES];
+    
+    int newNum = [ActionUtility getDownloadingItemNumber];
+    if(newNum == 0){
         [badgeView setHidden:YES];
     } else {
         [badgeView setHidden:NO];
-        badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
+        badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
     }
+}
+
+- (void)menuBtnClicked
+{
+    [super menuBtnClicked];
+    [badgeView setHidden:YES];
 }
 
 - (void)viewDidLoad
