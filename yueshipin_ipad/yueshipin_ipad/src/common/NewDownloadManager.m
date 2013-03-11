@@ -103,6 +103,7 @@
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
     }
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
 }
 
 - (void)downloadSuccess:(NSString *)operationId
