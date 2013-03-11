@@ -14,6 +14,7 @@
 #define PLAY_CACHE_VIEW 234238494
 #define RESOLUTION_KEY @"resolution_key"
 #define URL_KEY @"url_key"
+#define MAX_EPISODE_NUM 10
 
 /* Asset keys */
 static NSString * const kTracksKey         = @"tracks";
@@ -67,6 +68,9 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int resolutionNum;
 @property (nonatomic, strong) UILabel *sourceLabel;
 @property (nonatomic, strong) UIImageView *sourceImage;
+@property (nonatomic) int tableWidth;
+@property (nonatomic) int tableCellHeight;
+@property (nonatomic) int maxEpisodeNum;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -97,6 +101,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid;
+@synthesize tableCellHeight, tableWidth, maxEpisodeNum;
 
 #pragma mark
 #pragma mark View Controller
@@ -207,13 +212,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self customizeTopToolbar];
     [self customizeBottomToolbar];
     
+    tableCellHeight = EPISODE_TABLE_CELL_HEIGHT;
+    tableWidth = EPISODE_TABLE_WIDTH;
+    maxEpisodeNum = MAX_EPISODE_NUM;
+    if (type == 3) {
+        tableCellHeight = EPISODE_TABLE_CELL_HEIGHT * 1.1;
+        tableWidth = EPISODE_TABLE_WIDTH * 1.2;
+        maxEpisodeNum = 8;
+    }
     episodeListviewController = [[EpisodeListViewController alloc]init];
     [self addChildViewController:episodeListviewController];
     episodeListviewController.type = self.type;
     episodeListviewController.delegate = self;
     episodeListviewController.view.tag = EPISODE_ARRAY_VIEW_TAG;
-    episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-    episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+    episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, 0);
+    episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - tableWidth, TOP_TOOLBAR_HEIGHT + 24, tableWidth, 0);
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showToolview)];
     tapRecognizer.numberOfTapsRequired = 1;
@@ -780,8 +793,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
             if (epsideArrayView) {
                 [epsideArrayView removeFromSuperview];
-                episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-                episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+                episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, 0);
+                episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, 0);
                 [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
             }
             [topToolbar setHidden:YES];
@@ -1010,8 +1023,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (epsideArrayView) {
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+            episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, 0);
+            episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, 0);
         } completion:^(BOOL finished) {
             [epsideArrayView removeFromSuperview];
         }];
@@ -1024,8 +1037,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self.view addSubview:episodeListviewController.view];
         [episodeListviewController.table reloadData];
         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^{
-            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
-            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
+            episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, fmin(maxEpisodeNum, subnameArray.count) * tableCellHeight);
+            episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, fmin(maxEpisodeNum, subnameArray.count) * tableCellHeight);
         } completion:^(BOOL finished) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
             [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];

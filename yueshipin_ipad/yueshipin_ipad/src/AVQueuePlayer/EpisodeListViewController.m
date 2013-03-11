@@ -10,7 +10,9 @@
 #import "CommonHeader.h"
 
 @interface EpisodeListViewController ()<UITableViewDataSource, UITableViewDelegate>
-
+@property (nonatomic) int tableWidth;
+@property (nonatomic) int tableCellHeight;
+@property (nonatomic) int maxEpisodeNum;
 @end
 
 @implementation EpisodeListViewController
@@ -19,6 +21,9 @@
 @synthesize episodeArray;
 @synthesize type;
 @synthesize delegate;
+@synthesize tableCellHeight;
+@synthesize tableWidth;
+@synthesize maxEpisodeNum;
 
 - (void)viewDidUnload
 {
@@ -48,7 +53,15 @@
     self.view.layer.borderColor = [UIColor colorWithRed:49/255.0 green:49/255.0 blue:49/255.0 alpha:0.6].CGColor;
     self.view.layer.borderWidth = 2;
     self.view.backgroundColor = [UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.6];
-    table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, EPISODE_TABLE_WIDTH, fmin(10, episodeArray.count) * EPISODE_TABLE_CELL_HEIGHT)];
+    tableCellHeight = EPISODE_TABLE_CELL_HEIGHT;
+    tableWidth = EPISODE_TABLE_WIDTH;
+    maxEpisodeNum = 10;
+    if (type == 3) {
+        tableCellHeight = EPISODE_TABLE_CELL_HEIGHT * 1.1;
+        tableWidth = EPISODE_TABLE_WIDTH * 1.2;
+        maxEpisodeNum = 8;
+    }
+    table = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, tableWidth, fmin(maxEpisodeNum, episodeArray.count) * tableCellHeight)];
     table.separatorColor = [UIColor colorWithRed:13/255.0 green:13/255.0 blue:13/255.0 alpha:1];
     table.backgroundColor = [UIColor clearColor];
     table.delegate = self;
@@ -80,16 +93,18 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.font = [UIFont systemFontOfSize:18];
+        nameLabel.font = [UIFont systemFontOfSize:16];
         nameLabel.tag = 1001;
-        nameLabel.frame = CGRectMake(5, 5, EPISODE_TABLE_WIDTH - 10, EPISODE_TABLE_CELL_HEIGHT - 10);
+        nameLabel.frame = CGRectMake(5, 5, tableWidth - 10, tableCellHeight - 10);
         [cell.contentView addSubview:nameLabel];
     }
     UILabel *nameLabel  = (UILabel *)[cell viewWithTag:1001];
     if (type == 2) {
+        nameLabel.numberOfLines = 0;
         nameLabel.textAlignment = NSTextAlignmentCenter;
         nameLabel.text = [NSString stringWithFormat:@"第%@集", [self.episodeArray objectAtIndex:indexPath.row]];
     } else if(type == 3){
+        nameLabel.numberOfLines = 2;
         nameLabel.textAlignment = NSTextAlignmentLeft;
         nameLabel.text = [NSString stringWithFormat:@"%@", [self.episodeArray objectAtIndex:indexPath.row]];
     }
@@ -103,7 +118,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return EPISODE_TABLE_CELL_HEIGHT;
+    return tableCellHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
