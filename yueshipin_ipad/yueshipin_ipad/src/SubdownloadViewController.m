@@ -154,6 +154,7 @@
             [tempitem save];
             [_gmGridView reloadData];            
             [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             break;
         }
     }
@@ -168,6 +169,7 @@
                 NSLog(@"percent = %f", progress);
                 tempitem.percentage = (int)(progress*100);
                 [tempitem save];
+                [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             }
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
             UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:tempitem.pk + 20000000];
@@ -332,6 +334,7 @@
         [self.parentDelegate reloadItems];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position

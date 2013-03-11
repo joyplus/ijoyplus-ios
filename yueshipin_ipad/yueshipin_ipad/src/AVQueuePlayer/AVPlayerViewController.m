@@ -501,11 +501,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSLog(@"working = %@", connection.originalRequest.URL);
         workingUrl = connection.originalRequest.URL;
         [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
-        [connection cancel];
     } else {
         combinedIndex++;
         [self sendRequest];
     }
+    [connection cancel];
 }
 
 - (BOOL) canBecomeFirstResponder {return YES;}

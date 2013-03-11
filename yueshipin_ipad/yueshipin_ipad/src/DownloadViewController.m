@@ -28,6 +28,7 @@
     UIButton *editBtn;
     UIButton *doneBtn;
     DDProgressView *diskUsedProgress_;
+    UILabel *spaceInfoLabel;
     
     __gm_weak GMGridView *_gmGridView;
 }
@@ -47,7 +48,9 @@
     topImage = nil;
     bgImage = nil;
     _gmGridView = nil;
-    
+    spaceInfoLabel = nil;
+    diskUsedProgress_ = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DISK_STORAGE object:nil];
     [super viewDidUnload];
 }
 
@@ -58,6 +61,8 @@
 //    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateStorage) name:UPDATE_DISK_STORAGE object:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -144,7 +149,6 @@
         lineImage.image = [[UIImage imageNamed:@"download_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
         [spaceView addSubview:lineImage];
                
-        float percent = [self getFreeDiskspacePercent];
         UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 25)];
         diskFrame.image = [[UIImage imageNamed:@"tab2_download_2"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 5, 10, 5)];
         diskFrame.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
@@ -152,22 +156,28 @@
         
         diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 28, 27)];
         diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
-        diskUsedProgress_.progress = percent;
         diskUsedProgress_.innerColor = [UIColor colorWithRed:100/255.0 green:165/255.0 blue:248/255.0 alpha:1];
         diskUsedProgress_.outerColor = [UIColor clearColor];
         [spaceView addSubview:diskUsedProgress_];
         
-        UILabel *spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 25)];
-        spaceInfoLabel.text = [NSString stringWithFormat:@"总空间:%0.2fGB/剩余%0.2fGB",totalSpace_,totalFreeSpace_];
-        [spaceInfoLabel sizeToFit];
+        spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 25)];
         spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
         spaceInfoLabel.backgroundColor = [UIColor clearColor];
         spaceInfoLabel.font = [UIFont systemFontOfSize:11];
         spaceInfoLabel.textColor = [UIColor whiteColor];
         spaceInfoLabel.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
         [spaceView addSubview:spaceInfoLabel];
+        
+        [self updateDiskStorage];
     }
     return self;
+}
+
+- (void)updateDiskStorage
+{
+    float percent = [self getFreeDiskspacePercent];
+    diskUsedProgress_.progress = percent;
+    spaceInfoLabel.text = [NSString stringWithFormat:@"剩余: %0.2fGB / 总空间: %0.2fGB",totalFreeSpace_, totalSpace_];
 }
 
 
@@ -193,6 +203,8 @@
 {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
+    [editBtn setHidden:NO];
+    [doneBtn setHidden:YES];
 }
 
 - (void)reloadItems
@@ -229,6 +241,7 @@
             [item save];
             [_gmGridView reloadData];
             [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+            [self updateDiskStorage];
             break;
         }
     }
@@ -243,6 +256,7 @@
                 NSLog(@"percent = %f", progress);
                 item.percentage = (int)(progress*100);
                 [item save];
+                [self updateDiskStorage];
             }
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
             UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:operationId.intValue + 20000000];
@@ -436,6 +450,7 @@
         [doneBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
     }
+    [self updateDiskStorage];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position

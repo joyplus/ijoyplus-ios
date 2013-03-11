@@ -100,11 +100,7 @@
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
-    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [self startNewDownloadItem];
 }
 
 - (void)downloadSuccess:(NSString *)operationId
@@ -114,6 +110,16 @@
     [downloadingOperation pause];
     [downloadingOperation cancel];
     [downloadingItem save];
+    [self startNewDownloadItem];
+}
+
+- (void)startNewDownloadItem
+{
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];    
 }
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
