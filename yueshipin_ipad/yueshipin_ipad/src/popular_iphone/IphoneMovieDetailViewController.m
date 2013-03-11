@@ -19,7 +19,6 @@
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
-#import "IphonePlayVideoViewController.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -632,15 +631,15 @@
                 if([responseCode isEqualToString:kSuccessResCode]){
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
                     favCount_++;
-                    [self showOpSuccessModalView:1 with:DING];
+                    [self showOpSuccessModalView:1 with:ADDFAV];
                     [self.tableView reloadData];
                 
                 } else {
-                    [self showOpFailureModalView:1 with:DING];
+                    [self showOpFailureModalView:1 with:ADDFAV];
                 }
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:DING];
+                   [self showOpFailureModalView:1 with:ADDFAV];
             }];
             
             
@@ -706,10 +705,10 @@
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 
-                 [self showOpSuccessModalView:3 with:ADDFAV];
+                 [self showOpSuccessModalView:3 with:REPORT];
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self showOpFailureModalView:1 with:ADDFAV];
+                 [self showOpSuccessModalView:3 with:REPORT];
             }];
 
             break;

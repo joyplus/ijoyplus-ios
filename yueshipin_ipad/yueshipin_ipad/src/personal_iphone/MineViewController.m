@@ -23,7 +23,6 @@
 #import "SinaWeibo.h"
 #import "AppDelegate.h"
 #import "CommonHeader.h"
-#import "MyMediaPlayerViewController.h"
 #import "IphoneWebPlayerViewController.h"
 #import "CustomNavigationViewController.h"
 #import "CustomNavigationViewControllerPortrait.h"

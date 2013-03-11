@@ -15,7 +15,6 @@
 #import "DownloadItem.h"
 #import "DownloadHandler.h"
 #import "SequenceData.h"
-#import "MyMediaPlayerViewController.h"
 #import "DownloadUrlFinder.h"
 #define DEFAULT_POSOTION_Y 585
 

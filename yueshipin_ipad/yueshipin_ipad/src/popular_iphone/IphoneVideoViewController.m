@@ -17,7 +17,6 @@
 #import "SendWeiboViewController.h"
 #import "ActionUtility.h"
 #import <QuartzCore/QuartzCore.h>
-#import "VideoWebViewController.h"
 #import "CustomNavigationViewController.h"
 #import "CacheUtility.h"
 #import "TimeUtility.h"
@@ -25,6 +24,7 @@
 #import "IphoneAVPlayerViewController.h"
 #import "IphoneWebPlayerViewController.h"
 #import "CustomNavigationViewController.h"
+#import <QuartzCore/QuartzCore.h>
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -55,7 +55,7 @@
     [super viewDidLoad];
 
     if (isNotification_) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     }
 }
 
@@ -96,7 +96,7 @@
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
    
-    if (type == ADDFAV) {
+    if (type == REPORT) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 80)];
         label.numberOfLines = 0;
         label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -109,7 +109,7 @@
         label.textColor = [UIColor whiteColor];
         [view addSubview:label];
     }
-    if (type == DING ) {
+    if (type == DING || type == ADDFAV ) {
          UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
         temp.frame = CGRectMake(0, 0, 92, 27);
         temp.center = view.center;
@@ -125,15 +125,24 @@
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
-    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_fails.png"]];
+    UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+    label.backgroundColor = [UIColor blackColor];
+    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = [UIColor whiteColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.alpha = 0.9;
+    label.center = view.center;
+    label.layer.masksToBounds = YES;
+    label.layer.cornerRadius = 6.0;
     if (type == DING) {
-        temp.frame = CGRectMake(0, 0, 92, 27);
-        temp.center = view.center;
+       label.text = @"已顶过";
+        
     }
     if (type == ADDFAV) {
-        temp.frame = CGRectMake(16, 110, 92, 27);
+       label.text = @"已收藏过";
     }
-    [view addSubview:temp];
+    
+    [view addSubview:label];
   
      [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];

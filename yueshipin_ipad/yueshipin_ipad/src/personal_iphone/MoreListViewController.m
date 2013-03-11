@@ -17,7 +17,6 @@
 #import "TimeUtility.h"
 #import "UIImageView+WebCache.h"
 #import "CommonHeader.h"
-#import "MyMediaPlayerViewController.h"
 #import "CustomNavigationViewController.h"
 #import "IphoneWebPlayerViewController.h"
 @interface MoreListViewController ()
@@ -48,7 +47,7 @@
        self.title = @"我的悦单";  
         
     }
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];

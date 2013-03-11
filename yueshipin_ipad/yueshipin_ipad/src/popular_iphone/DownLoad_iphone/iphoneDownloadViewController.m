@@ -12,7 +12,6 @@
 #import "DownLoadManager.h"
 #import "IphoneSubdownloadViewController.h"
 #import "AppDelegate.h"
-#import "MyMediaPlayerViewController.h"
 #import "IphoneAVPlayerViewController.h"
 @interface IphoneDownloadViewController ()
 

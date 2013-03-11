@@ -41,7 +41,7 @@
 }
 
 -(void)loadViewResource{
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
@@ -54,10 +54,13 @@
     UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sina_btn_pressed.png"]];
     logo.frame = CGRectMake(20, 150, 34, 33);
     [self.view addSubview:logo];
-    
-    self.title = [infoDic_ objectForKey:@"prod_name"];
+    NSString *name = [infoDic_ objectForKey:@"prod_name"];
+    if (name == nil) {
+        name = [infoDic_ objectForKey:@"name"];
+    }
+    self.title = name;
     textView_ = [[UITextView alloc] initWithFrame:CGRectMake(20, 50, 280, 80)];
-    textView_.text = [NSString stringWithFormat:@"我刚看了#%@#，分享一下吧。",[infoDic_ objectForKey:@"name"]];
+    textView_.text = [NSString stringWithFormat:@"我刚看了#%@#，分享一下吧。更多精彩尽在悦视频，欢迎下载：http://ums.bz/REGLDb/。",[infoDic_ objectForKey:@"name"]];
 
     [textView_ becomeFirstResponder];
     UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];

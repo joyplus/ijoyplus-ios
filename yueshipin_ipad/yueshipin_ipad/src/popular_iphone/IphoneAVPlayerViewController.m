@@ -76,6 +76,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize timeLabelTimer = timeLabelTimer_;
 @synthesize volumeView = volumeView_;
 @synthesize airPlayLabel = airPlayLabel_;
+@synthesize sourceLogo = sourceLogo_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -115,6 +116,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     NSURL *url = asset.URL;
     NSLog(@"播放地址:%@!",url);
+    if (!islocalFile_) {
+      [self syncLogo:[url absoluteString]];
+    }
+    
 	/* At this point we're ready to set up for playback of the asset. */
     
     /* Stop observing our prior AVPlayerItem, if we have one. */
@@ -573,6 +578,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 250, 150)];
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+60);
     myHUD.backgroundColor = [UIColor clearColor];
+    [myHUD addGestureRecognizer:tapGesture];
     myHUD.labelText = @"加载中...";
     myHUD.opacity = 0;
     [myHUD show:YES];
@@ -581,7 +587,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UILabel *lodingLbel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     lodingLbel.center = CGPointMake(playCacheView_.center.x, 60);
     NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
-    if ([str isEqualToString:@"00:00"]) {
+    if ([str isEqualToString:@"00:00"] || [str isEqualToString:@"00:00:00"]) {
         lodingLbel.text = @"即将播出";
     }
     else{
@@ -926,6 +932,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tableList_.delegate = self;
     tableList_.dataSource = self;
     [self.view addSubview:tableList_];
+    
+    if (!islocalFile_) {
+        UILabel *sourceText = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 30, 18)];
+        sourceText.text = @"来源:";
+        sourceText.textColor = [UIColor whiteColor];
+        sourceText.backgroundColor = [UIColor clearColor];
+        sourceText.font = [UIFont systemFontOfSize:12];
+        [topToolBar_ addSubview:sourceText];
+        
+        sourceLogo_ = [[UIImageView alloc] initWithFrame:CGRectMake(102, 8, 30, 18)];
+        sourceLogo_.backgroundColor = [UIColor clearColor];
+        [topToolBar_ addSubview:sourceLogo_];
+    }
+
 }
 -(void)initPlayerView{
     mPlayer = nil;
@@ -1079,6 +1099,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [bottomToolBar_ addSubview:volumeView_];
     
 }
+
 
 -(void)clearSelectView{
     clearBgView_ = [[UIImageView alloc] initWithFrame:CGRectMake(270, 150, 202, 109)];
@@ -1367,41 +1388,47 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     UIImage *logoImg = nil;
     if ([source_str isEqualToString:@"letv"]) {
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_letv"];
     }
     else if ([source_str isEqualToString:@"fengxing"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_fengxing"];
     }
     else if ([source_str isEqualToString:@"qiyi"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_qiyi"];
     }
     else if ([source_str isEqualToString:@"youku"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_youku"];
     }
     else if ([source_str isEqualToString:@"sinahd"]){
-       logoImg = [UIImage imageNamed:@""];
+       logoImg = [UIImage imageNamed:@"logo_sinahd"];
     }
     else if ([source_str isEqualToString:@"sohu"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_sohu"];  
     }
     else if ([source_str isEqualToString:@"56"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_56"];
     }
     else if ([source_str isEqualToString:@"qq"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_qq"];
     }
     else if ([source_str isEqualToString:@"pptv"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_pptv"];
     }
     else if ([source_str isEqualToString:@"pps"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_pps"];
     }
     else if ([source_str isEqualToString:@"m1905"]){
-        logoImg = [UIImage imageNamed:@""];
+        logoImg = [UIImage imageNamed:@"logo_m1905"];
     }
 
     return logoImg;
 
+}
+-(void)syncLogo:(NSString *)url{
+    UIImage *img = [self getVideoSource:url];
+    int a = img.size.width;
+    sourceLogo_.frame = CGRectMake(102, 8, img.size.width/2, 18);
+    sourceLogo_.image = img;
 }
 - (void)updateWatchRecord
 {

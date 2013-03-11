@@ -24,7 +24,7 @@
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
 #define SHOW_TYPE 9002
-#define PAGESIZE 20
+#define PAGESIZE 10
 
 @interface PageManageViewController ()
 
@@ -41,6 +41,10 @@
 @synthesize showBtn = showBtn_;
 @synthesize slider = slider_;
 @synthesize pageMGIcon = pageMGIcon_;
+@synthesize refreshHeaderViewForMovieList = refreshHeaderViewForMovieList_;
+@synthesize refreshHeaderViewForShowList = refreshHeaderViewForShowList_;
+@synthesize refreshHeaderViewForTvList = refreshHeaderViewForTvList_;
+@synthesize showTopId = showTopId_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -49,23 +53,6 @@
     }
     return self;
 }
-
-//- (void)parseTopsListData:(id)result
-//{
-//    self.listArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
-//    NSString *responseCode = [result objectForKey:@"res_code"];
-//    if(responseCode == nil){
-//        NSArray *tempTopsArray = [result objectForKey:@"tops"];
-//        if(tempTopsArray.count > 0){
-//            
-//            [ self.listArr addObjectsFromArray:tempTopsArray];
-//        }
-//    }
-//    else {
-//        
-//    }
-//    
-//}
 
 
 -(void)loadTVTopsData{
@@ -97,7 +84,7 @@
         
     }
 
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%d",tvLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -152,7 +139,7 @@
         } 
     }
 
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%d",movieLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.movieListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -181,49 +168,29 @@
 
 -(void)loadShowTopsData{
 
-    MBProgressHUD *tempHUD;
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
-    if(cacheResult != nil){
-        self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
-        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
-        if(responseCode == nil){
-            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
-            if(tempTopsArray.count > 0){
-                [ self.showListArr addObjectsFromArray:tempTopsArray];
-            }
-        }
-        
-        [self.showTableList reloadData];
-    }
-    else {
-        if(tempHUD == nil){
-            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.showTableList reloadData];
-            [self.view addSubview:tempHUD];
-            tempHUD.labelText = @"加载中...";
-            tempHUD.opacity = 0.5;
-            [tempHUD show:YES];
-        }
-    }
-
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    MBProgressHUD * tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:tempHUD];
+    tempHUD.labelText = @"加载中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"tops"];
+            
             if(tempTopsArray.count > 0){
                 NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
+                showTopId_ = [[tempTopsArray objectAtIndex:0] objectForKey:@"id"];
+                
                 if(tempArray.count > 0) {
-                    [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
                     [self.showListArr addObjectsFromArray:tempArray];
                 }
             }
         }
-        else {
-            
-        }
+        
         [self.showTableList reloadData];
         [tempHUD hide:YES];
         
@@ -233,6 +200,31 @@
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [tempHUD hide:YES];
+    }];
+    
+    
+}
+
+-(void)loadMoreShowTopsData{
+
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:showTopId_,@"top_id",[NSNumber numberWithInt:showLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:@"/joyplus-service/index.php/show_top_items" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"items"];
+            if(tempTopsArray.count > 0){
+                [self.showListArr addObjectsFromArray:tempTopsArray];
+                }      
+        }
+        
+        [self.showTableList reloadData];
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+        if(self.showListArr == nil){
+            self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
+        }
     }];
     
     
@@ -343,32 +335,47 @@
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.showTableList.tag = SHOW_TYPE;
     [self.scrollView addSubview:self.showTableList];
+     self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+    
     
     [self.view addSubview:self.scrollView];
+
+       
+    //添加上，下拉刷新控件
     
- //   UIView *pageColBg = [[UIView alloc] initWithFrame:CGRectMake(125, kCurrentWindowHeight-132, 70, 26)];
-    
-//    pageColBg.backgroundColor = [UIColor colorWithRed:75/255.0 green:75/255.0 blue:75/255.0 alpha: 1.0f];
-//    pageColBg.alpha = 0.5;
-//    [self.view addSubview:pageColBg];
-//    pageControl_ = [[DDPageControl alloc] init] ;
-//    [pageControl_ setCenter: CGPointMake(pageColBg.center.x, pageColBg.center.y)] ;
-//    [pageControl_ setNumberOfPages: 3] ;
-//    [pageControl_ setCurrentPage: 0] ;
-//    [pageControl_ addTarget: self action: @selector(changePage:) forControlEvents: UIControlEventValueChanged] ;
-//    [pageControl_ setDefersCurrentPageDisplay: YES] ;
-//    [pageControl_ setType: DDPageControlTypeOnFullOffEmpty] ;
-//    [pageControl_ setOnColor: [UIColor colorWithRed:24/255.0 green:112/255.0 blue:195/255.0 alpha: 1.0f]] ;
+//    if (refreshHeaderViewForMovieList_ == nil) {
+//        refreshHeaderViewForMovieList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - movieTableList_.bounds.size.height, self.view.frame.size.width, movieTableList_.bounds.size.height)];
+//        refreshHeaderViewForMovieList_.backgroundColor = [UIColor clearColor];
+//        refreshHeaderViewForMovieList_.delegate = self;
+//        [movieTableList_ addSubview:refreshHeaderViewForMovieList_];
+//        [refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
+//        movieLoadCount_ = 1;
+//    }
 //
-//    [pageControl_ setOffColor: [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha: 1.0f]] ;
-//    
-//    [pageControl_ setIndicatorDiameter: 7.0f] ;
-//    [pageControl_ setIndicatorSpace: 8.0f] ;
-//    [self.view addSubview:pageControl_];
-    
+//    if (refreshHeaderViewForTvList_ == nil) {
+//        refreshHeaderViewForTvList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - tvTableList_.bounds.size.height, self.view.frame.size.width, tvTableList_.bounds.size.height)];
+//        refreshHeaderViewForTvList_.backgroundColor = [UIColor clearColor];
+//        refreshHeaderViewForTvList_.delegate = self;
+//        [tvTableList_ addSubview:refreshHeaderViewForTvList_];
+//        [refreshHeaderViewForTvList_ refreshLastUpdatedDate];
+//        tvLoadCount_ = 1;
+//    }
+
+//    if (refreshHeaderViewForShowList_ == nil) {
+//        refreshHeaderViewForShowList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(640.0f,100, self.view.frame.size.width, showTableList_.bounds.size.height)];
+//        refreshHeaderViewForShowList_.backgroundColor = [UIColor redColor];
+//        refreshHeaderViewForShowList_.delegate = self;
+//        [showTableList_ addSubview:refreshHeaderViewForShowList_];
+//        [showTableList_ addSubview:refreshHeaderViewForShowList_];
+//        [refreshHeaderViewForShowList_ refreshLastUpdatedDate];
+//        showLoadCount_ = 1;
+//    }
+//    self.scrollView.backgroundColor = [UIColor redColor];
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
+    
+
     
 }
 -(void)buttonChange:(UIButton *)btn{
@@ -471,7 +478,13 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 130;
+    if (tableView.tag == SHOW_TYPE){
+        return 94;
+    }
+    else{
+      return 130;
+    }
+    
     
 }
 
@@ -509,31 +522,13 @@
 
 }
 
-
-//-(void)changePage:(UIPageControl *)PageControl {
-//    int whichPage = PageControl.currentPage;
-//
-//    [UIView beginAnimations:nil context:NULL];
-//
-//    [UIView setAnimationDuration:0.3f];
-//
-//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-//
-//    [self.scrollView setContentOffset:CGPointMake(320.0f * whichPage, 0.0f) animated:YES];
-//
-//    [UIView commitAnimations];
-//
-//}
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat pageWidth = self.view.frame.size.width;
     CGPoint offset = scrollView.contentOffset;
     if (offset.x * offset.x> offset.y * offset.y) {
         int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-//        [pageControl_ setCurrentPage: page] ;
-//        [pageControl_ updateCurrentPageDisplay] ;
-       
+        
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.2f];
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
@@ -566,6 +561,74 @@
     
 }
 
+/*
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
+  
+    switch (aScrollView.tag) {
+        case MOVIE_TYPE:{
+            [refreshHeaderViewForMovieList_ egoRefreshScrollViewDidEndDragging:aScrollView];
+            break;
+        }
+        case TV_TYPE:{
+            [refreshHeaderViewForTvList_ egoRefreshScrollViewDidEndDragging:aScrollView];
+            break;
+        }
+        case SHOW_TYPE:{
+            [refreshHeaderViewForShowList_ egoRefreshScrollViewDidEndDragging:aScrollView];
+            break;
+        }
+        default:
+            break;
+    }
+    
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    if (view == refreshHeaderViewForMovieList_) {
+        movieLoadCount_++;
+        [self loadMovieTopsData];
+    }
+    else if (view == refreshHeaderViewForTvList_){
+        tvLoadCount_++;
+        [self loadTVTopsData];
+    }
+    else if (view == refreshHeaderViewForShowList_){
+        showLoadCount_++;
+        [self loadMoreShowTopsData];
+    
+    }
+    
+	reloading_ = YES;
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
+
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return reloading_; // should return if data source model is reloading
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; // should return date data source was last changed
+	
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	reloading_ = NO;
+//	[refreshHeaderViewForMovieList_ egoRefreshScrollViewDataSourceDidFinishedLoading:movieTableList_];
+//    [refreshHeaderViewForTvList_ egoRefreshScrollViewDataSourceDidFinishedLoading:tvTableList_];
+    [refreshHeaderViewForShowList_ egoRefreshScrollViewDataSourceDidFinishedLoading:showTableList_];
+	
+}
+*/
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

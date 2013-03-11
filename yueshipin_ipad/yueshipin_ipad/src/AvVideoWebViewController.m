@@ -7,7 +7,6 @@
 //
 
 #import "AvVideoWebViewController.h"
-#import "MyMediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "UIImage+Scale.h"
 #import "AVPlayerViewController.h"

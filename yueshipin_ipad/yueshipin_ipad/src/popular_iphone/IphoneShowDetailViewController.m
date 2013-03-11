@@ -758,7 +758,7 @@
 }
 
 -(UIView *)showEpisodesplayView{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15, 0, 293, 125)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15, 0, 293, 150)];
     int count = [episodesArr_ count];
     
     pageCount_ = (count%4 == 0 ? (count/4):(count/4)+1);
@@ -768,7 +768,6 @@
     scrollView_.scrollEnabled = NO;
     scrollView_.pagingEnabled = YES;
     scrollView_.showsHorizontalScrollIndicator = NO;
-
     for (int i = 0; i < count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake((i/4)*240, (i%4)*29, 240, 27);

@@ -161,14 +161,18 @@
     if (![statement isEqualToString:@"1"]) {
         [self showStatement];
     }
+<<<<<<< HEAD
     
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
+=======
+   
+>>>>>>> iphone code commit
     return YES;
 }
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
-//    NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
+    //NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
@@ -337,6 +341,10 @@
     textView.layer.cornerRadius = 2;
     textView.layer.masksToBounds = YES;
     alert.contentTextView = textView;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+       alert.frame = CGRectMake(alert.frame.origin.x, alert.frame.origin.y, 250, 330);
+       textView.frame = CGRectMake(10, 40, alert.frame.size.width - 25, alert.frame.size.height - 110);
+    }
     [alert show];
 }
 

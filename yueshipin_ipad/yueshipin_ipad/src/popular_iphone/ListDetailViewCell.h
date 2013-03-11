@@ -14,8 +14,8 @@
     UILabel *label_;
     UILabel *actors_;
     UILabel *area_;
-    UILabel *support_;
-    UILabel *addFav_;
+    UIButton *support_;
+    UIButton *addFav_;
     UILabel *score_;
 }
 
@@ -23,7 +23,7 @@
 @property (strong, nonatomic)UILabel *label;
 @property (strong, nonatomic)UILabel *actors;
 @property (strong, nonatomic)UILabel *area;
-@property (strong, nonatomic)UILabel *support;
-@property (strong, nonatomic)UILabel *addFav;
+@property (strong, nonatomic)UIButton *support;
+@property (strong, nonatomic)UIButton *addFav;
 @property (strong, nonatomic)UILabel *score;
 @end

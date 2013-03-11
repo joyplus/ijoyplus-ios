@@ -67,6 +67,7 @@
     MPVolumeView *volumeView_;
     UILabel *airPlayLabel_;
     
+    UIImageView *sourceLogo_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -104,6 +105,7 @@
 @property (nonatomic, assign) CMTime lastPlayTime;
 @property (nonatomic, strong) MPVolumeView *volumeView;
 @property (nonatomic, strong) UILabel *airPlayLabel;
+@property (nonatomic, strong) UIImageView *sourceLogo;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

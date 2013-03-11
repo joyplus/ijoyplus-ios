@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "DDPageControl.h"
-
-@interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate>{
+#import "EGORefreshTableHeaderView.h"
+#import "MNMBottomPullToRefreshManager.h"
+@interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient,EGORefreshTableHeaderDelegate>{
 
     UIScrollView *scrollView_;
     DDPageControl *pageControl_;
@@ -28,6 +29,16 @@
     UIImageView *slider_;
     
     UIImageView *pageMGIcon_;
+    
+    EGORefreshTableHeaderView *refreshHeaderViewForMovieList_;
+    EGORefreshTableHeaderView *refreshHeaderViewForTvList_;
+    EGORefreshTableHeaderView *refreshHeaderViewForShowList_;
+    
+    BOOL reloading_;
+    int movieLoadCount_;
+    int tvLoadCount_;
+    int showLoadCount_;
+    NSString *showTopId_;
 }
 @property (strong, nonatomic)UIScrollView *scrollView;
 @property (strong, nonatomic)DDPageControl *pageControl;
@@ -43,4 +54,9 @@
 @property (strong, nonatomic)UIButton *showBtn;
 @property (strong, nonatomic)UIImageView *slider;
 @property (strong, nonatomic)UIImageView *pageMGIcon;
+@property (strong, nonatomic) NSString *showTopId;
+
+@property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForMovieList;
+@property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForTvList;
+@property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForShowList;
 @end

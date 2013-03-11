@@ -12,7 +12,6 @@
 #import "GMGridView.h"
 #import "SubdownloadViewController.h"
 #import "SQLiteInstanceManager.h"
-#import "MyMediaPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
 #import "AVPlayerViewController.h"
 #import "DDProgressView.h"

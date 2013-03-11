@@ -149,7 +149,6 @@
 		2281DA6216AD25D800333353 /* IphoneDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */; };
 		229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */; };
 		22AAA4B81697D42E00333F76 /* CreateMyListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */; };
-		22AFAECB16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AFAECA16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m */; };
 		22B0463D16BB65FF005966B8 /* CustomNavigationButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0463A16BB65FF005966B8 /* CustomNavigationButtonView.m */; };
 		22B0463E16BB65FF005966B8 /* CustomNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0463B16BB65FF005966B8 /* CustomNavigationViewController.m */; };
 		22B21C2516A7D60C00D57512 /* DownLoadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B21C2416A7D60C00D57512 /* DownLoadManager.m */; };
@@ -168,7 +167,6 @@
 		22EF004616B767410001F743 /* UMGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22EF003B16B767410001F743 /* UMGridViewController.m */; };
 		22EF004716B767410001F743 /* libUMAppNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF003C16B767410001F743 /* libUMAppNetwork.a */; };
 		22EF004816B767410001F743 /* UMUFP.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22EF003D16B767410001F743 /* UMUFP.bundle */; };
-		22EF004D16B767D90001F743 /* MyMediaPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22EF004A16B767D90001F743 /* MyMediaPlayerViewController.m */; };
 		22EF004E16B767D90001F743 /* AvVideoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22EF004C16B767D90001F743 /* AvVideoWebViewController.m */; };
 		22EF005516B767EC0001F743 /* ChatCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22EF005016B767EC0001F743 /* ChatCustomCell.m */; };
 		22EF005616B767EC0001F743 /* ChatCustomCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22EF005116B767EC0001F743 /* ChatCustomCell.xib */; };
@@ -253,7 +251,6 @@
 		EB02F6A216DB0007001C2E3A /* watch_record_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB02F67A16DB0007001C2E3A /* watch_record_bg@2x.png */; };
 		EB02F6A616DB00ED001C2E3A /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02F6A516DB00ED001C2E3A /* CMPopTipView.m */; };
 		EB02F6A816DB0130001C2E3A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB02F6A716DB0130001C2E3A /* CoreMedia.framework */; };
-		EB02F6AE16DB024D001C2E3A /* VideoWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02F6AD16DB024D001C2E3A /* VideoWebViewController.m */; };
 		EB02F6AF16DB9A80001C2E3A /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB63D4CE16D07EA700B642C7 /* Icon-72@2x.png */; };
 		EB14D426165B306000CB3260 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D424165B306000CB3260 /* HomeViewController.m */; };
 		EB14D434165B357500CB3260 /* DDPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = EB14D433165B357500CB3260 /* DDPageControl.m */; };
@@ -567,8 +564,6 @@
 		EB9382A51668A1E10046A3B1 /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */; };
 		EB9382A71668AA3E0046A3B1 /* play_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */; };
 		EBB1B16616D0B46000A8F99A /* menu_intro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B16516D0B46000A8F99A /* menu_intro@2x.png */; };
-		EBB1B16B16D0B5D400A8F99A /* iphone_cache_video@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B16816D0B5D300A8F99A /* iphone_cache_video@2x.jpg */; };
-		EBB1B16C16D0B5D400A8F99A /* iphone_cache_video2@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBB1B16916D0B5D400A8F99A /* iphone_cache_video2@2x.jpg */; };
 		EBB59CA91666F68300F646C7 /* finish_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CA71666F68300F646C7 /* finish_pressed@2x.png */; };
 		EBB59CAA1666F68300F646C7 /* finish@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CA81666F68300F646C7 /* finish@2x.png */; };
 		EBB59CAE1666FE8400F646C7 /* MyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CAD1666FE8400F646C7 /* MyListViewController.m */; };
@@ -964,8 +959,6 @@
 		229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationViewControllerPortrait.m; sourceTree = "<group>"; };
 		22AAA4B61697D42D00333F76 /* CreateMyListOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateMyListOneViewController.h; sourceTree = "<group>"; };
 		22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateMyListOneViewController.m; sourceTree = "<group>"; };
-		22AFAEC916B7AF7F0092A8D6 /* IphonePlayVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphonePlayVideoViewController.h; sourceTree = "<group>"; };
-		22AFAECA16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphonePlayVideoViewController.m; sourceTree = "<group>"; };
 		22B0463916BB65FF005966B8 /* CustomNavigationButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationButtonView.h; sourceTree = "<group>"; };
 		22B0463A16BB65FF005966B8 /* CustomNavigationButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationButtonView.m; sourceTree = "<group>"; };
 		22B0463B16BB65FF005966B8 /* CustomNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationViewController.m; sourceTree = "<group>"; };
@@ -1001,8 +994,6 @@
 		22EF004216B767410001F743 /* UMUFPImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPImageView.h; sourceTree = "<group>"; };
 		22EF004316B767410001F743 /* UMUFPTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPTableView.h; sourceTree = "<group>"; };
 		22EF004416B767410001F743 /* UMUFPWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMUFPWebView.h; sourceTree = "<group>"; };
-		22EF004916B767D90001F743 /* MyMediaPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyMediaPlayerViewController.h; sourceTree = "<group>"; };
-		22EF004A16B767D90001F743 /* MyMediaPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyMediaPlayerViewController.m; sourceTree = "<group>"; };
 		22EF004B16B767D90001F743 /* AvVideoWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvVideoWebViewController.h; sourceTree = "<group>"; };
 		22EF004C16B767D90001F743 /* AvVideoWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AvVideoWebViewController.m; sourceTree = "<group>"; };
 		22EF004F16B767EC0001F743 /* ChatCustomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatCustomCell.h; sourceTree = "<group>"; };
@@ -1117,8 +1108,6 @@
 		EB02F6A416DB00ED001C2E3A /* CMPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPopTipView.h; sourceTree = "<group>"; };
 		EB02F6A516DB00ED001C2E3A /* CMPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPopTipView.m; sourceTree = "<group>"; };
 		EB02F6A716DB0130001C2E3A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
-		EB02F6AC16DB024D001C2E3A /* VideoWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoWebViewController.h; sourceTree = "<group>"; };
-		EB02F6AD16DB024D001C2E3A /* VideoWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoWebViewController.m; sourceTree = "<group>"; };
 		EB14D423165B306000CB3260 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		EB14D424165B306000CB3260 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		EB14D432165B357500CB3260 /* DDPageControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPageControl.h; sourceTree = "<group>"; };
@@ -1472,8 +1461,6 @@
 		EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-Landscape@2x~ipad.png"; sourceTree = "<group>"; };
 		EB9382A61668AA3E0046A3B1 /* play_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "play_btn_pressed@2x.png"; sourceTree = "<group>"; };
 		EBB1B16516D0B46000A8F99A /* menu_intro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_intro@2x.png"; sourceTree = "<group>"; };
-		EBB1B16816D0B5D300A8F99A /* iphone_cache_video@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "iphone_cache_video@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/iphone_cache_video@2x.jpg"; sourceTree = SOURCE_ROOT; };
-		EBB1B16916D0B5D400A8F99A /* iphone_cache_video2@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "iphone_cache_video2@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/iphone_cache_video2@2x.jpg"; sourceTree = SOURCE_ROOT; };
 		EBB59CA71666F68300F646C7 /* finish_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finish_pressed@2x.png"; sourceTree = "<group>"; };
 		EBB59CA81666F68300F646C7 /* finish@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finish@2x.png"; sourceTree = "<group>"; };
 		EBB59CAC1666FE8300F646C7 /* MyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyListViewController.h; sourceTree = "<group>"; };
@@ -1922,8 +1909,6 @@
 				2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */,
 				22345872169E991B009A65BE /* IphoneVideoViewController.h */,
 				22345873169E991B009A65BE /* IphoneVideoViewController.m */,
-				22AFAEC916B7AF7F0092A8D6 /* IphonePlayVideoViewController.h */,
-				22AFAECA16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m */,
 				22B0463916BB65FF005966B8 /* CustomNavigationButtonView.h */,
 				22B0463A16BB65FF005966B8 /* CustomNavigationButtonView.m */,
 				22B0463F16BB663E005966B8 /* CustomNavigationViewController.h */,
@@ -2038,8 +2023,6 @@
 				22BA95F016D205BE00A774D8 /* download_loading@2x.png */,
 				22BA95F116D205BE00A774D8 /* download_stop@2x.png */,
 				22BA95F216D205BE00A774D8 /* download_wait@2x.png */,
-				EBB1B16816D0B5D300A8F99A /* iphone_cache_video@2x.jpg */,
-				EBB1B16916D0B5D400A8F99A /* iphone_cache_video2@2x.jpg */,
 				EB63D2F016D07A0100B642C7 /* addFav_pressed@2x.png */,
 				EB63D2F116D07A0100B642C7 /* addFav@2x.png */,
 				EB63D2F316D07A0100B642C7 /* background_about_us@2x.png */,
@@ -2921,10 +2904,6 @@
 				EB8201BD166636140015F447 /* SublistViewController.m */,
 				EBF3A99D1663979500EBF56D /* DeviceListViewController.h */,
 				EBF3A99E1663979600EBF56D /* DeviceListViewController.m */,
-				22EF004916B767D90001F743 /* MyMediaPlayerViewController.h */,
-				22EF004A16B767D90001F743 /* MyMediaPlayerViewController.m */,
-				EB02F6AC16DB024D001C2E3A /* VideoWebViewController.h */,
-				EB02F6AD16DB024D001C2E3A /* VideoWebViewController.m */,
 				22EF004B16B767D90001F743 /* AvVideoWebViewController.h */,
 				22EF004C16B767D90001F743 /* AvVideoWebViewController.m */,
 			);
@@ -3563,8 +3542,6 @@
 				EB63D72F16D0A0BE00B642C7 /* share_btn_pressed.png in Resources */,
 				EB63D73016D0A0BE00B642C7 /* share_btn.png in Resources */,
 				EBB1B16616D0B46000A8F99A /* menu_intro@2x.png in Resources */,
-				EBB1B16B16D0B5D400A8F99A /* iphone_cache_video@2x.jpg in Resources */,
-				EBB1B16C16D0B5D400A8F99A /* iphone_cache_video2@2x.jpg in Resources */,
 				22BA95F316D205BE00A774D8 /* download_loading@2x.png in Resources */,
 				22BA95F416D205BE00A774D8 /* download_stop@2x.png in Resources */,
 				22BA95F516D205BE00A774D8 /* download_wait@2x.png in Resources */,
@@ -3849,11 +3826,9 @@
 				2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */,
 				22EF004516B767410001F743 /* GridViewCellDemo.m in Sources */,
 				22EF004616B767410001F743 /* UMGridViewController.m in Sources */,
-				22EF004D16B767D90001F743 /* MyMediaPlayerViewController.m in Sources */,
 				22EF004E16B767D90001F743 /* AvVideoWebViewController.m in Sources */,
 				22EF005516B767EC0001F743 /* ChatCustomCell.m in Sources */,
 				22EF005716B767EC0001F743 /* ChatViewController.m in Sources */,
-				22AFAECB16B7AF7F0092A8D6 /* IphonePlayVideoViewController.m in Sources */,
 				22B0463D16BB65FF005966B8 /* CustomNavigationButtonView.m in Sources */,
 				22B0463E16BB65FF005966B8 /* CustomNavigationViewController.m in Sources */,
 				22343DD516BC007C00AFE83A /* NewDownloadManager.m in Sources */,
@@ -3864,7 +3839,6 @@
 				EB02F65116DAFFF0001C2E3A /* AVPlayerViewController.m in Sources */,
 				EB02F65216DAFFF0001C2E3A /* EpisodeListViewController.m in Sources */,
 				EB02F6A616DB00ED001C2E3A /* CMPopTipView.m in Sources */,
-				EB02F6AE16DB024D001C2E3A /* VideoWebViewController.m in Sources */,
 				229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */,
 				220260B616E840A40010322F /* IphoneAVPlayerViewController.m in Sources */,
 				220260B716E840A40010322F /* IphoneWebPlayerViewController.m in Sources */,

@@ -15,7 +15,6 @@
 #import "WatchRecordCell.h"
 #import "MovieDetailViewController.h"
 #import "ShowDetailViewController.h"
-#import "MyMediaPlayerViewController.h"
 #import "AvVideoWebViewController.h"
 
 #define TABLE_VIEW_WIDTH 370

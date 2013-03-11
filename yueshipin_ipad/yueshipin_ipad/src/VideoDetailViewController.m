@@ -10,7 +10,6 @@
 #import "SelectListViewController.h"
 #import "CommonHeader.h"
 #import "ListViewController.h"
-#import "MyMediaPlayerViewController.h"
 #import "AvVideoWebViewController.h"
 
 @interface VideoDetailViewController ()

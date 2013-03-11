@@ -10,6 +10,7 @@
 #import "SinaWeibo.h"
 #define DING 1
 #define ADDFAV  2
+#define REPORT 3
 @interface IphoneVideoViewController : UITableViewController<SinaWeiboDelegate,SinaWeiboRequestDelegate>{
     SinaWeibo *_mySinaWeibo;
     NSDictionary *infoDic_;
