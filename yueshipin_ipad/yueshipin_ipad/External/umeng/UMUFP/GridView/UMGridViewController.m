@@ -133,6 +133,7 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
     } else {
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
+    [_mGridView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -233,6 +233,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 	[mPlayer pause];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
@@ -354,7 +355,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         for (NSDictionary *url_dic in urls) {
             NSString *type_str = [[url_dic objectForKey:@"type"] lowercaseString];
             NSString *url_str = [url_dic objectForKey:@"url"];
-            NSDictionary *urlDic = [NSDictionary dictionaryWithObjectsAndKeys:source_str, @"source", url_str, @"url", nil];
+            NSString *file_str = [url_dic objectForKey:@"file"];
+            NSDictionary *urlDic = [NSDictionary dictionaryWithObjectsAndKeys:source_str, @"source", url_str, @"url", file_str, @"file", nil];
             if ([type_str isEqualToString:CHAO_QING]) {
                 [superClearArr addObject:urlDic];
             }
@@ -495,10 +497,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
     NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
     int status_Code = HTTPResponse.statusCode;
-    if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
-        NSLog(@"working = %@", connection.originalRequest.URL);
-        workingUrl = connection.originalRequest.URL;
-        [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+    NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+    NSString *fileType = [[tempDic objectForKey:URL_KEY] objectForKey:@"file"];
+    NSString *source = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
+    if (status_Code >= 200 && status_Code <= 299){
+        if ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])) {
+            NSLog(@"working = %@", connection.originalRequest.URL);
+            workingUrl = connection.originalRequest.URL;
+            [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+        } else if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
+            NSLog(@"working = %@", connection.originalRequest.URL);
+            workingUrl = connection.originalRequest.URL;
+            [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+        } else {
+            combinedIndex++;
+            [self sendRequest];
+        }
     } else {
         combinedIndex++;
         [self sendRequest];
@@ -633,11 +647,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
     mToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0.0f, BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT, bottomView.frame.size.width, BOTTOM_TOOLBAR_HEIGHT)];
-    [mToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.8] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    [mToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.9] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [bottomView addSubview:mToolbar];
     
     mSwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mSwitchButton setEnabled:NO];
     mSwitchButton.frame = CGRectMake(20, 25, 55, BUTTON_HEIGHT);
     [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
     [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
@@ -665,7 +678,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
     mPlayButton.frame = CGRectMake(0, 0, 55, BUTTON_HEIGHT);
     [mPlayButton setHidden:YES];
-    [mPlayButton setEnabled:NO];
     mPlayButton.center = CGPointMake(bottomView.frame.size.width/2, BOTTOM_TOOLBAR_HEIGHT/2);
     [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt"] forState:UIControlStateNormal];
     [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt_pressed"] forState:UIControlStateHighlighted];
@@ -674,23 +686,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     mStopButton = [UIButton buttonWithType:UIButtonTypeCustom];
     mStopButton.frame = mPlayButton.frame;
-    [mStopButton setEnabled:NO];
     [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt"] forState:UIControlStateNormal];
     [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt_pressed"] forState:UIControlStateHighlighted];
     [mStopButton addTarget:self action:@selector(stopBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mStopButton];
     
     mPrevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mPrevButton setEnabled:NO];
-    mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
+    mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.height);
     [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt"] forState:UIControlStateNormal];
     [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_pressed"] forState:UIControlStateHighlighted];
     [mPrevButton addTarget:self action:@selector(prevBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mPrevButton];
     
     mNextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mNextButton setEnabled:NO];
-    mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
+    mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.height);
     [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt"] forState:UIControlStateNormal];
     [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_pressed"] forState:UIControlStateHighlighted];
     [mNextButton addTarget:self action:@selector(nextBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -718,13 +727,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
     [bottomView addSubview:volumeSlider];
     
-    [self initScrubberTimer];
-	[self syncPlayPauseButtons];
-	[self syncScrubber];
-    
     qualityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [qualityBtn setHidden:YES];
-    [qualityBtn setEnabled:NO];
     qualityBtn.frame = CGRectMake(mToolbar.frame.size.width - 100 - 20, mPlayButton.frame.origin.y, 100, BUTTON_HEIGHT);
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
@@ -733,6 +737,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (resolutionNum > 1 && !isDownloaded) {
         [qualityBtn setHidden:NO];
     }
+    [self initScrubberTimer];
+    [self syncPlayPauseButtons];
+    [self syncScrubber];
+    [self disablePlayerButtons];
+    [self enableNextButton];
 }
 
 - (void)resetControlVisibilityTimer
@@ -756,6 +765,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [epsideArrayView setHidden:NO];
         }
         [self resetControlVisibilityTimer];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
     } else {
         [controlVisibilityTimer invalidate];
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
@@ -779,6 +789,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [resolutionPopTipView dismissAnimated:NO];
             resolutionPopTipView = nil;
             [bottomView setHidden:YES];
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
         }];
     }
 }
@@ -876,7 +887,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [episodeListviewController.table reloadData];
         [self disablePlayerButtons];
         [self disableScrubber];
-        [self disableVolumeSlider];
+        if (subnameArray.count - 1 == self.currentNum) {
+            [self disableNextButton];
+        }
         [self preparePlayVideo];
     } else {
         currentNum--;
@@ -1318,6 +1331,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             break;
         }
     }
+    [mPrevButton setEnabled:YES];
+    [volumeBtn setEnabled:YES];
+}
+
+-(void)disablePlayerButtons
+{
+    [qualityBtn setEnabled:NO];
+    self.mPlayButton.enabled = NO;
+    self.mStopButton.enabled = NO;
+    [mPrevButton setEnabled:NO];
+    [volumeBtn setEnabled:NO];
+    [mSwitchButton setEnabled:NO];
+}
+
+- (void)enableNextButton
+{
     if (subnameArray.count > 0 && type != 1){
         if (currentNum == 0) {
             [mNextButton setEnabled:YES];
@@ -1328,17 +1357,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     } else {
         [mNextButton setEnabled:NO];
-    }
-    [mPrevButton setEnabled:YES];
+    }    
 }
 
--(void)disablePlayerButtons
+- (void)disableNextButton
 {
-    [qualityBtn setEnabled:NO];
-    self.mPlayButton.enabled = NO;
-    self.mStopButton.enabled = NO;
-    [mPrevButton setEnabled:NO];
-    [mNextButton setEnabled:NO];
+    [mNextButton setEnabled:NO];    
 }
 
 #pragma mark -
@@ -1479,37 +1503,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     self.mScrubber.enabled = NO;    
 }
-
--(void)enableVolumeSlider
-{
-    for (UIView *view in [volumeSlider subviews]){
-		if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
-			UISlider *tempSlider = (UISlider *) view;
-            tempSlider.enabled = YES;
-		}
-	}
-}
-
-- (void)disableVolumeSlider
-{
-    for (UIView *view in [volumeSlider subviews]){
-		if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
-			UISlider *tempSlider = (UISlider *) view;
-            tempSlider.enabled = NO;
-		}
-	}
-}
-
 - (void)playOneEpisode:(int)num
 {
     currentNum = num;
     currentPlaybackTimeLabel.text = @"00:00:00";
     mScrubber.value = 0;
-    [mPlayButton setEnabled:NO];
-    [mNextButton setEnabled:NO];
-    [mPrevButton setEnabled:NO];
-    [mSwitchButton setEnabled:NO];
-    [qualityBtn setEnabled:NO];
+    [self disablePlayerButtons];
+    [self enableNextButton];
+    [self disableScrubber];
     [self resetControlVisibilityTimer];
     [self preparePlayVideo];
 }
@@ -1756,7 +1757,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self removePlayerTimeObserver];
                 [self syncScrubber];
                 [self disableScrubber];
-                [self disableVolumeSlider];
                 [self disablePlayerButtons];
             }
             break;
@@ -1771,8 +1771,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 totalTimeLabel.text = [TimeUtility formatTimeInSecond:duration];
                 [self initScrubberTimer];
                 [self enableScrubber];
-                [self enableVolumeSlider];
                 [self enablePlayerButtons];
+                [self enableNextButton];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {
                         [subview setAlpha:0];
@@ -1851,7 +1851,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         {
             [self disablePlayerButtons];
             [self disableScrubber];
-            [self disableVolumeSlider];
         }
         else /* Replacement of player currentItem has occurred */
         {
