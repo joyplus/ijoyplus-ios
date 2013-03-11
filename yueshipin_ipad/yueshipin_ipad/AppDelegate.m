@@ -161,12 +161,9 @@
     if (![statement isEqualToString:@"1"]) {
         [self showStatement];
     }
-<<<<<<< HEAD
-    
+
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
-=======
-   
->>>>>>> iphone code commit
+
     return YES;
 }
 
