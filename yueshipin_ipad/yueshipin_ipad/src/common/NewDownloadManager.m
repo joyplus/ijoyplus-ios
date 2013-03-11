@@ -34,6 +34,7 @@
 
 - (void)startDownloadingThread:(NSArray *)allItem type:(NSString *)type
 {
+    NSString *test = nil;
     if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
         for (DownloadItem *item in allItem) {
             if([item.downloadStatus isEqualToString:type]){
