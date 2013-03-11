@@ -578,6 +578,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 250, 150)];
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+60);
     myHUD.backgroundColor = [UIColor clearColor];
+    UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTopToolBar)];
+    tapGesture_another.numberOfTapsRequired = 1;
+    tapGesture_another.numberOfTouchesRequired = 1;
+    [playCacheView_ addGestureRecognizer:tapGesture_another];
+    
     [myHUD addGestureRecognizer:tapGesture];
     myHUD.labelText = @"加载中...";
     myHUD.opacity = 0;

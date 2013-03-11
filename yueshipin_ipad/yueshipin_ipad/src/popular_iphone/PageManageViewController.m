@@ -466,6 +466,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
             cell.nameLabel.text = [item objectForKey:@"prod_name"];
+            cell.latest.text = [NSString stringWithFormat:@"更新至：%@",[item objectForKey:@"cur_item_name"]];
            [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"picture_bg.png"]];
         
             return cell;

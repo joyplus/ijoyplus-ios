@@ -11,8 +11,10 @@
 @interface ShowListViewCell : UITableViewCell{
     UIImageView *imageView_;
     UILabel *nameLabel_;
+    UILabel *latest_;
 }
 @property(nonatomic, strong)UIImageView *imageView;
 @property(nonatomic, strong)UILabel *nameLabel;
+@property(nonatomic, strong)UILabel *latest;
 
 @end

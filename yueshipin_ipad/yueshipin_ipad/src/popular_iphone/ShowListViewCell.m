@@ -11,7 +11,7 @@
 @implementation ShowListViewCell
 @synthesize imageView = imageView_;
 @synthesize nameLabel = nameLabel_;
-
+@synthesize latest = latest_;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -22,11 +22,17 @@
         view.backgroundColor = [UIColor grayColor];
         view.alpha = 0.5;
         [self addSubview:view];
-        nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 320, 15)];
+        nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(5, 80, 125, 15)];
         nameLabel_.backgroundColor = [UIColor clearColor];
         nameLabel_.textColor = [UIColor whiteColor];
-        nameLabel_.font = [UIFont systemFontOfSize:14];
+        nameLabel_.font = [UIFont systemFontOfSize:13];
         [self addSubview:nameLabel_];
+        
+        latest_ = [[UILabel alloc] initWithFrame:CGRectMake(135, 80, 190, 15)];
+        latest_.backgroundColor = [UIColor clearColor];
+        latest_.textColor = [UIColor whiteColor];
+        latest_.font = [UIFont systemFontOfSize:13];
+        [self addSubview:latest_];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         

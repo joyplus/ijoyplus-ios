@@ -91,7 +91,14 @@
             content = [content stringByReplacingOccurrencesOfString:@"\n" withString:@" "];
         }
         sinaWeibo_ = [AppDelegate instance].sinaweibo;
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaWeibo_.accessToken, @"access_token", content, @"status", [infoDic_ objectForKey:@"prod_pic_url"], @"url", nil];
+        NSString *imageUrl = [infoDic_ objectForKey:@"prod_pic_url"];
+        if (imageUrl == nil) {
+            imageUrl = [infoDic_ objectForKey:@"poster"];
+        }
+        if (imageUrl == nil) {
+            imageUrl = [infoDic_ objectForKey:@"ipad_poster"];
+        }
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaWeibo_.accessToken, @"access_token", content, @"status", imageUrl, @"url", nil];
         [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self removeOverlay];
             [self showSuccessModalView:1.5];
