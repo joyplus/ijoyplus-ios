@@ -25,6 +25,8 @@
 #import "IphoneWebPlayerViewController.h"
 #import "CustomNavigationViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "WXApi.h"
+#import "UIImageView+WebCache.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -41,6 +43,8 @@
 @synthesize videoUrlsArray = videoUrlsArray_;
 @synthesize httpUrlArray = httpUrlArray_;
 @synthesize isNotification = isNotification_;
+@synthesize segmentedControl = segmentedControl_;
+@synthesize wechatImg = wechatImg_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -161,21 +165,86 @@
 
 
 -(void)share:(id)sender{
-   
-        _mySinaWeibo = [AppDelegate instance].sinaweibo;
-        _mySinaWeibo.delegate = self;
-        if ([_mySinaWeibo isLoggedIn]) {
-            SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
-            sendV.infoDic = infoDic_;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
-        }
-        else{
-            [_mySinaWeibo logIn];
-           
-        }
- 
+
+    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:@"新浪分享",@"微信分享",nil];
+    
+    //初始化UISegmentedControl
+    
+    segmentedControl_ = [[UISegmentedControl alloc]initWithItems:segmentedArray];
+    
+    segmentedControl_.frame = CGRectMake(165.0, 0, 150.0, 44.0);
+    
+    segmentedControl_.selectedSegmentIndex = 2;//设置默认选择项索引
+    
+    segmentedControl_.segmentedControlStyle = UISegmentedControlStyleBar;//设置样式
+    
+    [segmentedControl_ addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    [self performSelector:@selector(removeView) withObject:nil afterDelay:1.5];
+    [self.view addSubview:segmentedControl_];
+    
+}
+-(void)segmentAction:(UISegmentedControl *)Seg{
+    NSInteger Index = Seg.selectedSegmentIndex;
+    
+    NSLog(@"Index %i", Index);
+    
+    switch (Index) {
+            
+        case 0:
+            
+            [self sinaShare];
+            
+            break;
+            
+        case 1:
+            
+            [self wechatShare];
+            
+            break;
+        default:
+            
+            break;
+            
+    }
+
+
 }
 
+-(void)sinaShare{
+    _mySinaWeibo = [AppDelegate instance].sinaweibo;
+    _mySinaWeibo.delegate = self;
+    if ([_mySinaWeibo isLoggedIn]) {
+        SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
+        sendV.infoDic = infoDic_;
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
+    }
+    else{
+        [_mySinaWeibo logIn];
+        
+    }
+}
+
+-(void)wechatShare{
+        WXMediaMessage *message = [WXMediaMessage message];
+        message.title = @"推荐";
+        message.description = [infoDic_ objectForKey:@"name"];
+        [message setThumbImage:wechatImg_];
+    
+        WXWebpageObject *ext = [WXWebpageObject object];
+        ext.webpageUrl = [NSString stringWithFormat:@"http://weixin.joyplus.tv/info.php?prod_id=%@",prodId_];
+        message.mediaObject = ext;
+    
+        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+        req.bText = NO;
+        req.message = message;
+        req.scene = WXSceneSession;
+        
+        [WXApi sendReq:req];
+
+}
+-(void)removeView{
+    [segmentedControl_ removeFromSuperview];
+}
 #pragma mark - SinaWeibo Delegate
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo{
     

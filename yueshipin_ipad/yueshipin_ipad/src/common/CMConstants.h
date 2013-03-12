@@ -46,6 +46,10 @@
 #define kUserLoggedIn @"userLoggedIn"
 #define kSinaUID @"kSinaUID"
 
+//WeChat
+#define KWeChatAppID @"wxc8ea1cbc355fe2d0"
+#define KWeChatAppKey @"5843781cb092af97588a827e3f2e6eac"
+
 #define kUserLoginService @"joypluslogin"
 #define kUserId @"kUserId"
 #define kUserName @"kUserName"

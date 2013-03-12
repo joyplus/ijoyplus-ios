@@ -16,6 +16,7 @@
 #import "ServiceConstants.h"
 #import "CacheUtility.h"
 #import "Reachability.h"
+
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -77,6 +78,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize volumeView = volumeView_;
 @synthesize airPlayLabel = airPlayLabel_;
 @synthesize sourceLogo = sourceLogo_;
+@synthesize willPlayLabel = willPlayLabel_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -201,6 +203,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self removePlayerTimeObserver];
     [self syncScrubber];
     [self disableScrubber];
+    [self disableBottomToolBarButtons];
     /* Display the error. */
 }
 
@@ -261,10 +264,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	
 	return(kCMTimeInvalid);
 }
+-(void)disableScrubber{
+  self.mScrubber.enabled = NO;
+}
 
--(void)disableScrubber
+-(void)disableBottomToolBarButtons
 {
-    self.mScrubber.enabled = NO;
+   
+    for (UIView *view in bottomToolBar_.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            if (view.tag == PRE_BUTTON_TAG || view.tag == FULL_SCREEN_TAG || view.tag == CLARITY_BUTTON_TAG || view.tag  == PLAY_BUTTON_TAG || view.tag == PAUSE_BUTTON_TAG) {
+                UIButton *btn = (UIButton *)view;
+                btn.enabled = NO;
+            }
+        }
+    }
 }
 
 - (void)syncPlayPauseButtons
@@ -355,7 +369,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self removePlayerTimeObserver];
                 [self syncScrubber];
                 [self disableScrubber];
-               
+                [self disableBottomToolBarButtons];
+            
                 playButton_.hidden = YES;
                 pauseButton_.hidden = NO;
                 myHUD.hidden = NO;
@@ -374,13 +389,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 myHUD.hidden = YES;
                 [self initScrubberTimer];
                 [self initTimeLabelTimer];
-                [self enableScrubber];
+                [self enableBottomToolBarButtons];
+                [self showToolBar];
                 [mPlayer play];
                 
                 playButton_.hidden = YES;
                 pauseButton_.hidden = NO;
-                
-                [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
             }
                 break;
                 
@@ -408,6 +422,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (newPlayerItem == (id)[NSNull null])
         {
             [self disableScrubber];
+            [self disableBottomToolBarButtons];
         }
         else /* Replacement of player currentItem has occurred */
         {
@@ -472,9 +487,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds([mPlayer currentTime])];
 
 }
--(void)enableScrubber
+-(void)enableBottomToolBarButtons
 {
     self.mScrubber.enabled = YES;
+    for (UIView *view in bottomToolBar_.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            if (view.tag == PRE_BUTTON_TAG || view.tag == FULL_SCREEN_TAG || view.tag == CLARITY_BUTTON_TAG || view.tag  == PLAY_BUTTON_TAG || view.tag == PAUSE_BUTTON_TAG) {
+                UIButton *btn = (UIButton *)view;
+                btn.enabled = YES;
+            }
+        }
+    }
+
 }
 
 -(void)hiddenToolBar{
@@ -484,16 +508,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
      bottomView_.hidden = YES;
     selectButton_.selected = NO;
     clarityButton_.selected = NO;
-    tableList_.frame = CGRectMake(378, 35, 100, 0);
-    [clearBgView_ removeFromSuperview];
+    tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+     clearBgView_.hidden = YES;
     
 }
 -(void)showToolBar{
-
-    topToolBar_.hidden = NO;
-    bottomToolBar_.hidden = NO;
-    bottomView_.hidden = NO;
- 
+    [self.view bringSubviewToFront:topToolBar_];
+    [self.view bringSubviewToFront:bottomToolBar_];
+    [self.view bringSubviewToFront:bottomView_];
+    if (bottomToolBar_.hidden) {
+        topToolBar_.hidden = NO;
+        bottomToolBar_.hidden = NO;
+        bottomView_.hidden = NO;
+        
+    }
+    else{
+        topToolBar_.hidden = YES;
+        bottomToolBar_.hidden = YES;
+        bottomView_.hidden = YES;
+    }
+    
+    
+    
     [self resetMyTimer];
 
     
@@ -502,7 +538,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (myTimer_ != nil) {
         [myTimer_ invalidate];
     }
-     myTimer_ = [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
+     myTimer_ = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
 }
 -(void)playerItemDidReachEnd:(id)sender{
     if (videoType_ == 1 || videoType_ == 3) {
@@ -512,6 +548,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 }
 -(void)playNext{
+    
+    
+    myHUD.hidden = NO;
+    [self.view bringSubviewToFront:myHUD];
+    
     lastPlayTime_ = CMTimeMake(0, NSEC_PER_SEC);
     [self removePlayerTimeObserver];
     [self.player pause];
@@ -519,6 +560,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [timeLabelTimer_ invalidate];
     }
     playNum++;
+    [self.view addSubview:playCacheView_];
+    [self initWillPlayLabel];
     [self initDataSource:playNum];
     
     [self beginToPlay];
@@ -536,8 +579,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self initUI];
-    
     if (!islocalFile_) {
         //初始化数据；
         [self initDataSource:playNum];
@@ -548,6 +589,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
         [self setPath:local_file_path_];
     }
+    
+    [self initUI];
     
 }
 
@@ -561,6 +604,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initTopToolBar];
     [self initBottomToolBar];
     
+    [self disableBottomToolBarButtons];
     playCacheView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, self.view.bounds.size.width)];
     if([AppDelegate instance].window.bounds.size.height == 568){
         playCacheView_.image = [UIImage imageNamed:@"iphone_video_loading_IP5"];
@@ -569,51 +613,65 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
        playCacheView_.image = [UIImage imageNamed:@"iphone_video_loading"];
     }
     playCacheView_.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTopToolBar)];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [playCacheView_ addGestureRecognizer:tapGesture];
     [self.view addSubview:playCacheView_];
     
-    myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 250, 150)];
-    myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+60);
+    myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
+    myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+130);
     myHUD.backgroundColor = [UIColor clearColor];
-    UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showTopToolBar)];
+    UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
     tapGesture_another.numberOfTapsRequired = 1;
     tapGesture_another.numberOfTouchesRequired = 1;
     [playCacheView_ addGestureRecognizer:tapGesture_another];
     
     [myHUD addGestureRecognizer:tapGesture];
-    myHUD.labelText = @"加载中...";
+    myHUD.labelText = @"正在加载，请稍等";
+    myHUD.labelFont = [UIFont systemFontOfSize:12];
     myHUD.opacity = 0;
     [myHUD show:YES];
     [self.view addSubview:myHUD];
 
-    UILabel *lodingLbel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    lodingLbel.center = CGPointMake(playCacheView_.center.x, 60);
-    NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
-    if ([str isEqualToString:@"00:00"] || [str isEqualToString:@"00:00:00"]) {
-        lodingLbel.text = @"即将播出";
+    willPlayLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+    willPlayLabel_.center = CGPointMake(playCacheView_.center.x, 160);
+    willPlayLabel_.font = [UIFont systemFontOfSize:13];
+    willPlayLabel_.backgroundColor = [UIColor clearColor];
+    willPlayLabel_.textColor = [UIColor whiteColor];
+    willPlayLabel_.textAlignment = NSTextAlignmentCenter;
+    [playCacheView_ addSubview:willPlayLabel_];
+    [self initWillPlayLabel];
+       
+}
+
+-(void)initWillPlayLabel{
+    if (videoType_ == 1) {
+        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",nameStr_];
     }
-    else{
-        lodingLbel.text = [NSString stringWithFormat:@"上次播放至: %@",str];
+    else if (videoType_ == 2){
+        willPlayLabel_.text = [NSString stringWithFormat:@"即将播放：%@ 第%d集", nameStr_, playNum];
+    }
+    else if (videoType_ == 3){
+        NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
+        NSString *name = [item objectForKey:@"name"];
+        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",name];
     }
     
-    lodingLbel.font = [UIFont systemFontOfSize:13];
-    lodingLbel.backgroundColor = [UIColor clearColor];
-    lodingLbel.textColor = [UIColor whiteColor];
-    lodingLbel.textAlignment = NSTextAlignmentCenter;
-    [playCacheView_ addSubview:lodingLbel];
+    NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
+    if (![str isEqualToString:@"00:00"] && ![str isEqualToString:@"00:00:00"]) {
+        UILabel *lodingLbel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
+        lodingLbel.center = CGPointMake(playCacheView_.center.x, 180);
+        lodingLbel.text = [NSString stringWithFormat:@"上次播放至: %@",str];
+        lodingLbel.font = [UIFont systemFontOfSize:11];
+        lodingLbel.backgroundColor = [UIColor clearColor];
+        lodingLbel.textColor = [UIColor grayColor];
+        lodingLbel.textAlignment = NSTextAlignmentCenter;
+        [playCacheView_ addSubview:lodingLbel];
+    }
+
 
 }
-
-
--(void)showTopToolBar{
-    topToolBar_.hidden = NO;
-    [self.view bringSubviewToFront:topToolBar_];
-    [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
-}
-
 
 -(void)initDataSource:(int)num{
     if (num >= [episodesArr_ count]) {
@@ -729,7 +787,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             else{
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
                 [alertView show];
-                
                 return;
             }
             break;
@@ -895,8 +952,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self retryUrltoPlay];
 }
 -(void)initTopToolBar{
-    topToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 480, 38)];
+    topToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, 38)];
     [topToolBar_ setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:30/255.0 green:30/255.0 blue:30/255.0 alpha:0.5] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    topToolBar_.hidden = YES;
     [self.view addSubview:topToolBar_];
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -910,7 +968,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [topToolBar_ setBackgroundImage:[UIImage imageNamed:@"iphone_top_bg"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     
     selectButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    selectButton_.frame = CGRectMake(422, 5, 57, 27);
+    selectButton_.frame = CGRectMake(kFullWindowHeight-87, 5, 57, 27);
     [selectButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_select_bt"] forState:UIControlStateNormal];
     [selectButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_select_bt_pressed"] forState:UIControlStateHighlighted];
     [selectButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_select_bt_pressed"] forState:UIControlStateSelected];
@@ -922,7 +980,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 30)];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 30)];
     titleLabel.center = topToolBar_.center;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:14];
@@ -931,7 +989,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     titleLabel.text = nameStr_;
     [topToolBar_ addSubview:titleLabel];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(378, 35, 100, 0) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(kFullWindowHeight-110, 35, 100, 0) style:UITableViewStylePlain];
     tableList_.backgroundColor = [UIColor clearColor];
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableList_.delegate = self;
@@ -954,7 +1012,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 -(void)initPlayerView{
     mPlayer = nil;
-    avplayerView_ = [[AVPlayerView alloc] initWithFrame:CGRectMake(0, 0, 480, 300)];
+    avplayerView_ = [[AVPlayerView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, 300)];
     avplayerView_.backgroundColor = [UIColor clearColor];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
@@ -975,9 +1033,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)initBottomToolBar{
     
-    bottomToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 256, 480, 44)];
+    bottomToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 256, kFullWindowHeight, 44)];
     bottomToolBar_.backgroundColor = [UIColor clearColor];
     //bottomToolBar_.alpha = 0.8;
+    bottomToolBar_.hidden = YES;
     [bottomToolBar_ setBackgroundImage:[UIImage imageNamed:@"iphone_play_bg"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:bottomToolBar_];
     
@@ -986,25 +1045,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     bottomView_.image = [UIImage imageNamed:@"iphone_time_bg"];
     bottomView_.backgroundColor = [UIColor clearColor];
     bottomView_.userInteractionEnabled = YES;
-    [self.view addSubview:bottomView_];
     
-    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(9, 8, 90, 10)];
-    seeTimeLabel_.backgroundColor = [UIColor clearColor];
-    seeTimeLabel_.font = [UIFont systemFontOfSize:12];
-    seeTimeLabel_.textAlignment = NSTextAlignmentLeft;
-    seeTimeLabel_.textColor = [UIColor whiteColor];
-    seeTimeLabel_.text = @"00:00";
-    [bottomView_ addSubview:seeTimeLabel_];
-    
-    totalTimeLable_ = [[UILabel alloc] initWithFrame:CGRectMake(423, 8, 90, 10)];
-    totalTimeLable_.backgroundColor = [UIColor clearColor];
-    totalTimeLable_.font = [UIFont systemFontOfSize:12];
-    totalTimeLable_.textAlignment = NSTextAlignmentLeft;
-    totalTimeLable_.textColor = [UIColor whiteColor];
-    [bottomView_ addSubview:totalTimeLable_];
     
     
     mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, 354 , 8)];
+    mScrubber.backgroundColor = [UIColor clearColor];
     mScrubber.center = CGPointMake(kFullWindowHeight/2, 13);
     [mScrubber setThumbImage: [UIImage imageNamed:@"iphone_progress_thumb"] forState:UIControlStateNormal];
     [mScrubber setMinimumTrackImage:[UIImage imageNamed:@"iphone_time_jindu_x"] forState:UIControlStateNormal];
@@ -1018,6 +1063,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventTouchUpOutside];
     [bottomView_ addSubview:mScrubber];
     
+    
+    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(9, 8, 90, 10)];
+    seeTimeLabel_.backgroundColor = [UIColor clearColor];
+    seeTimeLabel_.font = [UIFont systemFontOfSize:12];
+    seeTimeLabel_.textAlignment = NSTextAlignmentLeft;
+    seeTimeLabel_.textColor = [UIColor whiteColor];
+    seeTimeLabel_.text = @"00:00";
+    [bottomView_ addSubview:seeTimeLabel_];
+    
+    totalTimeLable_ = [[UILabel alloc] initWithFrame:CGRectMake((kFullWindowHeight+354)/2+8, 8, 90, 10)];
+    totalTimeLable_.backgroundColor = [UIColor clearColor];
+    totalTimeLable_.font = [UIFont systemFontOfSize:12];
+    totalTimeLable_.textAlignment = NSTextAlignmentLeft;
+    totalTimeLable_.textColor = [UIColor whiteColor];
+    [bottomView_ addSubview:totalTimeLable_];
+    
+    //bottomView_.hidden = YES;
+    [self.view addSubview:bottomView_];
     
     UIButton *fullScreen = [UIButton buttonWithType:UIButtonTypeCustom];
     fullScreen.frame = CGRectMake(18, 8, 33, 27);
@@ -1049,7 +1112,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [bottomToolBar_ addSubview:pauseButton_];
     
     UIButton *preButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    preButton.frame = CGRectMake(182, 6, 32, 31);
+    preButton.frame = CGRectMake(kFullWindowHeight/2-72, 6, 32, 31);
     preButton.backgroundColor = [UIColor clearColor];
     preButton.tag = PRE_BUTTON_TAG;
     [preButton setBackgroundImage:[UIImage imageNamed:@"iphone_prev_bt"] forState:UIControlStateNormal];
@@ -1059,7 +1122,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [bottomToolBar_ addSubview:preButton];
     
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    nextButton.frame = CGRectMake(267, 7, 29, 27);
+    nextButton.frame = CGRectMake(kFullWindowHeight/2+40, 7, 29, 27);
     nextButton.backgroundColor = [UIColor clearColor];
     nextButton.tag = NEXT_BUTTON_TAG;
     [nextButton setBackgroundImage:[UIImage imageNamed:@"iphone_next_bt"] forState:UIControlStateNormal];
@@ -1107,51 +1170,138 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 
 -(void)clearSelectView{
-    clearBgView_ = [[UIImageView alloc] initWithFrame:CGRectMake(270, 150, 202, 109)];
-    clearBgView_.image = [UIImage imageNamed:@"iphone_clarity_bg"];
-    clearBgView_.backgroundColor = [UIColor clearColor];
-    clearBgView_.userInteractionEnabled = YES;
-   
-    UIButton *plainClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
-    plainClearBtn.center = CGPointMake(34, 65);
-    plainClearBtn.tag = 100;
-    [plainClearBtn addTarget:self action:@selector(clearButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt"] forState:UIControlStateNormal];
-    [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt_pressed"] forState:UIControlStateHighlighted];
-    [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt_pressed"]forState:UIControlStateDisabled];
-    plainClearBtn.adjustsImageWhenDisabled = NO;
-    [clearBgView_ addSubview:plainClearBtn];
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 202, 109)];
+        UIButton *plainClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+       // plainClearBtn.center = CGPointMake(34, 65);
+        plainClearBtn.tag = 100;
+        [plainClearBtn addTarget:self action:@selector(clearButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt"] forState:UIControlStateNormal];
+        [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt_pressed"] forState:UIControlStateHighlighted];
+        [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt_pressed"]forState:UIControlStateDisabled];
+        plainClearBtn.adjustsImageWhenDisabled = NO;
+       // [view addSubview:plainClearBtn];
+         
+        UIButton *highClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        highClearBtn.backgroundColor = [UIColor clearColor];
+        [highClearBtn addTarget:self action:@selector(clearButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_high_bt"] forState:UIControlStateNormal];
+        [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_bt_pressed"] forState:UIControlStateHighlighted];
+        [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_bt_pressed"]forState:UIControlStateDisabled];
+        highClearBtn.frame = CGRectMake(0, 0, 42, 42);
+        //highClearBtn.center = CGPointMake(101, 65);
+        highClearBtn.enabled = NO;
+        highClearBtn.tag = 101;
+        highClearBtn.adjustsImageWhenDisabled = NO;
+        //[view addSubview:highClearBtn];
+         
+        UIButton *superClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        superClearBtn.backgroundColor = [UIColor clearColor];
+        [superClearBtn addTarget:self action:@selector(clearButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_super_bt"] forState:UIControlStateNormal];
+        [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_bt_pressed"] forState:UIControlStateHighlighted];
+        [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_bt_pressed"]forState:UIControlStateDisabled];
+        superClearBtn.frame = CGRectMake(0, 0, 42, 42);
+        //superClearBtn.center = CGPointMake(168, 65);
+        superClearBtn.tag = 102;
+        superClearBtn.adjustsImageWhenDisabled = NO;
+        //[view addSubview:superClearBtn];
     
-    UIButton *highClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    highClearBtn.backgroundColor = [UIColor clearColor];
-    [highClearBtn addTarget:self action:@selector(clearButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_high_bt"] forState:UIControlStateNormal];
-    [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_bt_pressed"] forState:UIControlStateHighlighted];
-    [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_bt_pressed"]forState:UIControlStateDisabled];
-    highClearBtn.frame = CGRectMake(0, 0, 42, 42);
-    highClearBtn.center = CGPointMake(101, 65);
-    highClearBtn.enabled = NO;
-    highClearBtn.tag = 101;
-    highClearBtn.adjustsImageWhenDisabled = NO;
-    [clearBgView_ addSubview:highClearBtn];
+    int num = 0;
+    if ([plainClearArr count]>0) {
+        num++;
+    }
+    if ([highClearArr count]>0) {
+        num++;
+    }
+    if ([superClearArr count]>0) {
+        num++;
+    }
+    if (num == 2) {
+        if ([plainClearArr count] > 0) {
+            plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+            [view addSubview:plainClearBtn];
+            
+            if ([highClearArr count]>0) {
+              highClearBtn.frame = CGRectMake(43, 0, 42, 42);
+              [view addSubview:highClearBtn];
+            }
+            else{
+              superClearBtn.frame = CGRectMake(43,0, 42, 42);
+              [view addSubview:superClearBtn];
+            }
+        }
+       else if ([highClearArr count]>0) {
+           [view addSubview:plainClearBtn];
+           
+           if ([plainClearArr count]>0) {
+               highClearBtn.frame = CGRectMake(43, 0, 42, 42);
+
+               plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+               [view addSubview:plainClearBtn];
+           }
+           else{
+                highClearBtn.frame = CGRectMake(0, 0, 42, 42);
+               
+               superClearBtn.frame = CGRectMake(43,0, 42, 42);
+               [view addSubview:superClearBtn];
+           }
+        }
+       else if ([superClearArr count]>0){
+        superClearBtn.frame = CGRectMake(43,0, 42, 42);
+        [view addSubview:superClearBtn];   
+           if ([plainClearArr count]>0) {
+               if ([plainClearArr count]>0) {
+                   plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+                   [view addSubview:plainClearBtn];
+               }
+               else{
+                   highClearBtn.frame = CGRectMake(0, 0, 42, 42);
+                   [view addSubview:highClearBtn];
+               }
+           }
+       
+       }
+        UIView *separatorView = [[UIView alloc]initWithFrame:CGRectMake(42, 0, 1, 42)];
+        separatorView.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
+        [view addSubview:separatorView];
+    }
+    if (num == 3) {
+        plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+         [view addSubview:plainClearBtn];
+        highClearBtn.frame = CGRectMake(43, 0, 42, 42);
+        [view addSubview:highClearBtn];
+        superClearBtn.frame = CGRectMake(86, 0, 42, 42);
+        [view addSubview:superClearBtn];
+        
+        UIView *separatorView = [[UIView alloc]initWithFrame:CGRectMake(42, 0, 1, 42)];
+        separatorView.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
+        [view addSubview:separatorView];
+        
+        UIView *separatorView1 = [[UIView alloc]initWithFrame:CGRectMake(85, 0, 1, 42)];
+        separatorView1.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
+        [view addSubview:separatorView1];
+    }
+    if (num > 1) {
+        view.frame = CGRectMake(0, 0, num*42, 50);
+        clearBgView_  = [[CMPopTipView alloc] initWithCustomView:view];
+        clearBgView_.backgroundColor = [UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:1];
+        clearBgView_.disableTapToDismiss = YES;
+        clearBgView_.animation = CMPopTipAnimationPop;
+        [clearBgView_ presentPointingAtView:clarityButton_ inView:self.view animated:YES];
+        clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
+        clearBgView_.hidden = YES;
+    }
+    else{
+        clarityButton_.hidden = YES;
+    }
     
-    UIButton *superClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    superClearBtn.backgroundColor = [UIColor clearColor];
-    [superClearBtn addTarget:self action:@selector(clearButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
-    [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_super_bt"] forState:UIControlStateNormal];
-    [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_bt_pressed"] forState:UIControlStateHighlighted];
-    [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_bt_pressed"]forState:UIControlStateDisabled];
-    superClearBtn.frame = CGRectMake(0, 0, 42, 42);
-    superClearBtn.center = CGPointMake(168, 65);
-    superClearBtn.tag = 102;
-    superClearBtn.adjustsImageWhenDisabled = NO;
-    [clearBgView_ addSubview:superClearBtn];
+    
     
 }
 -(void)clearButtonSelected:(UIButton *)btn{
 
-    for (UIView *view in clearBgView_.subviews) {
+    for (UIView *view in clearBgView_.customView.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
             UIButton *subBtn = (UIButton *)view;
             subBtn.enabled = YES;
@@ -1159,8 +1309,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     playCacheView_.backgroundColor = [UIColor clearColor];
-    [clearBgView_ removeFromSuperview];
-
+    clearBgView_.hidden = YES;
+    [mPlayer pause];
+     mPlayer = nil;
     switch (btn.tag) {
         case 100:{
             btn.enabled = NO;
@@ -1189,14 +1340,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
             [self updateWatchRecord];
-            
-            [avplayerView_.layer removeFromSuperlayer];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player.currentItem removeObserver:self forKeyPath:@"status"];
             [self.player  pause];
             mPlayerItem = nil;
             mPlayer = nil;
-           
             [self dismissViewControllerAnimated:YES completion:nil];
           
             //[self.navigationController popViewControllerAnimated:YES];
@@ -1253,12 +1401,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self resetMyTimer];
             if (btn.selected) {
                 btn.selected = NO;
-                [clearBgView_ removeFromSuperview];
+                clearBgView_.hidden = YES;
             }
             else{
             
                 btn.selected = YES;
-                [self.view addSubview:clearBgView_];
+                 clearBgView_.hidden = NO;
             }
 
             
@@ -1266,11 +1414,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case SELECT_BUTTON_TAG:{
             [self resetMyTimer];
+            [self.view bringSubviewToFront:tableList_];
             if (btn.selected) {
                 btn.selected = NO;
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
-                tableList_.frame = CGRectMake(378, 35, 100, 0);
+                tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
                 [UIView commitAnimations];
             }
             else{
@@ -1282,7 +1431,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
-                tableList_.frame = CGRectMake(378, 35, 100, height);
+                tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, height);
                 [UIView commitAnimations];
               
             }
@@ -1431,8 +1580,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 -(void)syncLogo:(NSString *)url{
     UIImage *img = [self getVideoSource:url];
-    int a = img.size.width;
-    sourceLogo_.frame = CGRectMake(102, 8, img.size.width/2, 18);
+    sourceLogo_.backgroundColor = [UIColor clearColor];
+    sourceLogo_.frame = CGRectMake(102, 13, img.size.width/3, img.size.height/3);
     sourceLogo_.image = img;
 }
 - (void)updateWatchRecord
@@ -1520,12 +1669,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    myHUD.hidden = NO;
+    [self.view bringSubviewToFront:myHUD];
     [self removePlayerTimeObserver];
     [self.player pause];
     if (timeLabelTimer_ != nil) {
         [timeLabelTimer_ invalidate];
     }
     playNum = indexPath.row;
+    [self.view addSubview:playCacheView_];
+    [self initWillPlayLabel];
     [self initDataSource:playNum];
     [self beginToPlay];
     
@@ -1552,7 +1706,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)dealloc{
-    [avplayerView_.layer removeFromSuperlayer];
+    //[avplayerView_.layer removeFromSuperlayer];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
     [self.player  pause];

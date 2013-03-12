@@ -62,6 +62,7 @@
     rb1.frame = CGRectMake(50,34,22,22);
     rb2.frame = CGRectMake(150,34,22,22);
     [rb1 setChecked:YES];
+    type_ = 1;
     [self.view addSubview:rb1];
     [self.view addSubview:rb2];
     [RadioButton addObserverForGroupId:@"first group" observer:self];
@@ -135,25 +136,32 @@
     }
 }
 -(void)radioButtonSelectedAtIndex:(NSUInteger)index inGroup:(NSString *)groupId{
-
+  type_ = index + 1;
 }
+
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)nextButtonPressed:(id)sender{
-     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content", nil];
+     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content",[NSNumber numberWithInt:type_], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         topicId_ = [result objectForKey:@"topic_id"];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             [self next:result];
         }
+        else if ([responseCode isEqualToString:@"20022"]){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"不能建立同名悦单。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+        }
         else {
-            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"创建悅单失败,错误码:%@",responseCode] delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"创建悅单失败,错误:%@",error.localizedDescription] delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
     }];
 
 }
@@ -165,10 +173,11 @@
     CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
     createMyListTwoViewController.infoDic = infoDic_;
     createMyListTwoViewController.topicId = [result objectForKey:@"topic_id"];
-    
+    createMyListTwoViewController.type = type_;
     [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
 
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

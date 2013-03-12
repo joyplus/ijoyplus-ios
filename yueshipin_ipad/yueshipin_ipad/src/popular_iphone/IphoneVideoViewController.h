@@ -22,6 +22,8 @@
     NSMutableArray *videoUrlsArray_;
     NSMutableArray *httpUrlArray_;
     BOOL isNotification_;
+    UISegmentedControl *segmentedControl_;
+    UIImage *wechatImg_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
@@ -32,6 +34,8 @@
 @property (nonatomic, strong) NSMutableArray *videoUrlsArray;
 @property (nonatomic, strong) NSMutableArray *httpUrlArray;
 @property (nonatomic, assign) BOOL isNotification;
+@property (nonatomic, strong) UISegmentedControl *segmentedControl;
+@property (nonatomic, strong) UIImage *wechatImg;
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;

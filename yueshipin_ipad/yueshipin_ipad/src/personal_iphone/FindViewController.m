@@ -27,7 +27,7 @@
 @synthesize selectedArr = selectedArr_;
 @synthesize topicId = topicId_;
 @synthesize rightButtonItem = rightButtonItem_;
-
+@synthesize type = type_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -100,7 +100,7 @@
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size",[NSNumber numberWithInt:type_], @"type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];

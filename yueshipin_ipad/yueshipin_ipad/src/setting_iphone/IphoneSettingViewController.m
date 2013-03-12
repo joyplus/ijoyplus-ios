@@ -249,10 +249,20 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     if(flag){
         [sinaweibo_ logIn];
     } else {
-        [sinaweibo_ logOut];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"确定要解除绑定吗？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+        [alert show];
+
     }
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        [sinaweibo_ logOut];
+    }
+    else if (buttonIndex == 1){
+        sinaSwith_.on = YES;
+    }
+}
 -(void)clearCache:(id)sender{
 
     MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:self.view];

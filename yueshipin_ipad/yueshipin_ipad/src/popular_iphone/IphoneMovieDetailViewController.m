@@ -31,7 +31,7 @@
 @synthesize commentArray =commentArray_;
 @synthesize relevantList = relevantList_;
 @synthesize summaryBg = summaryBg_;
-@synthesize summaryLabel = summaryLabel__;
+@synthesize summaryLabel = summaryLabel_;
 @synthesize moreBtn = moreBtn_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -111,10 +111,6 @@
    
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-   [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
-}
 
 -(void)back:(id)sender{
     if (!isNotification_) {
@@ -294,6 +290,7 @@
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];

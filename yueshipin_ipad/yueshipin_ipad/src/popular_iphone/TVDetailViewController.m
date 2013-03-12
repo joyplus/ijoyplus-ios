@@ -322,6 +322,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                     imgUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                 wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
@@ -925,9 +926,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
+        if (i == pageCount_-1 ) {
+            title = [NSString stringWithFormat:@"%d-%d集",i*15+1,count];
+        }
         if (i == 0) {
             button.selected = YES;
         }
+        
         [button setBackgroundImage:[UIImage imageNamed:@"selected.png"] forState:UIControlStateSelected];
         button.titleLabel.font = [UIFont systemFontOfSize:11];
         [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -1072,6 +1077,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
+        if (i == pageCount_-1 ) {
+            title = [NSString stringWithFormat:@"%d-%d集",i*15+1,count];
+        }
         if (i == 0) {
             button.selected = YES;
         }

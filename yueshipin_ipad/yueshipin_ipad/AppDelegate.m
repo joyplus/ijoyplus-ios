@@ -89,6 +89,10 @@
     }
 }
 
+-(void)initWeChat{
+    [WXApi registerApp:KWeChatAppID];
+}
+
 - (void)saveChannelRecord
 {
     NSString * appKey = @"efd3fb70a08b4a608fccd421f21a79e8";
@@ -123,6 +127,7 @@
     }
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
+    [self initWeChat];
     [self monitorReachability];
     [self isParseReachable];
    //[Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];   // Test Env
@@ -169,7 +174,7 @@
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
-    //NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
+   // NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
@@ -316,12 +321,16 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    return [self.sinaweibo handleOpenURL:url];
+   [self.sinaweibo handleOpenURL:url];
+    return [WXApi handleOpenURL:url delegate:self];
+   
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-    return [self.sinaweibo handleOpenURL:url];
+    [self.sinaweibo handleOpenURL:url];
+    return  [WXApi handleOpenURL:url delegate:self];
+   
 }
 
 - (void)showStatement
@@ -366,6 +375,14 @@
 3. 任何单位或者个人如认为悦视频客户端聚合引擎技术收录的第三方网站视频内容可能侵犯了其合法权益，请及时向我公司书面反馈，并提供身份证明、权属证明以及详情侵权情况证明。权利通知书请寄至我公司，地址：上海杨浦区淞沪路333号802室，邮政编码：200082，电话：021-31169320。我公司在收到上述文件后，可依其合理判断，断开聚合引擎技术收录的涉嫌侵权的第三方网站内容。\n\n\
 4. 用户理解并且同意，用户通过悦视频所获得的材料、信息、产品以及服务完全处于用户自己的判断，并承担因使用该等内容而引起的所有风险，包括但不限于因对内容的正确性、完整性或实用性的依赖而产生的风险。用户在使用悦视频的过程中，因受视频或相关内容误导或欺骗而导致或可能导致的任何心理、生理上的伤害以及经济上的损失，一概与本公司无关。\n\n\
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
+}
+
+// wecha sdk delegate
+-(void) onReq:(BaseReq*)req{
+       
+}
+-(void) onResp:(BaseResp*)resp{
+
 }
 
 @end

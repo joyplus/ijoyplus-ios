@@ -13,10 +13,10 @@
 #import "SubdownloadItem.h"
 #import "DownLoadManager.h"
 #import "NewDownloadManager.h"
-
+#import "WXApi.h"
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

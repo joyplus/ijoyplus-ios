@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "MBProgressHUD.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "CMPopTipView.h"
 @interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     UIToolbar *topToolBar_;
     UIToolbar *bottomToolBar_;
@@ -32,7 +33,7 @@
     UILabel *seeTimeLabel_;
     UILabel *totalTimeLable_;
     NSString *nameStr_;
-    UIImageView *clearBgView_;
+    CMPopTipView *clearBgView_;
     
     NSMutableArray *sortEpisodesArr_;
     NSArray *episodesArr_;
@@ -68,6 +69,9 @@
     UILabel *airPlayLabel_;
     
     UIImageView *sourceLogo_;
+    
+    UILabel *willPlayLabel_;
+
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -84,7 +88,7 @@
 @property (nonatomic, strong) UILabel *totalTimeLablel;
 @property (nonatomic, strong) UIImageView *playCacheView;
 @property (nonatomic, strong) UIImageView *bottomView;
-@property (nonatomic, strong) UIImageView *clearBgView;
+@property (nonatomic, strong) CMPopTipView *clearBgView;
 @property (nonatomic, strong) NSString *nameStr;
 @property (nonatomic, strong) NSArray *episodesArr;
 @property (nonatomic, assign) int playNum;
@@ -106,6 +110,7 @@
 @property (nonatomic, strong) MPVolumeView *volumeView;
 @property (nonatomic, strong) UILabel *airPlayLabel;
 @property (nonatomic, strong) UIImageView *sourceLogo;
+@property (nonatomic, strong) UILabel *willPlayLabel;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

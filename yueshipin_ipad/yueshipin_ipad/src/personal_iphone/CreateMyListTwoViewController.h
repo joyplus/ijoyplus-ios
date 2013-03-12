@@ -13,9 +13,11 @@
     NSMutableArray *listArr_;
     NSMutableDictionary *infoDic_;
     NSString *topicId_;
+    int type_;
 }
 @property (nonatomic, strong)UITableView *tableList;
 @property (nonatomic, strong)NSMutableArray *listArr;
 @property (nonatomic, strong)NSMutableDictionary *infoDic;
 @property (nonatomic, strong)NSString *topicId;
+@property (nonatomic, assign)int type;
 @end

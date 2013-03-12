@@ -572,13 +572,12 @@
             cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
 
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
-        cell.titleLab.frame = CGRectMake(10, 24, 220, 15);
+        cell.titleLab.frame = CGRectMake(10, 20, 220, 15);
 
         cell.actors.text  = [self composeContent:infoDic];
-        [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
+        [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
      
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
@@ -660,8 +659,32 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
-    if (tableView.tag == Fav_TYPE){
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (tableView.tag == RECORD_TYPE) {
+        NSDictionary *dic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
+        NSString *type = [dic objectForKey:@"prod_type"];
+        if ([type isEqualToString:@"1"]) {
+            IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+        }
+        else if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]){
+            TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];}
+        
+        else if ([type isEqualToString:@"3"]){
+            IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            
+        }
+
+    }
+    else if (tableView.tag == Fav_TYPE){
         NSDictionary *dic = [favArr_ objectAtIndex:indexPath.row];
         NSString *type = [dic objectForKey:@"content_type"];
         if ([type isEqualToString:@"1"]) {
@@ -691,6 +714,7 @@
         NSMutableArray *items = [NSMutableArray arrayWithArray:[infoDic objectForKey:@"items"]];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
         createMyListTwoViewController.listArr = items;
+        createMyListTwoViewController.type = [[infoDic objectForKey:@"prod_type"] intValue];
         createMyListTwoViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
         createMyListTwoViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
