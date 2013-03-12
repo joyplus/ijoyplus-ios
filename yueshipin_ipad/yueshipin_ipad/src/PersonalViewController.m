@@ -16,6 +16,7 @@
 #import "MovieDetailViewController.h"
 #import "ShowDetailViewController.h"
 #import "AvVideoWebViewController.h"
+#import "EGORefreshTableHeaderView.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -23,7 +24,7 @@
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
-@interface PersonalViewController () <MNMBottomPullToRefreshManagerClient>
+@interface PersonalViewController () <MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>
 {
     UIView *backgroundView;
     UIImageView *topImage;
@@ -57,6 +58,8 @@
 @property (nonatomic, assign) fade_orientation fadeOrientation;
 @property (nonatomic, strong) MNMBottomPullToRefreshManager *pullToRefreshManager_;
 @property (nonatomic) NSUInteger reloads_;
+@property (nonatomic, strong) EGORefreshTableHeaderView *_refreshHeaderView;
+@property (nonatomic) BOOL _reloading;
 @end
 
 @implementation PersonalViewController
@@ -66,6 +69,8 @@
 @synthesize bottomFadingView;
 @synthesize pullToRefreshManager_, reloads_;
 @synthesize fadeOrientation = fadeOrientation_;
+@synthesize _refreshHeaderView;
+@synthesize _reloading;
 
 - (void)didReceiveMemoryWarning
 {
@@ -217,6 +222,14 @@
         [self.view addSubview:tableBg];
         [self.view addSubview:table];
         
+        if (_refreshHeaderView == nil) {
+            EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, table.frame.size.width, table.bounds.size.height)];
+            view.backgroundColor = [UIColor clearColor];
+            view.delegate = self;
+            [table addSubview:view];
+            _refreshHeaderView = view;
+        }
+        
         pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
 
         self.baseColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
@@ -248,6 +261,37 @@
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
 }
+
+
+- (void)reloadTableViewDataSource{
+    reloads_ = 2;
+    _reloading = YES;
+    [self parseWatchHistory];
+}
+
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_reloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:table];
+	
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
+	
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	return _reloading; // should return if data source model is reloading
+}
+
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
@@ -378,10 +422,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [pullToRefreshManager_ tableViewScrolled];
+    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
  
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
     [pullToRefreshManager_ tableViewReleased];
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
