@@ -1182,23 +1182,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)volumeBtnClicked:(UIButton *)btn
 {
     if (btn.tag == 9877) {
-        btn.tag = 9878;
         [self setVolumeValue:0];
-        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt"] forState:UIControlStateNormal];
-        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt_pressed"] forState:UIControlStateHighlighted];
     } else {
-        btn.tag = 9877;
         [self setVolumeValue:volumeSlider.value];
-        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
-        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
     }
 }
 
 - (void)volumeSliderValueChanged
 {
     [self setVolumeValue:volumeSlider.value];
-    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
-    [MPMusicPlayerController applicationMusicPlayer].volume = volumeSlider.value;
 }
 
 - (void)systemVolumeChanged:(id)obj
@@ -1209,18 +1201,39 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)setVolumeValue:(float)value
 {
-    AVURLAsset *asset = [[mPlayer currentItem] asset];
-    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
-    NSMutableArray *allAudioParams = [NSMutableArray array];
-    for (AVAssetTrack *track in audioTracks) {
-        AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
-        [audioInputParams setVolume:value atTime:kCMTimeZero];
-        [audioInputParams setTrackID:[track trackID]];
-        [allAudioParams addObject:audioInputParams];
+    volumeSlider.value = value;
+    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+    [MPMusicPlayerController applicationMusicPlayer].volume = volumeSlider.value;
+    if (value > 0) {
+        volumeBtn.tag = 9877;
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
+    } else {
+        volumeBtn.tag = 9878;
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt"] forState:UIControlStateNormal];
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt_pressed"] forState:UIControlStateHighlighted];
     }
-    AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
-    [audioZeroMix setInputParameters:allAudioParams];
-    [[mPlayer currentItem] setAudioMix:audioZeroMix];
+//    AVURLAsset *asset = [[mPlayer currentItem] asset];
+//    NSMutableArray *allAudioParams = [NSMutableArray array];
+//    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
+//    if (audioTracks.count > 0) {
+//        for (AVAssetTrack *track in audioTracks) {
+//            AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
+//            [audioInputParams setVolume:value atTime:kCMTimeZero];
+//            [audioInputParams setTrackID:[track trackID]];
+//            [allAudioParams addObject:audioInputParams];
+//        }
+//    } else {
+//        NSArray *tempaudioTracks = self.player.currentItem.tracks;
+//        AVAssetTrack *track = [tempaudioTracks objectAtIndex:1];
+//        AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
+//        [audioInputParams setVolume:value atTime:kCMTimeZero];
+//        [audioInputParams setTrackID:[track trackID]];
+//        [allAudioParams addObject:audioInputParams];
+//    }
+//    AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
+//    [audioZeroMix setInputParameters:allAudioParams];
+//    [[mPlayer currentItem] setAudioMix:audioZeroMix];
 }
 
 - (void)updateWatchRecord

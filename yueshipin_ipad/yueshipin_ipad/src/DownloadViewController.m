@@ -443,9 +443,8 @@
     }
     
     item = nil;
-    if ([AppDelegate instance].downloadItems.count > 0) {
-        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-    } else {
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    if ([AppDelegate instance].downloadItems.count == 0) {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
