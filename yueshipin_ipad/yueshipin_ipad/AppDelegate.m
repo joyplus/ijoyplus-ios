@@ -106,11 +106,11 @@
 
 - (void)initDownloadManager
 {
-//    downloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-//    [downloadItems addObjectsFromArray:[DownloadItem allObjects]];
-//    subdownloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-//    [subdownloadItems addObjectsFromArray:[SubdownloadItem allObjects]];
-//    padDownloadManager = [[NewDownloadManager alloc]init];
+    downloadItems = [[NSMutableArray alloc]initWithCapacity:10];
+    [downloadItems addObjectsFromArray:[DownloadItem allObjects]];
+    subdownloadItems = [[NSMutableArray alloc]initWithCapacity:10];
+    [subdownloadItems addObjectsFromArray:[SubdownloadItem allObjects]];
+    padDownloadManager = [[NewDownloadManager alloc]init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -133,8 +133,7 @@
     [self initWeChat];
     [self monitorReachability];
     [self isParseReachable];
-//    [Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];   // Test Env
-    [Parse setApplicationId:@"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P" clientKey:@"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"]; // Production Env
+    [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -177,7 +176,10 @@
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
-//    NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
+    //如果是测试
+    if (ENVIRONMENT == 0) {
+        appKey = kDefaultAppKey;
+    }
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
@@ -192,9 +194,6 @@
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
     }
-//    if (![self.showVideoSwitch isEqualToString:@"0"]) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
-//    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

@@ -677,12 +677,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     for (UIView *asubview in routeBtn.subviews) {
         if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
             UIButton *btn = (UIButton *)asubview;
-            btn.frame = CGRectMake(0, 0, 37, BUTTON_HEIGHT);
+            btn.frame = CGRectMake(0, 0, 55, BUTTON_HEIGHT);
             [btn setImage:nil forState:UIControlStateNormal];
             [btn setImage:nil forState:UIControlStateHighlighted];
             [btn setImage:nil forState:UIControlStateSelected];
             [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_pressed"] forState:UIControlStateHighlighted];
+            [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateHighlighted];
             break;
         }
     }

@@ -8,9 +8,6 @@
 
 #import "ServiceConstants.h"
 
-NSString *const kDefaultAppKey  = @"ijoyplus_ios_001";
-//NSString *const kDefaultAppKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";
-
 NSString *const kSuccessResCode  = @"00000";
 
 NSString *const kPathMovie = @"/joyplus-service/index.php/video_movies";
@@ -124,3 +121,4 @@ NSString *const kPathAddPlayHistory = @"/joyplus-service/index.php/program/play"
 NSString *const kPathHiddenPlay =  @"/joyplus-service/index.php/program/hiddenPlay";
 NSString *const kPathRemoveAllPlay =  @"/joyplus-service/index.php/user/clearPlayHistories";
 NSString *const kPathShowTopItems =  @"/joyplus-service/index.php/show_top_items";
+NSString *const kPathRecordPlay =  @"/joyplus-service/index.php/program/recordPlay";

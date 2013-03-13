@@ -14,6 +14,7 @@
 #import "ShowDetailViewController.h"
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
+#import "CommonHeader.h"
 
 #define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 167
@@ -70,6 +71,8 @@
     UIImageView *lastSelectedListImage;
     UIImageView *lastSelectedOverlay;
     JSBadgeView *badgeView;
+    
+    NSString *umengPageName;
 }
 
 @end
@@ -152,6 +155,14 @@
 {
     [super viewDidAppear:animated];
     [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro"]];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if (umengPageName) {
+        [MobClick endLogPageView:umengPageName];
+    }
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
@@ -247,6 +258,8 @@
 
 - (void)retrieveTopsListData
 {
+    [MobClick beginLogPageView:POPULAR_TOP_LIST];
+    umengPageName = POPULAR_TOP_LIST;
     MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
@@ -408,6 +421,9 @@
 
 - (void)retrieveMovieTopsData
 {
+    [MobClick endLogPageView:umengPageName];
+    [MobClick beginLogPageView:POPULAR_MOVIE_TOP_LIST];
+    umengPageName = POPULAR_MOVIE_TOP_LIST;
     MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
@@ -458,6 +474,9 @@
 
 - (void)retrieveTvTopsData
 {
+    [MobClick endLogPageView:umengPageName];
+    [MobClick beginLogPageView:POPULAR_TV_TOP_LIST];
+    umengPageName = POPULAR_TV_TOP_LIST;
     MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
@@ -508,6 +527,9 @@
 
 - (void)retrieveShowTopsData
 {
+    [MobClick endLogPageView:umengPageName];
+    [MobClick beginLogPageView:POPULAR_SHOW_TOP_LIST];
+    umengPageName = POPULAR_SHOW_TOP_LIST;
     MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];

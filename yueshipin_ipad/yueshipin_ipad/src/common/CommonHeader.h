@@ -28,6 +28,10 @@
 #import "SlideBaseViewController.h"
 #import "JSBadgeView.h"
 #import "ActionUtility.h"
+#import "IpadPageNameConstant.h"
+#import "MobClick.h"
+#import "EnvConstant.h"
+
 @interface CommonHeader : NSObject
 
 @end

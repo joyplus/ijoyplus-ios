@@ -78,5 +78,20 @@
     return movieNum + subitemNum;    
 }
 
++ (BOOL)isAirPlayActive{
+    CFDictionaryRef currentRouteDescriptionDictionary = nil;
+    UInt32 dataSize = sizeof(currentRouteDescriptionDictionary);
+    AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &currentRouteDescriptionDictionary);
+    if (currentRouteDescriptionDictionary) {
+        CFArrayRef outputs = CFDictionaryGetValue(currentRouteDescriptionDictionary, kAudioSession_AudioRouteKey_Outputs);
+        if(CFArrayGetCount(outputs) > 0) {
+            CFDictionaryRef currentOutput = CFArrayGetValueAtIndex(outputs, 0);
+            CFStringRef outputType = CFDictionaryGetValue(currentOutput, kAudioSession_AudioRouteKey_Type);
+            return (CFStringCompare(outputType, kAudioSessionOutputRoute_AirPlay, 0) == kCFCompareEqualTo);
+        }
+    }
+    
+    return NO;
+}
 
 @end
