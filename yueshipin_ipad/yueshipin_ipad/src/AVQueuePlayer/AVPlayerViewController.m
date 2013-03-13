@@ -476,6 +476,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSDictionary *urlDic = [tempDic objectForKey:URL_KEY];
         int nowDate = [[NSDate date] timeIntervalSince1970];
         NSString *url = [urlDic objectForKey:@"url"];
+//        url = @"http://v.youku.com/player/getM3U8/vid/121064521/type/mp4/ts/1363168838/v.m3u8";
         NSString *formattedUrl = url;
         if([url rangeOfString:@"{now_date}"].location != NSNotFound){
             formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];

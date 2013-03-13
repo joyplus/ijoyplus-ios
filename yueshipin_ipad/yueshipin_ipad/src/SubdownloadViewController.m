@@ -173,9 +173,9 @@
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            tempitem.percentage = (int)(progress*100);
             if (progress * 100 - tempitem.percentage > 5) {
                 NSLog(@"percent = %f", progress);
+                tempitem.percentage = (int)(progress*100);
                 [tempitem save];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             }

@@ -257,8 +257,8 @@
     for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
         DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            item.percentage = (int)(progress*100);
             if (progress * 100 - item.percentage > 5) {
+                item.percentage = (int)(progress*100);
                 NSLog(@"percent = %f", progress);
                 [item save];
                 [self updateDiskStorage];
