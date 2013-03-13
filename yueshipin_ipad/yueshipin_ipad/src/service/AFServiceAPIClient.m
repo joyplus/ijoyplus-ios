@@ -41,6 +41,7 @@ NSString * const kABaseURLString = @"http://api.joyplus.tv/";
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:kABaseURLString]];
         NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
         [_sharedClient setDefaultHeader:@"app_key" value:appKey];
+        [_sharedClient setDefaultHeader:@"client" value:@"IOS"];
         [_sharedClient setDefaultHeader:@"Connection" value:@"keep-alive"];
     });
     
