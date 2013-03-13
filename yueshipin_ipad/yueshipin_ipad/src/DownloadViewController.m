@@ -21,15 +21,13 @@
     UIImageView *topIcon;
     UIImageView *bgImage;
     UIImageView *nodownloadImage;
-    float totalSpace_;
-    float totalFreeSpace_;
     int leftWidth;
     
     UIButton *editBtn;
     UIButton *doneBtn;
     DDProgressView *diskUsedProgress_;
     UILabel *spaceInfoLabel;
-    
+    BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
 }
 @end
@@ -63,6 +61,7 @@
     [self.view addGestureRecognizer:openMenuRecognizer];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -205,6 +204,10 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
+    displayNoSpaceFlag = NO;
+    for (DownloadItem *item in [AppDelegate instance].downloadItems) {
+        [item save];
+    }
 }
 
 - (void)reloadItems
@@ -252,9 +255,9 @@
     for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
         DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+            item.percentage = (int)(progress*100);
             if (progress * 100 - item.percentage > 5) {
                 NSLog(@"percent = %f", progress);
-                item.percentage = (int)(progress*100);
                 [item save];
                 [self updateDiskStorage];
             }
@@ -268,6 +271,22 @@
             break;
             
         }
+    }
+    [self getFreeDiskspacePercent];
+    if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        for (DownloadItem *item in [AppDelegate instance].downloadItems) {
+            if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
+                item.downloadStatus = @"stop";
+                [item save];
+                [AppDelegate instance].currentDownloadingNum = 0;
+                if (!displayNoSpaceFlag) {
+                    displayNoSpaceFlag = YES;
+                    [UIUtility showNoSpace:self.view];
+                }
+            }
+        }
+        [_gmGridView reloadData];
     }
 }
 
@@ -291,6 +310,11 @@
             [AppDelegate instance].currentDownloadingNum = 0;
         }
     } else if([item.downloadStatus isEqualToString:@"stop"]){
+        [self getFreeDiskspacePercent];
+        if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
+            [UIUtility showNoSpace:self.view];
+            return;
+        }
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"waiting";
         [item save];
@@ -516,20 +540,9 @@
     [doneBtn setHidden:YES];
 }
 
-
--(float)getFreeDiskspacePercent
+- (void)showNoEnoughSpace
 {
-    NSError *error = nil;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
-    if (dictionary) {
-        NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
-        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
-        totalSpace_ = [fileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
-        totalFreeSpace_ = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
-    }
-    float percent = (totalSpace_-totalFreeSpace_)/totalSpace_;
-    return percent;
+    [UIUtility showNoSpace:self.view];
 }
 
 @end

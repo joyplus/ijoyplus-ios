@@ -25,6 +25,7 @@
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, readonly) int networkStatus;
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
+@property (nonatomic, strong) NSString *show3GAlertSeq;
 - (void)monitorReachability;
 
 @end
@@ -49,6 +50,7 @@
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
 @synthesize mediaVolumeValue;
+@synthesize show3GAlertSeq;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -104,11 +106,11 @@
 
 - (void)initDownloadManager
 {
-    downloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-    [downloadItems addObjectsFromArray:[DownloadItem allObjects]];
-    subdownloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-    [subdownloadItems addObjectsFromArray:[SubdownloadItem allObjects]];
-    padDownloadManager = [[NewDownloadManager alloc]init];
+//    downloadItems = [[NSMutableArray alloc]initWithCapacity:10];
+//    [downloadItems addObjectsFromArray:[DownloadItem allObjects]];
+//    subdownloadItems = [[NSMutableArray alloc]initWithCapacity:10];
+//    [subdownloadItems addObjectsFromArray:[SubdownloadItem allObjects]];
+//    padDownloadManager = [[NewDownloadManager alloc]init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -117,6 +119,7 @@
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
+    show3GAlertSeq = @"0";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
@@ -130,7 +133,7 @@
     [self initWeChat];
     [self monitorReachability];
     [self isParseReachable];
-   //[Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];   // Test Env
+//    [Parse setApplicationId:@"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB" clientKey:@"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"];   // Test Env
     [Parse setApplicationId:@"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P" clientKey:@"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"]; // Production Env
     [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound];
     if (application.applicationIconBadgeNumber != 0) {
@@ -174,7 +177,7 @@
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
-   // NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
+//    NSString *appKey = @"aa8c2a3787a4a915f48b593d3ae9f94b";//测试
     if(appKey != nil){
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
@@ -312,8 +315,15 @@
         NSLog(@"Network is fine.");
         [self triggerDownload];
         [ActionUtility generateUserId:nil];
-        if (![self isWifiReachable]) {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:nil];
+        if ([self isWifiReachable]) {
+            show3GAlertSeq = @"0";
+        } else {
+            @synchronized(self){
+                if ([show3GAlertSeq isEqualToString:@"0"]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
+                    show3GAlertSeq = @"1";
+                }
+            }
         }
     }
 }

@@ -16,13 +16,14 @@
 @property (nonatomic, strong)DownloadItem *downloadingItem;
 @property (nonatomic, strong)AFDownloadRequestOperation *downloadingOperation;
 @property (nonatomic)float previousProgress;
+@property (nonatomic) BOOL displayNoSpaceFlag;
 @end
 
 @implementation NewDownloadManager
 @synthesize downloadingItem;
 @synthesize downloadingOperation;
 @synthesize delegate, subdelegate;
-@synthesize previousProgress;
+@synthesize previousProgress, displayNoSpaceFlag;
 
 - (void)startDownloadingThreads
 {
@@ -31,6 +32,7 @@
     [self startDownloadingThread:[AppDelegate instance].downloadItems type:@"waiting"];
     [self startDownloadingThread:[AppDelegate instance].subdownloadItems type:@"waiting"];
     [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
+    displayNoSpaceFlag = NO;
 }
 
 - (void)startDownloadingThread:(NSArray *)allItem type:(NSString *)type
@@ -124,12 +126,8 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    if (progress * 100 - previousProgress * 100 > 10) {
-        NSLog(@"percent in downloadmanager= %f", progress);
-        previousProgress = progress;
-        downloadingItem.percentage = progress;
-        [downloadingItem save];
-    }
+    [self updateProgress:progress downloadingArray:[AppDelegate instance].downloadItems];
+
 }
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
@@ -144,13 +142,50 @@
 
 - (void)updateProgress:(NSString *)operationId  suboperationId:(NSString *)suboperationId progress:(float)progress
 {
-    [self updateProgress:operationId progress:progress];
+    [self updateProgress:progress downloadingArray:[AppDelegate instance].subdownloadItems];
+}
+
+- (void)updateProgress:(float)progress downloadingArray:(NSArray *)downloadingArray
+{
+    if (progress * 100 - previousProgress * 100 > 5) {
+        NSLog(@"percent in downloadmanager= %f", progress);
+        previousProgress = progress;
+        downloadingItem.percentage = progress;
+        [downloadingItem save];
+    }
+    float freeSpace = [self getFreeDiskspace];
+    if (freeSpace <= LEAST_DISK_SPACE) {
+        [self stopDownloading];
+        for (DownloadItem *item in downloadingArray) {
+            if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
+                item.downloadStatus = @"stop";
+                [item save];
+                if (!displayNoSpaceFlag) {
+                    displayNoSpaceFlag = YES;
+                    [[NSNotificationCenter defaultCenter]postNotificationName:NO_ENOUGH_SPACE object:nil];
+                }
+            }
+        }
+    }
 }
 
 - (void)stopDownloading
 {
     [downloadingOperation pause];
     [downloadingOperation cancel];
+}
+
+- (float)getFreeDiskspace
+{
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    float totalFreeSpace_ = 0;
+    if (dictionary) {
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalFreeSpace_ = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
+    }
+    return totalFreeSpace_;
 }
 
 @end

@@ -21,7 +21,7 @@
     
     UIButton *editBtn;
     UIButton *doneBtn;;
-    
+    BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
 }
 @end
@@ -116,6 +116,14 @@
     [_gmGridView reloadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    displayNoSpaceFlag = NO;
+    for (SubdownloadItem *item in [AppDelegate instance].subdownloadItems) {
+        [item save];
+    }
+}
 - (void)reloadSubitems
 {
     NSMutableArray *tempsubitems = [[NSMutableArray alloc]initWithCapacity:10];
@@ -165,9 +173,9 @@
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
+            tempitem.percentage = (int)(progress*100);
             if (progress * 100 - tempitem.percentage > 5) {
                 NSLog(@"percent = %f", progress);
-                tempitem.percentage = (int)(progress*100);
                 [tempitem save];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             }
@@ -180,6 +188,22 @@
             }
             break;            
         }
+    }
+    [self getFreeDiskspacePercent];
+    if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        for (SubdownloadItem *subitem in [AppDelegate instance].subdownloadItems) {
+            if ([subitem.downloadStatus isEqualToString:@"start"] || [subitem.downloadStatus isEqualToString:@"waiting"]) {
+                subitem.downloadStatus = @"stop";
+                [subitem save];
+                [AppDelegate instance].currentDownloadingNum = 0;
+                if (!displayNoSpaceFlag) {
+                    displayNoSpaceFlag = YES;
+                    [UIUtility showNoSpace:self.view];
+                }
+            }
+        }
+        [_gmGridView reloadData];
     }
 }
 
@@ -203,6 +227,11 @@
             [AppDelegate instance].currentDownloadingNum = 0;
         }
     } else {
+        [self getFreeDiskspacePercent];
+        if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
+            [UIUtility showNoSpace:self.view];
+            return;
+        }
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"waiting";
         [subitem save];

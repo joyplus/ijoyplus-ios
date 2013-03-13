@@ -233,7 +233,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapRecognizer.delegate = self;
     tapRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapRecognizer];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
@@ -1895,14 +1895,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 //=====================Utility methods========================
 
-- (void)wifiNotAvailable
+- (void)wifiNotAvailable:(NSNotification *)notification
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                       message:@"当前网络为非Wifi环境，您确定要继续播放吗？"
-                                                      delegate:self
-                                             cancelButtonTitle:@"取消"
-                                             otherButtonTitles:@"确定", nil];
-    [alertView show];
+    NSString *show3GAlert = (NSString *)notification.object;
+    if ([show3GAlert isEqualToString:@"0"]) {
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"当前网络为非Wifi环境，您确定要继续播放吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
 }
 
 
