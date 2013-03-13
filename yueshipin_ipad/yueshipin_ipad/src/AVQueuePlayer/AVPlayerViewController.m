@@ -1215,13 +1215,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     volumeSlider.value = [MPMusicPlayerController applicationMusicPlayer].volume;
     [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+    [self changeVolumeBtn:volumeSlider.value];
 }
 
-- (void)setVolumeValue:(float)value
+- (void)changeVolumeBtn:(float)value
 {
-    volumeSlider.value = value;
-    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
-    [MPMusicPlayerController applicationMusicPlayer].volume = volumeSlider.value;
     if (value > 0) {
         volumeBtn.tag = 9877;
         [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
@@ -1231,6 +1229,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt"] forState:UIControlStateNormal];
         [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt_pressed"] forState:UIControlStateHighlighted];
     }
+}
+
+- (void)setVolumeValue:(float)value
+{
+    volumeSlider.value = value;
+    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+    [MPMusicPlayerController applicationMusicPlayer].volume = volumeSlider.value;
+    [self changeVolumeBtn:value];
 //    AVURLAsset *asset = [[mPlayer currentItem] asset];
 //    NSMutableArray *allAudioParams = [NSMutableArray array];
 //    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
