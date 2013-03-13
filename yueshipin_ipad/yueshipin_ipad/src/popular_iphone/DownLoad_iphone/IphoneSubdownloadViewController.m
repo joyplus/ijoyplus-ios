@@ -407,21 +407,18 @@
             }
         }
         if (playPath) {
-
-//            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//            viewController.isDownloaded = YES;
-//            viewController.closeAll = YES;
-//            NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-//            [urlsArray addObject:playPath];
-//            viewController.videoUrls = urlsArray;
-//            viewController.prodId = downloadItem.itemId;
-//            //viewController.type = downloadItem.type;
-//            viewController.name = self.title;
-//            viewController.subname = downloadItem.name;
-//            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
             iphoneAVPlayerViewController.local_file_path = playPath;
             iphoneAVPlayerViewController.islocalFile = YES;
+            if (downloadItem.type == 2) {
+                NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];
+                NSString *sub_name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+                int num = [sub_name intValue];
+                iphoneAVPlayerViewController.nameStr = [NSString stringWithFormat:@"%@ 第%d集",name,++num];
+            }
+            else if (downloadItem.type == 3){
+                iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
+            }
             [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         }
         else{

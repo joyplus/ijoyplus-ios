@@ -220,6 +220,10 @@
     
 }
 
+- (void)viewDidUnload{
+    [super viewDidUnload];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -880,5 +884,7 @@
     [self loadComments];
 
 }
+
+
 
 @end

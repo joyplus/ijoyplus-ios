@@ -247,6 +247,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [pullToRefreshManager_ tableViewReloadFinished];
 }
 
+- (void)viewDidUnload{
+    [super viewDidUnload];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -1390,5 +1394,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [self loadComments];
     
 }
+
 
 @end

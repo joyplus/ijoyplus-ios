@@ -157,6 +157,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     /* Create new player, if we don't already have one. */
     if (![self player])
     {
+        
+        seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
+    
+        
         /* Get a new AVPlayer initialized to play the specified player item. */
         [self setPlayer:[AVPlayer playerWithPlayerItem:self.mPlayerItem]];
         /* Observe the AVPlayer "currentItem" property to find out when any
@@ -186,16 +190,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 	
     
-    if (lastPlayTime_.value) {
-         [mPlayer seekToTime:lastPlayTime_];
-         seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
+    if (CMTIME_IS_VALID(lastPlayTime_)) {
+        [mPlayer seekToTime:lastPlayTime_];
     }
+    
 
     if (videoType_ == 2 || videoType_ ==3) {
        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId_] result:[NSNumber numberWithInt:playNum]];
     }
   
-    [mScrubber setValue:0.0];
+    //[mScrubber setValue:0.0];
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error
@@ -222,9 +226,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		float minValue = [mScrubber minimumValue];
 		float maxValue = [mScrubber maximumValue];
 		double time = CMTimeGetSeconds([mPlayer currentTime]);
+    
 		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
 	}
-
+    
 }
 
 -(void)removePlayerTimeObserver
@@ -462,8 +467,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	double duration = CMTimeGetSeconds(playerDuration);
 	if (isfinite(duration))
 	{
-		//CGFloat width = CGRectGetWidth([mScrubber bounds]);
-        CGFloat width = 100.0;
+		CGFloat width = CGRectGetWidth([mScrubber bounds]);
 		interval = 0.5f * duration / width;
 	}
     
@@ -483,7 +487,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 }
 -(void)syncTimeLabel{
-    lastPlayTime_ = [mPlayer currentTime];
     seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds([mPlayer currentTime])];
 
 }
@@ -560,7 +563,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [timeLabelTimer_ invalidate];
     }
     playNum++;
-    [self.view addSubview:playCacheView_];
+    [self addCacheview];
+    
     [self initWillPlayLabel];
     [self initDataSource:playNum];
     
@@ -620,7 +624,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.view addSubview:playCacheView_];
     
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-    myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+130);
+    myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+110);
     myHUD.backgroundColor = [UIColor clearColor];
     UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
     tapGesture_another.numberOfTapsRequired = 1;
@@ -632,13 +636,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     myHUD.labelFont = [UIFont systemFontOfSize:12];
     myHUD.opacity = 0;
     [myHUD show:YES];
-    [self.view addSubview:myHUD];
+    
+    if (!islocalFile_) {
+          [self.view addSubview:myHUD];
+    }
 
     willPlayLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
     willPlayLabel_.center = CGPointMake(playCacheView_.center.x, 160);
-    willPlayLabel_.font = [UIFont systemFontOfSize:13];
+    willPlayLabel_.font = [UIFont systemFontOfSize:12];
     willPlayLabel_.backgroundColor = [UIColor clearColor];
-    willPlayLabel_.textColor = [UIColor whiteColor];
+    willPlayLabel_.textColor = [UIColor grayColor];
     willPlayLabel_.textAlignment = NSTextAlignmentCenter;
     [playCacheView_ addSubview:willPlayLabel_];
     [self initWillPlayLabel];
@@ -646,31 +653,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)initWillPlayLabel{
-    if (videoType_ == 1) {
-        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",nameStr_];
-    }
-    else if (videoType_ == 2){
-        willPlayLabel_.text = [NSString stringWithFormat:@"即将播放：%@ 第%d集", nameStr_, playNum];
-    }
-    else if (videoType_ == 3){
-        NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
-        NSString *name = [item objectForKey:@"name"];
-        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",name];
-    }
+//    if (videoType_ == 1) {
+//        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",nameStr_];
+//    }
+//    else if (videoType_ == 2){
+//        willPlayLabel_.text = [NSString stringWithFormat:@"即将播放：%@ 第%d集", nameStr_, playNum];
+//    }
+//    else if (videoType_ == 3){
+//        NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
+//        NSString *name = [item objectForKey:@"name"];
+//        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",name];
+//    }
     
     NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
-    if (![str isEqualToString:@"00:00"] && ![str isEqualToString:@"00:00:00"]) {
-        UILabel *lodingLbel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-        lodingLbel.center = CGPointMake(playCacheView_.center.x, 180);
-        lodingLbel.text = [NSString stringWithFormat:@"上次播放至: %@",str];
-        lodingLbel.font = [UIFont systemFontOfSize:11];
-        lodingLbel.backgroundColor = [UIColor clearColor];
-        lodingLbel.textColor = [UIColor grayColor];
-        lodingLbel.textAlignment = NSTextAlignmentCenter;
-        [playCacheView_ addSubview:lodingLbel];
+    if (![str isEqualToString:@"00:00"] && ![str isEqualToString:@"00:00:00"]){
+    willPlayLabel_.text = [NSString stringWithFormat:@"上次播放至: %@",str];
     }
-
-
+    
 }
 
 -(void)initDataSource:(int)num{
@@ -1058,9 +1057,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpInside];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpOutside];
     [mScrubber addTarget:self action:@selector(beginScrubbing:) forControlEvents:UIControlEventTouchDown];
-    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventValueChanged];
     [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventTouchDragInside];
-    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventTouchUpOutside];
+    [mScrubber addTarget:self action:@selector(scrub:) forControlEvents:UIControlEventValueChanged];
     [bottomView_ addSubview:mScrubber];
     
     
@@ -1308,10 +1306,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     }
     
-    playCacheView_.backgroundColor = [UIColor clearColor];
+    lastPlayTime_ = [mPlayer currentTime];
+    
+    [self addCacheview];
+    
     clearBgView_.hidden = YES;
+    
     [mPlayer pause];
      mPlayer = nil;
+    
     switch (btn.tag) {
         case 100:{
             btn.enabled = NO;
@@ -1407,6 +1410,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             
                 btn.selected = YES;
                  clearBgView_.hidden = NO;
+                [self.view bringSubviewToFront:clearBgView_];
             }
 
             
@@ -1473,7 +1477,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
                              ^(CMTime time)
                              {
-                                 [self syncScrubber];
+                                [self syncScrubber];
                              }];
 		}
 	}
@@ -1483,6 +1487,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		[mPlayer setRate:mRestoreAfterScrubbingRate];
 		mRestoreAfterScrubbingRate = 0.f;
 	}
+
 }
 
 - (BOOL)isScrubbing
@@ -1492,8 +1497,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)scrub:(id)sender{
 
-    [self resetMyTimer];
-    [self removePlayerTimeObserver];
     if ([sender isKindOfClass:[UISlider class]])
 	{
 		UISlider* slider = sender;
@@ -1516,10 +1519,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         
 		}
 	}
-
-
-
 }
+
 -(UIImage *)getVideoSource:(NSString *)urlStr{
     NSString *source_str = nil;
     NSMutableArray *playUrlArr = [NSMutableArray arrayWithCapacity:5];
@@ -1581,7 +1582,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)syncLogo:(NSString *)url{
     UIImage *img = [self getVideoSource:url];
     sourceLogo_.backgroundColor = [UIColor clearColor];
-    sourceLogo_.frame = CGRectMake(102, 13, img.size.width/3, img.size.height/3);
+    sourceLogo_.frame = CGRectMake(102, 11, img.size.width/3, img.size.height/3);
     sourceLogo_.image = img;
 }
 - (void)updateWatchRecord
@@ -1669,6 +1670,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (selectButton_.selected) {
+        selectButton_.selected = NO;
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3];
+        tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+        [UIView commitAnimations];
+    }
     
     myHUD.hidden = NO;
     [self.view bringSubviewToFront:myHUD];
@@ -1678,11 +1686,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [timeLabelTimer_ invalidate];
     }
     playNum = indexPath.row;
-    [self.view addSubview:playCacheView_];
-    [self initWillPlayLabel];
+    
+    [self addCacheview];
     [self initDataSource:playNum];
     [self beginToPlay];
     
+}
+
+-(void)addCacheview{
+    [self.view addSubview:playCacheView_];
+    [self initWillPlayLabel];
+    myHUD.hidden = NO;
+    [self.view bringSubviewToFront:myHUD];
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
@@ -1706,12 +1721,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)dealloc{
-    //[avplayerView_.layer removeFromSuperlayer];
+    [avplayerView_.layer removeFromSuperlayer];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
     [self.player  pause];
     mPlayerItem = nil;
     mPlayer = nil;
+    avplayerView_ = nil;
    
 
 }

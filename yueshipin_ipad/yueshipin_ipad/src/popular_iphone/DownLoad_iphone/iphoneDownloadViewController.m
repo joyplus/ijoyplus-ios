@@ -461,23 +461,11 @@
                     break;
                 }
             }
-            if (playPath) {
-//                MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//                viewController.isDownloaded = YES;
-//                viewController.closeAll = YES;
-//                NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-//                [urlsArray addObject:playPath];
-//                viewController.videoUrls = urlsArray;
-//                viewController.prodId = item.itemId;
-//                //viewController.type = 1;
-//                viewController.name = item.name;
-//                viewController.subname = @"";
-//                viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//                [self presentViewController:viewController animated:YES completion:nil];
-                
+            if (playPath) {                
                 IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
                 iphoneAVPlayerViewController.local_file_path = playPath;
                 iphoneAVPlayerViewController.islocalFile = YES;
+                iphoneAVPlayerViewController.nameStr = item.name;
                 [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
             }
             else{

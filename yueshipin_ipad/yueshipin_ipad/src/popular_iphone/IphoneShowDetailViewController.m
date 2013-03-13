@@ -214,7 +214,9 @@
     [pullToRefreshManager_ tableViewReloadFinished];
 }
 
-
+- (void)viewDidUnload{
+    [super viewDidUnload];
+}
 
 - (void)didReceiveMemoryWarning
 {

@@ -181,13 +181,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (Type_ == TV_TYPE) {
+    NSDictionary *dic = [self.listArr objectAtIndex:indexPath.row];
+    NSString *type = [dic objectForKey:@"prod_type"];
+    if ([type isEqualToString:@"2"]) {
         TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
-        
     }
-    if (Type_ == MOVIE_TYPE) {
+    else if ([type isEqualToString:@"1"]||[type isEqualToString:@"131"]){
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
