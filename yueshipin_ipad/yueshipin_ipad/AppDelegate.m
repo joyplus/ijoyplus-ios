@@ -25,7 +25,7 @@
 @property (nonatomic, strong) Reachability *wifiReach;
 @property (nonatomic, readonly) int networkStatus;
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
-@property (nonatomic, strong) NSString *show3GAlertSeq;
+@property (atomic, strong) NSString *show3GAlertSeq;
 - (void)monitorReachability;
 
 @end
@@ -317,7 +317,7 @@
         if ([self isWifiReachable]) {
             show3GAlertSeq = @"0";
         } else {
-            @synchronized(self){
+            @synchronized(show3GAlertSeq){
                 if ([show3GAlertSeq isEqualToString:@"0"]) {
                     [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
                     show3GAlertSeq = @"1";

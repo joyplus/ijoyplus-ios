@@ -1015,6 +1015,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [self updateWatchRecord];
     [self saveLastPlaytime];
 	[mPlayer pause];
