@@ -284,8 +284,6 @@
 		EB182D02165CFCBD00A347BA /* PersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB182D01165CFCBD00A347BA /* PersonalViewController.m */; };
 		EB50213016E5F532005E855C /* clear_play_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB50212E16E5F532005E855C /* clear_play_pressed.png */; };
 		EB50213116E5F532005E855C /* clear_play.png in Resources */ = {isa = PBXBuildFile; fileRef = EB50212F16E5F532005E855C /* clear_play.png */; };
-		EB513F8C1676D19B0072E013 /* SuggestionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB513F8B1676D19B0072E013 /* SuggestionViewController.m */; };
-		EB513F901676D29C0072E013 /* SuggestionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB513F8F1676D29C0072E013 /* SuggestionViewController.xib */; };
 		EB513F981676D4340072E013 /* hot_signal.png in Resources */ = {isa = PBXBuildFile; fileRef = EB513F911676D4340072E013 /* hot_signal.png */; };
 		EB513F991676D4340072E013 /* proposal.png in Resources */ = {isa = PBXBuildFile; fileRef = EB513F921676D4340072E013 /* proposal.png */; };
 		EB513F9A1676D4340072E013 /* proposal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB513F931676D4340072E013 /* proposal@2x.png */; };
@@ -1155,9 +1153,6 @@
 		EB182D01165CFCBD00A347BA /* PersonalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersonalViewController.m; sourceTree = "<group>"; };
 		EB50212E16E5F532005E855C /* clear_play_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clear_play_pressed.png; sourceTree = "<group>"; };
 		EB50212F16E5F532005E855C /* clear_play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clear_play.png; sourceTree = "<group>"; };
-		EB513F8A1676D19B0072E013 /* SuggestionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuggestionViewController.h; sourceTree = "<group>"; };
-		EB513F8B1676D19B0072E013 /* SuggestionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuggestionViewController.m; sourceTree = "<group>"; };
-		EB513F8F1676D29C0072E013 /* SuggestionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SuggestionViewController.xib; sourceTree = "<group>"; };
 		EB513F911676D4340072E013 /* hot_signal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hot_signal.png; sourceTree = "<group>"; };
 		EB513F921676D4340072E013 /* proposal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = proposal.png; sourceTree = "<group>"; };
 		EB513F931676D4340072E013 /* proposal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "proposal@2x.png"; sourceTree = "<group>"; };
@@ -2997,9 +2992,6 @@
 			children = (
 				EB14D462165B728E00CB3260 /* SettingsViewController.h */,
 				EB14D463165B728E00CB3260 /* SettingsViewController.m */,
-				EB513F8A1676D19B0072E013 /* SuggestionViewController.h */,
-				EB513F8B1676D19B0072E013 /* SuggestionViewController.m */,
-				EB513F8F1676D29C0072E013 /* SuggestionViewController.xib */,
 				EBB9E0CF16706AAE006ECEE8 /* AboutUsViewController.h */,
 				EBB9E0D016706AAE006ECEE8 /* AboutUsViewController.m */,
 				EBBAD36F168326710070DD95 /* ClauseViewController.h */,
@@ -3325,7 +3317,6 @@
 				EBBCDC0F1675F00D006E2F64 /* push_pressed.png in Resources */,
 				EBBCDC101675F00E006E2F64 /* share_pressed.png in Resources */,
 				EBBCDC111675F00E006E2F64 /* share.png in Resources */,
-				EB513F901676D29C0072E013 /* SuggestionViewController.xib in Resources */,
 				EB513F981676D4340072E013 /* hot_signal.png in Resources */,
 				EB513F991676D4340072E013 /* proposal.png in Resources */,
 				EB513F9A1676D4340072E013 /* proposal@2x.png in Resources */,
@@ -3808,7 +3799,6 @@
 				EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */,
 				EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */,
 				EBB9E0D116706AAE006ECEE8 /* AboutUsViewController.m in Sources */,
-				EB513F8C1676D19B0072E013 /* SuggestionViewController.m in Sources */,
 				EBBAD371168326710070DD95 /* ClauseViewController.m in Sources */,
 				22FEEE5A16899AE100A71EF4 /* AllListViewCell.m in Sources */,
 				22FEEE5B16899AE100A71EF4 /* allListViewController.m in Sources */,

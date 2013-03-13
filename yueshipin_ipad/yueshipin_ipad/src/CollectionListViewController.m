@@ -86,6 +86,12 @@
     } else {
         [self retrieveTopsListData];
     }
+    [MobClick beginLogPageView:COLLECTION_LIST];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:COLLECTION_LIST];
 }
 
 

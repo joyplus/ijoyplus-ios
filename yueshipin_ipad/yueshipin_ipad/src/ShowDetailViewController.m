@@ -96,6 +96,7 @@
     [super viewDidLoad];
     
     self.type = 3;
+    umengPageName = SHOW_DETAIL;
     
     self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];

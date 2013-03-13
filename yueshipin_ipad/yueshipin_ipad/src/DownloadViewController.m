@@ -196,6 +196,7 @@
     [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
     [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
+    [MobClick beginLogPageView:DOWNLOAD];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -208,6 +209,7 @@
     for (DownloadItem *item in [AppDelegate instance].downloadItems) {
         [item save];
     }
+    [MobClick endLogPageView:DOWNLOAD];
 }
 
 - (void)reloadItems

@@ -58,6 +58,22 @@
     [downloadUrls removeAllObjects];
     downloadUrls = nil;
     episodeArray = nil;
+    umengPageName = nil;
+}
+
+- (void)dealloc
+{
+    [self clearMemory];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:umengPageName];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:umengPageName];
 }
 
 - (void)shareBtnClicked

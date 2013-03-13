@@ -333,12 +333,14 @@
         [self parseWatchHistory];
         [self parseResult];
     }
+    [MobClick beginLogPageView:PERSONAL];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:YES];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:PERSONAL];
 }
+
 
 - (void)parseWatchHistory
 {

@@ -108,6 +108,7 @@
     [super viewDidLoad];
     
     self.type = 2;
+    umengPageName = TV_DETAIL;
     
     self.bgScrollView.frame = CGRectMake(0, 255, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
@@ -258,6 +259,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }

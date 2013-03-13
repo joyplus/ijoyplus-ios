@@ -71,6 +71,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int tableWidth;
 @property (nonatomic) int tableCellHeight;
 @property (nonatomic) int maxEpisodeNum;
+@property (nonatomic, strong) NSString *umengPageName;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -101,7 +102,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid;
-@synthesize tableCellHeight, tableWidth, maxEpisodeNum;
+@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName;
 
 #pragma mark
 #pragma mark View Controller
@@ -190,6 +191,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPrevButton = nil;
     mNextButton = nil;
     mSwitchButton = nil;
+    umengPageName = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
@@ -199,6 +201,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
+    if (type == 1) {
+        umengPageName = MOVIE_PLAY;
+    } else if(type == 2 || type == 131){
+        umengPageName = TV_PLAY;
+    } else {
+        umengPageName = SHOW_PLAY;
+    }
     defaultErrorMessage = @"即将使用网页播放";
     resolution = GAO_QING;
     [self showPlayVideoView];
@@ -243,6 +252,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self becomeFirstResponder];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:umengPageName];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
@@ -250,6 +265,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	[mPlayer pause];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
+    [MobClick endLogPageView:umengPageName];
 }
 
 -(BOOL)shouldAutorotate {

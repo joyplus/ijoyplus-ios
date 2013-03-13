@@ -25,6 +25,17 @@
 @synthesize type;
 
 - (void)viewDidUnload{
+    [super viewDidUnload];
+    [self clearMemory];
+}
+
+- (void)dealloc
+{
+    [self clearMemory];
+}
+
+- (void)clearMemory
+{
     self.topId = nil;
     self.listTitle = nil;
     table = nil;
@@ -32,7 +43,7 @@
     topsArray = nil;
     closeBtn = nil;
     titleLabel = nil;
-    [super viewDidUnload];
+    umengPageName = nil;    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -76,6 +87,8 @@
     pageSize = 10;
     
     [self.view addGestureRecognizer:swipeRecognizer];
+    
+    umengPageName = TOP_LIST_DETAIL;
 }
 
 - (void)loadTable {    
@@ -90,6 +103,12 @@
     } else {
         [self retrieveTopsListData];        
     }
+    [MobClick beginLogPageView:umengPageName];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:umengPageName];
 }
 
 

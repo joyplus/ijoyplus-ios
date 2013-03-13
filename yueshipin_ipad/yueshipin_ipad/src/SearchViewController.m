@@ -143,6 +143,12 @@
         }
     }
     [table reloadData];
+    [MobClick beginLogPageView:SEARCH];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:SEARCH];
 }
 
 - (void)parseData:(id)result{

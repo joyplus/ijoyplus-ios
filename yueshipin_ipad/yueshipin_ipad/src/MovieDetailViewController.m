@@ -98,6 +98,7 @@
     [super viewDidLoad];
     
     self.type = 1;
+    umengPageName = MOVIE_DETAIL;
     
     self.bgScrollView.frame = CGRectMake(0, 255, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
@@ -218,6 +219,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }

@@ -93,6 +93,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self retrieveTopsListData];
+    [MobClick beginLogPageView:MY_TOP_LIST];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:MY_TOP_LIST];
 }
 
 

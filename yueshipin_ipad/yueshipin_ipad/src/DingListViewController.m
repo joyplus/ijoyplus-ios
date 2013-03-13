@@ -86,8 +86,13 @@
     } else {
         [self retrieveTopsListData];
     }
+    [MobClick beginLogPageView:SUPPORT_LIST];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:SUPPORT_LIST];
+}
 
 - (void)retrieveTopsListData
 {
