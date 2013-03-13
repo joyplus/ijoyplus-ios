@@ -299,7 +299,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if(responseCode == nil){
                 if (type == 1) {
                     video = (NSDictionary *)[result objectForKey:@"movie"];
-                } else if (type == 2){
+                } else if (type == 2 || type == 131){
                     video = (NSDictionary *)[result objectForKey:@"tv"];
                 } else if (type == 3){
                     video = (NSDictionary *)[result objectForKey:@"show"];
@@ -499,7 +499,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self saveLastPlaytime];
     mPlayer = nil;
     [controlVisibilityTimer invalidate];
-    if (type == 2 || type == 3) {
+    if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
     if (closeAll) {
@@ -603,7 +603,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, TOP_TOOLBAR_HEIGHT)];
     vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
-    if (type == 2) {
+    if (type == 2 || type == 131) {
         vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
     } else if(type == 3){
         vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
@@ -616,7 +616,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     vidoeTitle.textAlignment = UITextAlignmentCenter;
     [topToolbar addSubview:vidoeTitle];
     
-    if ((type == 2 || type == 3) && !isDownloaded) {
+    if ((type == 2 || type == 3 || type == 131) && !isDownloaded) {
         selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         selectButton.frame = CGRectMake(topToolbar.frame.size.width - 20 - 100, 0, 100, BUTTON_HEIGHT);
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
@@ -864,7 +864,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         nameLabel.textAlignment = NSTextAlignmentCenter;
         nameLabel.textColor = [UIColor whiteColor];
-        if (type == 2) {
+        if (type == 2 || type == 131) {
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
             vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
         } else if(type == 3){
@@ -911,7 +911,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     currentNum++;
     currentPlaybackTimeLabel.text = @"00:00:00";
     mScrubber.value = 0;
-    if ((type == 2 || type == 3) && subnameArray.count > self.currentNum) {
+    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum) {
         episodeListviewController.currentNum = currentNum;
         [episodeListviewController.table reloadData];
         [self disablePlayerButtons];
@@ -920,6 +920,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self disableNextButton];
         }
         [self preparePlayVideo];
+        [self recordPlayStatics];
     } else {
         currentNum--;
         [self closeSelf];
@@ -943,7 +944,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         workingUrl = nil;
         [mPlayer pause];
         mPlayer = nil;
-        if (type == 2) {
+        if (type == 2 || type == 131) {
             subname = [subnameArray objectAtIndex:self.currentNum];
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
             vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
@@ -1555,6 +1556,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self disableScrubber];
     [self resetControlVisibilityTimer];
     [self preparePlayVideo];
+    [self recordPlayStatics];
+}
+
+- (void)recordPlayStatics
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 - (BOOL)isPlaying

@@ -99,7 +99,7 @@
         [cell.contentView addSubview:nameLabel];
     }
     UILabel *nameLabel  = (UILabel *)[cell viewWithTag:1001];
-    if (type == 2) {
+    if (type == 2 || type == 131) {
         nameLabel.numberOfLines = 0;
         nameLabel.textAlignment = NSTextAlignmentCenter;
         nameLabel.text = [NSString stringWithFormat:@"第%@集", [self.episodeArray objectAtIndex:indexPath.row]];

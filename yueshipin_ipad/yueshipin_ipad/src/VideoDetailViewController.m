@@ -402,6 +402,18 @@
         webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
     }
+    
+    [self recordPlayStatics];
+}
+
+- (void)recordPlayStatics
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 - (BOOL)validadUrl:(NSString *)originalUrl

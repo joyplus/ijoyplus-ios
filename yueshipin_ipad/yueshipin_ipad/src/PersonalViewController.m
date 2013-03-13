@@ -593,6 +593,12 @@
     webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
 
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [item objectForKey:@"prod_id"], @"prod_id",  [item objectForKey:@"prod_name"], @"prod_name", [item objectForKey:@"prod_subname"], @"prod_subname", [item objectForKey:@"prod_type"], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 - (NSString *)composeContent:(NSDictionary *)item
