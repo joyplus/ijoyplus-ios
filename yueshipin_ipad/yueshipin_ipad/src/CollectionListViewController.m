@@ -97,15 +97,15 @@
 
 - (void)retrieveTopsListData
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_collection_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
     } else {
-        if([hostReach currentReachabilityStatus] != NotReachable) {
+        if(isReachable) {
             [myHUD showProgressBar:self.view];
         }
     }

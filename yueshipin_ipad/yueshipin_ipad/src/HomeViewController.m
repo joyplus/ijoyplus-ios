@@ -652,8 +652,8 @@
     [self closeMenu];     
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     videoType = 0;
@@ -666,8 +666,8 @@
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     videoType = 1;
@@ -680,8 +680,8 @@
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     videoType = 2;
@@ -694,8 +694,8 @@
     [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];      
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     videoType = 3;

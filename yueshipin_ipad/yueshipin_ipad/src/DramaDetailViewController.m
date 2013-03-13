@@ -308,8 +308,8 @@
 
 - (void)retrieveData
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
@@ -317,7 +317,7 @@
     if(cacheResult != nil){
         [self parseData:cacheResult];
     } else {
-        if([hostReach currentReachabilityStatus] != NotReachable) {
+        if(isReachable) {
             [myHUD showProgressBar:self.view];
         }
     }

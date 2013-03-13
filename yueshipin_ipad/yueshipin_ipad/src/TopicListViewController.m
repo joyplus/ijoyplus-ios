@@ -109,8 +109,8 @@
     //        [self parseVideoData:cacheResult];
     //    } else {
     //    }
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     } else {
         [myHUD showProgressBar:self.view];
