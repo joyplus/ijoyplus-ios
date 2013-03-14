@@ -192,7 +192,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mNextButton = nil;
     mSwitchButton = nil;
     umengPageName = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
@@ -1935,6 +1934,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)wifiNotAvailable:(NSNotification *)notification
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     NSString *show3GAlert = (NSString *)notification.object;
     if ([show3GAlert isEqualToString:@"0"]) {
         UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"当前网络为非Wifi环境，您确定要继续播放吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
