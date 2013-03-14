@@ -143,6 +143,8 @@
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
 {
+    NSLog(@"error in SubdownloadViewController");
+    [[AppDelegate instance].padDownloadManager stopDownloading];
     [AppDelegate instance].currentDownloadingNum--;
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
@@ -152,6 +154,7 @@
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
             tempitem.downloadStatus = @"stop";
             [tempitem save];
+            [_gmGridView reloadData];
             break;
         }
     }
@@ -184,7 +187,7 @@
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
             if (progress * 100 - tempitem.percentage > 5) {
-                NSLog(@"percent = %f", progress);
+                NSLog(@"percent in SubdownloadViewController= %f", progress);
                 tempitem.percentage = (int)(progress*100);
                 [tempitem save];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
@@ -247,6 +250,7 @@
         [subitem save];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [_gmGridView reloadData];
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView

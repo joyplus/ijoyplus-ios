@@ -56,12 +56,12 @@
                         filePath = [NSString stringWithFormat:@"%@/%@_%@.mp4", documentsDir, item.itemId, ((SubdownloadItem *)item).subitemId];
                     }
                     downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
-                    downloadingOperation.downloadingDelegate = delegate == nil ? self : delegate;
-                    downloadingOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
                     downloadingOperation.operationId = item.itemId;
                     if(item.type == 1){
+                        downloadingOperation.downloadingDelegate = delegate == nil ? self : delegate;
                         downloadingOperation.suboperationId = @"";
                     } else {
+                        downloadingOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
                         downloadingOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
                     }
                     
@@ -103,6 +103,8 @@
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
+    NSLog(@"error in download manager");
+    [self stopDownloading];
     for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
         DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {

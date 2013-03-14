@@ -209,6 +209,7 @@
     for (DownloadItem *item in [AppDelegate instance].downloadItems) {
         [item save];
     }
+    [self updateDiskStorage];
     [MobClick endLogPageView:DOWNLOAD];
 }
 
@@ -226,6 +227,8 @@
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
+    NSLog(@"error in DownloadViewController");
+    [[AppDelegate instance].padDownloadManager stopDownloading];
     [AppDelegate instance].currentDownloadingNum--;
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
@@ -235,6 +238,7 @@
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             item.downloadStatus = @"stop";
             [item save];
+            [_gmGridView reloadData];
             break;
         }
     }
@@ -268,7 +272,7 @@
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             if (progress * 100 - item.percentage > 5) {
                 item.percentage = (int)(progress*100);
-                NSLog(@"percent = %f", progress);
+                NSLog(@"percent in DownloadViewController= %f", progress);
                 [item save];
                 [self updateDiskStorage];
             }
@@ -331,6 +335,7 @@
         [item save];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [_gmGridView reloadData];
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
