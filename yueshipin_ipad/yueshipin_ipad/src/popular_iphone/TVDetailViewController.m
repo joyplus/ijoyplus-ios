@@ -333,12 +333,24 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (directors == nil) {
                     directors = [self.infoDic objectForKey:@"director"];
                 }
+                if (directors == nil) {
+                    directors = @" ";
+                }
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
                 if (actors == nil) {
                     actors = [self.infoDic objectForKey:@"star"];
                 }
+                if (actors == nil) {
+                    actors = @" ";
+                }
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
+                if (date == nil) {
+                    date = @" ";
+                }
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                if (area == nil) {
+                    area = @" ";
+                }
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -628,6 +640,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 
 -(void)action:(id)sender {
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
@@ -727,6 +745,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 
 -(void)selectToDownLoad:(int)num{
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
 
     NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:num] objectForKey:@"down_urls"];
     NSString *videoUrl = nil;

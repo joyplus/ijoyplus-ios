@@ -547,14 +547,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     myHUD.hidden = NO;
     [self.view bringSubviewToFront:myHUD];
-    
-    lastPlayTime_ = CMTimeMake(0, NSEC_PER_SEC);
     [self removePlayerTimeObserver];
     [self.player pause];
     if (timeLabelTimer_ != nil) {
         [timeLabelTimer_ invalidate];
     }
     playNum++;
+    [self initplaytime];
+    
     [self addCacheview];
     
     [self initWillPlayLabel];
@@ -575,6 +575,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    [self initPlayerView];
+    
     if (!islocalFile_) {
         //初始化数据；
         [self initDataSource:playNum];
@@ -596,7 +598,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.navigationController setNavigationBarHidden:YES animated:YES];
 
     self.view.backgroundColor = [UIColor blackColor];
-    [self initPlayerView];
     [self initTopToolBar];
     [self initBottomToolBar];
     
@@ -948,8 +949,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     topToolBar_.hidden = YES;
     [self.view addSubview:topToolBar_];
     
+    
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(7, 5, 39, 25);
+    closeButton.frame = CGRectMake(7, 5, 42, 26);
     [closeButton setBackgroundImage:[UIImage imageNamed:@"iphone_back_bt"] forState:UIControlStateNormal];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"iphone_back_bt_pressed"] forState:UIControlStateHighlighted];
     closeButton.backgroundColor = [UIColor clearColor];
@@ -989,7 +991,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (!islocalFile_) {
         UILabel *sourceText = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 30, 18)];
-        sourceText.text = @"来源:";
+        //sourceText.text = @"来源:";
+        sourceText.tag = 100001;
         sourceText.textColor = [UIColor whiteColor];
         sourceText.backgroundColor = [UIColor clearColor];
         sourceText.font = [UIFont systemFontOfSize:12];
@@ -1002,7 +1005,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 }
 -(void)initPlayerView{
-    mPlayer = nil;
     avplayerView_ = [[AVPlayerView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, 300)];
     avplayerView_.backgroundColor = [UIColor clearColor];
     
@@ -1605,6 +1607,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 }
 -(void)syncLogo:(NSString *)url{
+    UILabel *label = (UILabel *)[topToolBar_ viewWithTag:100001];
+    label.text =  @"来源:";
     UIImage *img = [self getVideoSource:url];
     sourceLogo_.backgroundColor = [UIColor clearColor];
     sourceLogo_.frame = CGRectMake(102, 11, img.size.width/3, img.size.height/3);
@@ -1710,14 +1714,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (timeLabelTimer_ != nil) {
         [timeLabelTimer_ invalidate];
     }
+    
+  
+    
     playNum = indexPath.row;
+    [self initplaytime];
     
     [self addCacheview];
     [self initDataSource:playNum];
     [self beginToPlay];
     
 }
-
+-(void)initplaytime{
+    NSNumber *playtime = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",playNum]]];
+    lastPlayTime_ = CMTimeMakeWithSeconds(playtime.doubleValue, NSEC_PER_SEC);
+}
 -(void)addCacheview{
     [self.view addSubview:playCacheView_];
     [self initWillPlayLabel];

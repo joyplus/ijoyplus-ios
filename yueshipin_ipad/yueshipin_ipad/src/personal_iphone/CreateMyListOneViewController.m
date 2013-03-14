@@ -13,6 +13,7 @@
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Reachability.h"
 @interface CreateMyListOneViewController ()
 
 @end
@@ -144,6 +145,12 @@
 }
 
 -(void)nextButtonPressed:(id)sender{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
      NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content",[NSNumber numberWithInt:type_], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         topicId_ = [result objectForKey:@"topic_id"];

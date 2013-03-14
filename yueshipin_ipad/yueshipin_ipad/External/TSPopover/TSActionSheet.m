@@ -70,7 +70,7 @@
 - (void)addButtonWithTitle:(NSString *)title block:(void (^)())block 
 {
     [self addButtonWithTitle:title
-                       color:[UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1]
+                       color:[UIColor colorWithRed:255/255.0 green:255/255.0 blue:255/255.0 alpha:1]
                   titleColor:[UIColor blackColor]
                  borderWidth:0
                  borderColor:[UIColor blackColor]
@@ -129,7 +129,7 @@
     {
         NSString *title = [button objectAtIndex:1];
         UIColor *color = [button objectAtIndex:2];
-        //UIColor *titleColor = [button objectAtIndex:3];
+        UIColor *titleColor = [button objectAtIndex:3];
         NSUInteger borderWidth = [[button objectAtIndex:4]intValue];
         UIColor *borderColor = [button objectAtIndex:5];
         
@@ -145,13 +145,13 @@
         button.tag = i++;
         
         [button setBackgroundImage:image forState:UIControlStateNormal];
-        //[button setTitleColor:titleColor forState:UIControlStateNormal];
+        [button setTitleColor:titleColor forState:UIControlStateNormal];
         [button setTitle:title forState:UIControlStateNormal];
         button.accessibilityLabel = title;
         
         if(self.titleShadow){
-            [button setTitleShadowColor:self.titleShadowColor forState:UIControlStateNormal];
-            button.titleLabel.shadowOffset = self.titleShadowOffset;
+//            [button setTitleShadowColor:self.titleShadowColor forState:UIControlStateNormal];
+//            button.titleLabel.shadowOffset = self.titleShadowOffset;
         }
         
         [button addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];

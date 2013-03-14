@@ -103,7 +103,7 @@
             
         }
         
-        [self.tvTableList reloadData];
+       [self loadTable:TV_TYPE];
         [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -157,7 +157,7 @@
         else {
             
         }
-        [self.movieTableList reloadData];
+        [self loadTable:MOVIE_TYPE];
          [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -171,13 +171,30 @@
 }
 
 -(void)loadShowTopsData{
-
-    MBProgressHUD * tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
-    
+    MBProgressHUD *tempHUD;
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
+    if(cacheResult != nil){
+        self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
+                [ self.showListArr addObjectsFromArray:tempArray];
+            }
+        }
+        
+        [showTableList_ reloadData];
+    }
+    else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
+    }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -188,6 +205,7 @@
             NSArray *tempTopsArray = [result objectForKey:@"tops"];
             
             if(tempTopsArray.count > 0){
+                [[CacheUtility sharedCache] putInCache:@"show_top_list" result:result];
                 NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
                 showTopId_ = [[tempTopsArray objectAtIndex:0] objectForKey:@"id"];
                 
@@ -197,7 +215,7 @@
             }
         }
         
-        [self.showTableList reloadData];
+        [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

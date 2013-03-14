@@ -39,6 +39,6 @@
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;
-
+-(BOOL)checkNetWork;
 +(NSDictionary *)commonGetPlayUrls:(NSArray *)videoInfoDic;
 @end

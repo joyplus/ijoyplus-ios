@@ -183,12 +183,12 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *dic = [self.listArr objectAtIndex:indexPath.row];
     NSString *type = [dic objectForKey:@"prod_type"];
-    if ([type isEqualToString:@"2"]) {
+    if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]) {
         TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
     }
-    else if ([type isEqualToString:@"1"]||[type isEqualToString:@"131"]){
+    else if ([type isEqualToString:@"1"]){
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];

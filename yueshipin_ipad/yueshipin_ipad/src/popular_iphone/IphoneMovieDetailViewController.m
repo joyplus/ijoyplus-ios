@@ -73,7 +73,8 @@
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
     }
-    self.title = titleStr;
+   // self.title = titleStr;
+    self.title = @"123";
     name_ = self.title;
     type_ = 1;
     
@@ -301,14 +302,26 @@
                 if (directors == nil) {
                     directors = [self.infoDic objectForKey:@"director"];
                 }
+                if (directors == nil) {
+                    directors = @" ";
+                }
                 
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
                 if (actors == nil) {
                     actors = [self.infoDic objectForKey:@"star"];
                 }
+                if (actors == nil) {
+                    actors = @" ";
+                }
                 
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
+                if (date == nil) {
+                    date = @" ";
+                }
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                if (area == nil) {
+                    area = @" ";
+                }
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -605,8 +618,12 @@
     
 }
 
--(void)didSelect:
-(UIButton *)btn{
+-(void)didSelect:(UIButton *)btn{
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     int num = btn.tag;
     NSDictionary *dic = [relevantList_ objectAtIndex:num];
     ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -618,6 +635,11 @@
 }
 
 -(void)action:(id)sender {
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{

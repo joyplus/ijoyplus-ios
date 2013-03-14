@@ -282,9 +282,21 @@
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
+                if (directors == nil) {
+                    directors = @" ";
+                }
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
+                if (actors == nil) {
+                    actors = @" ";
+                }
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
+                if (date == nil) {
+                    date = @" ";
+                }
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                if (area == nil) {
+                    area = @" ";
+                }
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -493,34 +505,12 @@
     return 0;
     
 }
-
--(void)Play:(int)number{
-    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:number] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
-                break;
-            }
-        }
-        if(videoUrl == nil){
-            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-        }
-        if(videoUrl == nil){
-            [self showPlayWebPage:number];
-        } else {
-//            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-//            viewController.videoUrl = videoUrl;
-//            viewController.type = 1;
-//            viewController.name = [videoInfo_ objectForKey:@"name"];
-//            [self presentViewController:viewController animated:YES completion:nil];
-        }
-    }else {
-        [self showPlayWebPage:number];
-    }
-}
 -(void)action:(id)sender {
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
@@ -592,13 +582,7 @@
             
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//                NSString *responseCode = [result objectForKey:@"res_code"];
-//                if([responseCode isEqualToString:kSuccessResCode]){
-//                    [self showOpSuccessModalView:1 with:ADDFAV];
-//                }
-//                else {
-//                    [self showOpFailureModalView:1 with:ADDFAV];
-//                }
+
                  [self showOpSuccessModalView:3 with:ADDFAV];
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

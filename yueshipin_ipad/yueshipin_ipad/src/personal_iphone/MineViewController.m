@@ -26,6 +26,7 @@
 #import "IphoneWebPlayerViewController.h"
 #import "CustomNavigationViewController.h"
 #import "CustomNavigationViewControllerPortrait.h"
+#import "Reachability.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -831,6 +832,13 @@
 
 
 -(void)continuePlay:(id)sender{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+   
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";

@@ -68,7 +68,15 @@
             [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
             break;
         }
-        case 2:{
+        case 2 :{
+            TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+            tvDetailViewController.infoDic = infoDic;
+            tvDetailViewController.isNotification = YES;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            
+            break;
+        }
+        case 131 :{
             TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             tvDetailViewController.infoDic = infoDic;
             tvDetailViewController.isNotification = YES;

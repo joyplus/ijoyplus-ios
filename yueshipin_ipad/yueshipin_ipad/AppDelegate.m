@@ -391,7 +391,10 @@
        
 }
 -(void) onResp:(BaseResp*)resp{
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
+    
 }
+
+
 
 @end

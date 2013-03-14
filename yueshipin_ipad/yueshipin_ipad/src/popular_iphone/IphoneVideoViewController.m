@@ -28,6 +28,7 @@
 #import "WXApi.h"
 #import "UIImageView+WebCache.h"
 #import "TSActionSheet.h"
+#import "Reachability.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -62,6 +63,7 @@
     if (isNotification_) {
         [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSuccessModalView) name:@"wechat_share_success" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -185,7 +187,12 @@
     
 }
 -(void)selectIndex:(int)index{
-
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     switch (index) {
             
         case 0:
@@ -248,6 +255,31 @@
 -(void)removeView{
     [segmentedControl_ removeFromSuperview];
 }
+
+
+- (void)showSuccessModalView
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    view.tag = 100000001;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
+    temp.frame = CGRectMake(0, 0, 200, 100);
+    temp.center = view.center;
+    [view addSubview:temp];
+    [self.view addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(removeSucceedOverlay) userInfo:nil repeats:NO];
+}
+
+- (void)removeSucceedOverlay
+{
+    UIView *view = (UIView *)[self.view viewWithTag:100000001];
+    for(UIView *subview in view.subviews){
+        [subview removeFromSuperview];
+    }
+    [view removeFromSuperview];
+    view = nil;
+}
+
 #pragma mark - SinaWeibo Delegate
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo{
     
@@ -363,5 +395,15 @@
     
 }
 
+-(BOOL)checkNetWork{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable){
+        return YES;
+    }
+    else{
+        return NO;
+    }
+
+}
 
 @end

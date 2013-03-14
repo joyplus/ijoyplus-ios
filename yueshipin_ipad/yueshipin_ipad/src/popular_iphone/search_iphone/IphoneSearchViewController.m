@@ -17,7 +17,8 @@
 #import "IphoneShowDetailViewController.h"
 #import "UIImage+Scale.h"
 #import "AppDelegate.h"
-#import <QuartzCore/QuartzCore.h>   
+#import <QuartzCore/QuartzCore.h>  
+#import "Reachability.h"
 #define PAGESIZE 20
 @interface IphoneSearchViewController ()
 
@@ -89,6 +90,13 @@
 }
 
 -(void)loadSearchData{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     MBProgressHUD  *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
