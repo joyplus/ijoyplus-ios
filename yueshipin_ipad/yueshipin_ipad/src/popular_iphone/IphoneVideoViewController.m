@@ -27,6 +27,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "WXApi.h"
 #import "UIImageView+WebCache.h"
+#import "TSActionSheet.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -164,31 +165,28 @@
 }
 
 
--(void)share:(id)sender{
+-(void)share:(id)sender event:(UIEvent *)event{
+    
+    TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
+    [actionSheet addButtonWithTitle:@"新浪微博" block:^{
+        [self selectIndex:0];
+    }];
+    [actionSheet addButtonWithTitle:@"微信好友" block:^{
+        [self selectIndex:1];
+    }];
+    [actionSheet addButtonWithTitle:@"微信朋友圈" block:^{
+        [self selectIndex:2];
+    }];
+    [actionSheet cancelButtonWithTitle:@"取消" block:nil];
+    actionSheet.cornerRadius = 5;
+    
+    [actionSheet showWithTouch:event];
 
-    NSArray *segmentedArray = [[NSArray alloc]initWithObjects:@"新浪分享",@"微信分享",nil];
-    
-    //初始化UISegmentedControl
-    
-    segmentedControl_ = [[UISegmentedControl alloc]initWithItems:segmentedArray];
-    
-    segmentedControl_.frame = CGRectMake(165.0, 0, 150.0, 44.0);
-    
-    segmentedControl_.selectedSegmentIndex = 2;//设置默认选择项索引
-    
-    segmentedControl_.segmentedControlStyle = UISegmentedControlStyleBar;//设置样式
-    
-    [segmentedControl_ addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
-    [self performSelector:@selector(removeView) withObject:nil afterDelay:1.5];
-    [self.view addSubview:segmentedControl_];
     
 }
--(void)segmentAction:(UISegmentedControl *)Seg{
-    NSInteger Index = Seg.selectedSegmentIndex;
-    
-    NSLog(@"Index %i", Index);
-    
-    switch (Index) {
+-(void)selectIndex:(int)index{
+
+    switch (index) {
             
         case 0:
             
@@ -198,7 +196,12 @@
             
         case 1:
             
-            [self wechatShare];
+            [self wechatShare:WXSceneSession];
+            
+            break;
+        case 2:
+            
+            [self wechatShare:WXSceneTimeline];
             
             break;
         default:
@@ -224,7 +227,7 @@
     }
 }
 
--(void)wechatShare{
+-(void)wechatShare:(int)sence{
         WXMediaMessage *message = [WXMediaMessage message];
         message.title = @"推荐";
         message.description = [infoDic_ objectForKey:@"name"];
@@ -237,7 +240,7 @@
         SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
         req.bText = NO;
         req.message = message;
-        req.scene = WXSceneSession;
+        req.scene = sence;
         
         [WXApi sendReq:req];
 

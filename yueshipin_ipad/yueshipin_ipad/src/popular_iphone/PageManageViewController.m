@@ -178,9 +178,10 @@
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     
-    self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if(responseCode == nil){
@@ -196,7 +197,7 @@
             }
         }
         
-        [self loadTable:SHOW_TYPE];
+        [self.showTableList reloadData];
         [tempHUD hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -204,7 +205,6 @@
         if(self.showListArr == nil){
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-        [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
     }];
     

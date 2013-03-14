@@ -71,7 +71,10 @@
     UIImageView *sourceLogo_;
     
     UILabel *willPlayLabel_;
+    
+    NSString *workingUrl_;
 
+    UILabel *titleLabel_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -111,6 +114,8 @@
 @property (nonatomic, strong) UILabel *airPlayLabel;
 @property (nonatomic, strong) UIImageView *sourceLogo;
 @property (nonatomic, strong) UILabel *willPlayLabel;
+@property (nonatomic, strong) NSString *workingUrl;
+@property (nonatomic, strong) UILabel *titleLabel;
 
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;

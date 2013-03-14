@@ -79,6 +79,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize airPlayLabel = airPlayLabel_;
 @synthesize sourceLogo = sourceLogo_;
 @synthesize willPlayLabel = willPlayLabel_;
+@synthesize workingUrl = workingUrl_;
+@synthesize titleLabel = titleLabel_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -87,10 +89,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	{
 		mURL = URL;
         
-		if (!islocalFile_) {
-            [self syncLogo:[URL absoluteString]];
-        }
-        
+        workingUrl_ = URL.absoluteString;
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
         
         [self prepareToPlayAsset:asset ];
@@ -373,6 +372,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 /* Once the AVPlayerItem becomes ready to play, i.e.
                  [playerItem status] == AVPlayerItemStatusReadyToPlay,
                  its duration can be fetched from the item. */
+                
+                if (!islocalFile_) {
+                    [self syncLogo:workingUrl_];
+                }
+                
+                
                 CMTime playerDuration = [self playerItemDuration];
                 totalTimeLable_.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(playerDuration)];
                 
@@ -640,17 +645,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)initWillPlayLabel{
-//    if (videoType_ == 1) {
-//        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",nameStr_];
-//    }
-//    else if (videoType_ == 2){
-//        willPlayLabel_.text = [NSString stringWithFormat:@"即将播放：%@ 第%d集", nameStr_, playNum];
-//    }
-//    else if (videoType_ == 3){
-//        NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
-//        NSString *name = [item objectForKey:@"name"];
-//        willPlayLabel_.text = [NSString stringWithFormat:@"即将播出：%@",name];
-//    }
+    if (videoType_ == 1) {
+        titleLabel_.text = [NSString stringWithFormat:@"%@",nameStr_];
+    }
+    else if (videoType_ == 2){
+        titleLabel_.text = [NSString stringWithFormat:@"%@ 第%d集", nameStr_, (playNum+1)];
+    }
+    else if (videoType_ == 3){
+        NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
+        titleLabel_.text = [item objectForKey:@"name"];
+    }
     
     NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
     if (![str isEqualToString:@"00:00"] && ![str isEqualToString:@"00:00:00"]){
@@ -967,14 +971,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 30)];
-    titleLabel.center = topToolBar_.center;
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont systemFontOfSize:14];
-    titleLabel.textAlignment = NSTextAlignmentCenter;
-    titleLabel.textColor = [UIColor whiteColor];
-    titleLabel.text = nameStr_;
-    [topToolBar_ addSubview:titleLabel];
+    titleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 30)];
+    titleLabel_.center = topToolBar_.center;
+    titleLabel_.backgroundColor = [UIColor clearColor];
+    titleLabel_.font = [UIFont systemFontOfSize:14];
+    titleLabel_.textAlignment = NSTextAlignmentCenter;
+    titleLabel_.textColor = [UIColor whiteColor];
+    titleLabel_.text = nameStr_;
+    [topToolBar_ addSubview:titleLabel_];
     
     tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(kFullWindowHeight-110, 35, 100, 0) style:UITableViewStylePlain];
     tableList_.backgroundColor = [UIColor clearColor];

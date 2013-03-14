@@ -144,6 +144,11 @@
 		22345874169E991C009A65BE /* IphoneVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22345873169E991B009A65BE /* IphoneVideoViewController.m */; };
 		22350CE416D31F62009676C6 /* dele_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22350CE216D31F62009676C6 /* dele_bt_pressed@2x.png */; };
 		22350CE516D31F62009676C6 /* dele_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22350CE316D31F62009676C6 /* dele_bt@2x.png */; };
+		22447FF516F18D4A00058985 /* TSActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FEB16F18D4A00058985 /* TSActionSheet.m */; };
+		22447FF616F18D4A00058985 /* TSPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FED16F18D4A00058985 /* TSPopoverController.m */; };
+		22447FF716F18D4A00058985 /* TSPopoverPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FEF16F18D4A00058985 /* TSPopoverPopoverView.m */; };
+		22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF216F18D4A00058985 /* TSPopoverTouchView.m */; };
+		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
 		2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */; };
 		2281DA6216AD25D800333353 /* IphoneDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */; };
@@ -957,6 +962,17 @@
 		22345873169E991B009A65BE /* IphoneVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneVideoViewController.m; sourceTree = "<group>"; };
 		22350CE216D31F62009676C6 /* dele_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dele_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/dele_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		22350CE316D31F62009676C6 /* dele_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "dele_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/dele_bt@2x.png"; sourceTree = SOURCE_ROOT; };
+		22447FEA16F18D4A00058985 /* TSActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSActionSheet.h; sourceTree = "<group>"; };
+		22447FEB16F18D4A00058985 /* TSActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSActionSheet.m; sourceTree = "<group>"; };
+		22447FEC16F18D4A00058985 /* TSPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPopoverController.h; sourceTree = "<group>"; };
+		22447FED16F18D4A00058985 /* TSPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPopoverController.m; sourceTree = "<group>"; };
+		22447FEE16F18D4A00058985 /* TSPopoverPopoverView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPopoverPopoverView.h; sourceTree = "<group>"; };
+		22447FEF16F18D4A00058985 /* TSPopoverPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPopoverPopoverView.m; sourceTree = "<group>"; };
+		22447FF016F18D4A00058985 /* TSPopoverTouchesDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPopoverTouchesDelegate.h; sourceTree = "<group>"; };
+		22447FF116F18D4A00058985 /* TSPopoverTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPopoverTouchView.h; sourceTree = "<group>"; };
+		22447FF216F18D4A00058985 /* TSPopoverTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPopoverTouchView.m; sourceTree = "<group>"; };
+		22447FF316F18D4A00058985 /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
+		22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
 		2249C9A6169C2C2D00757A2E /* ProgramNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgramNavigationController.h; sourceTree = "<group>"; };
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
 		2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownlooadViewController.h; sourceTree = "<group>"; };
@@ -1850,6 +1866,24 @@
 			path = WeChat;
 			sourceTree = "<group>";
 		};
+		22447FE916F18D4A00058985 /* TSPopover */ = {
+			isa = PBXGroup;
+			children = (
+				22447FEA16F18D4A00058985 /* TSActionSheet.h */,
+				22447FEB16F18D4A00058985 /* TSActionSheet.m */,
+				22447FEC16F18D4A00058985 /* TSPopoverController.h */,
+				22447FED16F18D4A00058985 /* TSPopoverController.m */,
+				22447FEE16F18D4A00058985 /* TSPopoverPopoverView.h */,
+				22447FEF16F18D4A00058985 /* TSPopoverPopoverView.m */,
+				22447FF016F18D4A00058985 /* TSPopoverTouchesDelegate.h */,
+				22447FF116F18D4A00058985 /* TSPopoverTouchView.h */,
+				22447FF216F18D4A00058985 /* TSPopoverTouchView.m */,
+				22447FF316F18D4A00058985 /* UIBarButtonItem+WEPopover.h */,
+				22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */,
+			);
+			path = TSPopover;
+			sourceTree = "<group>";
+		};
 		22B21C2116A7D4F000D57512 /* DownLoad_iphone */ = {
 			isa = PBXGroup;
 			children = (
@@ -2239,6 +2273,7 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				22447FE916F18D4A00058985 /* TSPopover */,
 				22210B1C16EE0661008EDF11 /* WeChat */,
 				EBC19B6D16E97BFC0001429C /* AHAlert */,
 				EB02F6A316DB00ED001C2E3A /* CMPopTipView */,
@@ -3883,6 +3918,11 @@
 				220260B716E840A40010322F /* IphoneWebPlayerViewController.m in Sources */,
 				EBC19B7016E97BFC0001429C /* AHAlertView.m in Sources */,
 				EBC298BA16F04615009DF9FD /* IpadPageNameConstant.m in Sources */,
+				22447FF516F18D4A00058985 /* TSActionSheet.m in Sources */,
+				22447FF616F18D4A00058985 /* TSPopoverController.m in Sources */,
+				22447FF716F18D4A00058985 /* TSPopoverPopoverView.m in Sources */,
+				22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */,
+				22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
