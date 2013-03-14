@@ -111,6 +111,7 @@
 @property (nonatomic, strong) UILabel *airPlayLabel;
 @property (nonatomic, strong) UIImageView *sourceLogo;
 @property (nonatomic, strong) UILabel *willPlayLabel;
+
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

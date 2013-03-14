@@ -86,7 +86,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	if (mURL != URL)
 	{
 		mURL = URL;
-		
+        
+		if (!islocalFile_) {
+            [self syncLogo:[URL absoluteString]];
+        }
+        
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
         
         [self prepareToPlayAsset:asset ];
@@ -118,10 +122,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     NSURL *url = asset.URL;
     NSLog(@"播放地址:%@!",url);
-    if (!islocalFile_) {
-      [self syncLogo:[url absoluteString]];
-    }
-    
 	/* At this point we're ready to set up for playback of the asset. */
     
     /* Stop observing our prior AVPlayerItem, if we have one. */
@@ -158,7 +158,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (![self player])
     {
         
-        seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
+       
     
         
         /* Get a new AVPlayer initialized to play the specified player item. */
@@ -192,6 +192,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (CMTIME_IS_VALID(lastPlayTime_)) {
         [mPlayer seekToTime:lastPlayTime_];
+         seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
     }
     
 
@@ -199,7 +200,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId_] result:[NSNumber numberWithInt:playNum]];
     }
   
-    //[mScrubber setValue:0.0];
+//    if(islocalFile_){
+//        [playCacheView_ removeFromSuperview];
+//        myHUD.hidden = YES;
+//        [mPlayer play];
+//    }
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error
@@ -211,26 +216,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     /* Display the error. */
 }
 
-- (void)syncScrubber
-{
-	CMTime playerDuration = [self playerItemDuration];
-	if (CMTIME_IS_INVALID(playerDuration))
-	{
-		mScrubber.minimumValue = 0.0;
-		return;
-	}
-    
-	double duration = CMTimeGetSeconds(playerDuration);
-	if (isfinite(duration))
-	{
-		float minValue = [mScrubber minimumValue];
-		float maxValue = [mScrubber maximumValue];
-		double time = CMTimeGetSeconds([mPlayer currentTime]);
-    
-		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
-	}
-    
-}
+
 
 -(void)removePlayerTimeObserver
 {
@@ -478,6 +464,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                       {
                           [self syncScrubber];
                       }];
+  
     
 }
 
@@ -772,6 +759,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         return (NSComparisonResult)NSOrderedSame;
     };
+
 
 -(void)beginToPlay{
     play_url_index = 0;
@@ -1287,7 +1275,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         clearBgView_.disableTapToDismiss = YES;
         clearBgView_.animation = CMPopTipAnimationPop;
         [clearBgView_ presentPointingAtView:clarityButton_ inView:self.view animated:YES];
-        clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
+        
+        if ([[UIScreen mainScreen] bounds].size.height == 568) {
+            clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width-100, clearBgView_.frame.origin.y-25, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
+        }
+        else{
+            clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
+        }
+        
+        
         clearBgView_.hidden = YES;
     }
     else{
@@ -1343,6 +1339,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
             [self updateWatchRecord];
+            
+            [self removePlayerTimeObserver];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player.currentItem removeObserver:self forKeyPath:@"status"];
             [self.player  pause];
@@ -1448,6 +1446,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 }
 
+
+- (void)syncScrubber
+{
+	CMTime playerDuration = [self playerItemDuration];
+	if (CMTIME_IS_INVALID(playerDuration))
+	{
+		mScrubber.minimumValue = 0.0;
+		return;
+	}
+    
+	double duration = CMTimeGetSeconds(playerDuration);
+	if (isfinite(duration))
+	{
+		float minValue = [mScrubber minimumValue];
+		float maxValue = [mScrubber maximumValue];
+		double time = CMTimeGetSeconds([mPlayer currentTime]);
+        
+		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
+	}
+    
+}
+
 - (void)beginScrubbing:(id)sender
 {
 	mRestoreAfterScrubbingRate = [mPlayer rate];
@@ -1473,12 +1493,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		{
 			CGFloat width = CGRectGetWidth([mScrubber bounds]);
 			double tolerance = 0.5f * duration / width;
-            
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
                              ^(CMTime time)
                              {
                                 [self syncScrubber];
                              }];
+        
 		}
 	}
     
@@ -1536,7 +1556,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [playUrlArr addObjectsFromArray:plainClearArr];
     }
     for (NSMutableDictionary *dic in playUrlArr) {
-        if ([[dic objectForKey:@"url"] isEqualToString:urlStr]) {
+        NSString *tempStr = [[dic objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        if ([tempStr isEqualToString:urlStr]) {
             source_str = [dic objectForKey:@"source"];
             break;
         }
@@ -1721,6 +1742,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)dealloc{
+    [self removePlayerTimeObserver];
     [avplayerView_.layer removeFromSuperlayer];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
