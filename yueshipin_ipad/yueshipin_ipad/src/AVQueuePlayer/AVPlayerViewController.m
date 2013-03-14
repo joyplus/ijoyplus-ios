@@ -489,6 +489,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         resolutionInvalid = YES;
         if ([defaultErrorMessage hasPrefix:@"即"]) {
             [self performSelector:@selector(showWebView) withObject:nil afterDelay:2];
+        } else {
+            [qualityBtn setEnabled:YES];
         }
     }
 }
