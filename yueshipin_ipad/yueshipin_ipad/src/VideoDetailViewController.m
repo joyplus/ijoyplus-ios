@@ -352,6 +352,7 @@
     if(num < 0 || num >= episodeArray.count){
         return;
     }
+    [self recordPlayStatics];
     // 网页地址
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
     for (int i = 0; i < episodeArray.count; i++) {
@@ -402,8 +403,6 @@
         webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
     }
-    
-    [self recordPlayStatics];
 }
 
 - (void)recordPlayStatics
