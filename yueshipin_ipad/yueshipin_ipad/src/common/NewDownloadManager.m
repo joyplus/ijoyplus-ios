@@ -74,6 +74,7 @@
                     [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
                     }];
                     previousProgress = 0;
+                    downloadingItem = item;
                     [downloadingOperation start];
                 } else {
                     if (![item.downloadStatus isEqualToString:@"error"]) {
@@ -102,6 +103,14 @@
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
+    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+            item.downloadStatus = @"stop";
+            [item save];
+            break;
+        }
+    }
     [self startNewDownloadItem];
 }
 
@@ -132,7 +141,15 @@
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
 {
-    [self downloadFailure:operationId error:error];
+    for (int i = 0; i < [AppDelegate instance].subdownloadItems.count; i++) {
+        SubdownloadItem *tempitem = [[AppDelegate instance].subdownloadItems objectAtIndex:i];
+        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
+            tempitem.downloadStatus = @"stop";
+            [tempitem save];
+            break;
+        }
+    }
+    [self startNewDownloadItem];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
@@ -152,6 +169,7 @@
         previousProgress = progress;
         downloadingItem.percentage = progress;
         [downloadingItem save];
+        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
     }
     float freeSpace = [self getFreeDiskspace];
     if (freeSpace <= LEAST_DISK_SPACE) {

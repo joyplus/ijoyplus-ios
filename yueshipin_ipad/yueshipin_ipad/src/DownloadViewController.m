@@ -230,6 +230,15 @@
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
     }
+    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+            item.downloadStatus = @"stop";
+            [item save];
+            break;
+        }
+    }
+    [[AppDelegate instance].padDownloadManager stopDownloading];
 }
 
 - (void)downloadSuccess:(NSString *)operationId
