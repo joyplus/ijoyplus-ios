@@ -410,9 +410,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (video != nil) {
         name = [video objectForKey:@"name"];
-        if (self.currentNum < subnameArray.count) {
-            subname = [subnameArray objectAtIndex:self.currentNum];
-        }
+//        if (self.currentNum < subnameArray.count) {
+//            subname = [subnameArray objectAtIndex:self.currentNum];
+//        }
     }
     [self loadLastPlaytime];
     if (combinedArr == nil) {
@@ -904,6 +904,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if(lastLabel && isFromSelectBtn){
         [lastLabel removeFromSuperview];
         lastLabel = nil;
+        lastPlayTime = kCMTimeZero;
     }
     tipLabel.text = @"正在加载，请稍等";
     [myHUD show:YES];

@@ -710,7 +710,12 @@
         if (editingStyle == UITableViewCellEditingStyleDelete) {
             [self removeRow:indexPath.row];
             NSMutableArray *tempArray = [[NSMutableArray alloc]initWithArray:sortedwatchRecordArray];
-            [tempArray removeObjectAtIndex:indexPath.row];
+            BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+            if(!isReachable) {
+                [UIUtility showNetWorkError:self.view];
+            } else {
+                [tempArray removeObjectAtIndex:indexPath.row];
+            }
             sortedwatchRecordArray = tempArray;
             if (sortedwatchRecordArray.count == 0) {
                 [removeAllBtn setHidden:YES];
@@ -751,6 +756,11 @@
 
 - (void)removeAllBtnClicked
 {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     sortedwatchRecordArray = [[NSArray alloc]init];
     [self loadTable];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
