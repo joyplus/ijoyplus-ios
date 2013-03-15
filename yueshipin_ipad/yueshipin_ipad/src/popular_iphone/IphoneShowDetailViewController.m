@@ -75,6 +75,9 @@
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
     }
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"name"];
+    }
     self.title = titleStr;
     type_ = 3;
     name_ = self.title;
@@ -151,6 +154,9 @@
     NSString *proId =  [self.infoDic objectForKey:@"prod_id"]; 
     if (proId == nil) {
         proId =  [self.infoDic objectForKey:@"content_id"];
+    }
+    if (proId == nil) {
+        proId =  [self.infoDic objectForKey:@"id"];
     }
     prodId_ = proId;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: proId, @"prod_id", nil];

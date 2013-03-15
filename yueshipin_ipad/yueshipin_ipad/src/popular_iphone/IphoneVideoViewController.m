@@ -65,7 +65,11 @@
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSuccessModalView) name:@"wechat_share_success" object:nil];
 }
+- (void)viewDidUnload{
 
+ [super viewDidUnload];
+ 
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -376,7 +380,12 @@
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        NSDictionary *dic = [episodesArr_ objectAtIndex:num];
+        NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+        NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+    }
     IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
     iphoneWebPlayerViewController.playNum = num;
     iphoneWebPlayerViewController.nameStr = name_;

@@ -275,7 +275,14 @@
 
 - (void)triggerDownload
 {
-    [padDownloadManager startDownloadingThreads];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+        [padDownloadManager startDownloadingThreads];
+    }
+    else{
+    
+       //[self.downLoadManager restartDownload];
+  }
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

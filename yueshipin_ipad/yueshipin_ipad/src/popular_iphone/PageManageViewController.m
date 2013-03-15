@@ -400,6 +400,18 @@
 
     
 }
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    self.tvListArr = nil;
+    self.movieListArr = nil;;
+    self.showListArr = nil;
+    self.tvTableList = nil;
+    self.movieTableList = nil;
+    self.showTableList = nil;
+    self.refreshHeaderViewForMovieList = nil;
+    self.refreshHeaderViewForTvList = nil;
+    self.refreshHeaderViewForShowList = nil;
+}
 -(void)buttonChange:(UIButton *)btn{
     int page = btn.tag;
     movieBtn_.selected = NO;

@@ -14,6 +14,7 @@
 #import "ProgramNavigationController.h"
 #import "CommonHeader.h"
 #import "CacheUtility.h"
+#import "DownloadUrlCheck.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
 
@@ -76,6 +77,9 @@
     NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"name"];
     }
     self.title = titleStr;
     name_ = self.title;
@@ -167,6 +171,9 @@
     if (proId == nil) {
         proId = [self.infoDic objectForKey:@"content_id"];
     }
+    if (proId == nil) {
+        proId = [self.infoDic objectForKey:@"id"];
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
@@ -249,6 +256,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+    self.scrollViewUp =nil;
+    self.scrollViewDown =nil;
+    
+    self.scrollViewUpDL = nil;
+    self.scrollViewDownDL = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -789,7 +801,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,videoUrl,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num], nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
+    DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
+    check.infoArr = infoArr;
+    [check checkDownloadUrl];
 }
 
 

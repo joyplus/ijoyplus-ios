@@ -1467,9 +1467,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		float minValue = [mScrubber minimumValue];
 		float maxValue = [mScrubber maximumValue];
 		double time = CMTimeGetSeconds([mPlayer currentTime]);
-		
 		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
 	}
+    
     currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
 }
 

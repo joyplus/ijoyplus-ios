@@ -221,6 +221,22 @@ static NSMutableArray *downLoadQueue_ = nil;
     
 }
 
+-(void)restartDownload{
+     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+        if (downloadRequestOperation.operationStatus == @"loading") {
+           [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+    }
+    for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+         if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error") {
+            [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+    }
+}
 
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
     

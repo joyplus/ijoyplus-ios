@@ -19,6 +19,7 @@
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
+#import "DownloadUrlCheck.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -72,6 +73,9 @@
     NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"name"];
     }
     self.title = titleStr;
     name_ = self.title;
@@ -128,6 +132,9 @@
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+         itemId = [self.infoDic objectForKey:@"id"];
     }
     
     prodId_ = itemId;
@@ -720,7 +727,9 @@
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
             NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
+            DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
+            check.infoArr = infoArr;
+            [check checkDownloadUrl];
             break;
         }
         case 10005:{

@@ -44,4 +44,6 @@
 +(void)continueDownload:(NSString *)downloadId;
 
 +(int)downloadTaskCount;
+
+-(void)restartDownload;
 @end

@@ -306,15 +306,26 @@
         else if (type == 3){
             videoInfo = (NSDictionary *)[result objectForKey:@"show"];
         }
-        // NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
-        IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-        iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
-        iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
-        iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
-        iphoneWebPlayerViewController.videoType = type;
-        iphoneWebPlayerViewController.prodId = prodId;
-        [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
         
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+            int num = [[item objectForKey:@"prod_subname"] intValue];
+            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
+            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        }
+        else{
+            IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+            iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
+            iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
+            iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
+            iphoneWebPlayerViewController.videoType = type;
+            iphoneWebPlayerViewController.prodId = prodId;
+            [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+
+        }
+
+               
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
     }];

@@ -199,11 +199,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId_] result:[NSNumber numberWithInt:playNum]];
     }
   
-//    if(islocalFile_){
-//        [playCacheView_ removeFromSuperview];
-//        myHUD.hidden = YES;
-//        [mPlayer play];
-//    }
+
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error
@@ -553,8 +549,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [timeLabelTimer_ invalidate];
     }
     playNum++;
-    [self initplaytime];
-    
+    [tableList_ reloadData];
+    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    //[self initplaytime];
+    lastPlayTime_ = kCMTimeZero;
     [self addCacheview];
     
     [self initWillPlayLabel];
@@ -657,11 +655,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         titleLabel_.text = [item objectForKey:@"name"];
     }
     
+    [self initplaytime];
+    
     NSString *str = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime_)];
     if (![str isEqualToString:@"00:00"] && ![str isEqualToString:@"00:00:00"]){
     willPlayLabel_.text = [NSString stringWithFormat:@"上次播放至: %@",str];
     }
-    
+    else{
+        willPlayLabel_.text = nil;
+    }
+
 }
 
 -(void)initDataSource:(int)num{
@@ -898,6 +901,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }
             else{
                 NSLog(@"没找到可播放的地址！");
+                [self removePlayerTimeObserver];
+                [self.player removeObserver:self forKeyPath:@"rate"];
+                [self.player.currentItem removeObserver:self forKeyPath:@"status"];
+                [self.player  pause];
+                mPlayerItem = nil;
+                mPlayer = nil;
                 [self.navigationController popViewControllerAnimated:YES];
             }
 
@@ -926,7 +935,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     NSLog(@"iphoneAvplayerViewController didFailWithError:%@",error);
-    [self retryUrltoPlay];
+    
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable){
+       [self retryUrltoPlay];
+    }
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
@@ -937,6 +951,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
         if (![content_type hasPrefix:@"text/html"]) {
              [self setURL:connection.originalRequest.URL];
+             [connection cancel];
              return;
         }
     
@@ -1463,12 +1478,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
     
 	double duration = CMTimeGetSeconds(playerDuration);
+    NSLog(@"duration is %f",duration);
 	if (isfinite(duration))
 	{
 		float minValue = [mScrubber minimumValue];
 		float maxValue = [mScrubber maximumValue];
 		double time = CMTimeGetSeconds([mPlayer currentTime]);
-        
+        NSLog(@"currentTime is %f",time);
 		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
 	}
     
@@ -1502,7 +1518,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
                              ^(CMTime time)
                              {
+            
                                 [self syncScrubber];
+                                
                              }];
         
 		}
@@ -1715,10 +1733,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [timeLabelTimer_ invalidate];
     }
     
-  
-    
     playNum = indexPath.row;
-    [self initplaytime];
+    
+    [tableList_ reloadData];
+    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    
+    lastPlayTime_ = kCMTimeZero;
+    //[self initplaytime];
     
     [self addCacheview];
     [self initDataSource:playNum];
@@ -1730,6 +1751,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     lastPlayTime_ = CMTimeMakeWithSeconds(playtime.doubleValue, NSEC_PER_SEC);
 }
 -(void)addCacheview{
+    [playCacheView_ removeFromSuperview];
     [self.view addSubview:playCacheView_];
     [self initWillPlayLabel];
     myHUD.hidden = NO;
