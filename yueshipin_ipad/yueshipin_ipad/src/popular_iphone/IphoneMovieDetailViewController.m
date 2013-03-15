@@ -73,8 +73,7 @@
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
     }
-   // self.title = titleStr;
-    self.title = @"123";
+    self.title = titleStr;
     name_ = self.title;
     type_ = 1;
     
