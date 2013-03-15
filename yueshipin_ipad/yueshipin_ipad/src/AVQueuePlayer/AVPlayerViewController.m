@@ -72,6 +72,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int tableCellHeight;
 @property (nonatomic) int maxEpisodeNum;
 @property (nonatomic, strong) NSString *umengPageName;
+@property (nonatomic) BOOL isFromSelectBtn;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -101,7 +102,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
-@synthesize sourceImage, sourceLabel, resolutionInvalid;
+@synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName;
 
 #pragma mark
@@ -276,10 +277,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(NSUInteger)supportedInterfaceOrientations {
     
     return UIInterfaceOrientationMaskLandscape;
-    
-}
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIInterfaceOrientationLandscapeRight;
     
 }
 
@@ -878,8 +875,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         [playCacheView addSubview:nameLabel];
         
-        if (CMTIME_IS_VALID(lastPlayTime) && CMTimeGetSeconds(lastPlayTime) > 0) {            
+        if (CMTIME_IS_VALID(lastPlayTime) && CMTimeGetSeconds(lastPlayTime) > 0) {
             UILabel *lastLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
+            lastLabel.tag = 3232947504;
             lastLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y);
             lastLabel.backgroundColor = [UIColor clearColor];
             lastLabel.textAlignment = NSTextAlignmentCenter;
@@ -902,6 +900,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [playCacheView addSubview:myHUD];
         myHUD.opacity = 0;
     }
+    UILabel *lastLabel = (UILabel *)[playCacheView viewWithTag:3232947504];
+    if(lastLabel && isFromSelectBtn){
+        [lastLabel removeFromSuperview];
+        lastLabel = nil;
+    }
     tipLabel.text = @"正在加载，请稍等";
     [myHUD show:YES];
 }
@@ -909,6 +912,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)nextBtnClicked
 {
+    isFromSelectBtn = YES;
     [self resetControlVisibilityTimer];
     currentNum++;
     currentPlaybackTimeLabel.text = @"00:00:00";
@@ -947,10 +951,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [mPlayer pause];
         mPlayer = nil;
         if (type == 2 || type == 131) {
-            subname = [subnameArray objectAtIndex:self.currentNum];
+            subname = [subnameArray objectAtIndex:self.currentNum];            
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
             vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
         } else if(type == 3){
+            subname = [subnameArray objectAtIndex:self.currentNum];
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@", subname];
             vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         } else {
@@ -1557,6 +1562,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 - (void)playOneEpisode:(int)num
 {
+    isFromSelectBtn = YES;
     currentNum = num;
     currentPlaybackTimeLabel.text = @"00:00:00";
     mScrubber.value = 0;

@@ -105,6 +105,10 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
 //    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
 //        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
 //        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
@@ -113,7 +117,7 @@
 //            break;
 //        }
 //    }
-    [self startNewDownloadItem];
+//    [self startNewDownloadItem];
 }
 
 - (void)downloadSuccess:(NSString *)operationId
@@ -144,6 +148,10 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
+    [AppDelegate instance].currentDownloadingNum--;
+    if([AppDelegate instance].currentDownloadingNum < 0){
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
 //    for (int i = 0; i < [AppDelegate instance].subdownloadItems.count; i++) {
 //        SubdownloadItem *tempitem = [[AppDelegate instance].subdownloadItems objectAtIndex:i];
 //        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
@@ -152,7 +160,7 @@
 //            break;
 //        }
 //    }
-    [self startNewDownloadItem];
+//    [self startNewDownloadItem];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId

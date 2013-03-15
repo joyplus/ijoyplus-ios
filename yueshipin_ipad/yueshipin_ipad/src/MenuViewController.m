@@ -298,8 +298,8 @@
     UIViewController *viewController = [self getViewControllerByIndex];
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
     if(selectedIndex < 5){
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable) {
+        BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+        if(!isReachable) {
             [UIUtility showNetWorkError:viewController.view];
         }
     }
