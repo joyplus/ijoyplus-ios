@@ -1,3 +1,5 @@
+
+
 //
 //  DownloadViewController.m
 //  yueshipin
@@ -233,16 +235,20 @@
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
     }
-    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
-        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            item.downloadStatus = @"stop";
-            [item save];
-            [_gmGridView reloadData];
-            break;
-        }
-    }
-    [[AppDelegate instance].padDownloadManager stopDownloading];
+//    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+//    if(isReachable) {
+//        NSLog(@"failure because of the source url");
+//        for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+//            DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+//            if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+//                item.downloadStatus = @"stop";
+//                [item save];
+//                [_gmGridView reloadData];
+//                break;
+//            }
+//        }
+//        [[AppDelegate instance].padDownloadManager stopDownloading];
+//    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId

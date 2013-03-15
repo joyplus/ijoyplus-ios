@@ -105,14 +105,14 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
-        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            item.downloadStatus = @"stop";
-            [item save];
-            break;
-        }
-    }
+//    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+//        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+//        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+//            item.downloadStatus = @"stop";
+//            [item save];
+//            break;
+//        }
+//    }
     [self startNewDownloadItem];
 }
 
@@ -138,19 +138,20 @@
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
     [self updateProgress:progress downloadingArray:[AppDelegate instance].downloadItems];
-
 }
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
 {
-    for (int i = 0; i < [AppDelegate instance].subdownloadItems.count; i++) {
-        SubdownloadItem *tempitem = [[AppDelegate instance].subdownloadItems objectAtIndex:i];
-        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            tempitem.downloadStatus = @"stop";
-            [tempitem save];
-            break;
-        }
-    }
+    NSLog(@"error in download manager");
+    [self stopDownloading];
+//    for (int i = 0; i < [AppDelegate instance].subdownloadItems.count; i++) {
+//        SubdownloadItem *tempitem = [[AppDelegate instance].subdownloadItems objectAtIndex:i];
+//        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
+//            tempitem.downloadStatus = @"stop";
+//            [tempitem save];
+//            break;
+//        }
+//    }
     [self startNewDownloadItem];
 }
 

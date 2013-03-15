@@ -149,16 +149,16 @@
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
     }
-    for (int i = 0; i < subitems.count; i++) {
-        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
-        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            tempitem.downloadStatus = @"stop";
-            [tempitem save];
-            [_gmGridView reloadData];
-            break;
-        }
-    }
-    [[AppDelegate instance].padDownloadManager stopDownloading];
+//    for (int i = 0; i < subitems.count; i++) {
+//        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
+//        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
+//            tempitem.downloadStatus = @"stop";
+//            [tempitem save];
+//            [_gmGridView reloadData];
+//            break;
+//        }
+//    }
+//    [[AppDelegate instance].padDownloadManager stopDownloading];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
