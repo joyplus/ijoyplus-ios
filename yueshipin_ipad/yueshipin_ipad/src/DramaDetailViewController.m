@@ -23,7 +23,6 @@
     UIButton *introBtn;
     float introContentHeight;
     BOOL introExpand;
-    BOOL btnAdded;
     UITapGestureRecognizer *tapGesture;
     
     UIScrollView *episodeView;
@@ -457,13 +456,18 @@
     if(lastNumObj != nil){
         lastNum = [lastNumObj integerValue];
     }
-    
+    BOOL changed = NO;
+    if (totalEpisodeNumber != episodeArray.count) {
+        changed = YES;
+    }
     totalEpisodeNumber = episodeArray.count;
     episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * 39);
     episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/EPISODE_NUMBER_IN_ROW*4.0) * 430, episodeView.frame.size.height);
-    if(!btnAdded){
+    if(changed){
+        for (UIView *aview in episodeView.subviews) {
+            [aview removeFromSuperview];
+        }
         for (int i = 0; i < totalEpisodeNumber; i++) {
-            btnAdded = YES;
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.tag = i+1;
             int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
