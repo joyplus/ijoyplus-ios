@@ -173,34 +173,35 @@
     return percent;
 }
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className{
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",itemId];
-    NSArray *itemArr = [DownloadItem findByCriteria:query];
-    int percet = 0;
-    if ([itemArr count] >0) {
-        percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
-    }
+//    NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",itemId];
+//    NSArray *itemArr = [DownloadItem findByCriteria:query];
+//    int percet = 0;
+//    if ([itemArr count] >0) {
+//        percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
+//    }
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
-        for (UILabel *label in progressLabelArr_) {
-            if (label.tag == [itemId intValue]) {           
-                label.text = [NSString stringWithFormat:@"已下载:%i%%",percet];
-                break;
-            
-        }   
-      }
-        
-    for (UIImageView *imgV in statusImgArr_) {
-        if (imgV.tag == [itemId intValue]) {
-            imgV.image = [UIImage imageNamed:@"download_loading.png"];
-            break;
-        }
-    }
-    
-    for (UIProgressView *proV in progressArr_) {
-        if (proV.tag == [itemId intValue]) {
-            proV.progress = percet/100.0;
-            break;
-        }
-    }
+        [self reloadDataSource];
+//        for (UILabel *label in progressLabelArr_) {
+//            if (label.tag == [itemId intValue]) {           
+//                label.text = [NSString stringWithFormat:@"已下载:%i%%",percet];
+//                break;
+//            
+//        }   
+//      }
+//        
+//    for (UIImageView *imgV in statusImgArr_) {
+//        if (imgV.tag == [itemId intValue]) {
+//            imgV.image = [UIImage imageNamed:@"download_loading.png"];
+//            break;
+//        }
+//    }
+//    
+//    for (UIProgressView *proV in progressArr_) {
+//        if (proV.tag == [itemId intValue]) {
+//            proV.progress = percet/100.0;
+//            break;
+//        }
+//    }
 
    }
 
@@ -341,7 +342,7 @@
            
         }
 
-        if([downloadItem.downloadStatus isEqualToString:@"loading"]){
+        if([downloadItem.downloadStatus isEqualToString:@"loading"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
             statusImg.image = [UIImage imageNamed:@"download_loading.png"];
             progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%", downloadItem.percentage];
             [cell.contentView addSubview:progressView];
@@ -367,10 +368,11 @@
                 [cell.contentView addSubview:progressLabel];
             }
         
-        } else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
-            progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
-            [cell.contentView addSubview:progressLabel];
         }
+//        else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
+//            progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
+//            [cell.contentView addSubview:progressLabel];
+//        }
         
     }
     else{

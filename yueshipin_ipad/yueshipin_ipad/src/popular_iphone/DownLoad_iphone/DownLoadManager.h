@@ -25,6 +25,7 @@
     DownloadItem *downloadItem_;
     SubdownloadItem *subdownloadItem_;
     int preProgress_;
+    int netWorkStatus;
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
@@ -46,4 +47,10 @@
 +(int)downloadTaskCount;
 
 -(void)restartDownload;
+
+-(void)appDidEnterBackground;
+
+-(void)appDidEnterForeground;
+
+-(void)networkChanged:(int)status;
 @end

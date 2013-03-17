@@ -248,14 +248,17 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-
+    [self.downLoadManager appDidEnterBackground];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-
+    [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
+    
 }
-
+-(void)iphoneContinueDownload{
+   [self.downLoadManager appDidEnterForeground];
+}
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
@@ -317,6 +320,7 @@
     Reachability *curReach = (Reachability *)[note object];
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
     networkStatus = [curReach currentReachabilityStatus];
+    
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
         [self triggerDownload];
@@ -332,6 +336,11 @@
             }
         }
     }
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        [self.downLoadManager networkChanged:networkStatus];
+    }
+    
 }
 
 

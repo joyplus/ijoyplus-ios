@@ -115,6 +115,8 @@
    
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         
+        [self reloadDataSource];
+        return;
         NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",itemId];
         NSArray *itemArr = [SubdownloadItem findByCriteria:query];
         
@@ -300,7 +302,7 @@
         [progressArr_ addObject:progressView];
     }
     
-    if([downloadItem.downloadStatus isEqualToString:@"loading"]){
+    if([downloadItem.downloadStatus isEqualToString:@"loading"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
         statusImg.image = [UIImage imageNamed:@"download_loading.png"];
         progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
         [cell.contentView addSubview:progressView];
@@ -328,11 +330,12 @@
             [cell.contentView addSubview:progressLabel];
         }
     
-    } else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
-        progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
-        [cell.contentView addSubview:progressView];
-        [cell.contentView addSubview:progressLabel];
     }
+//    else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
+//        progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
+//        [cell.contentView addSubview:progressView];
+//        [cell.contentView addSubview:progressLabel];
+//    }
 
     return cell;
 }
