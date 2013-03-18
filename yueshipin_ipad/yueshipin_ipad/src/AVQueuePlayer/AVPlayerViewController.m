@@ -1876,6 +1876,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     } else if ([source_str isEqualToString:@"qq"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
                     } else if ([source_str isEqualToString:@"pptv"] || [source_str isEqualToString:@"wangpan"]){
+                        source_str = @"pptv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 56, 17);
                     } else if ([source_str isEqualToString:@"m1905"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 16, 45, 17);
