@@ -12,6 +12,7 @@
 #import "SubdownloadItem.h"
 #import "AppDelegate.h"
 #import "IphoneAVPlayerViewController.h"
+#import "Reachability.h"
 @interface IphoneSubdownloadViewController ()
 
 @end
@@ -432,6 +433,14 @@
 
     }
    else if ([downloadItem.downloadStatus isEqualToString:@"waiting"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
+       Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+       if([hostReach currentReachabilityStatus] == NotReachable){
+           
+           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+           [alert show];
+           return;
+       }
+       
         downloadItem.downloadStatus = @"stop";
         [downloadItem save];
         [DownLoadManager stop:downloadItem.subitemId];
@@ -463,6 +472,14 @@
        [self reloadDataSource];
     }
     else if ([downloadItem.downloadStatus isEqualToString:@"stop"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
+        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if([hostReach currentReachabilityStatus] == NotReachable){
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+            return;
+        }
+        
         downloadItem.downloadStatus = @"waiting";
         [downloadItem save];
        
