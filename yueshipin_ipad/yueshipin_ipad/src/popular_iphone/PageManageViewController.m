@@ -471,9 +471,21 @@
             }
             NSDictionary *item = [self.tvListArr objectAtIndex:indexPath.row];
             NSMutableArray *items = [item objectForKey:@"items"];
-            cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name"];
-            cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name"];
-            cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name"];
+            for (int i = 0; i< [items count];i++) {
+                switch (i) {
+                    case 0:
+                        cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name" ];
+                        break;
+                    case 1:
+                        cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name" ];
+                        break;
+                    case 2:
+                        cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name" ];
+                        break;
+                    default:
+                        break;
+                }
+            }
             cell.title.text = [item objectForKey:@"name"];
             [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
             return cell;
@@ -485,9 +497,22 @@
             }
             NSDictionary *item = [self.movieListArr objectAtIndex:indexPath.row];
             NSMutableArray *items = [item objectForKey:@"items"];
-            cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name"];
-            cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name"];
-            cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name"];
+            for (int i = 0; i< [items count];i++) {
+                switch (i) {
+                    case 0:
+                        cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name" ];
+                        break;
+                    case 1:
+                        cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name" ];
+                        break;
+                    case 2:
+                        cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name" ];
+                        break;
+                    default:
+                        break;
+                }
+            }
+
             cell.title.text = [item objectForKey:@"name"];
             [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
             return cell;

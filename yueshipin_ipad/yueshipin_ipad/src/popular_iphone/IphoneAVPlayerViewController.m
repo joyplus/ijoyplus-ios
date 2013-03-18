@@ -559,6 +559,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initDataSource:playNum];
     
     [self beginToPlay];
+    
+    [self recordPlayStatics];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -1478,13 +1480,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
     
 	double duration = CMTimeGetSeconds(playerDuration);
-    NSLog(@"duration is %f",duration);
 	if (isfinite(duration))
 	{
 		float minValue = [mScrubber minimumValue];
 		float maxValue = [mScrubber maximumValue];
 		double time = CMTimeGetSeconds([mPlayer currentTime]);
-        NSLog(@"currentTime is %f",time);
 		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
 	}
     
@@ -1745,6 +1745,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initDataSource:playNum];
     [self beginToPlay];
     
+    [self recordPlayStatics];
+    
+}
+- (void)recordPlayStatics
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSLog(@"succeed!");
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 -(void)initplaytime{
     NSNumber *playtime = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",playNum]]];
