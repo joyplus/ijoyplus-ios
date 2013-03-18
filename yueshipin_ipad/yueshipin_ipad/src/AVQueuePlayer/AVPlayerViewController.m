@@ -269,15 +269,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(BOOL)shouldAutorotate {
-    
     return YES;
-    
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
-    
     return UIInterfaceOrientationMaskLandscape;
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
