@@ -706,7 +706,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         else if ([source_str isEqualToString:@"qq"]){
             [temp_dic setObject:@"8" forKey:@"level"];
         }
-        else if ([source_str isEqualToString:@"pptv"]){
+        else if ([source_str isEqualToString:@"pptv"]||[source_str isEqualToString:@"wangpan"]){
             [temp_dic setObject:@"9" forKey:@"level"];
         }
         else if ([source_str isEqualToString:@"pps"]){
@@ -1611,7 +1611,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     else if ([source_str isEqualToString:@"qq"]){
         logoImg = [UIImage imageNamed:@"logo_qq"];
     }
-    else if ([source_str isEqualToString:@"pptv"]){
+    else if ([source_str isEqualToString:@"pptv"]||[source_str isEqualToString:@"wangpan"]){
         logoImg = [UIImage imageNamed:@"logo_pptv"];
     }
     else if ([source_str isEqualToString:@"pps"]){
