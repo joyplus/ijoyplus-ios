@@ -1062,8 +1062,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, fmin(maxEpisodeNum, subnameArray.count) * tableCellHeight);
             episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, fmin(maxEpisodeNum, subnameArray.count) * tableCellHeight);
         } completion:^(BOOL finished) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
-            [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            if (currentNum >= 0 && currentNum < subnameArray.count) {                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
+                [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            }
         }];
     }
 }
@@ -1276,8 +1278,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (CMTIME_IS_VALID(playerDuration)) {
             duration = CMTimeGetSeconds(playerDuration);
         }
-        
-        subname = [subnameArray objectAtIndex:currentNum];
+        if (subname == nil && currentNum >=0 && currentNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:currentNum];
+        }
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         NSString *tempPlayType = @"1";
         NSString *tempUrl = workingUrl.absoluteString; //This url should be useless. In order to simplify the replay logic, we will don't use the url any more.
