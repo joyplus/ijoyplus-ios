@@ -204,7 +204,7 @@
         [installation setBadge:0];
         [installation saveInBackground];
     }
-    [PFPush subscribeToChannelInBackground:@"IOS" block:^(BOOL succeeded, NSError *error) {
+    [PFPush subscribeToChannelInBackground:@"" block:^(BOOL succeeded, NSError *error) {
         if (succeeded)
             NSLog(@"Successfully subscribed to broadcast channel!");
         else
