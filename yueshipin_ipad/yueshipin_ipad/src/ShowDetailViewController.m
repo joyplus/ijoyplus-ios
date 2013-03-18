@@ -585,7 +585,9 @@
     } else {
         UIButton *btn = (UIButton *)[showListView viewWithTag:1];
         self.subname = btn.titleLabel.text;
-        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
+        if (self.subname) {
+            [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
+        }
     }
     [super playVideo:lastNum];
 }
