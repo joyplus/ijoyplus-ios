@@ -124,6 +124,7 @@
         [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
+        cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
        
         return cell;
