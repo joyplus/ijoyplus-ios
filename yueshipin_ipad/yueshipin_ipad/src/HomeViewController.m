@@ -1314,10 +1314,12 @@
     
     UILabel *titleLabel = (UILabel *)[[btn superview] viewWithTag:btn.tag + 1000];
     [self updatePressedBtn:btn pressedLabel:titleLabel selectedRow:indexPath.row];
-    NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
-    if(btn.tag - 2011 < items.count){
-        NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
-        [self showDetailScreen:item];
+    if (indexPath.row >= 0 && indexPath.row < movieTopsArray.count) {
+        NSArray *items = [[movieTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
+        if(btn.tag - 2011 < items.count){
+            NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
+            [self showDetailScreen:item];
+        }
     }
 }
 
@@ -1330,10 +1332,12 @@
     
     UILabel *titleLabel = (UILabel *)[[btn superview] viewWithTag:btn.tag + 1000];
     [self updatePressedBtn:btn pressedLabel:titleLabel selectedRow:indexPath.row];
-    NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
-    if(btn.tag - 2021 < items.count){
-        NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
-        [self showDetailScreen:item];
+    if (indexPath.row >= 0 && indexPath.row < tvTopsArray.count) {        
+        NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
+        if(btn.tag - 2021 < items.count){
+            NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
+            [self showDetailScreen:item];
+        }
     }
 }
 

@@ -521,25 +521,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
     NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
     int status_Code = HTTPResponse.statusCode;
-    NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
-    NSString *fileType = [[tempDic objectForKey:URL_KEY] objectForKey:@"file"];
-    NSString *source = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
-    if (status_Code >= 200 && status_Code <= 299){
-        if ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])) {
-            NSLog(@"working = %@", connection.originalRequest.URL);
-            workingUrl = connection.originalRequest.URL;
-            [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
-        } else if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
-            NSLog(@"working = %@", connection.originalRequest.URL);
-            workingUrl = connection.originalRequest.URL;
-            [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+    if (combinedIndex < combinedArr.count) {
+        NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+        NSString *fileType = [[tempDic objectForKey:URL_KEY] objectForKey:@"file"];
+        NSString *source = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
+        if (status_Code >= 200 && status_Code <= 299){
+            if ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])) {
+                NSLog(@"working = %@", connection.originalRequest.URL);
+                workingUrl = connection.originalRequest.URL;
+                [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+            } else if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
+                NSLog(@"working = %@", connection.originalRequest.URL);
+                workingUrl = connection.originalRequest.URL;
+                [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+            } else {
+                combinedIndex++;
+                [self sendRequest];
+            }
         } else {
             combinedIndex++;
             [self sendRequest];
         }
-    } else {
-        combinedIndex++;
-        [self sendRequest];
     }
     [connection cancel];
 }

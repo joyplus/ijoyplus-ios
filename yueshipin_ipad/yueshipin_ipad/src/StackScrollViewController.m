@@ -683,12 +683,16 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             [[slideViews viewWithTag:20110106+viewControllersStack.count - 1] removeFromSuperview];
             [viewControllersStack removeObjectAtIndex:viewControllersStack.count - 1];
         } else {
+            BOOL needBreak;
             for (int i = viewControllersStack.count -1 ; i > 0; i--) {
                 UIViewController *viewController = [viewControllersStack objectAtIndex:i];
                 [[slideViews viewWithTag:20110106+i] removeFromSuperview];
                 [viewControllersStack removeObjectAtIndex:i];
-                viewController = nil;
                 if(viewController == includeViewController){
+                    needBreak = YES;
+                }
+                viewController = nil;
+                if (needBreak) {
                     break;
                 }
             }
