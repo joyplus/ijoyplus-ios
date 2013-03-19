@@ -496,6 +496,7 @@
 		EB6DEAC7165A34F200AF8003 /* StringUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABC165A34F200AF8003 /* StringUtility.m */; };
 		EB6DEAC8165A34F200AF8003 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABE165A34F200AF8003 /* UIUtility.m */; };
 		EB6DEAD2165A367F00AF8003 /* GenericBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */; };
+		EB7D435B16F8348B0060816E /* select_bt_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB7D435A16F8348B0060816E /* select_bt_pressed.png */; };
 		EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */; };
 		EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */; };
 		EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */; };
@@ -1374,6 +1375,7 @@
 		EB6DEAD0165A367F00AF8003 /* GenericBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GenericBaseViewController.h; path = ../GenericBaseViewController.h; sourceTree = "<group>"; };
 		EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GenericBaseViewController.m; path = ../GenericBaseViewController.m; sourceTree = "<group>"; };
 		EB6DEAD7165A36E600AF8003 /* CommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
+		EB7D435A16F8348B0060816E /* select_bt_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_bt_pressed.png; sourceTree = "<group>"; };
 		EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
 		EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MNMBottomPullToRefreshArrow@2x.png"; sourceTree = "<group>"; };
 		EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshManager.h; sourceTree = "<group>"; };
@@ -2251,6 +2253,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EB7D435A16F8348B0060816E /* select_bt_pressed.png */,
 				EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */,
 				EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */,
 				EB6298ED16EDC1E800BFB30B /* slider_bg@2x.png */,
@@ -3649,6 +3652,7 @@
 				EB6298EE16EDC1E800BFB30B /* slider_bg@2x.png in Resources */,
 				EBBD9E2916EDD80900AF96E0 /* progress_thumb_pressed.png in Resources */,
 				EBBD9E2A16EDD80900AF96E0 /* progress_thumb.png in Resources */,
+				EB7D435B16F8348B0060816E /* select_bt_pressed.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

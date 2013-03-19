@@ -1052,33 +1052,35 @@
         [self.view addSubview:lineImage];
         [cell.contentView addSubview:lineImage];
     }
-    NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
-    UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
-    for (int i=0; i < MOVIE_NUMBER; i++) {
-        UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
-        if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
-        } else {
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+    if (indexPath.row < movieTopsArray.count) {
+        NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
+        UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
+        for (int i=0; i < MOVIE_NUMBER; i++) {
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
+                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+            } else {
+                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+            }
         }
-    }
-    cellScrollView.contentOffset = CGPointMake(0, 0);
-    NSArray *subitemArray = [item objectForKey:@"items"];
-    for(int i = 0; i < subitemArray.count; i++){
-        UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
-        NSDictionary *subitem = [subitemArray objectAtIndex:i];
-        [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-        UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
-        tempLabel.text = [subitem objectForKey:@"prod_name"];
-        if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
-            tempLabel.textColor = [UIColor whiteColor];
-        } else {
-            tempLabel.textColor = [UIColor blackColor];
+        cellScrollView.contentOffset = CGPointMake(0, 0);
+        NSArray *subitemArray = [item objectForKey:@"items"];
+        for(int i = 0; i < subitemArray.count; i++){
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
+            NSDictionary *subitem = [subitemArray objectAtIndex:i];
+            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
+            tempLabel.text = [subitem objectForKey:@"prod_name"];
+            if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
+                tempLabel.textColor = [UIColor whiteColor];
+            } else {
+                tempLabel.textColor = [UIColor blackColor];
+            }
         }
+        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
+        [titleLabel setText:[item objectForKey:@"name"]];
+        [titleLabel sizeToFit];
     }
-    UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
-    [titleLabel setText:[item objectForKey:@"name"]];
-    [titleLabel sizeToFit];
     return cell;
 }
 
@@ -1143,33 +1145,35 @@
         [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:scrollBtn];
     }
-    NSDictionary *item = [tvTopsArray objectAtIndex:indexPath.row];
-    UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
-    cellScrollView.contentOffset = CGPointMake(0, 0);
-    for (int i=0; i < MOVIE_NUMBER; i++) {
-        UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2021 + i];
-        if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
-        } else {
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+    if (indexPath.row < tvTopsArray.count) {        
+        NSDictionary *item = [tvTopsArray objectAtIndex:indexPath.row];
+        UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
+        cellScrollView.contentOffset = CGPointMake(0, 0);
+        for (int i=0; i < MOVIE_NUMBER; i++) {
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2021 + i];
+            if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
+                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+            } else {
+                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+            }
         }
-    }
-    NSArray *subitemArray = [item objectForKey:@"items"];
-    for(int i = 0; i < subitemArray.count; i++){
-        UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
-        NSDictionary *subitem = [subitemArray objectAtIndex:i];
-        [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-        UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
-        tempLabel.text = [subitem objectForKey:@"prod_name"];
-        if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
-            tempLabel.textColor = [UIColor whiteColor];
-        } else {
-            tempLabel.textColor = [UIColor blackColor];
+        NSArray *subitemArray = [item objectForKey:@"items"];
+        for(int i = 0; i < subitemArray.count; i++){
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
+            NSDictionary *subitem = [subitemArray objectAtIndex:i];
+            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
+            tempLabel.text = [subitem objectForKey:@"prod_name"];
+            if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
+                tempLabel.textColor = [UIColor whiteColor];
+            } else {
+                tempLabel.textColor = [UIColor blackColor];
+            }
         }
+        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4021];
+        [titleLabel setText:[item objectForKey:@"name"]];
+        [titleLabel sizeToFit];
     }
-    UILabel *titleLabel = (UILabel *)[cell viewWithTag:4021];
-    [titleLabel setText:[item objectForKey:@"name"]];
-    [titleLabel sizeToFit];
     return cell;
 }
 
@@ -1210,24 +1214,26 @@
         titleLabel.tag = 4031;
         [cell.contentView addSubview:titleLabel];
     }
-    NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
-    UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
-    [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
-    
-    UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
-    [tempNameLabel setText:[item objectForKey:@"prod_name"]];
-//    [tempNameLabel sizeToFit];
-    
-    UIImageView *overLayImage = (UIImageView *)[cell viewWithTag:2131];
-    if(selectedRowNumber == indexPath.row && lastSelectedOverlay == overLayImage){
-        overLayImage.image = [UIImage imageNamed:@"show_overlay_pressed"];
-    } else {
-        overLayImage.image = [UIImage imageNamed:@"show_overlay"];
+    if (indexPath.row < showTopsArray.count) {        
+        NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
+        UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
+        [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
+        
+        UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
+        [tempNameLabel setText:[item objectForKey:@"prod_name"]];
+        //    [tempNameLabel sizeToFit];
+        
+        UIImageView *overLayImage = (UIImageView *)[cell viewWithTag:2131];
+        if(selectedRowNumber == indexPath.row && lastSelectedOverlay == overLayImage){
+            overLayImage.image = [UIImage imageNamed:@"show_overlay_pressed"];
+        } else {
+            overLayImage.image = [UIImage imageNamed:@"show_overlay"];
+        }
+        
+        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
+        NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
+        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
     }
-    
-    UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
-    NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
-    [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
     return cell;
 }
 
