@@ -93,6 +93,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self retrieveTopsListData];
+    [MobClick beginLogPageView:MY_TOP_LIST];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:MY_TOP_LIST];
 }
 
 
@@ -103,8 +109,8 @@
     //        [self parseVideoData:cacheResult];
     //    } else {
     //    }
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     } else {
         [myHUD showProgressBar:self.view];

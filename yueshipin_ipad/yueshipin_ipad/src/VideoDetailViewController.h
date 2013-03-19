@@ -32,6 +32,7 @@
     NSInteger willPlayIndex;
     NSMutableArray *downloadUrls;
     NSArray *episodeArray;
+    NSString *umengPageName;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (nonatomic, strong)NSString *subname;

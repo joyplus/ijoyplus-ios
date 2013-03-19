@@ -28,9 +28,7 @@
 #import "Reachability.h"
 #import "StringUtility.h"
 #import "OpenUDID.h"
-
-//NSString * const kABaseURLString = @"http://112.64.18.12/";
-NSString * const kABaseURLString = @"http://api.joyplus.tv/";
+#import "CommonHeader.h"
 
 @implementation AFServiceAPIClient
 
@@ -41,6 +39,8 @@ NSString * const kABaseURLString = @"http://api.joyplus.tv/";
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:kABaseURLString]];
         NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
         [_sharedClient setDefaultHeader:@"app_key" value:appKey];
+        [_sharedClient setDefaultHeader:@"client" value:@"ios"];
+        [_sharedClient setDefaultHeader:@"version" value:VERSION];
         [_sharedClient setDefaultHeader:@"Connection" value:@"keep-alive"];
     });
     

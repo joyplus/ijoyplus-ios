@@ -19,7 +19,7 @@
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
-#import "IphonePlayVideoViewController.h"
+#import "DownloadUrlCheck.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -32,7 +32,7 @@
 @synthesize commentArray =commentArray_;
 @synthesize relevantList = relevantList_;
 @synthesize summaryBg = summaryBg_;
-@synthesize summaryLabel = summaryLabel__;
+@synthesize summaryLabel = summaryLabel_;
 @synthesize moreBtn = moreBtn_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -61,7 +61,7 @@
     self.navigationItem.hidesBackButton = YES;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
@@ -73,6 +73,9 @@
     NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"name"];
     }
     self.title = titleStr;
     name_ = self.title;
@@ -112,10 +115,6 @@
    
 }
 
-- (void)viewWillAppear:(BOOL)animated{
-   [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
-}
 
 -(void)back:(id)sender{
     if (!isNotification_) {
@@ -133,6 +132,9 @@
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+         itemId = [self.infoDic objectForKey:@"id"];
     }
     
     prodId_ = itemId;
@@ -225,6 +227,10 @@
     
 }
 
+- (void)viewDidUnload{
+    [super viewDidUnload];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -295,20 +301,33 @@
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
                 if (directors == nil) {
                     directors = [self.infoDic objectForKey:@"director"];
                 }
+                if (directors == nil) {
+                    directors = @" ";
+                }
                 
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
                 if (actors == nil) {
                     actors = [self.infoDic objectForKey:@"star"];
                 }
+                if (actors == nil) {
+                    actors = @" ";
+                }
                 
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
+                if (date == nil) {
+                    date = @" ";
+                }
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                if (area == nil) {
+                    area = @" ";
+                }
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -605,8 +624,12 @@
     
 }
 
--(void)didSelect:
-(UIButton *)btn{
+-(void)didSelect:(UIButton *)btn{
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     int num = btn.tag;
     NSDictionary *dic = [relevantList_ objectAtIndex:num];
     ListDetailViewController *listDetail = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -618,6 +641,11 @@
 }
 
 -(void)action:(id)sender {
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
@@ -632,15 +660,15 @@
                 if([responseCode isEqualToString:kSuccessResCode]){
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
                     favCount_++;
-                    [self showOpSuccessModalView:1 with:DING];
+                    [self showOpSuccessModalView:1 with:ADDFAV];
                     [self.tableView reloadData];
                 
                 } else {
-                    [self showOpFailureModalView:1 with:DING];
+                    [self showOpFailureModalView:1 with:ADDFAV];
                 }
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:DING];
+                   [self showOpFailureModalView:1 with:ADDFAV];
             }];
             
             
@@ -699,17 +727,19 @@
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
             NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
+            DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
+            check.infoArr = infoArr;
+            [check checkDownloadUrl];
             break;
         }
         case 10005:{
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 
-                 [self showOpSuccessModalView:3 with:ADDFAV];
+                 [self showOpSuccessModalView:3 with:REPORT];
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self showOpFailureModalView:1 with:ADDFAV];
+                 [self showOpSuccessModalView:3 with:REPORT];
             }];
 
             break;
@@ -884,5 +914,7 @@
     [self loadComments];
 
 }
+
+
 
 @end

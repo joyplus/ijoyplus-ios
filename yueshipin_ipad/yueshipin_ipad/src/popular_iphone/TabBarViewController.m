@@ -28,15 +28,15 @@
         
         allListViewController *allListview = [[allListViewController alloc] init];
         UINavigationController *allListNav = [[UINavigationController alloc] initWithRootViewController:allListview];
-        [allListNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+        [allListNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
        
         PageManageViewController *pageView = [[PageManageViewController alloc] init];
         UINavigationController *sortNav = [[UINavigationController alloc] initWithRootViewController:pageView];
-        [sortNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)]forBarMetrics:UIBarMetricsDefault];
+        [sortNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
         
         MineViewController *mineview = [[MineViewController alloc] init];
         UINavigationController *mineNav = [[UINavigationController alloc] initWithRootViewController:mineview];
-        [mineNav.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+        [mineNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
         
         UIImage *tabBackground = [[UIImage imageNamed:@"tab_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
         [[UITabBar appearance] setBackgroundImage:tabBackground];
@@ -68,7 +68,15 @@
             [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
             break;
         }
-        case 2:{
+        case 2 :{
+            TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+            tvDetailViewController.infoDic = infoDic;
+            tvDetailViewController.isNotification = YES;
+            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            
+            break;
+        }
+        case 131 :{
             TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             tvDetailViewController.infoDic = infoDic;
             tvDetailViewController.isNotification = YES;

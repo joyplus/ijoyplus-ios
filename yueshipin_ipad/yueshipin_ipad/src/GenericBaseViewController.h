@@ -19,10 +19,13 @@
     UITapGestureRecognizer *closeMenuRecognizer;
     
     UISwipeGestureRecognizer *swipeCloseMenuRecognizer;
+    float totalSpace_;
+    float totalFreeSpace_;
 }
 
 - (void)closeMenu;
 
 - (void)menuBtnClicked;
 
+-(float)getFreeDiskspacePercent;
 @end

@@ -229,7 +229,7 @@
     contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(270, 150, 360, 110)];
     contentTextView.font = [UIFont systemFontOfSize:14];
     contentTextView.delegate = self;
-    contentTextView.text = [NSString stringWithFormat:@"我在用#悦视频#ipad版观看#%@#，推荐给大家哦！更多精彩尽在悦视频，快来和我一起看吧！", self.prodName];
+    contentTextView.text = [NSString stringWithFormat:@"我在用#悦视频#ipad版观看#%@#，推荐给大家哦！更多精彩尽在悦视频，欢迎下载：http://ums.bz/REGLDb/", self.prodName];
     [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
     
@@ -407,6 +407,7 @@
     nameLabel.text = [video objectForKey:@"name"];
     [nameLabel sizeToFit];
     nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
+    nameLabel.textColor = CMConstants.grayColor;
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -457,7 +458,7 @@
         UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         pageBtn.frame = CGRectMake(i * (63 + 10) + 1, 0, 64, 27);
         pageBtn.tag = 1001 + i;
-        [pageBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*30+1, (int)fmin((i+1)*30, episodeArray.count)] forState:UIControlStateNormal];
         if(i == 0){
             [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
@@ -472,6 +473,7 @@
     
     UIScrollView *episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     episodeView.tag = 3268143;
+//    episodeView.delegate = self;
     episodeView.scrollEnabled = YES;
     [episodeView setShowsHorizontalScrollIndicator:NO];
     episodeView.backgroundColor = [UIColor clearColor];
@@ -496,7 +498,7 @@
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download"] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_pressed"] forState:UIControlStateHighlighted];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [btn setEnabled:NO];
         NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
@@ -533,6 +535,24 @@
     
     [self.view addSubview:view];
 }
+
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//{
+//    if (scrollView.tag == 3268143) {
+//        int page = floor(scrollView.contentOffset.x/520.0);
+//        if (page > 0 && page < dramaPageNum) {
+//            UIView *view = (UIView *)[self.view viewWithTag:3268142];
+//            for (int i = 0; i < dramaPageNum; i++) {
+//                UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + i];
+//                if (i == page) {
+//                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
+//                } else {
+//                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
+//                }
+//            }
+//        }
+//    }
+//}
 
 - (void)dramaDownload:(UIButton *)btn
 {

@@ -41,9 +41,10 @@
         if(workingUrl == nil){
             NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
             NSDictionary *headerFields = [(NSHTTPURLResponse *)response allHeaderFields];
-            int status_Code = HTTPResponse.statusCode;
+            NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
             NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-            if (status_Code >= 200 && status_Code <= 299  && ![contentType hasPrefix:@"text/html"]) {
+            int status_Code = HTTPResponse.statusCode;
+            if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
                 workingUrl = [item.urlArray objectAtIndex:urlIndex];
                 NSLog(@"working url = %@", workingUrl);
                 item.url = [item.urlArray objectAtIndex:urlIndex];
@@ -53,13 +54,15 @@
                 urlIndex++;
                 [self setupWorkingUrl];
             }
-        } 
+        }
+        [aconnection cancel];
     }
 }
 
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     urlIndex++;
+    [connection cancel];
     [self setupWorkingUrl];
 }
 

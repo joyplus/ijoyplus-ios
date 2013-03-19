@@ -107,6 +107,12 @@
 {
     self.titleLabel.text = self.titleContent;
     [self retrieveTopsListData];  
+    [MobClick beginLogPageView:CREATE_LIST_STEP2];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:CREATE_LIST_STEP2];
 }
 
 - (void)addBtnClicked

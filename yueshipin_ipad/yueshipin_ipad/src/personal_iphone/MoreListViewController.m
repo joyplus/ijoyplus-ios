@@ -17,9 +17,11 @@
 #import "TimeUtility.h"
 #import "UIImageView+WebCache.h"
 #import "CommonHeader.h"
-#import "MyMediaPlayerViewController.h"
 #import "CustomNavigationViewController.h"
 #import "IphoneWebPlayerViewController.h"
+#import "IphoneMovieDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
+#import "TVDetailViewController.h"
 @interface MoreListViewController ()
 
 @end
@@ -48,7 +50,7 @@
        self.title = @"我的悦单";  
         
     }
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
@@ -117,11 +119,12 @@
         }
 
         cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
-        cell.titleLab.frame = CGRectMake(10, 24, 220, 15);
+        cell.titleLab.frame = CGRectMake(10, 20, 220, 15);
          cell.actors.text  = [self composeContent:infoDic];
-        [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
+        [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
+        cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
        
         return cell;
@@ -275,6 +278,13 @@
 }
 
 -(void)continuePlay:(id)sender{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
@@ -297,15 +307,26 @@
         else if (type == 3){
             videoInfo = (NSDictionary *)[result objectForKey:@"show"];
         }
-        // NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
-        IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-        iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
-        iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
-        iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
-        iphoneWebPlayerViewController.videoType = type;
-        iphoneWebPlayerViewController.prodId = prodId;
-        [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
         
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+            int num = [[item objectForKey:@"prod_subname"] intValue];
+            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
+            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        }
+        else{
+            IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+            iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
+            iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
+            iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
+            iphoneWebPlayerViewController.videoType = type;
+            iphoneWebPlayerViewController.prodId = prodId;
+            [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+
+        }
+
+               
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
     }];
@@ -371,11 +392,55 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
-    if (type_ == 1) {
-        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
-        detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:detailViewController animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (type_ == 0) {
+        NSDictionary *dic = [listArr_ objectAtIndex:indexPath.row];
+        NSString *type = [dic objectForKey:@"prod_type"];
+        if ([type isEqualToString:@"1"]) {
+            IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+        }
+        else if ([type isEqualToString:@"2"]){
+            TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];}
+        
+        else if ([type isEqualToString:@"3"]){
+            IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            
+        }
+        
+    }
+    else if (type_ == 1) {
+            NSDictionary *dic = [listArr_ objectAtIndex:indexPath.row];
+            NSString *type = [dic objectForKey:@"content_type"];
+            if ([type isEqualToString:@"1"]) {
+                IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+                detailViewController.infoDic = dic;
+                detailViewController.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:detailViewController animated:YES];
+            }
+            else if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]){
+                TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+                detailViewController.infoDic = dic;
+                detailViewController.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:detailViewController animated:YES];}
+            
+            else if ([type isEqualToString:@"3"]){
+                IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+                detailViewController.infoDic = dic;
+                detailViewController.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:detailViewController animated:YES];
+                
+            }
+            
     }
     else if (type_ == 2){
         NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];

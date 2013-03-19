@@ -109,6 +109,12 @@
         [myHUD hide];
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     }];
+    [MobClick beginLogPageView:SEARCH_LIST];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:SEARCH_LIST];
 }
 
 - (void)didReceiveMemoryWarning

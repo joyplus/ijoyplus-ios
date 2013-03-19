@@ -86,20 +86,25 @@
     } else {
         [self retrieveTopsListData];
     }
+    [MobClick beginLogPageView:SUPPORT_LIST];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:SUPPORT_LIST];
+}
 
 - (void)retrieveTopsListData
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"my_support_list"];
     if(cacheResult != nil){
         [self parseVideoData:cacheResult];
     } else {
-        if([hostReach currentReachabilityStatus] != NotReachable) {
+        if(isReachable) {
             [myHUD showProgressBar:self.view];
         }
     }

@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Joyplus. All rights reserved.
 //
 
-extern NSString *const kDefaultAppKey;
-
 extern NSString *const kSuccessResCode;
 
 extern NSString *const kPathMovie;
@@ -118,3 +116,5 @@ extern NSString *const kPathPlayHistory;
 extern NSString *const kPathAddPlayHistory;
 extern NSString *const kPathHiddenPlay;
 extern NSString *const kPathRemoveAllPlay;
+extern NSString *const kPathShowTopItems;
+extern NSString *const kPathRecordPlay;

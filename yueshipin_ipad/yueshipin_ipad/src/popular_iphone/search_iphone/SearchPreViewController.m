@@ -44,7 +44,7 @@
 	// Do any additional setup after loading the view.
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.tintColor = [UIColor whiteColor];
-    searchBar_.placeholder = @"电影/电视剧/综艺";
+    searchBar_.placeholder = @"请输入片名/导演/主演";
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
     for(int i = 0; i < numViews; i++) {

@@ -15,6 +15,7 @@
 #import "UIImage+Scale.h"
 #import <QuartzCore/QuartzCore.h> 
 #import "AppDelegate.h"
+#import "Reachability.h"
 #define PAGESIZE 20
 @interface FindViewController ()
 
@@ -27,7 +28,7 @@
 @synthesize selectedArr = selectedArr_;
 @synthesize topicId = topicId_;
 @synthesize rightButtonItem = rightButtonItem_;
-
+@synthesize type = type_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -64,7 +65,7 @@
     
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     searchBar_.tintColor = [UIColor whiteColor];
-    searchBar_.placeholder = @"电影/电视剧/综艺";
+    searchBar_.placeholder = @"请输入片名/导演/主演";
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
     for(int i = 0; i < numViews; i++) {
@@ -94,13 +95,20 @@
 }
 
 -(void)Search{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     MBProgressHUD  *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3", @"type", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size",[NSNumber numberWithInt:type_], @"type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];

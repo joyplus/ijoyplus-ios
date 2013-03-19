@@ -17,7 +17,6 @@
 #import "SendWeiboViewController.h"
 #import "ActionUtility.h"
 #import <QuartzCore/QuartzCore.h>
-#import "VideoWebViewController.h"
 #import "CustomNavigationViewController.h"
 #import "CacheUtility.h"
 #import "TimeUtility.h"
@@ -25,6 +24,11 @@
 #import "IphoneAVPlayerViewController.h"
 #import "IphoneWebPlayerViewController.h"
 #import "CustomNavigationViewController.h"
+#import <QuartzCore/QuartzCore.h>
+#import "WXApi.h"
+#import "UIImageView+WebCache.h"
+#import "TSActionSheet.h"
+#import "Reachability.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -41,6 +45,8 @@
 @synthesize videoUrlsArray = videoUrlsArray_;
 @synthesize httpUrlArray = httpUrlArray_;
 @synthesize isNotification = isNotification_;
+@synthesize segmentedControl = segmentedControl_;
+@synthesize wechatImg = wechatImg_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -55,10 +61,15 @@
     [super viewDidLoad];
 
     if (isNotification_) {
-        [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(320, 44)] forBarMetrics:UIBarMetricsDefault];
+        [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSuccessModalView) name:@"wechat_share_success" object:nil];
 }
+- (void)viewDidUnload{
 
+ [super viewDidUnload];
+ 
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -96,7 +107,7 @@
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
    
-    if (type == ADDFAV) {
+    if (type == REPORT) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 80)];
         label.numberOfLines = 0;
         label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -109,7 +120,7 @@
         label.textColor = [UIColor whiteColor];
         [view addSubview:label];
     }
-    if (type == DING ) {
+    if (type == DING || type == ADDFAV ) {
          UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
         temp.frame = CGRectMake(0, 0, 92, 27);
         temp.center = view.center;
@@ -125,15 +136,24 @@
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
-    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_fails.png"]];
+    UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+    label.backgroundColor = [UIColor blackColor];
+    label.font = [UIFont systemFontOfSize:12];
+    label.textColor = [UIColor whiteColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.alpha = 0.9;
+    label.center = view.center;
+    label.layer.masksToBounds = YES;
+    label.layer.cornerRadius = 6.0;
     if (type == DING) {
-        temp.frame = CGRectMake(0, 0, 92, 27);
-        temp.center = view.center;
+       label.text = @"已顶过";
+        
     }
     if (type == ADDFAV) {
-        temp.frame = CGRectMake(16, 110, 92, 27);
+       label.text = @"已收藏过";
     }
-    [view addSubview:temp];
+    
+    [view addSubview:label];
   
      [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
@@ -151,20 +171,117 @@
 }
 
 
--(void)share:(id)sender{
-   
-        _mySinaWeibo = [AppDelegate instance].sinaweibo;
-        _mySinaWeibo.delegate = self;
-        if ([_mySinaWeibo isLoggedIn]) {
-            SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
-            sendV.infoDic = infoDic_;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
-        }
-        else{
-            [_mySinaWeibo logIn];
-           
-        }
- 
+-(void)share:(id)sender event:(UIEvent *)event{
+    
+    TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
+    [actionSheet addButtonWithTitle:@"新浪微博" block:^{
+        [self selectIndex:0];
+    }];
+    [actionSheet addButtonWithTitle:@"微信好友" block:^{
+        [self selectIndex:1];
+    }];
+    [actionSheet addButtonWithTitle:@"微信朋友圈" block:^{
+        [self selectIndex:2];
+    }];
+    [actionSheet cancelButtonWithTitle:@"取消" block:nil];
+    actionSheet.cornerRadius = 5;
+    
+    [actionSheet showWithTouch:event];
+
+    
+}
+-(void)selectIndex:(int)index{
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
+    switch (index) {
+            
+        case 0:
+            
+            [self sinaShare];
+            
+            break;
+            
+        case 1:
+            
+            [self wechatShare:WXSceneSession];
+            
+            break;
+        case 2:
+            
+            [self wechatShare:WXSceneTimeline];
+            
+            break;
+        default:
+            
+            break;
+            
+    }
+
+
+}
+
+-(void)sinaShare{
+    _mySinaWeibo = [AppDelegate instance].sinaweibo;
+    _mySinaWeibo.delegate = self;
+    if ([_mySinaWeibo isLoggedIn]) {
+        SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
+        sendV.infoDic = infoDic_;
+        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
+    }
+    else{
+        [_mySinaWeibo logIn];
+        
+    }
+}
+
+-(void)wechatShare:(int)sence{
+        WXMediaMessage *message = [WXMediaMessage message];
+        message.title = @"推荐";
+        message.description = [infoDic_ objectForKey:@"name"];
+        [message setThumbImage:wechatImg_];
+    
+        WXWebpageObject *ext = [WXWebpageObject object];
+        ext.webpageUrl = [NSString stringWithFormat:@"http://weixin.joyplus.tv/info.php?prod_id=%@",prodId_];
+        message.mediaObject = ext;
+    
+        SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+        req.bText = NO;
+        req.message = message;
+        req.scene = sence;
+        
+        [WXApi sendReq:req];
+
+}
+-(void)removeView{
+    [segmentedControl_ removeFromSuperview];
+}
+
+
+- (void)showSuccessModalView
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+    view.tag = 100000001;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
+    temp.frame = CGRectMake(0, 0, 200, 100);
+    temp.center = view.center;
+    [view addSubview:temp];
+    [self.view addSubview:view];
+    [NSTimer scheduledTimerWithTimeInterval:1.5 target:self selector:@selector(removeSucceedOverlay) userInfo:nil repeats:NO];
+}
+
+- (void)removeSucceedOverlay
+{
+    UIView *view = (UIView *)[self.view viewWithTag:100000001];
+    for(UIView *subview in view.subviews){
+        [subview removeFromSuperview];
+    }
+    [view removeFromSuperview];
+    view = nil;
 }
 
 #pragma mark - SinaWeibo Delegate
@@ -263,98 +380,39 @@
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        NSDictionary *dic = [episodesArr_ objectAtIndex:num];
+        NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+        NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+    }
     IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
     iphoneWebPlayerViewController.playNum = num;
     iphoneWebPlayerViewController.nameStr = name_;
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
+    iphoneWebPlayerViewController.playBackTime = [self getRecordInfo:num];
     [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
     
 }
 
--(NSString*)getRecordInfo:(int)num{
+-(NSNumber*)getRecordInfo:(int)num{
     NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
-    NSString *content = nil;
-    NSString *time = [TimeUtility formatTimeInSecond:cacheResult.doubleValue];
-    if ([time isEqualToString:@"00:00"]) {
-        content = @"即将播出";
-    }
-    else{
-        content = [NSString stringWithFormat:@"上次播放至: %@",time];
-    }
-    return content;
+
+    return cacheResult;
     
 }
 
-
-
-+(NSDictionary *)commonGetPlayUrls:(NSArray *)videoInfoDic{
-//    NSMutableDictionary *source_type = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"",@"letv",@"",@"fengxing",@"",@"qiyi",@"",@"youku",@"",@"sinahd",@"",@"sohu",@"",@"56",@"",@"qq",@"",@"pptv",@"",@"m1905", nil];
-//    
-//    NSMutableDictionary *super_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
-//    NSMutableDictionary *high_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
-//    NSMutableDictionary *plain_clear = [NSMutableDictionary dictionaryWithDictionary:source_type];
-
-   
-    for (NSDictionary *dic in videoInfoDic) {
-        NSArray *infoArr = [dic objectForKey:@"down_urls"];
-        for (NSDictionary *url_dic in infoArr) {
-            NSString *source_str = [url_dic objectForKey:@"source"];
-            NSArray *urlsArr = [url_dic objectForKey:@"urls"];
-            
-            if ([source_str isEqualToString:@"letv"]) {
-                for (NSDictionary *clear_info in urlsArr) {
-                    NSString *clear_type = [[clear_info objectForKey:@"type"] lowercaseString];
-                    NSString *url = [clear_info objectForKey:@"url"];
-                    if ([clear_type isEqualToString:@"hd2"]) {
-                        
-                    }
-                    else if ([clear_type isEqualToString:@"mp4"]){
-                    
-                    }
-                    else if ([clear_type isEqualToString:@"flv"]||[clear_type isEqualToString:@"3gp"]){
-                        
-                    }
-                }
-                
-            }
-            else if ([source_str isEqualToString:@"fengxing"]){
-            
-            }
-            else if ([source_str isEqualToString:@"qiyi"]){
-                
-            }
-            else if ([source_str isEqualToString:@"youku"]){
-                
-            }
-            else if ([source_str isEqualToString:@"sinahd"]){
-                
-            }
-            else if ([source_str isEqualToString:@"sohu"]){
-                
-            }
-            else if ([source_str isEqualToString:@"56"]){
-                
-            }
-            else if ([source_str isEqualToString:@"qq"]){
-                
-            }
-            else if ([source_str isEqualToString:@"pptv"]){
-                
-            }
-            else if ([source_str isEqualToString:@"m1905"]){
-                
-            }
-            
-        
-        }
+-(BOOL)checkNetWork{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable){
+        return YES;
     }
-    return nil;
- 
+    else{
+        return NO;
+    }
+
 }
-
-
 
 @end

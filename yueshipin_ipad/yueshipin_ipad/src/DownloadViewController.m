@@ -1,3 +1,5 @@
+
+
 //
 //  DownloadViewController.m
 //  yueshipin
@@ -12,21 +14,22 @@
 #import "GMGridView.h"
 #import "SubdownloadViewController.h"
 #import "SQLiteInstanceManager.h"
-#import "MyMediaPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
 #import "AVPlayerViewController.h"
+#import "DDProgressView.h"
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
     UIImageView *topIcon;
     UIImageView *bgImage;
     UIImageView *nodownloadImage;
-    
     int leftWidth;
     
     UIButton *editBtn;
-    UIButton *doneBtn;;
-    
+    UIButton *doneBtn;
+    DDProgressView *diskUsedProgress_;
+    UILabel *spaceInfoLabel;
+    BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
 }
 @end
@@ -45,7 +48,9 @@
     topImage = nil;
     bgImage = nil;
     _gmGridView = nil;
-    
+    spaceInfoLabel = nil;
+    diskUsedProgress_ = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DISK_STORAGE object:nil];
     [super viewDidUnload];
 }
 
@@ -56,6 +61,9 @@
 //    [self.view addGestureRecognizer:closeMenuRecognizer];
     [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
     [self.view addGestureRecognizer:openMenuRecognizer];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -119,7 +127,7 @@
         [self.view addSubview:doneBtn];
         
         [self reloadItems];
-        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 610)];
+        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 580)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:gmGridView];
@@ -133,8 +141,44 @@
         _gmGridView.actionDelegate = self;
         _gmGridView.dataSource = self;
         _gmGridView.mainSuperView = self.view;
+        
+        UIView *spaceView = [[UIView alloc]initWithFrame:CGRectMake(8, self.view.frame.size.height - 75, self.view.frame.size.width- 17, 45)];
+        spaceView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
+        [self.view addSubview:spaceView];
+        
+        UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width, 2)];
+        lineImage.image = [[UIImage imageNamed:@"download_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
+        [spaceView addSubview:lineImage];
+               
+        UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 25)];
+        diskFrame.image = [[UIImage imageNamed:@"tab2_download_2"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 5, 10, 5)];
+        diskFrame.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
+        [spaceView addSubview:diskFrame];
+        
+        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 28, 27)];
+        diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
+        diskUsedProgress_.innerColor = [UIColor colorWithRed:100/255.0 green:165/255.0 blue:248/255.0 alpha:1];
+        diskUsedProgress_.outerColor = [UIColor clearColor];
+        [spaceView addSubview:diskUsedProgress_];
+        
+        spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 25)];
+        spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
+        spaceInfoLabel.backgroundColor = [UIColor clearColor];
+        spaceInfoLabel.font = [UIFont systemFontOfSize:11];
+        spaceInfoLabel.textColor = [UIColor whiteColor];
+        spaceInfoLabel.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
+        [spaceView addSubview:spaceInfoLabel];
+        
+        [self updateDiskStorage];
     }
     return self;
+}
+
+- (void)updateDiskStorage
+{
+    float percent = [self getFreeDiskspacePercent];
+    diskUsedProgress_.progress = percent;
+    spaceInfoLabel.text = [NSString stringWithFormat:@"剩余: %0.2fGB / 总空间: %0.2fGB",totalFreeSpace_, totalSpace_];
 }
 
 
@@ -154,12 +198,21 @@
     [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
     [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
+    [MobClick beginLogPageView:DOWNLOAD];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
+    [editBtn setHidden:NO];
+    [doneBtn setHidden:YES];
+    displayNoSpaceFlag = NO;
+    for (DownloadItem *item in [AppDelegate instance].downloadItems) {
+        [item save];
+    }
+    [self updateDiskStorage];
+    [MobClick endLogPageView:DOWNLOAD];
 }
 
 - (void)reloadItems
@@ -176,10 +229,26 @@
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
+    NSLog(@"error in DownloadViewController");
+    [[AppDelegate instance].padDownloadManager stopDownloading];
     [AppDelegate instance].currentDownloadingNum--;
     if([AppDelegate instance].currentDownloadingNum < 0){
         [AppDelegate instance].currentDownloadingNum = 0;
     }
+//    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+//    if(isReachable) {
+//        NSLog(@"failure because of the source url");
+//        for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+//            DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+//            if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
+//                item.downloadStatus = @"stop";
+//                [item save];
+//                [_gmGridView reloadData];
+//                break;
+//            }
+//        }
+//        [[AppDelegate instance].padDownloadManager stopDownloading];
+//    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId
@@ -196,6 +265,7 @@
             [item save];
             [_gmGridView reloadData];
             [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+            [self updateDiskStorage];
             break;
         }
     }
@@ -207,9 +277,10 @@
         DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             if (progress * 100 - item.percentage > 5) {
-                NSLog(@"percent = %f", progress);
                 item.percentage = (int)(progress*100);
+                NSLog(@"percent in DownloadViewController= %f", progress);
                 [item save];
+                [self updateDiskStorage];
             }
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
             UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:operationId.intValue + 20000000];
@@ -221,6 +292,22 @@
             break;
             
         }
+    }
+    [self getFreeDiskspacePercent];
+    if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        for (DownloadItem *item in [AppDelegate instance].downloadItems) {
+            if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
+                item.downloadStatus = @"stop";
+                [item save];
+                [AppDelegate instance].currentDownloadingNum = 0;
+                if (!displayNoSpaceFlag) {
+                    displayNoSpaceFlag = YES;
+                    [UIUtility showNoSpace:self.view];
+                }
+            }
+        }
+        [_gmGridView reloadData];
     }
 }
 
@@ -244,11 +331,17 @@
             [AppDelegate instance].currentDownloadingNum = 0;
         }
     } else if([item.downloadStatus isEqualToString:@"stop"]){
+        [self getFreeDiskspacePercent];
+        if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
+            [UIUtility showNoSpace:self.view];
+            return;
+        }
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"waiting";
         [item save];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [_gmGridView reloadData];
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
@@ -396,13 +489,13 @@
     }
     
     item = nil;
-    if ([AppDelegate instance].downloadItems.count > 0) {
-        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-    } else {
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    if ([AppDelegate instance].downloadItems.count == 0) {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
     }
+    [self updateDiskStorage];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
@@ -467,6 +560,11 @@
     _gmGridView.editing = NO;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
+}
+
+- (void)showNoEnoughSpace
+{
+    [UIUtility showNoSpace:self.view];
 }
 
 @end

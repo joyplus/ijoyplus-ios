@@ -17,7 +17,8 @@
 #import "IphoneShowDetailViewController.h"
 #import "UIImage+Scale.h"
 #import "AppDelegate.h"
-#import <QuartzCore/QuartzCore.h>   
+#import <QuartzCore/QuartzCore.h>  
+#import "Reachability.h"
 #define PAGESIZE 20
 @interface IphoneSearchViewController ()
 
@@ -89,13 +90,20 @@
 }
 
 -(void)loadSearchData{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     MBProgressHUD  *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3,131", @"type", nil];
+    NSString *searchKey = [searchBar_.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchKey, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3,131", @"type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
@@ -171,9 +179,10 @@
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     NSString *supportNum = [item objectForKey:@"support_num"];
-    cell.support.text = [NSString stringWithFormat:@"%@人顶",supportNum];
+    [cell.support setTitle:[NSString stringWithFormat:@"%@人顶",supportNum] forState:UIControlStateDisabled];
     NSString *addFavNum = [item objectForKey:@"favority_num"];
-    cell.addFav.text = [NSString stringWithFormat:@"%@人收藏",addFavNum];
+    [cell.addFav setTitle:[NSString stringWithFormat:@"%@人收藏",addFavNum] forState:UIControlStateDisabled];
+    cell.score.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"score"]];
     return cell;
 }
 

@@ -38,8 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    
+	// Do any additional setup after loading the view.   
     self.title = nameStr_;
     [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     
@@ -54,6 +53,17 @@
     [self initDataSource];
     [self initWebView];
     [self initPlayerView];
+    [self recordPlayStatics];
+}
+
+- (void)recordPlayStatics
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSLog(@"succeed!");
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 -(void)viewWillAppear:(BOOL)animated{

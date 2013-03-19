@@ -133,6 +133,7 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
     } else {
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
+    [_mGridView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -203,14 +204,6 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
 - (void)gridView:(UMUFPGridView *)gridView didSelectRowAtIndexPath:(IndexPath *)indexPath
 {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    int arrIndex = [gridView arrayIndexForIndexPath:indexPath];
-    if (arrIndex < [_mGridView.mPromoterDatas count])
-    {
-        NSDictionary *promoter = [_mGridView.mPromoterDatas objectAtIndex:arrIndex];
-        NSString *url = [promoter valueForKey:@"url"];
-        NSLog(@"%@", url);
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    }
 }
 
 - (void)UMUFPGridViewDidLoadDataFinish:(UMUFPGridView *)gridView promotersAmount:(NSInteger)promotersAmount

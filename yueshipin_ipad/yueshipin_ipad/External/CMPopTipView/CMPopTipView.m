@@ -289,7 +289,7 @@
 			pointDirection = PointDirectionDown;
 		}
 	}
-	
+	pointDirection = PointDirectionDown;
 	CGFloat W = containerView.frame.size.width;
 	
 	CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
