@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
  //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 1
-#define VERSION @"0.9.8"
+#define ENVIRONMENT 0
+#define VERSION @"0.9.8alpha"
 
 // for App Store
 #define CHANNEL_ID @""

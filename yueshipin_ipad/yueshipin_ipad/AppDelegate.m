@@ -197,14 +197,15 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [PFPush storeDeviceToken:deviceToken];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
+        [currentInstallation setBadge:0];
     }
-    [PFPush subscribeToChannelInBackground:@"" block:^(BOOL succeeded, NSError *error) {
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
             NSLog(@"Successfully subscribed to broadcast channel!");
         else
