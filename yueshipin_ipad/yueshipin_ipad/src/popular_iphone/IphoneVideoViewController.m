@@ -385,6 +385,7 @@
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
         NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        return;
     }
     IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
     iphoneWebPlayerViewController.playNum = num;

@@ -81,6 +81,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize willPlayLabel = willPlayLabel_;
 @synthesize workingUrl = workingUrl_;
 @synthesize titleLabel = titleLabel_;
+@synthesize webUrlSource = webUrlSource_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -554,7 +555,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     playNum++;
     [tableList_ reloadData];
-    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+//    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     //[self initplaytime];
     lastPlayTime_ = kCMTimeZero;
     [self addCacheview];
@@ -710,7 +711,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         else if ([source_str isEqualToString:@"qq"]){
             [temp_dic setObject:@"8" forKey:@"level"];
         }
-        else if ([source_str isEqualToString:@"pptv"]||[source_str isEqualToString:@"wangpan"]){
+        else if ([source_str isEqualToString:@"pptv"]){
             [temp_dic setObject:@"9" forKey:@"level"];
         }
         else if ([source_str isEqualToString:@"pps"]){
@@ -1461,6 +1462,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
                 tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, height);
+                [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
                 [UIView commitAnimations];
               
             }
@@ -1590,6 +1592,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             break;
         }
     }
+    return [self parseLogo:source_str];
+}
+
+-(UIImage *)parseLogo:(NSString *)source_str{
     UIImage *logoImg = nil;
     if ([source_str isEqualToString:@"letv"]) {
         logoImg = [UIImage imageNamed:@"logo_letv"];
@@ -1615,7 +1621,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     else if ([source_str isEqualToString:@"qq"]){
         logoImg = [UIImage imageNamed:@"logo_qq"];
     }
-    else if ([source_str isEqualToString:@"pptv"]||[source_str isEqualToString:@"wangpan"]){
+    else if ([source_str isEqualToString:@"pptv"]){
         logoImg = [UIImage imageNamed:@"logo_pptv"];
     }
     else if ([source_str isEqualToString:@"pps"]){
@@ -1632,6 +1638,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     UILabel *label = (UILabel *)[topToolBar_ viewWithTag:100001];
     label.text =  @"来源:";
     UIImage *img = [self getVideoSource:url];
+    if (img == nil) {
+        img = [self parseLogo:webUrlSource_];
+    }
     sourceLogo_.backgroundColor = [UIColor clearColor];
     sourceLogo_.frame = CGRectMake(102, 11, img.size.width/3, img.size.height/3);
     sourceLogo_.image = img;
@@ -1740,8 +1749,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     playNum = indexPath.row;
     
     [tableList_ reloadData];
-    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-    
     lastPlayTime_ = kCMTimeZero;
     //[self initplaytime];
     

@@ -26,6 +26,7 @@
 @synthesize videoType = videoType_;
 @synthesize prodId = prodId_;
 @synthesize playBackTime = playBackTime_;
+@synthesize webUrlSource = webUrlSource_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -72,7 +73,9 @@
 }
 -(void)initDataSource{
    NSDictionary *episodesInfo = [episodesArr_ objectAtIndex:playNum];
-    webUrl_ = [NSURL URLWithString:[[[episodesInfo objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"]];
+    NSDictionary *oneEpisodeInfo = [[episodesInfo objectForKey:@"video_urls"] objectAtIndex:0];
+    webUrlSource_ =[oneEpisodeInfo objectForKey:@"source"];
+    webUrl_ = [NSURL URLWithString:[oneEpisodeInfo objectForKey:@"url"]];
 }
 
 
@@ -106,6 +109,7 @@
     iphoneAVPlayerViewController.prodId = prodId_;
     iphoneAVPlayerViewController.webPlayUrl = webUrl_.absoluteString;
     iphoneAVPlayerViewController.lastPlayTime =  CMTimeMakeWithSeconds(playBackTime_.doubleValue, NSEC_PER_SEC);
+    iphoneAVPlayerViewController.webUrlSource = webUrlSource_;
     [self.navigationController pushViewController:iphoneAVPlayerViewController animated:NO];
 }
 
