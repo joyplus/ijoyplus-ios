@@ -10,6 +10,9 @@
 #import "MovieDetailViewController.h"
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
+#import "CloseTipsView.h"
+
+#define CLOSE_TIPS_VIEW_TAG (1111)
 
 @interface ListViewController (){
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
@@ -89,6 +92,12 @@
     [self.view addGestureRecognizer:swipeRecognizer];
     
     umengPageName = TOP_LIST_DETAIL;
+    
+    CGRect frame = table.frame;
+    
+    CloseTipsView * cView = [[CloseTipsView alloc] initWithFrame:CGRectMake(0, frame.size.height + frame.origin.y - 100, self.view.frame.size.width, 121)];
+    [self.view addSubview:cView];
+    cView.tag = CLOSE_TIPS_VIEW_TAG;
 }
 
 - (void)loadTable {    
@@ -381,6 +390,7 @@
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
     }
     self.moveToLeft = NO;
+    //[self.view viewWithTag:CLOSE_TIPS_VIEW_TAG].hidden = YES;
 }
 
 #pragma mark -
