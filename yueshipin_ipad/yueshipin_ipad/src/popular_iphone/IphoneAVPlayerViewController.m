@@ -519,6 +519,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         bottomView_.hidden = YES;
     }
     
+    if (selectButton_.selected) {
+        selectButton_.selected = NO;
+        tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+    }
     
     
     [self resetMyTimer];
