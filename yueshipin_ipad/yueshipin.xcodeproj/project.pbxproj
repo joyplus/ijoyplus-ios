@@ -139,6 +139,9 @@
 		22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF216F18D4A00058985 /* TSPopoverTouchView.m */; };
 		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
+		2260F5AB16F8504B00F74EBC /* CloseTipsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2260F5AA16F8504B00F74EBC /* CloseTipsView.m */; };
+		2260F5B416F86A8E00F74EBC /* fading.png in Resources */ = {isa = PBXBuildFile; fileRef = 2260F5B316F86A8E00F74EBC /* fading.png */; };
+		2260F5B616F8761B00F74EBC /* arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 2260F5B516F8761B00F74EBC /* arrow.png */; };
 		2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */; };
 		2281DA6216AD25D800333353 /* IphoneDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */; };
 		229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */; };
@@ -941,6 +944,10 @@
 		22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
 		2249C9A6169C2C2D00757A2E /* ProgramNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgramNavigationController.h; sourceTree = "<group>"; };
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
+		2260F5A916F8504B00F74EBC /* CloseTipsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloseTipsView.h; sourceTree = "<group>"; };
+		2260F5AA16F8504B00F74EBC /* CloseTipsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloseTipsView.m; sourceTree = "<group>"; };
+		2260F5B316F86A8E00F74EBC /* fading.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fading.png; sourceTree = "<group>"; };
+		2260F5B516F8761B00F74EBC /* arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrow.png; sourceTree = "<group>"; };
 		2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownlooadViewController.h; sourceTree = "<group>"; };
 		2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownlooadViewController.m; sourceTree = "<group>"; };
 		2281DA6016AD25D800333353 /* IphoneDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneDownloadViewController.h; sourceTree = "<group>"; };
@@ -2251,6 +2258,8 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2260F5B316F86A8E00F74EBC /* fading.png */,
+				2260F5B516F8761B00F74EBC /* arrow.png */,
 				EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */,
 				EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */,
 				EB6298ED16EDC1E800BFB30B /* slider_bg@2x.png */,
@@ -2911,6 +2920,8 @@
 				EBF3A99E1663979600EBF56D /* DeviceListViewController.m */,
 				22EF004B16B767D90001F743 /* AvVideoWebViewController.h */,
 				22EF004C16B767D90001F743 /* AvVideoWebViewController.m */,
+				2260F5A916F8504B00F74EBC /* CloseTipsView.h */,
+				2260F5AA16F8504B00F74EBC /* CloseTipsView.m */,
 			);
 			name = popular;
 			sourceTree = "<group>";
@@ -3649,6 +3660,8 @@
 				EB6298EE16EDC1E800BFB30B /* slider_bg@2x.png in Resources */,
 				EBBD9E2916EDD80900AF96E0 /* progress_thumb_pressed.png in Resources */,
 				EBBD9E2A16EDD80900AF96E0 /* progress_thumb.png in Resources */,
+				2260F5B416F86A8E00F74EBC /* fading.png in Resources */,
+				2260F5B616F8761B00F74EBC /* arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3833,6 +3846,7 @@
 				22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */,
 				22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */,
 				22CA85DF16F3256A00AAE4EE /* DownloadUrlCheck.m in Sources */,
+				2260F5AB16F8504B00F74EBC /* CloseTipsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

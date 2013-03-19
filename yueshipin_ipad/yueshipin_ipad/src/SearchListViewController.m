@@ -12,6 +12,9 @@
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
 #import "SubsearchViewController.h"
+#import "CloseTipsView.h"
+
+#define CLOSE_TIPS_VIEW_TAG (1111)
 
 @interface SearchListViewController (){
     UITableView *table;
@@ -78,6 +81,10 @@
     [self loadTable];
     
     [self.view addGestureRecognizer:swipeRecognizer];
+    
+    CloseTipsView * cView = [[CloseTipsView alloc] initWithFrame:CGRectMake(0, 627, self.view.frame.size.width, 121)];
+    [self.view addSubview:cView];
+    cView.tag = CLOSE_TIPS_VIEW_TAG;
 }
 
 - (void)loadTable {
@@ -351,6 +358,8 @@
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
         }
         self.moveToLeft = NO;
+        
+        //[self.view viewWithTag:CLOSE_TIPS_VIEW_TAG].hidden = YES;
     }
 }
 

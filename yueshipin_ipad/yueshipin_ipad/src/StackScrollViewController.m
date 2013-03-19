@@ -711,6 +711,8 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
             if([viewController isKindOfClass:clazz]){
                 [viewController.view setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
+                UIView * rightView = [viewController.view viewWithTag:1111];
+                rightView.hidden = NO;
                 break;
             } else{
                 [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
@@ -804,7 +806,11 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		[viewControllersStack removeAllObjects];
 	}
 	
-	
+    UIView * rightView = [controller.view viewWithTag:1111];
+    UIView * leftView = [invokeByController.view viewWithTag:1111];
+	rightView.hidden = NO;
+    leftView.hidden = YES;
+    
 	if([viewControllersStack count] > 1 && removePreviousView){
 		NSInteger indexOfViewController = [viewControllersStack
 										   indexOfObject:invokeByController]+1;

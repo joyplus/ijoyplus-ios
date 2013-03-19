@@ -8,6 +8,8 @@
 
 #import "SubsearchViewController.h"
 #import "SearchListViewController.h"
+#import "CloseTipsView.h"
+#define CLOSE_TIPS_VIEW_TAG (1111)
 
 @interface SubsearchViewController (){
     UIButton *closeBtn;
@@ -34,6 +36,10 @@
     
     [self.view removeGestureRecognizer:closeMenuRecognizer];
     [self.view removeGestureRecognizer:swipeCloseMenuRecognizer];
+    
+    CloseTipsView * cView = [[CloseTipsView alloc] initWithFrame:CGRectMake(0, 627, self.view.frame.size.width, 121)];
+    [self.view addSubview:cView];
+    cView.tag = CLOSE_TIPS_VIEW_TAG;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,6 +88,7 @@
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:removePreviousView moveToLeft:self.moveToLeft];
     self.moveToLeft = NO;
+    //[self.view viewWithTag:CLOSE_TIPS_VIEW_TAG].hidden = YES;
 }
 
 - (void)closeBtnClicked
