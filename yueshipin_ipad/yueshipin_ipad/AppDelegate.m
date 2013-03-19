@@ -19,6 +19,8 @@
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
 
+#define DAY(day)        (day * 3600)
+
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
 @property (nonatomic, strong) Reachability *internetReach;
@@ -27,6 +29,9 @@
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
 @property (atomic, strong) NSString *show3GAlertSeq;
 - (void)monitorReachability;
+
+- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti;
+- (void)cancelLocalNotification;
 
 @end
 
@@ -249,6 +254,11 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     [self.downLoadManager appDidEnterBackground];
+    
+    //When app enter background, add a new local Notification
+    //14天（2周）后下午9点提示
+    [self addLocalNotificationWithTimeInterval:DAY(14)];
+    // end
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -291,6 +301,10 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    //when app become active ,cancel all local notification .
+    [self cancelLocalNotification];
+    
 }
 //- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
 //    
@@ -411,6 +425,33 @@
     
 }
 
+- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti
+{
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    
+    if (nil != notification)
+    {
+        NSDate * now = [NSDate new];
+        //输出字符串为格林威治时区，做8小时偏移
+        NSString * now_str = [now description];
+        //即北京时区21点整,(ti)天后，提示用户
+        NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"13:00:00"];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+        NSDate * Date9PM = [formatter dateFromString:today9PM];
+        
+        notification.fireDate = [Date9PM dateByAddingTimeInterval:ti];
+        notification.timeZone = [NSTimeZone defaultTimeZone];
+        notification.alertBody = @"亲，你已经至少两周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
+        [[UIApplication sharedApplication]   scheduleLocalNotification:notification];
+    }
+    
+    [notification release];
+}
 
+- (void)cancelLocalNotification
+{
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+}
 
 @end
