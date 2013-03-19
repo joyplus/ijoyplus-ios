@@ -12,17 +12,6 @@
 #define MOVIE_POSTER_WIDTH 70
 #define MOVIE_POSTER_HEIGHT 100 
 
-// for App Store
-#define CHANNEL_ID @""
-// for 91 Store
-//#define CHANNEL_ID @"91store"
-// for PP Live
-//#define CHANNEL_ID @"pp"
-// for sohu 
-//#define CHANNEL_ID @"b005001"
-
-//#define CHANNEL_ID @"b006001"
-
 #define kJoyplusWebSite @"http://app.joyplus.tv"
 #define kSinaWeiboBaseUrl @"https://api.weibo.com"
 #define kSinaWeiboUpdateUrl @"statuses/update.json"
@@ -45,6 +34,10 @@
 
 #define kUserLoggedIn @"userLoggedIn"
 #define kSinaUID @"kSinaUID"
+
+//WeChat
+#define KWeChatAppID @"wxc8ea1cbc355fe2d0"
+#define KWeChatAppKey @"5843781cb092af97588a827e3f2e6eac"
 
 #define kUserLoginService @"joypluslogin"
 #define kUserId @"kUserId"
@@ -75,7 +68,10 @@
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
-//#define RELOAD_MENU_ITEM @ "reload_menu_item"
+#define RELOAD_MENU_ITEM @ "reload_menu_item"
+#define UPDATE_DISK_STORAGE @"update_disk_storage"
+#define NO_ENOUGH_SPACE @"no_enough_space"
+#define LEAST_DISK_SPACE 300.0/1024.0
 
 #define WATCH_RECORD_NUMBER 5
 
@@ -88,9 +84,6 @@
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
 #define APPIRATER_APP_ID				587246114
-
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch2"
-#define CLOSE_VIDEO_MODE @"closeVideoMode3"
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 

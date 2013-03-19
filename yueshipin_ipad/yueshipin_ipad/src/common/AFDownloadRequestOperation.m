@@ -205,7 +205,11 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
         }else if(!self.error) {
             // move file to final position and capture error        
             @synchronized(self) {
-                [[NSFileManager new] moveItemAtPath:[self tempPath] toPath:_targetPath error:&localError];
+                NSFileManager *newManager = [NSFileManager new];
+                if ([newManager fileExistsAtPath:_targetPath]) {
+                    [newManager removeItemAtPath:_targetPath error:nil];
+                }
+                [newManager moveItemAtPath:[self tempPath] toPath:_targetPath error:&localError];
                 if (localError) {
                     _fileError = localError;
                 }

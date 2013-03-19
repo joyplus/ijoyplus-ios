@@ -11,8 +11,8 @@
 #import "DownLoadManager.h"
 #import "SubdownloadItem.h"
 #import "AppDelegate.h"
-#import "MyMediaPlayerViewController.h"
 #import "IphoneAVPlayerViewController.h"
+#import "Reachability.h"
 @interface IphoneSubdownloadViewController ()
 
 @end
@@ -116,6 +116,8 @@
    
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         
+        [self reloadDataSource];
+        return;
         NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",itemId];
         NSArray *itemArr = [SubdownloadItem findByCriteria:query];
         
@@ -301,7 +303,7 @@
         [progressArr_ addObject:progressView];
     }
     
-    if([downloadItem.downloadStatus isEqualToString:@"loading"]){
+    if([downloadItem.downloadStatus isEqualToString:@"loading"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
         statusImg.image = [UIImage imageNamed:@"download_loading.png"];
         progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
         [cell.contentView addSubview:progressView];
@@ -329,11 +331,12 @@
             [cell.contentView addSubview:progressLabel];
         }
     
-    } else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
-        progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
-        [cell.contentView addSubview:progressView];
-        [cell.contentView addSubview:progressLabel];
     }
+//    else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
+//        progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
+//        [cell.contentView addSubview:progressView];
+//        [cell.contentView addSubview:progressLabel];
+//    }
 
     return cell;
 }
@@ -408,21 +411,18 @@
             }
         }
         if (playPath) {
-
-//            MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//            viewController.isDownloaded = YES;
-//            viewController.closeAll = YES;
-//            NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-//            [urlsArray addObject:playPath];
-//            viewController.videoUrls = urlsArray;
-//            viewController.prodId = downloadItem.itemId;
-//            //viewController.type = downloadItem.type;
-//            viewController.name = self.title;
-//            viewController.subname = downloadItem.name;
-//            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
             IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
             iphoneAVPlayerViewController.local_file_path = playPath;
             iphoneAVPlayerViewController.islocalFile = YES;
+            if (downloadItem.type == 2) {
+                NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];
+                NSString *sub_name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+                int num = [sub_name intValue];
+                iphoneAVPlayerViewController.nameStr = [NSString stringWithFormat:@"%@ 第%d集",name,++num];
+            }
+            else if (downloadItem.type == 3){
+                iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
+            }
             [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         }
         else{
@@ -433,6 +433,14 @@
 
     }
    else if ([downloadItem.downloadStatus isEqualToString:@"waiting"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
+       Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+       if([hostReach currentReachabilityStatus] == NotReachable){
+           
+           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+           [alert show];
+           return;
+       }
+       
         downloadItem.downloadStatus = @"stop";
         [downloadItem save];
         [DownLoadManager stop:downloadItem.subitemId];
@@ -464,6 +472,14 @@
        [self reloadDataSource];
     }
     else if ([downloadItem.downloadStatus isEqualToString:@"stop"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
+        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if([hostReach currentReachabilityStatus] == NotReachable){
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+            return;
+        }
+        
         downloadItem.downloadStatus = @"waiting";
         [downloadItem save];
        

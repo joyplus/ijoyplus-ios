@@ -10,7 +10,6 @@
 #import "SelectListViewController.h"
 #import "CommonHeader.h"
 #import "ListViewController.h"
-#import "MyMediaPlayerViewController.h"
 #import "AvVideoWebViewController.h"
 
 @interface VideoDetailViewController ()
@@ -59,6 +58,22 @@
     [downloadUrls removeAllObjects];
     downloadUrls = nil;
     episodeArray = nil;
+    umengPageName = nil;
+}
+
+- (void)dealloc
+{
+    [self clearMemory];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:umengPageName];
+}
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:umengPageName];
 }
 
 - (void)shareBtnClicked
@@ -302,15 +317,8 @@
 
 - (void)updateBadgeIcon
 {
-    SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
-    if (newNum == nil) {
-        newNum = [[SequenceData alloc]initWithType:0];
-        newNum.newDownloadItemNum = 1;
-    } else {
-        newNum.newDownloadItemNum++;
-    }
-    [newNum save];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
 }
 
 - (void)playVideo:(int)num
@@ -344,6 +352,7 @@
     if(num < 0 || num >= episodeArray.count){
         return;
     }
+    [self recordPlayStatics];
     // 网页地址
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
     for (int i = 0; i < episodeArray.count; i++) {
@@ -394,6 +403,16 @@
         webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
     }
+}
+
+- (void)recordPlayStatics
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 - (BOOL)validadUrl:(NSString *)originalUrl

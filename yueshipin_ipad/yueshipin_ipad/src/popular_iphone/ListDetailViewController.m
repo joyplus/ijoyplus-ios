@@ -166,8 +166,8 @@
     cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"stars"]];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-    cell.support.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"support_num"]];
-    cell.addFav.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"favority_num"]];
+    [cell.support setTitle:[NSString stringWithFormat:@"%@人顶",[item objectForKey:@"support_num"]] forState:UIControlStateDisabled];
+    [cell.addFav setTitle:[NSString stringWithFormat:@"%@人收藏",[item objectForKey:@"favority_num"]] forState:UIControlStateDisabled];
     return cell;
 }
 
@@ -181,13 +181,14 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (Type_ == TV_TYPE) {
+    NSDictionary *dic = [self.listArr objectAtIndex:indexPath.row];
+    NSString *type = [dic objectForKey:@"prod_type"];
+    if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]) {
         TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];
-        
     }
-    if (Type_ == MOVIE_TYPE) {
+    else if ([type isEqualToString:@"1"]){
         IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
         detailViewController.infoDic = [self.listArr objectAtIndex:indexPath.row];
         [self.navigationController pushViewController:detailViewController animated:YES];

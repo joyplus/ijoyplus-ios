@@ -8,7 +8,6 @@
 
 #import "SettingsViewController.h"
 #import "CustomSearchBar.h"
-#import "SuggestionViewController.h"
 #import "AboutUsViewController.h"
 #import "MBProgressHUD.h"
 #import "SDImageCache.h"
@@ -212,6 +211,12 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     } else {
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
+    [MobClick beginLogPageView:SETTING];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:SETTING];
 }
 
 - (void)clearCacheBtnClicked
@@ -246,9 +251,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chatViewController];
     navController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:navController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-//    SuggestionViewController *viewController = [[SuggestionViewController alloc] initWithNibName:@"SuggestionViewController" bundle:nil];
-//    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-//    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
 
 - (void)commentBtnClicked

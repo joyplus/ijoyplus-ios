@@ -15,6 +15,7 @@
     NSString *topicId_;
     UILabel *detailLabel_;
     UIButton *nextBtn_;
+    int type_;
 }
 @property (nonatomic, strong)UITextField *titleTextField;
 @property (nonatomic, strong)UITextView *detailTextView;

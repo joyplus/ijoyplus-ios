@@ -23,10 +23,10 @@
 #import "SinaWeibo.h"
 #import "AppDelegate.h"
 #import "CommonHeader.h"
-#import "MyMediaPlayerViewController.h"
 #import "IphoneWebPlayerViewController.h"
 #import "CustomNavigationViewController.h"
 #import "CustomNavigationViewControllerPortrait.h"
+#import "Reachability.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -573,16 +573,16 @@
             cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
 
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
-        cell.titleLab.frame = CGRectMake(10, 24, 220, 15);
+        cell.titleLab.frame = CGRectMake(10, 20, 220, 15);
 
         cell.actors.text  = [self composeContent:infoDic];
-        [cell.actors setFrame:CGRectMake(12, 40, 200, 15)];
+        [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
      
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
+        cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
         return cell;
     }
@@ -661,8 +661,32 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
-    if (tableView.tag == Fav_TYPE){
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (tableView.tag == RECORD_TYPE) {
+        NSDictionary *dic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
+        NSString *type = [dic objectForKey:@"prod_type"];
+        if ([type isEqualToString:@"1"]) {
+            IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+        }
+        else if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]){
+            TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];}
+        
+        else if ([type isEqualToString:@"3"]){
+            IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+            detailViewController.infoDic = dic;
+            detailViewController.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:detailViewController animated:YES];
+            
+        }
+
+    }
+    else if (tableView.tag == Fav_TYPE){
         NSDictionary *dic = [favArr_ objectAtIndex:indexPath.row];
         NSString *type = [dic objectForKey:@"content_type"];
         if ([type isEqualToString:@"1"]) {
@@ -692,6 +716,7 @@
         NSMutableArray *items = [NSMutableArray arrayWithArray:[infoDic objectForKey:@"items"]];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
         createMyListTwoViewController.listArr = items;
+        createMyListTwoViewController.type = [[infoDic objectForKey:@"prod_type"] intValue];
         createMyListTwoViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
         createMyListTwoViewController.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:createMyListTwoViewController animated:YES];
@@ -808,6 +833,13 @@
 
 
 -(void)continuePlay:(id)sender{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+   
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
@@ -831,14 +863,26 @@
         else if (type == 3){
          videoInfo = (NSDictionary *)[result objectForKey:@"show"];
         }
-        IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-        iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
-        iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
-        iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
-        iphoneWebPlayerViewController.videoType = type;
-        iphoneWebPlayerViewController.prodId = prodId;
-        iphoneWebPlayerViewController.playBackTime = (NSNumber *)[item objectForKey:@"playback_time"];
-        [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+            int num = [[item objectForKey:@"prod_subname"] intValue];
+            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
+            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        }
+        else{
+            IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+            iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
+            iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
+            iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
+            iphoneWebPlayerViewController.videoType = type;
+            iphoneWebPlayerViewController.prodId = prodId;
+            iphoneWebPlayerViewController.playBackTime = (NSNumber *)[item objectForKey:@"playback_time"];
+            [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
+        
+        }
+        
+        
             
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
        [tempHUD hide:YES];

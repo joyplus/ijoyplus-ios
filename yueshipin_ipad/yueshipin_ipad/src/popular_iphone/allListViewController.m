@@ -80,23 +80,20 @@
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [self parseTopsListData:result];
         [tempHUD hide:YES];
-        
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.listArray == nil){
             self.listArray = [[NSMutableArray alloc]initWithCapacity:10];
         }
+         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         [tempHUD hide:YES];
     }];
 
 
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
-   // [(TabBarViewController*)self.tabBarController setTabBarHidden:NO];
-    
-}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -146,7 +143,7 @@
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
     
-    self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-88) style:UITableViewStylePlain];
+    self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
     self.tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -161,9 +158,9 @@
         view.delegate = self;
         [tableList_ addSubview:view];
         refreshHeaderView_ = view;
-        
+        [refreshHeaderView_ refreshLastUpdatedDate];
     }
-    [refreshHeaderView_ refreshLastUpdatedDate];
+   
     
     
 }

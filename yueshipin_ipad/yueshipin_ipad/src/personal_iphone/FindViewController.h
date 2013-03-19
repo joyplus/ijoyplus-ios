@@ -15,6 +15,7 @@
    NSMutableArray *selectedArr_;
    NSString *topicId_;
    UIBarButtonItem *rightButtonItem_;
+   int type_;
 }
 @property (nonatomic, strong)UISearchBar *searchBar;
 @property (nonatomic, strong)UITableView *tableList;
@@ -22,4 +23,5 @@
 @property (nonatomic, strong)NSMutableArray *selectedArr;
 @property (nonatomic, strong)NSString *topicId;
 @property (nonatomic, strong)UIBarButtonItem *rightButtonItem;
+@property (nonatomic, assign)int type;
 @end

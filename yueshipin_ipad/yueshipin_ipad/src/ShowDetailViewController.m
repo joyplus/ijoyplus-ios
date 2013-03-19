@@ -96,6 +96,7 @@
     [super viewDidLoad];
     
     self.type = 3;
+    umengPageName = SHOW_DETAIL;
     
     self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
@@ -272,8 +273,8 @@
 
 - (void)retrieveData
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     NSString *key = [NSString stringWithFormat:@"%@%@", @"show", self.prodId];
@@ -281,7 +282,7 @@
     if(cacheResult != nil){
         [self parseData:cacheResult];
     } else {
-        if([hostReach currentReachabilityStatus] != NotReachable) {
+        if(isReachable) {
             [myHUD showProgressBar:self.view];
         }
     }
@@ -407,6 +408,7 @@
                     int pageNum = floor(i/5.0);
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
                     [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
@@ -438,6 +440,7 @@
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
                     }
+                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     [nameBtn setTitle:name forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
@@ -582,7 +585,9 @@
     } else {
         UIButton *btn = (UIButton *)[showListView viewWithTag:1];
         self.subname = btn.titleLabel.text;
-        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
+        if (self.subname) {
+            [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"show_epi_%@", self.prodId] result:btn.titleLabel.text];
+        }
     }
     [super playVideo:lastNum];
 }

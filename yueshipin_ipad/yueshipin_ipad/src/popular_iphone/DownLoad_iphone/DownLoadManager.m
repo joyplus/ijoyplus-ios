@@ -10,6 +10,7 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "AFDownloadRequestOperation.h"
+#import "Reachability.h"
 static DownLoadManager *downLoadManager_ = nil;
 static NSMutableArray *downLoadQueue_ = nil;
 @implementation DownLoadManager
@@ -23,11 +24,15 @@ static NSMutableArray *downLoadQueue_ = nil;
     if (downLoadManager_ == nil) {
         downLoadManager_ = [[DownLoadManager alloc] init];
         [downLoadManager_ initDownLoadManager];
+        
     }
     return downLoadManager_;
 }
 
 -(void)initDownLoadManager{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    netWorkStatus = [hostReach currentReachabilityStatus];
+   
     downLoadQueue_ = [[NSMutableArray alloc] initWithCapacity:10];
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addtoDownLoadQueue:) name:@"DOWNLOAD_MSG" object:nil];
@@ -221,12 +226,27 @@ static NSMutableArray *downLoadQueue_ = nil;
     
 }
 
+-(void)restartDownload{
+     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+        if (downloadRequestOperation.operationStatus == @"loading") {
+           [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+    }
+    for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+         if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error") {
+            [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+    }
+}
 
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
     
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file id %@", downloadRequestOperation.operationId);
-        
         if ([downLoadQueue_ containsObject:operation]) {
             [downLoadQueue_ removeObject:operation];
         }
@@ -487,7 +507,65 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     return count;
 }
+-(void)appDidEnterBackground{
+    for (AFDownloadRequestOperation *mc in downLoadQueue_){
+        [mc pause];
+        [mc cancel];
+    }
+}
+-(void)appDidEnterForeground{
+    NSMutableArray *tempQueue = [NSMutableArray arrayWithArray:downLoadQueue_];
+    [downLoadQueue_ removeAllObjects];
+    for (AFDownloadRequestOperation *downloadOperation in tempQueue){
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:downloadOperation.request.URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+        AFDownloadRequestOperation *newDownloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:downloadOperation.targetPath shouldResume:YES];
+        newDownloadingOperation.operationId = downloadOperation.operationId;
+        newDownloadingOperation.operationStatus = downloadOperation.operationStatus;
+        [downLoadQueue_ addObject:newDownloadingOperation];
 
+    }
+    
+    for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+        if (downloadRequestOperation.operationStatus == @"loading") {
+            [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+    }
+    for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+        if (downloadRequestOperation.operationStatus == @"fail") {
+            [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+    }
+    
+    for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
+        if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error" ) {
+            [self beginDownloadTask:downloadRequestOperation];
+            return;
+        }
+        
+        
+    }
+    
+    
+}
+
+-(void)networkChanged:(int)status{
+    if (status == netWorkStatus) {
+        return;
+    }
+    else{
+        netWorkStatus = status;
+        if(netWorkStatus == 0){
+            [self appDidEnterBackground];
+        }
+        else{
+            [self appDidEnterForeground];
+        }
+    }
+}
 -(float)getFreeSpace{
     NSError *error = nil;
     

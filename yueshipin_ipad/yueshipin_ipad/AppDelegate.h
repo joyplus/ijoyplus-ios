@@ -13,10 +13,10 @@
 #import "SubdownloadItem.h"
 #import "DownLoadManager.h"
 #import "NewDownloadManager.h"
-
+#import "WXApi.h"
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -36,6 +36,7 @@
 @property (assign, atomic) int currentDownloadingNum;
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
+@property (nonatomic) float mediaVolumeValue;
 
 @property (strong, nonatomic)DownLoadManager *downLoadManager;
 

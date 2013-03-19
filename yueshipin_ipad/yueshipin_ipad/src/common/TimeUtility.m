@@ -22,7 +22,7 @@
     if(hour > 0){
         formatedString = [NSString stringWithFormat:@"%@:%@:%@", [self numberToString:hour], [self numberToString:minute], [self numberToString:second]];
     } else {
-        formatedString = [NSString stringWithFormat:@"%@:%@",[self numberToString:minute], [self numberToString:second]];
+        formatedString = [NSString stringWithFormat:@"00:%@:%@",[self numberToString:minute], [self numberToString:second]];
     }
     return formatedString;
 }

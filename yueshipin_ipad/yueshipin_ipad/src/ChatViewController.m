@@ -93,11 +93,12 @@
 	
 	[self.messageTextField setText:self.messageString];
 	[self.chatTableView reloadData];
+    [MobClick beginLogPageView:SUGGESTION];
 }
-
 
 -(void)viewWillDisappear:(BOOL)animated{
 	[super viewWillDisappear:animated];
+    [MobClick endLogPageView:SUGGESTION];
 	
 }
 - (void)didReceiveMemoryWarning {

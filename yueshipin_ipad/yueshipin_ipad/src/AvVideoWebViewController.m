@@ -7,7 +7,6 @@
 //
 
 #import "AvVideoWebViewController.h"
-#import "MyMediaPlayerViewController.h"
 #import "CommonHeader.h"
 #import "UIImage+Scale.h"
 #import "AVPlayerViewController.h"
@@ -71,10 +70,6 @@
     subnameArray = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
-    return toInterfaceOrientation == /*UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == */UIInterfaceOrientationLandscapeRight;
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -82,6 +77,18 @@
         // Custom initialization
     }
     return self;
+}
+
+-(BOOL)shouldAutorotate {
+    return YES;
+}
+
+-(NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+    return toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight;
 }
 
 - (void)viewDidLoad

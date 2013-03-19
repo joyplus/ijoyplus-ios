@@ -84,8 +84,7 @@
     personalViewController = nil;
     badgeView = nil;
     appViewController = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:RELOAD_MENU_ITEM object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RELOAD_MENU_ITEM object:nil];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -119,8 +118,7 @@
         
         selectedIndex = 0;
         [self initMenuController];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:RELOAD_MENU_ITEM object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:RELOAD_MENU_ITEM object:nil];
 	}
     return self;
 }
@@ -225,21 +223,23 @@
         label.text = @"搜索";
     } else if(indexPath.row == 3){
 //        if([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-            imageView.image = [UIImage imageNamed:@"download_icon"];
-            label.text = @"缓存视频";
-            if(badgeView == nil){
-                badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
-                badgeView.badgePositionAdjustment = CGPointMake(50, 18);
-                badgeView.badgeText = @"0";
-                [badgeView setHidden:YES];
-            }
-            SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
-            if(newNum == nil || newNum.newDownloadItemNum == 0){
-                [badgeView setHidden:YES];
-            } else {
-                [badgeView setHidden:NO];
-                badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum.newDownloadItemNum];
-            }
+        imageView.image = [UIImage imageNamed:@"download_icon"];
+        label.text = @"缓存视频";
+        if (badgeView) {
+            [badgeView removeFromSuperview];
+            badgeView = nil;
+        }
+        badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
+        badgeView.badgePositionAdjustment = CGPointMake(50, 18);
+        badgeView.badgeText = @"0";
+        [badgeView setHidden:YES];
+        int newNum = [ActionUtility getDownloadingItemNumber];
+        if(newNum == 0){
+            [badgeView setHidden:YES];
+        } else {
+            [badgeView setHidden:NO];
+            badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
+        }
 //        } else{
 //            imageView.image = nil;
 //            label.text = @"";
@@ -295,24 +295,11 @@
     if(selectedIndex == 5){
         return;
     }
-    if(selectedIndex == 3){
-//        if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-//            return;
-//        }
-        SequenceData *newNum = (SequenceData *)[SequenceData findFirstByCriteria:@"WHERE type = 0"];
-        if(newNum.newDownloadItemNum > 0){
-            [badgeView setHidden:YES];
-            newNum.newDownloadItemNum = 0;
-            [newNum save];
-            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-        }
-
-    }
     UIViewController *viewController = [self getViewControllerByIndex];
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
     if(selectedIndex < 5){
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable) {
+        BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+        if(!isReachable) {
             [UIUtility showNetWorkError:viewController.view];
         }
     }

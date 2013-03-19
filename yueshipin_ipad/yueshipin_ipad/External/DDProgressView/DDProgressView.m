@@ -55,14 +55,16 @@
 - (void)setFrame:(CGRect)frame
 {
 	// we set the height ourselves since it is fixed
-	frame.size.height = kProgressBarHeight ;
+    // Commented by Steven
+//	frame.size.height = kProgressBarHeight ;
 	[super setFrame: frame] ;
 }
 
 - (void)setBounds:(CGRect)bounds
 {
 	// we set the height ourselves since it is fixed
-	bounds.size.height = kProgressBarHeight ;
+    // Commented by Steven
+//	bounds.size.height = kProgressBarHeight ;
 	[super setBounds: bounds] ;
 }
 

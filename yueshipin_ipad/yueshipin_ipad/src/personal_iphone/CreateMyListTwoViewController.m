@@ -21,6 +21,7 @@
 @synthesize listArr = listArr_;
 @synthesize infoDic = infoDic_;
 @synthesize topicId = topicId_;
+@synthesize type = type_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -153,6 +154,7 @@
     FindViewController *findViewController = [[FindViewController alloc] init];
     findViewController.selectedArr = listArr_;
     findViewController.topicId = topicId_;
+    findViewController.type = type_;
     [self.navigationController pushViewController:findViewController animated:YES];
 
 }

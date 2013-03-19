@@ -61,7 +61,7 @@
     self.navigationItem.hidesBackButton = YES;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
@@ -74,6 +74,9 @@
     NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"name"];
     }
     self.title = titleStr;
     type_ = 3;
@@ -152,6 +155,9 @@
     if (proId == nil) {
         proId =  [self.infoDic objectForKey:@"content_id"];
     }
+    if (proId == nil) {
+        proId =  [self.infoDic objectForKey:@"id"];
+    }
     prodId_ = proId;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -214,7 +220,9 @@
     [pullToRefreshManager_ tableViewReloadFinished];
 }
 
-
+- (void)viewDidUnload{
+    [super viewDidUnload];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -276,12 +284,25 @@
                 }
 
                 [imageView setImageWithURL:[NSURL URLWithString:url]];
+                 wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
+                if (directors == nil) {
+                    directors = @" ";
+                }
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
+                if (actors == nil) {
+                    actors = @" ";
+                }
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
+                if (date == nil) {
+                    date = @" ";
+                }
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                if (area == nil) {
+                    area = @" ";
+                }
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -490,34 +511,12 @@
     return 0;
     
 }
-
--(void)Play:(int)number{
-    NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:number] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        NSString *videoUrl = nil;
-        for(NSDictionary *tempVideo in videoUrlArray){
-            if([LETV isEqualToString:[tempVideo objectForKey:@"source"]]){
-                videoUrl = [self parseVideoUrl:tempVideo];
-                break;
-            }
-        }
-        if(videoUrl == nil){
-            videoUrl = [self parseVideoUrl:[videoUrlArray objectAtIndex:0]];
-        }
-        if(videoUrl == nil){
-            [self showPlayWebPage:number];
-        } else {
-//            MediaPlayerViewController *viewController = [[MediaPlayerViewController alloc]initWithNibName:@"MediaPlayerViewController" bundle:nil];
-//            viewController.videoUrl = videoUrl;
-//            viewController.type = 1;
-//            viewController.name = [videoInfo_ objectForKey:@"name"];
-//            [self presentViewController:viewController animated:YES completion:nil];
-        }
-    }else {
-        [self showPlayWebPage:number];
-    }
-}
 -(void)action:(id)sender {
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
@@ -589,13 +588,7 @@
             
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//                NSString *responseCode = [result objectForKey:@"res_code"];
-//                if([responseCode isEqualToString:kSuccessResCode]){
-//                    [self showOpSuccessModalView:1 with:ADDFAV];
-//                }
-//                else {
-//                    [self showOpFailureModalView:1 with:ADDFAV];
-//                }
+
                  [self showOpSuccessModalView:3 with:ADDFAV];
                 
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -758,7 +751,7 @@
 }
 
 -(UIView *)showEpisodesplayView{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15, 0, 293, 125)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15, 0, 293, 150)];
     int count = [episodesArr_ count];
     
     pageCount_ = (count%4 == 0 ? (count/4):(count/4)+1);
@@ -768,7 +761,6 @@
     scrollView_.scrollEnabled = NO;
     scrollView_.pagingEnabled = YES;
     scrollView_.showsHorizontalScrollIndicator = NO;
-
     for (int i = 0; i < count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake((i/4)*240, (i%4)*29, 240, 27);

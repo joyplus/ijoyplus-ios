@@ -151,4 +151,15 @@
     [HUD hide:YES afterDelay:3];
 }
 
++ (void)showNoSpace:(UIView *)view
+{
+    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
+    [view addSubview:HUD];
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.opacity = 0.5;
+    HUD.labelText = @"空间不足，请清理内存后重试。";
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:3];
+}
+
 @end

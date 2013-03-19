@@ -14,8 +14,6 @@
 #import "ListViewController.h"
 #import "DownloadItem.h"
 #import "DownloadHandler.h"
-#import "SequenceData.h"
-#import "MyMediaPlayerViewController.h"
 #import "DownloadUrlFinder.h"
 #define DEFAULT_POSOTION_Y 585
 
@@ -100,6 +98,7 @@
     [super viewDidLoad];
     
     self.type = 1;
+    umengPageName = MOVIE_DETAIL;
     
     self.bgScrollView.frame = CGRectMake(0, 255, self.view.frame.size.width, self.view.frame.size.height);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
@@ -220,6 +219,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
         [self.downloadBtn setHidden:YES];
     }
@@ -245,8 +245,8 @@
 
 - (void)retrieveData
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     NSString *key = [NSString stringWithFormat:@"%@%@", @"movie", self.prodId];
@@ -254,7 +254,7 @@
     if(cacheResult != nil){
         [self parseData:cacheResult];
     } else {
-        if([hostReach currentReachabilityStatus] != NotReachable) {
+        if(isReachable) {
             [myHUD showProgressBar:self.view];
         }
     }

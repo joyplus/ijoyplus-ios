@@ -13,6 +13,7 @@
     NSMutableArray *topsArray;
     UIButton *closeBtn;
     UILabel *titleLabel;
+    NSString *umengPageName;
 }
 
 @property (nonatomic, strong)NSString *listTitle;

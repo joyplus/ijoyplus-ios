@@ -14,6 +14,7 @@
 #define PLAY_CACHE_VIEW 234238494
 #define RESOLUTION_KEY @"resolution_key"
 #define URL_KEY @"url_key"
+#define MAX_EPISODE_NUM 10
 
 /* Asset keys */
 static NSString * const kTracksKey         = @"tracks";
@@ -30,7 +31,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @interface AVPlayerViewController () <UIGestureRecognizerDelegate, UIAlertViewDelegate>
 @property (nonatomic, strong) UIToolbar *topToolbar;
 @property (nonatomic, strong) UIView *bottomView;
-@property (nonatomic, strong) MPVolumeView *volumeSlider;
+@property (nonatomic, strong) UISlider *volumeSlider;
 @property (nonatomic, strong) MPVolumeView *routeBtn;
 @property (nonatomic, strong) UILabel *currentPlaybackTimeLabel;
 @property (nonatomic, strong) UILabel *totalTimeLabel;
@@ -57,6 +58,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) NSMutableArray *plainClearArr;
 @property (nonatomic, strong) NSMutableArray *combinedArr;
 @property (nonatomic, strong) NSString *defaultErrorMessage;
+@property (nonatomic) BOOL resolutionInvalid;
 @property (nonatomic) int combinedIndex;
 @property (nonatomic, strong) NSMutableDictionary *urlArrayDictionary;
 @property (atomic, strong) NSURL *workingUrl;
@@ -64,6 +66,13 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic) CMTime resolutionLastPlaytime;
 @property (nonatomic) int resolutionNum;
+@property (nonatomic, strong) UILabel *sourceLabel;
+@property (nonatomic, strong) UIImageView *sourceImage;
+@property (nonatomic) int tableWidth;
+@property (nonatomic) int tableCellHeight;
+@property (nonatomic) int maxEpisodeNum;
+@property (nonatomic, strong) NSString *umengPageName;
+@property (nonatomic) BOOL isFromSelectBtn;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -93,6 +102,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
+@synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
+@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName;
 
 #pragma mark
 #pragma mark View Controller
@@ -126,6 +137,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [superClearArr removeAllObjects];
     [plainClearArr removeAllObjects];
     [highClearArr removeAllObjects];
+    sourceLabel = nil;
+    sourceImage = nil;
     superClearArr = nil;
     plainClearArr = nil;
     highClearArr = nil;
@@ -179,7 +192,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPrevButton = nil;
     mNextButton = nil;
     mSwitchButton = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    umengPageName = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 - (void)viewDidLoad
@@ -187,6 +201,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
+    if (type == 1) {
+        umengPageName = MOVIE_PLAY;
+    } else if(type == 2 || type == 131){
+        umengPageName = TV_PLAY;
+    } else {
+        umengPageName = SHOW_PLAY;
+    }
     defaultErrorMessage = @"即将使用网页播放";
     resolution = GAO_QING;
     [self showPlayVideoView];
@@ -200,21 +221,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self customizeTopToolbar];
     [self customizeBottomToolbar];
     
+    tableCellHeight = EPISODE_TABLE_CELL_HEIGHT;
+    tableWidth = EPISODE_TABLE_WIDTH;
+    maxEpisodeNum = MAX_EPISODE_NUM;
+    if (type == 3) {
+        tableCellHeight = EPISODE_TABLE_CELL_HEIGHT * 1.1;
+        tableWidth = EPISODE_TABLE_WIDTH * 1.2;
+        maxEpisodeNum = 8;
+    }
     episodeListviewController = [[EpisodeListViewController alloc]init];
     [self addChildViewController:episodeListviewController];
     episodeListviewController.type = self.type;
     episodeListviewController.delegate = self;
     episodeListviewController.view.tag = EPISODE_ARRAY_VIEW_TAG;
-    episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-    episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+    episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, 0);
+    episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - tableWidth, TOP_TOOLBAR_HEIGHT + 24, tableWidth, 0);
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(showToolview)];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate = self;
     tapRecognizer.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapRecognizer];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(wifiNotAvailable) name:WIFI_IS_NOT_AVAILABLE object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
 }
 
 - (void) viewDidAppear: (BOOL) animated {
@@ -223,28 +252,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self becomeFirstResponder];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:umengPageName];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 	[mPlayer pause];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
+    [MobClick endLogPageView:umengPageName];
 }
 
 -(BOOL)shouldAutorotate {
-    
     return YES;
-    
 }
 
 -(NSUInteger)supportedInterfaceOrientations {
-    
     return UIInterfaceOrientationMaskLandscape;
-    
-}
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation{
-    return UIInterfaceOrientationLandscapeRight;
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -262,7 +291,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if(responseCode == nil){
                 if (type == 1) {
                     video = (NSDictionary *)[result objectForKey:@"movie"];
-                } else if (type == 2){
+                } else if (type == 2 || type == 131){
                     video = (NSDictionary *)[result objectForKey:@"tv"];
                 } else if (type == 3){
                     video = (NSDictionary *)[result objectForKey:@"show"];
@@ -298,33 +327,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSString *source_str = [temp_dic objectForKey:@"source"];
         if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"fengxing"]){
+        } else if ([source_str isEqualToString:@"fengxing"]){
             [temp_dic setObject:@"2" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"qiyi"]){
+        } else if ([source_str isEqualToString:@"qiyi"]){
             [temp_dic setObject:@"3" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"youku"]){
+        } else if ([source_str isEqualToString:@"youku"]){
             [temp_dic setObject:@"4" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"sinahd"]){
+        } else if ([source_str isEqualToString:@"sinahd"]){
             [temp_dic setObject:@"5" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"sohu"]){
+        } else if ([source_str isEqualToString:@"sohu"]){
             [temp_dic setObject:@"6" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"56"]){
+        } else if ([source_str isEqualToString:@"56"]){
             [temp_dic setObject:@"7" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"qq"]){
+        } else if ([source_str isEqualToString:@"qq"]){
             [temp_dic setObject:@"8" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"pptv"]){
+        } else if ([source_str isEqualToString:@"pptv"]){
             [temp_dic setObject:@"9" forKey:@"level"];
-        }
-        else if ([source_str isEqualToString:@"m1905"]){
+        } else if ([source_str isEqualToString:@"m1905"]){
             [temp_dic setObject:@"10" forKey:@"level"];
+        }else if ([source_str isEqualToString:@"pps"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
+        } else {
+            [temp_dic setObject:@"100" forKey:@"level"];
         }
         [tempSortArr addObject:temp_dic];
     }
@@ -348,17 +372,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (NSDictionary *url_info_dic in sortEpisodesArr_) {
         NSArray *urls = [url_info_dic objectForKey:@"urls"];
+        NSString *source_str = [url_info_dic objectForKey:@"source"];
         for (NSDictionary *url_dic in urls) {
             NSString *type_str = [[url_dic objectForKey:@"type"] lowercaseString];
             NSString *url_str = [url_dic objectForKey:@"url"];
+            NSString *file_str = [url_dic objectForKey:@"file"];
+            NSDictionary *urlDic = [NSDictionary dictionaryWithObjectsAndKeys:source_str, @"source", url_str, @"url", file_str, @"file", nil];
             if ([type_str isEqualToString:CHAO_QING]) {
-                [superClearArr addObject:url_str];
+                [superClearArr addObject:urlDic];
             }
             else if ([type_str isEqualToString:GAO_QING]){
-                [highClearArr addObject:url_str];
+                [highClearArr addObject:urlDic];
             }
             else if ([type_str isEqualToString:BIAO_QING]||[type_str isEqualToString:LIU_CHANG]){
-                [plainClearArr addObject:url_str];
+                [plainClearArr addObject:urlDic];
             }
         }
     }
@@ -379,9 +406,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (video != nil) {
         name = [video objectForKey:@"name"];
-        if (self.currentNum < subnameArray.count) {
-            subname = [subnameArray objectAtIndex:self.currentNum];
-        }
+//        if (self.currentNum < subnameArray.count) {
+//            subname = [subnameArray objectAtIndex:self.currentNum];
+//        }
     }
     [self loadLastPlaytime];
     if (combinedArr == nil) {
@@ -396,8 +423,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)createCombinedArray:(NSString *)resolutionKey urlArray:(NSMutableArray *)urlArray
 {
-    for (NSString *urlstr in urlArray) {
-        NSDictionary *tempDic = [NSDictionary dictionaryWithObjectsAndKeys:resolutionKey, RESOLUTION_KEY, urlstr, URL_KEY, nil];
+    for (NSDictionary *urlDic in urlArray) {
+        NSDictionary *tempDic = [NSDictionary dictionaryWithObjectsAndKeys:resolutionKey, RESOLUTION_KEY, urlDic, URL_KEY, nil];
         [combinedArr addObject:tempDic];
     }    
 }
@@ -438,8 +465,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (combinedIndex < combinedArr.count) {
         NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
         resolution = [tempDic objectForKey:RESOLUTION_KEY];
-        NSString *url = [tempDic objectForKey:URL_KEY];
+        NSDictionary *urlDic = [tempDic objectForKey:URL_KEY];
         int nowDate = [[NSDate date] timeIntervalSince1970];
+        NSString *url = [urlDic objectForKey:@"url"];
+//        url = @"http://v.youku.com/player/getM3U8/vid/121064521/type/mp4/ts/1363168838/v.m3u8";
         NSString *formattedUrl = url;
         if([url rangeOfString:@"{now_date}"].location != NSNotFound){
             formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
@@ -449,8 +478,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         [myHUD hide:NO];
         tipLabel.text = defaultErrorMessage;
+        resolutionInvalid = YES;
         if ([defaultErrorMessage hasPrefix:@"即"]) {
             [self performSelector:@selector(showWebView) withObject:nil afterDelay:2];
+        } else {
+            [qualityBtn setEnabled:YES];
         }
     }
 }
@@ -462,7 +494,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self saveLastPlaytime];
     mPlayer = nil;
     [controlVisibilityTimer invalidate];
-    if (type == 2 || type == 3) {
+    if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
     if (closeAll) {
@@ -489,15 +521,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
     NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
     int status_Code = HTTPResponse.statusCode;
-    if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
-        NSLog(@"working = %@", connection.originalRequest.URL);
-        workingUrl = connection.originalRequest.URL;
-        [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
-        [connection cancel];
+    NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+    NSString *fileType = [[tempDic objectForKey:URL_KEY] objectForKey:@"file"];
+    NSString *source = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
+    if (status_Code >= 200 && status_Code <= 299){
+        if ([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"])) {
+            NSLog(@"working = %@", connection.originalRequest.URL);
+            workingUrl = connection.originalRequest.URL;
+            [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+        } else if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
+            NSLog(@"working = %@", connection.originalRequest.URL);
+            workingUrl = connection.originalRequest.URL;
+            [self performSelectorOnMainThread:@selector(setURL:) withObject:workingUrl waitUntilDone:NO];
+        } else {
+            combinedIndex++;
+            [self sendRequest];
+        }
     } else {
         combinedIndex++;
         [self sendRequest];
     }
+    [connection cancel];
 }
 
 - (BOOL) canBecomeFirstResponder {return YES;}
@@ -526,32 +570,48 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)customizeTopToolbar
 {
     topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    [topToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:30/255.0 green:30/255.0 blue:30/255.0 alpha:0.5] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    [topToolbar setBackgroundImage:[[UIImage imageNamed:@"top_toolbar_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 5, 5, 5)] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:topToolbar];
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(20, 3, 67, 44);
+    closeButton.frame = CGRectMake(20, 7, 58, 38);
     [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt"] forState:UIControlStateNormal];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"back_bt_pressed"] forState:UIControlStateHighlighted];
     [closeButton addTarget:self action:@selector(closeSelf) forControlEvents:UIControlEventTouchUpInside];
     [topToolbar addSubview:closeButton];
     
-    vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, TOP_TOOLBAR_HEIGHT)];
+    sourceLabel = [[UILabel alloc]initWithFrame:CGRectMake(closeButton.frame.origin.x + closeButton.frame.size.width + 20, 10, 40, 30)];
+    [sourceLabel setFont:[UIFont systemFontOfSize:15]];
+    [sourceLabel setBackgroundColor:[UIColor clearColor]];
+    [sourceLabel setText:@"来源: "];
+    [sourceLabel sizeToFit];
+    sourceLabel.center = CGPointMake(sourceLabel.center.x, TOP_TOOLBAR_HEIGHT/2);
+    [sourceLabel setHidden:YES];
+    [sourceLabel setTextColor:[UIColor colorWithRed:228/255.0 green:228/255.0 blue:228/255.0 alpha:1]];
+    [topToolbar addSubview:sourceLabel];
+    
+    sourceImage = [[UIImageView alloc]initWithFrame:CGRectZero];
+    sourceImage.image = [UIImage imageNamed:@"play_pic"];
+    [sourceImage setHidden:YES];
+    sourceImage.center = CGPointMake(sourceImage.center.x, TOP_TOOLBAR_HEIGHT/2);
+    [topToolbar addSubview:sourceImage];
+    
+    vidoeTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 600, TOP_TOOLBAR_HEIGHT)];
     vidoeTitle.center = CGPointMake(topToolbar.center.x, TOP_TOOLBAR_HEIGHT/2);
-    if (type == 2) {
+    if (type == 2 || type == 131) {
         vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
     } else if(type == 3){
-        vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
+        vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
     } else {
         vidoeTitle.text = name;
     }
     vidoeTitle.font = [UIFont boldSystemFontOfSize:18];
-    vidoeTitle.textColor = [UIColor lightGrayColor];
+    vidoeTitle.textColor = [UIColor colorWithRed:228/255.0 green:228/255.0 blue:228/255.0 alpha:1];
     vidoeTitle.backgroundColor = [UIColor clearColor];
     vidoeTitle.textAlignment = UITextAlignmentCenter;
     [topToolbar addSubview:vidoeTitle];
     
-    if ((type == 2 || type == 3) && !isDownloaded) {
+    if ((type == 2 || type == 3 || type == 131) && !isDownloaded) {
         selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         selectButton.frame = CGRectMake(topToolbar.frame.size.width - 20 - 100, 0, 100, BUTTON_HEIGHT);
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
@@ -564,8 +624,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)customizeBottomToolbar
 {
     bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.width - BOTTOM_TOOL_VIEW_HEIGHT, self.view.frame.size.height, BOTTOM_TOOL_VIEW_HEIGHT)];
-    bottomView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    bottomView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:bottomView];
+    
+    UIImageView *bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width, BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)];
+    bgImageView.image = [[UIImage imageNamed:@"slider_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+    [bottomView addSubview:bgImageView];
     
     currentPlaybackTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 10, 80, 30)];
     [currentPlaybackTimeLabel setBackgroundColor:[UIColor clearColor]];
@@ -582,10 +646,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     totalTimeLabel.text = @"";
     [bottomView addSubview:totalTimeLabel];
     
-    mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width - currentPlaybackTimeLabel.frame.size.width * 2 - 60 , 10)];
+    mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width - currentPlaybackTimeLabel.frame.size.width * 2 - 60 , 23)];
     [mScrubber setEnabled:NO];
     mScrubber.center = CGPointMake(bottomView.center.x, (BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)/2);
+    UIImage *minImage = [[UIImage imageNamed:@"progress_slider_min"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
+    UIImage *maxImage;
+    if (ver >= 6.0){
+        maxImage = [[UIImage imageNamed:@"progress_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
+    } else {
+        maxImage = [[UIImage imageNamed:@"progress_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    }
+    [mScrubber setMinimumTrackImage:minImage forState:UIControlStateNormal];
+    [mScrubber setMaximumTrackImage:maxImage forState:UIControlStateNormal];
     [mScrubber setThumbImage: [UIImage imageNamed:@"progress_thumb"] forState:UIControlStateNormal];
+    [mScrubber setThumbImage:[UIImage imageNamed:@"progress_thumb_pressed"] forState:UIControlStateHighlighted];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchCancel];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpInside];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpOutside];
@@ -596,39 +671,37 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
     mToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0.0f, BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT, bottomView.frame.size.width, BOTTOM_TOOLBAR_HEIGHT)];
-    [mToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.8] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
+    [mToolbar setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:10/255.0 green:10/255.0 blue:10/255.0 alpha:0.9] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [bottomView addSubview:mToolbar];
     
     mSwitchButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mSwitchButton setEnabled:NO];
-    mSwitchButton.frame = CGRectMake(20, 25, 29, BUTTON_HEIGHT);
+    mSwitchButton.frame = CGRectMake(20, 25, 55, BUTTON_HEIGHT);
     [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt"] forState:UIControlStateNormal];
     [mSwitchButton setBackgroundImage:[UIImage imageNamed:@"full_bt_pressed"] forState:UIControlStateHighlighted];
     [mSwitchButton addTarget:self action:@selector(switchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mSwitchButton];
     
-    routeBtn = [[MPVolumeView alloc] initWithFrame:CGRectMake(mSwitchButton.frame.origin.x + mSwitchButton.frame.size.width + 20, 25, 37, BUTTON_HEIGHT)];
+    routeBtn = [[MPVolumeView alloc] initWithFrame:CGRectMake(mSwitchButton.frame.origin.x + mSwitchButton.frame.size.width + 20, 25, 55, BUTTON_HEIGHT)];
     [routeBtn setBackgroundColor:[UIColor clearColor]];
     [routeBtn setShowsVolumeSlider:NO];
     [routeBtn setShowsRouteButton:YES];
     for (UIView *asubview in routeBtn.subviews) {
         if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
             UIButton *btn = (UIButton *)asubview;
-            btn.frame = CGRectMake(0, 0, 37, BUTTON_HEIGHT);
+            btn.frame = CGRectMake(0, 0, 55, BUTTON_HEIGHT);
             [btn setImage:nil forState:UIControlStateNormal];
             [btn setImage:nil forState:UIControlStateHighlighted];
             [btn setImage:nil forState:UIControlStateSelected];
             [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_pressed"] forState:UIControlStateHighlighted];
+            [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateHighlighted];
             break;
         }
     }
     [mToolbar addSubview:routeBtn];
     
     mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    mPlayButton.frame = CGRectMake(0, 0, 45, BUTTON_HEIGHT);
+    mPlayButton.frame = CGRectMake(0, 0, 55, BUTTON_HEIGHT);
     [mPlayButton setHidden:YES];
-    [mPlayButton setEnabled:NO];
     mPlayButton.center = CGPointMake(bottomView.frame.size.width/2, BOTTOM_TOOLBAR_HEIGHT/2);
     [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt"] forState:UIControlStateNormal];
     [mPlayButton setBackgroundImage:[UIImage imageNamed:@"play_bt_pressed"] forState:UIControlStateHighlighted];
@@ -637,55 +710,49 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     mStopButton = [UIButton buttonWithType:UIButtonTypeCustom];
     mStopButton.frame = mPlayButton.frame;
-    [mStopButton setEnabled:NO];
     [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt"] forState:UIControlStateNormal];
     [mStopButton setBackgroundImage:[UIImage imageNamed:@"pause_bt_pressed"] forState:UIControlStateHighlighted];
     [mStopButton addTarget:self action:@selector(stopBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mStopButton];
     
     mPrevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mPrevButton setEnabled:NO];
-    mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
+    mPrevButton.frame = CGRectMake(mPlayButton.frame.origin.x - mPlayButton.frame.size.width - 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.height);
     [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt"] forState:UIControlStateNormal];
     [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_pressed"] forState:UIControlStateHighlighted];
-    [mPrevButton setBackgroundImage:[UIImage imageNamed:@"prev_bt_disabled"] forState:UIControlStateDisabled];
     [mPrevButton addTarget:self action:@selector(prevBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mPrevButton];
     
     mNextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [mNextButton setEnabled:NO];
-    mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.width);
+    mNextButton.frame = CGRectMake(mPlayButton.frame.origin.x + mPlayButton.frame.size.width + 30, mPlayButton.frame.origin.y, mPlayButton.frame.size.width, mPlayButton.frame.size.height);
     [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt"] forState:UIControlStateNormal];
     [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_pressed"] forState:UIControlStateHighlighted];
-    [mNextButton setBackgroundImage:[UIImage imageNamed:@"next_bt_disabled"] forState:UIControlStateDisabled];
     [mNextButton addTarget:self action:@selector(nextBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:mNextButton];
     
     volumeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     volumeBtn.frame = CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 40, mPlayButton.frame.origin.y, 27, BUTTON_HEIGHT);
+    volumeBtn.tag = 9877;
     [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
     [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
     [volumeBtn addTarget:self action:@selector(volumeBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:volumeBtn];
-    
-    volumeSlider = [[MPVolumeView alloc] initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
-    [volumeSlider setBackgroundColor:[UIColor clearColor]];
-    [volumeSlider setShowsVolumeSlider:YES];
-    [volumeSlider setShowsRouteButton:NO];
-    [self disableVolumeSlider];
-    [mToolbar addSubview:volumeSlider];
-    
-//    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 40, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
-//    [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
-//    [bottomView addSubview:volumeSlider];
-    
-    [self initScrubberTimer];
-	[self syncPlayPauseButtons];
-	[self syncScrubber];
+   
+    volumeSlider = [[UISlider alloc]initWithFrame:CGRectMake(mNextButton.frame.origin.x + mNextButton.frame.size.width + 75, 90, bottomView.frame.size.width - mNextButton.frame.origin.x - mNextButton.frame.size.width - 200, 20)];
+    minImage = [[UIImage imageNamed:@"volume_slider_min"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    if (ver >= 6.0){
+        maxImage = [[UIImage imageNamed:@"volume_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 5)];
+    } else {
+        maxImage = [[UIImage imageNamed:@"volume_slider_max"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
+    }
+    [volumeSlider setMinimumTrackImage:minImage forState:UIControlStateNormal];
+    [volumeSlider setMaximumTrackImage:maxImage forState:UIControlStateNormal];
+    [volumeSlider setThumbImage: [UIImage imageNamed:@"volume_thumb"] forState:UIControlStateNormal];
+    volumeSlider.value = [AppDelegate instance].mediaVolumeValue;
+    [volumeSlider addTarget:self action:@selector(volumeSliderValueChanged) forControlEvents:UIControlEventValueChanged];
+    [bottomView addSubview:volumeSlider];
     
     qualityBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [qualityBtn setHidden:YES];
-    [qualityBtn setEnabled:NO];
     qualityBtn.frame = CGRectMake(mToolbar.frame.size.width - 100 - 20, mPlayButton.frame.origin.y, 100, BUTTON_HEIGHT);
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
@@ -694,6 +761,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (resolutionNum > 1 && !isDownloaded) {
         [qualityBtn setHidden:NO];
     }
+    [self initScrubberTimer];
+    [self syncPlayPauseButtons];
+    [self syncScrubber];
+    [self disablePlayerButtons];
+    [self enableNextButton];
 }
 
 - (void)resetControlVisibilityTimer
@@ -717,6 +789,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [epsideArrayView setHidden:NO];
         }
         [self resetControlVisibilityTimer];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
     } else {
         [controlVisibilityTimer invalidate];
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
@@ -731,8 +804,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             UIView *epsideArrayView = (UIView *)[self.view viewWithTag:EPISODE_ARRAY_VIEW_TAG];
             if (epsideArrayView) {
                 [epsideArrayView removeFromSuperview];
-                episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-                episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+                episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, 0);
+                episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, 0);
                 [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
             }
             [topToolbar setHidden:YES];
@@ -740,6 +813,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [resolutionPopTipView dismissAnimated:NO];
             resolutionPopTipView = nil;
             [bottomView setHidden:YES];
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
         }];
     }
 }
@@ -761,36 +835,53 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     playCacheView = [self.view viewWithTag:PLAY_CACHE_VIEW];
     if (playCacheView == nil) {
         CGRect bounds = [UIScreen mainScreen].bounds;
-        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width - 24)];
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width)];
         playCacheView.tag = PLAY_CACHE_VIEW;
-        playCacheView.backgroundColor = [UIColor blackColor];
+        playCacheView.backgroundColor = [UIColor clearColor];
         if (topToolbar) {
             [self.view insertSubview:playCacheView belowSubview:topToolbar];
         } else {
             [self.view addSubview:playCacheView];
         }
         
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 1024, 768)];
+        imageView.center = CGPointMake(playCacheView.center.x, playCacheView.center.y- 44);
+        imageView.image = [UIImage imageNamed:@"video_cache_img"];
+        [playCacheView addSubview:imageView];
+        
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
-        nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.6);
+        nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.90);
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.font = [UIFont systemFontOfSize:25];
+        nameLabel.font = [UIFont systemFontOfSize:18];
         if (video != nil) {
             name = [video objectForKey:@"name"];
             subname = [subnameArray objectAtIndex:self.currentNum];
         }
         nameLabel.textAlignment = NSTextAlignmentCenter;
         nameLabel.textColor = [UIColor whiteColor];
-        if (type == 2) {
+        if (type == 2 || type == 131) {
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
             vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
         } else if(type == 3){
-            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
-            vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@", subname];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         } else {
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
             vidoeTitle.text = [video objectForKey:@"name"];
         }
         [playCacheView addSubview:nameLabel];
+        
+        if (CMTIME_IS_VALID(lastPlayTime) && CMTimeGetSeconds(lastPlayTime) > 0) {
+            UILabel *lastLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
+            lastLabel.tag = 3232947504;
+            lastLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y);
+            lastLabel.backgroundColor = [UIColor clearColor];
+            lastLabel.textAlignment = NSTextAlignmentCenter;
+            lastLabel.textColor = [UIColor lightGrayColor];
+            lastLabel.text = [NSString stringWithFormat:@"上次播放到 %@", [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime)]];
+            lastLabel.font = [UIFont systemFontOfSize:15];
+            [playCacheView addSubview:lastLabel];
+        }
         
         tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
         tipLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 1.4);
@@ -805,6 +896,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [playCacheView addSubview:myHUD];
         myHUD.opacity = 0;
     }
+    UILabel *lastLabel = (UILabel *)[playCacheView viewWithTag:3232947504];
+    if(lastLabel && isFromSelectBtn){
+        [lastLabel removeFromSuperview];
+        lastLabel = nil;
+        lastPlayTime = kCMTimeZero;
+    }
     tipLabel.text = @"正在加载，请稍等";
     [myHUD show:YES];
 }
@@ -812,14 +909,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)nextBtnClicked
 {
+    isFromSelectBtn = YES;
+    [self resetControlVisibilityTimer];
     currentNum++;
-    if ((type == 2 || type == 3) && subnameArray.count > self.currentNum) {
+    currentPlaybackTimeLabel.text = @"00:00:00";
+    mScrubber.value = 0;
+    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum) {
         episodeListviewController.currentNum = currentNum;
         [episodeListviewController.table reloadData];
         [self disablePlayerButtons];
         [self disableScrubber];
-        [self disableVolumeSlider];
+        if (subnameArray.count - 1 == self.currentNum) {
+            [self disableNextButton];
+        }
         [self preparePlayVideo];
+        [self recordPlayStatics];
     } else {
         currentNum--;
         [self closeSelf];
@@ -828,11 +932,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)prevBtnClicked
 {
-    currentNum--;
-    [self disablePlayerButtons];
-    [self disableScrubber];
-    [self disableVolumeSlider];
-    [self preparePlayVideo];
+    [self resetControlVisibilityTimer];
+    int currentTime = 0;
+    if (CMTIME_IS_VALID(mPlayer.currentTime)) {
+        currentTime = CMTimeGetSeconds(mPlayer.currentTime);
+        currentTime = fmax(0, currentTime - 30);
+    }
+    [mPlayer seekToTime:CMTimeMakeWithSeconds(currentTime, NSEC_PER_SEC)];
 }
 
 - (void)preparePlayVideo
@@ -841,13 +947,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         workingUrl = nil;
         [mPlayer pause];
         mPlayer = nil;
-        if (type == 2) {
-            subname = [subnameArray objectAtIndex:self.currentNum];
+        if (type == 2 || type == 131) {
+            subname = [subnameArray objectAtIndex:self.currentNum];            
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ 第%@集", name, subname];
             vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
         } else if(type == 3){
-            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@ %@", name, subname];
-            vidoeTitle.text = [NSString stringWithFormat:@"%@：%@", name, subname];
+            subname = [subnameArray objectAtIndex:self.currentNum];
+            nameLabel.text = [NSString stringWithFormat:@"即将播放：%@", subname];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         } else {
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
             vidoeTitle.text = [video objectForKey:@"name"];
@@ -911,6 +1018,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [self updateWatchRecord];
     [self saveLastPlaytime];
 	[mPlayer pause];
@@ -937,8 +1045,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (epsideArrayView) {
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, 0);
-            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, 0);
+            episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, 0);
+            episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, 0);
         } completion:^(BOOL finished) {
             [epsideArrayView removeFromSuperview];
         }];
@@ -951,11 +1059,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self.view addSubview:episodeListviewController.view];
         [episodeListviewController.table reloadData];
         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^{
-            episodeListviewController.table.frame = CGRectMake(0, 0, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
-            episodeListviewController.view.frame = CGRectMake(topToolbar.frame.size.width - 20 - EPISODE_TABLE_WIDTH, TOP_TOOLBAR_HEIGHT + 24, EPISODE_TABLE_WIDTH, fmin(10, subnameArray.count) * EPISODE_TABLE_CELL_HEIGHT);
+            episodeListviewController.table.frame = CGRectMake(0, 0, tableWidth, fmin(maxEpisodeNum, subnameArray.count) * tableCellHeight);
+            episodeListviewController.view.frame = CGRectMake(episodeListviewController.view.frame.origin.x, episodeListviewController.view.frame.origin.y, episodeListviewController.view.frame.size.width, fmin(maxEpisodeNum, subnameArray.count) * tableCellHeight);
         } completion:^(BOOL finished) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
-            [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            if (currentNum >= 0 && currentNum < subnameArray.count) {                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentNum inSection:0];
+                [episodeListviewController.table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            }
         }];
     }
 }
@@ -1082,8 +1192,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [resolutionPopTipView dismissAnimated:YES];
     resolutionPopTipView = nil;
-    resolutionLastPlaytime = [mPlayer currentTime];
-    
+    if (!resolutionInvalid) { //如果分辨率已失效，不记录播放时间
+        resolutionLastPlaytime = [mPlayer currentTime];
+    }
     workingUrl = nil;
     [mPlayer pause];
     mPlayer = nil;
@@ -1094,47 +1205,65 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)volumeBtnClicked:(UIButton *)btn
 {
-//        AVURLAsset *asset = [[mPlayer currentItem] asset];
-//        NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
-//    
-//        // Mute all the audio tracks
-//        NSMutableArray *allAudioParams = [NSMutableArray array];
+    if (btn.tag == 9877) {
+        [self setVolumeValue:0];
+    } else {
+        [self setVolumeValue:volumeSlider.value];
+    }
+}
+
+- (void)volumeSliderValueChanged
+{
+    [self setVolumeValue:volumeSlider.value];
+}
+
+- (void)systemVolumeChanged:(id)obj
+{
+    volumeSlider.value = [MPMusicPlayerController applicationMusicPlayer].volume;
+    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+    [self changeVolumeBtn:volumeSlider.value];
+}
+
+- (void)changeVolumeBtn:(float)value
+{
+    if (value > 0) {
+        volumeBtn.tag = 9877;
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt"] forState:UIControlStateNormal];
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_bt_pressed"] forState:UIControlStateHighlighted];
+    } else {
+        volumeBtn.tag = 9878;
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt"] forState:UIControlStateNormal];
+        [volumeBtn setBackgroundImage:[UIImage imageNamed:@"volume_mute_bt_pressed"] forState:UIControlStateHighlighted];
+    }
+}
+
+- (void)setVolumeValue:(float)value
+{
+    volumeSlider.value = value;
+    [AppDelegate instance].mediaVolumeValue = volumeSlider.value;
+    [MPMusicPlayerController applicationMusicPlayer].volume = volumeSlider.value;
+    [self changeVolumeBtn:value];
+//    AVURLAsset *asset = [[mPlayer currentItem] asset];
+//    NSMutableArray *allAudioParams = [NSMutableArray array];
+//    NSArray *audioTracks = [asset tracksWithMediaType:AVMediaTypeAudio];
+//    if (audioTracks.count > 0) {
 //        for (AVAssetTrack *track in audioTracks) {
 //            AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
-//            [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+//            [audioInputParams setVolume:value atTime:kCMTimeZero];
 //            [audioInputParams setTrackID:[track trackID]];
 //            [allAudioParams addObject:audioInputParams];
 //        }
-//        AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
-//        [audioZeroMix setInputParameters:allAudioParams];
-//    
-//        [[mPlayer currentItem] setAudioMix:audioZeroMix];
-    
-    //    float volume = 0.0f;
-    //
-    //    AVPlayerItem *currentItem = mPlayer.currentItem;
-    //    NSArray *audioTracks = mPlayer.currentItem.tracks;
-    //
-    //    NSMutableArray *allAudioParams = [NSMutableArray array];
-    //
-    //    for (AVPlayerItemTrack *track in audioTracks)
-    //    {
-    //        if ([track.assetTrack.mediaType isEqual:AVMediaTypeAudio])
-    //        {
-    //            AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters];
-    //            [audioInputParams setVolume:volume atTime:kCMTimeZero];
-    //            [audioInputParams setTrackID:[track.assetTrack trackID]];
-    //            [allAudioParams addObject:audioInputParams];
-    //        }
-    //    }
-    //
-    //    if ([allAudioParams count] > 0) {
-    //        AVMutableAudioMix *audioMix = [AVMutableAudioMix audioMix];
-    //        [audioMix setInputParameters:allAudioParams];
-    //        [currentItem setAudioMix:audioMix];
-    //    }
-    //    [mPlayer play];
-    
+//    } else {
+//        NSArray *tempaudioTracks = self.player.currentItem.tracks;
+//        AVAssetTrack *track = [tempaudioTracks objectAtIndex:1];
+//        AVMutableAudioMixInputParameters *audioInputParams =    [AVMutableAudioMixInputParameters audioMixInputParameters];
+//        [audioInputParams setVolume:value atTime:kCMTimeZero];
+//        [audioInputParams setTrackID:[track trackID]];
+//        [allAudioParams addObject:audioInputParams];
+//    }
+//    AVMutableAudioMix *audioZeroMix = [AVMutableAudioMix audioMix];
+//    [audioZeroMix setInputParameters:allAudioParams];
+//    [[mPlayer currentItem] setAudioMix:audioZeroMix];
 }
 
 - (void)updateWatchRecord
@@ -1149,8 +1278,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         if (CMTIME_IS_VALID(playerDuration)) {
             duration = CMTimeGetSeconds(playerDuration);
         }
-        
-        subname = [subnameArray objectAtIndex:currentNum];
+        if (subname == nil && currentNum >=0 && currentNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:currentNum];
+        }
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         NSString *tempPlayType = @"1";
         NSString *tempUrl = workingUrl.absoluteString; //This url should be useless. In order to simplify the replay logic, we will don't use the url any more.
@@ -1258,21 +1388,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             break;
         }
     }
-    if (subnameArray.count > 0 && type != 1){
-        if (currentNum == 0) {
-            [mPrevButton setEnabled:NO];
-            [mNextButton setEnabled:YES];
-        } else if(currentNum == subnameArray.count - 1) {
-            [mPrevButton setEnabled:YES];
-            [mNextButton setEnabled:NO];
-        } else if(currentNum > 0 && currentNum < subnameArray.count){
-            [mPrevButton setEnabled:YES];
-            [mNextButton setEnabled:YES];
-        }
-    } else {
-        [mPrevButton setEnabled:NO];
-        [mNextButton setEnabled:NO];
-    }
+    [mPrevButton setEnabled:YES];
+    [volumeBtn setEnabled:YES];
 }
 
 -(void)disablePlayerButtons
@@ -1281,7 +1398,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.mPlayButton.enabled = NO;
     self.mStopButton.enabled = NO;
     [mPrevButton setEnabled:NO];
-    [mNextButton setEnabled:NO];
+    [volumeBtn setEnabled:NO];
+    [mSwitchButton setEnabled:NO];
+}
+
+- (void)enableNextButton
+{
+    if (subnameArray.count > 0 && type != 1){
+        if (currentNum == 0) {
+            [mNextButton setEnabled:YES];
+        } else if(currentNum == subnameArray.count - 1) {
+            [mNextButton setEnabled:NO];
+        } else if(currentNum > 0 && currentNum < subnameArray.count){
+            [mNextButton setEnabled:YES];
+        }
+    } else {
+        [mNextButton setEnabled:NO];
+    }    
+}
+
+- (void)disableNextButton
+{
+    [mNextButton setEnabled:NO];    
 }
 
 #pragma mark -
@@ -1334,9 +1472,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		float minValue = [mScrubber minimumValue];
 		float maxValue = [mScrubber maximumValue];
 		double time = CMTimeGetSeconds([mPlayer currentTime]);
-		
 		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
 	}
+    
     currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
 }
 
@@ -1422,38 +1560,28 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     self.mScrubber.enabled = NO;    
 }
-
--(void)enableVolumeSlider
-{
-    for (UIView *view in [volumeSlider subviews]){
-		if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
-			UISlider *tempSlider = (UISlider *) view;
-            tempSlider.enabled = YES;
-		}
-	}
-}
-
-- (void)disableVolumeSlider
-{
-    for (UIView *view in [volumeSlider subviews]){
-		if ([[[view class] description] isEqualToString:@"MPVolumeSlider"]) {
-			UISlider *tempSlider = (UISlider *) view;
-            tempSlider.enabled = NO;
-		}
-	}
-}
-
 - (void)playOneEpisode:(int)num
 {
+    isFromSelectBtn = YES;
     currentNum = num;
-    currentPlaybackTimeLabel.text = @"";
-    [mPlayButton setEnabled:NO];
-    [mNextButton setEnabled:NO];
-    [mPrevButton setEnabled:NO];
-    [mSwitchButton setEnabled:NO];
-    [qualityBtn setEnabled:NO];
+    currentPlaybackTimeLabel.text = @"00:00:00";
+    mScrubber.value = 0;
+    [self disablePlayerButtons];
+    [self enableNextButton];
+    [self disableScrubber];
     [self resetControlVisibilityTimer];
     [self preparePlayVideo];
+    [self recordPlayStatics];
+}
+
+- (void)recordPlayStatics
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
 }
 
 - (BOOL)isPlaying
@@ -1619,7 +1747,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self syncPlayPauseButtons];
     }
 	
-    [mScrubber setValue:0.0];
+
 }
 
 #pragma mark -
@@ -1698,7 +1826,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self removePlayerTimeObserver];
                 [self syncScrubber];
                 [self disableScrubber];
-                [self disableVolumeSlider];
                 [self disablePlayerButtons];
             }
             break;
@@ -1711,23 +1838,58 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     duration = CMTimeGetSeconds(playerDuration);
                 }
                 totalTimeLabel.text = [TimeUtility formatTimeInSecond:duration];
-                currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
-                
                 [self initScrubberTimer];
                 [self enableScrubber];
-                [self enableVolumeSlider];
                 [self enablePlayerButtons];
+                [self enableNextButton];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {
                         [subview setAlpha:0];
                     }
                     [playCacheView setAlpha:0];
                 } completion:^(BOOL finished) {
+                    currentPlaybackTimeLabel.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(mPlayerItem.currentTime)];
                     [playCacheView removeFromSuperview];
                     [playCacheView setHidden:YES];
                     playCacheView = nil;
                     [self resetControlVisibilityTimer];
+                    resolutionInvalid = NO;
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+                    NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
+                    NSLog(@"%@", tempDic);
+                    NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
+                    BOOL exists = YES;
+                    if ([source_str isEqualToString:@"letv"]) {
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
+                    } else if ([source_str isEqualToString:@"fengxing"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
+                    } else if ([source_str isEqualToString:@"qiyi"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
+                    } else if ([source_str isEqualToString:@"youku"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 86, 17);
+                    } else if ([source_str isEqualToString:@"sinahd"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 23, 17);
+                    } else if ([source_str isEqualToString:@"sohu"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 43, 17);
+                    } else if ([source_str isEqualToString:@"56"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 54, 17);
+                    } else if ([source_str isEqualToString:@"qq"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
+                    } else if ([source_str isEqualToString:@"pptv"] || [source_str isEqualToString:@"wangpan"]){
+                        source_str = @"pptv";
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 56, 17);
+                    } else if ([source_str isEqualToString:@"m1905"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 16, 45, 17);
+                    } else if ([source_str isEqualToString:@"pps"]){
+                        sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 53, 17);
+                    } else {
+                        exists = NO;
+                    }
+                    if (exists) {
+                        sourceImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_%@", source_str]];
+                        [sourceLabel setHidden:NO];
+                        [sourceImage setHidden:NO];
+                    }
                 }];
             }
             break;
@@ -1759,7 +1921,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         {
             [self disablePlayerButtons];
             [self disableScrubber];
-            [self disableVolumeSlider];
         }
         else /* Replacement of player currentItem has occurred */
         {
@@ -1778,14 +1939,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 //=====================Utility methods========================
 
-- (void)wifiNotAvailable
+- (void)wifiNotAvailable:(NSNotification *)notification
 {
-    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
-                                                       message:@"当前网络为非Wifi环境，您确定要继续播放吗？"
-                                                      delegate:self
-                                             cancelButtonTitle:@"取消"
-                                             otherButtonTitles:@"确定", nil];
-    [alertView show];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    NSString *show3GAlert = (NSString *)notification.object;
+    if ([show3GAlert isEqualToString:@"0"]) {
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"当前网络为非Wifi环境，您确定要继续播放吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
 }
 
 

@@ -143,6 +143,12 @@
         }
     }
     [table reloadData];
+    [MobClick beginLogPageView:SEARCH];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:SEARCH];
 }
 
 - (void)parseData:(id)result{
@@ -381,11 +387,12 @@
 
 - (void)search:(NSString *)keyword
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    keyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     sBar.text = keyword;
     [self closeMenu];
     [self addKeyToLocalHistory:keyword];

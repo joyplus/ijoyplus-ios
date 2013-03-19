@@ -14,6 +14,7 @@
 #import "ProgramNavigationController.h"
 #import "CommonHeader.h"
 #import "CacheUtility.h"
+#import "DownloadUrlCheck.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
 
@@ -63,7 +64,7 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 40, 30);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
@@ -76,6 +77,9 @@
     NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"content_name"];
+    }
+    if (titleStr == nil) {
+        titleStr = [self.infoDic objectForKey:@"name"];
     }
     self.title = titleStr;
     name_ = self.title;
@@ -167,6 +171,9 @@
     if (proId == nil) {
         proId = [self.infoDic objectForKey:@"content_id"];
     }
+    if (proId == nil) {
+        proId = [self.infoDic objectForKey:@"id"];
+    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:proId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
@@ -247,6 +254,15 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [pullToRefreshManager_ tableViewReloadFinished];
 }
 
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    self.scrollViewUp =nil;
+    self.scrollViewDown =nil;
+    
+    self.scrollViewUpDL = nil;
+    self.scrollViewDownDL = nil;
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -322,18 +338,31 @@ NSComparator cmptr = ^(id obj1, id obj2){
                     imgUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                 wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
                 if (directors == nil) {
                     directors = [self.infoDic objectForKey:@"director"];
                 }
+                if (directors == nil) {
+                    directors = @" ";
+                }
                 NSString *actors = [self.infoDic objectForKey:@"stars"];
                 if (actors == nil) {
                     actors = [self.infoDic objectForKey:@"star"];
                 }
+                if (actors == nil) {
+                    actors = @" ";
+                }
                 NSString *date = [self.infoDic objectForKey:@"publish_date"];
+                if (date == nil) {
+                    date = @" ";
+                }
                 NSString *area = [self.infoDic objectForKey:@"area"];
+                if (area == nil) {
+                    area = @" ";
+                }
                 
                 UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
@@ -623,6 +652,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 
 -(void)action:(id)sender {
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
@@ -722,6 +757,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 
 -(void)selectToDownLoad:(int)num{
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
 
     NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:num] objectForKey:@"down_urls"];
     NSString *videoUrl = nil;
@@ -761,7 +801,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,videoUrl,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num], nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
+    DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
+    check.infoArr = infoArr;
+    [check checkDownloadUrl];
 }
 
 
@@ -925,9 +967,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
+        if (i == pageCount_-1 ) {
+            title = [NSString stringWithFormat:@"%d-%d集",i*15+1,count];
+        }
         if (i == 0) {
             button.selected = YES;
         }
+        
         [button setBackgroundImage:[UIImage imageNamed:@"selected.png"] forState:UIControlStateSelected];
         button.titleLabel.font = [UIFont systemFontOfSize:11];
         [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -1072,6 +1118,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
+        if (i == pageCount_-1 ) {
+            title = [NSString stringWithFormat:@"%d-%d集",i*15+1,count];
+        }
         if (i == 0) {
             button.selected = YES;
         }
@@ -1382,5 +1431,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [self loadComments];
     
 }
+
 
 @end

@@ -53,6 +53,7 @@
 
 - (void)search:(NSString *)keyword
 {
+    keyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     AddSearchListViewController *viewController = [[AddSearchListViewController alloc] init];
