@@ -71,7 +71,7 @@
     [self.view addSubview:imagview];
     searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 41)];
     searchBar_.tintColor = [UIColor clearColor];
-    searchBar_.placeholder = @"请输入片名/导演/主演";
+    searchBar_.placeholder = @" 请输入片名/导演/主演";
     [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];

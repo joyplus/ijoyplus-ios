@@ -116,12 +116,16 @@
     [btn setBackgroundImage:[UIImage imageNamed:@"show_download.png"] forState:UIControlStateSelected];
     [btn setBackgroundImage:[UIImage imageNamed:@"show_disable.png"] forState:UIControlStateDisabled];
      btn.adjustsImageWhenHighlighted = NO;
+    btn.titleLabel.frame = CGRectMake(0, 0, 250, 30);
+    btn.titleLabel.center = btn.center;
+    btn.titleLabel.backgroundColor = [UIColor clearColor];
     [btn setTitle:cellTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];
+    btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [cell.contentView addSubview:btn];

@@ -111,7 +111,10 @@
         if(responseCode == nil){
             NSArray *tempArr = [result objectForKey:@"tops"];
             if(tempArr != nil && tempArr.count > 0){
-                [myListArr_ addObjectsFromArray:tempArr];
+                for (int i =[tempArr count]-1;i >= 0;i-- ) {
+                    [myListArr_ addObject:[tempArr objectAtIndex:i]];
+                }
+                
                 [myTableList_ reloadData];
             }
             
@@ -374,7 +377,7 @@
     if (myListArr_ == nil) {
         myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
     }
-    [myListArr_ addObject:dic];
+    [myListArr_ insertObject:dic atIndex:0];
     
     [myTableList_ reloadData];
     [self Selectbutton:button3_];

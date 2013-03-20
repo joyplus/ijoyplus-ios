@@ -118,6 +118,9 @@
             if(searchResult != nil && searchResult.count > 0){
                 [searchResults_ addObjectsFromArray:searchResult];
             }
+            else{
+                [self showFailureView:1];
+            }
         }
         
         [tableList_ reloadData];

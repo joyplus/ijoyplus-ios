@@ -195,7 +195,7 @@ static NSMutableArray *downLoadQueue_ = nil;
     
     if (!isdownloading) {
         for (AFDownloadRequestOperation *downloadItem in downLoadQueue_) {
-            if (downloadItem.operationStatus == @"waiting"|| downloadItem.operationStatus == @"error" ) {    //0:stop 1:start 2:done 3: waiting 4:error
+            if ([downloadItem.operationStatus isEqualToString:@"waiting"]|| [downloadItem.operationStatus isEqualToString:@"error"] ) {    //0:stop 1:start 2:done 3: waiting 4:error
                 [self beginDownloadTask:downloadItem];
                 break;
             }
@@ -207,7 +207,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 -(void)startDownLoad{
     BOOL isDownloading = NO;
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-        if (downloadRequestOperation.operationStatus == @"loading") {
+        if ([downloadRequestOperation.operationStatus isEqualToString:@"loading"]) {
             isDownloading = YES;
             break;
         }
@@ -215,7 +215,7 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     if (!isDownloading) {
         for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-            if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error") {
+            if ([downloadRequestOperation.operationStatus isEqualToString:@"waiting"]|| [downloadRequestOperation.operationStatus isEqualToString:@"error"]) {
     
                 [self beginDownloadTask:downloadRequestOperation];
                 break;
@@ -228,14 +228,14 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 -(void)restartDownload{
      for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-        if (downloadRequestOperation.operationStatus == @"loading") {
+        if ([downloadRequestOperation.operationStatus isEqualToString:@"loading"]) {
            [self beginDownloadTask:downloadRequestOperation];
             return;
         }
         
     }
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-         if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error") {
+         if ([downloadRequestOperation.operationStatus isEqualToString:@"waiting"]|| [downloadRequestOperation.operationStatus isEqualToString:@"error"]) {
             [self beginDownloadTask:downloadRequestOperation];
             return;
         }
@@ -359,7 +359,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 
 -(void)saveDataBaseIntable:(NSString *)tableName withId:(NSString *)itenId withStatus:(NSString *)status withPercentage:(int)percentage{
-    if (tableName == @"DownloadItem") {
+    if ([tableName isEqualToString:@"DownloadItem"]) {
         allItems_ = [DownloadItem allObjects];
         for (DownloadItem *item in allItems_) {
             if ([item.itemId isEqualToString:itenId]) {
@@ -379,7 +379,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         }
 
     }
-    else if (tableName == @"SubdownloadItem"){
+    else if ([tableName isEqualToString:@"SubdownloadItem"]){
         allSubItems_ = [SubdownloadItem allObjects];
         for (SubdownloadItem *item in allSubItems_) {
             if ([item.subitemId isEqualToString:itenId]){
@@ -453,7 +453,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         
         BOOL isloading = NO;
         for (AFDownloadRequestOperation *mc in downLoadQueue_){
-            if (mc.operationStatus == @"loading") {
+            if ([mc.operationStatus isEqualToString:@"loading"]) {
                 isloading = YES;
                 break;
             }
@@ -461,7 +461,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         
         if (!isloading) {
             for (AFDownloadRequestOperation *mc in downLoadQueue_) {
-                if (mc.operationStatus != @"stop" && mc.operationStatus != @"error") {
+                if (![mc.operationStatus isEqualToString:@"stop"] && ![mc.operationStatus isEqualToString:@"error"] ) {
                     [[DownLoadManager defaultDownLoadManager] beginDownloadTask:mc];
                     break;
                 }
@@ -481,14 +481,14 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     BOOL isLoading = NO;
     for (AFDownloadRequestOperation *mc in downLoadQueue_){
-        if (mc.operationStatus == @"loading") {
+        if ([mc.operationStatus isEqualToString:@"loading"]) {
             isLoading = YES;
             break;
         }
     }
     if (!isLoading) {
         for (AFDownloadRequestOperation *mc in downLoadQueue_) {
-            if (mc.operationStatus != @"stop" && mc.operationStatus != @"error") {
+            if (![mc.operationStatus isEqualToString:@"stop"] && ![mc.operationStatus isEqualToString:@"error"]) {
                 [[DownLoadManager defaultDownLoadManager] beginDownloadTask:mc];
                 break;
             }
@@ -501,7 +501,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 +(int)downloadTaskCount{
     int count = 0;
     for (AFDownloadRequestOperation *mc in downLoadQueue_) {
-        if (mc.operationStatus != @"finish") { //0:stop 1:start 2:done 3: waiting 4:error
+        if (![mc.operationStatus isEqualToString:@"finish" ]) { //0:stop 1:start 2:done 3: waiting 4:error
             count++;
         }
     }
@@ -526,14 +526,14 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-        if (downloadRequestOperation.operationStatus == @"loading") {
+        if ([downloadRequestOperation.operationStatus isEqualToString:@"loading"]) {
             [self beginDownloadTask:downloadRequestOperation];
             return;
         }
         
     }
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-        if (downloadRequestOperation.operationStatus == @"fail") {
+        if ([downloadRequestOperation.operationStatus isEqualToString:@"fail"]) {
             [self beginDownloadTask:downloadRequestOperation];
             return;
         }
@@ -541,7 +541,7 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-        if (downloadRequestOperation.operationStatus == @"waiting"|| downloadRequestOperation.operationStatus == @"error" ) {
+        if ([downloadRequestOperation.operationStatus isEqualToString:@"waiting"]|| [downloadRequestOperation.operationStatus isEqualToString:@"error"] ) {
             [self beginDownloadTask:downloadRequestOperation];
             return;
         }
