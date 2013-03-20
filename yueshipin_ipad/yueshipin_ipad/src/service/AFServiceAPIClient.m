@@ -39,7 +39,13 @@
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:kABaseURLString]];
         NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
         [_sharedClient setDefaultHeader:@"app_key" value:appKey];
-        [_sharedClient setDefaultHeader:@"client" value:@"ios"];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+         [_sharedClient setDefaultHeader:@"client" value:@"ipad"];
+        }
+        else{
+         [_sharedClient setDefaultHeader:@"client" value:@"iphone"];
+        }
+        
         [_sharedClient setDefaultHeader:@"version" value:VERSION];
         [_sharedClient setDefaultHeader:@"Connection" value:@"keep-alive"];
     });
