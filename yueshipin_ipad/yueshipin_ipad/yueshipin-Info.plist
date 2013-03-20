@@ -65,11 +65,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-<<<<<<< HEAD
-	<string>0.9.8alpha</string>
-=======
 	<string>0.9.9alpha</string>
->>>>>>> #568
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSHasLocalizedDisplayName</key>
