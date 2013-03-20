@@ -124,7 +124,7 @@
     [view addSubview:HUD];
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.opacity = 0.5;
-    HUD.labelText = @"已成功加至缓存队列";
+    HUD.labelText = @"已加入缓存队列,请到菜单-缓存视频查询";//@"已成功加至缓存队列";
     [HUD show:YES];
     [HUD hide:YES afterDelay:1.5];
 }
