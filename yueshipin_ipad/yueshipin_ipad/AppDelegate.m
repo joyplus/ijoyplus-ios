@@ -440,7 +440,6 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
         [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
         NSDate * Date9PM = [formatter dateFromString:today9PM];
-        
         notification.fireDate = [Date9PM dateByAddingTimeInterval:ti];
         notification.timeZone = [NSTimeZone defaultTimeZone];
         notification.alertBody = @"亲，你已经至少两周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";

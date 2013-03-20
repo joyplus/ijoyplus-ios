@@ -432,7 +432,7 @@
     }
     
     [self setControlButtonDisplay];
-    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0) animated:YES];
+    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
 }
 
 - (void)setControlButtonDisplay
@@ -828,7 +828,8 @@
 
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height - 5.0f;
     [self relocateCommentWithOriginY:y];
