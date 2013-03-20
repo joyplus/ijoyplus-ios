@@ -36,6 +36,8 @@
     [super viewDidLoad];
     [self.view setBackgroundColor:CMConstants.backgroundColor];
     [self.view addGestureRecognizer:swipeRecognizer];
+    
+    [self setCloseTipsViewHidden:NO];
 }
 
 - (void)didReceiveMemoryWarning

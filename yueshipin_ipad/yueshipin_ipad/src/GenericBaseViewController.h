@@ -28,4 +28,6 @@
 - (void)menuBtnClicked;
 
 -(float)getFreeDiskspacePercent;
+
+- (void)setCloseTipsViewHidden:(BOOL)isHidden;
 @end

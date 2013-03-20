@@ -19,7 +19,7 @@
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
 
-#define DAY(day)        (day * 3600)
+#define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;

@@ -37,10 +37,12 @@
 //
 
 #import "StackScrollViewController.h"
-#import "UIViewWithShadow.h";
+#import "UIViewWithShadow.h"
 #import <QuartzCore/QuartzCore.h>
 #import "RootViewController.h"
 #import "SearchViewController.h"
+#import "GenericBaseViewController.h"
+
 const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = -150;
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
@@ -657,6 +659,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     if (viewControllersStack.count - 1 <= 0) {
         return;
     }
+    [self managerCloseTipsView];
     UIViewController *topViewController = [viewControllersStack objectAtIndex:viewControllersStack.count -1];
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         if(topViewController == includeViewController){
@@ -693,10 +696,12 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
                 }
                 viewController = nil;
                 if (needBreak) {
+                    [self managerCloseTipsView];
                     break;
                 }
             }
         }
+        
     }];
 }
 
@@ -706,13 +711,14 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     if (viewControllersStack.count - 1 <= 0) {
         return;
     }
+    [self managerCloseTipsView];
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
             if([viewController isKindOfClass:clazz]){
                 [viewController.view setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
-                UIView * rightView = [viewController.view viewWithTag:1111];
-                rightView.hidden = NO;
+//                UIView * rightView = [viewController.view viewWithTag:1111];
+//                rightView.hidden = NO;
                 break;
             } else{
                 [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
@@ -726,6 +732,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
             if([viewController isKindOfClass:clazz]){
+                [self managerCloseTipsView];
                 break;
             } else {
                 [[slideViews viewWithTag:20110106+i] removeFromSuperview];
@@ -734,6 +741,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             }
         }
     }];
+    
 }
 
 - (void)removeViewInSlider
@@ -755,7 +763,9 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     } completion:^(BOOL finished) {
         [[slideViews viewWithTag:20110106 + lastViewControllerIndex] removeFromSuperview];
         [viewControllersStack removeLastObject];
+        [self managerCloseTipsView];
     }];
+    
 }
 
 - (void)removeAllSubviewInSlider
@@ -765,7 +775,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     if(lastViewControllerIndex <= 0){
         return;
     }
-    
+    [self managerCloseTipsView];
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for(int i = lastViewControllerIndex; i > 0; i--){
             UIViewController *topController = [viewControllersStack objectAtIndex:i];
@@ -781,9 +791,24 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             [[slideViews viewWithTag:20110106+i] removeFromSuperview];
             if(viewControllersStack.count > 1){
                 [viewControllersStack removeLastObject];
+                [self managerCloseTipsView];
             }
         }
     }];
+    
+}
+
+- (void)managerCloseTipsView
+{
+    if (viewControllersStack.count >= 2)
+    {
+        UIViewController * secCtrl = [viewControllersStack objectAtIndex:(viewControllersStack.count - 1)];
+        if ([secCtrl isKindOfClass:[GenericBaseViewController class]])
+        {
+            GenericBaseViewController * gener = (GenericBaseViewController *)secCtrl;
+            [gener setCloseTipsViewHidden:NO];
+        }
+    }
 }
 
 - (void)addViewInSlider:(UIViewController*)controller invokeByController:(UIViewController*)invokeByController isStackStartView:(BOOL)isStackStartView removePreviousView:(BOOL)removePreviousView{
@@ -806,10 +831,13 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		[viewControllersStack removeAllObjects];
 	}
 	
-    UIView * rightView = [controller.view viewWithTag:1111];
-    UIView * leftView = [invokeByController.view viewWithTag:1111];
-	rightView.hidden = NO;
-    leftView.hidden = YES;
+    if ([controller isKindOfClass:[GenericBaseViewController class]] && [invokeByController isKindOfClass:[GenericBaseViewController class]])
+    {
+        GenericBaseViewController * right = (GenericBaseViewController *)controller;
+        GenericBaseViewController * left = (GenericBaseViewController *)invokeByController;
+        [right setCloseTipsViewHidden:NO];
+        [left setCloseTipsViewHidden:YES];
+    }
     
 	if([viewControllersStack count] > 1 && removePreviousView)
     {

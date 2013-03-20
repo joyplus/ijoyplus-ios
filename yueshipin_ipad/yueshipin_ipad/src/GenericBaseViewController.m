@@ -16,6 +16,9 @@
 #import "StackScrollViewController.h"
 #import "RootViewController.h"
 #import "CommonHeader.h"
+#import "CloseTipsView.h"
+
+#define CLOSE_TIPS_VIEW_TAG (1111)
 
 @interface GenericBaseViewController (){
 
@@ -60,6 +63,11 @@
     [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
     [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateHighlighted];
     [menuBtn addTarget:self action:@selector(menuBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    CloseTipsView * cView = [[CloseTipsView alloc] initWithFrame:CGRectMake(0, 627, self.view.frame.size.width, 121)];
+    [self.view addSubview:cView];
+    cView.tag = CLOSE_TIPS_VIEW_TAG;
+    cView.hidden = YES;
 }
 
 - (void)viewDidUnload
@@ -117,6 +125,16 @@
     }
     float percent = (totalSpace_-totalFreeSpace_)/totalSpace_;
     return percent;
+}
+
+- (void)setCloseTipsViewHidden:(BOOL)isHidden
+{
+    UIView * cView = [self.view viewWithTag:CLOSE_TIPS_VIEW_TAG];
+    if (NO == isHidden)
+    {
+        [self.view bringSubviewToFront:cView];
+    }
+    cView.hidden = isHidden;
 }
 
 @end
