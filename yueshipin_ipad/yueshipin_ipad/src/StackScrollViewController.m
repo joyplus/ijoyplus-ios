@@ -40,7 +40,7 @@
 #import "UIViewWithShadow.h";
 #import <QuartzCore/QuartzCore.h>
 #import "RootViewController.h"
-
+#import "SearchViewController.h"
 const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = -150;
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
@@ -811,10 +811,21 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 	rightView.hidden = NO;
     leftView.hidden = YES;
     
-	if([viewControllersStack count] > 1 && removePreviousView){
+	if([viewControllersStack count] > 1 && removePreviousView)
+    {
 		NSInteger indexOfViewController = [viewControllersStack
 										   indexOfObject:invokeByController]+1;
-		
+        //add code by huokun at 13/03/20 for BUG#214 “当迁移视图时，判断堆栈中，是否存在SearchViewController，若存在，刷新tableView”
+        for (int i = 0; i < indexOfViewController; i ++)
+        {
+            UIViewController * ctrl = [viewControllersStack objectAtIndex:i];
+            if ([ctrl isKindOfClass:[SearchViewController class]])
+            {
+                SearchViewController * searchCtrl = (SearchViewController *)ctrl;
+                [searchCtrl reloadSearchList];
+            }
+        }
+        //add code end
 		if ([invokeByController parentViewController]) {
 			indexOfViewController = [viewControllersStack
 									 indexOfObject:[invokeByController parentViewController]]+1;
