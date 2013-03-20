@@ -126,7 +126,19 @@
 
 - (void)deleteBtnClicked
 {
-    [self deleteList];
+    if(topsArray.count > 0)
+    {
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"删除悦单也会同时移除悦单中的影片，确定要删除吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
+    else
+    {
+        [self deleteList];
+    }
 }
 
 
@@ -186,6 +198,15 @@
     [table reloadData];
 }
 
+#pragma mark -
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex > 0)
+    {
+        [self deleteList];
+    }
+}
 
 #pragma mark - Table view data source
 
