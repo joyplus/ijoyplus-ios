@@ -321,6 +321,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // 视频地址
     NSDictionary *episodesInfo = [episodeArray objectAtIndex:currentNum];
     NSArray *down_load_urls = [episodesInfo objectForKey:@"down_urls"];
+    NSArray * video_urls = [episodesInfo objectForKey:@"video_urls"];
+    
     NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
     for (NSDictionary *dic in down_load_urls) {
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
@@ -372,8 +374,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     for (NSDictionary *url_info_dic in sortEpisodesArr_) {
         NSArray *urls = [url_info_dic objectForKey:@"urls"];
+        NSString * level = [url_info_dic objectForKey:@"level"];
         NSString *source_str = [url_info_dic objectForKey:@"source"];
-        for (NSDictionary *url_dic in urls) {
+        
+        //若数据来自网盘，重新设置source来源
+        if ([level isEqualToString:@"100"]
+            && [source_str isEqualToString:@"wangpan"])
+        {
+            NSDictionary * videoDic = nil;
+            if (nil != video_urls)
+            {
+                //取出第一个数据
+                videoDic = [video_urls objectAtIndex:0];
+            }
+            source_str = [videoDic objectForKey:@"source"];
+        }
+        
+        
+        for (NSDictionary *url_dic in urls)  {
             NSString *type_str = [[url_dic objectForKey:@"type"] lowercaseString];
             NSString *url_str = [url_dic objectForKey:@"url"];
             NSString *file_str = [url_dic objectForKey:@"file"];
