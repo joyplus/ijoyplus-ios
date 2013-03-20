@@ -31,5 +31,6 @@
 
 - (id)initWithFrame:(CGRect)frame;
 - (void)addKeyToLocalHistory:(NSString *)key;
+- (void)reloadSearchList;
 
 @end
