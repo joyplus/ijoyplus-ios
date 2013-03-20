@@ -218,10 +218,15 @@
     [self.bgScrollView addSubview:introBtn];
     
     episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
-    episodeView.scrollEnabled = NO;
+    //episodeView.scrollEnabled = NO;
+    episodeView.showsHorizontalScrollIndicator = NO;
     episodeView.backgroundColor = [UIColor clearColor];
     [episodeView setPagingEnabled:YES];
     [self.bgScrollView addSubview:episodeView];
+    episodeView.delegate = self;
+    episodeView.backgroundColor = [UIColor clearColor];
+    
+    [self.bgScrollView bringSubviewToFront:self.commentBtn];
 }
 
 - (void)introBtnClicked
@@ -425,6 +430,13 @@
     } else {
         episodePageNumber--;
     }
+    
+    [self setControlButtonDisplay];
+    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0) animated:YES];
+}
+
+- (void)setControlButtonDisplay
+{
     if(episodePageNumber <=0){
         episodePageNumber = 0;
         [nextBtn setHidden:NO];
@@ -445,8 +457,6 @@
     } else {
         [nextBtn setHidden:YES];
     }
-    
-    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
 }
 
 - (void)repositElements
@@ -462,7 +472,7 @@
     }
     totalEpisodeNumber = episodeArray.count;
     episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * 39);
-    episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/EPISODE_NUMBER_IN_ROW*4.0) * 430, episodeView.frame.size.height);
+    episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
     if(changed){
         for (UIView *aview in episodeView.subviews) {
             [aview removeFromSuperview];
@@ -563,10 +573,17 @@
 {
     UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
     
-    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height , 80, 30);
-    previousBtn.frame = CGRectMake(LEFT_WIDTH, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height, 80, 30);
+    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height;
+    [self relocateCommentWithOriginY:y];
+}
+
+- (void)relocateCommentWithOriginY:(CGFloat)y
+{
+    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
+    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
     
     int positionY = previousBtn.frame.origin.y + 10;
+    
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
@@ -807,6 +824,28 @@
     } else {
         return NO;
     }
+}
+
+#pragma mark -
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height - 5.0f;
+    [self relocateCommentWithOriginY:y];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    episodePageNumber = offset.x/430;
+    [self setControlButtonDisplay];
+}
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    episodePageNumber = offset.x/430;
+    
+    [self setControlButtonDisplay];
 }
 
 
