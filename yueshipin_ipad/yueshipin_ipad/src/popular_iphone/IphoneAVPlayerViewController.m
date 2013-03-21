@@ -566,9 +566,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
     lastPlayTime_ = kCMTimeZero;
     [self addCacheview];
-    myHUD.hidden = NO;
-    [self.view bringSubviewToFront:myHUD];
-    [self initWillPlayLabel];
+
     [self initDataSource:playNum];
     
     [self beginToPlay];
@@ -1338,9 +1336,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     }
     
-    lastPlayTime_ = [mPlayer currentTime];
+    
     
     [self addCacheview];
+    lastPlayTime_ = [mPlayer currentTime];
     
     clearBgView_.hidden = YES;
     
@@ -1750,8 +1749,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [UIView commitAnimations];
     }
     
-    myHUD.hidden = NO;
-    [self.view bringSubviewToFront:myHUD];
     [self removePlayerTimeObserver];
     [self.player pause];
     if (timeLabelTimer_ != nil) {
@@ -1761,10 +1758,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     playNum = indexPath.row;
     
     [tableList_ reloadData];
-    lastPlayTime_ = kCMTimeZero;
-    //[self initplaytime];
     
     [self addCacheview];
+    
+    lastPlayTime_ = kCMTimeZero;
     [self initDataSource:playNum];
     [self beginToPlay];
     
@@ -1781,8 +1778,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }];
 }
 -(void)initplaytime{
-    NSNumber *playtime = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",playNum]]];
-    lastPlayTime_ = CMTimeMakeWithSeconds(playtime.doubleValue, NSEC_PER_SEC);
+    if (!CMTIME_IS_VALID(lastPlayTime_)) {
+        NSNumber *playtime = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",playNum]]];
+        lastPlayTime_ = CMTimeMakeWithSeconds(playtime.doubleValue, NSEC_PER_SEC);
+    }
+    
 }
 -(void)addCacheview{
     [playCacheView_ removeFromSuperview];

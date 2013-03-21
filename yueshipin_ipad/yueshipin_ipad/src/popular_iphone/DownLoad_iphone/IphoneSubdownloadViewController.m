@@ -360,7 +360,7 @@
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
-    NSString *fileName = [item.subitemId stringByAppendingString:@".mp4"];
+    NSString *fileName = [itemId stringByAppendingString:@".mp4"];
     //对于错误信息
     NSError *error;
     // 创建文件管理器
