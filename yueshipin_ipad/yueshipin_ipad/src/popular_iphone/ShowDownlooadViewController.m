@@ -122,6 +122,7 @@
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [btn setTitleColor:[UIColor colorWithRed:196/255.0 green:196/255.0 blue:196/255.0 alpha:1] forState:UIControlStateDisabled];
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];
     btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
@@ -134,21 +135,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    int num = [listArr_ count];
-//    if (num == 1) {
-//       return 45;
-//    }
-//    else{
-//        if (indexPath.row == 0) {
-//            return 42.5;
-//        }
-//        else if (indexPath.row == num-1){
-//            return 42.5;
-//        }
-//        else{
-//            return 40;
-//        }
-//    }
+    
     return 40;
 
 }

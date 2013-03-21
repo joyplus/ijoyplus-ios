@@ -40,5 +40,5 @@
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
     #define PARSE_APP_ID @"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB"
     #define PARSE_CLIENT_KEY @"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"
-    #define kABaseURLString @"http://apitest.joyplus.tv/"
+    #define kABaseURLString @"http://apitest.yue001.com/"
 #endif

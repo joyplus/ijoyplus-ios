@@ -525,6 +525,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
     }
     
+    if (clarityButton_.selected) {
+        clarityButton_.selected = NO;
+        clearBgView_.hidden = YES;
+    }
+    
     
     [self resetMyTimer];
 
@@ -825,14 +830,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         default:{
              // 播放顺序:高清-超清-标清;
-            if ([highClearArr count] > 0) {
+            if ([plainClearArr count] > 0) {
+                url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
+            }
+            else if ([highClearArr count] > 0) {
                 url = [[highClearArr objectAtIndex:0] objectForKey:@"url"];
             }
             else if ([superClearArr count] > 0) {
                 url = [[superClearArr objectAtIndex:0] objectForKey:@"url"];
-            }
-            else if ([plainClearArr count] > 0) {
-                url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
             }
             
             //url =  @"http://115.238.173.139:80/play/42c906c95416b06db24f609ff70c09ab3fc4a010.mp4";
@@ -894,15 +899,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         default:{
             NSMutableArray *playUrlArr = [NSMutableArray arrayWithCapacity:5];
             
+            if ([plainClearArr count]>0) {
+                [playUrlArr addObjectsFromArray:plainClearArr];
+            }
             if ([highClearArr count]>0) {
                 [playUrlArr addObjectsFromArray:highClearArr];
             }
+            
             if ([superClearArr count]>0) {
                 [playUrlArr addObjectsFromArray:superClearArr];
-            }
-            
-            if ([plainClearArr count]>0) {
-                [playUrlArr addObjectsFromArray:plainClearArr];
             }
             
             if (play_url_index < [playUrlArr count ]) {

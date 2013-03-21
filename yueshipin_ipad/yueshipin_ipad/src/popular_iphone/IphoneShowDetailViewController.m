@@ -751,12 +751,12 @@
 }
 
 -(UIView *)showEpisodesplayView{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(15, 0, 293, 150)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 150)];
     int count = [episodesArr_ count];
     
     pageCount_ = (count%4 == 0 ? (count/4):(count/4)+1);
     
-    scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(25, 33, 240, 122)];
+    scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(40, 33, 240, 122)];
     scrollView_.contentSize = CGSizeMake(320*(count/15), 125);
     scrollView_.scrollEnabled = NO;
     scrollView_.pagingEnabled = YES;
@@ -780,11 +780,12 @@
         [scrollView_ addSubview:button];
     }
     currentPage_ = 1;
+    
     next_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    next_.frame = CGRectMake( 273, 30, 20, 125);
+    next_.frame = CGRectMake(280, 30, 40, 125);
     [next_ setTitle:@"PRE" forState:UIControlStateNormal];
-    [next_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More1.png"] forState:UIControlStateNormal];
-    [next_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More1_s.png"] forState:UIControlStateHighlighted];
+    [next_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More1"] forState:UIControlStateNormal];
+    [next_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More1_s"] forState:UIControlStateHighlighted];
     [next_ addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchDown];
     [view  addSubview:next_];
     if (pageCount_ == 1) {
@@ -792,13 +793,13 @@
     }
 
     pre_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    pre_.frame = CGRectMake(0, 30, 20, 125);
+    pre_.frame = CGRectMake(0, 30, 40, 125);
     if (currentPage_ == 1) {
         pre_.enabled = NO;
     }
     [pre_ setTitle:@"NEXT" forState:UIControlStateNormal];
-    [pre_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More2.png"] forState:UIControlStateNormal];
-    [pre_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More2_s.png"] forState:UIControlStateHighlighted];
+    [pre_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More2"] forState:UIControlStateNormal];
+    [pre_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More2_s"] forState:UIControlStateHighlighted];
     [pre_ addTarget:self action:@selector(pre:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:pre_];
    
