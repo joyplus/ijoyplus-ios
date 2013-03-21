@@ -114,7 +114,7 @@
                 for (int i =[tempArr count]-1;i >= 0;i-- ) {
                     [myListArr_ addObject:[tempArr objectAtIndex:i]];
                 }
-                
+                [self Selectbutton:button3_];
                 [myTableList_ reloadData];
             }
             
@@ -373,16 +373,8 @@
     
 }
 -(void)addDone:(id)sender{
-    NSMutableDictionary *dic = [(NSNotification *)sender object];
-    if (dic) {
-        if (myListArr_ == nil) {
-            myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
-        }
-        [myListArr_ insertObject:dic atIndex:0];
-    }
-    [myTableList_ reloadData];
-    [self Selectbutton:button3_];
-
+    [self loadPersonalData];
+  
 }
 -(void)createList:(id)sender{
     CreateMyListOneViewController *createMyListOneViewController = [[CreateMyListOneViewController alloc] init];
@@ -719,6 +711,7 @@
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
         NSMutableArray *items = [NSMutableArray arrayWithArray:[infoDic objectForKey:@"items"]];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
+        createMyListTwoViewController.topicId = [infoDic objectForKey:@"id"];
         createMyListTwoViewController.listArr = items;
         createMyListTwoViewController.type = [[infoDic objectForKey:@"prod_type"] intValue];
         createMyListTwoViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];

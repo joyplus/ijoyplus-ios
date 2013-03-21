@@ -1209,7 +1209,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt_pressed"] forState:UIControlStateHighlighted];
         [plainClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_biaoqing_bt_pressed"]forState:UIControlStateDisabled];
         plainClearBtn.adjustsImageWhenDisabled = NO;
-       // [view addSubview:plainClearBtn];
+    
          
         UIButton *highClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         highClearBtn.backgroundColor = [UIColor clearColor];
@@ -1218,11 +1218,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_bt_pressed"] forState:UIControlStateHighlighted];
         [highClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_gaoqing_bt_pressed"]forState:UIControlStateDisabled];
         highClearBtn.frame = CGRectMake(0, 0, 42, 42);
-        //highClearBtn.center = CGPointMake(101, 65);
-        highClearBtn.enabled = NO;
         highClearBtn.tag = 101;
         highClearBtn.adjustsImageWhenDisabled = NO;
-        //[view addSubview:highClearBtn];
          
         UIButton *superClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         superClearBtn.backgroundColor = [UIColor clearColor];
@@ -1231,10 +1228,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_bt_pressed"] forState:UIControlStateHighlighted];
         [superClearBtn setBackgroundImage:[UIImage imageNamed:@"iphone_chaoqing_bt_pressed"]forState:UIControlStateDisabled];
         superClearBtn.frame = CGRectMake(0, 0, 42, 42);
-        //superClearBtn.center = CGPointMake(168, 65);
         superClearBtn.tag = 102;
         superClearBtn.adjustsImageWhenDisabled = NO;
-        //[view addSubview:superClearBtn];
     
     int num = 0;
     if ([plainClearArr count]>0) {
@@ -1249,6 +1244,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (num == 2) {
         if ([plainClearArr count] > 0) {
             plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+            plainClearBtn.enabled = NO;
             [view addSubview:plainClearBtn];
             
             if ([highClearArr count]>0) {
@@ -1267,11 +1263,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                highClearBtn.frame = CGRectMake(43, 0, 42, 42);
 
                plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+               plainClearBtn.enabled = NO;
                [view addSubview:plainClearBtn];
            }
            else{
                 highClearBtn.frame = CGRectMake(0, 0, 42, 42);
-               
+               highClearBtn.enabled = NO;
                superClearBtn.frame = CGRectMake(43,0, 42, 42);
                [view addSubview:superClearBtn];
            }
@@ -1282,10 +1279,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
            if ([plainClearArr count]>0) {
                if ([plainClearArr count]>0) {
                    plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+                   plainClearBtn.enabled = NO;
                    [view addSubview:plainClearBtn];
                }
                else{
                    highClearBtn.frame = CGRectMake(0, 0, 42, 42);
+                   highClearBtn.enabled = NO;
                    [view addSubview:highClearBtn];
                }
            }
@@ -1297,6 +1296,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (num == 3) {
         plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
+        plainClearBtn.enabled = NO;
          [view addSubview:plainClearBtn];
         highClearBtn.frame = CGRectMake(43, 0, 42, 42);
         [view addSubview:highClearBtn];

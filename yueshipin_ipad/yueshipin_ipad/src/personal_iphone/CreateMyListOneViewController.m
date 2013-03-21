@@ -173,6 +173,7 @@
 
 }
 -(void)next:(id)result{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Update MineViewController" object:nil];
     infoDic_ = [NSMutableDictionary dictionaryWithCapacity:10];
     [infoDic_ setObject:self.titleTextField.text forKey:@"name"];
     [infoDic_ setObject:self.detailTextView.text forKey:@"detail"];
