@@ -229,12 +229,13 @@
 {
     [super viewDidAppear:animated];
     if ([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch] && self.downloadBtn.enabled) {
-        NSString *playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
+        NSString *playWithDownload = [AppDelegate instance].playWithDownload;
         if (![playWithDownload isEqualToString:@"1"]) {
+            [AppDelegate instance].playWithDownload = @"1";
             [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download_2"]];
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
         }
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
     } else {
         [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO introImage:[UIImage imageNamed:@"play_intro"]];
     }
@@ -364,7 +365,7 @@
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
-    if(downloadUrls != nil && downloadUrls.count > 0){
+    if(self.mp4DownloadUrls != nil && self.mp4DownloadUrls.count > 0){
     } else {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
@@ -684,7 +685,6 @@
     item.type = 3;
     item.downloadStatus = @"stop";
     [item save];
-    [[AppDelegate instance].downloadItems addObject:item];
 }
 
 - (BOOL)addSubdownloadItem:(int)num
@@ -702,13 +702,12 @@
     subitem.downloadStatus = @"waiting";
     subitem.fileName = [NSString stringWithFormat:@"%@_%@%@", self.prodId, subitem.subitemId, @".mp4"];
     [self getDownloadUrls:num];
-    if(downloadUrls.count > 0){
-        subitem.urlArray = downloadUrls;
+    if(self.mp4DownloadUrls.count > 0){
+        subitem.urlArray = self.mp4DownloadUrls;
         [subitem save];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
         [finder setupWorkingUrl];
-        [[AppDelegate instance].subdownloadItems addObject:subitem];
         [self updateBadgeIcon];
         return YES;
     } else {

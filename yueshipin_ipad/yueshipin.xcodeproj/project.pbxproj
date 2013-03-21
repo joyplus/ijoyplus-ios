@@ -507,6 +507,7 @@
 		EB6DEAC8165A34F200AF8003 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABE165A34F200AF8003 /* UIUtility.m */; };
 		EB6DEAD2165A367F00AF8003 /* GenericBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */; };
 		EB7D435B16F8348B0060816E /* select_bt_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB7D435A16F8348B0060816E /* select_bt_pressed.png */; };
+		EB7D43C216F9A8DC0060816E /* NewM3u8DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7D43C116F9A8DC0060816E /* NewM3u8DownloadManager.m */; };
 		EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */; };
 		EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */; };
 		EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */; };
@@ -1397,6 +1398,8 @@
 		EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GenericBaseViewController.m; path = ../GenericBaseViewController.m; sourceTree = "<group>"; };
 		EB6DEAD7165A36E600AF8003 /* CommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
 		EB7D435A16F8348B0060816E /* select_bt_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_bt_pressed.png; sourceTree = "<group>"; };
+		EB7D43C016F9A8DC0060816E /* NewM3u8DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewM3u8DownloadManager.h; path = common/NewM3u8DownloadManager.h; sourceTree = "<group>"; };
+		EB7D43C116F9A8DC0060816E /* NewM3u8DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewM3u8DownloadManager.m; path = common/NewM3u8DownloadManager.m; sourceTree = "<group>"; };
 		EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
 		EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MNMBottomPullToRefreshArrow@2x.png"; sourceTree = "<group>"; };
 		EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshManager.h; sourceTree = "<group>"; };
@@ -1809,6 +1812,8 @@
 				220E4952169BF0B300A29756 /* SubdownloadViewController.m */,
 				22343DD116BC007C00AFE83A /* NewDownloadManager.h */,
 				22343DD216BC007C00AFE83A /* NewDownloadManager.m */,
+				EB7D43C016F9A8DC0060816E /* NewM3u8DownloadManager.h */,
+				EB7D43C116F9A8DC0060816E /* NewM3u8DownloadManager.m */,
 				22343DD316BC007C00AFE83A /* DownloadUrlFinder.h */,
 				22343DD416BC007C00AFE83A /* DownloadUrlFinder.m */,
 			);
@@ -3878,7 +3883,11 @@
 				22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */,
 				22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */,
 				22B0FFC916F99F3C00ACDA07 /* CloseTipsView.m in Sources */,
+<<<<<<< HEAD
 				E7872DA816FC35B100017785 /* CommonMotheds.m in Sources */,
+=======
+				EB7D43C216F9A8DC0060816E /* NewM3u8DownloadManager.m in Sources */,
+>>>>>>> bugs
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

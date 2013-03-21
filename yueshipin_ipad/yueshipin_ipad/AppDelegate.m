@@ -36,9 +36,7 @@
 @end
 
 @implementation AppDelegate
-@synthesize downloadItems;
-@synthesize subdownloadItems;
-//@synthesize downloadManager;
+@synthesize playWithDownload;
 @synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
@@ -56,6 +54,7 @@
 @synthesize closeVideoMode;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
+@synthesize padM3u8DownloadManager;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -111,16 +110,16 @@
 
 - (void)initDownloadManager
 {
-    downloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-    [downloadItems addObjectsFromArray:[DownloadItem allObjects]];
-    subdownloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-    [subdownloadItems addObjectsFromArray:[SubdownloadItem allObjects]];
-    padDownloadManager = [[NewDownloadManager alloc]init];
+    padDownloadManager = [[NewDownloadManager alloc]init];    
+    padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    //如果是测试
+    if (ENVIRONMENT == 0 && LOG_ENABLED == 1) {
+        [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
@@ -133,6 +132,7 @@
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
     }
+    playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self initWeChat];
@@ -175,7 +175,6 @@
     }
 
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
-
     return YES;
 }
 

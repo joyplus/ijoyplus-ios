@@ -12,6 +12,9 @@
 #define ENVIRONMENT 0
 #define VERSION @"0.9.9alpha"
 
+//0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
+#define LOG_ENABLED 1
+
 // for App Store
 #define CHANNEL_ID @""
 // for 91 Store

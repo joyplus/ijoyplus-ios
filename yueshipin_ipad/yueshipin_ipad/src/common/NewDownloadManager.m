@@ -11,6 +11,7 @@
 #import "CMConstants.h"
 #import "AppDelegate.h"
 #import "DownloadUrlFinder.h"
+#import "ActionUtility.h"
 
 @interface NewDownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -27,63 +28,67 @@
 
 - (void)startDownloadingThreads
 {
-    [self startDownloadingThread:[AppDelegate instance].downloadItems type:@"start"];
-    [self startDownloadingThread:[AppDelegate instance].subdownloadItems type:@"start"];
-    [self startDownloadingThread:[AppDelegate instance].downloadItems type:@"waiting"];
-    [self startDownloadingThread:[AppDelegate instance].subdownloadItems type:@"waiting"];
+    [self startDownloadingThread:[DownloadItem allObjects] status:@"start"];
+    [self startDownloadingThread:[SubdownloadItem allObjects] status:@"start"];
+    [self startDownloadingThread:[DownloadItem allObjects] status:@"waiting"];
+    [self startDownloadingThread:[SubdownloadItem allObjects] status:@"waiting"];
     [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
     displayNoSpaceFlag = NO;
 }
 
-- (void)startDownloadingThread:(NSArray *)allItem type:(NSString *)type
+- (void)startDownloadingThread:(NSArray *)allItem status:(NSString *)status
 {
     if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
         for (DownloadItem *item in allItem) {
-            if([item.downloadStatus isEqualToString:type]){
-                if (item.url) {
-                    [AppDelegate instance].currentDownloadingNum++;
-                    item.downloadStatus = @"start";
-                    [item save];
-                    NSURL *url = [NSURL URLWithString:item.url];
-                    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
-                    
-                    NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                    NSString *documentsDir = [documentPaths objectAtIndex:0];
-                    NSString *filePath;
-                    if (item.type == 1) {
-                        filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir, item.itemId];
-                    } else {
-                        filePath = [NSString stringWithFormat:@"%@/%@_%@.mp4", documentsDir, item.itemId, ((SubdownloadItem *)item).subitemId];
-                    }
-                    downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
-                    downloadingOperation.operationId = item.itemId;
-                    if(item.type == 1){
-                        downloadingOperation.downloadingDelegate = delegate == nil ? self : delegate;
-                        downloadingOperation.suboperationId = @"";
-                    } else {
-                        downloadingOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
-                        downloadingOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
-                    }
-                    
-                    [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                        NSLog(@"Successfully downloaded file to %@", filePath);
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                        NSLog(@"Error: %@", error);
-                        [operation cancel];
-                    }];
-                    [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
-                    }];
-                    previousProgress = 0;
-                    downloadingItem = item;
-                    [downloadingOperation start];
+            if([item.downloadStatus isEqualToString:status]){
+                if ([item.downloadType isEqualToString:@"m3u8"]) {
+                    [[AppDelegate instance].padM3u8DownloadManager startDownloadingThreads:item];
                 } else {
-                    if (![item.downloadStatus isEqualToString:@"error"]) {
-                        DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
-                        finder.item = item;
-                        [finder setupWorkingUrl];
+                    if (item.url) {
+                        [AppDelegate instance].currentDownloadingNum++;
+                        item.downloadStatus = @"start";
+                        [item save];
+                        NSURL *url = [NSURL URLWithString:item.url];
+                        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+                        
+                        NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                        NSString *documentsDir = [documentPaths objectAtIndex:0];
+                        NSString *filePath;
+                        if (item.type == 1) {
+                            filePath = [NSString stringWithFormat:@"%@/%@.mp4", documentsDir, item.itemId];
+                        } else {
+                            filePath = [NSString stringWithFormat:@"%@/%@_%@.mp4", documentsDir, item.itemId, ((SubdownloadItem *)item).subitemId];
+                        }
+                        downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+                        downloadingOperation.operationId = item.itemId;
+                        if(item.type == 1){
+                            downloadingOperation.downloadingDelegate = delegate == nil ? self : delegate;
+                            downloadingOperation.suboperationId = @"";
+                        } else {
+                            downloadingOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
+                            downloadingOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
+                        }
+                        
+                        [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                            NSLog(@"Successfully downloaded file to %@", filePath);
+                        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                            NSLog(@"Error: %@", error);
+                            [operation cancel];
+                        }];
+                        [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+                        }];
+                        previousProgress = 0;
+                        downloadingItem = item;
+                        [downloadingOperation start];
+                    } else {
+                        if (![item.downloadStatus isEqualToString:@"error"]) {
+                            DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
+                            finder.item = item;
+                            [finder setupWorkingUrl];
+                        }
                     }
+                    break;
                 }
-                break;
             }
         }
     }
@@ -124,9 +129,9 @@
 {
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
+    [downloadingItem save];
     [downloadingOperation pause];
     [downloadingOperation cancel];
-    [downloadingItem save];
     [self startNewDownloadItem];
 }
 
@@ -141,7 +146,7 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    [self updateProgress:progress downloadingArray:[AppDelegate instance].downloadItems];
+    [self updateProgress:progress downloadingArray:[DownloadItem allObjects]];
 }
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
@@ -170,7 +175,7 @@
 
 - (void)updateProgress:(NSString *)operationId  suboperationId:(NSString *)suboperationId progress:(float)progress
 {
-    [self updateProgress:progress downloadingArray:[AppDelegate instance].subdownloadItems];
+    [self updateProgress:progress downloadingArray:[SubdownloadItem allObjects]];
 }
 
 - (void)updateProgress:(float)progress downloadingArray:(NSArray *)downloadingArray
@@ -182,18 +187,12 @@
         [downloadingItem save];
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
     }
-    float freeSpace = [self getFreeDiskspace];
+    float freeSpace = [ActionUtility getFreeDiskspace];
     if (freeSpace <= LEAST_DISK_SPACE) {
         [self stopDownloading];
-        for (DownloadItem *item in downloadingArray) {
-            if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
-                item.downloadStatus = @"stop";
-                [item save];
-                if (!displayNoSpaceFlag) {
-                    displayNoSpaceFlag = YES;
-                    [[NSNotificationCenter defaultCenter]postNotificationName:NO_ENOUGH_SPACE object:nil];
-                }
-            }
+        if (!displayNoSpaceFlag) {
+            displayNoSpaceFlag = YES;
+            [ActionUtility triggerSpaceNotEnough];
         }
     }
 }
@@ -202,6 +201,7 @@
 {
     [downloadingOperation pause];
     [downloadingOperation cancel];
+    [[AppDelegate instance].padM3u8DownloadManager stopDownloading];
 }
 
 - (float)getFreeDiskspace

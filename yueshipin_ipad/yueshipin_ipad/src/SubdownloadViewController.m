@@ -120,24 +120,12 @@
 {
     [super viewWillDisappear:animated];
     displayNoSpaceFlag = NO;
-    for (SubdownloadItem *item in [AppDelegate instance].subdownloadItems) {
-        [item save];
-    }
     [AppDelegate instance].padDownloadManager.subdelegate = [AppDelegate instance].padDownloadManager;
 }
+
 - (void)reloadSubitems
 {
-    NSMutableArray *tempsubitems = [[NSMutableArray alloc]initWithCapacity:10];
-    for (SubdownloadItem *item in [AppDelegate instance].subdownloadItems) {
-        if ([item.itemId isEqualToString:self.itemId]) {
-            [tempsubitems addObject:item];
-        }
-    }
-    subitems = [tempsubitems sortedArrayUsingComparator:^(SubdownloadItem *a, SubdownloadItem *b) {
-        NSNumber *first =  [NSNumber numberWithInt:a.subitemId.intValue];
-        NSNumber *second = [NSNumber numberWithInt:b.subitemId.intValue];
-        return [first compare:second];
-    }];
+    subitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@ order by subitem_id", self.itemId]];
 }
 
 
@@ -204,17 +192,8 @@
     }
     [self getFreeDiskspacePercent];
     if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
-        [[AppDelegate instance].padDownloadManager stopDownloading];
-        for (SubdownloadItem *subitem in [AppDelegate instance].subdownloadItems) {
-            if ([subitem.downloadStatus isEqualToString:@"start"] || [subitem.downloadStatus isEqualToString:@"waiting"]) {
-                subitem.downloadStatus = @"stop";
-                [subitem save];
-                [AppDelegate instance].currentDownloadingNum = 0;
-                if (!displayNoSpaceFlag) {
-                    displayNoSpaceFlag = YES;
-                    [UIUtility showNoSpace:self.view];
-                }
-            }
+        if (!displayNoSpaceFlag) {
+            [ActionUtility triggerSpaceNotEnough];
         }
         [_gmGridView reloadData];
     }
@@ -341,7 +320,6 @@
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
     SubdownloadItem *item = [subitems objectAtIndex:index];
-    [[AppDelegate instance].subdownloadItems removeObject:item];
     [item deleteObject];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
@@ -366,9 +344,8 @@
     
     [self reloadSubitems];
     if(subitems == nil || subitems.count == 0){
-        for (DownloadItem *pItem in [AppDelegate instance].downloadItems){
+        for (DownloadItem *pItem in [DownloadItem allObjects]){
             if ([pItem.itemId isEqualToString:self.itemId]) {
-                [[AppDelegate instance].downloadItems removeObject:pItem];
                 [pItem deleteObject];
                 break;
             }

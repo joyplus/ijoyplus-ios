@@ -73,7 +73,7 @@
     } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
         return NO;
     } else {
-        for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+        for (int i = 0; i < [DownloadItem allObjects].count; i++) {
             CGPoint pt = [touch locationInView:self.view];
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
             CGPoint ptInbtn = [self.view convertPoint:pt toView:cell];
@@ -191,7 +191,7 @@
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     _gmGridView.editing = NO;
-    if ([AppDelegate instance].downloadItems.count > 0) {
+    if ([DownloadItem allObjects].count > 0) {
         [editBtn setHidden:NO];
         [nodownloadImage setHidden:YES];
     }
@@ -208,7 +208,7 @@
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
     displayNoSpaceFlag = NO;
-    for (DownloadItem *item in [AppDelegate instance].downloadItems) {
+    for (DownloadItem *item in [DownloadItem allObjects]) {
         [item save];
     }
     [self updateDiskStorage];
@@ -217,7 +217,7 @@
 
 - (void)reloadItems
 {
-    if ([AppDelegate instance].downloadItems.count == 0) {
+    if ([DownloadItem allObjects].count == 0) {
         [editBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
     } else {
@@ -253,8 +253,9 @@
 
 - (void)downloadSuccess:(NSString *)operationId
 {
-    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+    NSArray *allDownloadItems = [DownloadItem allObjects];
+    for (int i = 0; i < allDownloadItems.count; i++) {
+        DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             [AppDelegate instance].currentDownloadingNum--;
             if([AppDelegate instance].currentDownloadingNum < 0){
@@ -273,8 +274,9 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
+    NSArray *allDownloadItems = [DownloadItem allObjects];
+    for (int i = 0; i < allDownloadItems.count; i++) {
+        DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             if (progress * 100 - item.percentage > 5) {
                 item.percentage = (int)(progress*100);
@@ -295,17 +297,8 @@
     }
     [self getFreeDiskspacePercent];
     if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
-        [[AppDelegate instance].padDownloadManager stopDownloading];
-        for (DownloadItem *item in [AppDelegate instance].downloadItems) {
-            if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
-                item.downloadStatus = @"stop";
-                [item save];
-                [AppDelegate instance].currentDownloadingNum = 0;
-                if (!displayNoSpaceFlag) {
-                    displayNoSpaceFlag = YES;
-                    [UIUtility showNoSpace:self.view];
-                }
-            }
+        if (!displayNoSpaceFlag) {
+            [ActionUtility triggerSpaceNotEnough];
         }
         [_gmGridView reloadData];
     }
@@ -313,11 +306,12 @@
 
 - (void)movieImageClicked:(NSInteger)index
 {
-    if(index >= [AppDelegate instance].downloadItems.count){
+    NSArray *allDownloadItems = [DownloadItem allObjects];
+    if(index >= allDownloadItems.count){
         return;
     }
     GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:index];
-    DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:index];
+    DownloadItem *item = [allDownloadItems objectAtIndex:index];
     UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.itemId.intValue + 10000000];
     UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.itemId.intValue + 20000000];
     item.percentage = (int)(progressView.progress*100);
@@ -346,7 +340,7 @@
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return fmax([[AppDelegate instance].downloadItems count], 9);
+    return fmax([DownloadItem allObjects].count, 9);
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
@@ -356,7 +350,8 @@
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
-    if(index >= [AppDelegate instance].downloadItems.count){
+    NSArray *allDownloadItems = [DownloadItem allObjects];
+    if(index >= allDownloadItems.count){
         return nil;
     }
     CGSize size = [self sizeForItemsInGMGridView:gridView];
@@ -370,7 +365,7 @@
         view.backgroundColor = [UIColor clearColor];
         cell.contentView = view;
     }
-    DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:index];
+    DownloadItem *item = [allDownloadItems objectAtIndex:index];
     
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
@@ -440,8 +435,7 @@
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
-    DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:index];
-    [[AppDelegate instance].downloadItems removeObject:item];
+    DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:index];
     [item deleteObject];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
@@ -470,14 +464,7 @@
         }
     }
     
-    NSMutableArray *tempsubitems = [[NSMutableArray alloc]initWithCapacity:10];
-    for (SubdownloadItem *subitem in [AppDelegate instance].subdownloadItems) {
-        if ([subitem.itemId isEqualToString:item.itemId]) {
-            [tempsubitems addObject:subitem];
-            [subitem deleteObject];
-        }
-    }
-    [[AppDelegate instance].subdownloadItems removeObjectsInArray:tempsubitems];
+    NSArray *tempsubitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", item.itemId]];
     for (SubdownloadItem *subitem in tempsubitems) {
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
@@ -486,11 +473,12 @@
                 [AppDelegate instance].currentDownloadingNum = 0;
             }
         }
+        [subitem deleteObject];
     }
     
     item = nil;
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-    if ([AppDelegate instance].downloadItems.count == 0) {
+    if ([DownloadItem allObjects].count == 0) {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
@@ -501,8 +489,9 @@
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     [self closeMenu];
-    if(position < [AppDelegate instance].downloadItems.count){
-        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:position];
+    NSArray *allDownloadItems = [DownloadItem allObjects];
+    if(position < allDownloadItems.count){
+        DownloadItem *item = [allDownloadItems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
             NSString *extension = @"mp4";
             NSFileManager *fileManager = [NSFileManager defaultManager];

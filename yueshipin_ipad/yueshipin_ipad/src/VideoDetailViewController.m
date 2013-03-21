@@ -21,6 +21,8 @@
 @synthesize fromViewController;
 @synthesize type;
 @synthesize subname;
+@synthesize mp4DownloadUrls;
+@synthesize m3u8DownloadUrls;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,6 +40,8 @@
     [self.view addGestureRecognizer:swipeRecognizer];
     
     [self setCloseTipsViewHidden:NO];
+    mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
+    m3u8DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
 }
 
 - (void)didReceiveMemoryWarning
@@ -57,8 +61,10 @@
     _sinaweibo = nil;
     video = nil;
     topics = nil;
-    [downloadUrls removeAllObjects];
-    downloadUrls = nil;
+    [mp4DownloadUrls removeAllObjects];
+    mp4DownloadUrls = nil;
+    [m3u8DownloadUrls removeAllObjects];
+    m3u8DownloadUrls = nil;
     episodeArray = nil;
     umengPageName = nil;
 }
@@ -299,10 +305,8 @@
 - (void)getDownloadUrls:(int)num
 {
     if(num < 0 || num >=episodeArray.count){
-        downloadUrls = nil;
         return;
     }
-    downloadUrls = [[NSMutableArray alloc]initWithCapacity:3];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
@@ -310,7 +314,10 @@
             for(NSDictionary *url in urlArray){
                 if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                     NSString *videoUrl = [url objectForKey:@"url"];
-                    [downloadUrls addObject:videoUrl];
+                    [mp4DownloadUrls addObject:videoUrl];
+                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                    NSString *videoUrl = [url objectForKey:@"url"];
+                    [m3u8DownloadUrls addObject:videoUrl];
                 }
             }
         }

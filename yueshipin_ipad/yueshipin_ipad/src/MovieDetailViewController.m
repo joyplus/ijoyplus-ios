@@ -15,6 +15,11 @@
 #import "DownloadItem.h"
 #import "DownloadHandler.h"
 #import "DownloadUrlFinder.h"
+#import "HTTPServer.h"
+#import <QuartzCore/QuartzCore.h>
+#import <MediaPlayer/MediaPlayer.h>
+
+
 #define DEFAULT_POSOTION_Y 585
 
 @interface MovieDetailViewController (){
@@ -26,6 +31,8 @@
     BOOL introExpand;
     UITapGestureRecognizer *tapGesture;
 }
+
+@property (nonatomic) int downloadType;
 
 @end
 
@@ -232,12 +239,13 @@
 {
     [super viewDidAppear:animated];
     if ([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch] && self.downloadBtn.enabled) {
-        NSString *playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
+        NSString *playWithDownload = [AppDelegate instance].playWithDownload;
         if (![playWithDownload isEqualToString:@"1"]) {
+            [AppDelegate instance].playWithDownload = @"1";
             [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download"]];
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
         }
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
     } else {
         [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO introImage:[UIImage imageNamed:@"play_intro"]];
     }
@@ -342,22 +350,27 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
-    if(downloadUrls != nil && downloadUrls.count > 0){
-        NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
-        DownloadItem *downloadingItem = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
-        if(downloadingItem != nil){
-            [self.downloadBtn setEnabled:NO];
-            if(downloadingItem.percentage == 100){
-                [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_disabled"] forState:UIControlStateDisabled];
-            } else {
-                [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
-            }
-        }
+    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+        // do nothing
     } else {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
     [self repositElements:0];
+}
+
+- (void)checkIfDownloading
+{
+    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+    DownloadItem *downloadingItem = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    if(downloadingItem != nil){
+        [self.downloadBtn setEnabled:NO];
+        if(downloadingItem.percentage == 100){
+            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_disabled"] forState:UIControlStateDisabled];
+        } else {
+            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
+        }
+    }
 }
 
 - (void)repositElements:(int)increasePositionY
@@ -442,8 +455,29 @@
 
 - (void)playVideo
 {
-    self.subname = @"";
-    [super playVideo:0];
+//    self.subname = @"";
+//    [super playVideo:0];
+    HTTPServer *httpServer = [[HTTPServer alloc] init];
+    [httpServer setPort:12580];
+	[httpServer setType:@"_http._tcp."];
+    NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDir = [documentPaths objectAtIndex:0];
+	[httpServer setDocumentRoot:documentsDir];
+    NSError *error;
+	if([httpServer start:&error]) {
+		NSLog(@"Started HTTP Server on port %hu", [httpServer listeningPort]);
+	}
+	else {
+		NSLog(@"Error starting HTTP Server: %@", error);
+	}
+    MPMoviePlayerViewController *MPC = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://127.0.0.1:12580/984192/playlist.m3u8"]];
+//    MPMoviePlayerViewController *MPC = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"]];
+    
+    MPMoviePlayerController *moviePlayer = MPC.moviePlayer;
+    moviePlayer.repeatMode = MPMovieRepeatModeNone;
+    moviePlayer.controlStyle = MPMovieControlStyleFullscreen;
+    
+    [self presentMoviePlayerViewControllerAnimated:MPC];
 }
 
 //- (NSString *)getVideoAddress
@@ -553,6 +587,15 @@
     }
     [self.downloadBtn setEnabled:NO];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
+    if (self.mp4DownloadUrls.count > 0) {
+        [self saveToDb:@"mp4"];
+    } else if (self.m3u8DownloadUrls.count > 0){
+        [self saveToDb:@"m3u8"];
+    }
+}
+
+- (void)saveToDb:(NSString *)downloadType
+{
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
     if (item != nil) {
@@ -570,16 +613,16 @@
     item.type = 1;
     item.downloadStatus = @"waiting";
     item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-    item.urlArray = downloadUrls;
-//        item.url = @"http://api.joyplus.tv/joyplus-service/video/t.mp4";
-//    item.url = [downloadUrls objectAtIndex:0];
+    if ([downloadType isEqualToString:@"mp4"]) {
+        item.urlArray = self.mp4DownloadUrls;
+    } else if([downloadType isEqualToString:@"m3u8"]){
+        NSArray *tempArray = [NSArray arrayWithObject:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"];
+//        item.urlArray = self.m3u8DownloadUrls;
+        item.urlArray = tempArray;
+    }
+    item.downloadType = downloadType;
     [item save];
-    [[AppDelegate instance].downloadItems addObject:item];
-//    [[AppDelegate instance] addToDownloaderArray:item];
-//    NSArray *tempArray = [NSArray arrayWithObjects:@"http://m.youku.com/wap/pvs?id=XNDY3NjU0ODIw&format=3gphd", @"http://122.228.96.165/12/17/21/2121689937.9.mp4?crypt=308351d1aa7f2e614&b=2000&gn=860&nc=1&bf=25&p2p=1&video_type=mp4&check=0&tm=1351771200&key=65c1e799be39e051e4ee093f2377309c&lgn=letv&proxy=1945014827&cipi=1945093243&tag=mobile&np=1&vtype=mp4&ptype=s1&level=350&t=1351674133&cid=&vid=&sign=mb&dname=mobile", nil];
-//    NSArray *tempArray = [NSArray arrayWithObjects:@"http://api.joyplus.tv/joyplus-service/video/t.mp4", nil];
-//
-//    item.urlArray = tempArray;
+    
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
     finder.item = item;
     [finder setupWorkingUrl];

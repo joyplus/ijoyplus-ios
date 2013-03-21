@@ -98,6 +98,8 @@
 #define APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION   (@"applicationDidEnterBackground")
 #define APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION      (@"applicationDidBecomeActive")
 
+#define LOCAL_HTTP_SERVER_URL @"http://127.0.0.1:12580"
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

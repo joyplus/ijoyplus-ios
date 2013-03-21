@@ -16,6 +16,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
+#import "AppDelegate.h"
 
 @implementation ActionUtility
 
@@ -94,6 +95,48 @@
     }
     
     return NO;
+}
+
+
++ (float)getFreeDiskspace
+{
+    NSError *error = nil;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    float totalFreeSpace_ = 0;
+    if (dictionary) {
+        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        totalFreeSpace_ = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
+    }
+    return totalFreeSpace_;
+}
+
+
++ (void)triggerSpaceNotEnough
+{
+    BOOL displayNoSpaceFlag = NO;
+    for (DownloadItem *item in [DownloadItem allObjects]) {
+        displayNoSpaceFlag = [self changeItemStatusToStop:item];
+    }
+    for (SubdownloadItem *item in [SubdownloadItem allObjects]) {
+        displayNoSpaceFlag = [self changeItemStatusToStop:item];
+    }
+    if(displayNoSpaceFlag) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:NO_ENOUGH_SPACE object:nil];
+    }
+    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance].padDownloadManager stopDownloading];
+}
+
++ (BOOL)changeItemStatusToStop:(DownloadItem *)item
+{
+    if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
+        item.downloadStatus = @"stop";
+        [item save];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 @end

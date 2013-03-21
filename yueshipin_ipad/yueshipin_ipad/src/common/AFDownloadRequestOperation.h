@@ -52,6 +52,7 @@
 @property (nonatomic, strong) NSString *operationId;
 @property (nonatomic, strong) NSString *suboperationId;
 @property (nonatomic, strong) NSString *operationStatus;
+@property (nonatomic) int downloadingSegmentIndex;
 /**
  A String value that defines the target path or directory.
  

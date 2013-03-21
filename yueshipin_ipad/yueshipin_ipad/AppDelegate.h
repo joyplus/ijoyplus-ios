@@ -14,6 +14,8 @@
 #import "DownLoadManager.h"
 #import "NewDownloadManager.h"
 #import "WXApi.h"
+#import "NewM3u8DownloadManager.h"
+
 @class RootViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate>
@@ -41,8 +43,9 @@
 @property (strong, nonatomic)DownLoadManager *downLoadManager;
 
 @property (strong, nonatomic) NewDownloadManager *padDownloadManager;
-@property (strong, nonatomic) NSMutableArray *downloadItems;
-@property (strong, nonatomic) NSMutableArray *subdownloadItems;
+@property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
+
+@property (nonatomic, strong) NSString *playWithDownload;
 
 + (AppDelegate *) instance;
 
