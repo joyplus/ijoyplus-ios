@@ -242,12 +242,7 @@
 
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
-        for (UILabel *label in progressLabelArr_){
-            if (label.tag == [itemId intValue]){
-                //label.text = @"暂停下载";
-                break;
-            }
-        }
+         [self reloadDataSource];
     }
 }
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className{
@@ -431,7 +426,7 @@
     
     //删除 对应的文件
     NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
-    NSString *subfileName = [NSString stringWithFormat:@"%@_",item.itemId];
+    NSString *subfileName = [NSString stringWithFormat:@"%@_",itemId];
     for (NSString *nameStr in fileList) {
         if ([nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]) {
             NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];

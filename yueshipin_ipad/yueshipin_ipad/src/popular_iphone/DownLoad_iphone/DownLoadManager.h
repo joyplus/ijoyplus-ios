@@ -27,6 +27,7 @@
     SubdownloadItem *subdownloadItem_;
     int preProgress_;
     int netWorkStatus;
+    NSLock *lock_;
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
@@ -35,6 +36,7 @@
 @property (nonatomic, strong)NSArray *allSubItems;
 @property (nonatomic, strong)DownloadItem *downloadItem;
 @property (nonatomic, strong)SubdownloadItem *subdownloadItem;
+@property (nonatomic, strong)NSLock *lock;
 +(DownLoadManager *)defaultDownLoadManager;
 
 -(void)resumeDownLoad;

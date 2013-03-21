@@ -185,18 +185,13 @@
 }
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
-        for (UILabel *label in progressLabelArr_){
-            if (label.tag == [itemId intValue]){
-               // label.text = @"暂停下载";
-                break;
-            }
-        }
+         [self reloadDataSource];
     }
 }
 
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className{
     
-    if ([className isEqualToString:@"IphoneDownloadViewController"]){
+    if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         [self reloadDataSource];
     }
 }

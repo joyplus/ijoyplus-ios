@@ -374,11 +374,12 @@
 }
 -(void)addDone:(id)sender{
     NSMutableDictionary *dic = [(NSNotification *)sender object];
-    if (myListArr_ == nil) {
-        myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
+    if (dic) {
+        if (myListArr_ == nil) {
+            myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
+        }
+        [myListArr_ insertObject:dic atIndex:0];
     }
-    [myListArr_ insertObject:dic atIndex:0];
-    
     [myTableList_ reloadData];
     [self Selectbutton:button3_];
 
