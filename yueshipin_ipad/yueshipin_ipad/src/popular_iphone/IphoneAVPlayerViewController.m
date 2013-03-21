@@ -1384,7 +1384,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         case CLOSE_BUTTON_TAG:{
             [urlConnection cancel];
             [self updateWatchRecord];
-            
+            [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                            name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                                          object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                            name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                                          object:nil];
             [self removePlayerTimeObserver];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player.currentItem removeObserver:self forKeyPath:@"status"];
@@ -1824,6 +1829,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)dealloc{
     [self removePlayerTimeObserver];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                                  object:nil];
     [avplayerView_.layer removeFromSuperlayer];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
