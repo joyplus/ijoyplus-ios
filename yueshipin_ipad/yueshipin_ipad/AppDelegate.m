@@ -285,6 +285,9 @@
     }
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:10];
+    
+    //when app become active ,cancel all local notification .
+    [self cancelLocalNotification];
 }
 
 - (void)triggerDownload
@@ -302,9 +305,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    
-    //when app become active ,cancel all local notification .
-    [self cancelLocalNotification];
     
 }
 //- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
