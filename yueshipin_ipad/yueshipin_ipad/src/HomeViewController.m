@@ -1055,17 +1055,29 @@
     if (indexPath.row < movieTopsArray.count) {
         NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
         UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
-        for (int i=0; i < MOVIE_NUMBER; i++) {
+//        for (int i=0; i < MOVIE_NUMBER; i++) {
+//            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+//            if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
+//                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+//            } else {
+//                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+//            }
+//        }
+        cellScrollView.contentOffset = CGPointMake(0, 0);
+        NSArray *subitemArray = [item objectForKey:@"items"];
+        
+        //add code by huokun at 13/03/21 for BUG#398
+        //根据网络回掉数据，设置scrollView的ContentSize
+        
+        for (int i=0; i < subitemArray.count; i++)
+        {
             UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
             if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
                 [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
             } else {
                 [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
             }
-        }
-        cellScrollView.contentOffset = CGPointMake(0, 0);
-        NSArray *subitemArray = [item objectForKey:@"items"];
-        for(int i = 0; i < subitemArray.count; i++){
+            
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             NSDictionary *subitem = [subitemArray objectAtIndex:i];
             [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
@@ -1076,7 +1088,23 @@
             } else {
                 tempLabel.textColor = [UIColor blackColor];
             }
+            
         }
+        for (int i=subitemArray.count; i < MOVIE_NUMBER; i++)
+        {
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            [tempBtn removeFromSuperview];
+            
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
+            [tempLabel removeFromSuperview];
+            
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
+            [contentImage removeFromSuperview];
+        }
+        
+        cellScrollView.contentSize = CGSizeMake((MOVIE_LOGO_WEIGHT+5) * subitemArray.count + 12, MOVIE_LOGO_HEIGHT);
+        //add code end
+        
         UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
         [titleLabel setText:[item objectForKey:@"name"]];
         [titleLabel sizeToFit];
