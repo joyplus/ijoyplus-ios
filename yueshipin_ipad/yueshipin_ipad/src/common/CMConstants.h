@@ -95,6 +95,9 @@
 #define SHOW_PLAY_INTRO_WITH_DOWNLOAD @"show_play_intro_with_download"
 #define WIFI_IS_NOT_AVAILABLE @"wifi_is_not_available"
 
+#define APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION   (@"applicationDidEnterBackground")
+#define APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION      (@"applicationDidBecomeActive")
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

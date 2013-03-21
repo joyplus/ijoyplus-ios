@@ -260,6 +260,10 @@
     //14天（2周）后下午9点提示
     [self addLocalNotificationWithTimeInterval:DAY(14)];
     // end
+    
+    //add notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                                        object:nil];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -288,6 +292,10 @@
     
     //when app become active ,cancel all local notification .
     [self cancelLocalNotification];
+    
+    //add notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                                        object:nil];
 }
 
 - (void)triggerDownload

@@ -5,6 +5,7 @@
 #import "EpisodeListViewController.h"
 #import "CommonHeader.h"
 #import "CMPopTipView.h"
+#import "ActionUtility.h"
 
 #define TOP_TOOLBAR_HEIGHT 50
 #define BOTTOM_TOOL_VIEW_HEIGHT 150
@@ -244,6 +245,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.view addGestureRecognizer:tapRecognizer];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidEnterBackground:)
+                                                 name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidBecomeActive:)
+                                                 name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                               object:nil];
 }
 
 - (void) viewDidAppear: (BOOL) animated {
@@ -2023,5 +2033,26 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 };
 
 //=====================End Utility methods========================
+
+#pragma mark -
+#pragma mark - 
+- (void)appDidEnterBackground:(NSNotification *)niti
+{
+    if (![ActionUtility isAirPlayActive])
+    {
+        if (self.isPlaying)
+        {
+            [mPlayer pause];
+        }
+        [self updateWatchRecord];
+        [self saveLastPlaytime];
+    }
+}
+
+- (void)appDidBecomeActive:(NSNotification *)niti
+{
+    
+}
+
 @end
 

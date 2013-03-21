@@ -84,6 +84,8 @@
     AudioSessionGetProperty(kAudioSessionProperty_AudioRouteDescription, &dataSize, &currentRouteDescriptionDictionary);
     if (currentRouteDescriptionDictionary) {
         CFArrayRef outputs = CFDictionaryGetValue(currentRouteDescriptionDictionary, kAudioSession_AudioRouteKey_Outputs);
+        if (nil == outputs)
+            return NO;
         if(CFArrayGetCount(outputs) > 0) {
             CFDictionaryRef currentOutput = CFArrayGetValueAtIndex(outputs, 0);
             CFStringRef outputType = CFDictionaryGetValue(currentOutput, kAudioSession_AudioRouteKey_Type);
