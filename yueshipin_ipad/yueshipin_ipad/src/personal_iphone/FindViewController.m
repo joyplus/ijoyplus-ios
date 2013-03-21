@@ -63,9 +63,14 @@
     rightButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = nil;
     
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    searchBar_.tintColor = [UIColor whiteColor];
-    searchBar_.placeholder = @"请输入片名/导演/主演";
+    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
+    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
+    [self.view addSubview:imagview];
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 41)];
+    searchBar_.tintColor = [UIColor clearColor];
+    searchBar_.placeholder = @" 请输入片名/导演/主演";
+    [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
+    
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
     for(int i = 0; i < numViews; i++) {
@@ -75,13 +80,13 @@
     }
     if(!(searchField == nil)) {
         [searchField.leftView setHidden:YES];
-        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang.png"] ];
+        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang"] ];
         [searchField setBorderStyle:UITextBorderStyleNone];
     }
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 320, kCurrentWindowHeight-88) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 42, 320, kCurrentWindowHeight-85) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -136,25 +141,24 @@
 - (void)showFailureView:(float)closeTime
 {
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 50)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
     label.backgroundColor = [UIColor blackColor];
-    label.font = [UIFont systemFontOfSize:13];
+    label.font = [UIFont systemFontOfSize:18];
     label.text = @"抱歉，未找到相关影片！";
     label.textColor = [UIColor whiteColor];
     label.numberOfLines = 0;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.textAlignment = NSTextAlignmentCenter;
-    label.center = self.view.center;
+    label.center = CGPointMake(self.view.bounds.size.width/2,100 );
     label.alpha = 0.6;
     label.layer.cornerRadius = 5;
     label.center = self.view.center;
     label.tag =19999;
-    [[AppDelegate instance].window addSubview:label];
-    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+    [self.view addSubview:label];
 }
 - (void)removeOverlay
 {
-    for(UIView *view in [AppDelegate instance].window.subviews ){
+    for(UIView *view in self.view.subviews ){
         if (view.tag == 19999) {
             [view removeFromSuperview];
             break;
@@ -174,18 +178,9 @@
     [searchBar_ resignFirstResponder];
     [self Search];
     [searchBar setShowsCancelButton:NO animated:YES];
-//    for (id view in searchBar.subviews) {
-//        if ([view isKindOfClass:[UIButton class]]) {
-//            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"cancelSearch.png"] forState:UIControlStateNormal];
-//            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"cancelSearch_s.png"] forState:UIControlStateHighlighted];
-//            [(UIButton *)view setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-//            ((UIButton *)view).titleLabel.font = [UIFont systemFontOfSize:13];
-//            ((UIButton *)view).enabled = YES;
-//        }
-//    }
-
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
+    [self removeOverlay];
    [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
     if ([view isKindOfClass:[UIButton class]]) {

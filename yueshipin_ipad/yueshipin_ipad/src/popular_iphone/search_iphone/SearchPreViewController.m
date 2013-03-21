@@ -271,25 +271,25 @@
 - (void)showFailureView:(float)closeTime
 {
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 50)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
     label.backgroundColor = [UIColor blackColor];
-    label.font = [UIFont systemFontOfSize:13];
+    label.font = [UIFont systemFontOfSize:18];
     label.text = @"抱歉，未找到相关影片！";
     label.textColor = [UIColor whiteColor];
     label.numberOfLines = 0;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.textAlignment = NSTextAlignmentCenter;
-    label.center = self.view.center;
+    label.center = CGPointMake(self.view.bounds.size.width/2,100 );
     label.alpha = 0.6;
     label.layer.cornerRadius = 5;
     label.center = self.view.center;
     label.tag =19999;
-    [[AppDelegate instance].window addSubview:label];
-    [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
+    [self.view addSubview:label];
+
 }
 - (void)removeOverlay
 {
-    for(UIView *view in [AppDelegate instance].window.subviews ){
+    for(UIView *view in self.view.subviews ){
         if (view.tag == 19999) {
             [view removeFromSuperview];
             break;
@@ -312,6 +312,7 @@
     }
     
     [self hiddeViews];
+    [self removeOverlay];
     [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
@@ -347,6 +348,7 @@
         [searchBar setShowsCancelButton:NO animated:YES];
         searchBar_.text = nil;
     }
+    [self removeOverlay];
     [self initDataArr];
     [tableList_ reloadData];
 }
