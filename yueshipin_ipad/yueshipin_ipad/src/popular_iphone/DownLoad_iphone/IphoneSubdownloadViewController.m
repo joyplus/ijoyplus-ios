@@ -193,6 +193,14 @@
         }
     }
 }
+
+-(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className{
+    
+    if ([className isEqualToString:@"IphoneDownloadViewController"]){
+        [self reloadDataSource];
+    }
+}
+
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         
@@ -332,12 +340,10 @@
         }
     
     }
-//    else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
-//        progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
-//        [cell.contentView addSubview:progressView];
-//        [cell.contentView addSubview:progressLabel];
-//    }
-
+    else if([downloadItem.downloadStatus isEqualToString:@"fail_1011"]){
+        labelDown.text = @"下载片源失效";
+        [cell.contentView addSubview:labelDown];
+    }
     return cell;
 }
 

@@ -157,7 +157,6 @@
 		22BA95F516D205BE00A774D8 /* download_wait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F216D205BE00A774D8 /* download_wait@2x.png */; };
 		22BC875416D7373300EEDC67 /* clear_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */; };
 		22BC875516D7373300EEDC67 /* clear_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875316D7373300EEDC67 /* clear_bt@2x.png */; };
-		22CA85DF16F3256A00AAE4EE /* DownloadUrlCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CA85DE16F3256A00AAE4EE /* DownloadUrlCheck.m */; };
 		22CE9F32169A729300D4FC76 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F31169A729300D4FC76 /* UIImage+Scale.m */; };
 		22CE9F5C169AA7FD00D4FC76 /* SendWeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */; };
 		22D11DB416A641D900B49FFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D11DB316A641D900B49FFD /* Default-568h@2x.png */; };
@@ -981,8 +980,6 @@
 		22BA95F216D205BE00A774D8 /* download_wait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_wait@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_wait@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BC875316D7373300EEDC67 /* clear_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt@2x.png"; sourceTree = SOURCE_ROOT; };
-		22CA85DD16F3256A00AAE4EE /* DownloadUrlCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadUrlCheck.h; sourceTree = "<group>"; };
-		22CA85DE16F3256A00AAE4EE /* DownloadUrlCheck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadUrlCheck.m; sourceTree = "<group>"; };
 		22CE9F30169A729300D4FC76 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		22CE9F31169A729300D4FC76 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
 		22CE9F5A169AA7FD00D4FC76 /* SendWeiboViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendWeiboViewController.h; sourceTree = "<group>"; };
@@ -1871,8 +1868,6 @@
 				2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */,
 				22F08FA016AE347400C16AD2 /* IphoneSubdownloadViewController.h */,
 				22F08FA116AE347400C16AD2 /* IphoneSubdownloadViewController.m */,
-				22CA85DD16F3256A00AAE4EE /* DownloadUrlCheck.h */,
-				22CA85DE16F3256A00AAE4EE /* DownloadUrlCheck.m */,
 			);
 			name = DownLoad_iphone;
 			path = popular_iphone/DownLoad_iphone;
@@ -3877,7 +3872,6 @@
 				22447FF716F18D4A00058985 /* TSPopoverPopoverView.m in Sources */,
 				22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */,
 				22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */,
-				22CA85DF16F3256A00AAE4EE /* DownloadUrlCheck.m in Sources */,
 				22B0FFC916F99F3C00ACDA07 /* CloseTipsView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

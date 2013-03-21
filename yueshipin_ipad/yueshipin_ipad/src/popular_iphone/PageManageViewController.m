@@ -393,12 +393,11 @@
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:showTableList_ withClient:self];
     
+}
+-(void)viewWillAppear:(BOOL)animated{
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
-    
-
-    
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -439,10 +438,6 @@
     iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
     
-}
-
-- (void)viewWillAppear:(BOOL)animated{
-    //self.tabBarController.tabBar.hidden = NO;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

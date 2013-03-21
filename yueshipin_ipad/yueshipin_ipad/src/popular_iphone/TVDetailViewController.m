@@ -14,7 +14,6 @@
 #import "ProgramNavigationController.h"
 #import "CommonHeader.h"
 #import "CacheUtility.h"
-#import "DownloadUrlCheck.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
 
@@ -801,9 +800,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,videoUrl,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num], nil];
-    DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
-    check.infoArr = infoArr;
-    [check checkDownloadUrl];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
 }
 
 

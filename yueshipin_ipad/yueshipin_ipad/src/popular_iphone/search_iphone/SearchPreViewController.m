@@ -347,6 +347,8 @@
         [searchBar setShowsCancelButton:NO animated:YES];
         searchBar_.text = nil;
     }
+    [self initDataArr];
+    [tableList_ reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

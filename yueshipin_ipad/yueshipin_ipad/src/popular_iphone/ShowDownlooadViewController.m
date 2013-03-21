@@ -10,7 +10,6 @@
 #import "UIImage+Scale.h"
 #import "CMConstants.h"
 #import "SubdownloadItem.h"
-#import "DownloadUrlCheck.h"
 @interface ShowDownlooadViewController ()
 
 @end
@@ -195,9 +194,7 @@
             return;
         }
         NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,videoUrl,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], nil];
-        DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
-        check.infoArr = infoArr;
-        [check checkDownloadUrl];
+       [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
     }
 }
 

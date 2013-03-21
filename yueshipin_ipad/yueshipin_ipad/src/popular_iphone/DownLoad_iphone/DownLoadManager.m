@@ -11,6 +11,7 @@
 #import "SubdownloadItem.h"
 #import "AFDownloadRequestOperation.h"
 #import "Reachability.h"
+#import "CacheUtility.h"
 static DownLoadManager *downLoadManager_ = nil;
 static NSMutableArray *downLoadQueue_ = nil;
 @implementation DownLoadManager
@@ -112,7 +113,7 @@ static NSMutableArray *downLoadQueue_ = nil;
       [downLoadQueue_ addObject:downloadingOperation];
   
         [self startDownLoad];
-       [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
+        [self waringPlus];
     
 }
 
@@ -186,7 +187,7 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     BOOL isdownloading = NO;
     for (AFDownloadRequestOperation *downloadItem in downLoadQueue_) {
-        if (downloadItem.operationStatus == @"loading" ) {    //0:stop 1:start 2:done 3: waiting 4:error
+        if ([downloadItem.operationStatus isEqualToString:@"loading"] ) {    //0:stop 1:start 2:done 3: waiting 4:error
              [self beginDownloadTask:downloadItem];
             isdownloading = YES;
             break;
@@ -246,7 +247,6 @@ static NSMutableArray *downLoadQueue_ = nil;
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
     
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Successfully downloaded file id %@", downloadRequestOperation.operationId);
         if ([downLoadQueue_ containsObject:operation]) {
             [downLoadQueue_ removeObject:operation];
         }
@@ -262,25 +262,45 @@ static NSMutableArray *downLoadQueue_ = nil;
             [self.downLoadMGdelegate downloadFinishwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
             
         }
-        //[[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
-        
+        [self waringReduce];
         [self startDownLoad];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
+        
         [operation cancel];
-        downloadRequestOperation.operationStatus = @"fail";
-        NSRange range = [downloadId_ rangeOfString:@"_"];
-        if (range.location == NSNotFound){
-             [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
-             [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+        if (error.code == -1011) {
+            downloadRequestOperation.operationStatus = @"fail_1011";
+            NSRange range = [downloadId_ rangeOfString:@"_"];
+            if (range.location == NSNotFound){
+                [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail_1011" withPercentage:-1];
+                [self.downLoadMGdelegate downloadUrlTnvalidWithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+                
+            }
+            else{
+                [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"fail_1011" withPercentage:-1];
+                [self.downLoadMGdelegate downloadUrlTnvalidWithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+                
+            }
+
             
         }
         else{
-             [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
-             [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
-            
-        }
+            downloadRequestOperation.operationStatus = @"fail";
+            NSRange range = [downloadId_ rangeOfString:@"_"];
+            if (range.location == NSNotFound){
+                [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
+                [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+                
+            }
+            else{
+                [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
+                [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+                
+            }
+}
         
+        
+                
         if ([downLoadQueue_ containsObject:operation]) {
             int index = [downLoadQueue_ indexOfObject:operation];
             index++;
@@ -418,7 +438,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         [downLoadQueue_ removeObject:downloadOperation];
     }
     [[DownLoadManager defaultDownLoadManager] startDownLoad];
-   // [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
+    [[DownLoadManager defaultDownLoadManager] waringReduce];
 }
 
 //停止下载不清除缓存
@@ -581,5 +601,27 @@ static NSMutableArray *downLoadQueue_ = nil;
     return 0.0;
 
 
+}
+-(void)waringPlus{
+    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
+    int num = 0;
+    if (numStr != nil) {
+        num = [numStr intValue];
+        num++;
+    }
+    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
+}
+-(void)waringReduce{
+    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
+    int num = 0;
+    if (numStr != nil) {
+        num = [numStr intValue];
+        if (num >0) {
+            num --;
+        }
+    }
+ [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
 }
 @end

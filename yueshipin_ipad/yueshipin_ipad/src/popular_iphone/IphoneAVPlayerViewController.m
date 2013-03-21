@@ -546,20 +546,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)playNext{
     
     
-    myHUD.hidden = NO;
-    [self.view bringSubviewToFront:myHUD];
+   
     [self removePlayerTimeObserver];
     [self.player pause];
     if (timeLabelTimer_ != nil) {
         [timeLabelTimer_ invalidate];
     }
+    if (playNum == [episodesArr_ count]-1) {
+        return;
+    }
+    
     playNum++;
     [tableList_ reloadData];
-//    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-    //[self initplaytime];
+
     lastPlayTime_ = kCMTimeZero;
     [self addCacheview];
-    
+    myHUD.hidden = NO;
+    [self.view bringSubviewToFront:myHUD];
     [self initWillPlayLabel];
     [self initDataSource:playNum];
     
@@ -1665,8 +1668,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             tempPlayType = @"2";
             playUrl = webPlayUrl_;
         }
-        [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:playbackTime] ];
-        
+        if ((duration - playbackTime)>5) {
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:playbackTime] ];
+        }
+        else{ 
+           [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0] ];
+        }
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];

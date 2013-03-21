@@ -14,6 +14,7 @@
 - (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className;
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
+-(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className;
 @end
 
 @interface DownLoadManager : NSObject{

@@ -170,9 +170,12 @@
     if (numStr != nil) {
         num = [numStr intValue];
     }
-     num++;
-    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
-    if (num >0 && num <10) {
+    if (num == 0) {
+        customNavigationButtonView_.warningNumber = 0;
+        customNavigationButtonView_.badgeView.badgeText = @"";
+        customNavigationButtonView_.badgeView.hidden = YES;
+    }
+   else if (num >=0 && num <10) {
         customNavigationButtonView_.badgeView.hidden = NO;
         customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
         [customNavigationButtonView_.badgeView setNeedsLayout];
@@ -194,10 +197,10 @@
 }
 
 -(void)setting:(id)sender{
-    customNavigationButtonView_.warningNumber = 0;
-    customNavigationButtonView_.badgeView.badgeText = @"";
-    customNavigationButtonView_.badgeView.hidden = YES;
-    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",0]];
+//    customNavigationButtonView_.warningNumber = 0;
+//    customNavigationButtonView_.badgeView.badgeText = @"";
+//    customNavigationButtonView_.badgeView.hidden = YES;
+//    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",0]];
     
     IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
     downloadViewController.hidesBottomBarWhenPushed = YES;
