@@ -1054,7 +1054,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:WIFI_IS_NOT_AVAILABLE
+                                                  object:nil];
     [self updateWatchRecord];
     [self saveLastPlaytime];
 	[mPlayer pause];
@@ -1064,11 +1066,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
     if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        }];
     } else {
         if (closeAll) {
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+                [[UIApplication sharedApplication] setStatusBarHidden:NO];
+            }];
         } else {
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
             [self.navigationController popViewControllerAnimated:NO];
         }
     }
