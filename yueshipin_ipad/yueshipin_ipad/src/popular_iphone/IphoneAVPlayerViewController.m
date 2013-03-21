@@ -16,7 +16,7 @@
 #import "ServiceConstants.h"
 #import "CacheUtility.h"
 #import "Reachability.h"
-
+#import "ActionUtility.h"
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -41,7 +41,9 @@
 #define HIGH_CLEAR 200
 #define SUPER_CLEAR 300
 @interface IphoneAVPlayerViewController ()
-
+{
+    NSURLConnection     *urlConnection;
+}
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -600,7 +602,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     [self initUI];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidEnterBackground:)
+                                                 name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidBecomeActive:)
+                                                 name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                               object:nil];
 }
 
 -(void)initUI{
@@ -936,7 +945,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         str = [str stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         NSLog(@"The request url is %@",str);
         NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:str] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
-        [NSURLConnection connectionWithRequest:request delegate:self];
+        urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
     }
     else{
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
@@ -1373,6 +1382,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)action:(UIButton *)btn{
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
+            [urlConnection cancel];
             [self updateWatchRecord];
             
             [self removePlayerTimeObserver];
@@ -1823,6 +1833,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     avplayerView_ = nil;
    
 
+}
+
+#pragma mark -
+#pragma mark - app进入后台/重新激活
+- (void)appDidEnterBackground:(NSNotification *)niti
+{
+    if (![ActionUtility isAirPlayActive])
+    {
+        if (self.isPlaying)
+        {
+            [mPlayer pause];
+        }
+        [self updateWatchRecord];
+    }
+}
+
+- (void)appDidBecomeActive:(NSNotification *)niti
+{
+    
 }
 
 @end

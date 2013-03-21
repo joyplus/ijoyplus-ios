@@ -30,6 +30,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 
 
 @interface AVPlayerViewController () <UIGestureRecognizerDelegate, UIAlertViewDelegate>
+@property (nonatomic, strong) NSURLConnection   *urlConnection;
 @property (nonatomic, strong) UIToolbar *topToolbar;
 @property (nonatomic, strong) UIView *bottomView;
 @property (nonatomic, strong) UISlider *volumeSlider;
@@ -104,7 +105,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
-@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName;
+@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection;
 
 #pragma mark
 #pragma mark View Controller
@@ -508,7 +509,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
         }
         NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
-        [NSURLConnection connectionWithRequest:request delegate:self];
+        self.urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
     } else {
         [myHUD hide:NO];
         tipLabel.text = defaultErrorMessage;
@@ -1057,6 +1058,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:WIFI_IS_NOT_AVAILABLE
                                                   object:nil];
+    [self.urlConnection cancel];
     [self updateWatchRecord];
     [self saveLastPlaytime];
 	[mPlayer pause];
@@ -2048,7 +2050,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 //=====================End Utility methods========================
 
 #pragma mark -
-#pragma mark - 
+#pragma mark - app进入后台/重新激活
 - (void)appDidEnterBackground:(NSNotification *)niti
 {
     if (![ActionUtility isAirPlayActive])
