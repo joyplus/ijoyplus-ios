@@ -195,6 +195,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mSwitchButton = nil;
     umengPageName = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                                  object:nil];
 }
 
 - (void)viewDidLoad
