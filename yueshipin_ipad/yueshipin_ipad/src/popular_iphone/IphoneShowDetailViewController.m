@@ -18,6 +18,7 @@
 #import "SendWeiboViewController.h"
 #import "ProgramNavigationController.h"
 #import "ShowDownlooadViewController.h"
+#import "CommonMotheds.h"
 @interface IphoneShowDetailViewController ()
 
 @end
@@ -188,6 +189,7 @@
 }
 
 -(void)loadComments{
+   
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
@@ -222,6 +224,14 @@
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+    scrollView_ = nil;
+    next_ = nil;
+    pre_ = nil;
+    summaryBg_ = nil;
+    summaryLabel_ = nil;
+    moreBtn_ = nil;
+    pullToRefreshManager_ = nil;
+   
 }
 
 - (void)didReceiveMemoryWarning
@@ -881,6 +891,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
     
 }

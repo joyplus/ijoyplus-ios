@@ -172,7 +172,11 @@
 
 
 -(void)share:(id)sender event:(UIEvent *)event{
-    
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
     [actionSheet addButtonWithTitle:@"新浪微博" block:^{
         [self selectIndex:0];

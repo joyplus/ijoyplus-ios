@@ -16,6 +16,7 @@
 #import <QuartzCore/QuartzCore.h> 
 #import "AppDelegate.h"
 #import "Reachability.h"
+#import "CommonMotheds.h"
 #define PAGESIZE 20
 @interface FindViewController ()
 
@@ -73,9 +74,16 @@
     
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
+    
     for(int i = 0; i < numViews; i++) {
         if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UITextField class]]) {
             searchField = [searchBar_.subviews objectAtIndex:i];
+        }
+        if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UIButton class]]){
+            
+            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+            
         }
     }
     if(!(searchField == nil)) {
@@ -141,18 +149,17 @@
 - (void)showFailureView:(float)closeTime
 {
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-    label.backgroundColor = [UIColor blackColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-100, 150, 200, 40)];
+    label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont systemFontOfSize:18];
     label.text = @"抱歉，未找到相关影片！";
-    label.textColor = [UIColor whiteColor];
+    label.textColor = [UIColor blackColor];
     label.numberOfLines = 0;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.textAlignment = NSTextAlignmentCenter;
-    label.center = CGPointMake(self.view.bounds.size.width/2,100 );
-    label.alpha = 0.6;
+    //label.center = CGPointMake(self.view.bounds.size.width/2,self.view.bounds.size.height/2-100);
+    label.alpha = 1;
     label.layer.cornerRadius = 5;
-    label.center = self.view.center;
     label.tag =19999;
     [self.view addSubview:label];
 }
@@ -183,13 +190,13 @@
     [self removeOverlay];
    [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
-    if ([view isKindOfClass:[UIButton class]]) {
-        [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"cancelSearch.png"] forState:UIControlStateNormal];
-        [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"cancelSearch_s.png"] forState:UIControlStateHighlighted];
-        [(UIButton *)view setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-        ((UIButton *)view).titleLabel.font = [UIFont systemFontOfSize:13];
+        if ([view isKindOfClass:[UIButton class]]) {
+            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+            [(UIButton *)view setTitle:nil forState:UIControlStateNormal];
+            [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];
+        }
     }
-}
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar{
     [searchBar setShowsCancelButton:NO animated:NO];
@@ -255,6 +262,11 @@
 
 - (void)addBtnClicked
 {
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     NSMutableString *prodIds = [[NSMutableString alloc]init];
     for(NSDictionary *item in selectedArr_){
        NSString *idStr = [item objectForKey:@"prod_id"];

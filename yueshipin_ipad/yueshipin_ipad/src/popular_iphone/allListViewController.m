@@ -20,6 +20,7 @@
 #import "UIImage+Scale.h"
 #import "IphoneDownloadViewController.h"
 #import "DownLoadManager.h"
+#import "CommonMotheds.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 #define TV_TYPE 9000
@@ -62,6 +63,8 @@
 
 
 -(void)loadData{
+    [CommonMotheds showNetworkDisAbledAlert];
+    
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
     if(cacheResult != nil){
@@ -130,15 +133,17 @@
         num = [numStr intValue];
     }
     [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
-    if (num >0 && num <10) {
-        customNavigationButtonView_.badgeView.hidden = NO;
-        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
+    customNavigationButtonView_.badgeView.hidden = NO;
+    if (num == 0) {
+         customNavigationButtonView_.badgeView.badgeText = nil;
     }
-    else if (num >=10){
-        customNavigationButtonView_.warningNumber = num;
+    else{
+         customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
     }
-
-    //[self setWarningNum];
+    
+    customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
+    
+    
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
@@ -164,6 +169,12 @@
     
     
 }
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    tableList_ = nil;
+    pullToRefreshManager_ = nil;
+    refreshHeaderView_ = nil;
+}
 -(void)setWarningNum{
      NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
     int num = 0;
@@ -175,17 +186,13 @@
         customNavigationButtonView_.badgeView.badgeText = @"";
         customNavigationButtonView_.badgeView.hidden = YES;
     }
-   else if (num >=0 && num <10) {
+    else {
         customNavigationButtonView_.badgeView.hidden = NO;
         customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
         [customNavigationButtonView_.badgeView setNeedsLayout];
         customNavigationButtonView_.warningNumber = 0;
     }
-    else if (num >=10){
-        customNavigationButtonView_.warningNumber = num;
-        customNavigationButtonView_.badgeView.badgeText = @"";
-        customNavigationButtonView_.badgeView.hidden = YES;
-    }
+    
      
 
 }
@@ -265,6 +272,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [CommonMotheds showNetworkDisAbledAlert];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *item = [self.listArray objectAtIndex:indexPath.row];
     ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -327,6 +335,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

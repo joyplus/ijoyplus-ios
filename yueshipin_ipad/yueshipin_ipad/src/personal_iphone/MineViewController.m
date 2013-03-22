@@ -27,6 +27,7 @@
 #import "CustomNavigationViewController.h"
 #import "CustomNavigationViewControllerPortrait.h"
 #import "Reachability.h"
+#import "CommonMotheds.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -36,7 +37,7 @@
 @end
 
 @implementation MineViewController
-@synthesize segControl = segControl_;
+
 @synthesize bgView = bgView_;
 @synthesize sortedwatchRecordArray = sortedwatchRecordArray_;
 @synthesize favArr = favArr_;
@@ -296,7 +297,25 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
 }
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    bgView_ = nil;
+    recordTableList_ = nil;
+    favTableList_ = nil;
+    myTableList_ = nil;
+    moreView_ = nil;
+    moreButton_ = nil;
+    avatarImage_ = nil;
+    nameLabel_ = nil;
+    createList_ = nil;
+    noRecordBg_ = nil;
+    button2_ = nil;
+    button3_ = nil;
+    noRecord_ = nil;
+    noFav_ = nil;
+    noPersonalList_ = nil;
 
+}
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
@@ -386,6 +405,11 @@
 
 }
 -(void)seeMore:(id)sender{
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     if (!button1_.enabled) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         if ([sortedwatchRecordArray_ count]>10) {
@@ -661,6 +685,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [CommonMotheds showNetworkDisAbledAlert];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (tableView.tag == RECORD_TYPE) {
         NSDictionary *dic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
@@ -753,6 +778,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
 
+        [CommonMotheds showNetworkDisAbledAlert];
         switch (tableView.tag) {
             case RECORD_TYPE:
             {

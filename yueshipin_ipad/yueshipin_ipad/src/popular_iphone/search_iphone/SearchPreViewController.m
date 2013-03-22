@@ -23,6 +23,7 @@
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
+#import "CommonMotheds.h"
 #define SEARCH_HISTORY @"serach_history"
 #define HISTORY_LIST 9999
 #define RESULT_LIST 99999
@@ -136,6 +137,7 @@
  listArr_ = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
 }
 -(void)intHotKeyWords{
+    [CommonMotheds showNetworkDisAbledAlert];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -271,18 +273,16 @@
 - (void)showFailureView:(float)closeTime
 {
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-    label.backgroundColor = [UIColor blackColor];
+     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-100, 150, 200, 40)];
+    label.backgroundColor = [UIColor clearColor];
     label.font = [UIFont systemFontOfSize:18];
     label.text = @"抱歉，未找到相关影片！";
-    label.textColor = [UIColor whiteColor];
+    label.textColor = [UIColor blackColor];
     label.numberOfLines = 0;
     label.lineBreakMode = NSLineBreakByWordWrapping;
     label.textAlignment = NSTextAlignmentCenter;
-    label.center = CGPointMake(self.view.bounds.size.width/2,100 );
-    label.alpha = 0.6;
+    label.alpha = 1;
     label.layer.cornerRadius = 5;
-    label.center = self.view.center;
     label.tag =19999;
     [self.view addSubview:label];
 

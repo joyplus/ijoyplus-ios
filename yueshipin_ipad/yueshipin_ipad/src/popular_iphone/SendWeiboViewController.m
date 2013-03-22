@@ -14,6 +14,7 @@
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
+#import "CommonMotheds.h"
 @interface SendWeiboViewController ()
 
 @end
@@ -80,7 +81,11 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
 }
 -(void)share:(id)sender{
-    
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     [textView_ resignFirstResponder];
     NSString *content = textView_.text ;
     if ([content length] >0) {

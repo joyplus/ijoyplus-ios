@@ -20,6 +20,7 @@
 #import "SearchPreViewController.h"
 #import "IphoneSettingViewController.h"
 #import "UIImage+Scale.h"
+#import "CommonMotheds.h"
 #define PAGE_NUM 3
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -60,6 +61,7 @@
 
 
 -(void)loadTVTopsData{
+
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
     if(cacheResult != nil){
@@ -117,6 +119,7 @@
     }
 
 -(void)loadMovieTopsData{
+     
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
     if(cacheResult != nil){
@@ -230,7 +233,6 @@
 }
 
 -(void)loadMoreShowTopsData{
-
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:showTopId_,@"top_id",[NSNumber numberWithInt:showLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:@"/joyplus-service/index.php/show_top_items" parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -395,6 +397,7 @@
     
 }
 -(void)viewWillAppear:(BOOL)animated{
+    [CommonMotheds showNetworkDisAbledAlert];
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
@@ -544,6 +547,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+     [CommonMotheds showNetworkDisAbledAlert];
     [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     int tableViewTag = tableView.tag;
     if (tableViewTag == TV_TYPE) {
@@ -646,6 +650,7 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+    [CommonMotheds showNetworkDisAbledAlert];
     if (view == refreshHeaderViewForMovieList_) {
         [self loadMovieTopsData];
     }
@@ -689,6 +694,7 @@
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     showLoadCount_++;
     [self loadMoreShowTopsData];
     

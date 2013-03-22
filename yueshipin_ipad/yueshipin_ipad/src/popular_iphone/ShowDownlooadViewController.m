@@ -10,6 +10,7 @@
 #import "UIImage+Scale.h"
 #import "CMConstants.h"
 #import "SubdownloadItem.h"
+#import "CommonMotheds.h"
 @interface ShowDownlooadViewController ()
 
 @end
@@ -150,7 +151,11 @@
 
 }
 -(void)selectToDownLoad:(int)num{
-
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     NSArray *videoUrlArray = [[listArr_ objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         NSString *videoUrl = nil;

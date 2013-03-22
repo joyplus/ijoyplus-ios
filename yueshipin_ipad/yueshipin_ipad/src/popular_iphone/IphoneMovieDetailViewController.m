@@ -19,6 +19,7 @@
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
+#import "CommonMotheds.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -191,6 +192,7 @@
     [self loadTable];
 }
 -(void)loadComments{
+   
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
@@ -228,6 +230,9 @@
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+    summaryBg_ = nil;
+    summaryLabel_ = nil;
+    moreBtn_ = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -908,6 +913,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
 
 }

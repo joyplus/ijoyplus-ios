@@ -14,6 +14,7 @@
 #import "ProgramNavigationController.h"
 #import "CommonHeader.h"
 #import "CacheUtility.h"
+#import "CommonMotheds.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
 @property (nonatomic) NSInteger curSelectedNum;
@@ -142,7 +143,6 @@
 
 
 -(void)loadData{
-    
     relevantList_ = [NSArray array];
     MBProgressHUD *tempHUD;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
@@ -257,6 +257,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+    summaryBg_ = nil;
+    summaryLabel_ = nil;
+    moreBtn_ = nil;
+    
     self.scrollViewUp =nil;
     self.scrollViewDown =nil;
     
@@ -1430,6 +1434,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
     
 }

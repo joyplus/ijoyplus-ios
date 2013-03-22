@@ -203,6 +203,7 @@
 		22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		E73688131695C5B300549C74 /* StatementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E73688121695C5B300549C74 /* StatementsViewController.m */; };
+		E7872DA816FC35B100017785 /* CommonMotheds.m in Sources */ = {isa = PBXBuildFile; fileRef = E7872DA716FC35B100017785 /* CommonMotheds.m */; };
 		E79FB54316F868AC0055AA4D /* bg_sou_suo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53D16F868AC0055AA4D /* bg_sou_suo@2x.png */; };
 		E79FB54416F868AC0055AA4D /* sou_suo_hot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53E16F868AC0055AA4D /* sou_suo_hot@2x.png */; };
 		E79FB54516F868AC0055AA4D /* sousuo_qing_chu_@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53F16F868AC0055AA4D /* sousuo_qing_chu_@2x.png */; };
@@ -1063,6 +1064,8 @@
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E73688111695C5B300549C74 /* StatementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatementsViewController.h; sourceTree = "<group>"; };
 		E73688121695C5B300549C74 /* StatementsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatementsViewController.m; sourceTree = "<group>"; };
+		E7872DA616FC35B100017785 /* CommonMotheds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMotheds.h; sourceTree = "<group>"; };
+		E7872DA716FC35B100017785 /* CommonMotheds.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonMotheds.m; sourceTree = "<group>"; };
 		E79FB53D16F868AC0055AA4D /* bg_sou_suo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg_sou_suo@2x.png"; path = "yueshipin_ipad/Resource_iphone/bg_sou_suo@2x.png"; sourceTree = SOURCE_ROOT; };
 		E79FB53E16F868AC0055AA4D /* sou_suo_hot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sou_suo_hot@2x.png"; path = "yueshipin_ipad/Resource_iphone/sou_suo_hot@2x.png"; sourceTree = SOURCE_ROOT; };
 		E79FB53F16F868AC0055AA4D /* sousuo_qing_chu_@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sousuo_qing_chu_@2x.png"; path = "yueshipin_ipad/Resource_iphone/sousuo_qing_chu_@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2745,6 +2748,8 @@
 				EB6DEAA0165A322F00AF8003 /* UIViewWithShadow.m */,
 				EB6DEAD0165A367F00AF8003 /* GenericBaseViewController.h */,
 				EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */,
+				E7872DA616FC35B100017785 /* CommonMotheds.h */,
+				E7872DA716FC35B100017785 /* CommonMotheds.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -3873,6 +3878,7 @@
 				22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */,
 				22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */,
 				22B0FFC916F99F3C00ACDA07 /* CloseTipsView.m in Sources */,
+				E7872DA816FC35B100017785 /* CommonMotheds.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,6 +15,7 @@
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
+#import "CommonMotheds.h"
 @interface CreateMyListTwoViewController ()
 
 @end
@@ -134,6 +135,7 @@
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [CommonMotheds showNetworkDisAbledAlert];
    NSDictionary *item = [listArr_ objectAtIndex:indexPath.row];
     NSString *typeStr = [item objectForKey:@"prod_type"];
     if ([typeStr isEqualToString:@"1"]) {

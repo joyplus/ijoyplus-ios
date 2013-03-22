@@ -803,9 +803,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self sendHttpRequest:url];
             }
             else{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-                [alertView show];
-                return;
+                [self showNOThisClearityUrl:YES];
             }
             break;
         }
@@ -815,11 +813,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self sendHttpRequest:url];
             }
             else{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-                [alertView show];
-                
-                return;
+                 [self showNOThisClearityUrl:YES];
             }
+           
             break;
         }
         case SUPER_CLEAR:{
@@ -829,10 +825,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self sendHttpRequest:url];
             }
             else{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-                [alertView show];
+                [self showNOThisClearityUrl:YES];
                
-                return;
             }
             break;
         }
@@ -873,9 +867,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self sendHttpRequest:url];
             }
             else{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-                [alertView show];
-                return;
+                [self showNOThisClearityUrl:YES];
             }
             
             break;
@@ -886,10 +878,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self sendHttpRequest:url];
             }
             else{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-                [alertView show];
-                return;
+                [self showNOThisClearityUrl:YES];
             }
+              
             break;
         }
         case SUPER_CLEAR:{
@@ -898,9 +889,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self sendHttpRequest:url];
             }
             else{
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"没有找到此清晰度的视频地址,请尝试其它清晰度的地址。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-                [alertView show];
-                return;
+                [self showNOThisClearityUrl:YES];
             }
             break;
         }
@@ -939,6 +928,30 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
    
 }
+-(void)showNOThisClearityUrl:(BOOL)bol{
+    if (bol) {
+        UILabel  *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250,40)];
+        label.text = @"此分辨率已失效，请选择其它分辨率";
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.backgroundColor = [UIColor clearColor];
+        label.font = [UIFont systemFontOfSize:14];
+        label.tag = 99999;
+        label.center = CGPointMake( playCacheView_.center.x,  playCacheView_.center.y+50);
+        [playCacheView_ addSubview:label];
+        
+        myHUD.hidden = YES;
+    }
+    else{
+        UIView *view = [playCacheView_ viewWithTag:99999];
+        if (view) {
+             [view removeFromSuperview];
+        }
+    }
+    
+
+}
+
 
 -(void)sendHttpRequest:(NSString *)str{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -1346,7 +1359,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
     }
     
-    
+    [self showNOThisClearityUrl:NO];
     
     [self addCacheview];
     lastPlayTime_ = [mPlayer currentTime];
@@ -1354,8 +1367,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     clearBgView_.hidden = YES;
     
     [mPlayer pause];
-     mPlayer = nil;
-    
+    mPlayer = nil;
     switch (btn.tag) {
         case 100:{
             btn.enabled = NO;
@@ -1446,7 +1458,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             if (videoType_ == 1) {
                 return;
             }
-            
+            [self showNOThisClearityUrl:NO];
             [self playNext];
             break;
         }
@@ -1765,6 +1777,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
         [UIView commitAnimations];
     }
+    [self showNOThisClearityUrl:NO];
     
     [self removePlayerTimeObserver];
     [self.player pause];
