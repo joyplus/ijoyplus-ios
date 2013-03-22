@@ -504,7 +504,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     clarityButton_.selected = NO;
     tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
      clearBgView_.hidden = YES;
-    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 -(void)showToolBar{
     [self.view bringSubviewToFront:topToolBar_];
@@ -514,12 +514,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         topToolBar_.hidden = NO;
         bottomToolBar_.hidden = NO;
         bottomView_.hidden = NO;
-        
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
     else{
         topToolBar_.hidden = YES;
         bottomToolBar_.hidden = YES;
         bottomView_.hidden = YES;
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
     }
     
     if (selectButton_.selected) {
@@ -981,7 +982,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self retryUrltoPlay];
 }
 -(void)initTopToolBar{
-    topToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, 38)];
+    topToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 20, kFullWindowHeight, 38)];
     [topToolBar_ setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:30/255.0 green:30/255.0 blue:30/255.0 alpha:0.5] ] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     topToolBar_.hidden = YES;
     [self.view addSubview:topToolBar_];
@@ -1010,8 +1011,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     
-    titleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 160, 30)];
-    titleLabel_.center = topToolBar_.center;
+    titleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(topToolBar_.frame.size.width/2.0 - 80.0f, 0, 160, 38)];
+    //titleLabel_.center = topToolBar_.center;
     titleLabel_.backgroundColor = [UIColor clearColor];
     titleLabel_.font = [UIFont systemFontOfSize:14];
     titleLabel_.textAlignment = NSTextAlignmentCenter;
@@ -1042,7 +1043,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 }
 -(void)initPlayerView{
-    avplayerView_ = [[AVPlayerView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, 300)];
+    avplayerView_ = [[AVPlayerView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, 320)];
     avplayerView_.backgroundColor = [UIColor clearColor];
     
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
@@ -1063,14 +1064,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)initBottomToolBar{
     
-    bottomToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 256, kFullWindowHeight, 44)];
+    bottomToolBar_ = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 256 + 20, kFullWindowHeight, 44)];
     bottomToolBar_.backgroundColor = [UIColor clearColor];
     //bottomToolBar_.alpha = 0.8;
     bottomToolBar_.hidden = YES;
     [bottomToolBar_ setBackgroundImage:[UIImage imageNamed:@"iphone_play_bg"] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:bottomToolBar_];
     
-    bottomView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0,231, kFullWindowHeight, 25)];
+    bottomView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0,231 + 20, kFullWindowHeight, 25)];
     bottomView_.alpha = 0.8;
     bottomView_.image = [UIImage imageNamed:@"iphone_time_bg"];
     bottomView_.backgroundColor = [UIColor clearColor];
@@ -1382,6 +1383,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)action:(UIButton *)btn{
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
             [urlConnection cancel];
             [self updateWatchRecord];
             [[NSNotificationCenter defaultCenter] removeObserver:self
