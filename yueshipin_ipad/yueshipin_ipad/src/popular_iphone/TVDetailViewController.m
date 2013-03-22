@@ -16,11 +16,11 @@
 #import "CacheUtility.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
-
+@property (nonatomic) NSInteger curSelectedNum;
 @end
 
 @implementation TVDetailViewController
-
+@synthesize curSelectedNum;
 @synthesize videoInfo = videoInfo_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
@@ -85,6 +85,7 @@
     type_ = 2;
     
     currentPage_ = 1;
+    curSelectedNum = 0;
     isDownLoad_ = NO;
     isloaded_ = NO;
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
@@ -123,7 +124,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-   
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 -(void)refreshRecord{
     [self.tableView reloadData];
@@ -660,8 +662,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            //[self Play:1];
-            [self playVideo:0];
+            [self playVideo:curSelectedNum];
             break;
         }
         case 10002:{
@@ -1013,6 +1014,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (playNum != nil) {
         lastNum = [playNum intValue];
     }
+    
+    curSelectedNum = lastNum < 0 ? 0 : lastNum;
+    
     for (int i = 0; i < count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake((i/15)*285+(i%5)*57, (i%15/5)*30, 54, 27);
@@ -1393,6 +1397,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
     [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:playNum-1]];
+    curSelectedNum = playNum - 1;
     [self playVideo:playNum-1];
     [self.tableView reloadData];
 }
