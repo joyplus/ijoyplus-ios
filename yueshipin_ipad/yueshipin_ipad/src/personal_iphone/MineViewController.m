@@ -303,6 +303,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    [self loadMyFavsData];
 }
 
 
@@ -364,7 +365,7 @@
 
 }
 -(void)refreshFav{
-    [self loadMyFavsData];
+    //[self loadMyFavsData];
 }
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
@@ -468,6 +469,7 @@
         //我的收藏
         case 101:{
             button2_.enabled = NO;
+            
             if ([self.favArr count] <= 3) {
                 [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
                 [moreView_ removeFromSuperview];
