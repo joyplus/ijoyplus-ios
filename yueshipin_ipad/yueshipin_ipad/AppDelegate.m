@@ -18,8 +18,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "HTTPServer.h"
 
-#define DAY(day)        (day * 3600 * 24)
+#define DAY(day)        (day * 3600)
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -28,6 +29,7 @@
 @property (nonatomic, readonly) int networkStatus;
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
 @property (atomic, strong) NSString *show3GAlertSeq;
+@property (nonatomic, strong)HTTPServer *httpServer;
 - (void)monitorReachability;
 
 - (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti;
@@ -55,6 +57,7 @@
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize padM3u8DownloadManager;
+@synthesize httpServer;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -71,6 +74,41 @@
     
     //enable preview mode
     [iRate sharedInstance].previewMode = NO;
+}
+
+- (void)startHttpServer
+{
+    if (httpServer) {
+        if (![httpServer isRunning]) {
+            [self startNewHttpServer];
+        }
+    } else {
+        httpServer = [[HTTPServer alloc] init];
+        [httpServer setPort:12580];
+    	[httpServer setType:@"_http._tcp."];
+        NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDir = [documentPaths objectAtIndex:0];
+    	[httpServer setDocumentRoot:documentsDir];
+        [self startNewHttpServer];
+    }
+}
+
+- (void)stopHttpServer
+{
+    if (httpServer) {
+        [httpServer stop];
+        NSLog(@"HTTP Server is stoped.");
+    }
+}
+
+- (void)startNewHttpServer
+{
+    NSError *error;
+    if([httpServer start:&error]) {
+        NSLog(@"Started HTTP Server on port %hu", [httpServer listeningPort]);
+    } else {
+        NSLog(@"Error starting HTTP Server: %@", error);
+    }
 }
 
 - (void)customizeAppearance
@@ -260,16 +298,22 @@
     [self addLocalNotificationWithTimeInterval:DAY(7)];
     // end
     
+<<<<<<< HEAD
     //add notification
     [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
                                                         object:nil];
+=======
+    if (httpServer && [httpServer isRunning]) {
+        [httpServer stop:YES];
+    }
+>>>>>>> bugs
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
-    
 }
+
 -(void)iphoneContinueDownload{
    [self.downLoadManager appDidEnterForeground];
 }

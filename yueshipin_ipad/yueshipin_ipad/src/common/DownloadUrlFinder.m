@@ -49,7 +49,7 @@
                 NSLog(@"working url = %@", workingUrl);
                 item.url = [item.urlArray objectAtIndex:urlIndex];
                 [item save];
-                [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+                [NSThread detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
             } else {
                 urlIndex++;
                 [self setupWorkingUrl];

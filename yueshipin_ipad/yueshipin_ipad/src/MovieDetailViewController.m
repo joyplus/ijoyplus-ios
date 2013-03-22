@@ -15,9 +15,7 @@
 #import "DownloadItem.h"
 #import "DownloadHandler.h"
 #import "DownloadUrlFinder.h"
-#import "HTTPServer.h"
 #import <QuartzCore/QuartzCore.h>
-#import <MediaPlayer/MediaPlayer.h>
 
 
 #define DEFAULT_POSOTION_Y 585
@@ -455,29 +453,29 @@
 
 - (void)playVideo
 {
-//    self.subname = @"";
-//    [super playVideo:0];
-    HTTPServer *httpServer = [[HTTPServer alloc] init];
-    [httpServer setPort:12580];
-	[httpServer setType:@"_http._tcp."];
-    NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDir = [documentPaths objectAtIndex:0];
-	[httpServer setDocumentRoot:documentsDir];
-    NSError *error;
-	if([httpServer start:&error]) {
-		NSLog(@"Started HTTP Server on port %hu", [httpServer listeningPort]);
-	}
-	else {
-		NSLog(@"Error starting HTTP Server: %@", error);
-	}
-    MPMoviePlayerViewController *MPC = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://127.0.0.1:12580/984192/playlist.m3u8"]];
-//    MPMoviePlayerViewController *MPC = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"]];
-    
-    MPMoviePlayerController *moviePlayer = MPC.moviePlayer;
-    moviePlayer.repeatMode = MPMovieRepeatModeNone;
-    moviePlayer.controlStyle = MPMovieControlStyleFullscreen;
-    
-    [self presentMoviePlayerViewControllerAnimated:MPC];
+    self.subname = @"";
+    [super playVideo:0];
+//    HTTPServer *httpServer = [[HTTPServer alloc] init];
+//    [httpServer setPort:12580];
+//	[httpServer setType:@"_http._tcp."];
+//    NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDir = [documentPaths objectAtIndex:0];
+//	[httpServer setDocumentRoot:documentsDir];
+//    NSError *error;
+//	if([httpServer start:&error]) {
+//		NSLog(@"Started HTTP Server on port %hu", [httpServer listeningPort]);
+//	}
+//	else {
+//		NSLog(@"Error starting HTTP Server: %@", error);
+//	}
+//    MPMoviePlayerViewController *MPC = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://127.0.0.1:12580/984192/playlist.m3u8"]];
+////    MPMoviePlayerViewController *MPC = [[MPMoviePlayerViewController alloc] initWithContentURL:[NSURL URLWithString:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"]];
+//    
+//    MPMoviePlayerController *moviePlayer = MPC.moviePlayer;
+//    moviePlayer.repeatMode = MPMovieRepeatModeNone;
+//    moviePlayer.controlStyle = MPMovieControlStyleFullscreen;
+//    
+//    [self presentMoviePlayerViewControllerAnimated:MPC];
 }
 
 //- (NSString *)getVideoAddress
@@ -612,13 +610,13 @@
     item.percentage = 0;
     item.type = 1;
     item.downloadStatus = @"waiting";
-    item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
     if ([downloadType isEqualToString:@"mp4"]) {
+        item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
         item.urlArray = self.mp4DownloadUrls;
     } else if([downloadType isEqualToString:@"m3u8"]){
         NSArray *tempArray = [NSArray arrayWithObject:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"];
-//        item.urlArray = self.m3u8DownloadUrls;
         item.urlArray = tempArray;
+//        item.urlArray = self.m3u8DownloadUrls;
     }
     item.downloadType = downloadType;
     [item save];

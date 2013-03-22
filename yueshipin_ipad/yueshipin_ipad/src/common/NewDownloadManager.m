@@ -42,6 +42,11 @@
         for (DownloadItem *item in allItem) {
             if([item.downloadStatus isEqualToString:status]){
                 if ([item.downloadType isEqualToString:@"m3u8"]) {
+                    if(item.type == 1){
+                        [AppDelegate instance].padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
+                    } else {
+                        [AppDelegate instance].padM3u8DownloadManager.subdelegate = subdelegate == nil ? self : subdelegate;
+                    }
                     [[AppDelegate instance].padM3u8DownloadManager startDownloadingThreads:item];
                 } else {
                     if (item.url) {
@@ -98,12 +103,14 @@
 {
     delegate = newdelegate;
     downloadingOperation.downloadingDelegate = newdelegate;
+    [AppDelegate instance].padM3u8DownloadManager.delegate = newdelegate;
 }
 
 - (void)setSubdelegate:(id<SubdownloadingDelegate>)newdelegate
 {
     subdelegate = newdelegate;
     downloadingOperation.subdownloadingDelegate = newdelegate;
+    [AppDelegate instance].padM3u8DownloadManager.subdelegate = newdelegate;
 }
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error

@@ -20,7 +20,6 @@
 @property (nonatomic, assign)int percentage;
 @property (nonatomic, strong)NSArray *urlArray;
 @property (nonatomic, strong)NSString *url;
-@property (nonatomic, strong) NSArray *segmentUrlArray;
 @property (nonatomic) int isDownloadingNum;
 @property (nonatomic, strong) NSString *downloadType;
 @end

@@ -700,10 +700,22 @@
     subitem.type = 3;
     subitem.subitemId = [StringUtility md5:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:num] objectForKey:@"name"]]];
     subitem.downloadStatus = @"waiting";
-    subitem.fileName = [NSString stringWithFormat:@"%@_%@%@", self.prodId, subitem.subitemId, @".mp4"];
     [self getDownloadUrls:num];
+    self.mp4DownloadUrls = nil;
     if(self.mp4DownloadUrls.count > 0){
         subitem.urlArray = self.mp4DownloadUrls;
+        subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
+        [subitem save];
+        DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
+        finder.item = subitem;
+        [finder setupWorkingUrl];
+        [self updateBadgeIcon];
+        return YES;
+    } else if(self.m3u8DownloadUrls.count > 0){
+        NSArray *tempArray = [NSArray arrayWithObject:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"];
+        subitem.urlArray = tempArray;
+        subitem.downloadType = @"m3u8";
+        //        subitem.urlArray = self.m3u8DownloadUrls;
         [subitem save];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;

@@ -47,8 +47,10 @@
 
 @property (nonatomic, strong) NSString *playWithDownload;
 
-+ (AppDelegate *) instance;
 
++ (AppDelegate *) instance;
+- (void)startHttpServer;
+- (void)stopHttpServer;
 - (BOOL)isParseReachable;
 - (BOOL)isWifiReachable;
 

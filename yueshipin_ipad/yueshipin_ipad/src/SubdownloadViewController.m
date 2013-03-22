@@ -12,6 +12,7 @@
 #import "GMGridView.h"
 #import "AVPlayerViewController.h"
 #import "AFDownloadRequestOperation.h"
+#import "SegmentUrl.h"
 
 @interface SubdownloadViewController ()<SubdownloadingDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
     UIButton *closeBtn;
@@ -321,6 +322,11 @@
 {
     SubdownloadItem *item = [subitems objectAtIndex:index];
     [item deleteObject];
+    NSArray *segmentUrlArray = [SegmentUrl findByCriteria: [NSString stringWithFormat: @"WHERE item_id = %@ and subitem_id = %@", item.itemId, item.subitemId]];
+    for (SegmentUrl *segUrl in segmentUrlArray) {
+        [segUrl deleteObject];
+    }
+    segmentUrlArray = nil;
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
         [AppDelegate instance].currentDownloadingNum--;
@@ -366,20 +372,13 @@
             item.downloadStatus = @"done";
             item.percentage = 100;
             [item save];
-            NSString *extension = @"mp4";
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
-            
-            NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-            NSEnumerator *e = [contents objectEnumerator];
-            NSString *filename;
             NSString *filePath;
-            while ((filename = [e nextObject])) {
-                if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
-                    filePath = [documentsDirectory stringByAppendingPathComponent:filename];
-                    break;
-                }
+            if ([item.downloadType isEqualToString:@"m3u8"]) {
+                filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/joyplus.m3u8", item.itemId, item.subitemId]];
+            } else {
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+                filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
             }
     
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];

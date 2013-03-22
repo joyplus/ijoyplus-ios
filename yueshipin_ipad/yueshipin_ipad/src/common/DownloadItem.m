@@ -19,7 +19,6 @@
 @synthesize urlArray;
 @synthesize type;
 @synthesize isDownloadingNum;
-@synthesize segmentUrlArray;
 @synthesize downloadType;
 
 @end

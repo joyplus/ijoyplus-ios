@@ -76,6 +76,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *subname;
 @property (nonatomic, strong) NSString *videoUrl;
+@property (nonatomic, strong) NSString *videoFormat;
 @property (nonatomic, strong) NSDictionary *video;
 @property (nonatomic, strong) NSString *videoHttpUrl;
 @property (nonatomic)BOOL closeAll;

@@ -106,7 +106,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
-@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground;
+@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 
 #pragma mark
 #pragma mark View Controller
@@ -223,7 +223,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self showPlayVideoView];
     if (isDownloaded) {
         [self loadLastPlaytime];
-        workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
+        if ([videoFormat isEqualToString:@"m3u8"]) {
+            [[AppDelegate instance] startHttpServer];
+            workingUrl = [NSURL URLWithString: videoUrl];
+        } else {
+            workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
+        }
         [self setURL:workingUrl];
     } else {
         [self playVideo];
@@ -265,7 +270,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                object:nil];
 }
 
-- (void) viewDidAppear: (BOOL) animated {
+- (void)viewDidAppear: (BOOL) animated {
     [super viewDidAppear:animated];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     [self becomeFirstResponder];
@@ -274,6 +279,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    if ([videoFormat isEqualToString:@"m3u8"]) {
+        [[AppDelegate instance] startHttpServer];
+    }
     [MobClick beginLogPageView:umengPageName];
 }
 
@@ -284,6 +292,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	[mPlayer pause];
     [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
     [self resignFirstResponder];
+    if ([videoFormat isEqualToString:@"m3u8"]) {
+        [[AppDelegate instance] stopHttpServer];
+    }
     [MobClick endLogPageView:umengPageName];
 }
 
@@ -1906,7 +1917,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                     resolutionInvalid = NO;
                     [mPlayButton sendActionsForControlEvents:UIControlEventTouchUpInside];
                     NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
-                    NSLog(@"%@", tempDic);
+//                    NSLog(@"%@", tempDic);
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
                     if ([source_str isEqualToString:@"letv"]) {
