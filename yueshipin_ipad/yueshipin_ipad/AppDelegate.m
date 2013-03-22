@@ -297,16 +297,11 @@
     //7天（1周）后下午9点提示
     [self addLocalNotificationWithTimeInterval:DAY(7)];
     // end
-    
-<<<<<<< HEAD
     //add notification
-    [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
-                                                        object:nil];
-=======
+    [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
     if (httpServer && [httpServer isRunning]) {
         [httpServer stop:YES];
     }
->>>>>>> bugs
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
