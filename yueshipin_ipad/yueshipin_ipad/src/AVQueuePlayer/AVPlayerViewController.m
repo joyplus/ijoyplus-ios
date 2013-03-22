@@ -75,6 +75,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int maxEpisodeNum;
 @property (nonatomic, strong) NSString *umengPageName;
 @property (nonatomic) BOOL isFromSelectBtn;
+@property (nonatomic) BOOL isAppEnterBackground;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -105,7 +106,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
-@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection;
+@synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground;
 
 #pragma mark
 #pragma mark View Controller
@@ -209,6 +210,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
+    isAppEnterBackground = NO;
     if (type == 1) {
         umengPageName = MOVIE_PLAY;
     } else if(type == 2 || type == 131){
@@ -441,9 +443,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (video != nil) {
         name = [video objectForKey:@"name"];
-//        if (self.currentNum < subnameArray.count) {
-//            subname = [subnameArray objectAtIndex:self.currentNum];
-//        }
+        if (self.currentNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+        }
     }
     [self loadLastPlaytime];
     if (combinedArr == nil) {
@@ -1344,7 +1346,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
 }
 
-- (void)loadLastPlaytime
+- (void)loadLastPlaytime 
 {
     NSString *lastPlaytimeCacheKey;
     if (type == 1) {
@@ -1806,6 +1808,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 			change:(NSDictionary*)change 
 			context:(void*)context
 {
+    if (isAppEnterBackground)
+        return;
     if (applyTvView == nil) {        
         applyTvView = [[UIView alloc]initWithFrame:mPlaybackView.frame];
         applyTvView.tag = 9585403;
@@ -1864,6 +1868,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		[self syncPlayPauseButtons];
 
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+        
         switch (status)
         {
             case AVPlayerStatusUnknown:
@@ -2053,6 +2058,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 #pragma mark - app进入后台/重新激活
 - (void)appDidEnterBackground:(NSNotification *)niti
 {
+    isAppEnterBackground = YES;
     if (![ActionUtility isAirPlayActive])
     {
         if (self.isPlaying)
@@ -2066,7 +2072,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    
+    isAppEnterBackground = NO;
 }
 
 @end

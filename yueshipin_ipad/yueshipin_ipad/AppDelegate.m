@@ -257,8 +257,8 @@
     [self.downLoadManager appDidEnterBackground];
     
     //When app enter background, add a new local Notification
-    //14天（2周）后下午9点提示
-    [self addLocalNotificationWithTimeInterval:DAY(14)];
+    //7天（1周）后下午9点提示
+    [self addLocalNotificationWithTimeInterval:DAY(7)];
     // end
     
     //add notification
