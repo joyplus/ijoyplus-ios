@@ -281,9 +281,6 @@
     [self.view addSubview:nameLabel_];
     
     //加载数据
-    [self loadMyFavsData];
-    [self loadPersonalData];
-    [self loadRecordData];
     if ([sortedwatchRecordArray_ count]>0) {
         [self.bgView addSubview:recordTableList_];
     }
@@ -303,7 +300,12 @@
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    
+    //request person data
     [self loadMyFavsData];
+    [self loadPersonalData];
+    [self loadRecordData];
+    
 }
 
 
