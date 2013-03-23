@@ -33,7 +33,6 @@
 @implementation AppDelegate
 @synthesize downloadItems;
 @synthesize subdownloadItems;
-//@synthesize downloadManager;
 @synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
