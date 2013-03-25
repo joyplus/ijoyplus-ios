@@ -727,6 +727,8 @@
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
+		EBBE075616FFD05700A533F7 /* SegmentUrl.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBE075516FFD05700A533F7 /* SegmentUrl.m */; };
+		EBBE075916FFD0DB00A533F7 /* NewM3u8DownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBE075816FFD0DB00A533F7 /* NewM3u8DownloadManager.m */; };
 		EBC19B5316E97BC70001429C /* custom-cancel-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3816E97BC60001429C /* custom-cancel-normal@2x.png */; };
 		EBC19B5416E97BC70001429C /* custom-dialog-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3916E97BC60001429C /* custom-dialog-background@2x.png */; };
 		EBC19B5516E97BC70001429C /* logo_56.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3B16E97BC60001429C /* logo_56.png */; };
@@ -1661,6 +1663,10 @@
 		EBBDCE34166C590200C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomColoredAccessory.h; sourceTree = "<group>"; };
 		EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomColoredAccessory.m; sourceTree = "<group>"; };
+		EBBE075416FFD05700A533F7 /* SegmentUrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentUrl.h; sourceTree = "<group>"; };
+		EBBE075516FFD05700A533F7 /* SegmentUrl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentUrl.m; sourceTree = "<group>"; };
+		EBBE075716FFD0DB00A533F7 /* NewM3u8DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewM3u8DownloadManager.h; path = common/NewM3u8DownloadManager.h; sourceTree = "<group>"; };
+		EBBE075816FFD0DB00A533F7 /* NewM3u8DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewM3u8DownloadManager.m; path = common/NewM3u8DownloadManager.m; sourceTree = "<group>"; };
 		EBC19B3816E97BC60001429C /* custom-cancel-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-cancel-normal@2x.png"; sourceTree = "<group>"; };
 		EBC19B3916E97BC60001429C /* custom-dialog-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-dialog-background@2x.png"; sourceTree = "<group>"; };
 		EBC19B3B16E97BC60001429C /* logo_56.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_56.png; sourceTree = "<group>"; };
@@ -1809,6 +1815,8 @@
 				220E4952169BF0B300A29756 /* SubdownloadViewController.m */,
 				22343DD116BC007C00AFE83A /* NewDownloadManager.h */,
 				22343DD216BC007C00AFE83A /* NewDownloadManager.m */,
+				EBBE075716FFD0DB00A533F7 /* NewM3u8DownloadManager.h */,
+				EBBE075816FFD0DB00A533F7 /* NewM3u8DownloadManager.m */,
 				22343DD316BC007C00AFE83A /* DownloadUrlFinder.h */,
 				22343DD416BC007C00AFE83A /* DownloadUrlFinder.m */,
 			);
@@ -2861,6 +2869,8 @@
 		EBB73301165C7E67008E407E /* component */ = {
 			isa = PBXGroup;
 			children = (
+				EBBE075416FFD05700A533F7 /* SegmentUrl.h */,
+				EBBE075516FFD05700A533F7 /* SegmentUrl.m */,
 				220E494B169BF08600A29756 /* DownloadItem.h */,
 				220E494C169BF08600A29756 /* DownloadItem.m */,
 				220E493F169BF07F00A29756 /* DownloadHandler.h */,
@@ -3879,6 +3889,8 @@
 				22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */,
 				22B0FFC916F99F3C00ACDA07 /* CloseTipsView.m in Sources */,
 				E7872DA816FC35B100017785 /* CommonMotheds.m in Sources */,
+				EBBE075616FFD05700A533F7 /* SegmentUrl.m in Sources */,
+				EBBE075916FFD0DB00A533F7 /* NewM3u8DownloadManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
