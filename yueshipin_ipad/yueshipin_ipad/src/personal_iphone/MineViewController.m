@@ -84,10 +84,7 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
-        if (!button2_.enabled) {
-            [self Selectbutton:button2_];
-        }
-        [favTableList_ reloadData];
+        [self refreshMineViewWithTag:button2_.tag];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.favArr == nil){
@@ -115,8 +112,7 @@
                 for (int i =[tempArr count]-1;i >= 0;i-- ) {
                     [myListArr_ addObject:[tempArr objectAtIndex:i]];
                 }
-                [self Selectbutton:button3_];
-                [myTableList_ reloadData];
+                [self refreshMineViewWithTag:button3_.tag];
             }
             
         }
@@ -321,10 +317,18 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
     
     //request person data
-    [self loadMyFavsData];
-    [self loadPersonalData];
-    [self loadRecordData];
-    
+    if (NO == button1_.enabled)
+    {
+        [self loadRecordData];
+    }
+    else if (NO == button2_.enabled)
+    {
+        [self loadMyFavsData];
+    }
+    else if (NO == button3_.enabled)
+    {
+        [self loadPersonalData];
+    }
 }
 
 
@@ -365,14 +369,7 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:(NSArray *)[result objectForKey:@"histories"]];
-        //if(sortedwatchRecordArray_.count > 0){
-            //if (!button1_.enabled) {
-            [self Selectbutton:button1_];
-           // }
-            [recordTableList_ reloadData];
-            
-           
-        //}
+        [self refreshMineViewWithTag:button1_.tag];
     }
 }
 
@@ -470,32 +467,55 @@
         //播放纪录
         case 100:{
             button1_.enabled = NO;
-                if ([self.sortedwatchRecordArray count] <= 3) {
-                    
-                    [moreView_ removeFromSuperview];
-                    [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
-                }
-                else {
-                    [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
-                    [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
-                    [self.view addSubview:moreView_];
-                }
-
-                if ([sortedwatchRecordArray_ count] == 0) {
-                    [self.bgView addSubview:noRecord_];
-                }
-                else{
-                    [self.bgView addSubview:self.recordTableList];
-                    [self.recordTableList reloadData];
-                }
-                    
-                
+            [self loadRecordData];
             break;
         }
         //我的收藏
         case 101:{
             button2_.enabled = NO;
+            [self loadMyFavsData];
+            break;
+        }
+        //我的悦单
+        case 102:{
+            button3_.enabled = NO;
+            [self loadPersonalData];
             
+            break;
+        }
+        default:
+            break;
+    }
+
+}
+
+- (void)refreshMineViewWithTag:(NSInteger)tag
+{
+    switch (tag) {
+        case 100:
+        {
+            if ([self.sortedwatchRecordArray count] <= 3) {
+                
+                [moreView_ removeFromSuperview];
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
+            }
+            else {
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
+                [self.view addSubview:moreView_];
+            }
+            
+            if ([sortedwatchRecordArray_ count] == 0) {
+                [self.bgView addSubview:noRecord_];
+            }
+            else{
+                [self.bgView addSubview:self.recordTableList];
+                [self.recordTableList reloadData];
+            }
+        }
+            break;
+        case 101:
+        {
             if ([self.favArr count] <= 3) {
                 [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
                 [moreView_ removeFromSuperview];
@@ -503,10 +523,10 @@
             else {
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
-               
+                
                 [self.view addSubview:moreView_];
             }
-
+            
             if ([favArr_ count]==0) {
                 [self.bgView addSubview:noFav_];
             }
@@ -515,12 +535,10 @@
                 [self.favTableList reloadData];
             }
             
-           
-            break;
         }
-        //我的悦单
-        case 102:{
-            button3_.enabled = NO;
+            break;
+        case 102:
+        {
             if ([myListArr_ count] <= 3) {
                 if ([myListArr_ count]== 0){
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 44)];
@@ -543,12 +561,13 @@
             
             [self.bgView addSubview:createList_];
             [self.bgView addSubview:myTableList_];
-            break;
         }
+            break;
+            
         default:
             break;
     }
-
+    [recordTableList_ reloadData];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
