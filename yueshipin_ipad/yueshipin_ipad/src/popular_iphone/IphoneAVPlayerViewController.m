@@ -1417,6 +1417,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
+            [self stopMyTimer];
             [urlConnection cancel];
             [self updateWatchRecord];
             [[NSNotificationCenter defaultCenter] removeObserver:self
