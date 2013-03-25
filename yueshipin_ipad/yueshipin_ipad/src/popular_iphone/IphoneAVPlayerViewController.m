@@ -44,7 +44,7 @@
 {
     NSURLConnection     *urlConnection;
 }
-
+@property (nonatomic) double seekBeginTime;
 - (void)stopMyTimer;
 - (void)beginMyTimer;
 
@@ -53,6 +53,7 @@ static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlaye
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
 @implementation IphoneAVPlayerViewController
+@synthesize seekBeginTime;
 @synthesize topToolBar = topToolBar_;
 @synthesize bottomToolBar = bottomToolBar_;
 @synthesize avplayerView = avplayerView_;
@@ -466,11 +467,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
     
 	/* Update the scrubber during normal playback. */
+    __block typeof (self) myself = self;
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
                                                            queue:NULL /* If you pass NULL, the main queue is used. */
                                                       usingBlock:^(CMTime time)
                       {
-                          [self syncScrubber];
+                          double curTime = CMTimeGetSeconds([myself.mPlayer currentTime]);
+                          
+                          if (fabs(curTime - myself.seekBeginTime) > 1.0f)
+                          {
+                              [myself syncScrubber];
+                          }
                       }];
   
     
@@ -1537,9 +1544,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)beginScrubbing:(id)sender
 {
     [self stopMyTimer];
+    seekBeginTime = CMTimeGetSeconds([mPlayer currentTime]);
 	mRestoreAfterScrubbingRate = [mPlayer rate];
 	[mPlayer setRate:0.f];
-	
 	/* Remove previous timer. */
 	[self removePlayerTimeObserver];
 }
@@ -1560,12 +1567,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		{
 			CGFloat width = CGRectGetWidth([mScrubber bounds]);
 			double tolerance = 0.5f * duration / width;
+            
+            __block typeof (self) myself = self;
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
                              ^(CMTime time)
                              {
-            
-                                [self syncScrubber];
-                                
+                                double curTime = CMTimeGetSeconds([myself.mPlayer currentTime]);
+                                // NSLog(@"\n begin time %f,cur time:%f",myself.seekBeginTime,curTime);
+                                if (fabs(curTime - myself.seekBeginTime) > 1.0f)
+                                {
+                                    [myself syncScrubber];
+                                }
                              }];
         
 		}
