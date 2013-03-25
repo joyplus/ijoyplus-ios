@@ -29,6 +29,7 @@
 #import "UIImageView+WebCache.h"
 #import "TSActionSheet.h"
 #import "Reachability.h"
+#import "MobClick.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -206,18 +207,18 @@
         case 0:
             
             [self sinaShare];
-            
+            [MobClick event:@"ue_sina_share"];
             break;
             
         case 1:
             
             [self wechatShare:WXSceneSession];
-            
+            [MobClick event:@"ue_wechat_friend_share"];
             break;
         case 2:
             
             [self wechatShare:WXSceneTimeline];
-            
+            [MobClick event:@"ue_wechat_social_share"];
             break;
         default:
             
