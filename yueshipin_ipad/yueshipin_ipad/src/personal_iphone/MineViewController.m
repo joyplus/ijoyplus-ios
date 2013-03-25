@@ -374,6 +374,7 @@
 }
 
 -(void)recordListReload{
+    return;
     [self loadRecordData];
     if (!button1_.enabled) {
         [self Selectbutton:button1_];
