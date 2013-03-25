@@ -108,7 +108,7 @@
     if (cacheArray == nil) {
         cacheArray = [[NSMutableArray alloc]initWithCapacity:100];
         for (NSString *key in [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]) {
-            if ([key hasPrefix:@"movie"] || [key hasPrefix:@"drama"] || [key hasPrefix:@"show"] || [key hasPrefix:@"top_detail_list"]) {
+            if (([key hasPrefix:@"movie"] || [key hasPrefix:@"drama"] || [key hasPrefix:@"show"] || [key hasPrefix:@"top_detail_list"]) && ![key hasPrefix:@"show_"]) {
                 NSLog(@"removed key = %@", key);
                 [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
             }
