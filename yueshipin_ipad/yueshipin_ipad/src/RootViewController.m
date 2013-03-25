@@ -136,6 +136,7 @@
 	[self.view addSubview:rootView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextViewChanged:) name:UITextViewTextDidChangeNotification object:nil];
+    myLock = [[NSLock alloc]init];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -761,24 +762,23 @@
 
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage
 {
-    @synchronized(self){
-        NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
-        if (![showMenuIntro isEqualToString:@"1"]) {
-            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
-            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
+    NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
+    if (![showMenuIntro isEqualToString:@"1"]) {
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
+        UIView *view = [self.view viewWithTag:3268999];
+        if (view == nil) {
+            view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
             view.tag = 3268999;
             [view setBackgroundColor:[UIColor clearColor]];
             UIImageView *temp = [[UIImageView alloc]initWithImage:introImage];
             temp.frame = view.frame;
             [view addSubview:temp];
             [self.view addSubview:view];
-            
-            UITapGestureRecognizer *closeModalViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeIntroModalView)];
-            closeModalViewGesture.numberOfTapsRequired = 1;
-            [view addGestureRecognizer:closeModalViewGesture];
         }
+        UITapGestureRecognizer *closeModalViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeIntroModalView)];
+        closeModalViewGesture.numberOfTapsRequired = 1;
+        [view addGestureRecognizer:closeModalViewGesture];
     }
-    
 }
 
 - (void)removeIntroModalView

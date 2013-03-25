@@ -38,8 +38,8 @@
 
 - (void)startDownloadingThread:(NSArray *)allItem status:(NSString *)status
 {
-    if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
-        for (DownloadItem *item in allItem) {
+    for (DownloadItem *item in allItem) {
+        if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
             if([item.downloadStatus isEqualToString:status]){
                 if ([item.downloadType isEqualToString:@"m3u8"]) {
                     if(item.type == 1){
@@ -117,11 +117,8 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
-//    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
+    [AppDelegate instance].currentDownloadingNum = 0;
+    //    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
 //        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
 //        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
 //            item.downloadStatus = @"stop";
@@ -144,11 +141,8 @@
 
 - (void)startNewDownloadItem
 {
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
-    [[AppDelegate instance].padDownloadManager startDownloadingThreads];    
+    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
 }
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
@@ -160,10 +154,7 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
+    [AppDelegate instance].currentDownloadingNum = 0;
 //    for (int i = 0; i < [AppDelegate instance].subdownloadItems.count; i++) {
 //        SubdownloadItem *tempitem = [[AppDelegate instance].subdownloadItems objectAtIndex:i];
 //        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {

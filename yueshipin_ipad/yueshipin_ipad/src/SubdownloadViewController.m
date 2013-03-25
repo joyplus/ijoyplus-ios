@@ -134,11 +134,8 @@
 {
     NSLog(@"error in SubdownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
-//    for (int i = 0; i < subitems.count; i++) {
+    [AppDelegate instance].currentDownloadingNum = 0;
+    //    for (int i = 0; i < subitems.count; i++) {
 //        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
 //        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
 //            tempitem.downloadStatus = @"stop";
@@ -155,10 +152,7 @@
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            [AppDelegate instance].currentDownloadingNum--;
-            if([AppDelegate instance].currentDownloadingNum < 0){
-                [AppDelegate instance].currentDownloadingNum = 0;
-            }
+            [AppDelegate instance].currentDownloadingNum = 0;
             tempitem.percentage = 100;
             tempitem.downloadStatus  = @"done";
             [tempitem save];
@@ -215,10 +209,7 @@
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"stop";
         [subitem save];
-        [AppDelegate instance].currentDownloadingNum--;
-        if([AppDelegate instance].currentDownloadingNum < 0){
-            [AppDelegate instance].currentDownloadingNum = 0;
-        }
+        [AppDelegate instance].currentDownloadingNum = 0;
     } else {
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
@@ -321,40 +312,36 @@
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
     SubdownloadItem *item = [subitems objectAtIndex:index];
-    [item deleteObject];
-    NSArray *segmentUrlArray = [SegmentUrl findByCriteria: [NSString stringWithFormat: @"WHERE item_id = %@ and subitem_id = %@", item.itemId, item.subitemId]];
-    for (SegmentUrl *segUrl in segmentUrlArray) {
-        [segUrl deleteObject];
-    }
-    segmentUrlArray = nil;
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
-        [AppDelegate instance].currentDownloadingNum--;
-        if([AppDelegate instance].currentDownloadingNum < 0){
-            [AppDelegate instance].currentDownloadingNum = 0;
-        }
+        [AppDelegate instance].currentDownloadingNum = 0;
     }
+    [item deleteObject];
+    double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
+    NSLog(@"result = %f", result);
     
-    NSString *extension = @"mp4";
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-    NSEnumerator *e = [contents objectEnumerator];
-    NSString *filename;
-    while ((filename = [e nextObject])) {
-        if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.%@", item.itemId, item.subitemId, extension]]) {
-            [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+    if ([item.downloadType isEqualToString:@"m3u8"]) {
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@/%@", DocumentsDirectory, item.itemId, item.subitemId];
+        [fileManager removeItemAtPath:filePath error:nil];
+    } else {
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+        NSEnumerator *e = [contents objectEnumerator];
+        NSString *filename;
+        while ((filename = [e nextObject])) {
+            if ([filename hasPrefix:[NSString stringWithFormat:@"%@_%@.mp4", item.itemId, item.subitemId]]) {
+                [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+            }
         }
     }
     
     [self reloadSubitems];
     if(subitems == nil || subitems.count == 0){
-        for (DownloadItem *pItem in [DownloadItem allObjects]){
-            if ([pItem.itemId isEqualToString:self.itemId]) {
-                [pItem deleteObject];
-                break;
-            }
+        DownloadItem *pItem = (DownloadItem *)[DownloadItem findFirstByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
+        [pItem deleteObject];
+        if ([item.downloadType isEqualToString:@"m3u8"]) {
+            NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+            [fileManager removeItemAtPath:filePath error:nil];
         }
         [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
         [self.parentDelegate reloadItems];
@@ -374,7 +361,7 @@
             [item save];
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {
-                filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/joyplus.m3u8", item.itemId, item.subitemId]];
+                filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/%@_%@.m3u8", item.itemId, item.subitemId, item.itemId, item.subitemId]];
             } else {
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                 NSString *documentsDirectory = [paths objectAtIndex:0];
@@ -382,6 +369,7 @@
             }
     
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
+            viewController.videoFormat = item.downloadType;
             viewController.isDownloaded = YES;
             viewController.closeAll = YES;
             viewController.videoUrl = filePath;

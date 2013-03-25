@@ -8,6 +8,7 @@
 
 #import "CacheUtility.h"
 #import "CMConstants.h"
+#import "NSMutableArray+QueueAdditions.h"
 
 @interface CacheUtility()
 
@@ -41,10 +42,6 @@
 
 - (void)clear {
     [self.cache removeAllObjects];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kSinaUID];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-//    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-//    [[NSUserDefaults standardUserDefaults] removePersistentDomainForName:appDomain];
 }
 - (void)setSinaFriends:(NSArray *)friends {
     NSString *key = kPAPUserDefaultsCacheSinaFriendsKey;
@@ -84,19 +81,50 @@
     return uid;
 }
 
-- (id)loadFromCache:(NSString *)cacheKey{
-   if ([self.cache objectForKey:cacheKey]) {
-        return [self.cache objectForKey:cacheKey];
+- (id)loadFromCache:(NSString *)cacheKey{   
+    NSArray *cacheArray = [self.cache objectForKey:CACHE_QUEUE];
+    if (cacheArray == nil) {
+        cacheArray = [[NSUserDefaults standardUserDefaults] objectForKey:CACHE_QUEUE];
+        if (cacheArray) {
+            [self.cache setObject:cacheArray forKey:CACHE_QUEUE];
+        }
     }
-    id result = [[NSUserDefaults standardUserDefaults] objectForKey:cacheKey];
-    if (result) {
-        [self.cache setObject:result forKey:cacheKey];
+    if (cacheArray) {
+        for (NSDictionary *cacheEntry in cacheArray) {
+            NSEnumerator *it = [cacheEntry keyEnumerator];
+            NSString *key = [it nextObject];
+            if ([cacheKey isEqualToString:key]) {
+                return [cacheEntry objectForKey:key];
+            }
+        }
+        return nil;
+    } else {
+        return nil;
     }
-    return result;
 }
+
 - (void)putInCache:(NSString *)cacheKey result:(id)result{
-    [self.cache setObject:result forKey:cacheKey];
-    [[NSUserDefaults standardUserDefaults] setObject:result forKey:cacheKey];
+    NSArray *cacheArray = [[NSUserDefaults standardUserDefaults] arrayForKey:CACHE_QUEUE];
+    if (cacheArray == nil) {
+        cacheArray = [[NSMutableArray alloc]initWithCapacity:100];
+        for (NSString *key in [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]) {
+            if ([key hasPrefix:@"movie"] || [key hasPrefix:@"drama"] || [key hasPrefix:@"show"] || [key hasPrefix:@"top_detail_list"]) {
+                NSLog(@"removed key = %@", key);
+                [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+            }
+        }
+    }
+    NSMutableArray *cacheQueue = [[NSMutableArray alloc]initWithArray:cacheArray];
+    NSDictionary *cacheObject = [NSDictionary dictionaryWithObjectsAndKeys:result, cacheKey, nil];
+    [cacheQueue enqueue:cacheObject];
+    if (cacheQueue.count >= 100) {
+        for (int i = 0; i < cacheQueue.count - 100; i++) {
+            [cacheQueue dequeue];
+        }
+    }
+    
+    [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
+    [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 

@@ -100,6 +100,10 @@
 
 #define LOCAL_HTTP_SERVER_URL @"http://127.0.0.1:12580"
 
+#define CACHE_QUEUE @"MY_CACHE_QUEUE"
+
+#define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

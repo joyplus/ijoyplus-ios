@@ -365,7 +365,9 @@
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
     
-    if(self.mp4DownloadUrls != nil && self.mp4DownloadUrls.count > 0){
+    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
     } else {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
@@ -701,24 +703,23 @@
     subitem.subitemId = [StringUtility md5:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:num] objectForKey:@"name"]]];
     subitem.downloadStatus = @"waiting";
     [self getDownloadUrls:num];
-    self.mp4DownloadUrls = nil;
-    if(self.mp4DownloadUrls.count > 0){
-        subitem.urlArray = self.mp4DownloadUrls;
-        subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
+    
+    NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    subitem.urlArray = tempArray;
+    
+    if(subitem.urlArray.count > 0){
+        if (self.mp4DownloadUrls.count > 0) {
+            subitem.downloadType = @"mp4";
+            subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
+        } else if(self.m3u8DownloadUrls.count > 0){
+            subitem.downloadType = @"m3u8";
+        }
         [subitem save];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
-        [finder setupWorkingUrl];
-        [self updateBadgeIcon];
-        return YES;
-    } else if(self.m3u8DownloadUrls.count > 0){
-        NSArray *tempArray = [NSArray arrayWithObject:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"];
-        subitem.urlArray = tempArray;
-        subitem.downloadType = @"m3u8";
-        //        subitem.urlArray = self.m3u8DownloadUrls;
-        [subitem save];
-        DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
-        finder.item = subitem;
+        finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
         [finder setupWorkingUrl];
         [self updateBadgeIcon];
         return YES;

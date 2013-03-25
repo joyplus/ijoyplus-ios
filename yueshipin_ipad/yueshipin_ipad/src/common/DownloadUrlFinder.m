@@ -12,7 +12,6 @@
 
 @interface DownloadUrlFinder ()<NSURLConnectionDelegate>
 
-
 @property (atomic, strong)NSString *workingUrl;
 @property (atomic)int urlIndex;
 
@@ -22,10 +21,25 @@
 @synthesize workingUrl;
 @synthesize urlIndex;
 @synthesize item;
+@synthesize mp4DownloadUrlNum;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        urlIndex = 0;
+        mp4DownloadUrlNum = 0;
+    }
+    return self;
+}
 
 - (void)setupWorkingUrl
 {
     if (urlIndex >= 0 && urlIndex < item.urlArray.count) {
+        if (urlIndex >= mp4DownloadUrlNum && [item.downloadType isEqualToString:@"mp4"]) {
+            item.downloadType = @"m3u8";
+            [item save];
+        }
         NSString *tempUrl = [item.urlArray objectAtIndex:urlIndex];
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:tempUrl]];
         [NSURLConnection connectionWithRequest:request delegate:self];
@@ -49,7 +63,7 @@
                 NSLog(@"working url = %@", workingUrl);
                 item.url = [item.urlArray objectAtIndex:urlIndex];
                 [item save];
-                [NSThread detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
+                [[AppDelegate instance].padDownloadManager startDownloadingThreads];
             } else {
                 urlIndex++;
                 [self setupWorkingUrl];

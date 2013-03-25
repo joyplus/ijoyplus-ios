@@ -232,10 +232,7 @@
 {
     NSLog(@"error in DownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
+    [AppDelegate instance].currentDownloadingNum = 0;
 //    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
 //    if(isReachable) {
 //        NSLog(@"failure because of the source url");
@@ -258,10 +255,7 @@
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            [AppDelegate instance].currentDownloadingNum--;
-            if([AppDelegate instance].currentDownloadingNum < 0){
-                [AppDelegate instance].currentDownloadingNum = 0;
-            }
+            [AppDelegate instance].currentDownloadingNum = 0;
             item.downloadStatus = @"done";
             item.percentage = 100;
             [item save];
@@ -321,10 +315,7 @@
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
         [item save];
-        [AppDelegate instance].currentDownloadingNum--;
-        if([AppDelegate instance].currentDownloadingNum < 0){
-            [AppDelegate instance].currentDownloadingNum = 0;
-        }
+        [AppDelegate instance].currentDownloadingNum = 0;
     } else if([item.downloadStatus isEqualToString:@"stop"]){
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
@@ -437,47 +428,39 @@
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
     DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:index];
-    [item deleteObject];
-    NSArray *segmentUrlArray = [SegmentUrl findByCriteria: [NSString stringWithFormat: @"WHERE item_id = %@", item.itemId]];
-    for (SegmentUrl *segUrl in segmentUrlArray) {
-        [segUrl deleteObject];
-    }
-    segmentUrlArray = nil;
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
-        [AppDelegate instance].currentDownloadingNum--;
-        if([AppDelegate instance].currentDownloadingNum < 0){
-            [AppDelegate instance].currentDownloadingNum = 0;
-        }
+        [AppDelegate instance].currentDownloadingNum = 0;
     }
+    [item deleteObject];
+    double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
+    NSLog(@"result = %f", result);
     
-    NSString *extension = @"mp4";
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSArray *contents = [fileManager contentsOfDirectoryAtPath:documentsDirectory error:NULL];
-    NSEnumerator *e = [contents objectEnumerator];
-    NSString *filename;
-    while ((filename = [e nextObject])) {
-        if(item.type == 1){
-            if ([filename hasPrefix:[NSString stringWithFormat:@"%@.%@", item.itemId, extension]]) {
-                [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+    if ([item.downloadType isEqualToString:@"m3u8"]) {
+        NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+        [fileManager removeItemAtPath:filePath error:nil];
+    } else {
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+        NSEnumerator *e = [contents objectEnumerator];
+        NSString *filename;
+        while ((filename = [e nextObject])) {
+            if(item.type == 1){
+                if ([filename hasPrefix:[NSString stringWithFormat:@"%@.mp4", item.itemId]]) {
+                    [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+                }
+            } else {
+                if ([filename hasPrefix:[NSString stringWithFormat:@"%@_", item.itemId]]) {
+                    [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+                }
             }
-        } else {
-            if ([filename hasPrefix:[NSString stringWithFormat:@"%@_", item.itemId]]) {
-                [fileManager removeItemAtPath:[documentsDirectory stringByAppendingPathComponent:filename] error:NULL];
-            }
-        }
+        }        
     }
-    
     NSArray *tempsubitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", item.itemId]];
     for (SubdownloadItem *subitem in tempsubitems) {
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [AppDelegate instance].currentDownloadingNum--;
-            if([AppDelegate instance].currentDownloadingNum < 0){
-                [AppDelegate instance].currentDownloadingNum = 0;
-            }
+            [AppDelegate instance].currentDownloadingNum = 0;
         }
         [subitem deleteObject];
     }
@@ -499,12 +482,12 @@
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {
                 filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@.m3u8", item.itemId, item.itemId]];
             } else {
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
                 filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
             }
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];

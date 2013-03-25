@@ -30,8 +30,6 @@
     UITapGestureRecognizer *tapGesture;
 }
 
-@property (nonatomic) int downloadType;
-
 @end
 
 @implementation MovieDetailViewController
@@ -350,6 +348,8 @@
     
     if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
         // do nothing
+        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
     } else {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
@@ -585,15 +585,7 @@
     }
     [self.downloadBtn setEnabled:NO];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
-    if (self.mp4DownloadUrls.count > 0) {
-        [self saveToDb:@"mp4"];
-    } else if (self.m3u8DownloadUrls.count > 0){
-        [self saveToDb:@"m3u8"];
-    }
-}
 
-- (void)saveToDb:(NSString *)downloadType
-{
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
     if (item != nil) {
@@ -610,19 +602,21 @@
     item.percentage = 0;
     item.type = 1;
     item.downloadStatus = @"waiting";
-    if ([downloadType isEqualToString:@"mp4"]) {
+    if (self.mp4DownloadUrls.count > 0) {
+        item.downloadType = @"mp4";
         item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-        item.urlArray = self.mp4DownloadUrls;
-    } else if([downloadType isEqualToString:@"m3u8"]){
-        NSArray *tempArray = [NSArray arrayWithObject:@"http://meta.video.qiyi.com/181/ef9f0d6a246b6c2bd6e2b40bd9076eec.m3u8"];
-        item.urlArray = tempArray;
-//        item.urlArray = self.m3u8DownloadUrls;
+    } else if(self.m3u8DownloadUrls.count > 0){
+        item.downloadType = @"m3u8";
     }
-    item.downloadType = downloadType;
+    NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    item.urlArray = tempArray;
     [item save];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
     finder.item = item;
+    finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
     [finder setupWorkingUrl];
     
     [self updateBadgeIcon];

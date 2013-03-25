@@ -307,6 +307,8 @@
     if(num < 0 || num >=episodeArray.count){
         return;
     }
+    [mp4DownloadUrls removeAllObjects];
+    [m3u8DownloadUrls removeAllObjects];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){

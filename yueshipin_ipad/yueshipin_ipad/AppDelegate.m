@@ -71,6 +71,7 @@
     [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
     [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
     [iRate sharedInstance].daysUntilPrompt = 3;
+    [iRate sharedInstance].verboseLogging = NO;
     
     //enable preview mode
     [iRate sharedInstance].previewMode = NO;

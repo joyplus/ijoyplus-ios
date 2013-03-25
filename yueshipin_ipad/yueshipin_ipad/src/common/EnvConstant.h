@@ -13,7 +13,7 @@
 #define VERSION @"0.9.9alpha"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
-#define LOG_ENABLED 1
+#define LOG_ENABLED 0
 
 // for App Store
 #define CHANNEL_ID @""

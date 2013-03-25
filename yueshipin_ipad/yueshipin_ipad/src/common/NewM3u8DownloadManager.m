@@ -15,8 +15,6 @@
 #import "SegmentUrl.h"
 #import "StringUtility.h"
 
-#define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
-
 @interface NewM3u8DownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
 @property (nonatomic, strong)AFDownloadRequestOperation *downloadingOperation;
@@ -56,7 +54,7 @@
             }
             segmentIndex = 0;
             // download m3u8 playlist
-            [self performSelectorInBackground:@selector(downloadVideoFromScratch) withObject:nil];
+            [self downloadVideoFromScratch];
         }
     } else {
         if (![item.downloadStatus isEqualToString:@"error"]) {
@@ -96,70 +94,7 @@
     }
     [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file to %@", filePath);
-        NSString *newFilePath;
-        if (item.type == 1){
-            newFilePath = [DocumentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@.m3u8", item.itemId, item.itemId]];
-        } else {
-            newFilePath = [DocumentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/%@_%@.m3u8", item.itemId, ((SubdownloadItem *)item).subitemId, item.itemId, ((SubdownloadItem *)item).subitemId]];
-        }
-        [[NSFileManager new]createFileAtPath:newFilePath contents:nil attributes:nil];
-        NSFileHandle *playlistFile = [NSFileHandle fileHandleForUpdatingAtPath:newFilePath];
-        [playlistFile truncateFileAtOffset:[playlistFile seekToEndOfFile]];
-        FILE *wordFile = fopen([filePath UTF8String], "r");
-        char word[1000];
-        NSMutableArray *videoArray = [[NSMutableArray alloc]initWithCapacity:500];
-        NSString *linebreak = @"\n";
-        while (fgets(word,1000,wordFile)){
-            word[strlen(word)-1] ='\0';
-            NSString *stringContent = [[NSString stringWithUTF8String:word] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            if ([stringContent hasPrefix:@"#"]) {
-                [playlistFile writeData: [stringContent dataUsingEncoding:NSUTF8StringEncoding]];
-            } else {
-                if ([[stringContent lowercaseString] hasPrefix:@"http://"] || [[stringContent lowercaseString] hasPrefix:@"https://"]) {
-                    [videoArray addObject:stringContent];
-                } else {
-                    // sample url: @"http://218.76.97.35:80/AB87334821B851A8A97C084D061D038FBC1057C3/playlist.m3u8"
-                    NSRange endRange = [item.url rangeOfString:@"/" options:NSBackwardsSearch];
-                    stringContent = [NSString stringWithFormat:@"%@/%@", [item.url substringToIndex:endRange.location], stringContent];
-                    [videoArray addObject:stringContent];
-                }
-                NSURL *tempUrl = [NSURL URLWithString:stringContent];
-                NSString *segmentName = [tempUrl lastPathComponent];
-                NSRange endRange = [stringContent rangeOfString:segmentName];
-                NSString *surfix = [stringContent substringFromIndex:NSMaxRange(endRange)];
-                NSString *localUrlString;
-                if (item.type == 1) {
-                    localUrlString = [NSString stringWithFormat:@"%@/%@/%i_%@%@", LOCAL_HTTP_SERVER_URL, item.itemId, videoArray.count, segmentName, surfix];
-                } else {
-                    localUrlString = [NSString stringWithFormat:@"%@/%@/%@/%i_%@%@", LOCAL_HTTP_SERVER_URL, item.itemId, ((SubdownloadItem *)item).subitemId, videoArray.count, segmentName, surfix];
-                }
-                if (ENVIRONMENT == 0) {
-                    NSLog(@"localurlstring = %@", localUrlString);
-                }
-                [playlistFile writeData: [localUrlString dataUsingEncoding:NSUTF8StringEncoding]];
-            }
-            [playlistFile writeData:[linebreak dataUsingEncoding:NSUTF8StringEncoding]];
-        }
-        [playlistFile closeFile];
-        if (item.type == 1) {
-            item.fileName = [NSString stringWithFormat:@"%@%@", item.itemId, @".m3u8"];
-        } else {
-            item.fileName = [NSString stringWithFormat:@"%@_%@%@", item.itemId, ((SubdownloadItem *)item).subitemId, @".m3u8"];
-        }
-        NSMutableArray *segmentUrlArray = [[NSMutableArray alloc]initWithCapacity:videoArray.count];
-        for (int i = 0; i < videoArray.count; i++) {
-            SegmentUrl *segUrl = [[SegmentUrl alloc]init];
-            segUrl.itemId = item.itemId;
-            if ([item isKindOfClass:[SubdownloadItem class]]) {
-                segUrl.subitemId = ((SubdownloadItem *)item).subitemId;
-            }
-            segUrl.url = [videoArray objectAtIndex:i];
-            segUrl.seqNum = i;
-            [segUrl save];
-            [segmentUrlArray addObject:segUrl];
-        }
-        [item save];
-        [self performSelectorInBackground:@selector(downloadVideoSegment:) withObject:segmentUrlArray];
+        [self performSelectorInBackground:@selector(generatePlaylistFile:) withObject:filePath];        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
         [operation cancel];
@@ -169,6 +104,75 @@
     previousProgress = 0;
     downloadingItem = item;
     [downloadingOperation start];
+}
+
+- (void)generatePlaylistFile:(NSString *)filePath
+{
+    DownloadItem *item = downloadingItem;
+    NSString *newFilePath;
+    if (item.type == 1){
+        newFilePath = [DocumentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@.m3u8", item.itemId, item.itemId]];
+    } else {
+        newFilePath = [DocumentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/%@_%@.m3u8", item.itemId, ((SubdownloadItem *)item).subitemId, item.itemId, ((SubdownloadItem *)item).subitemId]];
+    }
+    [[NSFileManager new]createFileAtPath:newFilePath contents:nil attributes:nil];
+    NSFileHandle *playlistFile = [NSFileHandle fileHandleForUpdatingAtPath:newFilePath];
+    [playlistFile truncateFileAtOffset:[playlistFile seekToEndOfFile]];
+    FILE *wordFile = fopen([filePath UTF8String], "r");
+    char word[1000];
+    NSMutableArray *videoArray = [[NSMutableArray alloc]initWithCapacity:500];
+    NSString *linebreak = @"\n";
+    while (fgets(word,1000,wordFile)){
+        word[strlen(word)-1] ='\0';
+        NSString *stringContent = [[NSString stringWithUTF8String:word] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if ([stringContent hasPrefix:@"#"]) {
+            [playlistFile writeData: [stringContent dataUsingEncoding:NSUTF8StringEncoding]];
+        } else {
+            if ([[stringContent lowercaseString] hasPrefix:@"http://"] || [[stringContent lowercaseString] hasPrefix:@"https://"]) {
+                [videoArray addObject:stringContent];
+            } else {
+                // sample url: @"http://218.76.97.35:80/AB87334821B851A8A97C084D061D038FBC1057C3/playlist.m3u8"
+                NSRange endRange = [item.url rangeOfString:@"/" options:NSBackwardsSearch];
+                stringContent = [NSString stringWithFormat:@"%@/%@", [item.url substringToIndex:endRange.location], stringContent];
+                [videoArray addObject:stringContent];
+            }
+            NSURL *tempUrl = [NSURL URLWithString:stringContent];
+            NSString *segmentName = [tempUrl lastPathComponent];
+            NSRange endRange = [stringContent rangeOfString:segmentName];
+            NSString *surfix = [stringContent substringFromIndex:NSMaxRange(endRange)];
+            NSString *localUrlString;
+            if (item.type == 1) {
+                localUrlString = [NSString stringWithFormat:@"%@/%@/%i_%@%@", LOCAL_HTTP_SERVER_URL, item.itemId, videoArray.count, segmentName, surfix];
+            } else {
+                localUrlString = [NSString stringWithFormat:@"%@/%@/%@/%i_%@%@", LOCAL_HTTP_SERVER_URL, item.itemId, ((SubdownloadItem *)item).subitemId, videoArray.count, segmentName, surfix];
+            }
+            if (ENVIRONMENT == 0) {
+                NSLog(@"localurlstring = %@", localUrlString);
+            }
+            [playlistFile writeData: [localUrlString dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        [playlistFile writeData:[linebreak dataUsingEncoding:NSUTF8StringEncoding]];
+    }
+    [playlistFile closeFile];
+    if (item.type == 1) {
+        item.fileName = [NSString stringWithFormat:@"%@.m3u8", item.itemId];
+    } else {
+        item.fileName = [NSString stringWithFormat:@"%@.m3u8", ((SubdownloadItem *)item).subitemId];
+    }
+    NSMutableArray *segmentUrlArray = [[NSMutableArray alloc]initWithCapacity:videoArray.count];
+    for (int i = 0; i < videoArray.count; i++) {
+        SegmentUrl *segUrl = [[SegmentUrl alloc]init];
+        segUrl.itemId = item.itemId;
+        if ([item isKindOfClass:[SubdownloadItem class]]) {
+            segUrl.subitemId = ((SubdownloadItem *)item).subitemId;
+        }
+        segUrl.url = [videoArray objectAtIndex:i];
+        segUrl.seqNum = i;
+        [segUrl save];
+        [segmentUrlArray addObject:segUrl];
+    }
+    [item save];
+    [self downloadVideoSegment:segmentUrlArray];
 }
 
 - (void)downloadVideoSegment:(NSArray *)segmentUrlArray
@@ -254,10 +258,7 @@
 
 - (void)startNewDownloadItem
 {
-    [AppDelegate instance].currentDownloadingNum--;
-    if([AppDelegate instance].currentDownloadingNum < 0){
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
+    [AppDelegate instance].currentDownloadingNum = 0;
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
 }
 
