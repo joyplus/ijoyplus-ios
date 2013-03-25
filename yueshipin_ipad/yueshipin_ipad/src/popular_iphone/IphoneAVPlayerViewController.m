@@ -44,6 +44,10 @@
 {
     NSURLConnection     *urlConnection;
 }
+
+- (void)stopMyTimer;
+- (void)beginMyTimer;
+
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -385,7 +389,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self initScrubberTimer];
                 [self initTimeLabelTimer];
                 [self enableBottomToolBarButtons];
-                [self showToolBar];
+                //[self showToolBar];
                 [mPlayer play];
                 
                 playButton_.hidden = YES;
@@ -538,12 +542,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
     
 }
--(void)resetMyTimer{
+-(void)resetMyTimer
+{
+    [self stopMyTimer];
+    [self beginMyTimer];
+}
+
+- (void)stopMyTimer
+{
     if (myTimer_ != nil) {
         [myTimer_ invalidate];
+        myTimer_ = nil;
     }
-     myTimer_ = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
 }
+- (void)beginMyTimer
+{
+    if (nil == myTimer_)
+    {
+        myTimer_ = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
+    }
+}
+
 -(void)playerItemDidReachEnd:(id)sender{
     if (videoType_ == 1 || videoType_ == 3) {
         return;
@@ -615,8 +634,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)initUI{
     self.title = nameStr_;
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+    
     [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
     self.view.backgroundColor = [UIColor blackColor];
     [self initTopToolBar];
@@ -1512,28 +1533,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 
-- (void)syncScrubber
-{
-	CMTime playerDuration = [self playerItemDuration];
-	if (CMTIME_IS_INVALID(playerDuration))
-	{
-		mScrubber.minimumValue = 0.0;
-		return;
-	}
-    
-	double duration = CMTimeGetSeconds(playerDuration);
-	if (isfinite(duration))
-	{
-		float minValue = [mScrubber minimumValue];
-		float maxValue = [mScrubber maximumValue];
-		double time = CMTimeGetSeconds([mPlayer currentTime]);
-		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
-	}
-    
-}
-
 - (void)beginScrubbing:(id)sender
 {
+    [self stopMyTimer];
 	mRestoreAfterScrubbingRate = [mPlayer rate];
 	[mPlayer setRate:0.f];
 	
@@ -1574,6 +1576,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		mRestoreAfterScrubbingRate = 0.f;
 	}
 
+}
+
+
+- (void)syncScrubber
+{
+	CMTime playerDuration = [self playerItemDuration];
+	if (CMTIME_IS_INVALID(playerDuration))
+	{
+		mScrubber.minimumValue = 0.0;
+		return;
+	}
+    
+	double duration = CMTimeGetSeconds(playerDuration);
+	if (isfinite(duration))
+	{
+		float minValue = [mScrubber minimumValue];
+		float maxValue = [mScrubber maximumValue];
+		double time = CMTimeGetSeconds([mPlayer currentTime]);
+		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
+	}
+    
 }
 
 - (BOOL)isScrubbing

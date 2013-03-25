@@ -385,7 +385,7 @@
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         NSDictionary *dic = [episodesArr_ objectAtIndex:num];
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
