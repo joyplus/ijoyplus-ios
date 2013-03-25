@@ -42,7 +42,7 @@
 #import "RootViewController.h"
 #import "SearchViewController.h"
 #import "GenericBaseViewController.h"
-
+#import "PersonalViewController.h"
 const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = -150;
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
@@ -851,6 +851,11 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             {
                 SearchViewController * searchCtrl = (SearchViewController *)ctrl;
                 [searchCtrl reloadSearchList];
+            }
+            else if ([ctrl isKindOfClass:[PersonalViewController class]] && moveToLeft)
+            {
+                PersonalViewController * pCtrl = (PersonalViewController *)ctrl;
+                [pCtrl reloadHistory];
             }
         }
         //add code end

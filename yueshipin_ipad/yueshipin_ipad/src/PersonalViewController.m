@@ -462,6 +462,10 @@
     }];
 }
 
+- (void)reloadHistory
+{
+    [table reloadData];
+}
 
 #pragma mark -
 #pragma mark Table view data source
