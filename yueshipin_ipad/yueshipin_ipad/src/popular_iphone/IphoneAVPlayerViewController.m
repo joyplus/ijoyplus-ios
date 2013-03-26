@@ -353,7 +353,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
 		[self syncPlayPauseButtons];
-
+        //NSLog(@"status:%d",self.player.status);
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         switch (status)
         {
@@ -392,6 +392,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self initTimeLabelTimer];
                 [self enableBottomToolBarButtons];
                 //[self showToolBar];
+                
                 [mPlayer play];
                 
                 playButton_.hidden = YES;
@@ -1428,13 +1429,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
             [self stopMyTimer];
+            if (nil != timeLabelTimer_)
+            {
+                [timeLabelTimer_ invalidate];
+                timeLabelTimer_ = nil;
+            }
             [urlConnection cancel];
             [self updateWatchRecord];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
             [self removePlayerTimeObserver];
-            [self.player removeObserver:self forKeyPath:@"rate"];
-            [self.player.currentItem removeObserver:self forKeyPath:@"status"];
+
             [self.player  pause];
             mPlayerItem = nil;
             mPlayer = nil;
@@ -1890,6 +1893,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                                                     name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
                                                   object:nil];
     [avplayerView_.layer removeFromSuperlayer];
+    [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
     [self.player  pause];
@@ -1897,7 +1901,42 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPlayer = nil;
     avplayerView_ = nil;
    
-
+    topToolBar_ = nil;
+    bottomToolBar_ = nil;
+    avplayerView_ = nil;
+    mURL = nil;
+    mScrubber = nil;
+    mTimeObserver = nil;
+    playCacheView_ = nil;
+    selectButton_ = nil;
+    clarityButton_ = nil;
+    playButton_ = nil;
+    pauseButton_ = nil;
+    bottomView_ = nil;
+    seeTimeLabel_ = nil;
+    totalTimeLable_ = nil;
+    nameStr_ = nil;
+    clearBgView_ = nil;
+    sortEpisodesArr_ = nil;
+    episodesArr_ = nil;
+    tableList_ = nil;
+    superClearArr = nil;
+    highClearArr = nil;
+    plainClearArr = nil;
+    play_index_tag = nil;
+    local_file_path_ = nil;
+    myTimer_ = nil;
+    myHUD = nil;
+    prodId_ = nil;
+    webPlayUrl_ = nil;
+    timeLabelTimer_ = nil;
+    volumeView_ = nil;
+    airPlayLabel_ = nil;
+    sourceLogo_ = nil;
+    willPlayLabel_ = nil;
+    workingUrl_ = nil;
+    titleLabel_ = nil;
+    webUrlSource_ = nil;
 }
 
 #pragma mark -
@@ -1916,7 +1955,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    
+    return;
+    [self showToolBar];
+    NSLog(@"%d",self.player.status);
 }
 
 - (void)wifiNotAvailable:(NSNotification *)notification
