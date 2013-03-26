@@ -15,6 +15,8 @@
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
 #import "CommonMotheds.h"
+#import "MobClick.h"
+
 @interface SendWeiboViewController ()
 
 @end
@@ -103,6 +105,7 @@
         if (imageUrl == nil) {
             imageUrl = [infoDic_ objectForKey:@"ipad_poster"];
         }
+        [MobClick event:@"ue_sina_share"];
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaWeibo_.accessToken, @"access_token", content, @"status", imageUrl, @"url", nil];
         [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self removeOverlay];

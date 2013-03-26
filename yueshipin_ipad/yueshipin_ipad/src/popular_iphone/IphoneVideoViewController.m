@@ -210,7 +210,6 @@
         case 0:
             
             [self sinaShare];
-            [MobClick event:@"ue_sina_share"];
             break;
             
         case 1:

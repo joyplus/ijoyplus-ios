@@ -616,18 +616,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
 	// Do any additional setup after loading the view.
     [self initPlayerView];
     
     if (!islocalFile_) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
         //初始化数据；
         [self initDataSource:playNum];
-        
         [self beginToPlay];
     }
     else{
-        
         [self setPath:local_file_path_];
     }
     
@@ -1890,12 +1888,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)dealloc{
     [self removePlayerTimeObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [avplayerView_.layer removeFromSuperlayer];
     [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
     [self.player removeObserver:self forKeyPath:@"rate"];
