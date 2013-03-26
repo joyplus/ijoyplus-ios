@@ -654,7 +654,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self initBottomToolBar];
     
     [self disableBottomToolBarButtons];
-    playCacheView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, self.view.bounds.size.width)];
+    playCacheView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, self.view.bounds.size.width + 24)];
     if([AppDelegate instance].window.bounds.size.height == 568){
         playCacheView_.image = [UIImage imageNamed:@"iphone_video_loading_IP5"];
     }
@@ -666,6 +666,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [playCacheView_ addGestureRecognizer:tapGesture];
+    self.view.backgroundColor = [UIColor clearColor];
     [self.view addSubview:playCacheView_];
     
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
@@ -1033,7 +1034,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
     UIButton *closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeButton.frame = CGRectMake(7, 5, 42, 26);
+    closeButton.frame = CGRectMake(7, 0, 45, 38);
     [closeButton setBackgroundImage:[UIImage imageNamed:@"iphone_back_bt"] forState:UIControlStateNormal];
     [closeButton setBackgroundImage:[UIImage imageNamed:@"iphone_back_bt_pressed"] forState:UIControlStateHighlighted];
     closeButton.backgroundColor = [UIColor clearColor];
@@ -1393,7 +1394,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self showNOThisClearityUrl:NO];
     
     [self addCacheview];
-    lastPlayTime_ = [mPlayer currentTime];
+    CMTime previousLastPlayTime = [mPlayer currentTime];
+    if (CMTIME_IS_VALID(previousLastPlayTime) && CMTimeCompare(previousLastPlayTime, kCMTimeZero) != 0) {
+        lastPlayTime_ = previousLastPlayTime;
+    }
     
     clearBgView_.hidden = YES;
     
@@ -1900,7 +1904,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     mPlayerItem = nil;
     mPlayer = nil;
     avplayerView_ = nil;
-   
     topToolBar_ = nil;
     bottomToolBar_ = nil;
     avplayerView_ = nil;
@@ -1937,6 +1940,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     workingUrl_ = nil;
     titleLabel_ = nil;
     webUrlSource_ = nil;
+    [subnameArray removeAllObjects];
+    subnameArray = nil;
 }
 
 #pragma mark -

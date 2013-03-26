@@ -156,6 +156,7 @@
 }
 -(void)dealloc{
     webView_.delegate = nil;
-
+    [subnameArray removeAllObjects];
+    subnameArray = nil;
 }
 @end

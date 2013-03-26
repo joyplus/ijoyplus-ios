@@ -35,7 +35,7 @@
 @interface MineViewController ()
 
 @property (nonatomic, strong)NSMutableArray *subnameArray;
-
+@property (nonatomic, strong) UIButton *clickedBtn;
 @end
 
 @implementation MineViewController
@@ -59,6 +59,7 @@
 @synthesize noFav = noFav_;
 @synthesize noPersonalList = noPersonalList_;
 @synthesize subnameArray;
+@synthesize clickedBtn;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -298,6 +299,9 @@
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
+    [subnameArray removeAllObjects];
+    subnameArray = nil;
+    clickedBtn = nil;
     bgView_ = nil;
     recordTableList_ = nil;
     favTableList_ = nil;
@@ -888,14 +892,35 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
         [alert show];
         return;
+    }    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        clickedBtn = (UIButton *)sender;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    } else {
+        [self willPlayVideo:sender];
     }
-   
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self willPlayVideo:clickedBtn];
+    }
+}
+
+- (void)willPlayVideo:(UIButton *)btn
+{
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    int num = ((UIButton *)sender).tag;
+    int num = btn.tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
     int type = [[item objectForKey:@"prod_type"] intValue];
     NSString *prodId = [item objectForKey:@"prod_id"];
@@ -944,11 +969,7 @@
             iphoneWebPlayerViewController.prodId = prodId;
             iphoneWebPlayerViewController.playBackTime = (NSNumber *)[item objectForKey:@"playback_time"];
             [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-        
         }
-        
-        
-            
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
        [tempHUD hide:YES];
     }];
