@@ -318,7 +318,7 @@
                 if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                     NSString *videoUrl = [url objectForKey:@"url"];
                     [mp4DownloadUrls addObject:videoUrl];
-                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]] && ![source isEqualToString:@"letv_fee"]){
+                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]] && ![source isEqualToString:@"le_tv_fee"]){
                     NSString *videoUrl = [url objectForKey:@"url"];
                     [m3u8DownloadUrls addObject:videoUrl];
                 }

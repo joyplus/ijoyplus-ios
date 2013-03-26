@@ -90,6 +90,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize titleLabel = titleLabel_;
 @synthesize webUrlSource = webUrlSource_;
 @synthesize subnameArray;
+@synthesize isM3u8 = isM3u8_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -208,7 +209,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
        [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId_] result:[NSNumber numberWithInt:playNum]];
     }
   
-
+    [self  syncCurrentClear];
 }
 
 -(void)assetFailedToPrepareForPlayback:(NSError *)error
@@ -625,8 +626,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [self initDataSource:playNum];
         [self beginToPlay];
     }
-    else{
-        [self setPath:local_file_path_];
+    else{        
+        if (isM3u8_) {
+            [self setURL:[NSURL URLWithString:local_file_path_]];
+        }
+        else{
+         [self setPath:local_file_path_];
+        }
     }
     
     [self initUI];
@@ -1244,6 +1250,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)clearSelectView{
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 202, 109)];
+        view.tag = 99;
         UIButton *plainClearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         plainClearBtn.frame = CGRectMake(0, 0, 42, 42);
        // plainClearBtn.center = CGPointMake(34, 65);
@@ -1380,6 +1387,53 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     
 }
+-(void)syncCurrentClear{
+    NSString *clearType = nil;
+    for ( NSDictionary *dic in plainClearArr) {
+        if ([[dic objectForKey:@"url"] isEqualToString:workingUrl_]) {
+            clearType = @"plain";
+            break;
+        }
+    }
+    if (clearType == nil) {
+        for ( NSDictionary *dic in highClearArr) {
+            if ([[dic objectForKey:@"url"] isEqualToString:workingUrl_]) {
+                clearType = @"high";
+                break;
+            }
+        }
+    }
+    if (clearType == nil) {
+        for ( NSDictionary *dic in superClearArr) {
+            if ([[dic objectForKey:@"url"] isEqualToString:workingUrl_]) {
+                clearType = @"super";
+                break;
+            }
+        }
+    }
+    UIView *view = [clearBgView_ viewWithTag:99];
+     UIButton *plainbtn = (UIButton *)[view viewWithTag:100];
+     UIButton *highbtn = (UIButton *)[view viewWithTag:101];
+     UIButton *superbtn = (UIButton *)[view viewWithTag:102];
+
+    if([clearType isEqualToString:@"plain"]){
+        plainbtn.enabled = NO;
+        highbtn.enabled = YES;
+        superbtn.enabled = YES;
+    }
+    else if([clearType isEqualToString:@"high"]){
+        plainbtn.enabled = YES;
+        highbtn.enabled = NO;
+        superbtn.enabled = YES;
+    }
+    else if([clearType isEqualToString:@"super"]){
+        plainbtn.enabled = YES;
+        highbtn.enabled = YES;
+        superbtn.enabled = NO;
+    }
+
+
+}
 -(void)clearButtonSelected:(UIButton *)btn{
 
     for (UIView *view in clearBgView_.customView.subviews) {
@@ -1428,7 +1482,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)action:(UIButton *)btn{
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
+
             [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+
+            [[AppDelegate instance] stopHttpServer];
+
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
             [self stopMyTimer];
             if (nil != timeLabelTimer_)

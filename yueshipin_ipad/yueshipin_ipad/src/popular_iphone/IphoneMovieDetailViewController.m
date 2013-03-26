@@ -706,7 +706,9 @@
             [button setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
             button.adjustsImageWhenHighlighted = NO;
             
-            NSString *url = [self getDownloadUrl];
+             NSString *url = [self getDownloadUrl];
+//            NSString *url = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
+//            download_file_type_ = @"m3u8";
             if (url == nil || [url isEqualToString:@""]) {
                 NSLog(@"Get the download url is failed");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"暂无下载地址" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
@@ -730,7 +732,8 @@
             if (imgUrl == nil) {
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
-            NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
+            download_file_type_ = @"m3u8";
+            NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1",[NSNumber numberWithInt:0],download_file_type_, nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:infoArr];
             break;
         }
@@ -858,6 +861,12 @@
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
+            download_file_type_ = @"mp4";
+            break;
+        }
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+            download_file_type_ = @"m3u8";
             break;
         }
     }
@@ -865,6 +874,12 @@
         for(NSDictionary *url in urlArray){
             if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+                download_file_type_ = @"mp4";
+                break;
+            }
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                download_file_type_ = @"m3u8";
                 break;
             }
         }
@@ -873,6 +888,12 @@
         for(NSDictionary *url in urlArray){
             if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+                download_file_type_ = @"mp4";
+                break;
+            }
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                download_file_type_ = @"m3u8";
                 break;
             }
         }
@@ -881,6 +902,12 @@
         for(NSDictionary *url in urlArray){
             if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+                download_file_type_ = @"mp4";
+                break;
+            }
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                download_file_type_ = @"m3u8";
                 break;
             }
         }
@@ -891,7 +918,12 @@
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
                 if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
-                     videoUrl = [url objectForKey:@"url"];
+                    videoUrl = [url objectForKey:@"url"];
+                    download_file_type_ = @"mp4";
+                }
+                if ([[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                    videoUrl = [url objectForKey:@"url"];
+                     download_file_type_ = @"m3u8";
                 }
             
             }

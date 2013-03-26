@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "IphoneAVPlayerViewController.h"
 #import "Reachability.h"
+#import "CMConstants.h"
 @interface IphoneSubdownloadViewController ()
 
 @end
@@ -363,21 +364,29 @@
     //指向文件目录
     NSString *documentsDirectory= [NSHomeDirectory()
                                    stringByAppendingPathComponent:@"Documents"];
+    
+    
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
-    for (NSString *nameStr in fileList) {
-        if ([nameStr hasPrefix:fileName]) {
-            NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
-            [fileMgr removeItemAtPath:deleteFilePath error:&error];
-            break;
+    if ([item.fileName hasSuffix:@"m3u8"]) {
+        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+        [fileMgr removeItemAtPath:deleteFilePath error:&error];
+    }
+    else{
+        for (NSString *nameStr in fileList) {
+            if ([nameStr hasPrefix:fileName]) {
+                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
+                [fileMgr removeItemAtPath:deleteFilePath error:&error];
+                break;
+            }
         }
     }
 
     [item deleteObject];
     
-     NSArray *tempArr = [SubdownloadItem findByCriteria:query];
+    NSArray *tempArr = [SubdownloadItem findByCriteria:query];
     
-    if ([tempArr count] == 0) {
+    if ([tempArr count] == 0){
         NSString *subquery = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
         NSArray *itemArr = [DownloadItem findByCriteria:subquery];
         for (DownloadItem *downloadItem in itemArr) {
@@ -405,15 +414,26 @@
         NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
         
         NSString *playPath = nil;
-        for (NSString *str in fileList) {
-            if ([str isEqualToString:fileName]) {
-                playPath = [documentsDirectory stringByAppendingPathComponent:str];
-                break;
+        if (![downloadItem.downloadType isEqualToString:@"m3u8"]) {
+            for (NSString *str in fileList) {
+                if ([str isEqualToString:fileName]) {
+                    playPath = [documentsDirectory stringByAppendingPathComponent:str];
+                    break;
+                }
             }
+        }
+        else{
+            [[AppDelegate instance] startHttpServer];
+            NSString *idStr = downloadItem.subitemId ;
+            NSArray *tempArr =  [idStr componentsSeparatedByString:@"_"];
+            playPath =[LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@/%@.m3u8",downloadItem.itemId,idStr,[tempArr objectAtIndex:1]]];
         }
         if (playPath) {
             IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
             iphoneAVPlayerViewController.local_file_path = playPath;
+            if ([downloadItem.downloadType isEqualToString:@"m3u8"]){
+              iphoneAVPlayerViewController.isM3u8 = YES;
+            }
             iphoneAVPlayerViewController.islocalFile = YES;
             if (downloadItem.type == 2) {
                 NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];

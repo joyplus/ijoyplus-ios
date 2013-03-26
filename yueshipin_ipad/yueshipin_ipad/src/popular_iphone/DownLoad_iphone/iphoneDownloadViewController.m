@@ -10,10 +10,12 @@
 #import "UIImageView+WebCache.h"
 #import "DownloadItem.h"
 #import "DownLoadManager.h"
+#import "SegmentUrl.h"
 #import "IphoneSubdownloadViewController.h"
 #import "AppDelegate.h"
 #import "IphoneAVPlayerViewController.h"
 #import "Reachability.h"
+#import "CMConstants.h"
 @interface IphoneDownloadViewController ()
 
 @end
@@ -414,26 +416,41 @@
     
     DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:index];
     NSString *itemId = item.itemId;
-    //删除从表的内容
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
-    NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
-    for (SubdownloadItem *subItem in subItems) {
-        [subItem deleteObject];
-        [DownLoadManager stopAndClear:subItem.subitemId];
-    }
-    //停止该下载线程，并从下载队列中删除
-    [DownLoadManager stopAndClear:itemId];
-    
-    //删除 对应的文件
-    NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
-    NSString *subfileName = [NSString stringWithFormat:@"%@_",itemId];
-    for (NSString *nameStr in fileList) {
-        if ([nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]) {
-            NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
-            [fileMgr removeItemAtPath:deleteFilePath error:&error];
+    if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
+        NSArray *arr = [SegmentUrl findByCriteria:itemId];
+        for (SegmentUrl *sg in arr) {
+            [sg deleteObject];
         }
+        NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:itemId];
+        [fileMgr removeItemAtPath:deletePath error:&error];
+        [DownLoadManager stop:itemId];
+        [DownLoadManager stopAndClear:itemId];
+        
     }
+    else{
     
+        //删除从表的内容
+        NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
+        for (SubdownloadItem *subItem in subItems) {
+            [subItem deleteObject];
+            [DownLoadManager stopAndClear:subItem.subitemId];
+        }
+        //停止该下载线程，并从下载队列中删除
+        [DownLoadManager stopAndClear:itemId];
+        
+        //删除 对应的文件
+        NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
+        NSString *subfileName = [NSString stringWithFormat:@"%@_",itemId];
+        for (NSString *nameStr in fileList) {
+            if ([nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]) {
+                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
+                [fileMgr removeItemAtPath:deleteFilePath error:&error];
+            }
+        }
+
+    }
+       
 
     [item deleteObject];
     
@@ -447,8 +464,9 @@
     
      DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:position];
     if (item.type == 1) {
-        if ([item.downloadStatus isEqualToString:@"finish"]) {
-            NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
+        
+            if ([item.downloadStatus isEqualToString:@"finish"]) {
+           
             //对于错误信息
             NSError *error;
             // 创建文件管理器
@@ -459,15 +477,29 @@
             NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
             
             NSString *playPath = nil;
-            for (NSString *str in fileList) {
-                if ([str isEqualToString:fileName]) {
-                    playPath = [documentsDirectory stringByAppendingPathComponent:str];
-                    break;
+              
+            if (![item.downloadType isEqualToString:@"m3u8"]) {
+                NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
+                for (NSString *str in fileList) {
+                    if ([str isEqualToString:fileName]) {
+                        playPath = [documentsDirectory stringByAppendingPathComponent:str];
+                        break;
+                    }
                 }
             }
+            else{
+                [[AppDelegate instance] startHttpServer];
+                NSString *subPath = [NSString stringWithFormat:@"%@_%@",item.itemId,@"1"];
+                playPath =[LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@/1.m3u8",item.itemId,subPath]];
+            }
+            
             if (playPath) {                
                 IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
                 iphoneAVPlayerViewController.local_file_path = playPath;
+                if ([item.downloadType isEqualToString:@"m3u8"]){
+                  iphoneAVPlayerViewController.isM3u8 = YES;
+                }
+                
                 iphoneAVPlayerViewController.islocalFile = YES;
                 iphoneAVPlayerViewController.nameStr = item.name;
                 [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
@@ -491,6 +523,7 @@
             item.downloadStatus = @"stop";
           
             [DownLoadManager stop:item.itemId];
+            
             [item save];
            
            for (UILabel *label in progressLabelArr_) {

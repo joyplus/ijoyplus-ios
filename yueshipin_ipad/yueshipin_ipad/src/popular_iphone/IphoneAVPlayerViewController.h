@@ -77,6 +77,8 @@
     UILabel *titleLabel_;
     
     NSString *webUrlSource_;
+    
+    BOOL isM3u8_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -120,6 +122,7 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) NSString *webUrlSource;
 @property (nonatomic, strong) NSMutableArray *subnameArray;
+@property (nonatomic, assign)  BOOL isM3u8;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 
