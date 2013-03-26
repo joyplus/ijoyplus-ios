@@ -114,10 +114,7 @@
             [self removeOverlay];
             [self showFailureModalView:1.5];
         }];
-
-
     }
-    
 }
 
 - (void)showSuccessModalView:(int)closeTime

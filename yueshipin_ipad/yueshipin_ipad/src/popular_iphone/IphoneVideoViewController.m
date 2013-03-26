@@ -30,6 +30,7 @@
 #import "TSActionSheet.h"
 #import "Reachability.h"
 #import "MobClick.h"
+#import "CustomNavigationViewControllerPortrait.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -237,7 +238,7 @@
     if ([_mySinaWeibo isLoggedIn]) {
         SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
         sendV.infoDic = infoDic_;
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
+        [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:sendV] animated:YES completion:nil];
     }
     else{
         [_mySinaWeibo logIn];

@@ -352,7 +352,11 @@
         episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
             NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
             NSNumber *second = [f numberFromString:[NSString stringWithFormat:@"%@", [b objectForKey:@"name"]]];
-            return [first compare:second];
+            if (first && second) {
+                return [first compare:second];
+            } else {
+                return NSOrderedSame;
+            }
         }];
         topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];

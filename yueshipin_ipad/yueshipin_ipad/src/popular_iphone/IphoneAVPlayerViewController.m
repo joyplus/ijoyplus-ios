@@ -1152,7 +1152,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     totalTimeLable_.textColor = [UIColor whiteColor];
     [bottomView_ addSubview:totalTimeLable_];
     
-    //bottomView_.hidden = YES;
+    bottomView_.hidden = YES;
     [self.view addSubview:bottomView_];
     
     UIButton *fullScreen = [UIButton buttonWithType:UIButtonTypeCustom];
