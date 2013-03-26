@@ -1077,9 +1077,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:WIFI_IS_NOT_AVAILABLE
-                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [self.urlConnection cancel];
     [self updateWatchRecord];
     [self saveLastPlaytime];

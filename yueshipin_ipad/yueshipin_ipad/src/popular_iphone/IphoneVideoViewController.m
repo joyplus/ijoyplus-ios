@@ -34,6 +34,8 @@
 
 @interface IphoneVideoViewController ()
 
+@property (nonatomic) int willPlayIndex;
+
 @end
 
 @implementation IphoneVideoViewController
@@ -48,6 +50,7 @@
 @synthesize isNotification = isNotification_;
 @synthesize segmentedControl = segmentedControl_;
 @synthesize wechatImg = wechatImg_;
+@synthesize willPlayIndex;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -382,6 +385,28 @@
 
 
 -(void)playVideo:(int)num{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        willPlayIndex = num;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    } else {
+        [self willPlayVideo:num];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self willPlayVideo:willPlayIndex];
+    }
+}
+
+- (void)willPlayVideo:(int)num
+{
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
@@ -401,7 +426,6 @@
     iphoneWebPlayerViewController.prodId = prodId_;
     iphoneWebPlayerViewController.playBackTime = [self getRecordInfo:num];
     [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-    
 }
 
 -(NSNumber*)getRecordInfo:(int)num{

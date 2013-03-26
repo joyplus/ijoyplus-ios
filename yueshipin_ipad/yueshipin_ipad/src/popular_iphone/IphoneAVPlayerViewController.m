@@ -615,6 +615,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
 	// Do any additional setup after loading the view.
     [self initPlayerView];
     
@@ -1424,16 +1425,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)action:(UIButton *)btn{
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
             [self stopMyTimer];
             [urlConnection cancel];
             [self updateWatchRecord];
-            [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                            name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
-                                                          object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                            name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
-                                                          object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
             [self removePlayerTimeObserver];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player.currentItem removeObserver:self forKeyPath:@"status"];
@@ -1919,6 +1917,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
     
+}
+
+- (void)wifiNotAvailable:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    NSString *show3GAlert = (NSString *)notification.object;
+    if ([show3GAlert isEqualToString:@"0"]) {
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:@"当前网络为非Wifi环境，您确定要继续播放吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 0){
+        UIButton *closeBtn = (UIButton *)[topToolBar_ viewWithTag:CLOSE_BUTTON_TAG];
+        [self action:closeBtn];
+    }
 }
 
 @end
