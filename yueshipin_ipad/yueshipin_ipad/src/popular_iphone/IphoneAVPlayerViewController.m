@@ -1441,8 +1441,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self removePlayerTimeObserver];
 
             [self.player  pause];
-            mPlayerItem = nil;
-            mPlayer = nil;
+//            mPlayerItem = nil;
+//            mPlayer = nil;
             [self dismissViewControllerAnimated:YES completion:nil];
           
             //[self.navigationController popViewControllerAnimated:YES];
@@ -1895,7 +1895,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
     [self.player removeObserver:self forKeyPath:@"rate"];
 	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
-    [self.player  pause];
+    
     mPlayerItem = nil;
     mPlayer = nil;
     avplayerView_ = nil;
