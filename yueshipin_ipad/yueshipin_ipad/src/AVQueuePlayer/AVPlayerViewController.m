@@ -64,7 +64,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) int combinedIndex;
 @property (nonatomic, strong) NSMutableDictionary *urlArrayDictionary;
 @property (atomic, strong) NSURL *workingUrl;
-@property (nonatomic) NSString *resolution;
+@property (nonatomic, strong) NSString *resolution;
 @property (nonatomic) CMTime resolutionLastPlaytime;
 @property (nonatomic) int resolutionNum;
 @property (nonatomic, strong) UILabel *sourceLabel;
@@ -84,6 +84,8 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 - (void)playerItemDidReachEnd:(NSNotification *)notification ;
 - (void)observeValueForKeyPath:(NSString*) path ofObject:(id)object change:(NSDictionary*)change context:(void*)context;
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys;
+- (void)closeAllTimer;
+
 @end
 
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
@@ -136,65 +138,80 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)dealloc
 {
-    [superClearArr removeAllObjects];
-    [plainClearArr removeAllObjects];
-    [highClearArr removeAllObjects];
+    
+    [mPlayer removeObserver:self forKeyPath:@"rate"];
+	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
+    [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
+    
+    mPlayer = nil;
+    mPlayerItem = nil;
+    
     sourceLabel = nil;
     sourceImage = nil;
     superClearArr = nil;
     plainClearArr = nil;
     highClearArr = nil;
+    
     topToolbar = nil;
     nameLabel = nil;
-    [combinedArr removeAllObjects];
     combinedArr = nil;
     videoUrl = nil;
     defaultErrorMessage = nil;
+    
     self.mPlaybackView = nil;
     self.mToolbar = nil;
     self.mPlayButton = nil;
     self.mStopButton = nil;
     self.mScrubber = nil;
+    
     topToolbar = nil;
     bottomView = nil;
     volumeSlider = nil;
     routeBtn = nil;
     currentPlaybackTimeLabel = nil;
+    
     totalTimeLabel = nil;
     volumeBtn = nil;
     selectButton = nil;
     qualityBtn = nil;
     playCacheView = nil;
+    
     controlVisibilityTimer = nil;
     myHUD = nil;
     episodeListviewController = nil;
     resolutionPopTipView = nil;
     biaoqingBtn = nil;
+    
     gaoqingBtn = nil;
     chaoqingBtn = nil;
     vidoeTitle = nil;
     airplayDeviceName = nil;
     deviceOutputType = nil;
+    
     applyTvView = nil;
     tipLabel = nil;
     subnameArray = nil;
     prodId = nil;
     name = nil;
+    
     subname = nil;
     video = nil;
     videoHttpUrl = nil;
     self.URL = nil;
-    [mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-	[mPlayer pause];
-    mPlayer = nil;
-    mPlayerItem = nil;
     mPlaybackView = nil;
+    
     mToolbar = nil;
     mPrevButton = nil;
     mNextButton = nil;
     mSwitchButton = nil;
     umengPageName = nil;
+    
+    resolution = nil;
+    workingUrl = nil;
+    urlArrayDictionary = nil;
+    urlConnection = nil;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
@@ -1071,13 +1088,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [self closeAllTimer];
     [self.urlConnection cancel];
     [self updateWatchRecord];
     [self saveLastPlaytime];
 	[mPlayer pause];
-    mPlayer = nil;
-    [controlVisibilityTimer invalidate];
+    
     if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
@@ -1482,6 +1498,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (void)disableNextButton
 {
     [mNextButton setEnabled:NO];    
+}
+
+- (void)closeAllTimer
+{
+    if (nil != controlVisibilityTimer)
+    {
+        [controlVisibilityTimer invalidate];
+        controlVisibilityTimer = nil;
+    }
+    [self removePlayerTimeObserver];
 }
 
 #pragma mark -

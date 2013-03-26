@@ -353,7 +353,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
 		[self syncPlayPauseButtons];
-        //NSLog(@"status:%d",self.player.status);
+        
         AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
         switch (status)
         {
@@ -1955,10 +1955,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    return;
-    [self showToolBar];
-    NSLog(@"%d",self.player.status);
+    
 }
+
+#pragma mark -
+#pragma mark - wifi -> 3G
 
 - (void)wifiNotAvailable:(NSNotification *)notification
 {
