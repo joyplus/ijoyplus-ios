@@ -20,7 +20,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "HTTPServer.h"
 
-#define DAY(day)        (day * 3600)
+#define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -30,6 +30,7 @@
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
 @property (atomic, strong) NSString *show3GAlertSeq;
 @property (nonatomic, strong)HTTPServer *httpServer;
+@property (nonatomic, strong) UILocalNotification *localNotification;
 - (void)monitorReachability;
 
 - (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti;
@@ -58,6 +59,7 @@
 @synthesize show3GAlertSeq;
 @synthesize padM3u8DownloadManager;
 @synthesize httpServer;
+@synthesize localNotification;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -475,9 +477,9 @@
 
 - (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti
 {
-    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    localNotification = [[UILocalNotification alloc] init];
     
-    if (nil != notification)
+    if (nil != localNotification)
     {
         NSDate * now = [NSDate new];
         //输出字符串为格林威治时区，做8小时偏移
@@ -487,18 +489,21 @@
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
         [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
         NSDate * Date9PM = [formatter dateFromString:today9PM];
-        notification.fireDate = [Date9PM dateByAddingTimeInterval:ti];
-        notification.timeZone = [NSTimeZone defaultTimeZone];
-        notification.alertBody = @"亲，你已经至少两周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
-        [[UIApplication sharedApplication]   scheduleLocalNotification:notification];
+        NSDate * fireDate = [Date9PM dateByAddingTimeInterval:ti];
+        localNotification.fireDate = fireDate;
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.alertBody = @"亲，你已经至少一周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
+        [[UIApplication sharedApplication]   scheduleLocalNotification:localNotification];
     }
-    
-    [notification release];
 }
 
 - (void)cancelLocalNotification
 {
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    if (nil != localNotification)
+    {
+        [[UIApplication sharedApplication] cancelLocalNotification:localNotification];
+        localNotification = nil;
+    }
 }
 
 @end
