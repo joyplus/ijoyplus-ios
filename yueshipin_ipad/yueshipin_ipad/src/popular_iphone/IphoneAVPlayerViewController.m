@@ -89,6 +89,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize workingUrl = workingUrl_;
 @synthesize titleLabel = titleLabel_;
 @synthesize webUrlSource = webUrlSource_;
+@synthesize subnameArray;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -1743,7 +1744,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         else{ 
            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0] ];
         }
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
+        NSString *subname = @"";
+        if (videoType_ != 1 && playNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:playNum];
+        }
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

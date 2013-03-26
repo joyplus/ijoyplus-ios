@@ -65,7 +65,6 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) NSMutableDictionary *urlArrayDictionary;
 @property (atomic, strong) NSURL *workingUrl;
 @property (nonatomic) NSString *resolution;
-@property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic) CMTime resolutionLastPlaytime;
 @property (nonatomic) int resolutionNum;
 @property (nonatomic, strong) UILabel *sourceLabel;
@@ -1369,14 +1368,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)loadLastPlaytime 
 {
-    NSString *lastPlaytimeCacheKey;
-    if (type == 1) {
-        lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@", self.prodId];
-    } else {
-        lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
+    if (CMTIME_IS_INVALID(lastPlayTime) || CMTimeCompare(lastPlayTime, kCMTimeZero) == 0) {
+        NSString *lastPlaytimeCacheKey;
+        if (type == 1) {
+            lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@", self.prodId];
+        } else {
+            lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
+        }
+        NSNumber *seconds = [[CacheUtility sharedCache]loadFromCache:lastPlaytimeCacheKey];
+        lastPlayTime = CMTimeMakeWithSeconds(seconds.doubleValue, NSEC_PER_SEC);
     }
-    NSNumber *seconds = [[CacheUtility sharedCache]loadFromCache:lastPlaytimeCacheKey];
-    lastPlayTime = CMTimeMakeWithSeconds(seconds.doubleValue, NSEC_PER_SEC);
 }
 
 #pragma mark -

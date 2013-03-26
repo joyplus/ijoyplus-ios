@@ -183,6 +183,7 @@
         viewController.type = self.type;
         viewController.prodId = self.prodId;
         viewController.name = name;
+        viewController.lastPlayTime = CMTimeMakeWithSeconds([playTime floatValue], NSEC_PER_SEC);
         viewController.subname = subname;
         if (video == nil) {//如果是从播放历史里来，就关闭网页和视频
             viewController.closeAll = YES;

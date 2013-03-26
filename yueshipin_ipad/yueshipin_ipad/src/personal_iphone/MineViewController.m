@@ -34,6 +34,8 @@
 #define PAGESIZE 20
 @interface MineViewController ()
 
+@property (nonatomic, strong)NSMutableArray *subnameArray;
+
 @end
 
 @implementation MineViewController
@@ -56,6 +58,7 @@
 @synthesize noRecord = noRecord_;
 @synthesize noFav = noFav_;
 @synthesize noPersonalList = noPersonalList_;
+@synthesize subnameArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -918,8 +921,23 @@
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
         }
         else{
+            int playNum = 0;
+            if (subnameArray == nil) {
+                subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+                for (NSDictionary *oneEpisode in [videoInfo objectForKey:@"episodes"]) {
+                    NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+                    [subnameArray addObject:tempName];
+                }
+            }
+            if (type != 1 && subnameArray.count > 0) {
+                playNum = [subnameArray indexOfObject:[item objectForKey:@"prod_subname"]];
+                if (playNum < 0 || playNum >= subnameArray.count) {
+                    playNum = 0;
+                }
+            }
             IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-            iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
+            iphoneWebPlayerViewController.playNum = playNum;
+            iphoneWebPlayerViewController.subnameArray = subnameArray;
             iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
             iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
             iphoneWebPlayerViewController.videoType = type;

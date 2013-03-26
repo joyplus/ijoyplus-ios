@@ -29,4 +29,5 @@
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSNumber *playBackTime;
 @property (nonatomic, strong) NSString *webUrlSource;
+@property (nonatomic, strong) NSMutableArray *subnameArray;
 @end

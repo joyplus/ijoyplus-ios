@@ -119,6 +119,7 @@
 @property (nonatomic, strong) NSString *workingUrl;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) NSString *webUrlSource;
+@property (nonatomic, strong) NSMutableArray *subnameArray;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

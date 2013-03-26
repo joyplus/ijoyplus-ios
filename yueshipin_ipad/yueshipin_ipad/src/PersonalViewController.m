@@ -566,21 +566,6 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
-//    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
-//        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-//        [urlsArray addObject:[item objectForKey:@"video_url"]];
-//        viewController.videoUrls = urlsArray;
-//    } else {
-//        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
-//    }
-//    viewController.prodId = [item objectForKey:@"prod_id"];
-//    viewController.closeAll = YES;
-//    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-//    viewController.name = [item objectForKey:@"prod_name"];
-//    viewController.subname = [item objectForKey:@"prod_subname"];
-//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     BOOL hasVideoUrls = YES;
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:1];
     if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"2"]){
@@ -592,6 +577,7 @@
     webViewController.name = [item objectForKey:@"prod_name"];
     webViewController.subname = [item objectForKey:@"prod_subname"];
     webViewController.prodId = [item objectForKey:@"prod_id"];
+    webViewController.playTime = [item objectForKey:@"playback_time"];
     webViewController.hasVideoUrls = hasVideoUrls;
     webViewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
     webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
