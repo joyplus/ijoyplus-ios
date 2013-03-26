@@ -1062,7 +1062,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     } else {
         lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
     }
-    [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: [NSNumber numberWithFloat: CMTimeGetSeconds(mPlayer.currentTime)]];
+    float lastPlaytimeNum = CMTimeGetSeconds(mPlayer.currentTime);
+    double duration = 0;
+    CMTime playerDuration = [self playerItemDuration];
+    if (CMTIME_IS_VALID(playerDuration)) {
+        duration = CMTimeGetSeconds(playerDuration);
+    }
+    if (duration - lastPlaytimeNum <= 5) {
+        [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: [NSNumber numberWithInt:0]];
+    } else {
+        [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: [NSNumber numberWithFloat:lastPlaytimeNum]];
+    }
 }
 
 
@@ -1387,12 +1397,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
         
         /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
+        __block typeof (self) myself = self;
         [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
          ^{
              dispatch_async( dispatch_get_main_queue(),
                             ^{
                                 /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                [self prepareToPlayAsset:asset withKeys:requestedKeys];
+                                [myself prepareToPlayAsset:asset withKeys:requestedKeys];
                             });
          }];
 	}
@@ -1505,11 +1516,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
 
 	/* Update the scrubber during normal playback. */
+    __block typeof (self) myself = self;
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
 								queue:NULL /* If you pass NULL, the main queue is used. */
 								usingBlock:^(CMTime time) 
                                             {
-                                                [self syncScrubber];
+                                                [myself syncScrubber];
                                             }];
 
 }
@@ -1588,11 +1600,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		{
 			CGFloat width = CGRectGetWidth([mScrubber bounds]);
 			double tolerance = 0.5f * duration / width;
-
+            __block typeof (self) myself = self;
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
-			^(CMTime time)
-			{
-				[self syncScrubber];
+            ^(CMTime time) {
+				[myself syncScrubber];
 			}];
 		}
 	}

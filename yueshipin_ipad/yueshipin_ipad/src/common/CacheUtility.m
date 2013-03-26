@@ -115,14 +115,21 @@
         }
     }
     NSMutableArray *cacheQueue = [[NSMutableArray alloc]initWithArray:cacheArray];
+    for (NSDictionary *tempObj in cacheQueue) {
+        id tempValue = [tempObj objectForKey:cacheKey];
+        if (tempValue) {
+            [cacheQueue removeObject:tempObj];
+            break;
+        }
+    }    
     NSDictionary *cacheObject = [NSDictionary dictionaryWithObjectsAndKeys:result, cacheKey, nil];
     [cacheQueue enqueue:cacheObject];
-    if (cacheQueue.count >= 100) {
-        for (int i = 0; i < cacheQueue.count - 100; i++) {
+    if (cacheQueue.count > 200) {
+        for (int i = 0; i < cacheQueue.count - 200; i++) {
             [cacheQueue dequeue];
         }
     }
-    
+    NSLog(@"cache num = %i", cacheQueue.count);
     [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];

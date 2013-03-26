@@ -230,6 +230,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)clearCache
 {
     [[SDImageCache sharedImageCache] clearDisk];
+    [[CacheUtility sharedCache] removeObjectForKey:CACHE_QUEUE];
     sleep(1);
 }
 
