@@ -166,7 +166,15 @@
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    [self downloadSuccess:operationId];
+    if([downloadingItem isKindOfClass:[SubdownloadItem class]]){
+        SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
+        tempDownloadingItem.downloadStatus = @"done";
+        tempDownloadingItem.percentage = 100;
+        [tempDownloadingItem save];
+    }
+    [downloadingOperation pause];
+    [downloadingOperation cancel];
+    [self startNewDownloadItem];        
 }
 
 - (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress

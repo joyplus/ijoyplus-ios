@@ -385,7 +385,7 @@
             progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", item.percentage];
         } else if([item.downloadStatus isEqualToString:@"stop"]){
             progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
-        } else if([item.downloadStatus isEqualToString:@"done"]){
+        } else if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
 //            progressLabel.text = @"下载完成";
         } else if([item.downloadStatus isEqualToString:@"waiting"]){
             progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
@@ -435,24 +435,23 @@
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    if ([item.downloadType isEqualToString:@"m3u8"]) {
-        NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
-        [fileManager removeItemAtPath:filePath error:nil];
-    } else {
-        NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
-        NSEnumerator *e = [contents objectEnumerator];
-        NSString *filename;
-        while ((filename = [e nextObject])) {
-            if(item.type == 1){
-                if ([filename hasPrefix:[NSString stringWithFormat:@"%@.mp4", item.itemId]]) {
-                    [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
-                }
-            } else {
-                if ([filename hasPrefix:[NSString stringWithFormat:@"%@_", item.itemId]]) {
-                    [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
-                }
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+    NSEnumerator *e = [contents objectEnumerator];
+    NSString *filename;
+    while ((filename = [e nextObject])) {
+        if(item.type == 1){
+            if ([filename hasPrefix:[NSString stringWithFormat:@"%@.mp4", item.itemId]]) {
+                [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
             }
-        }        
+        } else {
+            if ([filename hasPrefix:[NSString stringWithFormat:@"%@_", item.itemId]]) {
+                [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+            }
+        }
+    }
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        [fileManager removeItemAtPath:filePath error:nil];
     }
     NSArray *tempsubitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", item.itemId]];
     for (SubdownloadItem *subitem in tempsubitems) {

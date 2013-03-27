@@ -1385,8 +1385,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
         }
         NSNumber *seconds = [[CacheUtility sharedCache]loadFromCache:lastPlaytimeCacheKey];
-        lastPlayTime = CMTimeMakeWithSeconds(seconds.doubleValue, NSEC_PER_SEC);
-    } 
+        if (seconds.intValue > 1) {
+            lastPlayTime = CMTimeMakeWithSeconds(seconds.doubleValue, NSEC_PER_SEC);
+        } else {
+            lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
+        }
+    }
 }
 
 #pragma mark -
@@ -1933,9 +1937,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 if (CMTIME_IS_VALID(playerDuration)) {
                     duration = CMTimeGetSeconds(playerDuration);
                 }
-                totalTimeLabel.text = [TimeUtility formatTimeInSecond:duration];
                 [self initScrubberTimer];
-                [self enableScrubber];
+                if (duration > 0) {
+                    [self enableScrubber];
+                    totalTimeLabel.text = [TimeUtility formatTimeInSecond:duration];
+                } else {
+                    totalTimeLabel.text = @"";
+                }
                 [self enablePlayerButtons];
                 [self enableNextButton];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{

@@ -129,14 +129,16 @@
         if ([stringContent hasPrefix:@"#"]) {
             [playlistFile writeData: [stringContent dataUsingEncoding:NSUTF8StringEncoding]];
             NSRange startRange = [stringContent rangeOfString:@":"];
-            NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
-            double segmentDuration = 0;
-            if (lastRange.length == 0) {
-                segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
-            } else {
-                segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location, lastRange.location)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+            if (startRange.length > 0) {                
+                NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
+                double segmentDuration = 0;
+                if (lastRange.length == 0) {
+                    segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                } else if(lastRange.location - startRange.location > 1){
+                    segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location+1, lastRange.location-startRange.location-1)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                }
+                duration += segmentDuration;
             }
-            duration += segmentDuration;
         } else {
             if ([[stringContent lowercaseString] hasPrefix:@"http://"] || [[stringContent lowercaseString] hasPrefix:@"https://"]) {
                 [videoArray addObject:stringContent];
