@@ -53,7 +53,9 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     NSArray *infoArr = (NSArray *)((NSNotification *)sender).object;
     NSString *prodId = [infoArr objectAtIndex:0];
-    NSString *urlStr = [infoArr objectAtIndex:1];
+    NSString *tempUrlStr = [infoArr objectAtIndex:1];
+    NSString *urlStr = [tempUrlStr stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    
     NSString *fileName = [infoArr objectAtIndex:2];
     NSString *imgUrl = [infoArr objectAtIndex:3];
     NSString *type = [infoArr objectAtIndex:4];
@@ -315,7 +317,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
-    
+    __block AFDownloadRequestOperation *tempdownloadRequestOperation = downloadRequestOperation;
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([downLoadQueue_ containsObject:operation]) {
             [downLoadQueue_ removeObject:operation];
@@ -338,7 +340,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         NSLog(@"Error: %@", error);
         [operation cancel];
         if (error.code == -1011) {
-            downloadRequestOperation.operationStatus = @"fail_1011";
+            tempdownloadRequestOperation.operationStatus = @"fail_1011";
             
             NSRange range = [downloadId_ rangeOfString:@"_"];
             if (range.location == NSNotFound){
@@ -355,7 +357,7 @@ static NSMutableArray *downLoadQueue_ = nil;
             
         }
         else{
-            downloadRequestOperation.operationStatus = @"fail";
+            tempdownloadRequestOperation.operationStatus = @"fail";
             NSRange range = [downloadId_ rangeOfString:@"_"];
             if (range.location == NSNotFound){
                 [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
@@ -368,11 +370,11 @@ static NSMutableArray *downLoadQueue_ = nil;
                 
             }
 }
-        if ([downLoadQueue_ containsObject:downloadRequestOperation]) {
-            [downLoadQueue_ removeObject:downloadRequestOperation];
+        if ([downLoadQueue_ containsObject:tempdownloadRequestOperation]) {
+            [downLoadQueue_ removeObject:tempdownloadRequestOperation];
         }
         
-                
+        
         [self startDownLoad];
     }];
     
@@ -442,6 +444,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 
 -(void)beginM3u8DownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
+       __block AFDownloadRequestOperation *tempdownloadRequestOperation = downloadRequestOperation;
         NSString *idstr = downloadRequestOperation.operationId;
         downloadRequestOperation.operationStatus = @"loading";
         NSRange range = [idstr rangeOfString:@"_"];
@@ -519,8 +522,48 @@ static NSMutableArray *downLoadQueue_ = nil;
             }
             
         }
-        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
+        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"failure:%@",error);
+            [operation cancel];
+            if (error.code == -1011) {
+                tempdownloadRequestOperation.operationStatus = @"fail_1011";
+                
+                NSRange range = [tempdownloadRequestOperation.operationId rangeOfString:@"_"];
+                if (range.location == NSNotFound){
+                    [self saveDataBaseIntable:@"DownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail_1011" withPercentage:-1];
+                    [self.downLoadMGdelegate downloadUrlTnvalidWithId:tempdownloadRequestOperation.operationId inClass:@"IphoneDownloadViewController"];
+                    
+                }
+                else{
+                    [self saveDataBaseIntable:@"SubdownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail_1011" withPercentage:-1];
+                    [self.downLoadMGdelegate downloadUrlTnvalidWithId:tempdownloadRequestOperation.operationId inClass:@"IphoneSubdownloadViewController"];
+                    
+                }
+                
+                
+            }
+            else{
+                tempdownloadRequestOperation.operationStatus = @"fail";
+                NSRange range = [downloadId_ rangeOfString:@"_"];
+                if (range.location == NSNotFound){
+                    [self saveDataBaseIntable:@"DownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
+                    [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneDownloadViewController"];
+                    
+                }
+                else{
+                    [self saveDataBaseIntable:@"SubdownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
+                    [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneSubdownloadViewController"];
+                    
+                }
+            }
+            if ([downLoadQueue_ containsObject:tempdownloadRequestOperation]) {
+                [downLoadQueue_ removeObject:tempdownloadRequestOperation];
+            }
+            
+            
+            [self startDownLoad];
+
             
         }];
     
@@ -582,6 +625,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         }
     }
     if (downloadOperation != nil) {
+         [downloadOperation.m3u8MG stop];
          [downloadOperation pause];
          [downloadOperation cancel];
         [downLoadQueue_ removeObject:downloadOperation];
@@ -609,7 +653,9 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     if (downloadOperation != nil) {
         downloadOperation.operationStatus = @"stop";
+        [downloadOperation.m3u8MG saveCurrentInfo];
         [downloadOperation.m3u8MG stop];
+        
         [downloadOperation pause];
         [downloadOperation cancel];
         
@@ -838,7 +884,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 @implementation M3u8DownLoadManager
 @synthesize downloadOperationQueue = downloadOperationQueue_;
-
+@synthesize currentItem = currentItem_;
 -(void)setM3u8DownloadData:(NSString *)prodId withNum:(NSString *)num url:(NSString *)urlStr withOldPath:(NSString *)oldPath{
     
     NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -910,12 +956,11 @@ static NSMutableArray *downLoadQueue_ = nil;
     
    
     NSRange range = [idStr rangeOfString:@"_"];
-    DownloadItem *downloadItem = nil;
     if (range.location == NSNotFound) {
          NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",idStr];
          NSArray *arr = [DownloadItem findByCriteria:query];
         if ([arr count]>0) {
-            downloadItem = [arr objectAtIndex:0];
+            currentItem_ = [arr objectAtIndex:0];
         }
         
     }
@@ -923,12 +968,12 @@ static NSMutableArray *downLoadQueue_ = nil;
          NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",idStr];
          NSArray *arr = [SubdownloadItem findByCriteria:query];
          if ([arr count]>0) {
-            downloadItem = [arr objectAtIndex:0];
+            currentItem_ = [arr objectAtIndex:0];
          }
 
     }
     
-    url_index = downloadItem.isDownloadingNum;
+    url_index = currentItem_.isDownloadingNum;
     for (int i = url_index;i<[urlArr count];i++) {
         SegmentUrl *segUrl = [urlArr objectAtIndex:i];
         NSURL *url = [NSURL URLWithString:segUrl.url];
@@ -967,10 +1012,10 @@ static NSMutableArray *downLoadQueue_ = nil;
             else{
                 float percent =  url_index *1.0/[urlArr count];
                 NSLog(@"%f",percent);
-                downloadItem.isDownloadingNum = url_index;             
-                downloadItem.percentage = (int)(percent*100);
+                currentItem_.isDownloadingNum = url_index;             
+                currentItem_.percentage = (int)(percent*100);
                 if (url_index % 5 == 0) {
-                    [downloadItem save];
+                    [currentItem_ save];
                 }
                 
                 if (range.location == NSNotFound){
@@ -1035,6 +1080,11 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 -(void)stop{
     [downloadOperationQueue_ cancelAllOperations];
+}
+-(void)saveCurrentInfo{
+    if (currentItem_) {
+         [currentItem_ save];
+    }
 }
 
 @end

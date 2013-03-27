@@ -73,12 +73,16 @@
 @interface M3u8DownLoadManager : NSObject{
     NSOperationQueue *downloadOperationQueue_;
     int url_index;
-   
+    DownloadItem *currentItem_;
 }
 @property (nonatomic, strong) NSOperationQueue *downloadOperationQueue;
 
 @property (nonatomic, weak) id<M3u8DownLoadManagerDelegate>m3u8DownLoadManagerDelegate;
+
+@property (nonatomic, strong)DownloadItem *currentItem;
 -(void)stop;
+
+-(void)saveCurrentInfo;
 
 -(void)setM3u8DownloadData:(NSString *)prodId withNum:(NSString *)num url:(NSString *)urlStr withOldPath:(NSString *)oldPath;
 

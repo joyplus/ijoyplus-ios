@@ -440,10 +440,10 @@
         [DownLoadManager stopAndClear:itemId];
         
         //删除 对应的文件
-        NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
-        NSString *subfileName = [NSString stringWithFormat:@"%@_",itemId];
+//        NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
+//        NSString *subfileName = [NSString stringWithFormat:@"%@_",itemId];
         for (NSString *nameStr in fileList) {
-            if ([nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]) {
+            if (/*[nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]||*/[nameStr hasPrefix:itemId]) {
                 NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
                 [fileMgr removeItemAtPath:deleteFilePath error:&error];
             }

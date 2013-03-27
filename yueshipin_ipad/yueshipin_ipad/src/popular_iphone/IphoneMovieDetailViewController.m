@@ -706,7 +706,7 @@
             [button setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
             button.adjustsImageWhenHighlighted = NO;
             
-             NSString *url = [self getDownloadUrl];
+            NSString *url = [self getDownloadUrl];
 //            NSString *url = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
 //            download_file_type_ = @"m3u8";
             if (url == nil || [url isEqualToString:@""]) {
