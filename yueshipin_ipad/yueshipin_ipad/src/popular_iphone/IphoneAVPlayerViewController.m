@@ -1489,7 +1489,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             urlConnection = nil;
             [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
             [[AppDelegate instance] stopHttpServer];
-    
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
             [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player .currentItem removeObserver:self forKeyPath:@"status"];
@@ -1507,6 +1510,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self.player  pause];
             mPlayer = nil;
             mPlayerItem = nil;
+            prodId_ = nil;
             
             [self dismissViewControllerAnimated:YES completion:nil];
           
@@ -1806,6 +1810,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             tempPlayType = @"2";
             playUrl = webPlayUrl_;
         }
+        
+        if (nil == prodId_)
+            return;
+        
         if ((duration - playbackTime)>5) {
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:playbackTime] ];
         }
@@ -1953,10 +1961,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)dealloc
 {
-    [self removePlayerTimeObserver];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [avplayerView_.layer removeFromSuperlayer];
     
     avplayerView_ = nil;
@@ -2016,7 +2020,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    
+    [self hiddenToolBar];
+    [self showToolBar];
 }
 
 #pragma mark -
