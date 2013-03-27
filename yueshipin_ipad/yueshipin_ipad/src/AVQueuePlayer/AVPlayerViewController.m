@@ -1917,6 +1917,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [self syncScrubber];
                 [self disableScrubber];
                 [self disablePlayerButtons];
+                [mPlayer play];
             }
             break;
                 

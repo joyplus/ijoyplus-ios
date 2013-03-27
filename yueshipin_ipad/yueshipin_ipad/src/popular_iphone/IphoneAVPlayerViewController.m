@@ -370,6 +370,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 playButton_.hidden = YES;
                 pauseButton_.hidden = NO;
                 myHUD.hidden = NO;
+                [mPlayer play];
             }
                 break;
                 
@@ -1485,6 +1486,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
             
             [urlConnection cancel];
+            urlConnection = nil;
             [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
             [[AppDelegate instance] stopHttpServer];
     
