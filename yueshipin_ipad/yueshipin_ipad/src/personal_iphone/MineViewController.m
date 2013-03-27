@@ -114,9 +114,9 @@
             NSArray *tempArr = [result objectForKey:@"tops"];
             if(tempArr != nil && tempArr.count > 0){
                 [myListArr_ addObjectsFromArray:tempArr];
-                [self refreshMineViewWithTag:button3_.tag];
+                
             }
-            
+            [self refreshMineViewWithTag:button3_.tag];
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -208,7 +208,7 @@
     [self.view addSubview:button2_];
     [self.view addSubview:button3_];
     
-   [self Selectbutton:button1_];
+   //[self Selectbutton:button1_];
         
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
     self.bgView.backgroundColor = [UIColor whiteColor];
@@ -538,6 +538,7 @@
                 [self.bgView addSubview:noFav_];
             }
             else{
+                [noFav_ removeFromSuperview];
                 [self.bgView addSubview:self.favTableList];
                 [self.favTableList reloadData];
             }
@@ -552,12 +553,14 @@
                     [self.bgView addSubview:noPersonalList_];
                 }
                 else{
+                    [noPersonalList_ removeFromSuperview];
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*[myListArr_ count])];
                 }
                 
                 [moreView_ removeFromSuperview];
             }
             else {
+                 [noPersonalList_ removeFromSuperview];
                 [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see_s.png"] forState:UIControlStateHighlighted];
@@ -568,13 +571,14 @@
             
             [self.bgView addSubview:createList_];
             [self.bgView addSubview:myTableList_];
+            [myTableList_ reloadData];
         }
             break;
             
         default:
             break;
     }
-    [recordTableList_ reloadData];
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
