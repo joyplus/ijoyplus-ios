@@ -364,14 +364,15 @@
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
-    
-    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
-        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
-        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
-    } else {
-        [self.downloadBtn setEnabled:NO];
-        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
-    }
+
+    //在弹出窗口判断视频是否可以下载
+//    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+//        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+//        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
+//    } else {
+//        [self.downloadBtn setEnabled:NO];
+//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+//    }
     
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];

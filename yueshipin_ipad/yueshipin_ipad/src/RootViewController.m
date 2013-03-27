@@ -401,11 +401,12 @@
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
+    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.text = [video objectForKey:@"name"];
-    [nameLabel sizeToFit];
+//    [nameLabel sizeToFit];
+    nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
     nameLabel.textColor = CMConstants.grayColor;
     [frame addSubview:nameLabel];
@@ -422,7 +423,11 @@
     episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
         NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
         NSNumber *second = [f numberFromString:[NSString stringWithFormat:@"%@", [b objectForKey:@"name"]]];
-        return [first compare:second];
+        if (first && second) {
+            return [first compare:second];
+        } else {
+            return NSOrderedSame;
+        }
     }];
     dramaPageNum = ceil(episodeArray.count / 30.0);
     
@@ -505,6 +510,7 @@
         if(videoUrlArray.count > 0){
             for(NSDictionary *tempVideo in videoUrlArray){
                 NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+//                NSString *source = [url objectForKey:@"source"];
                 for(NSDictionary *url in urlArray){
                     if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                         NSString *videoUrl = [url objectForKey:@"url"];
@@ -606,11 +612,12 @@
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 460, 40)];
+    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 360, 40)];
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.text = title;
-    [nameLabel sizeToFit];
+//    [nameLabel sizeToFit];
+    nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
     [frame addSubview:nameLabel];
     
