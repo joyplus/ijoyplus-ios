@@ -505,33 +505,14 @@
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
         [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [btn setEnabled:NO];
-        NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
-        if(videoUrlArray.count > 0){
-            for(NSDictionary *tempVideo in videoUrlArray){
-                NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
-//                NSString *source = [url objectForKey:@"source"];
-                for(NSDictionary *url in urlArray){
-                    if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
-                        NSString *videoUrl = [url objectForKey:@"url"];
-                        NSString *formatUrl = [[videoUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
-                        if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
-                            [btn setEnabled:YES];
-                            break;
-                        } else {
-                            [btn setEnabled:NO];
-                        }
-                    }
-                }
-                if(btn.enabled){
-                    break;
-                }
-            }
+        if(![self checkDownloadStatus:episodeArray index:i]){
+            [btn setEnabled:NO];
         }
         for (SubdownloadItem *subitem in downloadingItems) {
             if(subitem.subitemId.intValue == i+1){
                 [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
+                [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
+                [btn setEnabled:NO];
                 break;
             }
         }
@@ -681,10 +662,14 @@
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setEnabled:NO];
+                }
                 for (SubdownloadItem *subitem in downloadingItems) {
                     if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
+                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        [nameBtn setEnabled:NO];
                         break;
                     }
                 }
@@ -712,11 +697,43 @@
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setEnabled:NO];
+                }
+                for (SubdownloadItem *subitem in downloadingItems) {
+                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
+                        [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        [nameBtn setEnabled:NO];
+                        break;
+                    }
+                }
                 [showListView addSubview:nameBtn];
             }
         }
     
     [self.view addSubview:view];
+}
+
+- (BOOL)checkDownloadStatus:(NSArray *)episodeArray index:(int)index
+{
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:index] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        for(NSDictionary *tempVideo in videoUrlArray){
+            NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+            NSString *source =  [tempVideo objectForKey:@"source"];
+            for(NSDictionary *url in urlArray){
+                if([@"mp4" isEqualToString:[url objectForKey:@"file"]] || ([@"m3u8" isEqualToString:[url objectForKey:@"file"]] && ![source isEqualToString:@"le_tv_fee"])){
+                    NSString *videoUrl = [url objectForKey:@"url"];
+                    NSString *formatUrl = [[videoUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+                    if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
+                        return YES;
+                    }
+                }
+            }
+        }
+    }
+    return NO;
 }
 
 - (void)showBtnClicked:(UIButton *)btn

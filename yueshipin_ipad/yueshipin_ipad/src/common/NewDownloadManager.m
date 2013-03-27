@@ -18,6 +18,8 @@
 @property (nonatomic, strong)AFDownloadRequestOperation *downloadingOperation;
 @property (nonatomic)float previousProgress;
 @property (nonatomic) BOOL displayNoSpaceFlag;
+@property (nonatomic, strong)NSArray *allDownloadItems;
+@property (nonatomic, strong)NSArray *allSubdownloadItems;
 @end
 
 @implementation NewDownloadManager
@@ -25,15 +27,20 @@
 @synthesize downloadingOperation;
 @synthesize delegate, subdelegate;
 @synthesize previousProgress, displayNoSpaceFlag;
+@synthesize allDownloadItems, allSubdownloadItems;
 
 - (void)startDownloadingThreads
 {
-    [self startDownloadingThread:[DownloadItem allObjects] status:@"start"];
-    [self startDownloadingThread:[SubdownloadItem allObjects] status:@"start"];
-    [self startDownloadingThread:[DownloadItem allObjects] status:@"waiting"];
-    [self startDownloadingThread:[SubdownloadItem allObjects] status:@"waiting"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
-    displayNoSpaceFlag = NO;
+    if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
+        allDownloadItems = [DownloadItem allObjects];
+        allSubdownloadItems = [SubdownloadItem allObjects];
+        [self startDownloadingThread:allDownloadItems status:@"start"];
+        [self startDownloadingThread:allSubdownloadItems status:@"start"];
+        [self startDownloadingThread:allDownloadItems status:@"waiting"];
+        [self startDownloadingThread:allSubdownloadItems status:@"waiting"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
+        displayNoSpaceFlag = NO;
+    }
 }
 
 - (void)startDownloadingThread:(NSArray *)allItem status:(NSString *)status
@@ -147,7 +154,7 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    [self updateProgress:progress downloadingArray:[DownloadItem allObjects]];
+    [self updateProgress:progress downloadingArray:allDownloadItems];
 }
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
@@ -155,15 +162,6 @@
     NSLog(@"error in download manager");
     [self stopDownloading];
     [AppDelegate instance].currentDownloadingNum = 0;
-//    for (int i = 0; i < [AppDelegate instance].subdownloadItems.count; i++) {
-//        SubdownloadItem *tempitem = [[AppDelegate instance].subdownloadItems objectAtIndex:i];
-//        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-//            tempitem.downloadStatus = @"stop";
-//            [tempitem save];
-//            break;
-//        }
-//    }
-//    [self startNewDownloadItem];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
@@ -171,9 +169,9 @@
     [self downloadSuccess:operationId];
 }
 
-- (void)updateProgress:(NSString *)operationId  suboperationId:(NSString *)suboperationId progress:(float)progress
+- (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress
 {
-    [self updateProgress:progress downloadingArray:[SubdownloadItem allObjects]];
+    [self updateProgress:progress downloadingArray:allSubdownloadItems];
 }
 
 - (void)updateProgress:(float)progress downloadingArray:(NSArray *)downloadingArray

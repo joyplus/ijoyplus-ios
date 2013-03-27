@@ -121,6 +121,9 @@
 {
     [super viewWillDisappear:animated];
     displayNoSpaceFlag = NO;
+    for (SubdownloadItem *item in subitems) {
+        [item save];
+    }
     [AppDelegate instance].padDownloadManager.subdelegate = [AppDelegate instance].padDownloadManager;
 }
 
@@ -135,16 +138,6 @@
     NSLog(@"error in SubdownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
     [AppDelegate instance].currentDownloadingNum = 0;
-    //    for (int i = 0; i < subitems.count; i++) {
-//        SubdownloadItem *tempitem = [subitems objectAtIndex:i];
-//        if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-//            tempitem.downloadStatus = @"stop";
-//            [tempitem save];
-//            [_gmGridView reloadData];
-//            break;
-//        }
-//    }
-//    [[AppDelegate instance].padDownloadManager stopDownloading];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
@@ -222,6 +215,12 @@
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [_gmGridView reloadData];
+}
+
+- (void)removeLastPlaytime:(SubdownloadItem *)item
+{
+    NSString *key = [NSString stringWithFormat:@"%@_%@", item.itemId, item.name];
+    [[CacheUtility sharedCache] putInCache:key result:[NSNumber numberWithInt:0]];
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
@@ -316,6 +315,7 @@
         [[AppDelegate instance].padDownloadManager stopDownloading];
         [AppDelegate instance].currentDownloadingNum = 0;
     }
+    [self removeLastPlaytime:item];
     [item deleteObject];
     double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
     NSLog(@"result = %f", result);

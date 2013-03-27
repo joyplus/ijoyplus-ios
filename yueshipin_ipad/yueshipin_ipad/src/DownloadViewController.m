@@ -33,9 +33,13 @@
     BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
 }
+
+@property (nonatomic, strong)NSArray *allDownloadItems;
+
 @end
 
 @implementation DownloadViewController
+@synthesize allDownloadItems;
 
 
 - (void)didReceiveMemoryWarning
@@ -74,7 +78,7 @@
     } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
         return NO;
     } else {
-        for (int i = 0; i < [DownloadItem allObjects].count; i++) {
+        for (int i = 0; i < allDownloadItems.count; i++) {
             CGPoint pt = [touch locationInView:self.view];
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
             CGPoint ptInbtn = [self.view convertPoint:pt toView:cell];
@@ -192,10 +196,6 @@
         [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     _gmGridView.editing = NO;
-    if ([DownloadItem allObjects].count > 0) {
-        [editBtn setHidden:NO];
-        [nodownloadImage setHidden:YES];
-    }
     [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
     [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
@@ -209,7 +209,7 @@
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
     displayNoSpaceFlag = NO;
-    for (DownloadItem *item in [DownloadItem allObjects]) {
+    for (DownloadItem *item in allDownloadItems) {
         [item save];
     }
     [self updateDiskStorage];
@@ -218,7 +218,8 @@
 
 - (void)reloadItems
 {
-    if ([DownloadItem allObjects].count == 0) {
+    allDownloadItems = [DownloadItem allObjects];
+    if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
     } else {
@@ -251,7 +252,6 @@
 
 - (void)downloadSuccess:(NSString *)operationId
 {
-    NSArray *allDownloadItems = [DownloadItem allObjects];
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
@@ -259,17 +259,16 @@
             item.downloadStatus = @"done";
             item.percentage = 100;
             [item save];
-            [_gmGridView reloadData];
-            [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-            [self updateDiskStorage];
             break;
         }
     }
+    [_gmGridView reloadData];
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [self updateDiskStorage];
 }
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    NSArray *allDownloadItems = [DownloadItem allObjects];
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
@@ -301,7 +300,6 @@
 
 - (void)movieImageClicked:(NSInteger)index
 {
-    NSArray *allDownloadItems = [DownloadItem allObjects];
     if(index >= allDownloadItems.count){
         return;
     }
@@ -332,7 +330,7 @@
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return fmax([DownloadItem allObjects].count, 9);
+    return fmax(allDownloadItems.count, 9);
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
@@ -342,7 +340,6 @@
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
 {
-    NSArray *allDownloadItems = [DownloadItem allObjects];
     if(index >= allDownloadItems.count){
         return nil;
     }
@@ -427,11 +424,12 @@
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
-    DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:index];
+    DownloadItem *item = [allDownloadItems objectAtIndex:index];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
         [AppDelegate instance].currentDownloadingNum = 0;
     }
+    [self removeLastPlaytime:item];
     [item deleteObject];
     double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
     NSLog(@"result = %f", result);
@@ -462,12 +460,12 @@
             [[AppDelegate instance].padDownloadManager stopDownloading];
             [AppDelegate instance].currentDownloadingNum = 0;
         }
+        [self removeLastPlaytime:subitem];
         [subitem deleteObject];
     }
-    
-    item = nil;
+    [self reloadItems];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-    if ([DownloadItem allObjects].count == 0) {
+    if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
@@ -475,10 +473,20 @@
     [self updateDiskStorage];
 }
 
+- (void)removeLastPlaytime:(DownloadItem *)item
+{
+    NSString *key;
+    if (item.type == 1) {
+        key = item.itemId;
+    } else {
+        key = [NSString stringWithFormat:@"%@_%@", item.itemId, ((SubdownloadItem *)item).name];
+    }
+    [[CacheUtility sharedCache] putInCache:key result:[NSNumber numberWithInt:0]];
+}
+
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
     [self closeMenu];
-    NSArray *allDownloadItems = [DownloadItem allObjects];
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
