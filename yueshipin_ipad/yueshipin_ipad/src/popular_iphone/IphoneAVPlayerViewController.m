@@ -1484,13 +1484,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         case CLOSE_BUTTON_TAG:{
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
             
+            [urlConnection cancel];
             [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
             [[AppDelegate instance] stopHttpServer];
     
             [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player .currentItem removeObserver:self forKeyPath:@"status"];
-            [self.player  pause];
+            
             [self removePlayerTimeObserver];
             [self stopMyTimer];
             if (nil != timeLabelTimer_)
@@ -1498,8 +1499,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [timeLabelTimer_ invalidate];
                 timeLabelTimer_ = nil;
             }
-            [urlConnection cancel];
+            
             [self updateWatchRecord];
+            
+            [self.player  pause];
+            mPlayer = nil;
+            mPlayerItem = nil;
             
             [self dismissViewControllerAnimated:YES completion:nil];
           
@@ -1952,8 +1957,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [avplayerView_.layer removeFromSuperlayer];
     
-    mPlayerItem = nil;
-    mPlayer = nil;
     avplayerView_ = nil;
     topToolBar_ = nil;
     bottomToolBar_ = nil;
