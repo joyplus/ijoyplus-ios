@@ -343,9 +343,7 @@
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-    [self loadMyFavsData];
-    [self loadPersonalData];
-    [self loadRecordData];
+    return;
 }
 - (void)loadRecordData
 {
@@ -376,6 +374,9 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:(NSArray *)[result objectForKey:@"histories"]];
+        if (sortedwatchRecordArray_.count > 0) {
+            [noRecord_ removeFromSuperview];
+        }
         [self refreshMineViewWithTag:button1_.tag];
     }
 }
@@ -947,7 +948,7 @@
         }
         else{
             int playNum = 0;
-            if (subnameArray == nil) {
+            if (subnameArray == nil || subnameArray.count == 0) {
                 subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
                 for (NSDictionary *oneEpisode in [videoInfo objectForKey:@"episodes"]) {
                     NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
