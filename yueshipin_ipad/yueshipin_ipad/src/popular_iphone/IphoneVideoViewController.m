@@ -248,8 +248,14 @@
 
 -(void)wechatShare:(int)sence{
         WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"推荐";
-        message.description = [infoDic_ objectForKey:@"name"];
+        NSString *name = self.title;
+        if (sence == 0) {
+            message.title = @"分享部影片给你 ";
+            message.description = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];
+        }
+        else if (sence == 1){
+            message.title = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];;
+        }
         [message setThumbImage:wechatImg_];
     
         WXWebpageObject *ext = [WXWebpageObject object];

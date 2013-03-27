@@ -472,6 +472,8 @@ static NSMutableArray *downLoadQueue_ = nil;
                 else{
                     // remove temp m3u8 file;
                 
+                    [self saveDataBaseIntable:@"DownloadItem" withId:idstr withStatus:@"loading" withPercentage:0];
+                    [self.downLoadMGdelegate downloadBeginwithId:idstr inClass:@"IphoneDownloadViewController"];
                 }
             }
             else{
@@ -491,6 +493,10 @@ static NSMutableArray *downLoadQueue_ = nil;
                     NSArray *tempArr = [idstr componentsSeparatedByString:@"_"];
                     [downloadRequestOperation.m3u8MG startDownloadM3u8file:segArr withId:idstr withNum:[tempArr objectAtIndex:1]];
                     return;
+                }
+                else{
+                    [self saveDataBaseIntable:@"SubdownloadItem" withId:idstr withStatus:@"loading" withPercentage:0];
+                    [self.downLoadMGdelegate downloadBeginwithId:idstr inClass:@"IphoneSubdownloadViewController"];
                 }
             }
             else{
