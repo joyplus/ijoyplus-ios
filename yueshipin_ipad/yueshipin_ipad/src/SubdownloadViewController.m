@@ -149,12 +149,12 @@
             tempitem.percentage = 100;
             tempitem.downloadStatus  = @"done";
             [tempitem save];
-            [_gmGridView reloadData];            
-            [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             break;
         }
     }
+    [_gmGridView reloadData];
+    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
 }
 
 - (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress
