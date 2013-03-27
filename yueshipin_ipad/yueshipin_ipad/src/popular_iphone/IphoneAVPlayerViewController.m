@@ -516,7 +516,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
      bottomView_.hidden = YES;
     selectButton_.selected = NO;
     clarityButton_.selected = NO;
-    tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+    tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
      clearBgView_.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
@@ -539,7 +539,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     if (selectButton_.selected) {
         selectButton_.selected = NO;
-        tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
     }
     
     if (clarityButton_.selected) {
@@ -1055,7 +1055,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     selectButton_.backgroundColor = [UIColor clearColor];
     selectButton_.tag = SELECT_BUTTON_TAG;
     [selectButton_ addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-    if (videoType_  != 1 || islocalFile_) {
+    if ((videoType_  == 2 ||videoType_  == 3) &&!islocalFile_) {
         [topToolBar_ addSubview:selectButton_];
     }
     
@@ -1069,7 +1069,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     titleLabel_.text = nameStr_;
     [topToolBar_ addSubview:titleLabel_];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(kFullWindowHeight-110, 35, 100, 0) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(kFullWindowHeight-110, 55, 100, 0) style:UITableViewStylePlain];
     tableList_.backgroundColor = [UIColor clearColor];
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableList_.delegate = self;
@@ -1576,7 +1576,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 btn.selected = NO;
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
-                tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+                tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
                 [UIView commitAnimations];
             }
             else{
@@ -1588,7 +1588,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
-                tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, height);
+                tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, height);
                 [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
                 [UIView commitAnimations];
               
@@ -1731,7 +1731,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(UIImage *)parseLogo:(NSString *)source_str{
     UIImage *logoImg = nil;
-    if ([source_str isEqualToString:@"letv"]) {
+    if ([source_str isEqualToString:@"letv"]||[source_str isEqualToString:@"le_tv_fee"]) {
         logoImg = [UIImage imageNamed:@"logo_letv"];
     }
     else if ([source_str isEqualToString:@"fengxing"]){
@@ -1876,7 +1876,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         selectButton_.selected = NO;
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3];
-        tableList_.frame = CGRectMake(kFullWindowHeight-110, 35, 100, 0);
+        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
         [UIView commitAnimations];
     }
     [self showNOThisClearityUrl:NO];

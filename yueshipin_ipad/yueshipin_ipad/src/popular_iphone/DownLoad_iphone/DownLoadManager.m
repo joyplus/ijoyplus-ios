@@ -776,7 +776,9 @@ static NSMutableArray *downLoadQueue_ = nil;
         }
     }
     [downLoadQueue_ removeObject:downloadOperation];
+    [self waringReduce];
     [self startDownLoad];
+    
 }
 
 -(void)networkChanged:(int)status{
@@ -966,8 +968,10 @@ static NSMutableArray *downLoadQueue_ = nil;
                 float percent =  url_index *1.0/[urlArr count];
                 NSLog(@"%f",percent);
                 downloadItem.isDownloadingNum = url_index;             
-                downloadItem.percentage = (int)percent*100;
-                [downloadItem save];
+                downloadItem.percentage = (int)(percent*100);
+                if (url_index % 5 == 0) {
+                    [downloadItem save];
+                }
                 
                 if (range.location == NSNotFound){
                   
