@@ -399,6 +399,8 @@
                 }
             }
         }
+    } else {
+        [AppDelegate instance].currentDownloadingNum = 0;
     }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){

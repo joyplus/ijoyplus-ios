@@ -124,8 +124,8 @@
     }    
     NSDictionary *cacheObject = [NSDictionary dictionaryWithObjectsAndKeys:result, cacheKey, nil];
     [cacheQueue enqueue:cacheObject];
-    if (cacheQueue.count > 200) {
-        for (int i = 0; i < cacheQueue.count - 200; i++) {
+    if (cacheQueue.count > 150) {
+        for (int i = 0; i < cacheQueue.count - 150; i++) {
             [cacheQueue dequeue];
         }
     }

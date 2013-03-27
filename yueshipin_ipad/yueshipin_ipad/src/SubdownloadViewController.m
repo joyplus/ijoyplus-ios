@@ -317,6 +317,7 @@
     }
     [self removeLastPlaytime:item];
     [item deleteObject];
+    [SubdownloadItem performSQLAggregation:[NSString stringWithFormat: @"delete from subdownload_item WHERE item_id = %@ and subitem_id = %@", item.itemId, item.subitemId]];
     double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
     NSLog(@"result = %f", result);
     
