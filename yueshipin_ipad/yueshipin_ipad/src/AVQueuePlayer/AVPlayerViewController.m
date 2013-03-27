@@ -138,11 +138,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)dealloc
 {
-    
-    [mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-    [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
-    
     mPlayer = nil;
     mPlayerItem = nil;
     
@@ -1088,12 +1083,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
+    [mPlayer removeObserver:self forKeyPath:@"rate"];
+	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
+    [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
+    
+    [mPlayer pause];
+    
     [self closeAllTimer];
     [self.urlConnection cancel];
     [self updateWatchRecord];
     [self saveLastPlaytime];
-	[mPlayer pause];
-    
+	
     if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
