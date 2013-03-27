@@ -20,5 +20,6 @@
 @synthesize type;
 @synthesize isDownloadingNum;
 @synthesize downloadType;
+@synthesize duration;
 
 @end

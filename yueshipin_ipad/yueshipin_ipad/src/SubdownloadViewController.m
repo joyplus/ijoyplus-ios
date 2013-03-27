@@ -372,6 +372,7 @@
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.videoFormat = item.downloadType;
             viewController.isDownloaded = YES;
+            viewController.m3u8Duration = item.duration;
             viewController.closeAll = YES;
             viewController.videoUrl = filePath;
             viewController.type = 3;

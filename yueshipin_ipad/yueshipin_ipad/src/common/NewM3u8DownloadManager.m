@@ -122,11 +122,21 @@
     char word[1000];
     NSMutableArray *videoArray = [[NSMutableArray alloc]initWithCapacity:500];
     NSString *linebreak = @"\n";
+    double duration = 0;
     while (fgets(word,1000,wordFile)){
         word[strlen(word)-1] ='\0';
         NSString *stringContent = [[NSString stringWithUTF8String:word] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([stringContent hasPrefix:@"#"]) {
             [playlistFile writeData: [stringContent dataUsingEncoding:NSUTF8StringEncoding]];
+            NSRange startRange = [stringContent rangeOfString:@":"];
+            NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
+            double segmentDuration = 0;
+            if (lastRange.length == 0) {
+                segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+            } else {
+                segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location, lastRange.location)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+            }
+            duration += segmentDuration;
         } else {
             if ([[stringContent lowercaseString] hasPrefix:@"http://"] || [[stringContent lowercaseString] hasPrefix:@"https://"]) {
                 [videoArray addObject:stringContent];
@@ -154,6 +164,7 @@
         [playlistFile writeData:[linebreak dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [playlistFile closeFile];
+    item.duration = duration;
     if (item.type == 1) {
         item.fileName = [NSString stringWithFormat:@"%@.m3u8", item.itemId];
     } else {

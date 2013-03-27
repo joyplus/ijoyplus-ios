@@ -108,6 +108,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
+@synthesize m3u8Duration;
 
 #pragma mark
 #pragma mark View Controller
@@ -1693,6 +1694,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 - (CMTime)playerItemDuration
 {
 	AVPlayerItem *playerItem = [mPlayer currentItem];
+    if (isDownloaded && m3u8Duration > 0) {
+        return  CMTimeMakeWithSeconds(m3u8Duration, NSEC_PER_SEC);
+    }
 	if (playerItem.status == AVPlayerItemStatusReadyToPlay)
 	{
         /* 
@@ -1931,11 +1935,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 }
                 totalTimeLabel.text = [TimeUtility formatTimeInSecond:duration];
                 [self initScrubberTimer];
-                if (duration > 0) {
-                    [self enableScrubber];
-                } else {
-                    totalTimeLabel.text = @"";
-                }
+                [self enableScrubber];
                 [self enablePlayerButtons];
                 [self enableNextButton];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{

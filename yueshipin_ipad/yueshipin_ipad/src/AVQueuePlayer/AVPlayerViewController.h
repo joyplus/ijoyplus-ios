@@ -72,6 +72,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
     NSURL* mURL;
 }
 @property (nonatomic) int type;
+@property (nonatomic) double m3u8Duration;
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, strong) NSString *subname;
