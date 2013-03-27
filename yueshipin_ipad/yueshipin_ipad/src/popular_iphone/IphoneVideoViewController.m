@@ -298,6 +298,8 @@
     view = nil;
 }
 
+
+
 #pragma mark - SinaWeibo Delegate
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo{
     

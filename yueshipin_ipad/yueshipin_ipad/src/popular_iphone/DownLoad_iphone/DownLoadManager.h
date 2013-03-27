@@ -87,4 +87,20 @@
 -(void)setM3u8DownloadData:(NSString *)prodId withNum:(NSString *)num url:(NSString *)urlStr withOldPath:(NSString *)oldPath;
 
 -(void)startDownloadM3u8file:(NSArray *)urlArr withId:(NSString *)idStr withNum:(NSString *)num;
+
+@end
+
+@interface CheckDownloadUrls : NSObject{
+    NSMutableArray *myConditionArr_;
+    NSArray *downloadInfoArr_;
+   int reponseCount_;
+    NSString *fileType_;
+    NSMutableArray *allUrls_;
+    BOOL isReceiveR_;
+}
+@property (nonatomic, strong) NSMutableArray *myConditionArr;
+@property (nonatomic, strong) NSArray *downloadInfoArr;
+@property (nonatomic, strong) NSString *fileType;
+@property (nonatomic, strong) NSMutableArray *allUrls;
+-(void)checkDownloadUrls:(NSDictionary *)infoDic;
 @end

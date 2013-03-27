@@ -1094,3 +1094,132 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 
 @end
+
+
+
+@implementation CheckDownloadUrls
+@synthesize myConditionArr = myConditionArr_;
+@synthesize downloadInfoArr = downloadInfoArr_;
+@synthesize fileType = fileType_;
+@synthesize allUrls = allUrls_;
+-(void)checkDownloadUrls:(NSDictionary *)infoDic{
+    allUrls_ = [[NSMutableArray alloc] initWithCapacity:5];
+    NSArray *down_urlsArr = [infoDic objectForKey:@"down_urls"];
+    for (NSDictionary *dic in down_urlsArr) {
+        NSArray *oneSourceArr = [dic objectForKey:@"urls"];
+        for (NSDictionary *oneUrlInfo in oneSourceArr) {
+            NSString *tempUrl = [oneUrlInfo objectForKey:@"url"];
+            NSString *type = [oneUrlInfo objectForKey:@"file"];
+            NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
+            [allUrls_ addObject:myDic];
+        }
+        
+    }
+    reponseCount_ = 0;
+    isReceiveR_ = NO;
+    for (NSDictionary *dic  in allUrls_) {
+        NSString *tempStr = [[dic objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:tempStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:15];
+         NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:self];
+        [myConditionArr_  addObject:connection];
+        
+    }
+}
+
+
+
+-(void)saveDataBase{
+    NSString *proid = [downloadInfoArr_ objectAtIndex:0];
+    NSRange range = [proid rangeOfString:@"_"];
+    if (range.location == NSNotFound){
+        [self saveDataBaseIntable:@"DownloadItem" withId:proid withStatus:@"fail_1011" withPercentage:-1];
+        [[DownLoadManager defaultDownLoadManager].downLoadMGdelegate  downloadUrlTnvalidWithId:proid inClass:@"IphoneDownloadViewController"];
+    }
+    else{
+        [self saveDataBaseIntable:@"SubdownloadItem" withId:proid withStatus:@"fail_1011" withPercentage:-1];
+        [[DownLoadManager defaultDownLoadManager].downLoadMGdelegate  downloadUrlTnvalidWithId:proid inClass:@"IphoneSubdownloadViewController"];
+    }
+
+}
+
+-(void)saveDataBaseIntable:(NSString *)tableName withId:(NSString *)itemId withStatus:(NSString *)status withPercentage:(int)percentage{
+    if ([tableName isEqualToString:@"DownloadItem"]) {
+        NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",itemId];
+        NSArray *itemArr = [DownloadItem findByCriteria:query];
+        if ([itemArr count]>0) {
+            DownloadItem *item = (DownloadItem *)[itemArr objectAtIndex:0];
+            item.downloadStatus = status;
+            item.percentage = percentage;
+            [item save];
+        }
+    }
+    else if ([tableName isEqualToString:@"SubdownloadItem"]){
+        NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",itemId];
+        NSArray *itemArr = [SubdownloadItem findByCriteria:query];
+        if ([itemArr count]> 0) {
+            SubdownloadItem *item = (SubdownloadItem *)[itemArr objectAtIndex:0];
+            item.downloadStatus = status;
+            item.percentage = percentage;
+            [item save];
+        }
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
+    reponseCount_ ++;
+    if (reponseCount_ == [myConditionArr_ count]) {
+        [self saveDataBase];
+        
+    }
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    if (isReceiveR_) {
+        return;
+    }
+    NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
+    int status_Code = HTTPResponse.statusCode;
+    if (status_Code >= 200 && status_Code <= 299) {
+        NSDictionary *headerFields = [HTTPResponse allHeaderFields];
+        NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
+        if (![content_type hasPrefix:@"text/html"]) {
+            isReceiveR_ = YES;
+            NSString *proid = [downloadInfoArr_ objectAtIndex:0];
+            NSString *urlStr = connection.originalRequest.URL.absoluteString;
+            NSString *name = [downloadInfoArr_ objectAtIndex:1];
+            NSString *imgUrl = [downloadInfoArr_ objectAtIndex:2];
+            NSString *type = [downloadInfoArr_ objectAtIndex:3];
+            NSString *num = [downloadInfoArr_ objectAtIndex:4];
+            NSString *fileType = nil;
+            for (NSDictionary *dic  in allUrls_) {
+                NSString *str = [dic objectForKey:@"url"];
+                if ([str isEqualToString:urlStr]) {
+                    fileType = [dic objectForKey:@"type"];
+                    break;
+                }
+            }
+           
+            NSArray *arr = [NSArray arrayWithObjects:proid,urlStr,name,imgUrl,type,num,fileType,nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:arr];
+            return;
+        }
+        
+    }
+    
+    reponseCount_++;
+    if (reponseCount_ == [myConditionArr_ count]) {
+        [self saveDataBase];        
+    }
+}
+-(void)cancelAllconnection{
+    
+    for (NSURLConnection *c in myConditionArr_) {
+        [c cancel];
+    }
+}
+-(void)dealloc{
+    [self cancelAllconnection];
+    myConditionArr_ = nil;
+}
+@end
