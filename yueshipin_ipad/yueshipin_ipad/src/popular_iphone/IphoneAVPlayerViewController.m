@@ -1482,12 +1482,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 -(void)action:(UIButton *)btn{
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
-
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-
-            [[AppDelegate instance] stopHttpServer];
-
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
+            
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+            [[AppDelegate instance] stopHttpServer];
+    
+            [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
+            [self.player removeObserver:self forKeyPath:@"rate"];
+            [self.player .currentItem removeObserver:self forKeyPath:@"status"];
+            [self.player  pause];
+            [self removePlayerTimeObserver];
             [self stopMyTimer];
             if (nil != timeLabelTimer_)
             {
@@ -1496,11 +1500,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             }
             [urlConnection cancel];
             [self updateWatchRecord];
-            [self removePlayerTimeObserver];
-
-            [self.player  pause];
-//            mPlayerItem = nil;
-//            mPlayer = nil;
+            
             [self dismissViewControllerAnimated:YES completion:nil];
           
             //[self.navigationController popViewControllerAnimated:YES];
@@ -1944,15 +1944,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     // Dispose of any resources that can be recreated.
 }
 
--(void)dealloc{
+-(void)dealloc
+{
     [self removePlayerTimeObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [avplayerView_.layer removeFromSuperlayer];
-    [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
-    [self.player removeObserver:self forKeyPath:@"rate"];
-	[self.player .currentItem removeObserver:self forKeyPath:@"status"];
     
     mPlayerItem = nil;
     mPlayer = nil;
