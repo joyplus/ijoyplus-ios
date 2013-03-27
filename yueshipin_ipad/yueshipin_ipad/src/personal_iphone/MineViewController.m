@@ -113,9 +113,7 @@
         if(responseCode == nil){
             NSArray *tempArr = [result objectForKey:@"tops"];
             if(tempArr != nil && tempArr.count > 0){
-                for (int i =[tempArr count]-1;i >= 0;i-- ) {
-                    [myListArr_ addObject:[tempArr objectAtIndex:i]];
-                }
+                [myListArr_ addObjectsFromArray:tempArr];
                 [self refreshMineViewWithTag:button3_.tag];
             }
             
