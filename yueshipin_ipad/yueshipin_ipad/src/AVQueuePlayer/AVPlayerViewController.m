@@ -1385,9 +1385,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         NSNumber *seconds = [[CacheUtility sharedCache]loadFromCache:lastPlaytimeCacheKey];
         lastPlayTime = CMTimeMakeWithSeconds(seconds.doubleValue, NSEC_PER_SEC);
-    } else {
-        lastPlayTime = kCMTimeZero;
-    }
+    } 
 }
 
 #pragma mark -
