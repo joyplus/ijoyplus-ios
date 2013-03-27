@@ -1086,6 +1086,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [self closeAllTimer];
     [self.urlConnection cancel];
+    self.urlConnection = nil;
     [self updateWatchRecord];
     [self saveLastPlaytime];
 	
