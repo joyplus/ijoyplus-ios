@@ -20,17 +20,28 @@
 @property (nonatomic) BOOL displayNoSpaceFlag;
 @property (nonatomic, strong)NSArray *allDownloadItems;
 @property (nonatomic, strong)NSArray *allSubdownloadItems;
+@property (nonatomic, strong)NSLock *myLock;
 @end
 
 @implementation NewDownloadManager
-@synthesize downloadingItem;
+@synthesize downloadingItem, myLock;
 @synthesize downloadingOperation;
 @synthesize delegate, subdelegate;
 @synthesize previousProgress, displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        myLock = [[NSLock alloc]init];
+    }
+    return self;
+}
+
 - (void)startDownloadingThreads
 {
+    [myLock lock];
     if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
         allDownloadItems = [DownloadItem allObjects];
         allSubdownloadItems = [SubdownloadItem allObjects];
@@ -41,6 +52,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
         displayNoSpaceFlag = NO;
     }
+    [myLock unlock];
 }
 
 - (void)startDownloadingThread:(NSArray *)allItem status:(NSString *)status
@@ -48,6 +60,7 @@
     for (DownloadItem *item in allItem) {
         if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
             if([item.downloadStatus isEqualToString:status]){
+                downloadingItem = item;
                 if ([item.downloadType isEqualToString:@"m3u8"]) {
                     if(item.type == 1){
                         [AppDelegate instance].padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
@@ -90,7 +103,6 @@
                         [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
                         }];
                         previousProgress = 0;
-                        downloadingItem = item;
                         [downloadingOperation start];
                     } else {
                         if (![item.downloadStatus isEqualToString:@"error"]) {

@@ -15,5 +15,5 @@
 @property (nonatomic, weak)id<SubdownloadingDelegate>subdelegate;
 - (void)startDownloadingThreads;
 - (void)stopDownloading;
-
+- (id)init;
 @end

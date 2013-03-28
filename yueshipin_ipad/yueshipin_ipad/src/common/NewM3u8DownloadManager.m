@@ -269,12 +269,6 @@
     downloadingOperation.subdownloadingDelegate = newdelegate;
 }
 
-- (void)startNewDownloadItem
-{
-    [AppDelegate instance].currentDownloadingNum = 0;
-    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-}
-
 - (void)stopDownloading
 {
     [queue cancelAllOperations];

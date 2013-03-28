@@ -657,6 +657,7 @@
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -692,6 +693,7 @@
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -721,9 +723,9 @@
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
             NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
-            NSString *source =  [tempVideo objectForKey:@"source"];
+//            NSString *source =  [tempVideo objectForKey:@"source"];
             for(NSDictionary *url in urlArray){
-                if([@"mp4" isEqualToString:[url objectForKey:@"file"]] || ([@"m3u8" isEqualToString:[url objectForKey:@"file"]] && ![source isEqualToString:@"le_tv_fee"])){
+                if([@"mp4" isEqualToString:[url objectForKey:@"file"]] || [@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
                     NSString *videoUrl = [url objectForKey:@"url"];
                     NSString *formatUrl = [[videoUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
                     if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){

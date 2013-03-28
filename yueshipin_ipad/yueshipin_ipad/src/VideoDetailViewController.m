@@ -312,13 +312,13 @@
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
-            NSString *source =  [tempVideo objectForKey:@"source"];
+//            NSString *source =  [tempVideo objectForKey:@"source"];
             NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
             for(NSDictionary *url in urlArray){
                 if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                     NSString *videoUrl = [url objectForKey:@"url"];
                     [mp4DownloadUrls addObject:videoUrl];
-                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]] && ![source isEqualToString:@"le_tv_fee"]){
+                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
                     NSString *videoUrl = [url objectForKey:@"url"];
                     [m3u8DownloadUrls addObject:videoUrl];
                 }

@@ -10,7 +10,7 @@
 #import "AFDownloadRequestOperation.h"
 #import "DownloadItem.h"
 
-@interface NewM3u8DownloadManager : NSObject <DownloadingDelegate, SubdownloadingDelegate>
+@interface NewM3u8DownloadManager : NSObject
 @property (nonatomic, strong)NSOperationQueue *queue;
 @property (nonatomic, weak)id<DownloadingDelegate>delegate;
 @property (nonatomic, weak)id<SubdownloadingDelegate>subdelegate;

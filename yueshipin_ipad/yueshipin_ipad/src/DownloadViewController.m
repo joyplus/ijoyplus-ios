@@ -416,7 +416,7 @@
     nameLabel.font = [UIFont systemFontOfSize:15];
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.textAlignment = NSTextAlignmentCenter;
-    nameLabel.text = item.name;
+    nameLabel.text = [NSString stringWithFormat:@"%@", item.name];
     nameLabel.center = CGPointMake(imageView.center.x, nameLabel.center.y);
     [cell.contentView addSubview:nameLabel];
     return cell;
