@@ -821,7 +821,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)resetControlVisibilityTimer
 {
-    [controlVisibilityTimer invalidate];
+    if (nil != controlVisibilityTimer)
+    {
+        [controlVisibilityTimer invalidate];
+        controlVisibilityTimer = nil;
+    }
     controlVisibilityTimer = [NSTimer scheduledTimerWithTimeInterval:4 target:self selector:@selector(showToolview) userInfo:nil repeats:NO];
 }
 
@@ -1546,6 +1550,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		interval = 0.5f * duration / width;
 	}
 
+    if (nil != mTimeObserver)
+    {
+        [mTimeObserver invalidate];
+        mTimeObserver = nil;
+    }
 	/* Update the scrubber during normal playback. */
     __block typeof (self) myself = self;
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
