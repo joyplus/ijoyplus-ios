@@ -470,6 +470,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		interval = 0.5f * duration / width;
 	}
     
+    if (nil != mTimeObserver)
+    {
+        [mTimeObserver invalidate];
+        mTimeObserver = nil;
+    }
+    
 	/* Update the scrubber during normal playback. */
     __block typeof (self) myself = self;
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
@@ -487,10 +493,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
 }
 
--(void)initTimeLabelTimer{
-   timeLabelTimer_ = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(syncTimeLabel) userInfo:nil repeats:YES];
-    
-
+-(void)initTimeLabelTimer
+{
+    if (nil != timeLabelTimer_)
+    {
+        [timeLabelTimer_ invalidate];
+        timeLabelTimer_ = nil;
+    }
+   timeLabelTimer_ = [NSTimer scheduledTimerWithTimeInterval:1
+                                                      target:self
+                                                    selector:@selector(syncTimeLabel)
+                                                    userInfo:nil
+                                                     repeats:YES];
 }
 -(void)syncTimeLabel{
     seeTimeLabel_.text =  [TimeUtility formatTimeInSecond:CMTimeGetSeconds([mPlayer currentTime])];
