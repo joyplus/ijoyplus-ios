@@ -426,7 +426,7 @@
             [[AppDelegate instance] startHttpServer];
             NSString *idStr = downloadItem.subitemId ;
             NSArray *tempArr =  [idStr componentsSeparatedByString:@"_"];
-            playPath =[LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@/%@.m3u8",downloadItem.itemId,idStr,[tempArr objectAtIndex:1]]];
+            playPath =[NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",LOCAL_HTTP_SERVER_URL,downloadItem.itemId,idStr,[tempArr objectAtIndex:1]];
         }
         if (playPath) {
             IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];

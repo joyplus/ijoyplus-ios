@@ -490,7 +490,7 @@
             else{
                 [[AppDelegate instance] startHttpServer];
                 NSString *subPath = [NSString stringWithFormat:@"%@_%@",item.itemId,@"1"];
-                playPath =[LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@/1.m3u8",item.itemId,subPath]];
+                playPath =[NSString stringWithFormat:@"%@/%@/%@/1.m3u8",LOCAL_HTTP_SERVER_URL, item.itemId,subPath];
             }
             
             if (playPath) {                

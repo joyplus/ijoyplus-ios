@@ -1567,6 +1567,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case PRE_BUTTON_TAG:{
             double time = CMTimeGetSeconds([mPlayer currentTime]);
+            if (isnan(time)) {
+                time = 0;
+            }
             if (time>= 30) {
                 [mPlayer seekToTime:CMTimeMakeWithSeconds(time-30, NSEC_PER_SEC)];
             }
@@ -1701,6 +1704,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		float minValue = [mScrubber minimumValue];
 		float maxValue = [mScrubber maximumValue];
 		double time = CMTimeGetSeconds([mPlayer currentTime]);
+        if (isnan(time)) {
+            time = 0;
+        }
 		[mScrubber setValue:(maxValue - minValue) * time / duration + minValue];
 	}
     

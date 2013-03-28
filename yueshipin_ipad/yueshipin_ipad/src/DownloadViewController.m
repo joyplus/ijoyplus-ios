@@ -233,7 +233,7 @@
 {
     NSLog(@"error in DownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
-    [AppDelegate instance].currentDownloadingNum = 0;
+//    [AppDelegate instance].currentDownloadingNum = 0;
 //    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
 //    if(isReachable) {
 //        NSLog(@"failure because of the source url");
@@ -491,7 +491,7 @@
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {
-                filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@.m3u8", item.itemId, item.itemId]];
+                filePath = [NSString stringWithFormat:@"%@/%@/%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.itemId];
             } else {
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                 NSString *documentsDirectory = [paths objectAtIndex:0];

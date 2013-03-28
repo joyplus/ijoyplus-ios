@@ -130,6 +130,9 @@
 
 + (BOOL)changeItemStatusToStop:(DownloadItem *)item
 {
+    if ([item isKindOfClass:[SubdownloadItem class]]) {
+        item = (SubdownloadItem *)item;
+    }
     if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
         item.downloadStatus = @"stop";
         [item save];

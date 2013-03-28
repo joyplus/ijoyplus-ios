@@ -400,6 +400,7 @@
             }
         }
     } else {
+        [self.padDownloadManager stopDownloading];
         [AppDelegate instance].currentDownloadingNum = 0;
     }
     
