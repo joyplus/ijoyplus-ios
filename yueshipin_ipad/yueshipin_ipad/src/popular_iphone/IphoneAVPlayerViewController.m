@@ -677,10 +677,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+110);
     myHUD.backgroundColor = [UIColor clearColor];
-    UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
-    tapGesture_another.numberOfTapsRequired = 1;
-    tapGesture_another.numberOfTouchesRequired = 1;
-    [playCacheView_ addGestureRecognizer:tapGesture_another];
+//    UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
+//    tapGesture_another.numberOfTapsRequired = 1;
+//    tapGesture_another.numberOfTouchesRequired = 1;
+//    [playCacheView_ addGestureRecognizer:tapGesture_another];
     myHUD.userInteractionEnabled = NO;
     //[myHUD addGestureRecognizer:tapGesture];
     myHUD.labelText = @"正在加载，请稍等";
@@ -2020,8 +2020,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    [self hiddenToolBar];
-    [self showToolBar];
+//    if (AVPlayerStatusReadyToPlay == mPlayer.status)
+//    {
+//        if (nil == playCacheView_.superview)
+//        {
+//            willPlayLabel_.text = nil;
+//            [self.view addSubview:playCacheView_];
+//            myHUD.hidden = NO;
+//            [self.view bringSubviewToFront:myHUD];
+//        }
+//    }
 }
 
 #pragma mark -
