@@ -688,6 +688,17 @@
             viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
         } else if([prodType isEqualToString:@"2"]  || [prodType isEqualToString:@"131"]){
+            NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
+            NSString *prodId = [item objectForKey:@"prod_id"];
+            NSString *subname = [item objectForKey:@"prod_subname"];
+            NSString *lastPlaytime = [item objectForKey:@"playback_time"];
+            NSString *lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", prodId, subname];
+            [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: lastPlaytime];
+            int btnTag = [[item objectForKey:@"prod_subname"] intValue];
+            if (btnTag <= 0) {
+                btnTag = 1;
+            }
+            [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId] result:[NSNumber numberWithInt:btnTag]];
             DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
             viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
             viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);

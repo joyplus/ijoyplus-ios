@@ -511,11 +511,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         NSDictionary *tempDic = [combinedArr objectAtIndex:combinedIndex];
         resolution = [tempDic objectForKey:RESOLUTION_KEY];
         NSDictionary *urlDic = [tempDic objectForKey:URL_KEY];
-        int nowDate = [[NSDate date] timeIntervalSince1970];
         NSString *url = [urlDic objectForKey:@"url"];
-//        url = @"mms://218.108.231.84:554/dftv1";
+//        url = @"http://gslb.tv.sohu.com/live?cid=8&type=hls";
         NSString *formattedUrl = url;
         if([url rangeOfString:@"{now_date}"].location != NSNotFound){
+            int nowDate = [[NSDate date] timeIntervalSince1970];
             formattedUrl = [url stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
         }
         NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:5];
