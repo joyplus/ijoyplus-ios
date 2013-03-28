@@ -341,7 +341,6 @@
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-    return;
 }
 - (void)loadRecordData
 {
@@ -498,6 +497,9 @@
 
 - (void)refreshMineViewWithTag:(NSInteger)tag
 {
+    [self.recordTableList removeFromSuperview];
+    [self.favTableList removeFromSuperview];
+    [self.myTableList removeFromSuperview];
     switch (tag) {
         case 100:
         {
@@ -507,6 +509,7 @@
                 [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
             }
             else {
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
                 [self.view addSubview:moreView_];
@@ -528,6 +531,7 @@
                 [moreView_ removeFromSuperview];
             }
             else {
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
                 
