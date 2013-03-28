@@ -106,7 +106,7 @@
     diskFrame.frame = CGRectMake(8, 6, 302, 18);
     [diskView addSubview:diskFrame];
     
-    diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(7, 4, 306, 27)];
+    diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(7, 4, 306, 22)];
     diskUsedProgress_.progress = percent;
     diskUsedProgress_.innerColor = [UIColor colorWithRed:100/255.0 green:165/255.0 blue:248/255.0 alpha:1];
     diskUsedProgress_.outerColor = [UIColor clearColor];

@@ -717,9 +717,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     willPlayLabel_.backgroundColor = [UIColor clearColor];
     willPlayLabel_.textColor = [UIColor grayColor];
     willPlayLabel_.textAlignment = NSTextAlignmentCenter;
-    [playCacheView_ addSubview:willPlayLabel_];
-    [self initWillPlayLabel];
-       
+    if (!islocalFile_) {
+        [playCacheView_ addSubview:willPlayLabel_];
+        [self initWillPlayLabel];
+    }
+   
 }
 
 -(void)initWillPlayLabel{
