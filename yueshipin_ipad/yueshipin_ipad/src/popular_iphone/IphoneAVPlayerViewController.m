@@ -666,12 +666,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     else{
        playCacheView_.image = [UIImage imageNamed:@"iphone_video_loading"];
     }
-    playCacheView_.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [playCacheView_ addGestureRecognizer:tapGesture];
-    self.view.backgroundColor = [UIColor clearColor];
+//    playCacheView_.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
+//    tapGesture.numberOfTapsRequired = 1;
+//    tapGesture.numberOfTouchesRequired = 1;
+//    [playCacheView_ addGestureRecognizer:tapGesture];
+//    self.view.backgroundColor = [UIColor clearColor];
     [self.view addSubview:playCacheView_];
     
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
@@ -681,8 +681,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     tapGesture_another.numberOfTapsRequired = 1;
     tapGesture_another.numberOfTouchesRequired = 1;
     [playCacheView_ addGestureRecognizer:tapGesture_another];
-    
-    [myHUD addGestureRecognizer:tapGesture];
+    myHUD.userInteractionEnabled = NO;
+    //[myHUD addGestureRecognizer:tapGesture];
     myHUD.labelText = @"正在加载，请稍等";
     myHUD.labelFont = [UIFont systemFontOfSize:12];
     myHUD.opacity = 0;
