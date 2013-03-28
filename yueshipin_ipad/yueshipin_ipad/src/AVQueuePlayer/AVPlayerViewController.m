@@ -448,7 +448,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     if (video != nil) {
         name = [video objectForKey:@"name"];
-        if (self.currentNum < subnameArray.count) {
+        if ([StringUtility stringIsEmpty:subname] && self.currentNum < subnameArray.count) {
             subname = [subnameArray objectAtIndex:self.currentNum];
         }
     }
@@ -475,6 +475,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 {
     if (subnameArray.count > 0) {
         currentNum = [subnameArray indexOfObject:subname];
+        if (currentNum < 0 || currentNum >= subnameArray.count) {
+            currentNum = 0;
+        }
     }
 }
 
@@ -613,7 +616,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)customizeTopToolbar
 {
-    topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+    if (isDownloaded) {
+        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+    } else {
+        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+    }
     [topToolbar setBackgroundImage:[[UIImage imageNamed:@"top_toolbar_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 5, 5, 5)] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:topToolbar];
     
@@ -915,7 +922,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         [playCacheView addSubview:nameLabel];
         
-        if (CMTIME_IS_VALID(lastPlayTime) && CMTimeGetSeconds(lastPlayTime) > 0) {
+        if (CMTIME_IS_VALID(lastPlayTime) && CMTimeGetSeconds(lastPlayTime) > 1) {
             UILabel *lastLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
             lastLabel.tag = 3232947504;
             lastLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y);

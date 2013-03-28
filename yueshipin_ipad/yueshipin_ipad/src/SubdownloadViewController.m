@@ -129,7 +129,13 @@
 
 - (void)reloadSubitems
 {
-    subitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@ order by subitem_id", self.itemId]];
+    NSArray *tempSubitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
+    
+    subitems = [tempSubitems sortedArrayUsingComparator:^(SubdownloadItem *a, SubdownloadItem *b) {
+        NSNumber *first =  [NSNumber numberWithInt:a.subitemId.intValue];
+        NSNumber *second = [NSNumber numberWithInt:b.subitemId.intValue];
+        return [first compare:second];
+    }];
 }
 
 

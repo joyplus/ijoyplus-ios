@@ -258,6 +258,19 @@
 }
 
 - (void)loadTable {
+    if(sortedwatchRecordArray.count > 0){
+        [myRecordImage setHidden:NO];
+        [table setHidden:NO];
+        [tableBg setHidden:NO];
+        [bottomFadingView setHidden:NO];
+        [removeAllBtn setHidden:NO];
+    } else {
+        [removeAllBtn setHidden:YES];
+        [tableBg setHidden:YES];
+        [myRecordImage setHidden:YES];
+        [table setHidden:YES];
+        [bottomFadingView setHidden:YES];
+    }
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
 }
@@ -378,9 +391,9 @@
             } else {
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
             }
-            [self loadTable];
         }
     }
+    [self loadTable];
 }
 
 - (void)parseResult
@@ -509,26 +522,28 @@
         [contentLabel setNumberOfLines:0];
         [cell.contentView addSubview:contentLabel];
     }
-    NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
-    UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
-    movieNameLabel.text = [item objectForKey:@"prod_name"];
-    
-    UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
-    contentLabel.text = [self composeContent:item];
-    CGSize size = [self calculateContentSize:contentLabel.text width:280];
-    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
-    
-    UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
-    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
-    NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
-    if(duration.doubleValue - playbackTime.doubleValue < 3){
-        [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
-        [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
-    } else {
-        [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
-        [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
+    if (indexPath.row < sortedwatchRecordArray.count) {
+        NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+        UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
+        movieNameLabel.text = [item objectForKey:@"prod_name"];
+        
+        UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
+        contentLabel.text = [self composeContent:item];
+        CGSize size = [self calculateContentSize:contentLabel.text width:280];
+        [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
+        
+        UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
+        NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
+        NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
+        if(duration.doubleValue - playbackTime.doubleValue < 3){
+            [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
+            [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
+        } else {
+            [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+            [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
+        }
+        playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
     }
-    playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
     return cell;
 }
 
