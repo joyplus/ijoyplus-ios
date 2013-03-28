@@ -898,13 +898,24 @@ static NSMutableArray *downLoadQueue_ = nil;
     NSString *subPath = nil;
     NSRange range = [prodId rangeOfString:@"_"];
     NSString *tempPath = nil;
+    DownloadItem *downloadItem = nil;
     if (range.location == NSNotFound) {
         subPath = [NSString stringWithFormat:@"%@_%@",prodId,num,nil];
         tempPath = prodId;
+        NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId];
+        NSArray *arr = [DownloadItem findByCriteria:query];
+        if ([arr count]>0) {
+            downloadItem = [arr objectAtIndex:0];
+        }
     }
     else{
         subPath = prodId;
         tempPath = [[prodId componentsSeparatedByString:@"_"] objectAtIndex:0];
+        NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",prodId];
+        NSArray *arr = [SubdownloadItem findByCriteria:query];
+        if ([arr count]>0) {
+            downloadItem = [arr objectAtIndex:0];
+        }
     }
    NSString *new_filePath = [NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",documentsDir,tempPath,subPath,num,nil];
    [[NSFileManager new]createFileAtPath:new_filePath contents:nil attributes:nil];
@@ -912,12 +923,24 @@ static NSMutableArray *downLoadQueue_ = nil;
    [playlistFile truncateFileAtOffset:[playlistFile seekToEndOfFile]];
     FILE *wordFile = fopen([oldPath UTF8String], "r");
     char word[1000];
+    double duration = 0;
     NSMutableArray *videoArray = [[NSMutableArray alloc]initWithCapacity:500];
     while (fgets(word,1000,wordFile)){
         word[strlen(word)-1] ='\0';
         NSString *stringContent = [[NSString stringWithUTF8String:word] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
         if ([stringContent hasPrefix:@"#"]) {
             [playlistFile writeData: [stringContent dataUsingEncoding:NSUTF8StringEncoding]];
+            NSRange startRange = [stringContent rangeOfString:@":"];
+            if (startRange.length > 0) {
+                NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
+                double segmentDuration = 0;
+                if (lastRange.length == 0) {
+                    segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                } else if(lastRange.location - startRange.location > 1){
+                    segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location+1, lastRange.location-startRange.location-1)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                }
+                duration += segmentDuration;
+            }
         } else {
             if ([[stringContent lowercaseString] hasPrefix:@"http://"] || [[stringContent lowercaseString] hasPrefix:@"https://"]) {
                 [videoArray addObject:stringContent];
@@ -939,6 +962,10 @@ static NSMutableArray *downLoadQueue_ = nil;
         [playlistFile writeData:[linebreak dataUsingEncoding:NSUTF8StringEncoding]];
     }
     [playlistFile closeFile];
+    
+    downloadItem.duration = duration;
+    [downloadItem save];
+    
     NSMutableArray *segmentUrlArray = [[NSMutableArray alloc]initWithCapacity:videoArray.count];
     for (int i = 0; i < videoArray.count; i++) {
         SegmentUrl *segUrl = [[SegmentUrl alloc]init];
@@ -1104,22 +1131,26 @@ static NSMutableArray *downLoadQueue_ = nil;
 @synthesize allUrls = allUrls_;
 -(void)checkDownloadUrls:(NSDictionary *)infoDic{
     allUrls_ = [[NSMutableArray alloc] initWithCapacity:5];
+    myConditionArr_ = [[NSMutableArray alloc] initWithCapacity:5];
     NSArray *down_urlsArr = [infoDic objectForKey:@"down_urls"];
     for (NSDictionary *dic in down_urlsArr) {
         NSArray *oneSourceArr = [dic objectForKey:@"urls"];
         for (NSDictionary *oneUrlInfo in oneSourceArr) {
-            NSString *tempUrl = [oneUrlInfo objectForKey:@"url"];
+            NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
             NSString *type = [oneUrlInfo objectForKey:@"file"];
             NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
+            
             [allUrls_ addObject:myDic];
         }
         
     }
+//     NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:@"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8",@"url",@"m3u8",@"type", nil];
+    //[allUrls_ addObject:myDic];
     reponseCount_ = 0;
     isReceiveR_ = NO;
     for (NSDictionary *dic  in allUrls_) {
-        NSString *tempStr = [[dic objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:tempStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:15];
+        NSString *tempStr = [dic objectForKey:@"url"];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:tempStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:10];
          NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:self];
         [myConditionArr_  addObject:connection];
         
@@ -1129,40 +1160,73 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 
 -(void)saveDataBase{
-    NSString *proid = [downloadInfoArr_ objectAtIndex:0];
-    NSRange range = [proid rangeOfString:@"_"];
-    if (range.location == NSNotFound){
-        [self saveDataBaseIntable:@"DownloadItem" withId:proid withStatus:@"fail_1011" withPercentage:-1];
-        [[DownLoadManager defaultDownLoadManager].downLoadMGdelegate  downloadUrlTnvalidWithId:proid inClass:@"IphoneDownloadViewController"];
-    }
-    else{
-        [self saveDataBaseIntable:@"SubdownloadItem" withId:proid withStatus:@"fail_1011" withPercentage:-1];
-        [[DownLoadManager defaultDownLoadManager].downLoadMGdelegate  downloadUrlTnvalidWithId:proid inClass:@"IphoneSubdownloadViewController"];
-    }
-
-}
-
--(void)saveDataBaseIntable:(NSString *)tableName withId:(NSString *)itemId withStatus:(NSString *)status withPercentage:(int)percentage{
-    if ([tableName isEqualToString:@"DownloadItem"]) {
-        NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",itemId];
-        NSArray *itemArr = [DownloadItem findByCriteria:query];
-        if ([itemArr count]>0) {
-            DownloadItem *item = (DownloadItem *)[itemArr objectAtIndex:0];
-            item.downloadStatus = status;
-            item.percentage = percentage;
-            [item save];
+    NSString *prodId = [downloadInfoArr_ objectAtIndex:0];
+    NSString *tempUrlStr = [[allUrls_ objectAtIndex:0] objectForKey:@"url"];
+    NSString *urlStr = [tempUrlStr stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    NSString *fileName = [downloadInfoArr_ objectAtIndex:1];
+    NSString *imgUrl = [downloadInfoArr_ objectAtIndex:2];
+    NSString *type = [downloadInfoArr_ objectAtIndex:3];
+    int num = [[downloadInfoArr_ objectAtIndex:4] intValue];
+    num++;
+    NSString *fileType = nil;
+    for (NSDictionary *dic  in allUrls_) {
+        NSString *str = [dic objectForKey:@"url"];
+        if ([str isEqualToString:urlStr]) {
+            fileType = [dic objectForKey:@"type"];
+            break;
         }
     }
-    else if ([tableName isEqualToString:@"SubdownloadItem"]){
-        NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",itemId];
-        NSArray *itemArr = [SubdownloadItem findByCriteria:query];
-        if ([itemArr count]> 0) {
-            SubdownloadItem *item = (SubdownloadItem *)[itemArr objectAtIndex:0];
-            item.downloadStatus = status;
-            item.percentage = percentage;
+    
+    if ([type isEqualToString:@"1"]){
+        DownloadItem *item = [[DownloadItem alloc]init];
+        item.itemId = prodId;
+        item.name = fileName;
+        item.percentage = -1;
+        item.type = 1;
+        item.url = urlStr;
+        item.imageUrl = imgUrl;
+        item.downloadStatus = @"fail_1011";
+        item.downloadType = fileType;
+        [item save];
+        [[DownLoadManager defaultDownLoadManager].downLoadMGdelegate  downloadUrlTnvalidWithId:prodId inClass:@"IphoneDownloadViewController"];
+        [[DownLoadManager defaultDownLoadManager] waringPlus];
+    } else {
+        NSArray *itemArr = [DownloadItem allObjects];
+        BOOL isHave = NO;
+        for (DownloadItem *item in itemArr) {
+            if ([item.itemId isEqualToString:prodId]) {
+                isHave = YES;
+                break;
+            }
+        }
+        if (!isHave) {
+            DownloadItem *item = [[DownloadItem alloc]init];
+            item.itemId = prodId;
+            if ([fileName rangeOfString:@"_"].location != NSNotFound) {
+                item.name = [[fileName componentsSeparatedByString:@"_"] objectAtIndex:0];
+            }
+            
+            item.imageUrl = imgUrl;
             [item save];
         }
+        
+        SubdownloadItem *subItem = [[SubdownloadItem alloc] init];
+        subItem.itemId = prodId;
+        subItem.percentage = -1;
+        subItem.type = [type intValue];
+        subItem.url = urlStr;
+        subItem.imageUrl = imgUrl;
+        subItem.name = fileName;
+        subItem.subitemId = [NSString stringWithFormat:@"%@_%d",prodId,num];
+        subItem.downloadStatus = @"fail_1011";
+        subItem.downloadType = fileType;
+        [subItem save];
+       
+        [[DownLoadManager defaultDownLoadManager].downLoadMGdelegate  downloadUrlTnvalidWithId:prodId inClass:@"IphoneSubdownloadViewController"];
+        [[DownLoadManager defaultDownLoadManager] waringPlus];
     }
+
+
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
@@ -1182,8 +1246,9 @@ static NSMutableArray *downLoadQueue_ = nil;
     int status_Code = HTTPResponse.statusCode;
     if (status_Code >= 200 && status_Code <= 299) {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
-        NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-        if (![content_type hasPrefix:@"text/html"]) {
+        NSString *content_type = [headerFields objectForKey:@"Content-Type"];
+         NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
+        if (![content_type hasPrefix:@"text/html"] && contentLength.intValue >100) {
             isReceiveR_ = YES;
             NSString *proid = [downloadInfoArr_ objectAtIndex:0];
             NSString *urlStr = connection.originalRequest.URL.absoluteString;
@@ -1199,7 +1264,6 @@ static NSMutableArray *downLoadQueue_ = nil;
                     break;
                 }
             }
-           
             NSArray *arr = [NSArray arrayWithObjects:proid,urlStr,name,imgUrl,type,num,fileType,nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:arr];
             return;

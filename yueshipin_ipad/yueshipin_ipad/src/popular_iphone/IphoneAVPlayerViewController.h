@@ -123,6 +123,7 @@
 @property (nonatomic, strong) NSString *webUrlSource;
 @property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (nonatomic, assign)  BOOL isM3u8;
+@property (nonatomic, assign) double playDuration;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

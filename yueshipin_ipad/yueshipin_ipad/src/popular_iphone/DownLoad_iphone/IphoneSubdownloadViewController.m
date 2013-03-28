@@ -79,7 +79,7 @@
     [self.view addSubview:gmGridView];
     gMGridView_ = gmGridView;
     
-    NSInteger spacing = 25;
+    NSInteger spacing = 5;
     gMGridView_.style = GMGridViewStyleSwap;
     gMGridView_.itemSpacing = spacing;
     gMGridView_.minEdgeInsets = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
@@ -224,7 +224,7 @@
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView{
-    return CGSizeMake(70, 124);
+    return CGSizeMake(100, 140);
 }
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index{
@@ -234,7 +234,7 @@
     if (!cell) {
         cell = [[GMGridViewCell alloc] init];
         cell.deleteButtonIcon = [UIImage imageNamed:@"close_x.png"];
-        cell.deleteButtonOffset = CGPointMake(-15, -15);
+        cell.deleteButtonOffset = CGPointMake(-3, -3);
         
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         view.backgroundColor = [UIColor clearColor];
@@ -244,15 +244,15 @@
         [view removeFromSuperview];
     }
     UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
-    frame.frame = CGRectMake(0, 0, 71, 104);
+    frame.frame = CGRectMake(15, 15, 71, 104);
     [cell.contentView addSubview:frame];
     
-    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(2, 2, 67, 99)];
+    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(17, 17, 67, 99)];
     [contentImage setImageWithURL:imageUrl_];
     [cell.contentView addSubview:contentImage];
     
     NSString *numStr = [[downloadItem.subitemId componentsSeparatedByString:@"_"] lastObject];
-    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(-4, 108, 78, 15)];
+    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(11, 123, 78, 15)];
     nameLbl.font = [UIFont systemFontOfSize:13];
     nameLbl.backgroundColor = [UIColor clearColor];
     nameLbl.textAlignment = NSTextAlignmentCenter;
@@ -268,13 +268,13 @@
         nameLbl.text =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
     }
     if ([nameLbl.text length]>5) {
-        nameLbl.frame = CGRectMake(-4, 108, 78, 30);
+        nameLbl.frame = CGRectMake(11, 123, 78, 30);
     }
     
     nameLbl.textColor = [UIColor blackColor];
     [cell.contentView addSubview:nameLbl];
     
-    UILabel *labelDown = [[UILabel alloc] initWithFrame:CGRectMake(2, 86, 67, 15)];
+    UILabel *labelDown = [[UILabel alloc] initWithFrame:CGRectMake(17, 101, 67, 15)];
     labelDown.textColor = [UIColor whiteColor];
     labelDown.backgroundColor = [UIColor blackColor];
     labelDown.alpha = 0.6;
@@ -282,7 +282,7 @@
     labelDown.font = [UIFont systemFontOfSize:10];
     
     
-    UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 1, 67, 15)];
+    UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 16, 67, 15)];
     progressLabel.textColor = [UIColor whiteColor];
     progressLabel.tag = 10*[downloadItem.itemId intValue]+[numStr intValue];
     progressLabel.textAlignment = NSTextAlignmentCenter;
@@ -291,7 +291,7 @@
     progressLabel.font = [UIFont systemFontOfSize:10];
     [progressLabelArr_ addObject:progressLabel];
     
-    UIImageView *statusImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    UIImageView *statusImg = [[UIImageView alloc] initWithFrame:CGRectMake(17, 15, 44, 44)];
     statusImg.tag = 10*[downloadItem.itemId intValue]+[numStr intValue];
     statusImg.center = CGPointMake(cell.contentView.center.x, cell.contentView.center.y-10);
     [statusImgArr_ addObject:statusImg];
@@ -300,7 +300,7 @@
     UIProgressView *progressView = nil;
     if(![downloadItem.downloadStatus isEqualToString:@"finish"]){
         progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        progressView.frame = CGRectMake(5, 92, 62, 10);
+        progressView.frame = CGRectMake(20, 107, 62, 10);
         progressView.tag = 10*[downloadItem.itemId intValue]+[numStr intValue];
         progressView.progress = downloadItem.percentage/100.0;
         progressView.progressTintColor = [UIColor colorWithRed:62/255.0 green:138/255.0 blue:238/255.0 alpha:1];
@@ -433,6 +433,8 @@
             iphoneAVPlayerViewController.local_file_path = playPath;
             if ([downloadItem.downloadType isEqualToString:@"m3u8"]){
               iphoneAVPlayerViewController.isM3u8 = YES;
+              iphoneAVPlayerViewController.playDuration = downloadItem.duration;
+              iphoneAVPlayerViewController.lastPlayTime = CMTimeMake(1, NSEC_PER_SEC);
             }
             iphoneAVPlayerViewController.islocalFile = YES;
             if (downloadItem.type == 2) {

@@ -238,7 +238,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (CMTime)playerItemDuration
 {
-	AVPlayerItem *playerItem = [mPlayer currentItem];
+   
+    if (islocalFile_ && isM3u8_) {
+        return  CMTimeMakeWithSeconds(self.playDuration, NSEC_PER_SEC);
+    }
+    
+	AVPlayerItem *playerItem = [mPlayer currentItem];  
 	if (playerItem.status == AVPlayerItemStatusReadyToPlay)
 	{
         /*
@@ -665,7 +670,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     self.title = nameStr_;
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
     self.view.backgroundColor = [UIColor blackColor];
