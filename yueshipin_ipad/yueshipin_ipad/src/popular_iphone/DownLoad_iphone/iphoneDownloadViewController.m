@@ -499,7 +499,7 @@
                 if ([item.downloadType isEqualToString:@"m3u8"]){
                   iphoneAVPlayerViewController.isM3u8 = YES;
                   iphoneAVPlayerViewController.playDuration = item.duration;
-                  iphoneAVPlayerViewController.lastPlayTime = CMTimeMake(1, NSEC_PER_SEC);
+                  iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
                 }
                 
                 iphoneAVPlayerViewController.islocalFile = YES;
