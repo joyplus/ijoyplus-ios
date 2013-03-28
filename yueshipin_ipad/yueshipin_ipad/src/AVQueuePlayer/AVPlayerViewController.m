@@ -203,15 +203,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     workingUrl = nil;
     urlArrayDictionary = nil;
     urlConnection = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
-                                                  object:nil];
 }
 
 - (void)viewDidLoad
@@ -1084,6 +1075,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [mPlayer removeObserver:self forKeyPath:@"rate"];
 	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
     [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
+                                                  object:nil];
     
     [self closeAllTimer];
     [self.urlConnection cancel];
