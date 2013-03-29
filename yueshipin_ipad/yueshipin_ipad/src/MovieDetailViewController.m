@@ -348,8 +348,8 @@
     
     if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
         // do nothing
-        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
-        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
+//        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+//        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
     } else {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
@@ -509,6 +509,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
         } else {
@@ -531,6 +532,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
         } else {

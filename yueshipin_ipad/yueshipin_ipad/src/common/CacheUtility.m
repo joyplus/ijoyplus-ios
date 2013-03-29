@@ -9,6 +9,7 @@
 #import "CacheUtility.h"
 #import "CMConstants.h"
 #import "NSMutableArray+QueueAdditions.h"
+#import "EnvConstant.h"
 
 @interface CacheUtility()
 
@@ -129,7 +130,9 @@
             [cacheQueue dequeue];
         }
     }
-    NSLog(@"cache num = %i", cacheQueue.count);
+    if(ENVIRONMENT == 0) {        
+        NSLog(@"cache num = %i", cacheQueue.count);
+    }
     [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];

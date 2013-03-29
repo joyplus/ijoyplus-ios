@@ -143,7 +143,13 @@
 {
     NSLog(@"error in SubdownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
-//    [AppDelegate instance].currentDownloadingNum = 0;
+    [self performSelector:@selector(startNewDownloading) withObject:nil afterDelay:10];
+}
+
+- (void)startNewDownloading
+{
+    [AppDelegate instance].padDownloadManager = 0;
+    [NSThread detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId

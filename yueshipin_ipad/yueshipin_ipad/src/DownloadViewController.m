@@ -233,21 +233,13 @@
 {
     NSLog(@"error in DownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
-//    [AppDelegate instance].currentDownloadingNum = 0;
-//    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
-//    if(isReachable) {
-//        NSLog(@"failure because of the source url");
-//        for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-//            DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
-//            if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-//                item.downloadStatus = @"stop";
-//                [item save];
-//                [_gmGridView reloadData];
-//                break;
-//            }
-//        }
-//        [[AppDelegate instance].padDownloadManager stopDownloading];
-//    }
+    [self performSelector:@selector(startNewDownloading) withObject:nil afterDelay:10];
+}
+
+- (void)startNewDownloading
+{
+    [AppDelegate instance].padDownloadManager = 0;
+    [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];    
 }
 
 - (void)downloadSuccess:(NSString *)operationId

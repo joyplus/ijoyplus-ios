@@ -40,6 +40,7 @@
     closeBtn = nil;
     pullToRefreshManager_ = nil;
     fromViewController = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:SEARCH_LIST_VIEW_REFRESH object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -80,6 +81,7 @@
     [self.view addGestureRecognizer:swipeRecognizer];
     
     [self setCloseTipsViewHidden:NO];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSearchList) name:SEARCH_LIST_VIEW_REFRESH object:nil];
 }
 
 - (void)loadTable {
@@ -112,6 +114,31 @@
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     }];
     [MobClick beginLogPageView:SEARCH_LIST];
+}
+
+- (void)refreshSearchList
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3,131", @"type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        if (videoArray == nil) {
+            videoArray = [[NSMutableArray alloc]initWithCapacity:10];
+        } else {
+            [videoArray removeAllObjects];
+        }
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *searchResult = [result objectForKey:@"results"];
+            if(searchResult != nil && searchResult.count > 0){
+                [videoArray addObjectsFromArray:searchResult];
+            }
+            if(searchResult.count < pageSize){
+                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            }
+        }
+        [self loadTable];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+    }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

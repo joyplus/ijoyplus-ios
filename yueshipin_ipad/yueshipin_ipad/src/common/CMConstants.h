@@ -66,6 +66,7 @@
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
 #define WATCH_HISTORY_REFRESH @"PersonalWatchHistoryViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
+#define SEARCH_LIST_VIEW_REFRESH @"SearchListViewRefresh"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
 #define RELOAD_MENU_ITEM @ "reload_menu_item"
