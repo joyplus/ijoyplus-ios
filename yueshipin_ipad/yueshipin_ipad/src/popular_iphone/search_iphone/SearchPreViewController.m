@@ -444,6 +444,9 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView.tag == HISTORY_LIST) {
+        if (indexPath.row == [listArr_ count]) {
+            return;
+        }
         NSString *str = [listArr_ objectAtIndex:indexPath.row];
         [self search:str];
     }

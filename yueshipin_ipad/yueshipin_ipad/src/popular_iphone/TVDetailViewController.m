@@ -777,7 +777,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
         }
         if(videoUrl == nil){
-            videoUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (videoUrl != nil) {
+                    break;
+                }
+                 videoUrl = [self parseDownloadUrl:dic];
+            }
+           
         }
     }
 //   NSString *videoUrl = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
@@ -884,7 +890,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
         }
         if(downloadUrl == nil){
-            downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            //downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (downloadUrl != nil) {
+                    break;
+                }
+                downloadUrl = [self parseDownloadUrl:dic];
+            }
         }
     }
     if (downloadUrl == nil) {
@@ -1090,24 +1102,26 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(BOOL)isWacthEnbled:(NSDictionary *)oneEpisoder{
     NSArray *down_urls = [oneEpisoder objectForKey:@"down_urls"];
-    NSDictionary *dic = [down_urls objectAtIndex:0];
-    NSArray *urlInfoArr = [dic objectForKey:@"urls"];
-    for (NSDictionary *urlinfo  in urlInfoArr) {
-        NSString *urlStr = [urlinfo objectForKey:@"url"];
-        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
-            return YES;
+    for (NSDictionary *dic in down_urls) {
+        NSArray *urlInfoArr = [dic objectForKey:@"urls"];
+        for (NSDictionary *urlinfo  in urlInfoArr) {
+            NSString *urlStr = [urlinfo objectForKey:@"url"];
+            if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+                return YES;
+            }
+            
         }
-    
-    }
-    NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
-    for (NSDictionary *urlinfo  in video_urls) {
-        NSString *urlStr = [urlinfo objectForKey:@"url"];
-        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
-            return YES;
+        NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
+        for (NSDictionary *urlinfo  in video_urls) {
+            NSString *urlStr = [urlinfo objectForKey:@"url"];
+            if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+                return YES;
+            }
+            
         }
-        
+
     }
-    return NO;
+        return NO;
 
 }
 

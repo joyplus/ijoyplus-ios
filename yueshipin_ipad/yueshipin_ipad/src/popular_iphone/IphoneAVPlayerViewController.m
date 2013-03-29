@@ -736,7 +736,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     else if (videoType_ == 3){
         NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
-        titleLabel_.text = [item objectForKey:@"name"];
+        titleLabel_.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"name"]];
     }
     
     [self initplaytime];

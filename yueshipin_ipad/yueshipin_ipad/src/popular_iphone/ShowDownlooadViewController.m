@@ -58,7 +58,7 @@
     
     EpisodeIdArr_ = [NSMutableArray arrayWithCapacity:5];
     for (SubdownloadItem *item in [self readDataFromDB]) {
-        NSString *episodeId = [[item.name componentsSeparatedByString:@"_"] lastObject];
+        NSString *episodeId = [[item.subitemId componentsSeparatedByString:@"_"] lastObject];
         [EpisodeIdArr_ addObject:episodeId];
     }
     
@@ -168,7 +168,12 @@
             }
         }
         if(videoUrl == nil){
-            videoUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (videoUrl != nil) {
+                    break;
+                }
+                videoUrl = [self parseDownloadUrl:dic];
+            }
         }
         if (videoUrl == nil || [videoUrl isEqualToString:@""]) {
             NSLog(@"Get the download url is failed");
@@ -191,7 +196,7 @@
         
         CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
         check.downloadInfoArr = infoArr;
-        [check checkDownloadUrls:[EpisodeIdArr_ objectAtIndex:num]];
+        [check checkDownloadUrls:[listArr_ objectAtIndex:num]];
     }
 }
 
@@ -206,7 +211,12 @@
             }
         }
         if(downloadUrl == nil){
-            downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (downloadUrl != nil) {
+                    break;
+                }
+                downloadUrl = [self parseDownloadUrl:dic];
+            }
         }
     }
     if (downloadUrl == nil) {

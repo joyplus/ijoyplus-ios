@@ -260,9 +260,9 @@
     nameLbl.numberOfLines = 0;
     if (downloadItem.type == 2) {
      
-        NSString *sub_name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+        NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
         int num = [sub_name intValue];
-        nameLbl.text = [NSString stringWithFormat:@"第%d集",++num];
+        nameLbl.text = [NSString stringWithFormat:@"第%d集",num];
     }
     else if (downloadItem.type == 3){
         nameLbl.text =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];

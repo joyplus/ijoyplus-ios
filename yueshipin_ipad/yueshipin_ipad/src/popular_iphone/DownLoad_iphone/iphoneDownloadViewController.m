@@ -136,8 +136,8 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     //重新将downLoadManager的代理指向self;
-  downLoadManager_.downLoadMGdelegate = self;
-    
+    downLoadManager_.downLoadMGdelegate = self;
+    [gMGridView_ reloadData];
     
 }
 - (void)viewWillDisappear:(BOOL)animated{
@@ -176,35 +176,8 @@
     return percent;
 }
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className{
-//    NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",itemId];
-//    NSArray *itemArr = [DownloadItem findByCriteria:query];
-//    int percet = 0;
-//    if ([itemArr count] >0) {
-//        percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
-//    }
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
         [self reloadDataSource];
-//        for (UILabel *label in progressLabelArr_) {
-//            if (label.tag == [itemId intValue]) {           
-//                label.text = [NSString stringWithFormat:@"已下载:%i%%",percet];
-//                break;
-//            
-//        }   
-//      }
-//        
-//    for (UIImageView *imgV in statusImgArr_) {
-//        if (imgV.tag == [itemId intValue]) {
-//            imgV.image = [UIImage imageNamed:@"download_loading.png"];
-//            break;
-//        }
-//    }
-//    
-//    for (UIProgressView *proV in progressArr_) {
-//        if (proV.tag == [itemId intValue]) {
-//            proV.progress = percet/100.0;
-//            break;
-//        }
-//    }
 
    }
 
