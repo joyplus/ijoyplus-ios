@@ -461,7 +461,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 /* Requests invocation of a given block during media playback to update the movie scrubber control. */
 -(void)initScrubberTimer
 {
-	double interval = .1f;
+	double interval = 0.1f;
 	
 	CMTime playerDuration = [self playerItemDuration];
 	if (CMTIME_IS_INVALID(playerDuration))
@@ -480,9 +480,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [mTimeObserver invalidate];
         mTimeObserver = nil;
     }
-    
 	/* Update the scrubber during normal playback. */
     __block typeof (self) myself = self;
+    if (isnan(interval) || interval < 0.1f) {
+        interval = 0.1f;
+    }
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
                                                            queue:NULL /* If you pass NULL, the main queue is used. */
                                                       usingBlock:^(CMTime time)
@@ -1627,7 +1629,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
                 tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, height);
-                [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                if(playNum >= 0 && playNum < episodesArr_.count){
+                    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                }
                 [UIView commitAnimations];
               
             }
@@ -1668,6 +1672,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 			CGFloat width = CGRectGetWidth([mScrubber bounds]);
 			double tolerance = 0.5f * duration / width;
             
+            if (isnan(tolerance) || tolerance < 0.1f) {
+                tolerance = 0.1f;
+            }
             __block typeof (self) myself = self;
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
                              ^(CMTime time)

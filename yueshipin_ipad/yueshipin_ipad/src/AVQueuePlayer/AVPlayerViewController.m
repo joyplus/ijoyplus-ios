@@ -1556,6 +1556,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         mTimeObserver = nil;
     }
 	/* Update the scrubber during normal playback. */
+    if (isnan(interval) || interval < 0.1f) {
+        interval = 0.1f;
+    }
     __block typeof (self) myself = self;
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
 								queue:NULL /* If you pass NULL, the main queue is used. */
@@ -1643,6 +1646,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		{
 			CGFloat width = CGRectGetWidth([mScrubber bounds]);
 			double tolerance = 0.5f * duration / width;
+            if (isnan(tolerance) || tolerance < 0.1f) {
+                tolerance = 0.1f;
+            }
             __block typeof (self) myself = self;
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
             ^(CMTime time) {
