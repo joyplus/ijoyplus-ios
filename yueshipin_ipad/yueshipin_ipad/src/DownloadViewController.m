@@ -233,13 +233,16 @@
 {
     NSLog(@"error in DownloadViewController");
     [[AppDelegate instance].padDownloadManager stopDownloading];
-    [self performSelector:@selector(startNewDownloading) withObject:nil afterDelay:10];
+    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
 }
 
-- (void)startNewDownloading
+- (void)restartNewDownloading
 {
     [AppDelegate instance].padDownloadManager = 0;
-    [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];    
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable) {
+        [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
+    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId

@@ -398,10 +398,7 @@
                 }
             }
         }
-    } else {
-        [self.padDownloadManager stopDownloading];
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
+    } 
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [self.downLoadManager networkChanged:networkStatus];

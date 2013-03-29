@@ -639,6 +639,7 @@
 - (void)summaryBtnClicked:(UIButton *)sender
 {
     [self closeMenu];
+    [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
     for(int i = 0; i < 4; i++){
         UIButton *btn = (UIButton *)[self.view viewWithTag:1001 + i];
         [btn setBackgroundImage:nil forState:UIControlStateNormal];
