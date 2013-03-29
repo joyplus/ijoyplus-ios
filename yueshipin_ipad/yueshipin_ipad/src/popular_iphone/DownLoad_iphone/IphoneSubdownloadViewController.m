@@ -91,12 +91,18 @@
     downLoadManager_ = [AppDelegate instance].downLoadManager;
     downLoadManager_.downLoadMGdelegate = self;
     
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
 }
-- (void)viewWillDisappear:(BOOL)animated{
 
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
 }
+
 -(void)initData{
     progressArr_ = [NSMutableArray arrayWithCapacity:5];
     progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];
