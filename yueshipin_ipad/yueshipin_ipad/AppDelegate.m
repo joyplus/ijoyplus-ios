@@ -329,7 +329,7 @@
         [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
-    [self performSelector:@selector(triggerDownload) withObject:self afterDelay:10];
+    [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
     //when app become active ,cancel all local notification .
     [self cancelLocalNotification];
