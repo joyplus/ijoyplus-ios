@@ -140,9 +140,17 @@
     [gMGridView_ reloadData];
     
 }
-- (void)viewWillDisappear:(BOOL)animated{
-[[UIApplication sharedApplication] setIdleTimerDisabled: NO];
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
 }
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
+    [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
+}
+
 -(void)initData{
     progressArr_ = [NSMutableArray arrayWithCapacity:5];
     progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];

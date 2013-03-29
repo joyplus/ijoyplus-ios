@@ -94,6 +94,7 @@
     [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
 }
 - (void)viewWillDisappear:(BOOL)animated{
+
     [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
 }
 -(void)initData{
