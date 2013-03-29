@@ -195,6 +195,11 @@
 
 - (void)videoImageClicked:(NSInteger)index
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     if(index >= subitems.count){
         return;
     }

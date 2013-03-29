@@ -300,6 +300,11 @@
 
 - (void)movieImageClicked:(NSInteger)index
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     if(index >= allDownloadItems.count){
         return;
     }
