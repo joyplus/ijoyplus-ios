@@ -594,6 +594,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 -(void)playerItemDidReachEnd:(id)sender{
+    if (islocalFile_) {
+        return;
+    }
     if (videoType_ == 1 || videoType_ == 3) {
         return;
     }
