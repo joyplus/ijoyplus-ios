@@ -17,13 +17,17 @@
 
 // for App Store
 #define CHANNEL_ID @""
-// for 91 Store
-//#define CHANNEL_ID @"91store"
-// for PP Live
-//#define CHANNEL_ID @"pp"
-// for sohu
+// 机客
+//#define CHANNEL_ID @"b001001"
+// 同步推
+//#define CHANNEL_ID @"b002001"
+// 91
+//#define CHANNEL_ID @"b003001"
+// PP助手
+//#define CHANNEL_ID @"b004001"
+// 搜狐
 //#define CHANNEL_ID @"b005001"
-
+// 威锋
 //#define CHANNEL_ID @"b006001"
 
 
