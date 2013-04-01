@@ -78,7 +78,7 @@
     {
         self.autoresizesSubviews = !YES;
         self.editing = NO;
-        
+        self.backgroundColor = [UIColor clearColor];
         UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
         self.deleteButton = deleteButton;
         [self.deleteButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];

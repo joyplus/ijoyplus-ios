@@ -21,11 +21,11 @@
 // THE SOFTWARE.
 
 #import "AFHTTPRequestOperation.h"
-
+#import "DownLoadManager.h"
 #define kAFNetworkingIncompleteDownloadFolderName @"Incomplete"
 
 @class AFDownloadRequestOperation;
-
+@class M3u8DownLoadManager;
 @protocol DownloadingDelegate <NSObject>
 @required
 - (void)downloadSuccess:(NSString *)operationId;
@@ -52,6 +52,9 @@
 @property (nonatomic, strong) NSString *operationId;
 @property (nonatomic, strong) NSString *suboperationId;
 @property (nonatomic, strong) NSString *operationStatus;
+@property (nonatomic) int downloadingSegmentIndex;
+@property (nonatomic, strong) NSString *fileType;
+@property (nonatomic, strong)M3u8DownLoadManager *m3u8MG;
 /**
  A String value that defines the target path or directory.
  

@@ -218,10 +218,15 @@
     [self.bgScrollView addSubview:introBtn];
     
     episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
-    episodeView.scrollEnabled = NO;
+    //episodeView.scrollEnabled = NO;
+    episodeView.showsHorizontalScrollIndicator = NO;
     episodeView.backgroundColor = [UIColor clearColor];
     [episodeView setPagingEnabled:YES];
     [self.bgScrollView addSubview:episodeView];
+    episodeView.delegate = self;
+    episodeView.backgroundColor = [UIColor clearColor];
+    
+    [self.bgScrollView bringSubviewToFront:self.commentBtn];
 }
 
 - (void)introBtnClicked
@@ -271,12 +276,13 @@
 {
     [super viewDidAppear:animated];
     if ([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch] && self.downloadBtn.enabled) {
-        NSString *playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
+        NSString *playWithDownload = [AppDelegate instance].playWithDownload;
         if (![playWithDownload isEqualToString:@"1"]) {
+            [AppDelegate instance].playWithDownload = @"1";
             [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download"]];
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
+            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
         }
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
     } else {
         [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO introImage:[UIImage imageNamed:@"play_intro"]];
     }
@@ -346,7 +352,11 @@
         episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
             NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
             NSNumber *second = [f numberFromString:[NSString stringWithFormat:@"%@", [b objectForKey:@"name"]]];
-            return [first compare:second];
+            if (first && second) {
+                return [first compare:second];
+            } else {
+                return NSOrderedSame;
+            }
         }];
         topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
@@ -398,12 +408,15 @@
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
     self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
     self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
-    
-    if(downloadUrls != nil && downloadUrls.count > 0){
-    } else {
-        [self.downloadBtn setEnabled:NO];
-        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
-    }
+
+    //在弹出窗口判断视频是否可以下载
+//    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+//        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+//        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
+//    } else {
+//        [self.downloadBtn setEnabled:NO];
+//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+//    }
     
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
@@ -425,6 +438,13 @@
     } else {
         episodePageNumber--;
     }
+    
+    [self setControlButtonDisplay];
+    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
+}
+
+- (void)setControlButtonDisplay
+{
     if(episodePageNumber <=0){
         episodePageNumber = 0;
         [nextBtn setHidden:NO];
@@ -445,8 +465,6 @@
     } else {
         [nextBtn setHidden:YES];
     }
-    
-    [episodeView setContentOffset:CGPointMake(430*episodePageNumber, 0)];
 }
 
 - (void)repositElements
@@ -462,7 +480,7 @@
     }
     totalEpisodeNumber = episodeArray.count;
     episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * 39);
-    episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/EPISODE_NUMBER_IN_ROW*4.0) * 430, episodeView.frame.size.height);
+    episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
     if(changed){
         for (UIView *aview in episodeView.subviews) {
             [aview removeFromSuperview];
@@ -563,10 +581,17 @@
 {
     UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
     
-    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height , 80, 30);
-    previousBtn.frame = CGRectMake(LEFT_WIDTH, episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height, 80, 30);
+    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height;
+    [self relocateCommentWithOriginY:y];
+}
+
+- (void)relocateCommentWithOriginY:(CGFloat)y
+{
+    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
+    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
     
     int positionY = previousBtn.frame.origin.y + 10;
+    
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title1"];
@@ -777,7 +802,6 @@
     item.type = 2;
     item.downloadStatus = @"stop";
     [item save];
-    [[AppDelegate instance].downloadItems addObject:item];
 }
 
 - (BOOL)addSubdownloadItem:(int)num
@@ -793,20 +817,53 @@
     subitem.type = 2;
     subitem.subitemId = [NSString stringWithFormat:@"%i", num];
     subitem.downloadStatus = @"waiting";
-    subitem.fileName = [NSString stringWithFormat:@"%@_%i%@", self.prodId, num, @".mp4"];
     [self getDownloadUrls:num-1];
-    if(downloadUrls.count > 0){
-        subitem.urlArray = downloadUrls;
+    
+    NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    subitem.urlArray = tempArray;
+    
+    if(subitem.urlArray.count > 0){
+        if (self.mp4DownloadUrls.count > 0) {
+            subitem.downloadType = @"mp4";
+            subitem.fileName = [NSString stringWithFormat:@"%@_%i.mp4", self.prodId, num];
+        } else if(self.m3u8DownloadUrls.count > 0){
+            subitem.downloadType = @"m3u8";
+        }
+        [subitem save];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
+        finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
         [finder setupWorkingUrl];
-        [subitem save];
-        [[AppDelegate instance].subdownloadItems addObject:subitem];
         [self updateBadgeIcon];
         return YES;
     } else {
         return NO;
     }
+}
+
+#pragma mark -
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height - 5.0f;
+    [self relocateCommentWithOriginY:y];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    episodePageNumber = offset.x/430;
+    [self setControlButtonDisplay];
+}
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    episodePageNumber = offset.x/430;
+    
+    [self setControlButtonDisplay];
 }
 
 

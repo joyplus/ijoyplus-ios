@@ -30,14 +30,17 @@
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(82, 19, 170, 14)];
         self.label.font = [UIFont systemFontOfSize:15];
+        self.label.backgroundColor = [UIColor clearColor];
         [self addSubview:self.label];
         
         actors_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 42, 200, 12)];
         actors_.font = [UIFont systemFontOfSize:12];
+        actors_.backgroundColor = [UIColor clearColor];
         actors_.textColor = [UIColor grayColor];
         area_ = [[UILabel alloc] initWithFrame:CGRectMake(82, 58, 170, 12)];
         area_.font = [UIFont systemFontOfSize:12];
         area_.textColor = [UIColor grayColor];
+        area_.backgroundColor = [UIColor clearColor];
         [self addSubview:actors_];
         [self addSubview:area_];
         

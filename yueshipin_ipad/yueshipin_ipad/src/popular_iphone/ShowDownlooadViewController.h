@@ -19,5 +19,5 @@
 @property (nonatomic, strong) UITableView *tableList;
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSString *imageviewUrl;
-@property (nonatomic, strong)  NSMutableArray *EpisodeIdArr;
+@property (nonatomic, strong) NSMutableArray *EpisodeIdArr;
 @end

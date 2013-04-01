@@ -14,6 +14,9 @@
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
 #import "AFServiceAPIClient.h"
+#import "CommonMotheds.h"
+#import "MobClick.h"
+
 @interface SendWeiboViewController ()
 
 @end
@@ -80,7 +83,11 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
 }
 -(void)share:(id)sender{
-    
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     [textView_ resignFirstResponder];
     NSString *content = textView_.text ;
     if ([content length] >0) {
@@ -98,6 +105,7 @@
         if (imageUrl == nil) {
             imageUrl = [infoDic_ objectForKey:@"ipad_poster"];
         }
+        [MobClick event:@"ue_sina_share"];
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaWeibo_.accessToken, @"access_token", content, @"status", imageUrl, @"url", nil];
         [[AFSinaWeiboAPIClient sharedClient] postPath:kSinaWeiboUpdateWithImageUrl parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self removeOverlay];
@@ -106,10 +114,7 @@
             [self removeOverlay];
             [self showFailureModalView:1.5];
         }];
-
-
     }
-    
 }
 
 - (void)showSuccessModalView:(int)closeTime

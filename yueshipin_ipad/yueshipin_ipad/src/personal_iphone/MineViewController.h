@@ -10,7 +10,6 @@
 
 @interface MineViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
 
-    UISegmentedControl *segControl_;
     UIView *bgView_;
     NSMutableArray *sortedwatchRecordArray_;
     NSMutableArray *favArr_;

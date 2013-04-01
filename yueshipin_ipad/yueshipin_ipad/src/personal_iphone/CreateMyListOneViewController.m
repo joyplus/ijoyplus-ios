@@ -14,6 +14,7 @@
 #import "AFServiceAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
+#import "CommonMotheds.h"
 @interface CreateMyListOneViewController ()
 
 @end
@@ -173,6 +174,12 @@
 
 }
 -(void)next:(id)result{
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+            return; 
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Update MineViewController" object:nil];
     infoDic_ = [NSMutableDictionary dictionaryWithCapacity:10];
     [infoDic_ setObject:self.titleTextField.text forKey:@"name"];
     [infoDic_ setObject:self.detailTextView.text forKey:@"detail"];

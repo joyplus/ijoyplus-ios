@@ -78,6 +78,8 @@
     [self loadTable];
     
     [self.view addGestureRecognizer:swipeRecognizer];
+    
+    [self setCloseTipsViewHidden:NO];
 }
 
 - (void)loadTable {

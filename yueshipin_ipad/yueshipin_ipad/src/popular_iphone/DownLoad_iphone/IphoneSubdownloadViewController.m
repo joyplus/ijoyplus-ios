@@ -13,6 +13,7 @@
 #import "AppDelegate.h"
 #import "IphoneAVPlayerViewController.h"
 #import "Reachability.h"
+#import "CMConstants.h"
 @interface IphoneSubdownloadViewController ()
 
 @end
@@ -78,7 +79,7 @@
     [self.view addSubview:gmGridView];
     gMGridView_ = gmGridView;
     
-    NSInteger spacing = 25;
+    NSInteger spacing = 5;
     gMGridView_.style = GMGridViewStyleSwap;
     gMGridView_.itemSpacing = spacing;
     gMGridView_.minEdgeInsets = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
@@ -90,11 +91,18 @@
     downLoadManager_ = [AppDelegate instance].downLoadManager;
     downLoadManager_.downLoadMGdelegate = self;
     
+}
+
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
 }
-- (void)viewWillDisappear:(BOOL)animated{
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [super viewDidDisappear:animated];
     [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
 }
+
 -(void)initData{
     progressArr_ = [NSMutableArray arrayWithCapacity:5];
     progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];
@@ -185,14 +193,17 @@
 }
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
-        for (UILabel *label in progressLabelArr_){
-            if (label.tag == [itemId intValue]){
-               // label.text = @"暂停下载";
-                break;
-            }
-        }
+         [self reloadDataSource];
     }
 }
+
+-(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className{
+    
+    if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
+        [self reloadDataSource];
+    }
+}
+
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         
@@ -220,7 +231,7 @@
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView{
-    return CGSizeMake(70, 124);
+    return CGSizeMake(100, 140);
 }
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index{
@@ -230,7 +241,7 @@
     if (!cell) {
         cell = [[GMGridViewCell alloc] init];
         cell.deleteButtonIcon = [UIImage imageNamed:@"close_x.png"];
-        cell.deleteButtonOffset = CGPointMake(-15, -15);
+        cell.deleteButtonOffset = CGPointMake(-3, -3);
         
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         view.backgroundColor = [UIColor clearColor];
@@ -240,15 +251,15 @@
         [view removeFromSuperview];
     }
     UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
-    frame.frame = CGRectMake(0, 0, 71, 104);
+    frame.frame = CGRectMake(15, 15, 71, 104);
     [cell.contentView addSubview:frame];
     
-    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(2, 2, 67, 99)];
+    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(17, 17, 67, 99)];
     [contentImage setImageWithURL:imageUrl_];
     [cell.contentView addSubview:contentImage];
     
     NSString *numStr = [[downloadItem.subitemId componentsSeparatedByString:@"_"] lastObject];
-    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(-4, 108, 78, 15)];
+    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(11, 123, 78, 15)];
     nameLbl.font = [UIFont systemFontOfSize:13];
     nameLbl.backgroundColor = [UIColor clearColor];
     nameLbl.textAlignment = NSTextAlignmentCenter;
@@ -256,21 +267,21 @@
     nameLbl.numberOfLines = 0;
     if (downloadItem.type == 2) {
      
-        NSString *sub_name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:1];
+        NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
         int num = [sub_name intValue];
-        nameLbl.text = [NSString stringWithFormat:@"第%d集",++num];
+        nameLbl.text = [NSString stringWithFormat:@"第%d集",num];
     }
     else if (downloadItem.type == 3){
         nameLbl.text =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
     }
     if ([nameLbl.text length]>5) {
-        nameLbl.frame = CGRectMake(-4, 108, 78, 30);
+        nameLbl.frame = CGRectMake(11, 123, 78, 30);
     }
     
     nameLbl.textColor = [UIColor blackColor];
     [cell.contentView addSubview:nameLbl];
     
-    UILabel *labelDown = [[UILabel alloc] initWithFrame:CGRectMake(2, 86, 67, 15)];
+    UILabel *labelDown = [[UILabel alloc] initWithFrame:CGRectMake(17, 101, 67, 15)];
     labelDown.textColor = [UIColor whiteColor];
     labelDown.backgroundColor = [UIColor blackColor];
     labelDown.alpha = 0.6;
@@ -278,7 +289,7 @@
     labelDown.font = [UIFont systemFontOfSize:10];
     
     
-    UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(2, 1, 67, 15)];
+    UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 16, 67, 15)];
     progressLabel.textColor = [UIColor whiteColor];
     progressLabel.tag = 10*[downloadItem.itemId intValue]+[numStr intValue];
     progressLabel.textAlignment = NSTextAlignmentCenter;
@@ -287,7 +298,7 @@
     progressLabel.font = [UIFont systemFontOfSize:10];
     [progressLabelArr_ addObject:progressLabel];
     
-    UIImageView *statusImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    UIImageView *statusImg = [[UIImageView alloc] initWithFrame:CGRectMake(17, 15, 44, 44)];
     statusImg.tag = 10*[downloadItem.itemId intValue]+[numStr intValue];
     statusImg.center = CGPointMake(cell.contentView.center.x, cell.contentView.center.y-10);
     [statusImgArr_ addObject:statusImg];
@@ -296,7 +307,7 @@
     UIProgressView *progressView = nil;
     if(![downloadItem.downloadStatus isEqualToString:@"finish"]){
         progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-        progressView.frame = CGRectMake(5, 92, 62, 10);
+        progressView.frame = CGRectMake(20, 107, 62, 10);
         progressView.tag = 10*[downloadItem.itemId intValue]+[numStr intValue];
         progressView.progress = downloadItem.percentage/100.0;
         progressView.progressTintColor = [UIColor colorWithRed:62/255.0 green:138/255.0 blue:238/255.0 alpha:1];
@@ -332,12 +343,10 @@
         }
     
     }
-//    else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
-//        progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%",downloadItem.percentage];
-//        [cell.contentView addSubview:progressView];
-//        [cell.contentView addSubview:progressLabel];
-//    }
-
+    else if([downloadItem.downloadStatus isEqualToString:@"fail_1011"]){
+        labelDown.text = @"下载片源失效";
+        [cell.contentView addSubview:labelDown];
+    }
     return cell;
 }
 
@@ -354,7 +363,7 @@
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
-    NSString *fileName = [item.subitemId stringByAppendingString:@".mp4"];
+    NSString *fileName = [itemId stringByAppendingString:@".mp4"];
     //对于错误信息
     NSError *error;
     // 创建文件管理器
@@ -362,21 +371,29 @@
     //指向文件目录
     NSString *documentsDirectory= [NSHomeDirectory()
                                    stringByAppendingPathComponent:@"Documents"];
+    
+    
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
-    for (NSString *nameStr in fileList) {
-        if ([nameStr hasPrefix:fileName]) {
-            NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
-            [fileMgr removeItemAtPath:deleteFilePath error:&error];
-            break;
+    if ([item.fileName hasSuffix:@"m3u8"]) {
+        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+        [fileMgr removeItemAtPath:deleteFilePath error:&error];
+    }
+    else{
+        for (NSString *nameStr in fileList) {
+            if ([nameStr hasPrefix:fileName]) {
+                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
+                [fileMgr removeItemAtPath:deleteFilePath error:&error];
+                break;
+            }
         }
     }
 
     [item deleteObject];
     
-     NSArray *tempArr = [SubdownloadItem findByCriteria:query];
+    NSArray *tempArr = [SubdownloadItem findByCriteria:query];
     
-    if ([tempArr count] == 0) {
+    if ([tempArr count] == 0){
         NSString *subquery = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
         NSArray *itemArr = [DownloadItem findByCriteria:subquery];
         for (DownloadItem *downloadItem in itemArr) {
@@ -404,15 +421,28 @@
         NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
         
         NSString *playPath = nil;
-        for (NSString *str in fileList) {
-            if ([str isEqualToString:fileName]) {
-                playPath = [documentsDirectory stringByAppendingPathComponent:str];
-                break;
+        if (![downloadItem.downloadType isEqualToString:@"m3u8"]) {
+            for (NSString *str in fileList) {
+                if ([str isEqualToString:fileName]) {
+                    playPath = [documentsDirectory stringByAppendingPathComponent:str];
+                    break;
+                }
             }
+        }
+        else{
+            [[AppDelegate instance] startHttpServer];
+            NSString *idStr = downloadItem.subitemId ;
+            NSArray *tempArr =  [idStr componentsSeparatedByString:@"_"];
+            playPath =[NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",LOCAL_HTTP_SERVER_URL,downloadItem.itemId,idStr,[tempArr objectAtIndex:1]];
         }
         if (playPath) {
             IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
             iphoneAVPlayerViewController.local_file_path = playPath;
+            if ([downloadItem.downloadType isEqualToString:@"m3u8"]){
+              iphoneAVPlayerViewController.isM3u8 = YES;
+              iphoneAVPlayerViewController.playDuration = downloadItem.duration;
+              iphoneAVPlayerViewController.lastPlayTime = CMTimeMake(1, NSEC_PER_SEC);
+            }
             iphoneAVPlayerViewController.islocalFile = YES;
             if (downloadItem.type == 2) {
                 NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];

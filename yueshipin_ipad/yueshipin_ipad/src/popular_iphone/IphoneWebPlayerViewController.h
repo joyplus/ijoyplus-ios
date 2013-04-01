@@ -18,6 +18,7 @@
     int videoType_;
     NSString *prodId_;
     NSNumber *playBackTime_;
+    NSString *webUrlSource_;
 }
 @property (nonatomic, strong) NSArray *episodesArr;
 @property (nonatomic, assign) int playNum;
@@ -27,4 +28,6 @@
 @property (nonatomic, assign) int videoType;
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSNumber *playBackTime;
+@property (nonatomic, strong) NSString *webUrlSource;
+@property (nonatomic, strong) NSMutableArray *subnameArray;
 @end

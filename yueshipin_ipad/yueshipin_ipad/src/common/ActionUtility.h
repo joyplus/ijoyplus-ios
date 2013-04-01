@@ -14,4 +14,6 @@
 + (UIImage*) thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time;
 + (int)getDownloadingItemNumber;
 + (BOOL)isAirPlayActive;
++ (float)getFreeDiskspace;
++ (void)triggerSpaceNotEnough;
 @end

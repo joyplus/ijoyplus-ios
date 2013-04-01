@@ -18,4 +18,8 @@
 @synthesize url;
 @synthesize urlArray;
 @synthesize type;
+@synthesize isDownloadingNum;
+@synthesize downloadType;
+@synthesize duration;
+
 @end

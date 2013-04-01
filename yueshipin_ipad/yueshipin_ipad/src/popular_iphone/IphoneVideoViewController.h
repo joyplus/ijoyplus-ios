@@ -24,6 +24,7 @@
     BOOL isNotification_;
     UISegmentedControl *segmentedControl_;
     UIImage *wechatImg_;
+
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
@@ -36,9 +37,10 @@
 @property (nonatomic, assign) BOOL isNotification;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) UIImage *wechatImg;
+
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;
 -(BOOL)checkNetWork;
-+(NSDictionary *)commonGetPlayUrls:(NSArray *)videoInfoDic;
+-(void)checkDownloadUrls:(NSDictionary *)infoDic;
 @end

@@ -10,7 +10,8 @@
 #import "UIImage+Scale.h"
 #import "CMConstants.h"
 #import "SubdownloadItem.h"
-#import "DownloadUrlCheck.h"
+#import "CommonMotheds.h"
+#import "DownLoadManager.h"
 @interface ShowDownlooadViewController ()
 
 @end
@@ -21,6 +22,7 @@
 @synthesize prodId = prodId_;
 @synthesize imageviewUrl = imageviewUrl_;
 @synthesize EpisodeIdArr = EpisodeIdArr_;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -56,7 +58,7 @@
     
     EpisodeIdArr_ = [NSMutableArray arrayWithCapacity:5];
     for (SubdownloadItem *item in [self readDataFromDB]) {
-        NSString *episodeId = [[item.name componentsSeparatedByString:@"_"] lastObject];
+        NSString *episodeId = [[item.subitemId componentsSeparatedByString:@"_"] lastObject];
         [EpisodeIdArr_ addObject:episodeId];
     }
     
@@ -116,12 +118,17 @@
     [btn setBackgroundImage:[UIImage imageNamed:@"show_download.png"] forState:UIControlStateSelected];
     [btn setBackgroundImage:[UIImage imageNamed:@"show_disable.png"] forState:UIControlStateDisabled];
      btn.adjustsImageWhenHighlighted = NO;
+    btn.titleLabel.frame = CGRectMake(0, 0, 250, 30);
+    btn.titleLabel.center = btn.center;
+    btn.titleLabel.backgroundColor = [UIColor clearColor];
     [btn setTitle:cellTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+    [btn setTitleColor:[UIColor colorWithRed:196/255.0 green:196/255.0 blue:196/255.0 alpha:1] forState:UIControlStateDisabled];
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];
+    btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
     [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
     
     [cell.contentView addSubview:btn];
@@ -131,21 +138,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    int num = [listArr_ count];
-//    if (num == 1) {
-//       return 45;
-//    }
-//    else{
-//        if (indexPath.row == 0) {
-//            return 42.5;
-//        }
-//        else if (indexPath.row == num-1){
-//            return 42.5;
-//        }
-//        else{
-//            return 40;
-//        }
-//    }
+    
     return 40;
 
 }
@@ -160,7 +153,11 @@
 
 }
 -(void)selectToDownLoad:(int)num{
-
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     NSArray *videoUrlArray = [[listArr_ objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         NSString *videoUrl = nil;
@@ -171,7 +168,12 @@
             }
         }
         if(videoUrl == nil){
-            videoUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (videoUrl != nil) {
+                    break;
+                }
+                videoUrl = [self parseDownloadUrl:dic];
+            }
         }
         if (videoUrl == nil || [videoUrl isEqualToString:@""]) {
             NSLog(@"Get the download url is failed");
@@ -190,10 +192,11 @@
             NSLog(@"Get the download prodId is failed");
             return;
         }
-        NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,videoUrl,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], nil];
-        DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
-        check.infoArr = infoArr;
-        [check checkDownloadUrl];
+        NSArray *infoArr = [NSArray arrayWithObjects:prod_Id,name,imageviewUrl_,@"3",[NSString stringWithFormat:@"%d",num], nil];
+        
+        CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
+        check.downloadInfoArr = infoArr;
+        [check checkDownloadUrls:[listArr_ objectAtIndex:num]];
     }
 }
 
@@ -208,7 +211,12 @@
             }
         }
         if(downloadUrl == nil){
-            downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (downloadUrl != nil) {
+                    break;
+                }
+                downloadUrl = [self parseDownloadUrl:dic];
+            }
         }
     }
     if (downloadUrl == nil) {
@@ -227,6 +235,12 @@
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
+            
+            break;
+        }
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+            
             break;
         }
     }
@@ -234,14 +248,26 @@
         for(NSDictionary *url in urlArray){
             if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+               
+                break;
+            }
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                
                 break;
             }
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+            if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+                
+                break;
+            }
+            if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                
                 break;
             }
         }
@@ -250,6 +276,12 @@
         for(NSDictionary *url in urlArray){
             if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+                
+                break;
+            }
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                
                 break;
             }
         }
@@ -261,6 +293,11 @@
             for(NSDictionary *url in urlArray){
                 if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
+                   
+                }
+                if ([[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                    videoUrl = [url objectForKey:@"url"];
+                   
                 }
                 
             }

@@ -89,6 +89,8 @@
     [self.view addGestureRecognizer:swipeRecognizer];
     
     umengPageName = TOP_LIST_DETAIL;
+    
+    [self setCloseTipsViewHidden:NO];
 }
 
 - (void)loadTable {    

@@ -18,6 +18,6 @@ typedef enum _fade_orientation {
 @interface PersonalViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
-
+- (void)reloadHistory;
 
 @end

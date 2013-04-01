@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "CommonMotheds.h"
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
 #define SHOW_TYPE 9002
@@ -180,6 +181,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [CommonMotheds showNetworkDisAbledAlert];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *dic = [self.listArr objectAtIndex:indexPath.row];
     NSString *type = [dic objectForKey:@"prod_type"];

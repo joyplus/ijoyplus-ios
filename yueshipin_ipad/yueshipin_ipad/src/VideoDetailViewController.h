@@ -30,7 +30,6 @@
     NSDictionary *video;
     NSArray *topics;
     NSInteger willPlayIndex;
-    NSMutableArray *downloadUrls;
     NSArray *episodeArray;
     NSString *umengPageName;
 }
@@ -38,6 +37,8 @@
 @property (nonatomic, strong)NSString *subname;
 @property (assign, nonatomic)int type;
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
+@property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
+@property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 - (void)addListBtnClicked;

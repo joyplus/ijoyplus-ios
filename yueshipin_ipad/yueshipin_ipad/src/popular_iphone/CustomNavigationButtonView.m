@@ -85,7 +85,7 @@
     [self addSubview:self.buttonLabel];
     
     badgeView = [[JSBadgeView alloc] initWithParentView:self alignment:JSBadgeViewAlignmentTopCenter];
-    badgeView.badgePositionAdjustment = CGPointMake(14, 5);
+    badgeView.badgePositionAdjustment = CGPointMake(13, 5);
     badgeView.badgeText = @"";
     //[badgeView setHidden:NO];
 }

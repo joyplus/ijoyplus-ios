@@ -52,7 +52,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 @synthesize shouldResume = _shouldResume;
 @synthesize deleteTempFileOnCancel = _deleteTempFileOnCancel;
 @synthesize progressiveDownloadProgress = _progressiveDownloadProgress;
-@synthesize totalBytesReadPerDownload;
+@synthesize totalBytesReadPerDownload, downloadingSegmentIndex;
 #pragma mark - Static
 
 + (NSString *)cacheFolder {

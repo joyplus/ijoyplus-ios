@@ -34,6 +34,8 @@
     
     [self.view removeGestureRecognizer:closeMenuRecognizer];
     [self.view removeGestureRecognizer:swipeCloseMenuRecognizer];
+    
+    [self setCloseTipsViewHidden:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated

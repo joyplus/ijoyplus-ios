@@ -28,6 +28,7 @@
 #import "AppRecommendViewController.h"
 #import "UMUFPGridCell.h"
 #import "GridViewCellDemo.h"
+#import "CommonMotheds.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -200,6 +201,11 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 
 }
 -(void)careUs:(id)sender{
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     sinaweibo_ = [AppDelegate instance].sinaweibo;
     if([sinaweibo_ isLoggedIn]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:sinaweibo_.accessToken, @"access_token", @"悦视频", @"screen_name", nil];
@@ -278,9 +284,13 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     sleep(1);
 }
 -(void)feedBack:(id)sender{
-//    FeedBackViewController *feedBackViewController = [[FeedBackViewController alloc] init];
-//    [self.navigationController pushViewController:feedBackViewController animated:YES];
-      [UMFeedback showFeedback:self withAppkey:umengAppKey];
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+
+    [UMFeedback showFeedback:self withAppkey:umengAppKey];
 }
 
 -(void)suggest:(id)sender{
@@ -463,14 +473,14 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 - (void)gridView:(UMUFPGridView *)gridView didSelectRowAtIndexPath:(IndexPath *)indexPath
 {
     NSLog(@"%s", __PRETTY_FUNCTION__);
-    int arrIndex = [gridView arrayIndexForIndexPath:indexPath];
-    if (arrIndex < [_mGridView.mPromoterDatas count])
-    {
-        NSDictionary *promoter = [_mGridView.mPromoterDatas objectAtIndex:arrIndex];
-        NSString *url = [promoter valueForKey:@"url"];
-        NSLog(@"%@", url);
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
-    }
+//    int arrIndex = [gridView arrayIndexForIndexPath:indexPath];
+//    if (arrIndex < [_mGridView.mPromoterDatas count])
+//    {
+//        NSDictionary *promoter = [_mGridView.mPromoterDatas objectAtIndex:arrIndex];
+//        NSString *url = [promoter valueForKey:@"url"];
+//        NSLog(@"%@", url);
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+//    }
 }
 
 - (void)UMUFPGridViewDidLoadDataFinish:(UMUFPGridView *)gridView promotersAmount:(NSInteger)promotersAmount

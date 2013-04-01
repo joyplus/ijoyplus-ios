@@ -19,7 +19,7 @@
 #import "SendWeiboViewController.h"
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
-#import "DownloadUrlCheck.h"
+#import "CommonMotheds.h"
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -192,6 +192,7 @@
     [self loadTable];
 }
 -(void)loadComments{
+   
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
@@ -229,6 +230,9 @@
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+    summaryBg_ = nil;
+    summaryLabel_ = nil;
+    moreBtn_ = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -703,6 +707,7 @@
             button.adjustsImageWhenHighlighted = NO;
             
             NSString *url = [self getDownloadUrl];
+//            NSString *url = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
             if (url == nil || [url isEqualToString:@""]) {
                 NSLog(@"Get the download url is failed");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"暂无下载地址" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
@@ -726,10 +731,12 @@
             if (imgUrl == nil) {
                 imgUrl = [self.infoDic objectForKey:@"poster"];
             }
-            NSArray *infoArr = [NSArray arrayWithObjects:prodId,url,name,imgUrl,@"1", nil];
-            DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
-            check.infoArr = infoArr;
-            [check checkDownloadUrl];
+            NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"1",[NSNumber numberWithInt:0], nil];
+            
+            CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
+            check.downloadInfoArr = infoArr;
+            [check checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
+            
             break;
         }
         case 10005:{
@@ -856,6 +863,12 @@
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
+            
+            break;
+        }
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+          
             break;
         }
     }
@@ -863,14 +876,26 @@
         for(NSDictionary *url in urlArray){
             if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+               
+                break;
+            }
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+               
                 break;
             }
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+            if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+              
+                break;
+            }
+            if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+               
                 break;
             }
         }
@@ -879,6 +904,12 @@
         for(NSDictionary *url in urlArray){
             if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+                
+                break;
+            }
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                
                 break;
             }
         }
@@ -889,7 +920,12 @@
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
                 if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
-                     videoUrl = [url objectForKey:@"url"];
+                    videoUrl = [url objectForKey:@"url"];
+                   
+                }
+                if ([[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                    videoUrl = [url objectForKey:@"url"];
+                    
                 }
             
             }
@@ -911,6 +947,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
 
 }

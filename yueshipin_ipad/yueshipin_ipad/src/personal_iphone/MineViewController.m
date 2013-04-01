@@ -27,16 +27,19 @@
 #import "CustomNavigationViewController.h"
 #import "CustomNavigationViewControllerPortrait.h"
 #import "Reachability.h"
+#import "CommonMotheds.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
 #define PAGESIZE 20
 @interface MineViewController ()
 
+@property (nonatomic, strong)NSMutableArray *subnameArray;
+@property (nonatomic, strong) UIButton *clickedBtn;
 @end
 
 @implementation MineViewController
-@synthesize segControl = segControl_;
+
 @synthesize bgView = bgView_;
 @synthesize sortedwatchRecordArray = sortedwatchRecordArray_;
 @synthesize favArr = favArr_;
@@ -55,6 +58,8 @@
 @synthesize noRecord = noRecord_;
 @synthesize noFav = noFav_;
 @synthesize noPersonalList = noPersonalList_;
+@synthesize subnameArray;
+@synthesize clickedBtn;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -83,10 +88,7 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
-        if (!button2_.enabled) {
-            [self Selectbutton:button2_];
-        }
-        [favTableList_ reloadData];
+        [self refreshMineViewWithTag:button2_.tag];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.favArr == nil){
@@ -112,9 +114,9 @@
             NSArray *tempArr = [result objectForKey:@"tops"];
             if(tempArr != nil && tempArr.count > 0){
                 [myListArr_ addObjectsFromArray:tempArr];
-                [myTableList_ reloadData];
+                
             }
-            
+            [self refreshMineViewWithTag:button3_.tag];
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -206,7 +208,7 @@
     [self.view addSubview:button2_];
     [self.view addSubview:button3_];
     
-   [self Selectbutton:button1_];
+   //[self Selectbutton:button1_];
         
     self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
     self.bgView.backgroundColor = [UIColor whiteColor];
@@ -278,9 +280,6 @@
     [self.view addSubview:nameLabel_];
     
     //加载数据
-    [self loadMyFavsData];
-    [self loadPersonalData];
-    [self loadRecordData];
     if ([sortedwatchRecordArray_ count]>0) {
         [self.bgView addSubview:recordTableList_];
     }
@@ -296,10 +295,45 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
 }
+- (void)viewDidUnload{
+    [super viewDidUnload];
+    [subnameArray removeAllObjects];
+    subnameArray = nil;
+    clickedBtn = nil;
+    bgView_ = nil;
+    recordTableList_ = nil;
+    favTableList_ = nil;
+    myTableList_ = nil;
+    moreView_ = nil;
+    moreButton_ = nil;
+    avatarImage_ = nil;
+    nameLabel_ = nil;
+    createList_ = nil;
+    noRecordBg_ = nil;
+    button2_ = nil;
+    button3_ = nil;
+    noRecord_ = nil;
+    noFav_ = nil;
+    noPersonalList_ = nil;
 
+}
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    
+    //request person data
+    if (NO == button1_.enabled)
+    {
+        [self loadRecordData];
+    }
+    else if (NO == button2_.enabled)
+    {
+        [self loadMyFavsData];
+    }
+    else if (NO == button3_.enabled)
+    {
+        [self loadPersonalData];
+    }
 }
 
 
@@ -307,9 +341,6 @@
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
     nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
-    [self loadMyFavsData];
-    [self loadPersonalData];
-    [self loadRecordData];
 }
 - (void)loadRecordData
 {
@@ -340,18 +371,15 @@
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
         sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:(NSArray *)[result objectForKey:@"histories"]];
-        //if(sortedwatchRecordArray_.count > 0){
-            //if (!button1_.enabled) {
-            [self Selectbutton:button1_];
-           // }
-            [recordTableList_ reloadData];
-            
-           
-        //}
+        if (sortedwatchRecordArray_.count > 0) {
+            [noRecord_ removeFromSuperview];
+        }
+        [self refreshMineViewWithTag:button1_.tag];
     }
 }
 
 -(void)recordListReload{
+    return;
     [self loadRecordData];
     if (!button1_.enabled) {
         [self Selectbutton:button1_];
@@ -361,7 +389,7 @@
 
 }
 -(void)refreshFav{
-    [self loadMyFavsData];
+    //[self loadMyFavsData];
 }
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
@@ -370,15 +398,8 @@
     
 }
 -(void)addDone:(id)sender{
-    NSMutableDictionary *dic = [(NSNotification *)sender object];
-    if (myListArr_ == nil) {
-        myListArr_ = [[NSMutableArray alloc]initWithCapacity:10];
-    }
-    [myListArr_ addObject:dic];
-    
-    [myTableList_ reloadData];
-    [self Selectbutton:button3_];
-
+    [self loadPersonalData];
+  
 }
 -(void)createList:(id)sender{
     CreateMyListOneViewController *createMyListOneViewController = [[CreateMyListOneViewController alloc] init];
@@ -387,6 +408,11 @@
 
 }
 -(void)seeMore:(id)sender{
+    if (![CommonMotheds isNetworkEnbled]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     if (!button1_.enabled) {
         MoreListViewController *moreListViewController = [[MoreListViewController alloc] initWithStyle:UITableViewStylePlain];
         if ([sortedwatchRecordArray_ count]>10) {
@@ -447,68 +473,98 @@
         //播放纪录
         case 100:{
             button1_.enabled = NO;
-                if ([self.sortedwatchRecordArray count] <= 3) {
-                    
-                    [moreView_ removeFromSuperview];
-                    [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
-                }
-                else {
-                    [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
-                    [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
-                    [self.view addSubview:moreView_];
-                }
-
-                if ([sortedwatchRecordArray_ count] == 0) {
-                    [self.bgView addSubview:noRecord_];
-                }
-                else{
-                    [self.bgView addSubview:self.recordTableList];
-                    [self.recordTableList reloadData];
-                }
-                    
-                
+            [self loadRecordData];
             break;
         }
         //我的收藏
         case 101:{
             button2_.enabled = NO;
-            if ([self.favArr count] <= 3) {
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
-                [moreView_ removeFromSuperview];
-            }
-            else {
-                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
-                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
-               
-                [self.view addSubview:moreView_];
-            }
-
-            if ([favArr_ count]==0) {
-                [self.bgView addSubview:noFav_];
-            }
-            else{
-                [self.bgView addSubview:self.favTableList];
-                [self.favTableList reloadData];
-            }
-            
-           
+            [self loadMyFavsData];
             break;
         }
         //我的悦单
         case 102:{
             button3_.enabled = NO;
+            [self loadPersonalData];
+            
+            break;
+        }
+        default:
+            break;
+    }
+
+}
+
+- (void)refreshMineViewWithTag:(NSInteger)tag
+{
+    [self.recordTableList removeFromSuperview];
+    [self.favTableList removeFromSuperview];
+    [self.myTableList removeFromSuperview];
+    switch (tag) {
+        case 100:
+        {
+            if ([self.sortedwatchRecordArray count] <= 3) {
+                
+                [moreView_ removeFromSuperview];
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
+            }
+            else {
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*3)];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
+                [self.view addSubview:moreView_];
+            }
+            
+            if ([sortedwatchRecordArray_ count] == 0) {
+                [self.bgView addSubview:noRecord_];
+            }
+            else{
+                [self.bgView addSubview:self.recordTableList];
+                [self.recordTableList reloadData];
+            }
+        }
+            break;
+        case 101:
+        {
+            if ([self.favArr count] <= 3) {
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
+                [moreView_ removeFromSuperview];
+            }
+            else {
+                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*3)];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
+                [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
+                
+                [self.view addSubview:moreView_];
+            }
+            
+            if ([favArr_ count]==0) {
+                [self.bgView addSubview:noFav_];
+            }
+            else{
+                [noFav_ removeFromSuperview];
+                [self.bgView addSubview:self.favTableList];
+                [self.favTableList reloadData];
+            }
+            
+        }
+            break;
+        case 102:
+        {
             if ([myListArr_ count] <= 3) {
                 if ([myListArr_ count]== 0){
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 44)];
                     [self.bgView addSubview:noPersonalList_];
                 }
                 else{
+                    [noPersonalList_ removeFromSuperview];
                     [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*[myListArr_ count])];
                 }
                 
                 [moreView_ removeFromSuperview];
             }
             else {
+                 [noPersonalList_ removeFromSuperview];
                 [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see_s.png"] forState:UIControlStateHighlighted];
@@ -519,12 +575,14 @@
             
             [self.bgView addSubview:createList_];
             [self.bgView addSubview:myTableList_];
-            break;
+            [myTableList_ reloadData];
         }
+            break;
+            
         default:
             break;
     }
-
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -661,6 +719,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [CommonMotheds showNetworkDisAbledAlert];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (tableView.tag == RECORD_TYPE) {
         NSDictionary *dic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
@@ -715,6 +774,7 @@
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
         NSMutableArray *items = [NSMutableArray arrayWithArray:[infoDic objectForKey:@"items"]];
         CreateMyListTwoViewController *createMyListTwoViewController = [[CreateMyListTwoViewController alloc] init];
+        createMyListTwoViewController.topicId = [infoDic objectForKey:@"id"];
         createMyListTwoViewController.listArr = items;
         createMyListTwoViewController.type = [[infoDic objectForKey:@"prod_type"] intValue];
         createMyListTwoViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
@@ -752,6 +812,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
 
+        [CommonMotheds showNetworkDisAbledAlert];
         switch (tableView.tag) {
             case RECORD_TYPE:
             {
@@ -820,7 +881,7 @@
     if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
         content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
-        int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
+        int subNum = [[item objectForKey:@"prod_subname"] intValue];
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
         //int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
@@ -838,14 +899,35 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
         [alert show];
         return;
+    }    
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        clickedBtn = (UIButton *)sender;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    } else {
+        [self willPlayVideo:sender];
     }
-   
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self willPlayVideo:clickedBtn];
+    }
+}
+
+- (void)willPlayVideo:(UIButton *)btn
+{
     MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    int num = ((UIButton *)sender).tag;
+    int num = btn.tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
     int type = [[item objectForKey:@"prod_type"] intValue];
     NSString *prodId = [item objectForKey:@"prod_id"];
@@ -871,19 +953,30 @@
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
         }
         else{
+            int playNum = 0;
+            if (subnameArray == nil || subnameArray.count == 0) {
+                subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+                for (NSDictionary *oneEpisode in [videoInfo objectForKey:@"episodes"]) {
+                    NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+                    [subnameArray addObject:tempName];
+                }
+            }
+            if (type != 1 && subnameArray.count > 0) {
+                playNum = [subnameArray indexOfObject:[item objectForKey:@"prod_subname"]];
+                if (playNum < 0 || playNum >= subnameArray.count) {
+                    playNum = 0;
+                }
+            }
             IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-            iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
+            iphoneWebPlayerViewController.playNum = playNum;
+            iphoneWebPlayerViewController.subnameArray = subnameArray;
             iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
             iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
             iphoneWebPlayerViewController.videoType = type;
             iphoneWebPlayerViewController.prodId = prodId;
             iphoneWebPlayerViewController.playBackTime = (NSNumber *)[item objectForKey:@"playback_time"];
             [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-        
         }
-        
-        
-            
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
        [tempHUD hide:YES];
     }];

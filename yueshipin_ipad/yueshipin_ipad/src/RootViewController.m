@@ -401,11 +401,12 @@
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
+    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.text = [video objectForKey:@"name"];
-    [nameLabel sizeToFit];
+//    [nameLabel sizeToFit];
+    nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
     nameLabel.textColor = CMConstants.grayColor;
     [frame addSubview:nameLabel];
@@ -422,7 +423,11 @@
     episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
         NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
         NSNumber *second = [f numberFromString:[NSString stringWithFormat:@"%@", [b objectForKey:@"name"]]];
-        return [first compare:second];
+        if (first && second) {
+            return [first compare:second];
+        } else {
+            return NSOrderedSame;
+        }
     }];
     dramaPageNum = ceil(episodeArray.count / 30.0);
     
@@ -500,32 +505,14 @@
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
         [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [btn setEnabled:NO];
-        NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
-        if(videoUrlArray.count > 0){
-            for(NSDictionary *tempVideo in videoUrlArray){
-                NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
-                for(NSDictionary *url in urlArray){
-                    if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
-                        NSString *videoUrl = [url objectForKey:@"url"];
-                        NSString *formatUrl = [[videoUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
-                        if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
-                            [btn setEnabled:YES];
-                            break;
-                        } else {
-                            [btn setEnabled:NO];
-                        }
-                    }
-                }
-                if(btn.enabled){
-                    break;
-                }
-            }
+        if(![self checkDownloadStatus:episodeArray index:i]){
+            [btn setEnabled:NO];
         }
         for (SubdownloadItem *subitem in downloadingItems) {
             if(subitem.subitemId.intValue == i+1){
                 [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
+                [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
+                [btn setEnabled:NO];
                 break;
             }
         }
@@ -606,11 +593,12 @@
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 460, 40)];
+    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 360, 40)];
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.text = title;
-    [nameLabel sizeToFit];
+//    [nameLabel sizeToFit];
+    nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
     [frame addSubview:nameLabel];
     
@@ -669,15 +657,20 @@
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setEnabled:NO];
+                }
                 for (SubdownloadItem *subitem in downloadingItems) {
                     if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
+                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        [nameBtn setEnabled:NO];
                         break;
                     }
                 }
@@ -700,16 +693,49 @@
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setEnabled:NO];
+                }
+                for (SubdownloadItem *subitem in downloadingItems) {
+                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
+                        [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        [nameBtn setEnabled:NO];
+                        break;
+                    }
+                }
                 [showListView addSubview:nameBtn];
             }
         }
     
     [self.view addSubview:view];
+}
+
+- (BOOL)checkDownloadStatus:(NSArray *)episodeArray index:(int)index
+{
+    NSArray *videoUrlArray = [[episodeArray objectAtIndex:index] objectForKey:@"down_urls"];
+    if(videoUrlArray.count > 0){
+        for(NSDictionary *tempVideo in videoUrlArray){
+            NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
+//            NSString *source =  [tempVideo objectForKey:@"source"];
+            for(NSDictionary *url in urlArray){
+                if([@"mp4" isEqualToString:[url objectForKey:@"file"]] || [@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                    NSString *videoUrl = [url objectForKey:@"url"];
+                    NSString *formatUrl = [[videoUrl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] lowercaseString];
+                    if([formatUrl hasPrefix:@"http://"] || [formatUrl hasPrefix:@"https://"]){
+                        return YES;
+                    }
+                }
+            }
+        }
+    }
+    return NO;
 }
 
 - (void)showBtnClicked:(UIButton *)btn
@@ -761,24 +787,23 @@
 
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage
 {
-    @synchronized(self){
-        NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
-        if (![showMenuIntro isEqualToString:@"1"]) {
-            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
-            UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
+    NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
+    if (![showMenuIntro isEqualToString:@"1"]) {
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
+        UIView *view = [self.view viewWithTag:3268999];
+        if (view == nil) {
+            view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
             view.tag = 3268999;
             [view setBackgroundColor:[UIColor clearColor]];
             UIImageView *temp = [[UIImageView alloc]initWithImage:introImage];
             temp.frame = view.frame;
             [view addSubview:temp];
             [self.view addSubview:view];
-            
-            UITapGestureRecognizer *closeModalViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeIntroModalView)];
-            closeModalViewGesture.numberOfTapsRequired = 1;
-            [view addGestureRecognizer:closeModalViewGesture];
         }
+        UITapGestureRecognizer *closeModalViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(removeIntroModalView)];
+        closeModalViewGesture.numberOfTapsRequired = 1;
+        [view addGestureRecognizer:closeModalViewGesture];
     }
-    
 }
 
 - (void)removeIntroModalView

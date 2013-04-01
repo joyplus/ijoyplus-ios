@@ -14,14 +14,14 @@
 #import "ProgramNavigationController.h"
 #import "CommonHeader.h"
 #import "CacheUtility.h"
-#import "DownloadUrlCheck.h"
+#import "CommonMotheds.h"
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
-
+@property (nonatomic) NSInteger curSelectedNum;
 @end
 
 @implementation TVDetailViewController
-
+@synthesize curSelectedNum;
 @synthesize videoInfo = videoInfo_;
 @synthesize videoType = videoType_;
 @synthesize summary = summary_;
@@ -86,6 +86,7 @@
     type_ = 2;
     
     currentPage_ = 1;
+    curSelectedNum = 0;
     isDownLoad_ = NO;
     isloaded_ = NO;
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
@@ -124,7 +125,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-   
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 -(void)refreshRecord{
     [self.tableView reloadData];
@@ -141,7 +143,6 @@
 
 
 -(void)loadData{
-    
     relevantList_ = [NSArray array];
     MBProgressHUD *tempHUD;
     NSString *key = [NSString stringWithFormat:@"%@%@", @"tv", [self.infoDic objectForKey:@"prod_id"]];
@@ -256,6 +257,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)viewDidUnload{
     [super viewDidUnload];
+    summaryBg_ = nil;
+    summaryLabel_ = nil;
+    moreBtn_ = nil;
+    
     self.scrollViewUp =nil;
     self.scrollViewDown =nil;
     
@@ -661,8 +666,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            //[self Play:1];
-            [self playVideo:0];
+            [self playVideo:curSelectedNum];
             break;
         }
         case 10002:{
@@ -773,9 +777,16 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
         }
         if(videoUrl == nil){
-            videoUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (videoUrl != nil) {
+                    break;
+                }
+                 videoUrl = [self parseDownloadUrl:dic];
+            }
+           
         }
     }
+//   NSString *videoUrl = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
 
     if (videoUrl == nil || [videoUrl isEqualToString:@""]) {
         NSLog(@"Get the download url is failed");
@@ -800,10 +811,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (imgUrl == nil) {
         imgUrl = [self.infoDic objectForKey:@"poster"];
     }
-    NSArray *infoArr = [NSArray arrayWithObjects:prodId,videoUrl,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num], nil];
-    DownloadUrlCheck *check = [[DownloadUrlCheck alloc] init];
-    check.infoArr = infoArr;
-    [check checkDownloadUrl];
+    NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],nil];
+    CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
+    check.downloadInfoArr = infoArr;
+    [check checkDownloadUrls:[episodesArr_ objectAtIndex:num]];
 }
 
 
@@ -879,7 +890,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
         }
         if(downloadUrl == nil){
-            downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            //downloadUrl = [self parseDownloadUrl:[videoUrlArray objectAtIndex:0]];
+            for (NSDictionary *dic in videoUrlArray) {
+                if (downloadUrl != nil) {
+                    break;
+                }
+                downloadUrl = [self parseDownloadUrl:dic];
+            }
         }
     }
     if (downloadUrl == nil) {
@@ -897,6 +914,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
             videoUrl = [url objectForKey:@"url"];
+           
+            break;
+        }
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+           
             break;
         }
     }
@@ -904,14 +927,26 @@ NSComparator cmptr = ^(id obj1, id obj2){
         for(NSDictionary *url in urlArray){
             if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+              
+                break;
+            }
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+            
                 break;
             }
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
-            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+            if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+               
+                break;
+            }
+            if([LIU_CHANG isEqualToString:[[url objectForKey:@"type"] lowercaseString]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+               
                 break;
             }
         }
@@ -920,6 +955,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
         for(NSDictionary *url in urlArray){
             if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
+               
+                break;
+            }
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                
                 break;
             }
         }
@@ -931,6 +972,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
             for(NSDictionary *url in urlArray){
                 if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
                     videoUrl = [url objectForKey:@"url"];
+                   
+                }
+                if ([[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
+                    videoUrl = [url objectForKey:@"url"];
+                   
                 }
                 
             }
@@ -1016,6 +1062,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (playNum != nil) {
         lastNum = [playNum intValue];
     }
+    
+    curSelectedNum = lastNum < 0 ? 0 : lastNum;
+    
     for (int i = 0; i < count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.frame = CGRectMake((i/15)*285+(i%5)*57, (i%15/5)*30, 54, 27);
@@ -1053,24 +1102,26 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(BOOL)isWacthEnbled:(NSDictionary *)oneEpisoder{
     NSArray *down_urls = [oneEpisoder objectForKey:@"down_urls"];
-    NSDictionary *dic = [down_urls objectAtIndex:0];
-    NSArray *urlInfoArr = [dic objectForKey:@"urls"];
-    for (NSDictionary *urlinfo  in urlInfoArr) {
-        NSString *urlStr = [urlinfo objectForKey:@"url"];
-        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
-            return YES;
+    for (NSDictionary *dic in down_urls) {
+        NSArray *urlInfoArr = [dic objectForKey:@"urls"];
+        for (NSDictionary *urlinfo  in urlInfoArr) {
+            NSString *urlStr = [urlinfo objectForKey:@"url"];
+            if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+                return YES;
+            }
+            
         }
-    
-    }
-    NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
-    for (NSDictionary *urlinfo  in video_urls) {
-        NSString *urlStr = [urlinfo objectForKey:@"url"];
-        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
-            return YES;
+        NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
+        for (NSDictionary *urlinfo  in video_urls) {
+            NSString *urlStr = [urlinfo objectForKey:@"url"];
+            if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+                return YES;
+            }
+            
         }
-        
+
     }
-    return NO;
+        return NO;
 
 }
 
@@ -1396,6 +1447,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
     [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:playNum-1]];
+    curSelectedNum = playNum - 1;
     [self playVideo:playNum-1];
     [self.tableView reloadData];
 }
@@ -1428,6 +1480,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
     
 }

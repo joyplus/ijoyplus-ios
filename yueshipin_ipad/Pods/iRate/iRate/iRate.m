@@ -198,9 +198,9 @@ static NSString *const iRateMacAppStoreURLFormat = @"macappstore://itunes.apple.
         self.promptAgainForEachNewVersion = YES;
         self.promptAtLaunch = YES;
         self.usesUntilPrompt = 5;
-        self.eventsUntilPrompt = 3;
-        self.daysUntilPrompt = 3;
-        self.remindPeriod = 3;
+        self.eventsUntilPrompt = 7;
+        self.daysUntilPrompt = 7;
+        self.remindPeriod = 5;
         self.verboseLogging = NO;
         self.previewMode = NO;
         

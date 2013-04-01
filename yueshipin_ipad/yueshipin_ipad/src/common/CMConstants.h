@@ -95,6 +95,15 @@
 #define SHOW_PLAY_INTRO_WITH_DOWNLOAD @"show_play_intro_with_download"
 #define WIFI_IS_NOT_AVAILABLE @"wifi_is_not_available"
 
+#define APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION   (@"applicationDidEnterBackground")
+#define APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION      (@"applicationDidBecomeActive")
+
+#define LOCAL_HTTP_SERVER_URL @"http://127.0.0.1:12580"
+
+#define CACHE_QUEUE @"MY_CACHE_QUEUE"
+
+#define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

@@ -22,6 +22,7 @@
 #import "IphoneMovieDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
 #import "TVDetailViewController.h"
+#import "CommonMotheds.h"
 @interface MoreListViewController ()
 
 @end
@@ -221,7 +222,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        
+        [CommonMotheds showNetworkDisAbledAlert];
         switch (type_) {
             case 0:
             {
@@ -344,6 +345,11 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 0) {
+        if (![CommonMotheds isNetworkEnbled]) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+            return;
+        }
         for (NSDictionary *dic in listArr_) {
             NSString *type = [dic objectForKey:@"prod_type"];
             NSString *prodId = [dic objectForKey:@"prod_id"];
@@ -372,11 +378,11 @@
 - (NSString *)composeContent:(NSDictionary *)item
 {
     NSString *content;
-    int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
     NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
     if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
         content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
+        int subNum = [[item objectForKey:@"prod_subname"] intValue];
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
         content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
@@ -392,6 +398,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+     [CommonMotheds showNetworkDisAbledAlert];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (type_ == 0) {

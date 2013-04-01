@@ -459,6 +459,11 @@
     }
 }
 
+- (void)reloadSearchList
+{
+    [table reloadData];
+}
+
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section > 0 && historyArray.count > 0 && indexPath.row < historyArray.count){
         return UITableViewCellEditingStyleDelete;

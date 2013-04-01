@@ -258,6 +258,19 @@
 }
 
 - (void)loadTable {
+    if(sortedwatchRecordArray.count > 0){
+        [myRecordImage setHidden:NO];
+        [table setHidden:NO];
+        [tableBg setHidden:NO];
+        [bottomFadingView setHidden:NO];
+        [removeAllBtn setHidden:NO];
+    } else {
+        [removeAllBtn setHidden:YES];
+        [tableBg setHidden:YES];
+        [myRecordImage setHidden:YES];
+        [table setHidden:YES];
+        [bottomFadingView setHidden:YES];
+    }
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
 }
@@ -378,9 +391,9 @@
             } else {
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
             }
-            [self loadTable];
         }
     }
+    [self loadTable];
 }
 
 - (void)parseResult
@@ -462,6 +475,10 @@
     }];
 }
 
+- (void)reloadHistory
+{
+    [table reloadData];
+}
 
 #pragma mark -
 #pragma mark Table view data source
@@ -505,26 +522,28 @@
         [contentLabel setNumberOfLines:0];
         [cell.contentView addSubview:contentLabel];
     }
-    NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
-    UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
-    movieNameLabel.text = [item objectForKey:@"prod_name"];
-    
-    UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
-    contentLabel.text = [self composeContent:item];
-    CGSize size = [self calculateContentSize:contentLabel.text width:280];
-    [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
-    
-    UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
-    NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
-    NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
-    if(duration.doubleValue - playbackTime.doubleValue < 3){
-        [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
-        [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
-    } else {
-        [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
-        [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
+    if (indexPath.row < sortedwatchRecordArray.count) {
+        NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
+        UILabel *movieNameLabel = (UILabel *)[cell viewWithTag:1001];
+        movieNameLabel.text = [item objectForKey:@"prod_name"];
+        
+        UILabel *contentLabel = (UILabel *)[cell viewWithTag:1003];
+        contentLabel.text = [self composeContent:item];
+        CGSize size = [self calculateContentSize:contentLabel.text width:280];
+        [contentLabel setFrame:CGRectMake(contentLabel.frame.origin.x, contentLabel.frame.origin.y, size.width, size.height)];
+        
+        UIButton *playButton = (UIButton *)[cell viewWithTag:1002];
+        NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
+        NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
+        if(duration.doubleValue - playbackTime.doubleValue < 3){
+            [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
+            [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
+        } else {
+            [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
+            [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
+        }
+        playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
     }
-    playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
     return cell;
 }
 
@@ -562,21 +581,6 @@
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
-//    MyMediaPlayerViewController *viewController = [[MyMediaPlayerViewController alloc]init];
-//    if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"1"]){
-//        NSMutableArray *urlsArray = [[NSMutableArray alloc]initWithCapacity:1];
-//        [urlsArray addObject:[item objectForKey:@"video_url"]];
-//        viewController.videoUrls = urlsArray;
-//    } else {
-//        viewController.videoHttpUrl = [item objectForKey:@"video_url"];
-//    }
-//    viewController.prodId = [item objectForKey:@"prod_id"];
-//    viewController.closeAll = YES;
-//    viewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
-//    viewController.name = [item objectForKey:@"prod_name"];
-//    viewController.subname = [item objectForKey:@"prod_subname"];
-//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     BOOL hasVideoUrls = YES;
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:1];
     if([[NSString stringWithFormat:@"%@", [item objectForKey:@"play_type"]] isEqualToString:@"2"]){
@@ -588,6 +592,7 @@
     webViewController.name = [item objectForKey:@"prod_name"];
     webViewController.subname = [item objectForKey:@"prod_subname"];
     webViewController.prodId = [item objectForKey:@"prod_id"];
+    webViewController.playTime = [item objectForKey:@"playback_time"];
     webViewController.hasVideoUrls = hasVideoUrls;
     webViewController.type = [[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] integerValue];
     webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
@@ -683,6 +688,17 @@
             viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
             [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
         } else if([prodType isEqualToString:@"2"]  || [prodType isEqualToString:@"131"]){
+            NSDictionary *item = [sortedwatchRecordArray objectAtIndex:indexPath.row];
+            NSString *prodId = [item objectForKey:@"prod_id"];
+            NSString *subname = [item objectForKey:@"prod_subname"];
+            NSString *lastPlaytime = [item objectForKey:@"playback_time"];
+            NSString *lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", prodId, subname];
+            [[CacheUtility sharedCache]putInCache:lastPlaytimeCacheKey result: lastPlaytime];
+            int btnTag = [[item objectForKey:@"prod_subname"] intValue];
+            if (btnTag <= 0) {
+                btnTag = 1;
+            }
+            [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId] result:[NSNumber numberWithInt:btnTag]];
             DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
             viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
             viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);

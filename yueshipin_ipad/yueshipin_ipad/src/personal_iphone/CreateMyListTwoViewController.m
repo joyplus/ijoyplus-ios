@@ -12,6 +12,10 @@
 #import "UIImageView+WebCache.h"
 #import "UIImage+Scale.h"
 #import <QuartzCore/QuartzCore.h>
+#import "IphoneMovieDetailViewController.h"
+#import "TVDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
+#import "CommonMotheds.h"
 @interface CreateMyListTwoViewController ()
 
 @end
@@ -129,6 +133,27 @@
     }
 
     return cell;
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [CommonMotheds showNetworkDisAbledAlert];
+   NSDictionary *item = [listArr_ objectAtIndex:indexPath.row];
+    NSString *typeStr = [item objectForKey:@"prod_type"];
+    if ([typeStr isEqualToString:@"1"]) {
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    else if ([typeStr isEqualToString:@"2"]||[typeStr isEqualToString:@"131"]){
+        TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    else if ([typeStr isEqualToString:@"3"]){
+        IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;

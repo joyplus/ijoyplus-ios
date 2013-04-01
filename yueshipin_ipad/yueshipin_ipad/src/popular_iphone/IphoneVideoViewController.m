@@ -29,9 +29,13 @@
 #import "UIImageView+WebCache.h"
 #import "TSActionSheet.h"
 #import "Reachability.h"
+#import "MobClick.h"
+#import "CustomNavigationViewControllerPortrait.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
+
+@property (nonatomic) int willPlayIndex;
 
 @end
 
@@ -47,6 +51,7 @@
 @synthesize isNotification = isNotification_;
 @synthesize segmentedControl = segmentedControl_;
 @synthesize wechatImg = wechatImg_;
+@synthesize willPlayIndex;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -172,7 +177,11 @@
 
 
 -(void)share:(id)sender event:(UIEvent *)event{
-    
+    if (![self checkNetWork]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
     [actionSheet addButtonWithTitle:@"新浪微博" block:^{
         [self selectIndex:0];
@@ -202,18 +211,17 @@
         case 0:
             
             [self sinaShare];
-            
             break;
             
         case 1:
             
             [self wechatShare:WXSceneSession];
-            
+            [MobClick event:@"ue_wechat_friend_share"];
             break;
         case 2:
             
             [self wechatShare:WXSceneTimeline];
-            
+            [MobClick event:@"ue_wechat_social_share"];
             break;
         default:
             
@@ -230,7 +238,7 @@
     if ([_mySinaWeibo isLoggedIn]) {
         SendWeiboViewController *sendV = [[SendWeiboViewController alloc] init];
         sendV.infoDic = infoDic_;
-        [self presentViewController:[[UINavigationController alloc] initWithRootViewController:sendV] animated:YES completion:nil];
+        [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:sendV] animated:YES completion:nil];
     }
     else{
         [_mySinaWeibo logIn];
@@ -240,8 +248,14 @@
 
 -(void)wechatShare:(int)sence{
         WXMediaMessage *message = [WXMediaMessage message];
-        message.title = @"推荐";
-        message.description = [infoDic_ objectForKey:@"name"];
+        NSString *name = self.title;
+        if (sence == 0) {
+            message.title = @"分享部影片给你 ";
+            message.description = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];
+        }
+        else if (sence == 1){
+            message.title = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];;
+        }
         [message setThumbImage:wechatImg_];
     
         WXWebpageObject *ext = [WXWebpageObject object];
@@ -283,6 +297,8 @@
     [view removeFromSuperview];
     view = nil;
 }
+
+
 
 #pragma mark - SinaWeibo Delegate
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo{
@@ -377,14 +393,38 @@
 
 
 -(void)playVideo:(int)num{
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
+        willPlayIndex = num;
+        UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                           message:@"播放视频会消耗大量流量，您确定要在非WiFi环境下播放吗？"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"取消"
+                                                 otherButtonTitles:@"确定", nil];
+        [alertView show];
+    } else {
+        [self willPlayVideo:num];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex == 1){
+        [self willPlayVideo:willPlayIndex];
+    }
+}
+
+- (void)willPlayVideo:(int)num
+{
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
+    //[[UIApplication sharedApplication] setStatusBarHidden:YES];
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         NSDictionary *dic = [episodesArr_ objectAtIndex:num];
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
         NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        return;
     }
     IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
     iphoneWebPlayerViewController.playNum = num;
@@ -394,7 +434,6 @@
     iphoneWebPlayerViewController.prodId = prodId_;
     iphoneWebPlayerViewController.playBackTime = [self getRecordInfo:num];
     [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-    
 }
 
 -(NSNumber*)getRecordInfo:(int)num{

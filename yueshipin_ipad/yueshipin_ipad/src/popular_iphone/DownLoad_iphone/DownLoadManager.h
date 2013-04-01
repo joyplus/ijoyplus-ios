@@ -8,16 +8,24 @@
 
 #import <Foundation/Foundation.h>
 #import "SubdownloadItem.h"
+#import "AFDownloadRequestOperation.h"
 @protocol DownloadManagerDelegate <NSObject>
 
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className;
 - (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className;
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
+-(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className;
 @end
 
-@interface DownLoadManager : NSObject{
-   // id <DownloadManagerDelegate>downLoadMGdelegate_;
+
+@protocol M3u8DownLoadManagerDelegate <NSObject>
+- (void)M3u8DownLoadreFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className;
+- (void)M3u8DownLoadFailedwithId:(NSString *)itemId inClass:(NSString *)className;
+-(void)M3u8DownLoadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
+@end
+
+@interface DownLoadManager : NSObject<M3u8DownLoadManagerDelegate>{
     NSThread *downloadThread_;
     NSString *downloadId_;
     NSArray *allItems_;
@@ -26,6 +34,8 @@
     SubdownloadItem *subdownloadItem_;
     int preProgress_;
     int netWorkStatus;
+    NSLock *lock_;
+    
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
@@ -34,6 +44,8 @@
 @property (nonatomic, strong)NSArray *allSubItems;
 @property (nonatomic, strong)DownloadItem *downloadItem;
 @property (nonatomic, strong)SubdownloadItem *subdownloadItem;
+@property (nonatomic, strong)NSLock *lock;
+//@property (nonatomic, strong) NSString *fileType;
 +(DownLoadManager *)defaultDownLoadManager;
 
 -(void)resumeDownLoad;
@@ -53,4 +65,42 @@
 -(void)appDidEnterForeground;
 
 -(void)networkChanged:(int)status;
+@end
+
+
+
+
+@interface M3u8DownLoadManager : NSObject{
+    NSOperationQueue *downloadOperationQueue_;
+    int url_index;
+    DownloadItem *currentItem_;
+}
+@property (nonatomic, strong) NSOperationQueue *downloadOperationQueue;
+
+@property (nonatomic, weak) id<M3u8DownLoadManagerDelegate>m3u8DownLoadManagerDelegate;
+
+@property (nonatomic, strong)DownloadItem *currentItem;
+-(void)stop;
+
+-(void)saveCurrentInfo;
+
+-(void)setM3u8DownloadData:(NSString *)prodId withNum:(NSString *)num url:(NSString *)urlStr withOldPath:(NSString *)oldPath;
+
+-(void)startDownloadM3u8file:(NSArray *)urlArr withId:(NSString *)idStr withNum:(NSString *)num;
+
+@end
+
+@interface CheckDownloadUrls : NSObject{
+    NSMutableArray *myConditionArr_;
+    NSArray *downloadInfoArr_;
+   int reponseCount_;
+    NSString *fileType_;
+    NSMutableArray *allUrls_;
+    BOOL isReceiveR_;
+}
+@property (nonatomic, strong) NSMutableArray *myConditionArr;
+@property (nonatomic, strong) NSArray *downloadInfoArr;
+@property (nonatomic, strong) NSString *fileType;
+@property (nonatomic, strong) NSMutableArray *allUrls;
+-(void)checkDownloadUrls:(NSDictionary *)infoDic;
 @end

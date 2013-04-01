@@ -75,6 +75,10 @@
     NSString *workingUrl_;
 
     UILabel *titleLabel_;
+    
+    NSString *webUrlSource_;
+    
+    BOOL isM3u8_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -116,7 +120,10 @@
 @property (nonatomic, strong) UILabel *willPlayLabel;
 @property (nonatomic, strong) NSString *workingUrl;
 @property (nonatomic, strong) UILabel *titleLabel;
-
+@property (nonatomic, strong) NSString *webUrlSource;
+@property (nonatomic, strong) NSMutableArray *subnameArray;
+@property (nonatomic, assign)  BOOL isM3u8;
+@property (nonatomic, assign) double playDuration;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

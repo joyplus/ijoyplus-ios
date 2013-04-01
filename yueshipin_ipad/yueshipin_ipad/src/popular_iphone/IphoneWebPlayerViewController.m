@@ -26,6 +26,9 @@
 @synthesize videoType = videoType_;
 @synthesize prodId = prodId_;
 @synthesize playBackTime = playBackTime_;
+@synthesize webUrlSource = webUrlSource_;
+@synthesize subnameArray;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -72,7 +75,9 @@
 }
 -(void)initDataSource{
    NSDictionary *episodesInfo = [episodesArr_ objectAtIndex:playNum];
-    webUrl_ = [NSURL URLWithString:[[[episodesInfo objectForKey:@"video_urls"] objectAtIndex:0] objectForKey:@"url"]];
+    NSDictionary *oneEpisodeInfo = [[episodesInfo objectForKey:@"video_urls"] objectAtIndex:0];
+    webUrlSource_ =[oneEpisodeInfo objectForKey:@"source"];
+    webUrl_ = [NSURL URLWithString:[oneEpisodeInfo objectForKey:@"url"]];
 }
 
 
@@ -98,14 +103,23 @@
 }
 
 -(void)initPlayerView{
+    if (subnameArray == nil) {
+        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+        for (NSDictionary *oneEpisode in episodesArr_) {
+            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+            [subnameArray addObject:tempName];
+        }
+    }
     IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
     iphoneAVPlayerViewController.nameStr = nameStr_;
     iphoneAVPlayerViewController.episodesArr = episodesArr_;
     iphoneAVPlayerViewController.playNum = playNum;
+    iphoneAVPlayerViewController.subnameArray = subnameArray;
     iphoneAVPlayerViewController.videoType = videoType_;
     iphoneAVPlayerViewController.prodId = prodId_;
     iphoneAVPlayerViewController.webPlayUrl = webUrl_.absoluteString;
     iphoneAVPlayerViewController.lastPlayTime =  CMTimeMakeWithSeconds(playBackTime_.doubleValue, NSEC_PER_SEC);
+    iphoneAVPlayerViewController.webUrlSource = webUrlSource_;
     [self.navigationController pushViewController:iphoneAVPlayerViewController animated:NO];
 }
 
@@ -118,7 +132,11 @@
 {
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *tempPlayType = @"2";
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", webUrl_, @"video_url", nil];
+    NSString *subname = @"";
+    if (videoType_ != 1 && playNum < subnameArray.count) {
+        subname = [subnameArray objectAtIndex:playNum];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", webUrl_, @"video_url", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -138,6 +156,7 @@
 }
 -(void)dealloc{
     webView_.delegate = nil;
-
+    [subnameArray removeAllObjects];
+    subnameArray = nil;
 }
 @end

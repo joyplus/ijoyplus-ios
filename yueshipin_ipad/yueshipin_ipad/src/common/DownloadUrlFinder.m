@@ -12,7 +12,6 @@
 
 @interface DownloadUrlFinder ()<NSURLConnectionDelegate>
 
-
 @property (atomic, strong)NSString *workingUrl;
 @property (atomic)int urlIndex;
 
@@ -22,12 +21,32 @@
 @synthesize workingUrl;
 @synthesize urlIndex;
 @synthesize item;
+@synthesize mp4DownloadUrlNum;
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        urlIndex = 0;
+        mp4DownloadUrlNum = 0;
+    }
+    return self;
+}
 
 - (void)setupWorkingUrl
 {
     if (urlIndex >= 0 && urlIndex < item.urlArray.count) {
+        if (urlIndex >= mp4DownloadUrlNum && [item.downloadType isEqualToString:@"mp4"]) {
+            item.downloadType = @"m3u8";
+            [item save];
+        }
         NSString *tempUrl = [item.urlArray objectAtIndex:urlIndex];
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:tempUrl]];
+        NSString *formattedUrl = tempUrl;
+        if([tempUrl rangeOfString:@"{now_date}"].location != NSNotFound){
+            int nowDate = [[NSDate date] timeIntervalSince1970];
+            formattedUrl = [tempUrl stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+        }
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:formattedUrl]];
         [NSURLConnection connectionWithRequest:request delegate:self];
     } else {
         NSLog(@"no download url");
@@ -45,9 +64,9 @@
             NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
             int status_Code = HTTPResponse.statusCode;
             if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
-                workingUrl = [item.urlArray objectAtIndex:urlIndex];
+                workingUrl = aconnection.originalRequest.URL.absoluteString;
                 NSLog(@"working url = %@", workingUrl);
-                item.url = [item.urlArray objectAtIndex:urlIndex];
+                item.url = workingUrl;
                 [item save];
                 [[AppDelegate instance].padDownloadManager startDownloadingThreads];
             } else {
