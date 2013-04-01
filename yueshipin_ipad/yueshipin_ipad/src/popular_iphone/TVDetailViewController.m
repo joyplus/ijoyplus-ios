@@ -15,7 +15,6 @@
 #import "CommonHeader.h"
 #import "CacheUtility.h"
 #import "CommonMotheds.h"
-#import "FilmReviewViewCell.h"
 #import "ServiceConstants.h"
 
 #define REVIEW_DATA_REQUEST_NUM     (@"2")
@@ -62,17 +61,19 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 40, 30);
+    rightButton.frame = CGRectMake(0, 0, 49, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"share_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     self.tableView.backgroundView = backGround;
@@ -323,6 +324,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
     }
     else if (section == 2){
+        return 0;
         if ([commentArray_ count]>0) {
             return [commentArray_ count]+1;
         }
@@ -333,7 +335,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     else if (3 == section)
     {
-        return 1;
+        return arrReviewData_.count > 0 ? 1 : 0;
     }
     return 0;
 
@@ -795,20 +797,21 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         case 10005:{
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-//                NSString *responseCode = [result objectForKey:@"res_code"];
-//                if([responseCode isEqualToString:kSuccessResCode]){
-//                    [self showOpSuccessModalView:1 with:ADDFAV];
-//                }
-//                else {
-//                    [self showOpFailureModalView:1 with:ADDFAV];
-//                }
-                 [self showOpSuccessModalView:3 with:ADDFAV];
-                
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self showOpFailureModalView:1 with:ADDFAV];
-            }];
+            FeedBackView * feedback = [[FeedBackView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)];
+            feedback.delegate = self;
+            UITabBarController * ctrl = [AppDelegate instance].tabBarView;
+            
+            [ctrl.selectedViewController.view addSubview:feedback];
+            
+            [UIView beginAnimations:nil context:NULL];
+            
+            [UIView setAnimationDuration:0.5f];
+            
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            
+            feedback.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+            
+            [UIView commitAnimations];
             
             break;
         }
@@ -1541,5 +1544,61 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
 }
 
+#pragma mark -
+#pragma mark - FilmReviewViewCellDelegate
+
+- (void)filmReviewTaped:(NSString *)title content:(NSString *)content
+{
+    FilmReviewDetailView * filmView = [[FilmReviewDetailView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)
+                                                                            title:title
+                                                                          content:content];
+    
+    UITabBarController * ctrl = [AppDelegate instance].tabBarView;
+    
+    [ctrl.selectedViewController.view addSubview:filmView];
+    
+    [UIView beginAnimations:nil context:NULL];
+    
+    [UIView setAnimationDuration:0.5f];
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    
+    filmView.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    
+    [UIView commitAnimations];
+    
+}
+
+#pragma mark -
+#pragma mark - FeedBackDelegate
+- (void)feedBackType:(NSInteger)type
+        detailReason:(NSString *)reason
+{
+    NSString *feedbackType = [NSString stringWithFormat:@"%d",type];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: \
+                                prodId_, @"prod_id",\
+                                name_ ,@"prod_name",\
+                                @"1",@"prod_type",\
+                                feedbackType,@"invalid_type",\
+                                reason,@"memo",\
+                                nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
+     {
+         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"问题提交成功，我们会尽快处理，谢谢！"
+                                                        delegate:self
+                                               cancelButtonTitle:@"我知道了"
+                                               otherButtonTitles:nil, nil];
+         [alert show];
+     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     {
+         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"问题反馈提交失败!"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"我知道了"
+                                               otherButtonTitles:nil, nil];
+         [alert show];
+     }];
+}
 
 @end

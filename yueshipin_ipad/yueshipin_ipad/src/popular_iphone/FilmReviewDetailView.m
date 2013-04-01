@@ -9,9 +9,9 @@
 #import "FilmReviewDetailView.h"
 
 #define FILM_DETAIL_REVIEW_FRAME(Height)    (CGRectMake(30, 80, 258, Height))
-#define FILM_DETAIL_CLOSE_BUTTON_FRAME      (CGRectMake(330, 0, 30, 30))
+#define FILM_DETAIL_CLOSE_BUTTON_FRAME      (CGRectMake(214, 6, 38, 38))
 #define FILM_DETAIL_TITLE_LABEL_FRAME       (CGRectMake(20, 30, 218, 30))
-#define FILM_DETAIL_CONTENT_FRAME(Height)   (CGRectMake(10, 65, 238, Height))
+#define FILM_DETAIL_CONTENT_FRAME(Height)   (CGRectMake(10, 65, 250, Height))
 
 @implementation FilmReviewDetailView
 
@@ -31,8 +31,13 @@
         forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:bgBtn];
         
+        UIImageView * detailImage = [[UIImageView alloc] initWithFrame:CGRectMake(27, 77, 264, self.frame.size.height - 134)];
+        detailImage.image = [[UIImage imageNamed:@"popview_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
+        detailImage.backgroundColor = [UIColor clearColor];
+        [self addSubview:detailImage];
+        
         UIView * detailView = [[UIView alloc] initWithFrame:FILM_DETAIL_REVIEW_FRAME(self.frame.size.height - 140)];
-        detailView.backgroundColor = [UIColor whiteColor];
+        detailView.backgroundColor = [UIColor clearColor];
         [self addSubview:detailView];
         
         UIButton * closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -41,11 +46,17 @@
                      action:@selector(closeButtonClick:)
            forControlEvents:UIControlEventTouchUpInside];
         [detailView addSubview:closeBtn];
+        closeBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 19, 19, 0);
+        [closeBtn setImage:[UIImage imageNamed:@"download_shut.png"]
+                  forState:UIControlStateNormal];
+        [closeBtn setImage:[UIImage imageNamed:@"download_shut_pressed.png"]
+                  forState:UIControlStateHighlighted];
+        closeBtn.backgroundColor = [UIColor clearColor];
         
-        UILabel * detailLab   = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 30)];
+        UILabel * detailLab   = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 80, 30)];
         detailLab.textAlignment = UITextAlignmentCenter;
         detailLab.font   = [UIFont boldSystemFontOfSize:15];
-        detailLab.text = @"影片详情";
+        detailLab.text = @"影评详情";
         detailLab.backgroundColor   = [UIColor clearColor];
         detailLab.textColor   = [UIColor grayColor];
         [detailView addSubview:detailLab];
@@ -58,10 +69,10 @@
         [detailView addSubview:_labTitle];
         _labTitle.text = title;
         
-        _viewContent = [[UITextView alloc] initWithFrame:FILM_DETAIL_CONTENT_FRAME(detailView.frame.size.height - 65)];
+        _viewContent = [[UITextView alloc] initWithFrame:FILM_DETAIL_CONTENT_FRAME(detailView.frame.size.height - 80)];
         _viewContent.editable = NO;
         [detailView addSubview:_viewContent];
-        _viewContent.text = [NSString stringWithFormat:@" %@",content];
+        _viewContent.text = [NSString stringWithFormat:@"%@",content];
         [_viewContent setBackgroundColor:[UIColor clearColor]];
         
         for (UIGestureRecognizer * gRec in _viewContent.gestureRecognizers)

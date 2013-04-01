@@ -10,8 +10,9 @@
 #import "IphoneVideoViewController.h"
 #import "MNMBottomPullToRefreshManager.h"
 #import "FilmReviewViewCell.h"
+#import "FeedBackView.h"
 
-@interface IphoneMovieDetailViewController : IphoneVideoViewController< MNMBottomPullToRefreshManagerClient,FilmReviewViewCellDelegate>{
+@interface IphoneMovieDetailViewController : IphoneVideoViewController< MNMBottomPullToRefreshManagerClient,FilmReviewViewCellDelegate,FeedBackViewDelegate>{
     NSDictionary *videoInfo_;
     int videoType_;
     NSString *summary_;

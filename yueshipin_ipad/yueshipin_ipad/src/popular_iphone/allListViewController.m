@@ -113,16 +113,17 @@
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 40, 30);
+    leftButton.frame = CGRectMake(0, 0, 49, 30);
     leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage imageNamed:@"top_search_common.png"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
     customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
     [customNavigationButtonView_ initUI:self.navigationController withText:nil];
-    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
+    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 49, 30);
    [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
     tapGesture.numberOfTapsRequired = 1;
