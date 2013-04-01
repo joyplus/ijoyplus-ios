@@ -81,10 +81,17 @@
 
 @end
 
+@interface RootViewController ()
+
+@property (nonatomic) BOOL triggeredByDrag;
+
+@end
+
 @implementation RootViewController
 @synthesize menuViewController, stackScrollViewController;
 @synthesize prodUrl, prodId, prodName;
 @synthesize videoDetailDelegate;
+@synthesize triggeredByDrag;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -523,9 +530,14 @@
     [self.view addSubview:view];
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    triggeredByDrag = YES;
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    if (scrollView.tag == 3268143) {
+    if (scrollView.tag == 3268143 && triggeredByDrag) {
         int page = round(scrollView.contentOffset.x/520.0);
         if (page >=0 && page < dramaPageNum) {
             int index = page/7;
@@ -580,6 +592,7 @@
     }
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
     UIScrollView *episodeView = (UIScrollView *)[view viewWithTag:3268143];
+    triggeredByDrag = NO;
     [episodeView setContentOffset:CGPointMake(520*(btn.tag - 1001), 0) animated:YES];
 }
 
