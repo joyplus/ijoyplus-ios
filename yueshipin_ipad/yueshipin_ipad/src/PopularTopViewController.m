@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "HomeViewController.h"
+#import "PopularTopViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "DDPageControl.h"
 #import "MovieDetailViewController.h"
@@ -17,11 +17,11 @@
 #import "CommonHeader.h"
 
 #define BOTTOM_IMAGE_HEIGHT 20
-#define TOP_IMAGE_HEIGHT 167
-#define LIST_LOGO_WIDTH 220
-#define LIST_LOGO_HEIGHT 180
-#define VIDEO_BUTTON_WIDTH 118
-#define VIDEO_BUTTON_HEIGHT 29
+#define TOP_IMAGE_HEIGHT 170
+#define LIST_LOGO_WIDTH 223
+#define LIST_LOGO_HEIGHT 184
+#define VIDEO_BUTTON_WIDTH 250
+#define VIDEO_BUTTON_HEIGHT 52
 #define TOP_SOLGAN_HEIGHT 93
 #define MOVIE_LOGO_HEIGHT 139
 #define MOVIE_LOGO_WEIGHT 83
@@ -33,7 +33,7 @@
 #define MOVIE_NUMBER 10
 #define DRAMA_NUMBER 10
 
-@interface HomeViewController (){
+@interface PopularTopViewController (){
     UIView *backgroundView;
     UIImageView *sloganImageView;
     UIButton *searchBtn;
@@ -75,9 +75,12 @@
     NSString *umengPageName;
 }
 
+@property (nonatomic, strong) UIView *customHeaderView;
+
 @end
 
-@implementation HomeViewController
+@implementation PopularTopViewController
+@synthesize customHeaderView;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -98,24 +101,11 @@
         [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
         
-        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [backgroundView addSubview:bgImage];
-        
-        [backgroundView addSubview:menuBtn];
-        
         sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];
-        sloganImageView.frame = CGRectMake(80, 36, 265, 42);
+        sloganImageView.frame = CGRectMake(15, 36, 261, 42);
         [backgroundView addSubview:sloganImageView];
         
-        searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        searchBtn.frame = CGRectMake(440, 48, 42, 30);
-        [searchBtn setBackgroundImage:[UIImage imageNamed:@"searchicon_btn"] forState:UIControlStateNormal];
-        [searchBtn setBackgroundImage:[UIImage imageNamed:@"searchicon_pressed_btn"] forState:UIControlStateHighlighted];
-        [searchBtn addTarget:self action:@selector(searchBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [backgroundView addSubview:searchBtn];
-        
-        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 92, backgroundView.frame.size.width - 18, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, backgroundView.frame.size.width - 16, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
@@ -171,7 +161,7 @@
         [badgeView removeFromSuperview];
         badgeView = nil;
     }
-    badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
+    //    badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
     badgeView.badgePositionAdjustment = CGPointMake(-10, 7);
     badgeView.badgeText = @"0";
     [badgeView setHidden:YES];
@@ -185,12 +175,6 @@
     }
 }
 
-- (void)menuBtnClicked
-{
-    [super menuBtnClicked];
-    [badgeView setHidden:YES];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -202,11 +186,6 @@
     [self retrieveTopsListData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-    
-    closeMenuRecognizer.delegate = self;
-    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -355,7 +334,7 @@
             [UIUtility showNetWorkError:self.view];
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
             return;
-        }        
+        }
         if (videoType == 0) {
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -397,7 +376,7 @@
                 }
             } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                 [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-            }];            
+            }];
         }
     }
 }
@@ -615,7 +594,6 @@
                 [pageControl updateCurrentPageDisplay] ;
         }
     } else {
-        [self closeMenu];
         [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
         if(videoType == 0){
             [pullToRefreshManager_ tableViewScrolled];
@@ -635,7 +613,6 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
     if(aScrollView.tag == 11270014){
-        [self closeMenu];
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
         if(videoType == 0){
@@ -649,7 +626,6 @@
 
 - (void)listBtnClicked:(UIButton *)sender
 {
-    [self closeMenu];     
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
@@ -663,7 +639,6 @@
 
 - (void)movieBtnClicked:(UIButton *)sender
 {
-    [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
@@ -677,7 +652,6 @@
 
 - (void)dramaBtnClicked:(UIButton *)sender
 {
-    [self closeMenu];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
@@ -691,8 +665,7 @@
 
 - (void)showBtnClicked:(UIButton *)sender
 {
-    [self closeMenu];
-    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];      
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -709,7 +682,6 @@
 
 - (void)searchBtnClicked
 {
-    [self closeMenu];
     SubsearchViewController *viewController = [[SubsearchViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
 }
@@ -750,11 +722,11 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-            UIImageView *lunboPlaceholder = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, TOP_IMAGE_HEIGHT)];
+            UIImageView *lunboPlaceholder = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, table.frame.size.width, TOP_IMAGE_HEIGHT)];
             lunboPlaceholder.image = [UIImage imageNamed:@"top_image_placeholder"];
             [cell.contentView addSubview:lunboPlaceholder];
             
-            scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 4, self.view.frame.size.width- 12, TOP_IMAGE_HEIGHT - 8)];
+            scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 4, table.frame.size.width+6, TOP_IMAGE_HEIGHT - 8)];
             scrollView.tag = 11270014;
             scrollView.delegate = self;
             
@@ -779,17 +751,17 @@
             [cell.contentView addSubview:scrollView];
             
             pageControl = [[DDPageControl alloc] init] ;
-            [pageControl setCenter: CGPointMake(self.view.center.x, TOP_IMAGE_HEIGHT + 10)] ;
+            [pageControl setCenter: CGPointMake(self.view.center.x - 8, TOP_IMAGE_HEIGHT + 10)] ;
             [pageControl setNumberOfPages: 5] ;
             [pageControl setCurrentPage: 0] ;
             [pageControl addTarget: self action: @selector(pageControlClicked:) forControlEvents: UIControlEventValueChanged] ;
             [pageControl setDefersCurrentPageDisplay: YES] ;
             [pageControl setType: DDPageControlTypeOnFullOffEmpty] ;
-            [pageControl setOnColor: [UIColor colorWithRed:160/255.0 green:180/255.0 blue:195/255.0 alpha: 1.0f]] ;
-            [pageControl setOffColor: [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha: 1.0f]] ;
+            [pageControl setOnColor: [UIColor colorWithRed:244/255.0 green:163/255.0 blue:73/255.0 alpha: 1.0f]];
+            [pageControl setOffColor: [UIColor colorWithRed:202/255.0 green:195/255.0 blue:170/255.0 alpha: 1.0f]];
             
-            [pageControl setIndicatorDiameter: 7.0f] ;
-            [pageControl setIndicatorSpace: 8.0f] ;
+            [pageControl setIndicatorDiameter: 8.0f] ;
+            [pageControl setIndicatorSpace: 9.0f] ;
             [cell.contentView addSubview:pageControl];
         }
         for (int i = 0; i < 5 && i < lunboArray.count; i++){
@@ -818,7 +790,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-    
+        
         UIImageView *contentImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(40, 20, 87, 120)];
         contentImage1.tag = 2001;
         [cell.contentView addSubview:contentImage1];
@@ -934,7 +906,7 @@
     if([hotFlag2 isEqualToString:@"1"]){
         hotImage2.image = [UIImage imageNamed:@"hot_signal"];
     } else {
-        hotImage2.image = nil;        
+        hotImage2.image = nil;
     }
     
     UILabel *nameLabel1 = (UILabel *)[cell viewWithTag:6001];
@@ -1055,14 +1027,14 @@
     if (indexPath.row < movieTopsArray.count) {
         NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
         UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
-//        for (int i=0; i < MOVIE_NUMBER; i++) {
-//            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
-//            if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
-//                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
-//            } else {
-//                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
-//            }
-//        }
+        //        for (int i=0; i < MOVIE_NUMBER; i++) {
+        //            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+        //            if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
+        //                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
+        //            } else {
+        //                [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
+        //            }
+        //        }
         cellScrollView.contentOffset = CGPointMake(0, 0);
         NSArray *subitemArray = [item objectForKey:@"items"];
         
@@ -1173,7 +1145,7 @@
         [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:scrollBtn];
     }
-    if (indexPath.row < tvTopsArray.count) {        
+    if (indexPath.row < tvTopsArray.count) {
         NSDictionary *item = [tvTopsArray objectAtIndex:indexPath.row];
         UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
         cellScrollView.contentOffset = CGPointMake(0, 0);
@@ -1242,7 +1214,7 @@
         titleLabel.tag = 4031;
         [cell.contentView addSubview:titleLabel];
     }
-    if (indexPath.row < showTopsArray.count) {        
+    if (indexPath.row < showTopsArray.count) {
         NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
         UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
         [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
@@ -1282,7 +1254,6 @@
 - (void)lunboImageClicked:(UIButton *)btn
 {
     [timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:5]];
-    [self closeMenu];
     int index = btn.tag - 9021;
     NSDictionary *item = [lunboArray objectAtIndex:index];
     NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"type"]];
@@ -1341,7 +1312,6 @@
 
 - (void)movieImageClicked:(UIButton *)btn
 {
-    [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -1359,14 +1329,13 @@
 
 - (void)dramaImageClicked:(UIButton *)btn
 {
-    [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
     
     UILabel *titleLabel = (UILabel *)[[btn superview] viewWithTag:btn.tag + 1000];
     [self updatePressedBtn:btn pressedLabel:titleLabel selectedRow:indexPath.row];
-    if (indexPath.row >= 0 && indexPath.row < tvTopsArray.count) {        
+    if (indexPath.row >= 0 && indexPath.row < tvTopsArray.count) {
         NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
         if(btn.tag - 2021 < items.count){
             NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
@@ -1380,9 +1349,7 @@
     lastSelectedListImage = nil;
     lastPressedBtn = nil;
     lastPressedLabel = nil;
-
     
-    [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -1400,8 +1367,6 @@
 
 - (void)imageBtnClicked:(UIButton *)btn
 {
-    
-    [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -1450,7 +1415,7 @@
     if(section == 0){
         return 0;
     } else {
-        return 40;
+        return 64;
     }
 }
 

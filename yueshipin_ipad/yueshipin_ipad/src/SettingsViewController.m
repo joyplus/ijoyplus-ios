@@ -90,8 +90,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [backgroundView addSubview:bgImage];
         
-        [self.view addSubview:menuBtn];
-        
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 137, 34)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
@@ -179,10 +177,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    closeMenuRecognizer.delegate = self;
-    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -205,11 +199,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch.on = YES;
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
-    }
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     [MobClick beginLogPageView:SETTING];
 }
@@ -247,7 +236,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    [self closeMenu];
     ChatViewController *chatViewController = [[ChatViewController alloc] initWithNibName:@"ChatViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chatViewController];
     navController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
@@ -268,7 +256,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)aboutBtnClicked
 {
-    [self closeMenu];
     AboutUsViewController *viewController = [[AboutUsViewController alloc]init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -276,7 +263,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)speakBtnClicked
 {
-    [self closeMenu];
     ClauseViewController *viewController = [[ClauseViewController alloc]init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];

@@ -90,7 +90,6 @@
     bottomFadingView = nil;
     pullToRefreshManager_ = nil;
     backgroundView = nil;
-    menuBtn = nil;
     topImage = nil;
     bgImage = nil;
     table = nil;
@@ -122,8 +121,7 @@
         bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
         bgImage.image = [UIImage imageNamed:@"left_background"];
         [backgroundView addSubview:bgImage];
-        
-        [self.view addSubview:menuBtn];
+
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 187, 36)];
         topImage.image = [UIImage imageNamed:@"my_title"];
@@ -247,13 +245,7 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
-    
-//    closeMenuRecognizer.delegate = self;
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    swipeCloseMenuRecognizer.delegate = self;
-    [self.view addGestureRecognizer:openMenuRecognizer];
-    
+   
     reloads_ = 2;
 }
 
@@ -320,11 +312,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
-    }
     if(sortedwatchRecordArray.count > 0){
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
@@ -576,7 +563,6 @@
 
 - (void)playVideo:(UIButton *)btn
 {
-    [self closeMenu];
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -638,7 +624,6 @@
 
 - (void)summaryBtnClicked:(UIButton *)sender
 {
-    [self closeMenu];
     for(int i = 0; i < 4; i++){
         UIButton *btn = (UIButton *)[self.view viewWithTag:1001 + i];
         [btn setBackgroundImage:nil forState:UIControlStateNormal];
@@ -669,7 +654,6 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    [self closeMenu];
     CreateListOneViewController *viewController = [[CreateListOneViewController alloc]initWithNibName:@"CreateListOneViewController" bundle:nil];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -678,7 +662,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self closeMenu];
     if(indexPath.row < sortedwatchRecordArray.count){
         NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
         NSString *prodType = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]];

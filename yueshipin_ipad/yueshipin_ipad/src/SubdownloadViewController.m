@@ -48,7 +48,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     [self reloadSubitems];
 }
 
@@ -359,7 +359,6 @@
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
-    [self closeMenu];
     if(position < subitems.count){
         SubdownloadItem *item = [subitems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){

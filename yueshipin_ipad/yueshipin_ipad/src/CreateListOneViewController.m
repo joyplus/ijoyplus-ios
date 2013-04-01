@@ -123,7 +123,7 @@
     [self.nextBtn setEnabled:NO];
     [self.nextBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated{

@@ -37,7 +37,7 @@
 {
     [super viewDidLoad];
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning

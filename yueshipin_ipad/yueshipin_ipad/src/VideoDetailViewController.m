@@ -37,7 +37,7 @@
 {
     [super viewDidLoad];
     [self.view setBackgroundColor:CMConstants.backgroundColor];
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];

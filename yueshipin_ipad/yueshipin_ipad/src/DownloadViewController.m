@@ -61,12 +61,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-//    closeMenuRecognizer.delegate = self;
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
-    
+    [super viewDidLoad];    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
 }
@@ -106,7 +101,6 @@
         [self.view addSubview:nodownloadImage];
         
         leftWidth = 80;
-        [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth + 50, 40, 143, 35)];
         topImage.image = [UIImage imageNamed:@"download_title"];
@@ -190,11 +184,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
-    }
     _gmGridView.editing = NO;
     [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
@@ -485,7 +474,6 @@
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
-    [self closeMenu];
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
@@ -527,7 +515,6 @@
 
 - (void)editBtnClicked
 {
-    [self closeMenu];
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
     _gmGridView.editing = YES;
     [editBtn setHidden:YES];
@@ -536,7 +523,6 @@
 
 - (void)doneBtnClicked
 {
-    [self closeMenu];
     _gmGridView.editing = NO;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];

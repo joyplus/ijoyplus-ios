@@ -62,7 +62,7 @@
     contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 100, 418, 733)];
     contentImage.image = [UIImage imageNamed:@"clause_content"];
     [bgScrollView addSubview:contentImage];
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning

@@ -43,7 +43,6 @@
 #import "SearchViewController.h"
 #import "GenericBaseViewController.h"
 #import "PersonalViewController.h"
-const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = -150;
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
 @implementation StackScrollViewController
@@ -956,28 +955,6 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		}
 	}
 }
-
-
-- (void)menuToggle:(BOOL)menuClicked isStackStartView:(BOOL)isStackStartView
-{
-    if ([[slideViews subviews] count] > 0) {
-        viewAtLeft = [[slideViews subviews] objectAtIndex:0];
-        viewAtLeft2 = nil;
-        viewAtRight = nil;
-        viewAtRight2 = nil;
-    }
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
-    [UIView setAnimationDuration:0.3];
-    [UIView setAnimationBeginsFromCurrentState:NO];
-    if(menuClicked){
-        [viewAtLeft setFrame:CGRectMake(-LEFT_MENU_DIPLAY_WIDTH, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-    }else {
-        [viewAtLeft setFrame:CGRectMake(0, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-    }
-    [UIView commitAnimations];    
-}
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

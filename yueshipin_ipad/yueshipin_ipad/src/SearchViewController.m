@@ -52,7 +52,6 @@
         [self.view addSubview:bgImage];
         
         leftWidth = 80;
-        [self.view addSubview:menuBtn];
         
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 140, 35)];
         topImage.image = [UIImage imageNamed:@"search_title"];
@@ -93,11 +92,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
-    }
     historyArray = (NSMutableArray *)[[ContainerUtility sharedInstance] attributeForKey:@"search_history"];
     if(historyArray == nil){
         historyArray = [[NSMutableArray alloc]initWithCapacity:LOCAL_KEYS_NUMBER];
@@ -191,10 +185,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    closeMenuRecognizer.delegate = self;
-    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -394,7 +384,6 @@
     }
     keyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     sBar.text = keyword;
-    [self closeMenu];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     SearchListViewController *viewController = [[SearchListViewController alloc] init];

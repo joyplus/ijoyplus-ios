@@ -16,7 +16,7 @@
 
 + (UIColor *)grayColor
 {
-    return [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
+    return [UIColor colorWithRed:149/255.0 green:146/255.0 blue:142/255.0 alpha:1.0];
 }
 
 + (UIColor *)scoreBlueColor

@@ -41,7 +41,6 @@
 #import "StackScrollViewController.h"
 #import "CommonHeader.h"
 #import "VideoDetailViewController.h"
-#define LEFT_MENU_DIPLAY_WIDTH 150
 
 @class UIViewExt;
 

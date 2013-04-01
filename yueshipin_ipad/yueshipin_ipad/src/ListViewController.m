@@ -58,6 +58,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
+    
     titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 377, 30)];
     titleLabel.font = [UIFont boldSystemFontOfSize:23];
     titleLabel.backgroundColor = [UIColor clearColor];
@@ -65,6 +69,7 @@
     titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
     titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
     [self.view addSubview:titleLabel];
+    
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     closeBtn.frame = CGRectMake(465, 20, 40, 42);
@@ -86,7 +91,7 @@
     reloads_ = 2;
     pageSize = 10;
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     umengPageName = TOP_LIST_DETAIL;
     

@@ -73,7 +73,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
 #endif
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkResponse) userInfo:nil repeats:YES];
 }

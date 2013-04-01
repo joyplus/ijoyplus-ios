@@ -30,10 +30,7 @@
     [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
     self.moveToLeft = YES;
-    [self.view addGestureRecognizer:swipeRecognizer];
-    
-    [self.view removeGestureRecognizer:closeMenuRecognizer];
-    [self.view removeGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     [self setCloseTipsViewHidden:NO];
 }
@@ -55,8 +52,6 @@
     bgImage.image = nil;
     [bgImage removeFromSuperview];
     
-    [menuBtn removeFromSuperview];
-    
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     closeBtn.frame = CGRectMake(465, 20, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
@@ -75,7 +70,6 @@
     }
     keyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     sBar.text = keyword;
-    [self closeMenu];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     SearchListViewController *viewController = [[SearchListViewController alloc] init];
