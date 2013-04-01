@@ -39,8 +39,6 @@
 @end
 
 @implementation AppDelegate
-@synthesize downloadItems;
-@synthesize subdownloadItems;
 @synthesize playWithDownload;
 @synthesize padDownloadManager;
 @synthesize window;
