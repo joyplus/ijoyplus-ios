@@ -55,17 +55,17 @@
         
         UILabel * detailLab   = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 80, 30)];
         detailLab.textAlignment = UITextAlignmentCenter;
-        detailLab.font   = [UIFont boldSystemFontOfSize:15];
+        detailLab.font   = [UIFont boldSystemFontOfSize:16];
         detailLab.text = @"影评详情";
         detailLab.backgroundColor   = [UIColor clearColor];
-        detailLab.textColor   = [UIColor grayColor];
+        detailLab.textColor = [UIColor colorWithRed:174.0/255.0 green:174.0/255.0 blue:174.0/255.0 alpha:1];
         [detailView addSubview:detailLab];
         
         _labTitle   = [[UILabel alloc] initWithFrame:FILM_DETAIL_TITLE_LABEL_FRAME];
         _labTitle.textAlignment = UITextAlignmentCenter;
-        _labTitle.font   = [UIFont boldSystemFontOfSize:15];
+        _labTitle.font   = [UIFont boldSystemFontOfSize:14];
         _labTitle.backgroundColor   = [UIColor clearColor];
-        _labTitle.textColor   = [UIColor grayColor];
+        _labTitle.textColor   = [UIColor colorWithRed:174.0/255.0 green:174.0/255.0 blue:174.0/255.0 alpha:1];
         [detailView addSubview:_labTitle];
         _labTitle.text = title;
         
@@ -74,6 +74,8 @@
         [detailView addSubview:_viewContent];
         _viewContent.text = [NSString stringWithFormat:@"%@",content];
         [_viewContent setBackgroundColor:[UIColor clearColor]];
+        _viewContent.textColor = [UIColor colorWithRed:132.0/255.0 green:132.0/255.0 blue:132.0/255.0 alpha:1];
+        _viewContent.font = [UIFont systemFontOfSize:10];
         
         for (UIGestureRecognizer * gRec in _viewContent.gestureRecognizers)
         {
