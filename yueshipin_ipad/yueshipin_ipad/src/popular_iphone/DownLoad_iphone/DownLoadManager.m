@@ -1128,13 +1128,15 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 
 @implementation CheckDownloadUrls
-@synthesize myConditionArr = myConditionArr_;
 @synthesize downloadInfoArr = downloadInfoArr_;
 @synthesize fileType = fileType_;
 @synthesize allUrls = allUrls_;
+@synthesize currentConnection = currentConnection_;
 -(void)checkDownloadUrls:(NSDictionary *)infoDic{
     allUrls_ = [[NSMutableArray alloc] initWithCapacity:5];
-    myConditionArr_ = [[NSMutableArray alloc] initWithCapacity:5];
+    NSMutableArray *mp4UrlsArr = [[NSMutableArray alloc] initWithCapacity:5];
+    NSMutableArray *m3u8UrlsArr = [[NSMutableArray alloc] initWithCapacity:5];
+    
     NSArray *down_urlsArr = [infoDic objectForKey:@"down_urls"];
     for (NSDictionary *dic in down_urlsArr) {
         NSArray *oneSourceArr = [dic objectForKey:@"urls"];
@@ -1142,25 +1144,36 @@ static NSMutableArray *downLoadQueue_ = nil;
             NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
             NSString *type = [oneUrlInfo objectForKey:@"file"];
             NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
-            
-            [allUrls_ addObject:myDic];
+            if ([type isEqualToString:@"mp4"]) {
+                [mp4UrlsArr addObject:myDic];
+            }
+            else if ([type isEqualToString:@"m3u8"]){
+                [m3u8UrlsArr addObject:myDic];
+            }
+           
         }
         
     }
-
-    reponseCount_ = 0;
-    isReceiveR_ = NO;
-    for (NSDictionary *dic  in allUrls_) {
-        NSString *tempStr = [dic objectForKey:@"url"];
-        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:tempStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60];
-         NSURLConnection *connection = [NSURLConnection connectionWithRequest:request delegate:self];
-        [myConditionArr_  addObject:connection];
-        
-    }
+   [allUrls_ addObjectsFromArray:mp4UrlsArr];
+   [allUrls_ addObjectsFromArray:m3u8UrlsArr];
+    
+    sendCount_ = 0;
     [self saveDataBase];
+    [self sendHttpRequest];
 }
 
-
+-(void)sendHttpRequest{
+    if (sendCount_ < [allUrls_ count]) {
+        NSDictionary *infoDic = [allUrls_ objectAtIndex:sendCount_];
+        NSString *urlStr = [infoDic objectForKey:@"url"];
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:60];
+        currentConnection_ = [NSURLConnection connectionWithRequest:request delegate:self];
+        sendCount_++;
+    }
+    else{
+        [self resetDataBase];
+    }
+}
 
 -(void)saveDataBase{
     NSString *prodId = [downloadInfoArr_ objectAtIndex:0];
@@ -1261,20 +1274,14 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
-    reponseCount_ ++;
-    if (reponseCount_ == [myConditionArr_ count]) {
-        [self resetDataBase];
-        
-    }
-    [self cancelAllconnection];
+    
+        [self sendHttpRequest];
     
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
     
-    if (isReceiveR_) {
-        return;
-    }
+    
     NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
     int status_Code = HTTPResponse.statusCode;
     if (status_Code >= 200 && status_Code <= 299) {
@@ -1282,7 +1289,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         NSString *content_type = [headerFields objectForKey:@"Content-Type"];
          NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
         if (![content_type hasPrefix:@"text/html"] && contentLength.intValue >100) {
-            isReceiveR_ = YES;
+      
             NSString *proid = [downloadInfoArr_ objectAtIndex:0];
             NSString *urlStr = connection.originalRequest.URL.absoluteString;
             NSString *name = [downloadInfoArr_ objectAtIndex:1];
@@ -1299,26 +1306,18 @@ static NSMutableArray *downLoadQueue_ = nil;
             }
             NSArray *arr = [NSArray arrayWithObjects:proid,urlStr,name,imgUrl,type,num,fileType,nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:arr];
-            [self cancelAllconnection];
+        
             return;
             
         }
         
     }
+       [self sendHttpRequest];
     
-    reponseCount_++;
-    if (reponseCount_ == [myConditionArr_ count]) {
-        [self resetDataBase];
-    }
 }
--(void)cancelAllconnection{
-    
-    for (NSURLConnection *c in myConditionArr_) {
-        [c cancel];
-    }
-}
+
 -(void)dealloc{
-    [self cancelAllconnection];
-    myConditionArr_ = nil;
+    [currentConnection_ cancel];
+    currentConnection_ = nil;
 }
 @end

@@ -91,16 +91,15 @@
 @end
 
 @interface CheckDownloadUrls : NSObject{
-    NSMutableArray *myConditionArr_;
     NSArray *downloadInfoArr_;
-   int reponseCount_;
+   int sendCount_;
     NSString *fileType_;
     NSMutableArray *allUrls_;
-    BOOL isReceiveR_;
+    NSURLConnection *currentConnection_;
 }
-@property (nonatomic, strong) NSMutableArray *myConditionArr;
 @property (nonatomic, strong) NSArray *downloadInfoArr;
 @property (nonatomic, strong) NSString *fileType;
 @property (nonatomic, strong) NSMutableArray *allUrls;
+@property (nonatomic, strong) NSURLConnection *currentConnection;
 -(void)checkDownloadUrls:(NSDictionary *)infoDic;
 @end

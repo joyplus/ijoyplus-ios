@@ -9,8 +9,8 @@
 #import <Foundation/Foundation.h>
 
  //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 1
-#define VERSION @"0.9.9"
+#define ENVIRONMENT 0
+#define VERSION @"1.0.0alpha"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
@@ -28,8 +28,8 @@
 
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch3"
-#define CLOSE_VIDEO_MODE @"closeVideoMode4"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch4"
+#define CLOSE_VIDEO_MODE @"closeVideoMode5"
 
 
 //正式环境
