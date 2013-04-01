@@ -14,6 +14,8 @@
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
+#import "iphoneDownloadViewController.h"
+
 @interface TabBarViewController ()
 
 @end
@@ -38,16 +40,23 @@
         UINavigationController *mineNav = [[UINavigationController alloc] initWithRootViewController:mineview];
         [mineNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
         
+        //init downLoad viewController
+        IphoneDownloadViewController * downloadCtrl = [[IphoneDownloadViewController alloc] init];
+        UINavigationController * downLoadNavCtrl = [[UINavigationController alloc] initWithRootViewController:downloadCtrl];
+        [downLoadNavCtrl.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
+        
         UIImage *tabBackground = [[UIImage imageNamed:@"tab_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
         [[UITabBar appearance] setBackgroundImage:tabBackground];
         [[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tab_bg_zhong_212.png"]];
-        self.viewControllers = [NSArray arrayWithObjects:allListNav,sortNav,mineNav, nil];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEDAN];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEBANG];
+        self.viewControllers = [NSArray arrayWithObjects:sortNav,allListNav,downLoadNavCtrl,mineNav, nil];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEDAN];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEBANG];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:MINE];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:MINE];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:XIAZAI];
         self.tabBar.selectedImageTintColor = [UIColor whiteColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];

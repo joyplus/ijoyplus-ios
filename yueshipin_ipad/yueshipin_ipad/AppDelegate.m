@@ -195,7 +195,8 @@
         [self initDownloadManager];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
     } else {
-        self.rootViewController = [[TabBarViewController alloc] init];
+        tabBarView = [[TabBarViewController alloc] init];
+        self.rootViewController = tabBarView;
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];
         [self.downLoadManager resumeDownLoad];
     }

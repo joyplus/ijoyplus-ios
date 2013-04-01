@@ -20,6 +20,11 @@
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
 #import "CommonMotheds.h"
+#import "FilmReviewDetailView.h"
+#import "AppDelegate.h"
+
+#define REVIEW_VIEW_TAG (11112)
+
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -111,7 +116,7 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
+    //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
    
 }
 
@@ -185,6 +190,20 @@
         [tempHUD hide:YES];
     }];
     
+    NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id",@"1",@"page_num",@"2",@"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews
+                                    parameters:reqData
+                                       success:^(AFHTTPRequestOperation *operation, id result)
+     {
+         arrReviewData_ = [result objectForKey:@"reviews"];
+         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+         //[tempHUD hide:YES];
+     }
+                                       failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     {
+         //[tempHUD hide:YES];
+     }];
+    
 }
 -(void)notificationData{
     infoDic_ = videoInfo_;
@@ -233,6 +252,7 @@
     summaryBg_ = nil;
     summaryLabel_ = nil;
     moreBtn_ = nil;
+    arrReviewData_ = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -244,7 +264,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{   int count = 2;
+{   int count = 3;
     
     if ([commentArray_ count] > 0) {
         count++;
@@ -268,12 +288,17 @@
        
     }
     else if (section == 2){
+        return 0;
         if ([commentArray_ count]>0) {
             return [commentArray_ count]+1;
         }
         else{
             return 0;
         }
+    }
+    else if (3 == section)
+    {
+        return 1;
     }
     return 0;
 }
@@ -568,7 +593,35 @@
         }
     
     }
-    
+    else if (3 == indexPath.section)
+    {
+        UILabel * review =[[UILabel alloc]initWithFrame:CGRectMake(12, 20, 100, 30)];
+        review.text = @"影评";
+        review.backgroundColor = [UIColor clearColor];
+        review.textColor = [UIColor grayColor];
+        review.font = [UIFont systemFontOfSize:13];
+        [cell addSubview:review];
+        
+        for (int i = 0; i < arrReviewData_.count; i ++)
+        {
+            NSDictionary * data = [arrReviewData_ objectAtIndex:i];
+            FilmReviewViewCell * preCell = (FilmReviewViewCell *)[cell viewWithTag:(REVIEW_VIEW_TAG + i - 1)];
+            
+            CGRect rect = CGRectMake(12, 44, 296, 133);
+            if (nil != preCell)
+            {
+                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 20.0f;
+            }
+            
+            FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
+                                                                            title:[data objectForKey:@"title"]
+                                                                          content:[data objectForKey:@"comments"]];
+            reviewCell.tag = REVIEW_VIEW_TAG + i;
+            [reviewCell setDelegate:self];
+            [cell addSubview:reviewCell];
+        }
+        
+    }
     return cell;
 }
 
@@ -613,6 +666,7 @@
     
     }
     else if (indexPath.section == 2){
+        return 0;
         if (indexPath.row == 0) {
             return 20;
         }
@@ -623,6 +677,11 @@
         
         }
         
+    }
+    else if (3 == indexPath.section)
+    {
+        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 15.0f;
+        return height;
     }
         return 0;
     
@@ -947,11 +1006,28 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    return;
     [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
 
 }
 
+#pragma mark -
+#pragma mark - FilmReviewViewCellDelegate 
+
+- (void)filmReviewTaped:(NSString *)title content:(NSString *)content
+{
+    [UIView animateWithDuration:0.0 animations:^{
+        FilmReviewDetailView * filmView = [[FilmReviewDetailView alloc] initWithFrame:CGRectMake(0, 0, 320, kFullWindowHeight)
+                                                                                title:title
+                                                                              content:content];
+        
+        UITabBarController * ctrl = [AppDelegate instance].tabBarView;
+        
+        [ctrl.selectedViewController.view addSubview:filmView];
+    }];
+    
+}
 
 
 @end

@@ -42,6 +42,8 @@
     UIButton *preDL_;
     BOOL isDownLoad_;
     BOOL isloaded_;
+    
+    NSArray *arrReviewData_;
 }
 @property (nonatomic, strong) NSDictionary *videoInfo;
 @property (nonatomic, assign) int videoType;

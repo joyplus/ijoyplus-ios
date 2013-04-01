@@ -65,7 +65,7 @@
     
     self.button = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.button setEnabled:YES];
-    [self.button setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateNormal];
+    [self.button setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
     //[self.button setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
     UIFont* font = [UIFont systemFontOfSize:13];
     

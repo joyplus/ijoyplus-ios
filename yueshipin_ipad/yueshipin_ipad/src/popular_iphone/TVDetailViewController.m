@@ -15,6 +15,11 @@
 #import "CommonHeader.h"
 #import "CacheUtility.h"
 #import "CommonMotheds.h"
+#import "FilmReviewViewCell.h"
+#import "ServiceConstants.h"
+
+#define REVIEW_DATA_REQUEST_NUM     (@"2")
+#define REVIEW_VIEW_TAG             (11111)
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
 @property (nonatomic) NSInteger curSelectedNum;
@@ -118,7 +123,7 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
+     //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRecord) name:WATCH_HISTORY_REFRESH object:nil];
     
@@ -193,6 +198,21 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
+    }];
+    
+    
+    NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:proId, @"prod_id",@"1",@"page_num",REVIEW_DATA_REQUEST_NUM,@"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews
+                                    parameters:reqData
+                                       success:^(AFHTTPRequestOperation *operation, id result)
+    {
+        arrReviewData_ = [result objectForKey:@"reviews"];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        //[tempHUD hide:YES];
+    }
+                                       failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+    {
+        //[tempHUD hide:YES];
     }];
     
 }
@@ -279,7 +299,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    int count = 2;
+    int count = 3;
     
     if ([commentArray_ count] > 0) {
         count++;
@@ -310,6 +330,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
             return 0;
         }
 
+    }
+    else if (3 == section)
+    {
+        return 1;
     }
     return 0;
 
@@ -581,6 +605,34 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
 
     }
+    else if (3 == indexPath.section)
+    {
+        UILabel * review =[[UILabel alloc]initWithFrame:CGRectMake(12, 20, 100, 30)];
+        review.text = @"影评";
+        review.backgroundColor = [UIColor clearColor];
+        review.textColor = [UIColor grayColor];
+        review.font = [UIFont systemFontOfSize:13];
+        [cell addSubview:review];
+        
+        for (int i = 0; i < arrReviewData_.count; i ++)
+        {
+            NSDictionary * data = [arrReviewData_ objectAtIndex:i];
+            FilmReviewViewCell * preCell = (FilmReviewViewCell *)[cell viewWithTag:(REVIEW_VIEW_TAG + i - 1)];
+            
+            CGRect rect = CGRectMake(12, 44, 296, 133);
+            if (nil != preCell)
+            {
+                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 20.0f;
+            }
+            
+            FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
+                                                                                  title:[data objectForKey:@"title"]
+                                                                                content:[data objectForKey:@"comments"]];
+            reviewCell.tag = REVIEW_VIEW_TAG + i;
+            [cell addSubview:reviewCell];
+        }
+        
+    }
     
     return cell;
 }
@@ -639,6 +691,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
             
         }
 
+    }
+    else if (3 == indexPath.section)
+    {
+        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 15.0f;
+        return height;
     }
        return 0;
     
@@ -1478,6 +1535,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    return;
     [CommonMotheds showNetworkDisAbledAlert];
     [self loadComments];
     

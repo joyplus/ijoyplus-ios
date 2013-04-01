@@ -41,7 +41,13 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.title = @"视频缓存";
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    titleText.backgroundColor = [UIColor clearColor];
+    titleText.textColor=[UIColor whiteColor];
+    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [titleText setText:@"下载缓存"];
+    self.navigationItem.titleView=titleText;
+    
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];

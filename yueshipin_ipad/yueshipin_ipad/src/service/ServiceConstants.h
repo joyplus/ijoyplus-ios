@@ -90,6 +90,8 @@ extern NSString *const kPathProgramHiddenWatch;
 
 extern NSString *const kPathProgramView;
 
+extern NSString *const kPathProgramReviews;
+
 extern NSString *const kPathProgramViewRecommend;
 
 extern NSString *const kPathProgramInvalid;
