@@ -18,6 +18,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
+#import "HTTPServer.h"
+
+#define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -26,13 +29,19 @@
 @property (nonatomic, readonly) int networkStatus;
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
 @property (atomic, strong) NSString *show3GAlertSeq;
+@property (nonatomic, strong)HTTPServer *httpServer;
+@property (nonatomic, strong) UILocalNotification *localNotification;
 - (void)monitorReachability;
+
+- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti;
+- (void)cancelLocalNotification;
 
 @end
 
 @implementation AppDelegate
 @synthesize downloadItems;
 @synthesize subdownloadItems;
+@synthesize playWithDownload;
 @synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
@@ -50,6 +59,9 @@
 @synthesize closeVideoMode;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
+@synthesize padM3u8DownloadManager;
+@synthesize httpServer;
+@synthesize localNotification;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -62,10 +74,46 @@
 	[iRate sharedInstance].appStoreID = APPIRATER_APP_ID;
     [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
     [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
-    [iRate sharedInstance].daysUntilPrompt = 3;
+    [iRate sharedInstance].daysUntilPrompt = 7;
+    [iRate sharedInstance].verboseLogging = NO;
     
     //enable preview mode
     [iRate sharedInstance].previewMode = NO;
+}
+
+- (void)startHttpServer
+{
+    if (httpServer) {
+        if (![httpServer isRunning]) {
+            [self startNewHttpServer];
+        }
+    } else {
+        httpServer = [[HTTPServer alloc] init];
+        [httpServer setPort:12580];
+    	[httpServer setType:@"_http._tcp."];
+        NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDir = [documentPaths objectAtIndex:0];
+    	[httpServer setDocumentRoot:documentsDir];
+        [self startNewHttpServer];
+    }
+}
+
+- (void)stopHttpServer
+{
+    if (httpServer) {
+        [httpServer stop];
+        NSLog(@"HTTP Server is stoped.");
+    }
+}
+
+- (void)startNewHttpServer
+{
+    NSError *error;
+    if([httpServer start:&error]) {
+        NSLog(@"Started HTTP Server on port %hu", [httpServer listeningPort]);
+    } else {
+        NSLog(@"Error starting HTTP Server: %@", error);
+    }
 }
 
 - (void)customizeAppearance
@@ -105,16 +153,16 @@
 
 - (void)initDownloadManager
 {
-    downloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-    [downloadItems addObjectsFromArray:[DownloadItem allObjects]];
-    subdownloadItems = [[NSMutableArray alloc]initWithCapacity:10];
-    [subdownloadItems addObjectsFromArray:[SubdownloadItem allObjects]];
-    padDownloadManager = [[NewDownloadManager alloc]init];
+    padDownloadManager = [[NewDownloadManager alloc]init];    
+    padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    //如果是测试
+    if (ENVIRONMENT == 0 && LOG_ENABLED == 1) {
+        [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
@@ -127,6 +175,7 @@
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
     }
+    playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self initWeChat];
@@ -169,7 +218,6 @@
     }
 
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
-
     return YES;
 }
 
@@ -196,14 +244,15 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [PFPush storeDeviceToken:deviceToken];
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:deviceToken];
+    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
-        PFInstallation *installation = [PFInstallation currentInstallation];
-        [installation setBadge:0];
-        [installation saveInBackground];
+        [currentInstallation setBadge:0];
     }
-    [PFPush subscribeToChannelInBackground:@"" block:^(BOOL succeeded, NSError *error) {
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded)
             NSLog(@"Successfully subscribed to broadcast channel!");
         else
@@ -248,13 +297,23 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     [self.downLoadManager appDidEnterBackground];
+    
+    //When app enter background, add a new local Notification
+    //7天（1周）后下午9点提示
+    [self addLocalNotificationWithTimeInterval:DAY(7)];
+    // end
+    //add notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
+    if (httpServer && [httpServer isRunning]) {
+        [httpServer stop:YES];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
-    
 }
+
 -(void)iphoneContinueDownload{
    [self.downLoadManager appDidEnterForeground];
 }
@@ -273,6 +332,13 @@
     }
     [self.sinaweibo applicationDidBecomeActive];
     [self performSelector:@selector(triggerDownload) withObject:self afterDelay:10];
+    
+    //when app become active ,cancel all local notification .
+    [self cancelLocalNotification];
+    
+    //add notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
+                                                        object:nil];
 }
 
 - (void)triggerDownload
@@ -290,6 +356,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
 }
 //- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
 //    
@@ -334,6 +401,9 @@
                 }
             }
         }
+    } else {
+        [self.padDownloadManager stopDownloading];
+        [AppDelegate instance].currentDownloadingNum = 0;
     }
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
@@ -410,6 +480,35 @@
     
 }
 
+- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti
+{
+    localNotification = [[UILocalNotification alloc] init];
+    
+    if (nil != localNotification)
+    {
+        NSDate * now = [NSDate new];
+        //输出字符串为格林威治时区，做8小时偏移
+        NSString * now_str = [now description];
+        //即北京时区21点整,(ti)天后，提示用户
+        NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"13:00:00"];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+        NSDate * Date9PM = [formatter dateFromString:today9PM];
+        NSDate * fireDate = [Date9PM dateByAddingTimeInterval:ti];
+        localNotification.fireDate = fireDate;
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.alertBody = @"亲，你已经至少一周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
+        [[UIApplication sharedApplication]   scheduleLocalNotification:localNotification];
+    }
+}
 
+- (void)cancelLocalNotification
+{
+    if (nil != localNotification)
+    {
+        [[UIApplication sharedApplication] cancelLocalNotification:localNotification];
+        localNotification = nil;
+    }
+}
 
 @end
