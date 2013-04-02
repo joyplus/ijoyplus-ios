@@ -109,20 +109,6 @@
     }
 }
 
-- (void)commentBtnClicked
-{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [AppDelegate instance].rootViewController.prodId = self.prodId;
-    [AppDelegate instance].rootViewController.videoDetailDelegate = self;
-    [[AppDelegate instance].rootViewController showCommentPopup];
-    
-}
-
-
 - (void)removeAuthData
 {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"SinaWeiboAuthData"];
@@ -272,18 +258,28 @@
     return videoUrl;
 }
 
-- (void)addListBtnClicked
+//- (void)addListBtnClicked
+//{
+//    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+//    if([hostReach currentReachabilityStatus] == NotReachable) {
+//        [UIUtility showNetWorkError:self.view];
+//        return;
+//    }
+//    SelectListViewController *viewController = [[SelectListViewController alloc]init];
+//    viewController.prodId = self.prodId;
+//    viewController.type = self.type;
+//    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+//    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+//}
+
+- (void)reportBtnClicked
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    SelectListViewController *viewController = [[SelectListViewController alloc]init];
-    viewController.prodId = self.prodId;
-    viewController.type = self.type;
-    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+    [[[AppDelegate instance].rootViewController showReportPopup:self.prodId]];
 }
 
 - (void)showSublistView:(int)num{

@@ -806,6 +806,24 @@
     }
 }
 
+- (void)showReportPopup:(NSString *)prodId
+{
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    view.tag = 3268142;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"comment_frame"]];
+    frame.frame = CGRectMake(0, 0, 424, 265);
+    frame.center = CGPointMake(view.center.x, view.center.y - 180);
+    [view addSubview:frame];
+    
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(675, 80, 40, 42);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:closeBtn];
+}
+
 - (void)removeIntroModalView
 {
     UIView *modalView = (UIView *)[self.view viewWithTag:3268999];

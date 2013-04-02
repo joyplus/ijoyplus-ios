@@ -47,12 +47,8 @@
     [self setFilmImage:nil];
     [self setTitleImage:nil];
     [self setTitleLabel:nil];
-    [self setScoreLabel:nil];
-    [self setDoulanLogo:nil];
     [self setActorLabel:nil];
     [self setActorName1Label:nil];
-    [self setActorName2Label:nil];
-    [self setActorName3Label:nil];
     [self setPlayLabel:nil];
     [self setPlayTimeLabel:nil];
     [self setRegionLabel:nil];
@@ -62,13 +58,10 @@
     [self setPlayBtn:nil];
     [self setShareBtn:nil];
     [self setAddListBtn:nil];
-    [self setLineImage:nil];
     [self setIntroImage:nil];
-    [self setIntroBgImage:nil];
     [self setIntroContentTextView:nil];
     [self setCommentImage:nil];
     [self setNumberLabel:nil];
-    [self setCommentBtn:nil];
     [self setDingNumberImage:nil];
     [self setCollectioNumber:nil];
     [self setPlayRoundBtn:nil];
@@ -125,10 +118,6 @@
     self.titleLabel.frame = CGRectMake(278, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
     
-    self.scoreLabel.frame = CGRectMake(280, 110, 50, 20);
-    self.doulanLogo.frame = CGRectMake(325, 113, 15, 15);
-    self.doulanLogo.image = [UIImage imageNamed:@"douban"];
-    
     self.playBtn.frame = CGRectMake(280, 120, 185, 40);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
@@ -179,21 +168,13 @@
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    //    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
-    //    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
-    //    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
-    //    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
-    self.lineImage.image = [UIImage imageNamed:@"dividing"];
-    
     self.introImage.frame = CGRectMake(LEFT_WIDTH, 460, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    self.introBgImage.frame = CGRectMake(LEFT_WIDTH, 490, 430, 100);
-    self.introBgImage.image = [[UIImage imageNamed:@"brief"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    
-    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH + 10, 490, 420, 100);
+    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 490, 430, 100);
+    self.introContentTextView.textColor = CMConstants.grayColor;
+    self.introContentTextView.layer.borderWidth = 1;
+    self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -212,6 +193,8 @@
     showListView.backgroundColor = [UIColor clearColor];
     [showListView setPagingEnabled:YES];
     [self.bgScrollView addSubview:showListView];
+    
+    [self.commentImage setHidden:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -249,7 +232,6 @@
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
-                self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:introContentHeight - 100];
@@ -258,7 +240,6 @@
         } else {
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
-                self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
@@ -341,8 +322,6 @@
     [self.filmImage setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     
     self.titleLabel.text = [video objectForKey:@"name"];
-    self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     self.actorName1Label.text = stars;
     //    NSArray *starArray;
@@ -468,11 +447,6 @@
     self.numberLabel.textColor = CMConstants.grayColor;
     self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
     
-    self.commentBtn.frame = CGRectMake(405, positionY + 27, 66, 26);
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
-    [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
     if(commentListViewController == nil){
         commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
         commentListViewController.parentDelegate = self;
@@ -482,7 +456,7 @@
     [commentListViewController.tableView reloadData];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + 200 + increasePositionY)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + increasePositionY)];
     //    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 70, 425, commentListViewController.tableHeight);
 }
 
@@ -567,8 +541,11 @@
 
 - (void)refreshCommentListView:(int)tableHeight
 {
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+5 * 30 + 200)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+5 * 30)];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 430, tableHeight);
+    if (tableHeight > 0) {
+        [self.commentImage setHidden:NO];
+    }
 }
 
 - (void)playVideo

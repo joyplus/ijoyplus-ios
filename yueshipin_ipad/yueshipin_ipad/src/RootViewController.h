@@ -74,4 +74,5 @@
 - (void)showShowDownloadView:(NSString *)downloadingProdid title:(NSString *)title episodeArray:(NSArray *)episodeArray;
 - (void)showModalView:(UIImage *)image closeTime:(int)closeTime;
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage;
+- (void)showReportPopup:(NSString *)prodId;
 @end

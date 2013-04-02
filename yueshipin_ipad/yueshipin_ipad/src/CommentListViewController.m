@@ -73,6 +73,7 @@
             NSArray *tempArray = [result objectForKey:@"reviews"];
             if (tempArray.count > 0) {
                 [commentArray addObjectsFromArray:tempArray];
+                [commentArray addObjectsFromArray:tempArray];
             }
             [self.tableView reloadData];
             [self.parentDelegate refreshCommentListView:tableHeight];
