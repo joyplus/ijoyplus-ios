@@ -479,8 +479,6 @@
         commentListViewController.prodId = self.prodId;
         [self.bgScrollView addSubview:commentListViewController.view];
     }
-    commentListViewController.totalCommentNum = totalCommentNum;
-    commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     

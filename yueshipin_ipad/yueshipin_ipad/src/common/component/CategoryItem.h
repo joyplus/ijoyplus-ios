@@ -10,4 +10,7 @@
 
 @interface CategoryItem : NSObject
 
+@property (nonatomic, strong) NSString *label;
+@property (nonatomic, strong) NSString *key;
+@property (nonatomic, strong) NSString *value;
 @end

@@ -938,7 +938,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             //                    [viewAtLeft2 setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION, viewAtLeft2.frame.origin.y, viewAtLeft2.frame.size.width, viewAtLeft2.frame.size.height)];
             //                }
             if(moveToLeft){
-                [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION+8, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
+                [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
 				[viewAtRight setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
             } else {
                 [viewAtRight setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];

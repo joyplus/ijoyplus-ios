@@ -10,4 +10,7 @@
 
 @implementation CategoryItem
 
+@synthesize label;
+@synthesize key;
+@synthesize value;
 @end

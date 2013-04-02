@@ -37,7 +37,7 @@
     int pageSize;    
     NSString *umengPageName;
 }
-@property (nonatomic, strong) NSArray *btnLabelArray
+@property (nonatomic, strong) NSArray *btnLabelArray;
 @property (nonatomic, strong) UIView *topCategoryView;
 @property (nonatomic, strong) UIView *subcategoryView;
 
@@ -66,34 +66,44 @@
         backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
         [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
+        
+        UITapGestureRecognizer *hideSubcategoryViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideSubcategoryView)];
+        [hideSubcategoryViewGesture setNumberOfTapsRequired:1];
+        [backgroundView addGestureRecognizer:hideSubcategoryViewGesture];
 
         sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];
         sloganImageView.frame = CGRectMake(15, 36, 261, 42);
         [backgroundView addSubview:sloganImageView];
         
-        topCategoryView = [[UIView alloc]initWithFrame:CGRectMake(0, 50, backgroundView.frame.size.width, 50)];
+        topCategoryView = [[UIView alloc]initWithFrame:CGRectMake(5, 100, backgroundView.frame.size.width-15, 50)];
         [topCategoryView setBackgroundColor:[UIColor yellowColor]];
         UIImageView *topCatBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, topCategoryView.frame.size.width, 45)];
         topCatBgImage.image = [UIImage imageNamed:@"top_category_bg"];
         [topCategoryView addSubview:topCatBgImage];
         
-        UIView *sliderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 50, 45)];
-        sliderView.backgroundColor = [UIColor colorWithRed:255.0/255.0 green:164.0/255.0 blue:5/255.0 alpha:1];
+        UIView *sliderView = [[UIView alloc]initWithFrame:CGRectMake(5, 0, 50, 45)];
+        sliderView.backgroundColor = CMConstants.yellowColor;
         sliderView.tag = SLIDER_VIEW_TAG;
         sliderView.layer.cornerRadius = 5;
         sliderView.layer.masksToBounds = YES;
         [topCategoryView addSubview:sliderView];
-        btnLabelArray = [NSArray arrayWithObjects:@"全部", @"大陆", @"日本", @"韩国", @"欧美", @"香港", @"台湾", @"泰国", @"偶像", @"更多", nil];
+        btnLabelArray = [NSArray arrayWithObjects:@"全部", @"日本", @"欧美", @"国产", @"情感", @"科幻", @"热血", @"推理", @"搞笑", @"更多", nil];
         for (int i = 0; i < btnLabelArray.count; i++) {
-            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            tempBtn.frame = CGRectMake(20 + i * 50, 0, 50, 45);
-            tempBtn.titleLabel.text = [btnLabelArray objectAtIndex:i];
+            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            tempBtn.frame = CGRectMake(5 + i * 50, 0, 50, 45);
+            [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
+            [tempBtn setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
+            [tempBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+            [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             tempBtn.tag = 1101 + i;
             [tempBtn addTarget:self action:@selector(categoryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
             [topCategoryView addSubview:tempBtn];
         }
+        [backgroundView addSubview:topCategoryView];
                
-        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 92, backgroundView.frame.size.width - 18, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 150, backgroundView.frame.size.width - 18, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
         [table setBackgroundColor:[UIColor yellowColor]];
 		[table setDelegate:self];
@@ -107,6 +117,16 @@
         reloads_ = 2;
     }
     return self;
+}
+
+- (void)hideSubcategoryView
+{
+    subcategoryView.alpha = 0;
+    for (UIView *subview in subcategoryView.subviews) {
+        subview.alpha = 0;
+    }
+    [subcategoryView setHidden:YES];
+    [subcategoryView removeFromSuperview];
 }
 
 - (void)loadTable {
@@ -142,13 +162,23 @@
 - (void)categoryBtnClicked:(UIButton *)btn
 {
     int num = btn.tag - 1101;
+    for (int i = 0; i < btnLabelArray.count; i++) {
+        UIButton *tempBtn = (UIButton *)[topCategoryView viewWithTag:1101 + i];
+        if (tempBtn.tag == btn.tag) {
+            [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        } else {
+            [tempBtn setTitleColor:[UIColor colorWithRed:132/255.0 green:132/255.0 blue:129/255.0 alpha:1] forState:UIControlStateNormal];
+        }
+    }
     UIView *sliderView = [topCategoryView viewWithTag:SLIDER_VIEW_TAG];
     if (sliderView) {
-        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            sliderView.frame = CGRectMake(20 + num * 50, 0, sliderView.frame.size.width, sliderView.frame.size.height);
+        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            sliderView.frame = CGRectMake(5 + num * 50, 0, sliderView.frame.size.width, sliderView.frame.size.height);
         } completion:^(BOOL finished) {
             if (num == btnLabelArray.count - 1) {
                 [self showSubcategoryView];
+            } else {
+                [self hideSubcategoryView];
             }
         }];
     }
@@ -157,10 +187,11 @@
 - (void)showSubcategoryView
 {
     if (subcategoryView == nil) {
-        subcategoryView = [[UIView alloc]initWithFrame:CGRectMake(10, 120, 500, 350)];
+        subcategoryView = [[UIView alloc]initWithFrame:CGRectMake(10, 130, 500, 350)];
+        subcategoryView.alpha = 0;
         [subcategoryView setBackgroundColor:[UIColor whiteColor]];
-        NSArray *categoryLabelArray = [NSArray arrayWithObjects:@"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", @"", nil];
-        NSArray *regionLabelArray = [NSArray arrayWithObjects:@"", @"", @"", @"", @"", nil];
+        NSArray *categoryLabelArray = [NSArray arrayWithObjects:@"全部", @"情感", @"科幻", @"热血", @"推理", @"搞笑", @"冒险", @"萝莉", @"校园", @"动作", @"机战", @"运动", @"耽美", @"战争", @"少年", @"少年", @"社会", @"原创", @"亲子", @"益智", @"励志", @"百合", @"其他", nil];
+        NSArray *regionLabelArray = [NSArray arrayWithObjects:@"全部", @"日本", @"欧美", @"国产", @"其他", nil];
         NSDate * nowDate = [NSDate date];
         NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
         [dateformat setDateFormat:@"yyyy"];
@@ -171,15 +202,97 @@
             [yearLabelArray addObject:[NSString stringWithFormat:@"%i", year - i]];
         }
         [yearLabelArray addObject:@"其他"];
-    }
-    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 50, 40, 45)];
+        categoryLabel.textColor = CMConstants.grayColor;
+        [categoryLabel setFont:[UIFont systemFontOfSize:15]];
+        categoryLabel.text = @"类型";
+        [subcategoryView addSubview:categoryLabel];
         
+        for (int i = 0; i < categoryLabelArray.count; i++) {
+            NSString *tempLabel = [categoryLabelArray objectAtIndex:i];
+            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            tempBtn.frame = CGRectMake(70 + (i%8) * 51, categoryLabel.frame.origin.y + (i/8) * 50, 50, 45);
+            [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
+            tempBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [tempBtn setTitle:tempLabel forState:UIControlStateNormal];
+            [tempBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+            [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+            tempBtn.tag = 1201 + i;
+            [tempBtn addTarget:self action:@selector(subcategoryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [subcategoryView addSubview:tempBtn];
+        }
+        
+        UILabel *regionLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, 200, categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
+        regionLabel.textColor = CMConstants.grayColor;
+        [regionLabel setFont:[UIFont systemFontOfSize:15]];
+        regionLabel.text = @"地区";
+        [subcategoryView addSubview:regionLabel];
+        for (int i = 0; i < regionLabelArray.count; i++) {
+            NSString *tempLabel = [regionLabelArray objectAtIndex:i];
+            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            tempBtn.frame = CGRectMake(70 + (i%8) * 51, regionLabel.frame.origin.y, 50, 45);
+            [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
+            tempBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [tempBtn setTitle:tempLabel forState:UIControlStateNormal];
+            [tempBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+            [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+            tempBtn.tag = 1301 + i;
+            [tempBtn addTarget:self action:@selector(subcategoryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [subcategoryView addSubview:tempBtn];
+        }
+        
+        UILabel *yearLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, 250, categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
+        yearLabel.contentMode = UIControlContentVerticalAlignmentCenter;
+        yearLabel.textColor = CMConstants.grayColor;
+        [yearLabel setFont:[UIFont systemFontOfSize:15]];
+        yearLabel.text = @"年份";
+        [subcategoryView addSubview:yearLabel];
+        for (int i = 0; i < yearLabelArray.count; i++) {
+            NSString *tempLabel = [yearLabelArray objectAtIndex:i];
+            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            tempBtn.frame = CGRectMake(70 + (i%8) * 51, yearLabel.frame.origin.y + (i/8) * 50, 50, 45);
+            [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
+            [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
+            tempBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [tempBtn setTitle:tempLabel forState:UIControlStateNormal];
+            [tempBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+            [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+            tempBtn.tag = 1301 + i;
+            [tempBtn addTarget:self action:@selector(subcategoryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [subcategoryView addSubview:tempBtn];
+        }
+        for (UIView *subview in subcategoryView.subviews) {
+            subview.alpha = 0;
+        }
+    }
+    [backgroundView addSubview:subcategoryView];
+    [subcategoryView setHidden:NO];
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        for (UIView *subview in subcategoryView.subviews) {
+            subview.alpha = 1;
+        }
+        subcategoryView.alpha = 1;
     } completion:^(BOOL finished) {
         
     }];
 }
 
+- (void)subcategoryBtnClicked:(UIButton *)btn
+{
+
+}
+
 #pragma mark -
+- (void)scrollViewDidScroll:(UIScrollView *)aScrollView
+{
+    [pullToRefreshManager_ tableViewScrolled];
+}
+
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     if (videoType == 0 || videoType == 3) {
         if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){

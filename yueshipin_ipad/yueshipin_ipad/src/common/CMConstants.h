@@ -113,6 +113,8 @@
 
 + (UIColor*)grayColor;
 
++ (UIColor*)yellowColor;
+
 + (UIColor *)scoreBlueColor;
 
 + (UIColor *)titleBlueColor;

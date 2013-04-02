@@ -10,4 +10,5 @@
 
 @interface CommentWebViewController : UIViewController
 
+@property (nonatomic, strong) NSString *commentUrl;
 @end

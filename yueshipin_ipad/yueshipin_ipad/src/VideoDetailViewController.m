@@ -36,9 +36,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:CMConstants.backgroundColor];
     [self.view addGestureRecognizer:self.swipeRecognizer];
-    
+    // Custom initialization
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
+
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
     m3u8DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
