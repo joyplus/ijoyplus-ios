@@ -19,6 +19,8 @@
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "HTTPServer.h"
+#import "PageManageViewController.h"
+#import "UIImage+ResizeAdditions.h"
 
 #define DAY(day)        (day * 3600 * 24)
 
@@ -466,9 +468,24 @@
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
+-(void) onRequestAppMessage
+{
+    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
+    respRootViewCtrl.delegate = self;
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
+    [navCtrl pushViewController:respRootViewCtrl animated:NO];
+}
+
 // wecha sdk delegate
--(void) onReq:(BaseReq*)req{
-       
+-(void) onReq:(BaseReq*)req
+{
+    //
+    if([req isKindOfClass:[GetMessageFromWXReq class]])
+    {
+        [self onRequestAppMessage];
+    }
 }
 -(void) onResp:(BaseResp*)resp{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
@@ -504,6 +521,49 @@
         [[UIApplication sharedApplication] cancelLocalNotification:localNotification];
         localNotification = nil;
     }
+}
+
+#pragma mark - RespForWXRootViewControllerDelegate
+- (void)removeRespForWXRootView
+{
+    tabBarView.tabBar.hidden = NO;
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    [navCtrl popViewControllerAnimated:NO];
+}
+
+- (void)backButtonClick
+{
+    [WXApi openWXApp];
+    tabBarView.tabBar.hidden = NO;
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    [navCtrl popViewControllerAnimated:NO];
+}
+
+- (void)shareVideoResp:(NSDictionary *)data
+{
+    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
+    
+    WXMediaMessage *message = [WXMediaMessage message];
+    
+    message.title = [data objectForKey:@"name"];
+    message.description = [data objectForKey:@"description"];
+    
+    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
+    
+    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+    
+    [message setThumbImage:thumb];
+    
+    WXVideoObject *ext = [WXVideoObject object];
+    ext.videoUrl = [data objectForKey:@"videoURL"];
+    
+    message.mediaObject = ext;
+    
+    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
+    resp.message = message;
+    resp.bText = NO;
+    
+    [WXApi sendResp:resp];
 }
 
 @end

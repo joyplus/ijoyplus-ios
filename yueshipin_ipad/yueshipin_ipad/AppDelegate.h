@@ -15,10 +15,11 @@
 #import "NewDownloadManager.h"
 #import "WXApi.h"
 #import "NewM3u8DownloadManager.h"
+#import "RespForWXRootViewController.h"
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate,RespForWXRootViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

@@ -148,6 +148,17 @@
 		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
 		2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */; };
+		227C09CA170A7D4000BEC1E5 /* RespForWXRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 227C09C9170A7D4000BEC1E5 /* RespForWXRootViewController.m */; };
+		227C09CD170A818700BEC1E5 /* RespForWXRootView.m in Sources */ = {isa = PBXBuildFile; fileRef = 227C09CC170A818600BEC1E5 /* RespForWXRootView.m */; };
+		227C09CF170AC24400BEC1E5 /* weixin_tupian_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09CE170AC24400BEC1E5 /* weixin_tupian_bg@2x.png */; };
+		227C09D4170ACFFA00BEC1E5 /* re_bo_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09D0170ACFF700BEC1E5 /* re_bo_s@2x.png */; };
+		227C09D5170ACFFA00BEC1E5 /* re_bo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09D1170ACFF800BEC1E5 /* re_bo@2x.png */; };
+		227C09D6170ACFFA00BEC1E5 /* shou_cang_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09D2170ACFF900BEC1E5 /* shou_cang_s@2x.png */; };
+		227C09D7170ACFFA00BEC1E5 /* shou_cang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09D3170ACFF900BEC1E5 /* shou_cang@2x.png */; };
+		227C09DA170AF69F00BEC1E5 /* RespForWXDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 227C09D9170AF69E00BEC1E5 /* RespForWXDetailViewController.m */; };
+		227C09DD170AFB2D00BEC1E5 /* fenxiang_weixin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09DB170AFB2C00BEC1E5 /* fenxiang_weixin@2x.png */; };
+		227C09DE170AFB2D00BEC1E5 /* shareWX_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09DC170AFB2C00BEC1E5 /* shareWX_bg@2x.png */; };
+		227C09E0170AFB9C00BEC1E5 /* fenxiang_weixin_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09DF170AFB9B00BEC1E5 /* fenxiang_weixin_s@2x.png */; };
 		2281DA6216AD25D800333353 /* IphoneDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */; };
 		229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */; };
 		22AAA4B81697D42E00333F76 /* CreateMyListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */; };
@@ -978,6 +989,20 @@
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
 		2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownlooadViewController.h; sourceTree = "<group>"; };
 		2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownlooadViewController.m; sourceTree = "<group>"; };
+		227C09C8170A7D4000BEC1E5 /* RespForWXRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RespForWXRootViewController.h; sourceTree = "<group>"; };
+		227C09C9170A7D4000BEC1E5 /* RespForWXRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RespForWXRootViewController.m; sourceTree = "<group>"; };
+		227C09CB170A818600BEC1E5 /* RespForWXRootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RespForWXRootView.h; sourceTree = "<group>"; };
+		227C09CC170A818600BEC1E5 /* RespForWXRootView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RespForWXRootView.m; sourceTree = "<group>"; };
+		227C09CE170AC24400BEC1E5 /* weixin_tupian_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "weixin_tupian_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/weixin_tupian_bg@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09D0170ACFF700BEC1E5 /* re_bo_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "re_bo_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/re_bo_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09D1170ACFF800BEC1E5 /* re_bo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "re_bo@2x.png"; path = "yueshipin_ipad/Resource_iphone/re_bo@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09D2170ACFF900BEC1E5 /* shou_cang_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shou_cang_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/shou_cang_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09D3170ACFF900BEC1E5 /* shou_cang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shou_cang@2x.png"; path = "yueshipin_ipad/Resource_iphone/shou_cang@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09D8170AF69E00BEC1E5 /* RespForWXDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RespForWXDetailViewController.h; sourceTree = "<group>"; };
+		227C09D9170AF69E00BEC1E5 /* RespForWXDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RespForWXDetailViewController.m; sourceTree = "<group>"; };
+		227C09DB170AFB2C00BEC1E5 /* fenxiang_weixin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fenxiang_weixin@2x.png"; path = "yueshipin_ipad/Resource_iphone/fenxiang_weixin@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09DC170AFB2C00BEC1E5 /* shareWX_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shareWX_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/shareWX_bg@2x.png"; sourceTree = SOURCE_ROOT; };
+		227C09DF170AFB9B00BEC1E5 /* fenxiang_weixin_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fenxiang_weixin_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/fenxiang_weixin_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		2281DA6016AD25D800333353 /* IphoneDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneDownloadViewController.h; sourceTree = "<group>"; };
 		2281DA6116AD25D800333353 /* IphoneDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneDownloadViewController.m; sourceTree = "<group>"; };
 		229CA6D216DB78AF00C60661 /* CustomNavigationViewControllerPortrait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationViewControllerPortrait.h; sourceTree = "<group>"; };
@@ -1916,6 +1941,19 @@
 			path = TSPopover;
 			sourceTree = "<group>";
 		};
+		227C09C7170A7D0800BEC1E5 /* WechatShare */ = {
+			isa = PBXGroup;
+			children = (
+				227C09C8170A7D4000BEC1E5 /* RespForWXRootViewController.h */,
+				227C09C9170A7D4000BEC1E5 /* RespForWXRootViewController.m */,
+				227C09D8170AF69E00BEC1E5 /* RespForWXDetailViewController.h */,
+				227C09D9170AF69E00BEC1E5 /* RespForWXDetailViewController.m */,
+				227C09CB170A818600BEC1E5 /* RespForWXRootView.h */,
+				227C09CC170A818600BEC1E5 /* RespForWXRootView.m */,
+			);
+			name = WechatShare;
+			sourceTree = "<group>";
+		};
 		22B21C2116A7D4F000D57512 /* DownLoad_iphone */ = {
 			isa = PBXGroup;
 			children = (
@@ -1970,6 +2008,7 @@
 		22FEEE4316899AE000A71EF4 /* popular_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				227C09C7170A7D0800BEC1E5 /* WechatShare */,
 				220DF9961709368400C1AB86 /* FeedBack */,
 				223AD77E170562000017A09C /* FilmReview_iPhone */,
 				220260B216E840A40010322F /* IphoneAVPlayerViewController.h */,
@@ -2069,7 +2108,15 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				227C09DB170AFB2C00BEC1E5 /* fenxiang_weixin@2x.png */,
+				227C09DF170AFB9B00BEC1E5 /* fenxiang_weixin_s@2x.png */,
+				227C09DC170AFB2C00BEC1E5 /* shareWX_bg@2x.png */,
 				22E74254170999D4006DEB72 /* share_f@2x.png */,
+				227C09CE170AC24400BEC1E5 /* weixin_tupian_bg@2x.png */,
+				227C09D0170ACFF700BEC1E5 /* re_bo_s@2x.png */,
+				227C09D1170ACFF800BEC1E5 /* re_bo@2x.png */,
+				227C09D2170ACFF900BEC1E5 /* shou_cang_s@2x.png */,
+				227C09D3170ACFF900BEC1E5 /* shou_cang@2x.png */,
 				22E74255170999D4006DEB72 /* share@2x.png */,
 				22E7424C170997CE006DEB72 /* back_f@2x.png */,
 				22E7424D170997CE006DEB72 /* back@2x.png */,
@@ -3768,6 +3815,14 @@
 				22E7424F170997CE006DEB72 /* back@2x.png in Resources */,
 				22E74256170999D4006DEB72 /* share_f@2x.png in Resources */,
 				22E74257170999D4006DEB72 /* share@2x.png in Resources */,
+				227C09CF170AC24400BEC1E5 /* weixin_tupian_bg@2x.png in Resources */,
+				227C09D4170ACFFA00BEC1E5 /* re_bo_s@2x.png in Resources */,
+				227C09D5170ACFFA00BEC1E5 /* re_bo@2x.png in Resources */,
+				227C09D6170ACFFA00BEC1E5 /* shou_cang_s@2x.png in Resources */,
+				227C09D7170ACFFA00BEC1E5 /* shou_cang@2x.png in Resources */,
+				227C09DD170AFB2D00BEC1E5 /* fenxiang_weixin@2x.png in Resources */,
+				227C09DE170AFB2D00BEC1E5 /* shareWX_bg@2x.png in Resources */,
+				227C09E0170AFB9C00BEC1E5 /* fenxiang_weixin_s@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3959,6 +4014,9 @@
 				223AD781170562A10017A09C /* FilmReviewViewCell.m in Sources */,
 				223AD7871705B8950017A09C /* FilmReviewDetailView.m in Sources */,
 				220DF999170936B600C1AB86 /* FeedBackView.m in Sources */,
+				227C09CA170A7D4000BEC1E5 /* RespForWXRootViewController.m in Sources */,
+				227C09CD170A818700BEC1E5 /* RespForWXRootView.m in Sources */,
+				227C09DA170AF69F00BEC1E5 /* RespForWXDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
