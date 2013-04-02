@@ -255,17 +255,17 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     if(flag){
         [sinaweibo_ logIn];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"确定要解除绑定吗？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"确定要解除绑定吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];
 
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 0) {
+    if (buttonIndex == 1) {
         [sinaweibo_ logOut];
     }
-    else if (buttonIndex == 1){
+    else if (buttonIndex == 0){
         sinaSwith_.on = YES;
     }
 }

@@ -21,6 +21,7 @@
 #import "IphoneDownloadViewController.h"
 #import "DownLoadManager.h"
 #import "CommonMotheds.h"
+#import "DownLoadManager.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 #define TV_TYPE 9000
@@ -132,22 +133,13 @@
     if (numStr != nil) {
         num = [numStr intValue];
     }
-    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
     customNavigationButtonView_.badgeView.hidden = NO;
-    if (num == 0) {
-         customNavigationButtonView_.badgeView.badgeText = nil;
-    }
-    else{
-         customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
-    }
-    
+        
     customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
     
     
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
-    
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
@@ -166,8 +158,6 @@
         [refreshHeaderView_ refreshLastUpdatedDate];
     }
    
-    
-    
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -175,27 +165,19 @@
     pullToRefreshManager_ = nil;
     refreshHeaderView_ = nil;
 }
--(void)setWarningNum{
-     NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
-    int num = 0;
-    if (numStr != nil) {
-        num = [numStr intValue];
-    }
-    if (num == 0) {
-        customNavigationButtonView_.warningNumber = 0;
-        customNavigationButtonView_.badgeView.badgeText = @"";
-        customNavigationButtonView_.badgeView.hidden = YES;
-    }
-    else {
-        customNavigationButtonView_.badgeView.hidden = NO;
-        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
-        [customNavigationButtonView_.badgeView setNeedsLayout];
-        customNavigationButtonView_.warningNumber = 0;
-    }
-    
-     
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    int count = [DownLoadManager downloadTaskCount];
+    if (count == 0) {
+        customNavigationButtonView_.badgeView.badgeText = nil;
+    }
+    else{
+        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",count];
+    }
+    [customNavigationButtonView_.badgeView setNeedsLayout];
 }
+
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
@@ -203,12 +185,7 @@
 
 }
 
--(void)setting:(id)sender{
-//    customNavigationButtonView_.warningNumber = 0;
-//    customNavigationButtonView_.badgeView.badgeText = @"";
-//    customNavigationButtonView_.badgeView.hidden = YES;
-//    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",0]];
-    
+-(void)setting:(id)sender{    
     IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
     downloadViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:downloadViewController animated:YES];

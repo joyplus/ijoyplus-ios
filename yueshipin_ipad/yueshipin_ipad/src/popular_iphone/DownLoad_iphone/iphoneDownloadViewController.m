@@ -24,11 +24,10 @@
 @synthesize editButtonItem = editButtonItem_;
 @synthesize doneButtonItem = doneButtonItem_;
 @synthesize itemArr = itemArr_;
-@synthesize progressArr = progressArr_;
+@synthesize progressViewDic = progressViewDic_;
 @synthesize diskUsedProgress = diskUsedProgress_;
-@synthesize progressLabelArr = progressLabelArr_;
+@synthesize progressLabelDic = progressLabelDic_;
 @synthesize downLoadManager = downLoadManager_;
-@synthesize statusImgArr = statusImgArr_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -73,9 +72,9 @@
     doneButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     
     itemArr_ = [NSMutableArray arrayWithArray:[DownloadItem allObjects]];
-    progressArr_ = [NSMutableArray arrayWithCapacity:5];
-    progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];
-    statusImgArr_ = [NSMutableArray arrayWithCapacity:5];
+    progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
+    progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
+    
     GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-30)];
     gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     gmGridView.backgroundColor = [UIColor clearColor];
@@ -152,9 +151,9 @@
 }
 
 -(void)initData{
-    progressArr_ = [NSMutableArray arrayWithCapacity:5];
-    progressLabelArr_ = [NSMutableArray arrayWithCapacity:5];
-    statusImgArr_ = [NSMutableArray arrayWithCapacity:5];
+    progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
+    progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
+    
     itemArr_ = [NSMutableArray arrayWithArray:[DownloadItem allObjects]];
 }
 -(void)reloadDataSource{
@@ -185,47 +184,41 @@
 }
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
-        [self reloadDataSource];
-
+        DownloadItem *item = [self getDownloadItemById:itemId];
+        float percent = item.percentage/100.0;
+        UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
+        [progressView setProgress:percent];
+        UILabel *label = [progressLabelDic_ objectForKey:itemId];
+        label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",item.percentage];
    }
-
 }
 - (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]) {
         float value = (float)progress;
-        for (UIProgressView *progress in progressArr_) {
-            if (progress.tag == [itemId intValue]) {
-                [progress setProgress:value];
-                break;
-            }
-        }
-        int progressValue = (int)(100*value);
-        for (UILabel *label in progressLabelArr_) {
-            if (label.tag == [itemId intValue]) {
-                if (progressValue == 100) {
-                    //label.text = [NSString stringWithFormat:@"下载完成"];
-                }
-                else{
-                    label.text = [NSString stringWithFormat:@"已下载:%i%%",progressValue];
-                }
-                break;
-            }
-        }
+        UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
+        [progressView setProgress:value];
         
+        int progressValue = (int)(100*value);
+        UILabel *label = [progressLabelDic_ objectForKey:itemId];
+        label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
     }
 }
 
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
     
-        [self reloadDataSource];
+        UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
+        [progressView removeFromSuperview];
+        UILabel *label = [progressLabelDic_ objectForKey:itemId];
+        [label removeFromSuperview];
     }
 
 }
 
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
-         [self reloadDataSource];
+         UILabel *label = [progressLabelDic_ objectForKey:itemId];
+         label.text = [NSString stringWithFormat:@"下载失败\n "];
     }
 }
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className{
@@ -272,6 +265,7 @@
     for (UIView *view in cell.contentView.subviews) {
         [view removeFromSuperview];
     }
+    
     UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
      frame.frame = CGRectMake(15, 15, 71, 104);
     [cell.contentView addSubview:frame];
@@ -279,8 +273,8 @@
     UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(17, 17, 67, 99)];
     [contentImage setImageWithURL:[NSURL URLWithString:downloadItem.imageUrl] ];
     [cell.contentView addSubview:contentImage];
-    
-    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(17, 123, 67, 15)];
+        
+    UILabel *nameLbl = [[UILabel alloc] initWithFrame:CGRectMake(17, 123, 67, 21)];
     nameLbl.font = [UIFont systemFontOfSize:13];
     nameLbl.backgroundColor = [UIColor clearColor];
     nameLbl.text = downloadItem.name;
@@ -289,74 +283,57 @@
     [cell.contentView addSubview:nameLbl];
     
     if(downloadItem.type == 1){
-        UILabel *labelDown = [[UILabel alloc] initWithFrame:CGRectMake(17, 101, 67, 15)];
-        labelDown.textColor = [UIColor whiteColor];
-        labelDown.backgroundColor = [UIColor blackColor];
-        labelDown.alpha = 0.6;
-        labelDown.textAlignment = NSTextAlignmentCenter;
-        labelDown.font = [UIFont systemFontOfSize:10];
-        
-        
-        UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 16, 67, 15)];
+        UILabel *progressLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 93, 67, 24)];
         progressLabel.textColor = [UIColor whiteColor];
         progressLabel.tag = [downloadItem.itemId intValue];
         progressLabel.textAlignment = NSTextAlignmentCenter;
         progressLabel.backgroundColor = [UIColor blackColor];
+        progressLabel.font = [UIFont systemFontOfSize:9];
         progressLabel.alpha = 0.6;
-        progressLabel.font = [UIFont systemFontOfSize:10];
-        
-        [progressLabelArr_ addObject:progressLabel];
-      
-        
-        UIImageView *statusImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 44, 44)];
-        statusImg.tag = [downloadItem.itemId intValue];
-        statusImg.center = CGPointMake(cell.contentView.center.x, cell.contentView.center.y-10);
-        [statusImgArr_ addObject:statusImg];
-        [cell.contentView addSubview:statusImg];
-        
+        progressLabel.numberOfLines = 0;
+        progressLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        //[progressLabel drawTextInRect:CGRectMake(17, 93, 67, 15)];
+        [progressLabelDic_ setObject:progressLabel forKey:downloadItem.itemId];
+              
         UIProgressView *progressView = nil;
-        if (![downloadItem.downloadStatus isEqualToString:@"finish"]) {
+        if (![downloadItem.downloadStatus isEqualToString:@"finish"] && ![downloadItem.downloadStatus isEqualToString:@"fail_1011"]) {
             
             progressView = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
-            progressView.frame = CGRectMake(20, 107, 62, 10);
+            progressView.frame = CGRectMake(20, 105, 62, 10);
             progressView.tag = [downloadItem.itemId intValue];
             progressView.progress = downloadItem.percentage/100.0;
             progressView.progressTintColor = [UIColor colorWithRed:62/255.0 green:138/255.0 blue:238/255.0 alpha:1];
-            [progressArr_ addObject:progressView];
-           
+            [progressViewDic_ setObject:progressView forKey:downloadItem.itemId];
         }
 
-        if([downloadItem.downloadStatus isEqualToString:@"loading"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
-            statusImg.image = [UIImage imageNamed:@"download_loading.png"];
-            progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%", downloadItem.percentage];
-            [cell.contentView addSubview:progressView];
+        if([downloadItem.downloadStatus isEqualToString:@"loading"]){
+            progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%\n ", downloadItem.percentage];
              [cell.contentView addSubview:progressLabel];
+             [cell.contentView addSubview:progressView];
+            
         } else if([downloadItem.downloadStatus isEqualToString:@"stop"]){
-            statusImg.image = [UIImage imageNamed:@"download_stop.png"];
-           
-            progressLabel.text = [NSString stringWithFormat:@"下载至:%i%%", downloadItem.percentage];
-            labelDown.text = @"暂停";
-            [cell.contentView addSubview:labelDown];
-            if (downloadItem.percentage > 0) {
-                 [cell.contentView addSubview:progressLabel];
-            }
-        
+            progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%\n ", downloadItem.percentage];
+            [cell.contentView addSubview:progressLabel];
+            [cell.contentView addSubview:progressView];
+            
         } else if([downloadItem.downloadStatus isEqualToString:@"finish"]){
+            
             progressLabel.text = @"";
+            
         } else if([downloadItem.downloadStatus isEqualToString:@"waiting"]){
-            statusImg.image = [UIImage imageNamed:@"download_wait.png"];
-            progressLabel.text = [NSString stringWithFormat:@"已下载:%i%%", downloadItem.percentage];
-            labelDown.text = @"等待下载...";
-            [cell.contentView addSubview:labelDown];
-            if (downloadItem.percentage > 0) {
-                [cell.contentView addSubview:progressLabel];
-            }
-        
+            progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%\n ", downloadItem.percentage];
+            [cell.contentView addSubview:progressLabel];
+            [cell.contentView addSubview:progressView];
+        }
+        else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
+            progressLabel.text = [NSString stringWithFormat:@"下载失败\n "];
+            [cell.contentView addSubview:progressLabel];
+            [cell.contentView addSubview:progressView];
+           
         }
         else if([downloadItem.downloadStatus isEqualToString:@"fail_1011"]){
-            labelDown.text =@"下载片源失效";
-            [cell.contentView addSubview:labelDown];
-          
+            progressLabel.text = [NSString stringWithFormat:@"下载片源失效"];
+            [cell.contentView addSubview:progressLabel];
         }
         
     }
@@ -372,7 +349,6 @@
         labeltotal.font = [UIFont systemFontOfSize:12];
         [cell.contentView addSubview:labeltotal];
        
-    
     }
     
     return cell;
@@ -399,10 +375,8 @@
     NSString *itemId = item.itemId;
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
     if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
-        NSArray *arr = [SegmentUrl findByCriteria:itemId];
-        for (SegmentUrl *sg in arr) {
-            [sg deleteObject];
-        }
+        //NSArray *arr = [SegmentUrl findByCriteria:subquery];
+        [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", itemId]];
         NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:itemId];
         [fileMgr removeItemAtPath:deletePath error:&error];
         [DownLoadManager stop:itemId];
@@ -414,9 +388,14 @@
         //删除从表的内容
         NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
         for (SubdownloadItem *subItem in subItems) {
-            [subItem deleteObject];
+            
+            [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", subItem.subitemId]];
             [DownLoadManager stopAndClear:subItem.subitemId];
+            [subItem deleteObject];
         }
+        
+        
+        
         //停止该下载线程，并从下载队列中删除
         [DownLoadManager stopAndClear:itemId];
         
@@ -509,28 +488,12 @@
             
             [item save];
            
-           for (UILabel *label in progressLabelArr_) {
-               if (label.tag == [item.itemId intValue]) {
-                    label.text =  [NSString stringWithFormat:@"下载至:%i%%", item.percentage];
-                   break;
-               }
-           }
+           UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
+           label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", item.percentage];
            
-           for (UIImageView *imgV in statusImgArr_) {
-               if (imgV.tag == [item.itemId intValue]) {
-                   imgV.image = [UIImage imageNamed:@"download_stop.png"];
-                   break;
-               }
-           }
+           UIProgressView *progressView = [progressViewDic_ objectForKey:item.itemId];
+           progressView.progress = item.percentage/100.0;
            
-           for (UIProgressView *progressView in progressArr_) {
-               if (progressView.tag == [item.itemId intValue]) {
-                   progressView.progress = item.percentage/100.0;
-                   break;
-               }
-           }
-           [self initData]; 
-          [self reloadDataSource];
         }
        else if ([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"]){
            Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -543,30 +506,14 @@
            
            item.downloadStatus = @"waiting";
            [item save];
-           for (UILabel *label in progressLabelArr_) {
-               if (label.tag == [item.itemId intValue]) {
-                   label.text =  [NSString stringWithFormat:@"已下载:%i%%", item.percentage];
-                   break;
-               }
-           }
            
-           for (UIImageView *imgV in statusImgArr_) {
-               if (imgV.tag == [item.itemId intValue]) {
-                   imgV.image = [UIImage imageNamed:@"download_wait.png"];
-                   break;
-               }
-           }
+           UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
+           label.text = [NSString stringWithFormat:@"等待中：%i%%\n ", item.percentage];
            
-           for (UIProgressView *progressView in progressArr_) {
-               if (progressView.tag == [item.itemId intValue]) {
-                   progressView.progress = item.percentage/100.0;
-                   break;
-               }
-               
-           }
-
+           UIProgressView *progressView = [progressViewDic_ objectForKey:item.itemId];
+           progressView.progress = item.percentage/100.0;
+           
            [DownLoadManager continueDownload:item.itemId];
-           [self reloadDataSource];
        }
     
     }
@@ -578,6 +525,17 @@
         subdownloadViewController.title = item.name;
         [self.navigationController pushViewController:subdownloadViewController animated:YES];
     
+    }
+}
+-(DownloadItem *)getDownloadItemById:(NSString *)idstr{
+    NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",idstr];
+    NSArray *arr = [DownloadItem findByCriteria:query];
+    if ([arr count]>0) {
+        DownloadItem *item = [arr objectAtIndex:0];
+        return item;
+    }
+    else{
+        return nil;
     }
 }
 - (void)didReceiveMemoryWarning

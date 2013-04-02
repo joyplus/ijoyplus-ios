@@ -1811,10 +1811,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 -(void)syncLogo:(NSString *)url{
     UILabel *label = (UILabel *)[topToolBar_ viewWithTag:100001];
-    label.text =  @"来源:";
+  
     UIImage *img = [self getVideoSource:url];
     if (img == nil) {
         img = [self parseLogo:webUrlSource_];
+    }
+    if (img == nil) {
+       label.text = nil;
+    }
+    else{
+       label.text =  @"来源:";
     }
     sourceLogo_.backgroundColor = [UIColor clearColor];
     sourceLogo_.frame = CGRectMake(102, 11, img.size.width/3, img.size.height/3);

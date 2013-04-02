@@ -1108,18 +1108,16 @@ NSComparator cmptr = ^(id obj1, id obj2){
             NSString *urlStr = [urlinfo objectForKey:@"url"];
             if (urlStr != nil && ![urlStr isEqualToString:@""]) {
                 return YES;
-            }
-            
+            }            
         }
-        NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
-        for (NSDictionary *urlinfo  in video_urls) {
-            NSString *urlStr = [urlinfo objectForKey:@"url"];
-            if (urlStr != nil && ![urlStr isEqualToString:@""]) {
-                return YES;
-            }
-            
+    }
+    NSArray *video_urls = [oneEpisoder objectForKey:@"video_urls"];
+    for (NSDictionary *urlinfo  in video_urls) {
+        NSString *urlStr = [urlinfo objectForKey:@"url"];
+        if (urlStr != nil && ![urlStr isEqualToString:@""]) {
+            return YES;
         }
-
+        
     }
         return NO;
 

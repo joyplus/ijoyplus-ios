@@ -346,7 +346,6 @@
     }
     else{
     
-       //[self.downLoadManager restartDownload];
   }
     
 }

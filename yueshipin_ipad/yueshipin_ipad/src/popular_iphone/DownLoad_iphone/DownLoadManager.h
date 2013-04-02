@@ -35,7 +35,8 @@
     int preProgress_;
     int netWorkStatus;
     NSLock *lock_;
-    
+    int retryCount_;
+
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
@@ -45,7 +46,7 @@
 @property (nonatomic, strong)DownloadItem *downloadItem;
 @property (nonatomic, strong)SubdownloadItem *subdownloadItem;
 @property (nonatomic, strong)NSLock *lock;
-//@property (nonatomic, strong) NSString *fileType;
+@property (nonatomic, assign)BOOL isResetLoading;
 +(DownLoadManager *)defaultDownLoadManager;
 
 -(void)resumeDownLoad;
@@ -57,8 +58,6 @@
 +(void)continueDownload:(NSString *)downloadId;
 
 +(int)downloadTaskCount;
-
--(void)restartDownload;
 
 -(void)appDidEnterBackground;
 
@@ -74,12 +73,16 @@
     NSOperationQueue *downloadOperationQueue_;
     int url_index;
     DownloadItem *currentItem_;
+    NSMutableArray *segmentUrlArray_;
+    int retryCount_;
 }
 @property (nonatomic, strong) NSOperationQueue *downloadOperationQueue;
 
 @property (nonatomic, weak) id<M3u8DownLoadManagerDelegate>m3u8DownLoadManagerDelegate;
 
 @property (nonatomic, strong)DownloadItem *currentItem;
+
+@property (nonatomic, strong)  NSMutableArray *segmentUrlArray;
 -(void)stop;
 
 -(void)saveCurrentInfo;
@@ -96,10 +99,12 @@
     NSString *fileType_;
     NSMutableArray *allUrls_;
     NSURLConnection *currentConnection_;
+    
 }
 @property (nonatomic, strong) NSArray *downloadInfoArr;
 @property (nonatomic, strong) NSString *fileType;
 @property (nonatomic, strong) NSMutableArray *allUrls;
 @property (nonatomic, strong) NSURLConnection *currentConnection;
+
 -(void)checkDownloadUrls:(NSDictionary *)infoDic;
 @end
