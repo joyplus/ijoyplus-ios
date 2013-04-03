@@ -192,17 +192,23 @@
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
         [self customizeAppearance];
         [self initDownloadManager];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-    } else {
+        self.window.rootViewController = self.rootViewController;
+    }
+    else
+    {
         tabBarView = [[TabBarViewController alloc] init];
-        self.rootViewController = tabBarView;
+        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
+        //navCtrl.navigationBarHidden = YES;
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];
         [self.downLoadManager resumeDownLoad];
+        self.window.rootViewController = tabBarView;
     }
-    self.window.rootViewController = self.rootViewController;
+    
     [self.window makeKeyAndVisible];
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -293,6 +299,8 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
+    [self clearRespForWXView];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -520,6 +528,20 @@
     {
         [[UIApplication sharedApplication] cancelLocalNotification:localNotification];
         localNotification = nil;
+    }
+}
+
+- (void)clearRespForWXView
+{
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
+    {
+        [navCtrl popViewControllerAnimated:NO];
+    }
+    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
+    {
+        [navCtrl popViewControllerAnimated:NO];
+        [navCtrl popViewControllerAnimated:NO];
     }
 }
 

@@ -32,6 +32,13 @@
 {
     self.dicDataSource = nil;
     _dicVideoInfo = nil;
+    
+    _labName = nil;
+    _labActors = nil;
+    _labDirectors = nil;
+    _labArea = nil;
+    _labReleaseDate = nil;
+    _imgViewPoster = nil;
 }
 
 - (void)viewDidLoad
@@ -60,89 +67,48 @@
     UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
     frame.frame = CGRectMake(14, 14, 90, 133);
     [self.view addSubview:frame];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 126)];
     
-    NSString *imageUrl = [self.dicDataSource objectForKey:@"prod_pic_url"];
-    if (imageUrl == nil) {
-        imageUrl = [self.dicDataSource objectForKey:@"content_pic_url"];
-    }
-    if (imageUrl == nil) {
-        imageUrl = [self.dicDataSource objectForKey:@"poster"];
-    }
-    [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-    //wechatImg_ = imageView.image;
-    [self.view addSubview:imageView];
+    _imgViewPoster = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 126)];
     
-    NSString *titleStr = [self.dicDataSource objectForKey:@"prod_name"];
-    if (titleStr == nil) {
-        titleStr = [self.dicDataSource objectForKey:@"content_name"];
-    }
-    if (titleStr == nil) {
-        titleStr = [self.dicDataSource objectForKey:@"name"];
-    }
-    
-    UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 16, 200, 30)];
-    titleLabel.font = [UIFont systemFontOfSize:18];
-    titleLabel.textColor = [UIColor grayColor];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.text = [NSString stringWithFormat:@"%@",titleStr];
-    [self.view addSubview:titleLabel];
+    [self.view addSubview:_imgViewPoster];
     
     
-    NSString *directors = [self.dicDataSource objectForKey:@"directors"];
-    if (directors == nil) {
-        directors = [self.dicDataSource objectForKey:@"director"];
-    }
-    if (directors == nil) {
-        directors = @" ";
-    }
-    
-    NSString *actors = [self.dicDataSource objectForKey:@"stars"];
-    if (actors == nil) {
-        actors = [self.dicDataSource objectForKey:@"star"];
-    }
-    if (actors == nil) {
-        actors = @" ";
-    }
-    
-    NSString *date = [self.dicDataSource objectForKey:@"publish_date"];
-    if (date == nil) {
-        date = @" ";
-    }
-    NSString *area = [self.dicDataSource objectForKey:@"area"];
-    if (area == nil) {
-        area = @" ";
-    }
-    
-    UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 49, 200, 15)];
-    actorsLabel.font = [UIFont systemFontOfSize:12];
-    actorsLabel.textColor = [UIColor grayColor];
-    actorsLabel.backgroundColor = [UIColor clearColor];
-    actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
-    
-    UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 85, 200, 15)];
-    areaLabel.font = [UIFont systemFontOfSize:12];
-    areaLabel.textColor = [UIColor grayColor];
-    areaLabel.backgroundColor = [UIColor clearColor];
-    areaLabel.text = [NSString stringWithFormat:@"地区: %@",area];
-    
-    UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 67, 200, 15)];
-    directorLabel.font = [UIFont systemFontOfSize:12];
-    directorLabel.textColor = [UIColor grayColor];
-    directorLabel.backgroundColor = [UIColor clearColor];
-    directorLabel.text = [NSString stringWithFormat:@"导演: %@",directors];
-    
-    UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 103, 200, 15)];
-    dateLabel.font = [UIFont systemFontOfSize:12];
-    dateLabel.textColor = [UIColor grayColor];
-    dateLabel.backgroundColor = [UIColor clearColor];
-    dateLabel.text = [NSString stringWithFormat:@"年代: %@",date];
+    _labName = [[UILabel alloc] initWithFrame:CGRectMake(116, 16, 200, 30)];
+    _labName.font = [UIFont systemFontOfSize:18];
+    _labName.textColor = [UIColor grayColor];
+    _labName.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:_labName];
     
     
-    [self.view addSubview:actorsLabel];
-    [self.view addSubview:areaLabel];
-    [self.view addSubview:directorLabel];
-    [self.view addSubview:dateLabel];;
+    _labActors = [[UILabel alloc] initWithFrame:CGRectMake(116, 49, 200, 15)];
+    _labActors.font = [UIFont systemFontOfSize:12];
+    _labActors.textColor = [UIColor grayColor];
+    _labActors.backgroundColor = [UIColor clearColor];
+    
+    
+    
+    _labArea = [[UILabel alloc] initWithFrame:CGRectMake(116, 85, 200, 15)];
+    _labArea.font = [UIFont systemFontOfSize:12];
+    _labArea.textColor = [UIColor grayColor];
+    _labArea.backgroundColor = [UIColor clearColor];
+    
+    
+    _labDirectors = [[UILabel alloc] initWithFrame:CGRectMake(116, 67, 200, 15)];
+    _labDirectors.font = [UIFont systemFontOfSize:12];
+    _labDirectors.textColor = [UIColor grayColor];
+    _labDirectors.backgroundColor = [UIColor clearColor];
+    
+    
+    _labReleaseDate = [[UILabel alloc] initWithFrame:CGRectMake(116, 103, 200, 15)];
+    _labReleaseDate.font = [UIFont systemFontOfSize:12];
+    _labReleaseDate.textColor = [UIColor grayColor];
+    _labReleaseDate.backgroundColor = [UIColor clearColor];
+
+    
+    [self.view addSubview:_labActors];
+    [self.view addSubview:_labArea];
+    [self.view addSubview:_labDirectors];
+    [self.view addSubview:_labReleaseDate];;
     
     
     
@@ -221,6 +187,61 @@
 - (void)setViewWithData:(id)result
 {
     _dicVideoInfo = (NSDictionary *)[result objectForKey:@"movie"];
+    
+    //Poster
+    NSString *imageUrl = [_dicVideoInfo objectForKey:@"prod_pic_url"];
+    if (imageUrl == nil) {
+        imageUrl = [_dicVideoInfo objectForKey:@"content_pic_url"];
+    }
+    if (imageUrl == nil) {
+        imageUrl = [_dicVideoInfo objectForKey:@"poster"];
+    }
+    [_imgViewPoster setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    
+    //Title
+    NSString *titleStr = [_dicVideoInfo objectForKey:@"prod_name"];
+    if (titleStr == nil) {
+        titleStr = [_dicVideoInfo objectForKey:@"content_name"];
+    }
+    if (titleStr == nil) {
+        titleStr = [_dicVideoInfo objectForKey:@"name"];
+    }
+    
+    _labName.text = [NSString stringWithFormat:@"%@",titleStr];
+    
+    //Actors & Direcctors
+    NSString *directors = [_dicVideoInfo objectForKey:@"directors"];
+    if (directors == nil) {
+        directors = [_dicVideoInfo objectForKey:@"director"];
+    }
+    if (directors == nil) {
+        directors = @" ";
+    }
+    
+    NSString *actors = [_dicVideoInfo objectForKey:@"stars"];
+    if (actors == nil) {
+        actors = [_dicVideoInfo objectForKey:@"star"];
+    }
+    if (actors == nil) {
+        actors = @" ";
+    }
+    
+    NSString *date = [_dicVideoInfo objectForKey:@"publish_date"];
+    if (date == nil) {
+        date = @" ";
+    }
+    NSString *area = [_dicVideoInfo objectForKey:@"area"];
+    if (area == nil) {
+        area = @" ";
+    }
+    
+    _labActors.text = [NSString stringWithFormat:@"主演: %@",actors];
+    _labReleaseDate.text = [NSString stringWithFormat:@"年代: %@",date];
+    _labDirectors.text = [NSString stringWithFormat:@"导演: %@",directors];
+    _labArea.text = [NSString stringWithFormat:@"地区: %@",area];
+    
+    
+    
     NSString * summary_ = [_dicVideoInfo objectForKey:@"summary"];
     
     if (nil != summary_)

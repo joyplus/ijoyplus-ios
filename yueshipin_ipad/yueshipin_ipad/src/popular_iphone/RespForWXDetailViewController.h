@@ -14,6 +14,15 @@
 {
     NSDictionary        *_dicDataSource;
     NSDictionary        *_dicVideoInfo;
+    
+    UILabel             *_labName;
+    UILabel             *_labActors;
+    UILabel             *_labDirectors;
+    UILabel             *_labArea;
+    UILabel             *_labReleaseDate;
+    
+    UIImageView         *_imgViewPoster;
+    
 }
 
 @property (nonatomic, strong) NSDictionary        *dicDataSource;
