@@ -50,21 +50,21 @@
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem = backButtonItem;
+    //UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    //self.navigationItem.leftBarButtonItem = backButtonItem;
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [editButton addTarget:self action:@selector(editPressed:) forControlEvents:UIControlEventTouchUpInside];
-    editButton.frame = CGRectMake(0, 0, 37, 30);
+    editButton.frame = CGRectMake(0, 0, 49, 30);
     [editButton setImage:[UIImage imageNamed:@"download_edit.png"] forState:UIControlStateNormal];
-    [editButton setImage:[UIImage imageNamed:@"download_edit_s.png"] forState:UIControlStateHighlighted];
+    [editButton setImage:[UIImage imageNamed:@"download_edit_f.png"] forState:UIControlStateHighlighted];
     [editButton setTitle:@"Edit" forState:UIControlStateNormal];
     editButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:editButton];
     self.navigationItem.rightBarButtonItem = editButtonItem_;
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [doneButton addTarget:self action:@selector(donePressed:) forControlEvents:UIControlEventTouchUpInside];
-    doneButton.frame = CGRectMake(0, 0, 37, 30);
+    doneButton.frame = CGRectMake(0, 0, 49, 30);
     [doneButton setImage:[UIImage imageNamed:@"download_done.png"] forState:UIControlStateNormal];
     [doneButton setImage:[UIImage imageNamed:@"download_done_s.png"] forState:UIControlStateHighlighted];
     [doneButton setTitle:@"done" forState:UIControlStateNormal];
