@@ -398,19 +398,46 @@
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];
         
-        UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(88, 30, 170, 15)];
-        actors.text = [NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
+        NSString * actorsStr = [infoDic objectForKey:@"stars"];
+        if (nil == actorsStr)
+        {
+            actorsStr = [infoDic objectForKey:@"star"];
+        }
+        
+        UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(88, 32, 170, 15)];
+        actors.text = [NSString stringWithFormat:@"主演：%@",actorsStr] ;
         actors.font = [UIFont systemFontOfSize:12];
         actors.textColor = [UIColor grayColor];
         actors.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actors];
         
-        UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(88, 42, 200, 15)];
+        UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(88, 46, 200, 15)];
         date.text = [NSString stringWithFormat:@"地区：%@",[infoDic objectForKey:@"area"]];
-        date.font = [UIFont systemFontOfSize:12];
+        date.font = [UIFont systemFontOfSize:11];
         date.textColor = [UIColor grayColor];
         date.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:date];
+        
+        
+        NSString * directorStr = [infoDic objectForKey:@"directors"];
+        if (nil == directorStr)
+        {
+            directorStr = [infoDic objectForKey:@"director"];
+        }
+        
+        UILabel * director = [[UILabel alloc] initWithFrame:CGRectMake(88, 60, 200, 15)];
+        director.text = [NSString stringWithFormat:@"导演：%@",directorStr];
+        director.font = [UIFont systemFontOfSize:11];
+        director.textColor = [UIColor grayColor];
+        director.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:director];
+        
+        UILabel * releaseDate = [[UILabel alloc] initWithFrame:CGRectMake(88, 74, 200, 15)];
+        releaseDate.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
+        releaseDate.font = [UIFont systemFontOfSize:11];
+        releaseDate.textColor = [UIColor grayColor];
+        releaseDate.backgroundColor = [UIColor clearColor];
+        [cell.contentView addSubview:releaseDate];
         
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 109, 297, 1);

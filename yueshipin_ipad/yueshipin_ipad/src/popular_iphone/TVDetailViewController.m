@@ -1584,20 +1584,20 @@ NSComparator cmptr = ^(id obj1, id obj2){
                                 nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
      {
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                         message:@"问题提交成功，我们会尽快处理，谢谢！"
-                                                        delegate:self
-                                               cancelButtonTitle:@"我知道了"
-                                               otherButtonTitles:nil, nil];
-         [alert show];
+//         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                         message:@"问题提交成功，我们会尽快处理，谢谢！"
+//                                                        delegate:self
+//                                               cancelButtonTitle:@"我知道了"
+//                                               otherButtonTitles:nil, nil];
+//         [alert show];
      }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
      {
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
-                                                         message:@"问题反馈提交失败!"
-                                                        delegate:nil
-                                               cancelButtonTitle:@"我知道了"
-                                               otherButtonTitles:nil, nil];
-         [alert show];
+//         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                         message:@"问题反馈提交失败!"
+//                                                        delegate:nil
+//                                               cancelButtonTitle:@"我知道了"
+//                                               otherButtonTitles:nil, nil];
+//         [alert show];
      }];
 }
 

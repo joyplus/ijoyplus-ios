@@ -179,6 +179,14 @@
         [delegate feedBackType:selectedIndex detailReason:_textViewOther.text];
     }
     [self backgroundClicked:nil];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+                                                    message:@"问题提交成功，我们会尽快处理，谢谢！"
+                                                   delegate:nil
+                                          cancelButtonTitle:@"我知道了"
+                                          otherButtonTitles:nil, nil];
+    [alert show];
+    
 }
 
 - (void)selectBtnClicked:(id)sender
