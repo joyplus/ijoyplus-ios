@@ -124,3 +124,4 @@ NSString *const kPathHiddenPlay =  @"/joyplus-service/index.php/program/hiddenPl
 NSString *const kPathRemoveAllPlay =  @"/joyplus-service/index.php/user/clearPlayHistories";
 NSString *const kPathShowTopItems =  @"/joyplus-service/index.php/show_top_items";
 NSString *const kPathRecordPlay =  @"/joyplus-service/index.php/program/recordPlay";
+NSString *const kPathFilter = @"/joyplus-service/index.php/filter";

@@ -13,4 +13,6 @@
 @synthesize label;
 @synthesize key;
 @synthesize value;
+@synthesize type;
+@synthesize subtype;
 @end

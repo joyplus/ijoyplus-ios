@@ -604,6 +604,7 @@
 		EBB59CF51667608600F646C7 /* morecomments@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CF31667608600F646C7 /* morecomments@2x.png */; };
 		EBB59CF81667681E00F646C7 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CF71667681E00F646C7 /* CommentCell.m */; };
 		EBB5AF151671C68800AD15C9 /* show_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB5AF141671C68800AD15C9 /* show_placeholder@2x.png */; };
+		EBB69DE8170BD3E600521900 /* CategoryUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB69DE7170BD3E600521900 /* CategoryUtility.m */; };
 		EBB732F8165C7789008E407E /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB732EE165C7789008E407E /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBB732F9165C7789008E407E /* SinaWeibo.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EBB732F0165C7789008E407E /* SinaWeibo.bundle */; };
 		EBB732FA165C7789008E407E /* SinaWeibo.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB732F2165C7789008E407E /* SinaWeibo.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1538,6 +1539,8 @@
 		EBB59CF61667681E00F646C7 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentCell.h; sourceTree = "<group>"; };
 		EBB59CF71667681E00F646C7 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentCell.m; sourceTree = "<group>"; };
 		EBB5AF141671C68800AD15C9 /* show_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "show_placeholder@2x.png"; sourceTree = "<group>"; };
+		EBB69DE6170BD3E600521900 /* CategoryUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryUtility.h; sourceTree = "<group>"; };
+		EBB69DE7170BD3E600521900 /* CategoryUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryUtility.m; sourceTree = "<group>"; };
 		EBB732ED165C7789008E407E /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		EBB732EE165C7789008E407E /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		EBB732F0165C7789008E407E /* SinaWeibo.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SinaWeibo.bundle; sourceTree = "<group>"; };
@@ -2892,6 +2895,8 @@
 				EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */,
 				E7872DA616FC35B100017785 /* CommonMotheds.h */,
 				E7872DA716FC35B100017785 /* CommonMotheds.m */,
+				EBB69DE6170BD3E600521900 /* CategoryUtility.h */,
+				EBB69DE7170BD3E600521900 /* CategoryUtility.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -4023,6 +4028,7 @@
 				EBC19350170A9AE3009D8221 /* CategoryItem.m in Sources */,
 				EBC19353170ABFDA009D8221 /* CommentListViewController.m in Sources */,
 				EBC19356170AD09E009D8221 /* CommentWebViewController.m in Sources */,
+				EBB69DE8170BD3E600521900 /* CategoryUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

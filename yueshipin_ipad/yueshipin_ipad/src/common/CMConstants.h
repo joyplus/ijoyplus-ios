@@ -108,6 +108,13 @@
 
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 
+typedef enum {
+    MOVIE_TYPE = 1,
+    DRAMA_TYPE = 2,
+    SHOW_TYPE = 3,
+    COMIC_TYPE = 131,
+} VideoType;
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

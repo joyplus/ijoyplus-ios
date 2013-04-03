@@ -9,7 +9,7 @@
 #import "CommonHeader.h"
 #import "MenuViewController.h"
 
-@interface ComicViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
+@interface ComicViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
 
