@@ -69,6 +69,10 @@
         [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSuccessModalView) name:@"wechat_share_success" object:nil];
+    
+    UIView *footview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    footview.backgroundColor = [UIColor clearColor];
+    self.tableView.tableFooterView = footview;
 }
 - (void)viewDidUnload{
 

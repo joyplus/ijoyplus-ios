@@ -361,7 +361,17 @@
                 [addFav setBackgroundImage:[UIImage imageNamed:@"addFav_pressed.png"] forState:UIControlStateHighlighted];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"]forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
-                [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                if (favCount_ <1000) {
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                }
+                else if (favCount_ >= 1000 && favCount_<= 1100) {
+                    
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
+                }
+                else {
+                    float favNum = favCount_*1.0/1000;
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
+                }
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 addFav.titleLabel.font = [UIFont systemFontOfSize:12];
@@ -375,7 +385,17 @@
                 [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
                 [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
+                if (supportCount_ <1000) {
+                    [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_]  forState:UIControlStateNormal];
+                }
+                else if (supportCount_ >= 1000 && supportCount_<= 1100) {
+                    
+                    [support setTitle:[NSString stringWithFormat:@"顶（1k）"]  forState:UIControlStateNormal];
+                }
+                else {
+                    float suppotNum = supportCount_*1.0/1000;
+                    [support setTitle:[NSString stringWithFormat:@"顶（%.1fk）",suppotNum]  forState:UIControlStateNormal];
+                }
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 support.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:support];

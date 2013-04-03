@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(200, 0, 60, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
@@ -52,12 +52,13 @@
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
     
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
-    backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
-    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
+
+//    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+//    backButton.frame = CGRectMake(0, 0, 49, 30);
+//    backButton.backgroundColor = [UIColor clearColor];
+//    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+//    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
 //    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 //    self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -79,10 +80,6 @@
     [doneButton setImage:[UIImage imageNamed:@"download_done_s.png"] forState:UIControlStateHighlighted];
     //[doneButton setTitle:@"done" forState:UIControlStateNormal];
     doneButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
-    
-    itemArr_ = [NSMutableArray arrayWithArray:[DownloadItem allObjects]];
-    progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
-    progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     
     GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-30)];
     gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -155,6 +152,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    
+    [self initData];
     //重新将downLoadManager的代理指向self;
     downLoadManager_.downLoadMGdelegate = self;
     [gMGridView_ reloadData];

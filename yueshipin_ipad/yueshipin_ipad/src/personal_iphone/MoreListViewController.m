@@ -30,6 +30,7 @@
 @implementation MoreListViewController
 @synthesize listArr = listArr_;
 @synthesize type = type_;
+@synthesize pullToRefreshManagerFAV = pullToRefreshManagerFAV_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -41,6 +42,7 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     if(type_ == 0){
        self.title = @"播放纪录";
     }
@@ -75,8 +77,14 @@
     }
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [super viewDidLoad];
-
+    
+    if (type_ == 1) {
+        favLoadCount_ = 1;
+        pullToRefreshManagerFAV_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:600 tableView:self.tableView withClient:self];
+        [self.tableView reloadData];
+        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -391,6 +399,26 @@
     return content;
 }
 
+
+-(void)loadMyFavsData{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", [NSString stringWithFormat:@"%d",favLoadCount_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"favorities"];
+            if(tempTopsArray.count > 0){
+                [listArr_ addObjectsFromArray:tempTopsArray];
+            }
+        }
+
+        [self.tableView reloadData];
+        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       
+    }];
+    
+}
+
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -475,5 +503,27 @@
     return UIInterfaceOrientationPortrait;
     
 }
+
+#pragma mark -
+#pragma mark ScrollViewDelegate Methods
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+        
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
+    
+    [pullToRefreshManagerFAV_ tableViewReleased];
+    
+}
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+    [CommonMotheds showNetworkDisAbledAlert];
+    favLoadCount_++;
+    [self loadMyFavsData];
+}
+
 
 @end

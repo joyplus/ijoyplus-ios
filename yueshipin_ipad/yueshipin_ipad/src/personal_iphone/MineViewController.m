@@ -76,7 +76,7 @@
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -88,7 +88,10 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
-        [self refreshMineViewWithTag:button2_.tag];
+        if (!button2_.enabled) {
+            [self refreshMineViewWithTag:button2_.tag];
+        }
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.favArr == nil){
@@ -116,13 +119,16 @@
                 [myListArr_ addObjectsFromArray:tempArr];
                 
             }
-            [self refreshMineViewWithTag:button3_.tag];
+            
+            if (!button3_.enabled) {
+                [self refreshMineViewWithTag:button3_.tag];
+            }
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
        
-       [tempHUD hide:YES];
+      [tempHUD hide:YES];
     }];
 
 
@@ -286,14 +292,10 @@
         [self.bgView addSubview:recordTableList_];
     }
     else{
-        [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
+        [self.bgView setFrame:CGRectMake(12, 98, 296,0)];
         [self.bgView addSubview:noRecord_];
     }
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(refreshFav) name:@"REFRESH_FAV" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordListReload) name:WATCH_HISTORY_REFRESH object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
 }
@@ -346,6 +348,12 @@
 }
 - (void)loadRecordData
 {
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:tempHUD];
+    tempHUD.labelText = @"加载中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
+    
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
     if(cacheResult != nil){
         @try {
@@ -359,8 +367,10 @@
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [tempHUD hide:YES];
         [self parseWatchResultData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [tempHUD hide:YES];
         NSLog(@"%@", error);
        
     }];
@@ -376,33 +386,20 @@
         if (sortedwatchRecordArray_.count > 0) {
             [noRecord_ removeFromSuperview];
         }
-        [self refreshMineViewWithTag:button1_.tag];
+        if (!button1_.enabled) {
+            [self refreshMineViewWithTag:button1_.tag];
+        }
+        
     }
 }
 
--(void)recordListReload{
-    return;
-    [self loadRecordData];
-    if (!button1_.enabled) {
-        [self Selectbutton:button1_];
-    }
-    [recordTableList_ reloadData];
-    
-
-}
--(void)refreshFav{
-    //[self loadMyFavsData];
-}
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
     
 }
--(void)addDone:(id)sender{
-    [self loadPersonalData];
-  
-}
+
 -(void)createList:(id)sender{
     CreateMyListOneViewController *createMyListOneViewController = [[CreateMyListOneViewController alloc] init];
     createMyListOneViewController.hidesBottomBarWhenPushed = YES;
@@ -460,8 +457,8 @@
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];
     [createList_ removeFromSuperview];
-    [self.bgView setFrame:CGRectMake(12, 98, 296, 180)];
-    [moreView_ setFrame:CGRectMake(12, 290, 296, 45)];
+    [self.bgView setFrame:CGRectMake(12, 98, 296, 0)];
+    [moreView_ removeFromSuperview];
     [noRecord_ removeFromSuperview];
     [noFav_ removeFromSuperview];
     [noPersonalList_ removeFromSuperview];
@@ -475,6 +472,7 @@
         //播放纪录
         case 100:{
             button1_.enabled = NO;
+            
             [self loadRecordData];
             break;
         }

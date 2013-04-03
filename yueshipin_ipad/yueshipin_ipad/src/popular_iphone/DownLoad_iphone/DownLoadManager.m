@@ -942,7 +942,8 @@ static NSMutableArray *downLoadQueue_ = nil;
 
 -(void)startDownloadM3u8file:(NSArray *)urlArr withId:(NSString *)idStr withNum:(NSString *)num{
     NSArray *infoArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
-    [self performSelectorInBackground:@selector(beginDownloadM3u8file:) withObject:infoArr];
+    //[self performSelectorInBackground:@selector(beginDownloadM3u8file:) withObject:infoArr];
+    [self performSelector:@selector(beginDownloadM3u8file:) withObject:infoArr];
 }
 
 -(void)beginDownloadM3u8file:(NSArray *)infoArr{
@@ -994,12 +995,14 @@ static NSMutableArray *downLoadQueue_ = nil;
         }
         NSString*filePath = [NSString stringWithFormat:@"%@/%@/%@/%i_%@", documentsDir,tempPath,subPath,(i+1), segmentName];
         AFDownloadRequestOperation *segmentDownloadingOp = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+        segmentDownloadingOp.downloadingSegmentIndex = i;
         [segmentDownloadingOp setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            AFDownloadRequestOperation *tempDownloadRequestOperation = (AFDownloadRequestOperation*)operation;
             retryCount_ = 0;
-            url_index++;
+            url_index = tempDownloadRequestOperation.downloadingSegmentIndex;
             NSLog(@"url_index is %d",url_index);
             NSLog(@"[urlArr count] is %d",[urlArr count]);
-            if (url_index == [urlArr count]){
+            if (tempDownloadRequestOperation.downloadingSegmentIndex == [urlArr count]){
                 
                 if (range.location == NSNotFound){
                     [self saveDataBaseIntable:@"DownloadItem" withId:idStr withStatus:@"finish" withPercentage:100];
@@ -1018,7 +1021,7 @@ static NSMutableArray *downLoadQueue_ = nil;
                 if (ENVIRONMENT == 0 ) {
                     NSLog(@"%f",percent);
                 }
-                currentItem_.isDownloadingNum = url_index;
+                currentItem_.isDownloadingNum = tempDownloadRequestOperation.downloadingSegmentIndex;
                 currentItem_.percentage = (int)(percent*100);
                 if (url_index % 5 == 0) {
                     [currentItem_ save];

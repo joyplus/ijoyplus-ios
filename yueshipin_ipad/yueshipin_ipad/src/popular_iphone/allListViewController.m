@@ -169,6 +169,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    return;
     int count = [DownLoadManager downloadTaskCount];
     if (count == 0) {
         customNavigationButtonView_.badgeView.badgeText = nil;
@@ -186,10 +187,13 @@
 
 }
 
--(void)setting:(id)sender{    
-    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
-    downloadViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:downloadViewController animated:YES];
+-(void)setting:(id)sender{
+    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
+    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+//    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
+//    downloadViewController.hidesBottomBarWhenPushed = YES;
+//    [self.navigationController pushViewController:downloadViewController animated:YES];
 }
 
 
