@@ -28,8 +28,8 @@
     if (self) {
         // Custom initialization
         
-        //allListViewController *allListview = [[allListViewController alloc] init];
-        RespForWXRootViewController *allListview = [[RespForWXRootViewController alloc] init];
+        allListViewController *allListview = [[allListViewController alloc] init];
+        //RespForWXRootViewController *allListview = [[RespForWXRootViewController alloc] init];
         UINavigationController *allListNav = [[UINavigationController alloc] initWithRootViewController:allListview];
         [allListNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
        
