@@ -597,6 +597,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 -(void)playerItemDidReachEnd:(id)sender{
     if (islocalFile_) {
+        [self dismissViewControllerAnimated:YES completion:nil];
         return;
     }
     if (videoType_ == 1 || videoType_ == 3) {
@@ -1811,6 +1812,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     else if ([source_str isEqualToString:@"m1905"]){
         logoImg = [UIImage imageNamed:@"logo_m1905"];
+    }
+    else if ([source_str isEqualToString:@"wangpan"]){
+        logoImg = [UIImage imageNamed:@"logo_pptv"];
     }
 
     return logoImg;

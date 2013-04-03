@@ -107,13 +107,16 @@
 -(void)initData{
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
-    itemArr_ = [NSMutableArray arrayWithCapacity:5];
+    NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:5];
+    //itemArr_ = [NSMutableArray arrayWithCapacity:5];
     NSArray *items = [SubdownloadItem allObjects];
     for (SubdownloadItem *item in items) {
         if ([item.subitemId hasPrefix:prodId_]) {
-            [itemArr_ addObject:item];
+            [tempArr addObject:item];
         }
     }
+    NSSortDescriptor*asd = [NSSortDescriptor sortDescriptorWithKey:@"subitemId"ascending:YES];
+    itemArr_ = [NSMutableArray arrayWithArray: [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:asd]]];
 }
 -(void)reloadDataSource{
     [self initData];
@@ -256,7 +259,7 @@
     progressLabel.numberOfLines = 0;
     progressLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [progressLabelDic_ setObject:progressLabel forKey:[NSString stringWithFormat:@"%d",tag]];
-    
+
     UIProgressView *progressView = nil;
     if (![downloadItem.downloadStatus isEqualToString:@"finish"] && ![downloadItem.downloadStatus isEqualToString:@"fail_1011"]) {
         
@@ -289,7 +292,7 @@
         [cell.contentView addSubview:progressView];
     }
     else if([downloadItem.downloadStatus isEqualToString:@"fail"]){
-        progressLabel.text = [NSString stringWithFormat:@"下载失败"];
+        progressLabel.text = [NSString stringWithFormat:@"下载失败\n "];
         [cell.contentView addSubview:progressLabel];
         [cell.contentView addSubview:progressView];
         

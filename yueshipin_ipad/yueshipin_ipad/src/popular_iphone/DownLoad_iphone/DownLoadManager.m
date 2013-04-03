@@ -238,7 +238,6 @@ static NSMutableArray *downLoadQueue_ = nil;
         [lock_ lock];
         BOOL isDownloading = NO;
         for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-            NSString *str = downloadRequestOperation.operationStatus;
             if ([downloadRequestOperation.operationStatus isEqualToString:@"loading"]) {
                 isDownloading = YES;
                 break;
@@ -295,7 +294,6 @@ static NSMutableArray *downLoadQueue_ = nil;
             [self.downLoadMGdelegate downloadFinishwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
             
         }
-        //[self waringReduce];
         [self startDownLoad];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
@@ -322,7 +320,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 
         //}
         
-        //[self startDownLoad];
+        [self startDownLoad];
     }];
     
     [downloadRequestOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
@@ -481,9 +479,8 @@ static NSMutableArray *downLoadQueue_ = nil;
                 else{
                     [self saveDataBaseIntable:@"SubdownloadItem" withId:tempdownloadRequestOperation.operationId withStatus:@"fail" withPercentage:-1];
                     [self.downLoadMGdelegate downloadFailedwithId:tempdownloadRequestOperation.operationId inClass:@"IphoneSubdownloadViewController"];
-                    
-                
             }
+             [self startDownLoad];
  
         }];
     
@@ -663,7 +660,6 @@ static NSMutableArray *downLoadQueue_ = nil;
 +(int)downloadTaskCount{
     int count = 0;
     for (DownloadItem *item in [DownloadItem allObjects]) {
-        NSString *str = item.downloadStatus;
         if (![item.downloadStatus isEqualToString:@"finish"]&& item.downloadStatus != nil) {
             count ++;
         }
@@ -676,9 +672,6 @@ static NSMutableArray *downLoadQueue_ = nil;
     return count;
 }
 -(void)appDidEnterBackground{
-    
-}
--(void)appDidEnterForeground{
     for (AFDownloadRequestOperation *mc in downLoadQueue_){
         
         if (IS_M3U8(mc.fileType) && mc.m3u8MG != nil) {
@@ -689,9 +682,11 @@ static NSMutableArray *downLoadQueue_ = nil;
             [mc pause];
             [mc cancel];
         }
-
+        
     }
 
+}
+-(void)appDidEnterForeground{
     NSMutableArray *tempQueue = [NSMutableArray arrayWithArray:downLoadQueue_];
     [downLoadQueue_ removeAllObjects];
     for (AFDownloadRequestOperation *downloadOperation in tempQueue){
@@ -765,7 +760,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         [self saveDataBaseIntable:@"SubdownloadItem" withId:itemId withStatus:@"fail" withPercentage:-1];
         [self.downLoadMGdelegate downloadFailedwithId:itemId inClass:@"IphoneSubdownloadViewController"];
     }
-
+   [self startDownLoad];
 }
 -(void)M3u8DownLoadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
    
