@@ -8,7 +8,7 @@
 
 #import "FilmReviewViewCell.h"
 
-#define FILMREVIEW_TITLE_LABEL_FRAME                CGRectMake(0, 0, 90, 25)
+#define FILMREVIEW_TITLE_LABEL_FRAME                CGRectMake(0, 0, 200, 25)
 #define FILMREVIEW_CONTENT_LABEL_FRAME(height)      CGRectMake(8, 38, 280, height)
 #define FILMREVIEW_MORE_REVIEW_BUTTON(x)            CGRectMake(x, 128, 60, 15)
 
@@ -40,10 +40,10 @@
         _labTitle   = [[UILabel alloc] initWithFrame:FILMREVIEW_TITLE_LABEL_FRAME];
         _labContent = [[UILabel alloc] init];
         
-        _labTitle.textAlignment = UITextAlignmentCenter;
+        //_labTitle.textAlignment = UITextAlignmentCenter;
         _labContent.numberOfLines = 0;
         
-        _labTitle.font   = [UIFont boldSystemFontOfSize:15];
+        _labTitle.font   = [UIFont boldSystemFontOfSize:13];
         _labContent.font = [UIFont systemFontOfSize:12];
         
         NSString * newContent = [NSString stringWithFormat:@" %@",content];
