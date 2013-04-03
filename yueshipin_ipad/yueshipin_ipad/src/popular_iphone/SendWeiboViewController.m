@@ -68,8 +68,8 @@
     [textView_ becomeFirstResponder];
     UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
     share.frame = CGRectMake(220, 150, 80, 32);
-    [share setBackgroundImage:[UIImage imageNamed:@"share_btn.png"] forState:UIControlStateNormal];
-    [share setBackgroundImage:[UIImage imageNamed:@"share_btn_pressed.png"] forState:UIControlStateHighlighted];
+    [share setBackgroundImage:[UIImage imageNamed:@"share.png"] forState:UIControlStateNormal];
+    [share setBackgroundImage:[UIImage imageNamed:@"share_f.png"] forState:UIControlStateHighlighted];
     [share addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:textView_];
     [self.view addSubview:share];

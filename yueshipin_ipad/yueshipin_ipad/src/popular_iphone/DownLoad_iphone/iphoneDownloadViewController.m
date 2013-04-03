@@ -63,10 +63,10 @@
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [editButton addTarget:self action:@selector(editPressed:) forControlEvents:UIControlEventTouchUpInside];
-    editButton.frame = CGRectMake(0, 0, 37, 30);
-    [editButton setImage:[UIImage imageNamed:@"download_edit.png"] forState:UIControlStateNormal];
-    [editButton setImage:[UIImage imageNamed:@"download_edit_s.png"] forState:UIControlStateHighlighted];
-    [editButton setTitle:@"Edit" forState:UIControlStateNormal];
+    editButton.frame = CGRectMake(0, 0, 49, 30);
+    [editButton setImage:[UIImage imageNamed:@"Edit.png"] forState:UIControlStateNormal];
+    [editButton setImage:[UIImage imageNamed:@"Edit_f.png"] forState:UIControlStateHighlighted];
+    //[editButton setTitle:@"Edit" forState:UIControlStateNormal];
     editButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:editButton];
     self.navigationItem.rightBarButtonItem = editButtonItem_;
     
