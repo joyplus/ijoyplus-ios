@@ -461,12 +461,9 @@
             }
         }
     }
-    else
-    {
-        [searchBar setShowsCancelButton:NO animated:YES];
-        [_viewRespForWX setViewType:SEGMENT_VIEW_TYPE];
-        searchBar_.text = nil;
-    }
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [_viewRespForWX setViewType:SEGMENT_VIEW_TYPE];
+    searchBar_.text = nil;
 }
 
 #pragma mark -

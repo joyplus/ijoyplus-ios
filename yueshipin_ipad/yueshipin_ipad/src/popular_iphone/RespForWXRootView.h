@@ -10,7 +10,7 @@
 
 enum
 {
-    SEARCH_VIEW_TYPE,
+    SEARCH_VIEW_TYPE = 1,
     SEGMENT_VIEW_TYPE
 };
 

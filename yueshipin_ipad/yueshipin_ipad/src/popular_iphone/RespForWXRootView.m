@@ -163,6 +163,9 @@
     
     _tableHot.hidden = NO;
     _tableFavAndRec.hidden = YES;
+    
+    _tableFavAndRec.tableFooterView = [[UIView alloc] init];
+    _tableHot.tableFooterView = [[UIView alloc] init];
 }
 
 - (void)buttonClicked:(id)sender
@@ -245,6 +248,7 @@
         _viewSegment.hidden = NO;
         frame = HOT_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 5.0f));
         [_tableHot reloadData];
+        _arrSearch = nil;
     }
     _tableHot.frame = frame;
 }
@@ -471,20 +475,20 @@
             [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
             [cell.contentView addSubview:imageView];
             
-            UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(88, 8, 170, 15)];
+            UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
             titleLab.font = [UIFont systemFontOfSize:14];
             titleLab.text = [infoDic objectForKey:@"content_name"];
             titleLab.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:titleLab];
             
-            UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(88, 30, 170, 15)];
+            UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(65, 30, 170, 15)];
             actors.text = [NSString stringWithFormat:@"主演：%@",[infoDic objectForKey:@"stars"]] ;
             actors.font = [UIFont systemFontOfSize:12];
             actors.textColor = [UIColor grayColor];
             actors.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:actors];
             
-            UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(88, 42, 200, 15)];
+            UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(65, 42, 200, 15)];
             date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
             date.font = [UIFont systemFontOfSize:12];
             date.textColor = [UIColor grayColor];
@@ -521,13 +525,13 @@
             [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
             [cell.contentView addSubview:imageView];
             
-            UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(88, 8, 170, 15)];
+            UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
             titleLab.font = [UIFont systemFontOfSize:14];
             titleLab.text = [infoDic objectForKey:@"prod_name"];
             titleLab.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:titleLab];
             
-            UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(88, 30, 170, 15)];
+            UILabel *actors = [[UILabel alloc] initWithFrame:CGRectMake(65, 30, 170, 15)];
             actors.text = [self composeContent:infoDic];
             actors.font = [UIFont systemFontOfSize:12];
             actors.textColor = [UIColor grayColor];
