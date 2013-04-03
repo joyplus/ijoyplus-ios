@@ -52,12 +52,16 @@
         self.viewControllers = [NSArray arrayWithObjects:sortNav,allListNav,downLoadNavCtrl,mineNav, nil];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEDAN];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEBANG];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:MINE];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:XIAZAI];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         self.tabBar.selectedImageTintColor = [UIColor whiteColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];
