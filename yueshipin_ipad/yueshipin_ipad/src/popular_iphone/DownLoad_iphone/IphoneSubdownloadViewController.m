@@ -50,8 +50,8 @@
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
-    //UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
-    //self.navigationItem.leftBarButtonItem = backButtonItem;
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
+    self.navigationItem.leftBarButtonItem = backButtonItem;
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [editButton addTarget:self action:@selector(editPressed:) forControlEvents:UIControlEventTouchUpInside];

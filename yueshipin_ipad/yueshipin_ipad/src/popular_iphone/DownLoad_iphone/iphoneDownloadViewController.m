@@ -61,6 +61,7 @@
 //    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
 //    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
 //    self.navigationItem.leftBarButtonItem = backButtonItem;
+    self.navigationItem.hidesBackButton = YES;
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [editButton addTarget:self action:@selector(editPressed:) forControlEvents:UIControlEventTouchUpInside];
