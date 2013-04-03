@@ -97,8 +97,9 @@
     gMGridView_.dataSource = self;
     gMGridView_.mainSuperView = self.view;
     
+    /*
     UIImageView *diskView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_download_3.png"]];
-    diskView.frame = CGRectMake(0, kCurrentWindowHeight-74, 320, 30);
+    diskView.frame = CGRectMake(0, kCurrentWindowHeight-88-30, 320, 30);
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(66, 9, 42, 13)];
     label.text = @"存储容量";
@@ -116,20 +117,31 @@
     diskUsedProgress_.progress = percent;
     diskUsedProgress_.innerColor = [UIColor colorWithRed:100/255.0 green:165/255.0 blue:248/255.0 alpha:1];
     diskUsedProgress_.outerColor = [UIColor clearColor];
+    */
     
-    UILabel *spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 5, 200, 10)];
-    spaceInfoLabel.text = [NSString stringWithFormat:@"总空间:%0.2fGB/剩余%0.2fGB",totalSpace_,totalFreeSpace_];
+    UIView * spaceBackground = [[UIView alloc] initWithFrame:CGRectMake(0, kCurrentWindowHeight - 140 + 27, 320, 20)];
+    spaceBackground.backgroundColor = [UIColor colorWithRed:121.0f/255.0f green:121.0f/255.0f blue:121.0f/255.0f alpha:1.0f];
+    
+    float freePresent = [self getFreeDiskspacePercent];
+    
+    UIView * innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 320 * freePresent, 18)];
+    innerView.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:102.0f/255.0f blue:180.0f/255.0f alpha:1.0f];
+    [spaceBackground addSubview:innerView];
+    
+    [self.view addSubview:spaceBackground];
+    
+    UILabel *spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    spaceInfoLabel.text = [NSString stringWithFormat:@"共:%0.2fGB/剩余%0.2fGB",totalSpace_,totalFreeSpace_];
     spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
     spaceInfoLabel.backgroundColor = [UIColor clearColor];
     spaceInfoLabel.font = [UIFont systemFontOfSize:8];
     spaceInfoLabel.textColor = [UIColor whiteColor];
-    [diskUsedProgress_ addSubview:spaceInfoLabel];
+    [spaceBackground addSubview:spaceInfoLabel];
     
-    
-    
-    [diskView addSubview:diskUsedProgress_];
-    
-    [self.view addSubview:diskView];
+//    [diskUsedProgress_ addSubview:spaceInfoLabel];
+//    [diskView addSubview:diskUsedProgress_];
+//    
+//    [self.view addSubview:diskView];
     
     downLoadManager_ = [AppDelegate instance].downLoadManager;
     downLoadManager_.downLoadMGdelegate = self;
