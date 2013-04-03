@@ -395,6 +395,7 @@
                 play.tag = 10001;
                 [play setImage:[UIImage imageNamed:@"play_video.png"] forState:UIControlStateNormal];
                 [play setImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
+                [play setImage:[UIImage imageNamed:@"no_video_source.png"] forState:UIControlStateDisabled];
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
@@ -433,11 +434,12 @@
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                     downLoad.enabled = NO;
+                    play.enabled = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
-                
+                    play.enabled = YES;
                 }
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
