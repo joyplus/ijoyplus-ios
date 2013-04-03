@@ -341,13 +341,13 @@
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
     int dingNum = [[video objectForKey:@"support_num"] intValue];
     if (dingNum >= 1000) {
-        self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%iK)", dingNum/1000];
+        self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", dingNum/1000.0];
     } else {
         self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
     }
     int collectioNum = [[video objectForKey:@"favority_num"] intValue];
     if (collectioNum > 1000) {
-        self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%iK)", collectioNum/1000];
+        self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", collectioNum/1000.0];
     } else {
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", collectioNum];
     }
@@ -471,7 +471,7 @@
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int dingNum = [[video objectForKey:@"support_num"] intValue] + 1;
             if (dingNum >= 1000) {
-                self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%iK)", dingNum/1000];
+                self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", dingNum/1000.0];
             } else {
                 self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
             }
@@ -498,7 +498,7 @@
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
             if (collectioNum > 1000) {
-                self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%iK)", collectioNum/1000];
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", collectioNum/1000.0];
             } else {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", collectioNum];
             }

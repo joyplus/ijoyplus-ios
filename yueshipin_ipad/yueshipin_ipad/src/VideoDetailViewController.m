@@ -279,7 +279,7 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    [[[AppDelegate instance].rootViewController showReportPopup:self.prodId]];
+    [[AppDelegate instance].rootViewController showReportPopup:self.prodId];
 }
 
 - (void)showSublistView:(int)num{
