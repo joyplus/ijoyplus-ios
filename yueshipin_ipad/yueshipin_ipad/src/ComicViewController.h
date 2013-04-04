@@ -8,8 +8,9 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
+#import "VideoViewController.h"
 
-@interface ComicViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>
+@interface ComicViewController : VideoViewController
 
 - (id)initWithFrame:(CGRect)frame;
 

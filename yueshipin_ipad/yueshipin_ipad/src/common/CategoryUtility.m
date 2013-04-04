@@ -11,6 +11,63 @@
 
 @implementation CategoryUtility
 
++ (NSArray *)getHightlightCategoryByType:(VideoType)type
+{
+    if (type == MOVIE_TYPE) {
+        return [self getMovieHighlightCategory];
+    } else if (type == DRAMA_TYPE){
+        return [self getDramaHighlightCategory];
+    } else if (type == SHOW_TYPE){
+        return [self getShowHighlightCategory];
+    } else if (type == COMIC_TYPE){
+        return [self getComicHighlightCategory];
+    } else {
+        return nil;
+    }
+}
++ (NSArray *)getCategoryByType:(VideoType)type
+{
+    if (type == MOVIE_TYPE) {
+        return [self getMovieCategory];
+    } else if (type == DRAMA_TYPE){
+        return [self getDramaCategory];
+    } else if (type == SHOW_TYPE){
+        return [self getShowCategory];
+    } else if (type == COMIC_TYPE){
+        return [self getComicCategory];
+    } else {
+        return nil;
+    }
+}
++ (NSArray *)getRegionTypeByType:(VideoType)type
+{
+    if (type == MOVIE_TYPE) {
+        return [self getMovieRegionType];
+    } else if (type == DRAMA_TYPE){
+        return [self getDramaRegionType];
+    } else if (type == SHOW_TYPE){
+        return [self getShowRegionType];
+    } else if (type == COMIC_TYPE){
+        return [self getComicRegionType];
+    } else {
+        return nil;
+    }
+}
++ (NSArray *)getYearTypeByType:(VideoType)type
+{
+    if (type == MOVIE_TYPE) {
+        return [self getMovieYearType];
+    } else if (type == DRAMA_TYPE){
+        return [self getDramaYearType];
+    } else if (type == SHOW_TYPE){
+        return [self getShowYearType];
+    } else if (type == COMIC_TYPE){
+        return [self getComicYearType];
+    } else {
+        return nil;
+    }
+}
+
 
 + (NSArray *)getComicHighlightCategory
 {
@@ -85,6 +142,14 @@
     item.label = @"搞笑";
     item.key = @"hilarious";
     item.value = @"搞笑";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = COMIC_TYPE;
+    item.subtype = NO_TYPE;
+    item.label = @"其他";
+    item.key = @"other";
+    item.value = @"其他";
     [categoryArray addObject:item];
     
     return categoryArray;
@@ -447,6 +512,14 @@
     item.label = @"喜剧";
     item.key = @"comedy";
     item.value = @"喜剧";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = MOVIE_TYPE;
+    item.subtype = NO_TYPE;
+    item.label = @"其他";
+    item.key = @"other";
+    item.value = @"其他";
     [categoryArray addObject:item];
     return categoryArray;
 }
@@ -819,6 +892,14 @@
     item.value = @"TVB";
     [categoryArray addObject:item];
     
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
+    item.subtype = NO_TYPE;
+    item.label = @"其他";
+    item.key = @"other";
+    item.value = @"其他";
+    [categoryArray addObject:item];
+    
     return categoryArray;
 }
 
@@ -1141,6 +1222,14 @@
     item.label = @"访谈";
     item.key = @"dialog";
     item.value = @"访谈";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = SHOW_TYPE;
+    item.subtype = NO_TYPE;
+    item.label = @"其他";
+    item.key = @"other";
+    item.value = @"其他";
     [categoryArray addObject:item];
 
     return categoryArray;
