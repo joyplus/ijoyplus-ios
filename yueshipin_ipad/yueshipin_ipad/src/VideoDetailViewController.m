@@ -11,6 +11,7 @@
 #import "CommonHeader.h"
 #import "ListViewController.h"
 #import "AvVideoWebViewController.h"
+#import "CommentDetailViewController.h"
 
 @interface VideoDetailViewController ()
 
@@ -439,6 +440,14 @@
 // This callback method will be implemented by subclasses.
 - (void)playNextEpisode{
     
+}
+
+- (void)showCommentDetail:(NSDictionary *)commentItem
+{
+    CommentDetailViewController *viewController = [[CommentDetailViewController alloc]init];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:YES];
+    self.moveToLeft = NO;
 }
 
 @end

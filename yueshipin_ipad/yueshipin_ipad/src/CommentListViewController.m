@@ -10,6 +10,7 @@
 #import "CommonHeader.h"
 #import "CommentCell.h"
 #import "CommentWebViewController.h"
+#import "CommentDetailViewController.h"
 
 @interface CommentListViewController ()
 
@@ -225,7 +226,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row < fmin(commentArray.count, 3)) {
-        
+        NSDictionary *item = [commentArray objectAtIndex:indexPath.row];
+        [self.parentDelegate showCommentDetail:item];
     } else if (indexPath.row == 3){
         NSDictionary *item = [commentArray objectAtIndex:indexPath.row];
         CommentWebViewController *viewController = [[CommentWebViewController alloc]init];

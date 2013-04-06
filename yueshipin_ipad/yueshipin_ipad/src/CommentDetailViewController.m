@@ -6,9 +6,10 @@
 //  Copyright (c) 2012年 joyplus. All rights reserved.
 //
 
-#import "AboutUsViewController.h"
+#import "CommentDetailViewController.h"
+#import "VideoDetailViewController.h"
 
-@interface AboutUsViewController (){
+@interface CommentDetailViewController (){
     UIImageView *titleImage;
     UIImageView *contentImage;
     UIButton *closeBtn;
@@ -16,7 +17,7 @@
 
 @end
 
-@implementation AboutUsViewController
+@implementation CommentDetailViewController
 
 - (void)viewDidUnload
 {
@@ -55,6 +56,11 @@
     [self.view addSubview:contentImage];
 
     [self.view addGestureRecognizer:self.swipeRecognizer];
+}
+
+- (void)closeBtnClicked
+{
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:VideoDetailViewController.class];
 }
 
 - (void)didReceiveMemoryWarning

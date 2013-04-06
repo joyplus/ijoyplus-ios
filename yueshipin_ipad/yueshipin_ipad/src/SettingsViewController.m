@@ -86,10 +86,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
         
-        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [backgroundView addSubview:bgImage];
-        
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 137, 34)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];

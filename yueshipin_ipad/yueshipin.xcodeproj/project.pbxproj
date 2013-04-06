@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14DB6970170FBC7100240DF8 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14DB696F170FBC7100240DF8 /* VideoViewController.m */; };
+		14DB6974170FBD1800240DF8 /* CommentDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 14DB6973170FBD1800240DF8 /* CommentDetailViewController.m */; };
 		220260B616E840A40010322F /* IphoneAVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220260B316E840A40010322F /* IphoneAVPlayerViewController.m */; };
 		220260B716E840A40010322F /* IphoneWebPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 220260B516E840A40010322F /* IphoneWebPlayerViewController.m */; };
 		220260E516E8414B0010322F /* iphone_back_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260B916E8414B0010322F /* iphone_back_bt_pressed@2x.png */; };
@@ -790,6 +792,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		14DB696E170FBC7100240DF8 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
+		14DB696F170FBC7100240DF8 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
+		14DB6972170FBD1800240DF8 /* CommentDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentDetailViewController.h; sourceTree = "<group>"; };
+		14DB6973170FBD1800240DF8 /* CommentDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentDetailViewController.m; sourceTree = "<group>"; };
 		220260B216E840A40010322F /* IphoneAVPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneAVPlayerViewController.h; sourceTree = "<group>"; };
 		220260B316E840A40010322F /* IphoneAVPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneAVPlayerViewController.m; sourceTree = "<group>"; };
 		220260B416E840A40010322F /* IphoneWebPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneWebPlayerViewController.h; sourceTree = "<group>"; };
@@ -2729,8 +2735,12 @@
 		EB64C38117097E3F00C5AD67 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				14DB696E170FBC7100240DF8 /* VideoViewController.h */,
+				14DB696F170FBC7100240DF8 /* VideoViewController.m */,
 				EBC19351170ABFDA009D8221 /* CommentListViewController.h */,
 				EBC19352170ABFDA009D8221 /* CommentListViewController.m */,
+				14DB6972170FBD1800240DF8 /* CommentDetailViewController.h */,
+				14DB6973170FBD1800240DF8 /* CommentDetailViewController.m */,
 				EBF3A961166301F100EBF56D /* ListViewController.h */,
 				EBF3A962166301F100EBF56D /* ListViewController.m */,
 				EBF3A963166301F100EBF56D /* ListViewController.xib */,
@@ -4029,6 +4039,8 @@
 				EBC19353170ABFDA009D8221 /* CommentListViewController.m in Sources */,
 				EBC19356170AD09E009D8221 /* CommentWebViewController.m in Sources */,
 				EBB69DE8170BD3E600521900 /* CategoryUtility.m in Sources */,
+				14DB6970170FBC7100240DF8 /* VideoViewController.m in Sources */,
+				14DB6974170FBD1800240DF8 /* CommentDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

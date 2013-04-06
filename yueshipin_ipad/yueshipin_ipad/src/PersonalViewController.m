@@ -117,12 +117,7 @@
         backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
         [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
-        
-        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [backgroundView addSubview:bgImage];
 
-        
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 187, 36)];
         topImage.image = [UIImage imageNamed:@"my_title"];
         [self.view addSubview:topImage];

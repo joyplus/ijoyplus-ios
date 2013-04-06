@@ -91,10 +91,6 @@
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         
-        bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [self.view addSubview:bgImage];
-        
         nodownloadImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 200, 200)];
         nodownloadImage.center = CGPointMake(bgImage.center.x, bgImage.center.y - 100);
         nodownloadImage.image = [UIImage imageNamed:@"nodownload"];

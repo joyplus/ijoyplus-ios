@@ -53,19 +53,23 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
+    
     titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 106, 27)];
     titleImage.image = [UIImage imageNamed:@"result_title"];
     [self.view addSubview:titleImage];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    closeBtn.frame = CGRectMake(456, 0, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 70, 420, self.view.frame.size.height - 370)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 70, 420, self.view.frame.size.height - 380)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
