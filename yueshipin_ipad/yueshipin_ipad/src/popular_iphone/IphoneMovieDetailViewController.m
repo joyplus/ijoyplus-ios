@@ -13,6 +13,7 @@
 #import "CacheUtility.h"
 #import "CMConstants.h"
 #import "AppDelegate.h"
+#import "ReviewViewController.h"
 #import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "UIImage+Scale.h"
@@ -644,6 +645,22 @@
             reviewCell.tag = REVIEW_VIEW_TAG + i;
             [reviewCell setDelegate:self];
             [cell addSubview:reviewCell];
+            
+            if (i == arrReviewData_.count - 1 && 2 == arrReviewData_.count)
+            {
+                UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 100, 30);
+                //[moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+                [moreBtn setTitle:@"更多影评 >" forState:UIControlStateNormal];
+                moreBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+                moreBtn.titleLabel.textColor = [UIColor orangeColor];
+                [moreBtn setTitleColor:[UIColor orangeColor]
+                              forState:UIControlStateNormal];
+                [moreBtn addTarget:self
+                            action:@selector(moreBtnClicked:)
+                  forControlEvents:UIControlEventTouchUpInside];
+                [cell addSubview:moreBtn];
+            }
         }
         
     }
@@ -705,7 +722,7 @@
     }
     else if (3 == indexPath.section)
     {
-        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 15.0f;
+        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 15.0f + 15;
         return height;
     }
         return 0;
@@ -856,6 +873,20 @@
         default:
             break;
     }
+}
+
+- (void)moreBtnClicked:(id)sender
+{
+    NSString * douban_Id = [self.infoDic objectForKey:@"douban_id"];
+    
+    if (nil == douban_Id)
+    {
+        return;
+    }
+    
+    ReviewViewController * rCtrl = [[ReviewViewController alloc] init];
+    rCtrl.reqURL = douban_Id;
+    [self presentViewController:rCtrl animated:YES completion:NULL];
 }
 
 -(void)more{
