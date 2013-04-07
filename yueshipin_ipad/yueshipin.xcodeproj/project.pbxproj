@@ -147,12 +147,7 @@
 		22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF216F18D4A00058985 /* TSPopoverTouchView.m */; };
 		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
-<<<<<<< HEAD
 		2270AB8816B24F7D009A3861 /* ShowDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */; };
-=======
-		2251348F171124E50002886B /* ReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2251348E171124E50002886B /* ReviewViewController.m */; };
-		2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */; };
->>>>>>> 添加更多影评页面
 		227A45BE170BF5140002DCDE /* download_edit_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BC170BF5140002DCDE /* download_edit_f@2x.png */; };
 		227A45BF170BF5140002DCDE /* download_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BD170BF5140002DCDE /* download_edit@2x.png */; };
 		227A45C1170C0B620002DCDE /* no_video_source@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45C0170C0B610002DCDE /* no_video_source@2x.png */; };
@@ -992,15 +987,8 @@
 		22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
 		2249C9A6169C2C2D00757A2E /* ProgramNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgramNavigationController.h; sourceTree = "<group>"; };
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
-<<<<<<< HEAD
 		2270AB8616B24F7D009A3861 /* ShowDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownloadViewController.h; sourceTree = "<group>"; };
 		2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownloadViewController.m; sourceTree = "<group>"; };
-=======
-		2251348D171124E50002886B /* ReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReviewViewController.h; sourceTree = "<group>"; };
-		2251348E171124E50002886B /* ReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReviewViewController.m; sourceTree = "<group>"; };
-		2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownlooadViewController.h; sourceTree = "<group>"; };
-		2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownlooadViewController.m; sourceTree = "<group>"; };
->>>>>>> 添加更多影评页面
 		227A45BC170BF5140002DCDE /* download_edit_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit_f@2x.png"; sourceTree = SOURCE_ROOT; };
 		227A45BD170BF5140002DCDE /* download_edit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit@2x.png"; sourceTree = SOURCE_ROOT; };
 		227A45C0170C0B610002DCDE /* no_video_source@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "no_video_source@2x.png"; path = "yueshipin_ipad/Resource_iphone/no_video_source@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2051,8 +2039,6 @@
 				22FEEE9D168AEF7B00A71EF4 /* ShowListViewCell.m */,
 				22FEEED1168D463800A71EF4 /* TVDetailViewController.h */,
 				22FEEED2168D463900A71EF4 /* TVDetailViewController.m */,
-				2251348D171124E50002886B /* ReviewViewController.h */,
-				2251348E171124E50002886B /* ReviewViewController.m */,
 				22FEEEDB168D474B00A71EF4 /* IphoneMovieDetailViewController.h */,
 				22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */,
 				22CE9F5A169AA7FD00D4FC76 /* SendWeiboViewController.h */,
@@ -4031,7 +4017,6 @@
 				227C09CA170A7D4000BEC1E5 /* RespForWXRootViewController.m in Sources */,
 				227C09CD170A818700BEC1E5 /* RespForWXRootView.m in Sources */,
 				227C09DA170AF69F00BEC1E5 /* RespForWXDetailViewController.m in Sources */,
-				2251348F171124E50002886B /* ReviewViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
