@@ -109,6 +109,7 @@ NSString *const kPathUserSupport = @"/joyplus-service/index.php/user/supports";
 NSString *const kPathAddItem = @"/joyplus-service/index.php/top/addItem";
 NSString *const kPathNew = @"/joyplus-service/index.php/top/new";
 NSString *const kPathTvTops = @"/joyplus-service/index.php/tv_tops";
+NSString *const kPathComicTops = @"/joyplus-service/index.php/cart_tops";
 NSString *const kPathMoiveTops = @"/joyplus-service/index.php/movie_tops";
 NSString *const kPathShowTops = @"/joyplus-service/index.php/show_tops";
 NSString *const kPathLunbo = @"/joyplus-service/index.php/lunbo";

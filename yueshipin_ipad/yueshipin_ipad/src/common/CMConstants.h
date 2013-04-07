@@ -115,6 +115,18 @@ typedef enum {
     COMIC_TYPE = 131,
 } VideoType;
 
+typedef enum {
+    MOVIE_TOPIC = 1,
+    DRAMA_TOPIC = 2,
+} TopicType;
+
+typedef enum {
+    MOVIE_TOP = 1,
+    DRAMA_TOP = 2,
+    COMIC_TOP = 3,
+    SHOW_TOP = 4,
+} TopType;
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 

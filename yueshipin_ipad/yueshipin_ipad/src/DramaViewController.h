@@ -7,10 +7,9 @@
 //
 
 #import "CommonHeader.h"
-#import "MenuViewController.h"
-#import "EGORefreshTableHeaderView.h"
+#import "VideoViewController.h"
 
-@interface DramaViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIGestureRecognizerDelegate>
+@interface DramaViewController : VideoViewController
 
 - (id)initWithFrame:(CGRect)frame;
 

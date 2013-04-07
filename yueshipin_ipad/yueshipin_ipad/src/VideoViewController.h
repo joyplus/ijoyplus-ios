@@ -10,8 +10,8 @@
 #import "MenuViewController.h"
 
 #define SLIDER_VIEW_TAG 8924355
-#define VIDEO_LOGO_HEIGHT 105
-#define VIDEO_LOGO_WIDTH 75
+#define VIDEO_LOGO_HEIGHT 106
+#define VIDEO_LOGO_WIDTH 78
 
 @interface VideoViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>{
     UIImageView *sloganImageView;

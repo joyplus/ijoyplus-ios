@@ -12,6 +12,7 @@ extern NSString *const POPULAR_MOVIE_TOP_LIST;
 extern NSString *const MOVIE_DETAIL;
 extern NSString *const MOVIE_PLAY;
 extern NSString *const POPULAR_TV_TOP_LIST;
+extern NSString *const POPULAR_COMIC_TOP_LIST;
 extern NSString *const TV_DETAIL;
 extern NSString *const TV_PLAY;
 extern NSString *const POPULAR_SHOW_TOP_LIST;

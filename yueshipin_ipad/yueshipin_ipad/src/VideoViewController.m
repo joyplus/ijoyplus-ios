@@ -44,8 +44,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-- (id)initWithFrame:(CGRect)frame {
+- (void)initTypePrefix
+{
     if (videoType == MOVIE_TYPE) {
         typePrefix = @"movie";
     } else if(videoType == DRAMA_TYPE){
@@ -55,7 +55,24 @@
     } else if(videoType == SHOW_TYPE){
         typePrefix = @"show";
     }
+}
 
+- (void)initSolganImage
+{
+    if (videoType == MOVIE_TYPE) {
+        sloganImageView.image = [UIImage imageNamed:@"slogan_movie"];
+    } else if(videoType == DRAMA_TYPE){
+        sloganImageView.image = [UIImage imageNamed:@"slogan_drama"];
+    } else if(videoType == COMIC_TYPE){
+        sloganImageView.image = [UIImage imageNamed:@"slogan_show"];
+    } else if(videoType == SHOW_TYPE){
+        sloganImageView.image = [UIImage imageNamed:@"slogan_comic"];
+    }
+}
+
+
+- (id)initWithFrame:(CGRect)frame {
+    [self initTypePrefix];
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
@@ -64,26 +81,27 @@
         [hideSubcategoryViewGesture setNumberOfTapsRequired:1];
         [self.view addGestureRecognizer:hideSubcategoryViewGesture];
         
-        sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];
-        sloganImageView.frame = CGRectMake(15, 36, 261, 42);
+        sloganImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 36, 261, 42)];
+        [self initSolganImage];
         [self.view addSubview:sloganImageView];
         
-        topCategoryView = [[UIView alloc]initWithFrame:CGRectMake(5, 90, self.view.frame.size.width-15, 50)];
-        [topCategoryView setBackgroundColor:[UIColor yellowColor]];
+        topCategoryView = [[UIView alloc]initWithFrame:CGRectMake(5, 90, self.view.frame.size.width-20, 50)];
+        [topCategoryView setBackgroundColor:[UIColor clearColor]];
         UIImageView *topCatBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, topCategoryView.frame.size.width, 45)];
         topCatBgImage.image = [UIImage imageNamed:@"top_category_bg"];
         [topCategoryView addSubview:topCatBgImage];
         
-        UIView *sliderView = [[UIView alloc]initWithFrame:CGRectMake(5, 0, 50, 45)];
-        sliderView.backgroundColor = CMConstants.yellowColor;
+        UIView *sliderView = [[UIView alloc]initWithFrame:CGRectMake(2, 3, 50, 45)];
+        sliderView.backgroundColor = [UIColor clearColor];
         sliderView.tag = SLIDER_VIEW_TAG;
-        sliderView.layer.cornerRadius = 5;
-        sliderView.layer.masksToBounds = YES;
+        UIImageView *sliderImage = [[UIImageView alloc]initWithFrame:sliderView.frame];
+        sliderImage.image = [UIImage imageNamed:@"slide_image"];
+        [sliderView addSubview:sliderImage];
         [topCategoryView addSubview:sliderView];
         hightLightCategoryArray = [CategoryUtility getHightlightCategoryByType:videoType];
         for (int i = 0; i < hightLightCategoryArray.count; i++) {
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            tempBtn.frame = CGRectMake(5 + i * 50, 0, 50, 45);
+            tempBtn.frame = CGRectMake(5 + i * 50, 5, 50, 45);
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
             [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
@@ -96,19 +114,18 @@
             }
             [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             tempBtn.tag = 1101 + i;
-            [tempBtn addTarget:self action:@selector(categoryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [tempBtn addTarget:self action:@selector(categoryBtnClicked:) forControlEvents:UIControlEventTouchDown];
             [topCategoryView addSubview:tempBtn];
         }
         [self.view addSubview:topCategoryView];
         
         table = [[UITableView alloc] initWithFrame:CGRectMake(9, 150, self.view.frame.size.width - 18, self.view.frame.size.height - 170) style:UITableViewStylePlain];
-        [table setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
-        [table setBackgroundColor:[UIColor yellowColor]];
+        [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+        [table setBackgroundColor:[UIColor clearColor]];
 		[table setDelegate:self];
 		[table setDataSource:self];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setShowsVerticalScrollIndicator:NO];
-		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
         table.tableFooterView = [[UIView alloc] init];
 		[self.view addSubview:table];
         
@@ -175,11 +192,18 @@
     if(cacheResult != nil){
         [self parseData:cacheResult];
     } else {
+        [videoArray removeAllObjects];
+        [table reloadData];
         if(isReachable) {
             [myHUD showProgressBar:self.view];
         }
     }
     reloads_ = 1;
+    [self performSelectorInBackground:@selector(sendRequest) withObject:nil];
+}
+
+- (void)sendRequest
+{
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:videoType], @"type", categoryType, @"sub_type", regionType, @"area", yearType, @"year", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -191,7 +215,7 @@
             [myHUD hide];
             [UIUtility showSystemError:self.view];
         }];
-    }
+    }    
 }
 
 - (void)parseData:(id)result
@@ -270,6 +294,7 @@
 
 - (void)categoryBtnClicked:(UIButton *)btn
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     int num = btn.tag - 1101;
     if (subcategoryView && !subcategoryView.hidden && num != hightLightCategoryArray.count - 1) {
         [self hideSubcategoryView];
@@ -348,9 +373,14 @@
 - (void)showSubcategoryView
 {
     if (subcategoryView == nil) {
-        subcategoryView = [[UIView alloc]initWithFrame:CGRectMake(10, 130, 500, 350)];
+        subcategoryView = [[UIView alloc]initWithFrame:CGRectMake(10, 128, 505, 372)];
         subcategoryView.alpha = 0;
-        [subcategoryView setBackgroundColor:[UIColor whiteColor]];
+        subcategoryView.layer.cornerRadius = 5;
+        subcategoryView.layer.masksToBounds = YES;
+        [subcategoryView setBackgroundColor:[UIColor clearColor]];
+        UIImageView *subcategoryImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, subcategoryView.frame.size.width, subcategoryView.frame.size.height)];
+        subcategoryImage.image = [UIImage imageNamed:@"subcategory_bg"];
+        [subcategoryView addSubview:subcategoryImage];
         if (categoryArray == nil) {
             categoryArray = [CategoryUtility getCategoryByType:self.videoType];
         }
@@ -365,6 +395,7 @@
         categoryLabel.textColor = CMConstants.grayColor;
         [categoryLabel setFont:[UIFont systemFontOfSize:15]];
         categoryLabel.text = @"类型";
+        categoryLabel.backgroundColor = [UIColor clearColor];
         [subcategoryView addSubview:categoryLabel];
         
         for (int i = 0; i < categoryArray.count; i++) {
@@ -387,6 +418,7 @@
         regionLabel.textColor = CMConstants.grayColor;
         [regionLabel setFont:[UIFont systemFontOfSize:15]];
         regionLabel.text = @"地区";
+        regionLabel.backgroundColor = [UIColor clearColor];
         [subcategoryView addSubview:regionLabel];
         for (int i = 0; i < regionCategoryArray.count; i++) {
             CategoryItem *tempItem = [regionCategoryArray objectAtIndex:i];
@@ -413,6 +445,7 @@
         yearLabel.textColor = CMConstants.grayColor;
         [yearLabel setFont:[UIFont systemFontOfSize:15]];
         yearLabel.text = @"年份";
+        yearLabel.backgroundColor = [UIColor clearColor];
         [subcategoryView addSubview:yearLabel];
         for (int i = 0; i < yearCategoryArray.count; i++) {
             CategoryItem *tempItem = [yearCategoryArray objectAtIndex:i];
@@ -524,8 +557,8 @@
 {
     UIView *sliderView = [topCategoryView viewWithTag:SLIDER_VIEW_TAG];
     if (sliderView) {
-        [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            sliderView.frame = CGRectMake(5 + num * 50, 0, sliderView.frame.size.width, sliderView.frame.size.height);
+        [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+            sliderView.frame = CGRectMake(2 + num * 50, sliderView.frame.origin.y, sliderView.frame.size.width, sliderView.frame.size.height);
         } completion:^(BOOL finished) {
             
         }];
@@ -597,18 +630,25 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
         for (int i=0; i < 5; i++) {
-            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            UIImageView *placeHolderImage = [[UIImageView alloc]init];
+            placeHolderImage.tag = 1011 + i;
+            placeHolderImage.image = [[UIImage imageNamed:@"video_bg_placeholder"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+            placeHolderImage.frame = CGRectMake(13 + (VIDEO_LOGO_WIDTH+22) * i, 5, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
+            [cell.contentView addSubview:placeHolderImage];
+            
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6011 + i;
-            movieImage.frame = CGRectMake(13 + (VIDEO_LOGO_WIDTH+22) * i, 5, VIDEO_LOGO_WIDTH, VIDEO_LOGO_HEIGHT);
-            tempBtn.frame = movieImage.frame;
+            movieImage.frame = CGRectMake(16 + (VIDEO_LOGO_WIDTH+22) * i, 8, VIDEO_LOGO_WIDTH-6, VIDEO_LOGO_HEIGHT-3);
+            [cell.contentView addSubview:movieImage];
+            
+            UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [tempBtn setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:0.4]] forState:UIControlStateHighlighted];
+            tempBtn.frame = placeHolderImage.frame;
             tempBtn.tag = 2011 + i;
             [tempBtn addTarget:self action:@selector(imageClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [cell.contentView addSubview:movieImage];
             [cell.contentView addSubview:tempBtn];
             
             UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieImage.frame.origin.x, movieImage.frame.origin.y + movieImage.frame.size.height, movieImage.frame.size.width, 25)];
-            nameLabel.contentMode = UIViewContentModeTop;
             [nameLabel setTextAlignment:NSTextAlignmentCenter];
             [nameLabel setTextColor:[UIColor blackColor]];
             [nameLabel setBackgroundColor:[UIColor clearColor]];
@@ -624,38 +664,33 @@
             [titleLabel setBackgroundColor:[UIColor clearColor]];
             titleLabel.tag = 4011 + i;
             [cell.contentView addSubview:titleLabel];
+            
         }
-        
-        
-        //        UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, VIDEO_LOGO_HEIGHT + 40 - 2, 450, 2)];
-        //        lineImage.image = [UIImage imageNamed:@"dividing"];
-        //        [self.view addSubview:lineImage];
-        //        [cell.contentView addSubview:lineImage];
+        UIImageView *titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, VIDEO_LOGO_HEIGHT + 9, (VIDEO_LOGO_WIDTH) * 6 + 7, 30)];
+        titleImage.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        [cell.contentView addSubview:titleImage];
+
     }
     if (indexPath.row < ceil(videoArray.count/5.0)) {
         int i = 0;
         for (i = 0; i < fmin(videoArray.count - 5 * indexPath.row, 5); i++) {
-            //                if(selectedRowNumber == indexPath.row && lastPressedBtn == tempBtn){
-            //                    [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateNormal];
-            //                } else {
-            //                    [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
-            //                }
-            
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             NSDictionary *item = [videoArray objectAtIndex: 5 * indexPath.row + i];
-            [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]]];
             UILabel *nameLabel = (UILabel *)[cell.contentView viewWithTag:3011 + i];
+            if (videoType == MOVIE_TYPE) {
+                nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
+                nameLabel.numberOfLines = 2;
+            } else {
+                UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
+                titleLabel.text = [NSString stringWithFormat:@"更新至第%@集", [item objectForKey:@"cur_episode"]];
+            }
             nameLabel.text = [item objectForKey:@"prod_name"];
-            //                if(selectedRowNumber == indexPath.row && lastPressedLabel == tempLabel){
-            //                    tempLabel.textColor = [UIColor whiteColor];
-            //                } else {
-            //                    tempLabel.textColor = [UIColor blackColor];
-            //                }
-            UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
-            titleLabel.text = [NSString stringWithFormat:@"更新至第%@集", [item objectForKey:@"cur_episode"]];
         }
         if (i < 5) {
             for (int j = i; j < 5; j++) {
+                UIImageView *placeHolderImage = (UIImageView *)[cell viewWithTag:1011 + j];
+                placeHolderImage.image = nil;
                 UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + j];
                 contentImage.image = nil;
                 UILabel *nameLabel = (UILabel *)[cell.contentView viewWithTag:3011 + j];

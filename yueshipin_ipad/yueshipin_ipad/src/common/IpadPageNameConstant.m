@@ -14,6 +14,7 @@ NSString *const POPULAR_MOVIE_TOP_LIST = @"电影悦榜";
 NSString *const MOVIE_DETAIL = @"电影详情";
 NSString *const MOVIE_PLAY = @"电影播放";
 NSString *const POPULAR_TV_TOP_LIST = @"电视剧悦榜";
+NSString *const POPULAR_COMIC_TOP_LIST = @"动漫悦榜";
 NSString *const TV_DETAIL = @"电视剧详情";
 NSString *const TV_PLAY = @"电视剧播放";
 NSString *const POPULAR_SHOW_TOP_LIST = @"综艺悦榜";

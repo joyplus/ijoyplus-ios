@@ -16,40 +16,23 @@
 #import "SubsearchViewController.h"
 #import "CommonHeader.h"
 
-#define BOTTOM_IMAGE_HEIGHT 20
 #define TOP_IMAGE_HEIGHT 170
 #define LIST_LOGO_WIDTH 223
 #define LIST_LOGO_HEIGHT 184
 #define VIDEO_BUTTON_WIDTH 250
 #define VIDEO_BUTTON_HEIGHT 52
 #define TOP_SOLGAN_HEIGHT 93
-#define MOVIE_LOGO_HEIGHT 139
-#define MOVIE_LOGO_WEIGHT 83
-#define DRAMA_LOGO_HEIGHT 145
-#define DRAMA_LOGO_WEIGHT 83
-#define SHOW_LOGO_HEIGHT 125
-#define SHOW_LOGO_WEIGHT 486
-
-#define MOVIE_NUMBER 10
-#define DRAMA_NUMBER 10
 
 @interface PopularListViewController (){
-    UIView *backgroundView;
-    UIImageView *sloganImageView;
-    UIView *contentView;
-    UITableView *table;
     UIScrollView *scrollView;
+    UIImageView *sloganImageView;
+    UITableView *table;
     DDPageControl *pageControl;
-    UIImageView *bottomImageView;
-    NSMutableArray *movieTopsArray;
-    NSMutableArray *tvTopsArray;
     NSArray *lunboArray;
-    int videoType; // 0: 电影悦榜 1: 电视剧悦榜
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
-    MNMBottomPullToRefreshManager *showPullToRefreshManager_;
+    MNMBottomPullToRefreshManager *dramaPullToRefreshManager_;
     NSUInteger reloads_;
-    NSUInteger showReloads;
-    int showTopicId;
+    NSUInteger dramaReloads;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     int pageSize;
@@ -69,11 +52,15 @@
 @property (nonatomic, strong) UIView *customHeaderView;
 @property (nonatomic, strong) UIButton *movieListBtn;
 @property (nonatomic, strong) UIButton *dramaListBtn;
+@property (nonatomic) TopicType topicType; // 1: 电影悦榜 2: 电视剧悦榜
+@property (nonatomic, strong) NSMutableArray *movieTopsArray;
+@property (nonatomic, strong) NSMutableArray *tvTopsArray;
 
 @end
 
 @implementation PopularListViewController
-@synthesize customHeaderView, movieListBtn, dramaListBtn;
+@synthesize customHeaderView, movieListBtn, dramaListBtn, topicType;
+@synthesize movieTopsArray, tvTopsArray;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -90,31 +77,25 @@
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
-        backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor clearColor]];
-        [self.view addSubview:backgroundView];
         
         sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];
         sloganImageView.frame = CGRectMake(15, 36, 261, 42);
-        [backgroundView addSubview:sloganImageView];
+        [self.view addSubview:sloganImageView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, backgroundView.frame.size.width - 16, backgroundView.frame.size.height - TOP_SOLGAN_HEIGHT - BOTTOM_IMAGE_HEIGHT) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setShowsVerticalScrollIndicator:NO];
 		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-		[backgroundView addSubview:table];
-        
-        bottomImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height - 8, self.view.frame.size.width, 20)];
-        [backgroundView addSubview:bottomImageView];
+		[self.view addSubview:table];
         
         pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        showPullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        dramaPullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
         reloads_ = 2;
-        showReloads = 2;
+        dramaReloads = 2;
         if (_refreshHeaderView == nil) {
             EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
             view.backgroundColor = [UIColor clearColor];
@@ -131,7 +112,7 @@
 - (void)loadTable {
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
-    [showPullToRefreshManager_ tableViewReloadFinished];
+    [dramaPullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -175,20 +156,11 @@
     timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
     pageSize = 20;
-    videoType = 0;
+    topicType = MOVIE_TOPIC;
+    movieTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    tvTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     [self retrieveTopsListData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
-{
-    if([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]){
-        return NO;
-    } else if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
-        return NO;
-    } else {
-        return YES;
-    }
 }
 
 - (void)retrieveLunboData
@@ -226,7 +198,7 @@
     umengPageName = POPULAR_TOP_LIST;
     MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache: [NSString stringWithFormat: @"top_list_%i", topicType]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
     } else {
@@ -242,32 +214,30 @@
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [tempHUD hide:YES];
     } else {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
             [tempHUD hide:YES];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
-            if(movieTopsArray == nil){
-                movieTopsArray = [[NSMutableArray alloc]initWithCapacity:10];
-            }
             [tempHUD hide:YES];
             [UIUtility showSystemError:self.view];
         }];
     }
 }
 
+
 - (void)reloadTableViewDataSource{
     reloads_ = 2;
-    showReloads = 2;
+    dramaReloads = 2;
     [self retrieveLunboData];
-	if(videoType == 0){
+	if(topicType == MOVIE_TOPIC){
         [self retrieveTopsListData];
         [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
-        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
-    } else if(videoType == 1){
+        [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    } else if(topicType == DRAMA_TOPIC){
         [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveTopsListData];
     }
     _reloading = YES;
@@ -306,67 +276,58 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    if (videoType == 0 || videoType == 3) {
-        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-            [UIUtility showNetWorkError:self.view];
-            [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-            return;
-        }
-        if (videoType == 0) {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
-            [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                NSArray *tempTopsArray;
-                if(responseCode == nil){
-                    tempTopsArray = [result objectForKey:@"tops"];
-                    if(tempTopsArray.count > 0){
-                        [movieTopsArray addObjectsFromArray:tempTopsArray];
-                        reloads_ ++;
-                    }
-                } else {
-                    
-                }
-                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-                if(tempTopsArray.count < pageSize){
-                    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-                }
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-            }];
-        } else {
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:showReloads], @"page_num", [NSNumber numberWithInt:10], @"page_size", [NSNumber numberWithInt:showTopicId], @"top_id", nil];
-            [[AFServiceAPIClient sharedClient] getPath:kPathShowTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                NSArray *tempTopsArray;
-                if(responseCode == nil){
-                    tempTopsArray = [result objectForKey:@"items"];
-                    if(tempTopsArray.count > 0){
-                        [tvTopsArray addObjectsFromArray:tempTopsArray];
-                        showReloads ++;
-                    }
-                } else {
-                    
-                }
-                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-                if(tempTopsArray.count < 10){
-                    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
-                }
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-            }];
-        }
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        [UIUtility showNetWorkError:self.view];
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        return;
     }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        NSArray *tempTopsArray;
+        if(responseCode == nil){
+            tempTopsArray = [result objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                if (topicType ==  MOVIE_TOPIC) {
+                    [movieTopsArray addObjectsFromArray:tempTopsArray];
+                    reloads_ ++;
+                } else if (topicType == DRAMA_TOPIC){
+                    [tvTopsArray addObjectsFromArray:tempTopsArray];
+                    dramaReloads ++;
+                }
+            }
+        } else {
+            
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        if(topicType ==  MOVIE_TOPIC && tempTopsArray.count < pageSize){
+            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        } else if(topicType ==  DRAMA_TOPIC && tempTopsArray.count < pageSize){
+            [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
+    
 }
 
 - (void)parseTopsListData:(id)result
 {
-    movieTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+    if (topicType == MOVIE_TOPIC) {
+        [movieTopsArray removeAllObjects];
+    } else if(topicType == DRAMA_TOPIC){
+        [tvTopsArray removeAllObjects];
+    }
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         NSArray *tempTopsArray = [result objectForKey:@"tops"];
         if(tempTopsArray.count > 0){
-            [[CacheUtility sharedCache] putInCache:@"top_list" result:result];
-            [movieTopsArray addObjectsFromArray:tempTopsArray];
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat: @"top_list_%i", topicType] result:result];
+            if (topicType == MOVIE_TOPIC) {
+                [movieTopsArray addObjectsFromArray:tempTopsArray];
+            } else if (topicType == DRAMA_TOPIC){
+                [tvTopsArray addObjectsFromArray:tempTopsArray];
+            }
         }
     } else {
         [UIUtility showSystemError:self.view];
@@ -406,10 +367,10 @@
         }
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
-        if(videoType == 0){
+        if(topicType == MOVIE_TOPIC){
             [pullToRefreshManager_ tableViewScrolled];
-        } else if(videoType == 3){
-            [showPullToRefreshManager_ tableViewScrolled];
+        } else if(topicType == DRAMA_TOPIC){
+            [dramaPullToRefreshManager_ tableViewScrolled];
         }
         
     }
@@ -426,10 +387,10 @@
     if(aScrollView.tag == 11270014){
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
-        if(videoType == 0){
+        if(topicType == MOVIE_TOPIC){
             [pullToRefreshManager_ tableViewReleased];
-        } else if(videoType == 3){
-            [showPullToRefreshManager_ tableViewReleased];
+        } else if(topicType == DRAMA_TOPIC){
+            [dramaPullToRefreshManager_ tableViewReleased];
         }
     }
 }
@@ -438,27 +399,31 @@
 - (void)movieListBtnClicked:(UIButton *)sender
 {
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
-    videoType = 0;
+    topicType = MOVIE_TOPIC;
     [self initTopButtonImage];
     [self loadTable];
 }
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
-    [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    [dramaPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
-    videoType = 0;
+    topicType = DRAMA_TOPIC;
     [self initTopButtonImage];
-    [self loadTable];
+    if (tvTopsArray.count > 0) {
+        [self loadTable];
+    } else {
+        [self retrieveTopsListData];
+    }
 }
 
 
@@ -475,7 +440,7 @@
     if(section == 0){
         return 1;
     } else {
-        if (videoType == 0) {
+        if (topicType == MOVIE_TOPIC) {
             return movieTopsArray.count / 2;
         } else {
             return tvTopsArray.count / 2;
@@ -500,8 +465,7 @@
             
             scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 4, table.frame.size.width+6, TOP_IMAGE_HEIGHT - 8)];
             scrollView.tag = 11270014;
-            scrollView.delegate = self;
-            
+            scrollView.delegate = self;            
             
             CGSize size = scrollView.frame.size;
             for (int i=0; i < 5; i++) {
@@ -522,14 +486,21 @@
             scrollView.showsHorizontalScrollIndicator = NO;
             [cell.contentView addSubview:scrollView];
             
+            UIImageView *pageControllerBg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"page_controller_bg"]];
+            pageControllerBg.frame = CGRectMake(scrollView.frame.origin.x, scrollView.frame.origin.y + scrollView.frame.size.height - 20, scrollView.frame.size.width, 20);
+            pageControllerBg.layer.zPosition = 2;
+            [cell.contentView addSubview:pageControllerBg];
+            [pageControllerBg bringSubviewToFront:scrollView];
+        
             pageControl = [[DDPageControl alloc] init] ;
-            [pageControl setCenter: CGPointMake(self.view.center.x - 8, TOP_IMAGE_HEIGHT + 10)] ;
+            [pageControl setCenter: CGPointMake(self.view.center.x - 8, pageControllerBg.center.y)] ;
+            pageControl.layer.zPosition = 3;
             [pageControl setNumberOfPages: 5] ;
             [pageControl setCurrentPage: 0] ;
             [pageControl addTarget: self action: @selector(pageControlClicked:) forControlEvents: UIControlEventValueChanged] ;
             [pageControl setDefersCurrentPageDisplay: YES] ;
             [pageControl setType: DDPageControlTypeOnFullOffEmpty] ;
-            [pageControl setOnColor: [UIColor colorWithRed:244/255.0 green:163/255.0 blue:73/255.0 alpha: 1.0f]];
+            [pageControl setOnColor: CMConstants.yellowColor];
             [pageControl setOffColor: [UIColor colorWithRed:202/255.0 green:195/255.0 blue:170/255.0 alpha: 1.0f]];
             
             [pageControl setIndicatorDiameter: 8.0f] ;
@@ -563,6 +534,11 @@
         selectedImage1.tag = 3101;
         [cell.contentView addSubview:selectedImage1];
         
+        UIImageView *placeHolderImage1 = [[UIImageView alloc]init];
+        placeHolderImage1.image = [UIImage imageNamed:@"video_bg_placeholder"];
+        placeHolderImage1.frame = CGRectMake(36, 16, 95, 128);
+        [cell.contentView addSubview:placeHolderImage1];
+        
         UIImageView *contentImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(40, 20, 87, 120)];
         contentImage1.tag = 2001;
         [cell.contentView addSubview:contentImage1];
@@ -593,6 +569,11 @@
         selectedImage2.image = [UIImage imageNamed:@"gray_bg"];
         selectedImage2.tag = 3102;
         [cell.contentView addSubview:selectedImage2];
+        
+        UIImageView *placeHolderImage2 = [[UIImageView alloc]init];
+        placeHolderImage2.image = [UIImage imageNamed:@"video_bg_placeholder"];
+        placeHolderImage2.frame = CGRectMake(18 + LIST_LOGO_WIDTH + 35, 16, 95, 128);
+        [cell.contentView addSubview:placeHolderImage2];
         
         UIImageView *contentImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(22 + LIST_LOGO_WIDTH + 35, 20, 87, 120)];
         contentImage2.tag = 2002;
@@ -647,9 +628,9 @@
             [imageView2 addSubview:dotView22];
         }
     }
-    if ((videoType == 0 && indexPath.row * 2 + 1 < movieTopsArray.count) || (videoType == 1 && indexPath.row * 2 + 1 < tvTopsArray.count)) {
+    if ((topicType == MOVIE_TOPIC && indexPath.row * 2 + 1 < movieTopsArray.count) || (topicType == DRAMA_TOPIC && indexPath.row * 2 + 1 < tvTopsArray.count)) {
         NSDictionary *item1, *item2;
-        if (videoType == 0) {
+        if (topicType == MOVIE_TOPIC) {
             item1 = [movieTopsArray objectAtIndex:indexPath.row * 2];
             item2 = [movieTopsArray objectAtIndex:indexPath.row * 2 + 1];
         } else {
@@ -658,7 +639,7 @@
         }
         
         UIImageView *contentImage1 = (UIImageView *)[cell viewWithTag:2001];
-        [contentImage1 setImageWithURL:[NSURL URLWithString:[item1 objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        [contentImage1 setImageWithURL:[NSURL URLWithString:[item1 objectForKey:@"pic_url"]]];
         
         UIImageView *hotImage1 = (UIImageView *)[cell viewWithTag:1111];
         NSString *hotFlag1 = [NSString stringWithFormat:@"%@", [item1 objectForKey:@"toptype"]];
@@ -669,7 +650,7 @@
         }
         
         UIImageView *contentImage2 = (UIImageView *)[cell viewWithTag:2002];
-        [contentImage2 setImageWithURL:[NSURL URLWithString:[item2 objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        [contentImage2 setImageWithURL:[NSURL URLWithString:[item2 objectForKey:@"pic_url"]]];
         
         UIImageView *hotImage2 = (UIImageView *)[cell viewWithTag:1112];
         NSString *hotFlag2 = [NSString stringWithFormat:@"%@", [item2 objectForKey:@"toptype"]];
@@ -778,7 +759,12 @@
     
     ListViewController *viewController = [[ListViewController alloc] init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    NSDictionary *item = [movieTopsArray objectAtIndex:floor(indexPath.row * 2.0) + btn.tag - 3001];
+    NSDictionary *item;
+    if (topicType == MOVIE_TOPIC) {        
+        item = [movieTopsArray objectAtIndex:floor(indexPath.row * 2.0) + btn.tag - 3001];
+    } else if(topicType == DRAMA_TOPIC){
+        item = [tvTopsArray objectAtIndex:floor(indexPath.row * 2.0) + btn.tag - 3001];
+    }
     NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"id"]];
     viewController.topId = topId;
     viewController.listTitle = [item objectForKey: @"name"];
@@ -790,7 +776,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.section == 0){
-        return TOP_IMAGE_HEIGHT + 20;
+        return TOP_IMAGE_HEIGHT;
     } else {
         return LIST_LOGO_HEIGHT + 10;
     }
@@ -811,9 +797,11 @@
     [movieListBtn setBackgroundImage:[UIImage imageNamed:@"movie_list_selected"] forState:UIControlStateHighlighted];
     [dramaListBtn setBackgroundImage:[UIImage imageNamed:@"drama_list"] forState:UIControlStateNormal];
     [dramaListBtn setBackgroundImage:[UIImage imageNamed:@"drama_list_selected"] forState:UIControlStateHighlighted];
-    if (videoType == 0) {
+    if (topicType == MOVIE_TOPIC) {
         [movieListBtn setBackgroundImage:[UIImage imageNamed:@"movie_list_selected"] forState:UIControlStateNormal];
-    } else if(videoType == 1){
+        [dramaListBtn setBackgroundImage:[UIImage imageNamed:@"drama_list"] forState:UIControlStateNormal];
+    } else if(topicType == DRAMA_TOPIC){
+        [movieListBtn setBackgroundImage:[UIImage imageNamed:@"movie_list"] forState:UIControlStateNormal];
         [dramaListBtn setBackgroundImage:[UIImage imageNamed:@"drama_list_selected"] forState:UIControlStateNormal];
     }
 }
@@ -823,7 +811,7 @@
         return customHeaderView;
     } else {
         customHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, 64)];
-        UIImageView *bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 461, 64)];
+        UIImageView *bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, customHeaderView.frame.size.width, customHeaderView.frame.size.height)];
         bgImageView.center = CGPointMake(customHeaderView.center.x - 8, customHeaderView.center.y);
         bgImageView.image = [UIImage imageNamed:@"popular_header_bg"];
         [customHeaderView addSubview:bgImageView];

@@ -103,6 +103,7 @@ extern NSString *const kPathAddItem;
 extern NSString *const kPathTops;
 extern NSString *const kPathSupport;
 extern NSString *const kPathTvTops;
+extern NSString *const kPathComicTops;
 extern NSString *const kPathMoiveTops;
 extern NSString *const kPathShowTops;
 extern NSString *const kPathLunbo;

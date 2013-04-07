@@ -8,9 +8,9 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
-#import "EGORefreshTableHeaderView.h"
+#import "VideoViewController.h"
 
-@interface MovieViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIGestureRecognizerDelegate>
+@interface MovieViewController : VideoViewController
 
 - (id)initWithFrame:(CGRect)frame;
 

@@ -7,16 +7,6 @@
 //
 
 #import "ComicViewController.h"
-#import <QuartzCore/QuartzCore.h>
-#import "DDPageControl.h"
-#import "MovieDetailViewController.h"
-#import "DramaDetailViewController.h"
-#import "ShowDetailViewController.h"
-#import "ListViewController.h"
-#import "SubsearchViewController.h"
-#import "CommonHeader.h"
-#import "CategoryUtility.h"
-#import "CategoryItem.h"
 
 @interface ComicViewController ()
 
