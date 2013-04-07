@@ -193,7 +193,7 @@
         [tempHUD hide:YES];
     }];
     
-    NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id",@"1",@"page_num",@"2",@"page_size", nil];
+    NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id",@"1",@"page_num",@"3",@"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews
                                     parameters:reqData
                                        success:^(AFHTTPRequestOperation *operation, id result)
@@ -646,7 +646,7 @@
             [reviewCell setDelegate:self];
             [cell addSubview:reviewCell];
             
-            if (i == arrReviewData_.count - 1 && 2 == arrReviewData_.count)
+            if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
                 UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 100, 30);

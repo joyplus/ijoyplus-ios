@@ -18,7 +18,7 @@
 #import "ServiceConstants.h"
 #import "ReviewViewController.h"
 
-#define REVIEW_DATA_REQUEST_NUM     (@"2")
+#define REVIEW_DATA_REQUEST_NUM     (@"3")
 #define REVIEW_VIEW_TAG             (11111)
 #define DOWNLOAD_BG  100001
 @interface TVDetailViewController ()
@@ -653,7 +653,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                                                                                 content:[data objectForKey:@"comments"]];
             reviewCell.tag = REVIEW_VIEW_TAG + i;
             [cell addSubview:reviewCell];
-            if (i == arrReviewData_.count - 1 && 2 == arrReviewData_.count)
+            if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
                 UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 100, 30);
