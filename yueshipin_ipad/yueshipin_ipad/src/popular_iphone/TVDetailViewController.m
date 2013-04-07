@@ -737,8 +737,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     
@@ -842,8 +841,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(void)selectToDownLoad:(int)num{
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
 
@@ -1559,7 +1557,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     return;
-    [CommonMotheds showNetworkDisAbledAlert];
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     
 }

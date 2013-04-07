@@ -16,7 +16,7 @@
 #import "AFServiceAPIClient.h"
 #import "CommonMotheds.h"
 #import "MobClick.h"
-
+#import "UIUtility.h"
 @interface SendWeiboViewController ()
 
 @end
@@ -85,8 +85,7 @@
 }
 -(void)share:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+       [UIUtility showNetWorkError:self.view];
         return;
     }
     [textView_ resignFirstResponder];

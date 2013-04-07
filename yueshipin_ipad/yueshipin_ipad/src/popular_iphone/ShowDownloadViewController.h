@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ShowDownlooadViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
+@interface ShowDownloadViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
     NSMutableArray *listArr_;
     UITableView *tableList_;
     NSString *prodId_;

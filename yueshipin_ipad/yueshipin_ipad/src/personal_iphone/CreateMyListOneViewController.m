@@ -15,6 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
 #import "CommonMotheds.h"
+#import "UIUtility.h"
 @interface CreateMyListOneViewController ()
 
 @end
@@ -148,8 +149,7 @@
 -(void)nextButtonPressed:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
      NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content",[NSNumber numberWithInt:type_], @"type", nil];
@@ -175,8 +175,7 @@
 }
 -(void)next:(id)result{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-            [alert show];
+        [UIUtility showNetWorkError:self.view];
             return; 
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Update MineViewController" object:nil];

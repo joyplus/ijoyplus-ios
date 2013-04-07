@@ -203,8 +203,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 }
 -(void)careUs:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     sinaweibo_ = [AppDelegate instance].sinaweibo;
@@ -286,8 +285,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 }
 -(void)feedBack:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
 

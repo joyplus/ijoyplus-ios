@@ -399,7 +399,7 @@
     
 }
 -(void)viewWillAppear:(BOOL)animated{
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
@@ -549,7 +549,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-     [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES]; 
     int tableViewTag = tableView.tag;
     if (tableViewTag == TV_TYPE) {
@@ -652,7 +652,7 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     if (view == refreshHeaderViewForMovieList_) {
         [self loadMovieTopsData];
     }
@@ -696,7 +696,7 @@
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     showLoadCount_++;
     [self loadMoreShowTopsData];
     

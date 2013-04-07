@@ -408,8 +408,7 @@
 }
 -(void)seeMore:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     if (!button1_.enabled) {
@@ -719,7 +718,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (tableView.tag == RECORD_TYPE) {
         NSDictionary *dic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
@@ -812,7 +811,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
 
-        [CommonMotheds showNetworkDisAbledAlert];
+        [CommonMotheds showNetworkDisAbledAlert:self.view];
         switch (tableView.tag) {
             case RECORD_TYPE:
             {
@@ -896,8 +895,7 @@
 -(void)continuePlay:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }    
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){

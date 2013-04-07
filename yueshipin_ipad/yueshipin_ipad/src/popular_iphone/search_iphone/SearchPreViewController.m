@@ -136,7 +136,7 @@
  listArr_ = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
 }
 -(void)intHotKeyWords{
-    [CommonMotheds showNetworkDisAbledAlert];
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -231,8 +231,7 @@
 -(void)loadSearchData:(NSString *)searchStr{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     

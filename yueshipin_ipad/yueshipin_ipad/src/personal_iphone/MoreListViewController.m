@@ -231,7 +231,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        [CommonMotheds showNetworkDisAbledAlert];
+        [CommonMotheds showNetworkDisAbledAlert:self.view];
         switch (type_) {
             case 0:
             {
@@ -290,8 +290,7 @@
 -(void)continuePlay:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+       [UIUtility showNetWorkError:self.view];
         return;
     }
     
@@ -355,8 +354,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 0) {
         if (![CommonMotheds isNetworkEnbled]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-            [alert show];
+            [UIUtility showNetWorkError:self.view];
             return;
         }
         for (NSDictionary *dic in listArr_) {
@@ -427,7 +425,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     [CommonMotheds showNetworkDisAbledAlert];
+      [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (type_ == 0) {
@@ -520,7 +518,7 @@
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert];
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
     favLoadCount_++;
     [self loadMyFavsData];
 }

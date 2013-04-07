@@ -17,8 +17,9 @@
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
 #import "ProgramNavigationController.h"
-#import "ShowDownlooadViewController.h"
+#import "ShowDownloadViewController.h"
 #import "CommonMotheds.h"
+#import "UIUtility.h"
 @interface IphoneShowDetailViewController ()
 
 @end
@@ -545,8 +546,7 @@
 }
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+       [UIUtility showNetWorkError:self.view];
         return;
     }
     UIButton *button = (UIButton *)sender;
@@ -597,7 +597,7 @@
         }
         case 10004:{
         
-            ShowDownlooadViewController *showDownlooadViewController = [[ShowDownlooadViewController alloc] init];
+            ShowDownloadViewController *showDownlooadViewController = [[ShowDownloadViewController alloc] init];
             showDownlooadViewController.title = self.title;
             NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
             if (itemId == nil) {
@@ -913,7 +913,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     
 }

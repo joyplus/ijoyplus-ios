@@ -560,8 +560,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     }
     
     if (selectButton_.selected) {
-        selectButton_.selected = NO;
-        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
+//        selectButton_.selected = NO;
+//        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
+        [self.view bringSubviewToFront:tableList_];
     }
     
     if (clarityButton_.selected) {
@@ -569,7 +570,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         clearBgView_.hidden = YES;
     }
     
-    
+
     [self resetMyTimer];
 
     
@@ -1934,13 +1935,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (selectButton_.selected) {
-        selectButton_.selected = NO;
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.3];
-        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
-        [UIView commitAnimations];
-    }
+//    if (selectButton_.selected) {
+//        selectButton_.selected = NO;
+//        [UIView beginAnimations:nil context:nil];
+//        [UIView setAnimationDuration:0.3];
+//        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
+//        [UIView commitAnimations];
+//    }
     [self showNOThisClearityUrl:NO];
     
     [self removePlayerTimeObserver];
@@ -1960,6 +1961,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self beginToPlay];
     
     [self recordPlayStatics];
+    
+     bottomToolBar_.hidden = YES;
+    selectButton_.selected = YES;
+    [self showToolBar];
     
 }
 - (void)recordPlayStatics

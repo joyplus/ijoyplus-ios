@@ -147,7 +147,7 @@
 		22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF216F18D4A00058985 /* TSPopoverTouchView.m */; };
 		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
-		2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */; };
+		2270AB8816B24F7D009A3861 /* ShowDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */; };
 		227A45BE170BF5140002DCDE /* download_edit_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BC170BF5140002DCDE /* download_edit_f@2x.png */; };
 		227A45BF170BF5140002DCDE /* download_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BD170BF5140002DCDE /* download_edit@2x.png */; };
 		227A45C1170C0B620002DCDE /* no_video_source@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45C0170C0B610002DCDE /* no_video_source@2x.png */; };
@@ -987,8 +987,8 @@
 		22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
 		2249C9A6169C2C2D00757A2E /* ProgramNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgramNavigationController.h; sourceTree = "<group>"; };
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
-		2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownlooadViewController.h; sourceTree = "<group>"; };
-		2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownlooadViewController.m; sourceTree = "<group>"; };
+		2270AB8616B24F7D009A3861 /* ShowDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownloadViewController.h; sourceTree = "<group>"; };
+		2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownloadViewController.m; sourceTree = "<group>"; };
 		227A45BC170BF5140002DCDE /* download_edit_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit_f@2x.png"; sourceTree = SOURCE_ROOT; };
 		227A45BD170BF5140002DCDE /* download_edit@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit@2x.png"; sourceTree = SOURCE_ROOT; };
 		227A45C0170C0B610002DCDE /* no_video_source@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "no_video_source@2x.png"; path = "yueshipin_ipad/Resource_iphone/no_video_source@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2019,8 +2019,8 @@
 				229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */,
 				22FEEEE1168D4C5C00A71EF4 /* IphoneShowDetailViewController.h */,
 				22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */,
-				2270AB8616B24F7D009A3861 /* ShowDownlooadViewController.h */,
-				2270AB8716B24F7D009A3861 /* ShowDownlooadViewController.m */,
+				2270AB8616B24F7D009A3861 /* ShowDownloadViewController.h */,
+				2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */,
 				22FEEE4416899AE100A71EF4 /* AllListViewCell.h */,
 				22FEEE4516899AE100A71EF4 /* AllListViewCell.m */,
 				22FEEE4616899AE100A71EF4 /* allListViewController.h */,
@@ -3980,7 +3980,7 @@
 				2281DA6216AD25D800333353 /* IphoneDownloadViewController.m in Sources */,
 				22F08FA216AE347400C16AD2 /* IphoneSubdownloadViewController.m in Sources */,
 				22F08FC016AEA6E800C16AD2 /* DDProgressView.m in Sources */,
-				2270AB8816B24F7D009A3861 /* ShowDownlooadViewController.m in Sources */,
+				2270AB8816B24F7D009A3861 /* ShowDownloadViewController.m in Sources */,
 				22EF004516B767410001F743 /* GridViewCellDemo.m in Sources */,
 				22EF004616B767410001F743 /* UMGridViewController.m in Sources */,
 				22EF004E16B767D90001F743 /* AvVideoWebViewController.m in Sources */,

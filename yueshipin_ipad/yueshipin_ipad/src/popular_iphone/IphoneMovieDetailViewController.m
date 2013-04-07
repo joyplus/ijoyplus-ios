@@ -22,7 +22,7 @@
 #import "CommonMotheds.h"
 #import "FilmReviewDetailView.h"
 #import "AppDelegate.h"
-
+#import "UIUtility.h"
 #define REVIEW_VIEW_TAG (11112)
 
 @interface IphoneMovieDetailViewController ()
@@ -714,8 +714,7 @@
 
 -(void)didSelect:(UIButton *)btn{
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     int num = btn.tag;
@@ -730,8 +729,7 @@
 
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     UIButton *button = (UIButton *)sender;
@@ -1052,7 +1050,7 @@
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     return;
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
 
 }

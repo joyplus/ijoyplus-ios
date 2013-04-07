@@ -6,17 +6,18 @@
 //  Copyright (c) 2013年 joyplus. All rights reserved.
 //
 
-#import "ShowDownlooadViewController.h"
+#import "ShowDownloadViewController.h"
 #import "UIImage+Scale.h"
 #import "CMConstants.h"
 #import "SubdownloadItem.h"
 #import "CommonMotheds.h"
 #import "DownLoadManager.h"
-@interface ShowDownlooadViewController ()
+#import "UIUtility.h"
+@interface ShowDownloadViewController ()
 
 @end
 
-@implementation ShowDownlooadViewController
+@implementation ShowDownloadViewController
 @synthesize listArr = listArr_;
 @synthesize tableList = tableList_;
 @synthesize prodId = prodId_;
@@ -155,8 +156,7 @@
 }
 -(void)selectToDownLoad:(int)num{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     NSArray *videoUrlArray = [[listArr_ objectAtIndex:num] objectForKey:@"down_urls"];
