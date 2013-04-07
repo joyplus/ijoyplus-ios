@@ -79,6 +79,10 @@
     NSString *webUrlSource_;
     
     BOOL isM3u8_;
+    
+    NSDictionary *continuePlayInfo_;
+    
+    BOOL isPlayFromRecord_; 
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -124,6 +128,8 @@
 @property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (nonatomic, assign)  BOOL isM3u8;
 @property (nonatomic, assign) double playDuration;
+@property (nonatomic, strong)NSDictionary *continuePlayInfo;
+@property (nonatomic, assign) BOOL isPlayFromRecord;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 

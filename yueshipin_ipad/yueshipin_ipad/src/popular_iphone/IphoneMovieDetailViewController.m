@@ -844,7 +844,7 @@
             FeedBackView * feedback = [[FeedBackView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)];
             feedback.delegate = self;
             UITabBarController * ctrl = [AppDelegate instance].tabBarView;
-            
+            feedback.clipsToBounds = YES;
             [ctrl.selectedViewController.view addSubview:feedback];
             
             [UIView beginAnimations:nil context:NULL];
@@ -1123,11 +1123,13 @@
                                 feedbackType,@"invalid_type",\
                                 reason,@"memo",\
                                 nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
     {
+        
         
     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
     {
+        
 //        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
 //                                                        message:@"问题反馈提交失败!"
 //                                                       delegate:nil

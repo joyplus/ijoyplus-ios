@@ -73,9 +73,10 @@
     UIImageView * feedbackImage = [[UIImageView alloc] initWithFrame:CGRectMake(8, 83, 299, 376)];//kFullWindowHeight * 0.685
     feedbackImage.image = [[UIImage imageNamed:@"popview_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
     feedbackImage.backgroundColor = [UIColor clearColor];
+    feedbackImage.userInteractionEnabled = YES;
     [self addSubview:feedbackImage];
     
-    UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(10, 85, 295, kFullWindowHeight * 0.685)];
+    UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(10, 85, 295, 376)];
     feedback.backgroundColor = [UIColor clearColor];
     [self addSubview:feedback];
     feedback.tag = FEEDBACK_VEWI_TAG;
@@ -142,7 +143,7 @@
     [commitBtn addTarget:self
                  action:@selector(commitButtonClick:)
        forControlEvents:UIControlEventTouchUpInside];
-    [feedback addSubview:commitBtn];
+    //[feedback addSubview:commitBtn];
     [commitBtn setImage:[UIImage imageNamed:@"ti_jiao_s.png"]
                forState:UIControlStateHighlighted];
     [commitBtn setImage:[UIImage imageNamed:@"ti_jiao.png"]

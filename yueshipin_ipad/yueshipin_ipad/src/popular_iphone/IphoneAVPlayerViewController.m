@@ -91,6 +91,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 @synthesize webUrlSource = webUrlSource_;
 @synthesize subnameArray;
 @synthesize isM3u8 = isM3u8_;
+@synthesize continuePlayInfo = continuePlayInfo_;
+@synthesize isPlayFromRecord = isPlayFromRecord_;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -556,6 +558,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         topToolBar_.hidden = YES;
         bottomToolBar_.hidden = YES;
         bottomView_.hidden = YES;
+        selectButton_.selected = NO;
+        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
     }
     
@@ -650,8 +654,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     if (!islocalFile_) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
         //初始化数据；
-        [self initDataSource:playNum];
-        [self beginToPlay];
+        if (!isPlayFromRecord_) {
+            
+            [self initDataSource:playNum];
+            [self beginToPlay];
+            
+        }
+        else{
+            [self initDataPlayFromRecord];
+        }
+        
     }
     else{        
         if (isM3u8_) {
@@ -659,10 +671,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         else{
          [self setPath:local_file_path_];
+            
         }
     }
-    
     [self initUI];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appDidEnterBackground:)
                                                  name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
@@ -681,8 +694,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 
     self.view.backgroundColor = [UIColor blackColor];
+    
     [self initTopToolBar];
     [self initBottomToolBar];
+    
     
     [self disableBottomToolBarButtons];
     playCacheView_ = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, kFullWindowHeight, self.view.bounds.size.width + 24)];
@@ -692,21 +707,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     else{
        playCacheView_.image = [UIImage imageNamed:@"iphone_video_loading"];
     }
-//    playCacheView_.userInteractionEnabled = YES;
-//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
-//    tapGesture.numberOfTapsRequired = 1;
-//    tapGesture.numberOfTouchesRequired = 1;
-//    [playCacheView_ addGestureRecognizer:tapGesture];
-//    self.view.backgroundColor = [UIColor clearColor];
     [self.view addSubview:playCacheView_];
     
     myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+110);
     myHUD.backgroundColor = [UIColor clearColor];
-//    UITapGestureRecognizer *tapGesture_another = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showToolBar)];
-//    tapGesture_another.numberOfTapsRequired = 1;
-//    tapGesture_another.numberOfTouchesRequired = 1;
-//    [playCacheView_ addGestureRecognizer:tapGesture_another];
     myHUD.userInteractionEnabled = NO;
     //[myHUD addGestureRecognizer:tapGesture];
     myHUD.labelText = @"正在加载，请稍等";
@@ -939,7 +944,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case HIGH_CLEAR:{
             if ([highClearArr count] > play_url_index ) {
-                NSString *url = [[plainClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
+                NSString *url = [[highClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -950,7 +955,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         }
         case SUPER_CLEAR:{
             if ([superClearArr count] > play_url_index ) {
-                NSString *url = [[plainClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
+                NSString *url = [[superClearArr objectAtIndex:play_url_index] objectForKey:@"url"];
                 [self sendHttpRequest:url];
             }
             else{
@@ -1935,13 +1940,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    if (selectButton_.selected) {
-//        selectButton_.selected = NO;
-//        [UIView beginAnimations:nil context:nil];
-//        [UIView setAnimationDuration:0.3];
-//        tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
-//        [UIView commitAnimations];
-//    }
+
     [self showNOThisClearityUrl:NO];
     
     [self removePlayerTimeObserver];
@@ -1954,9 +1953,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     [tableList_ reloadData];
     
+    [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0]];
+    lastPlayTime_ = kCMTimeZero;
     [self addCacheview];
     
-    lastPlayTime_ = kCMTimeZero;
     [self initDataSource:playNum];
     [self beginToPlay];
     
@@ -1990,6 +1990,60 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     myHUD.hidden = NO;
     [self.view bringSubviewToFront:myHUD];
 }
+
+
+-(void)initDataPlayFromRecord{
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSDictionary *videoInfo = nil;
+        if (videoType_ == 1) {
+            videoInfo = (NSDictionary *)[result objectForKey:@"movie"];
+        }
+        else if(videoType_ == 2){
+            videoInfo = (NSDictionary *)[result objectForKey:@"tv"];
+        }
+        else if (videoType_ == 3){
+            videoInfo = (NSDictionary *)[result objectForKey:@"show"];
+        }
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+            int num = [[continuePlayInfo_ objectForKey:@"prod_subname"] intValue];
+            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
+            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        }
+        else{
+            playNum = 0;
+            if (subnameArray == nil || subnameArray.count == 0) {
+                subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+                for (NSDictionary *oneEpisode in [videoInfo objectForKey:@"episodes"]) {
+                    NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+                    [subnameArray addObject:tempName];
+                }
+            }
+            if (videoType_ != 1 && subnameArray.count > 0) {
+                playNum = [subnameArray indexOfObject:[continuePlayInfo_ objectForKey:@"prod_subname"]];
+                if (playNum < 0 || playNum >= subnameArray.count) {
+                    playNum = 0;
+                }
+            }
+            nameStr_ =  [continuePlayInfo_ objectForKey:@"prod_name"];
+            episodesArr_ = [videoInfo objectForKey:@"episodes"];
+            
+            [self initDataSource:playNum];
+            [self beginToPlay];
+            
+            titleLabel_.text = nameStr_;
+            [tableList_ reloadData];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+}
+
+
 
 -(NSUInteger)supportedInterfaceOrientations {
     

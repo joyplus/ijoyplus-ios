@@ -654,18 +654,6 @@
     
 }
 
-- (void)showPlayWebPage:(int)num
-{
-//    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-//    NSDictionary *episode = [episodesArr_ objectAtIndex:num];
-//    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
-//    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
-//    viewController.title = [videoInfo_ objectForKey:@"name"];
-//    viewController.type = 1;
-//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-//    [self presentViewController:pro animated:YES completion:nil];
-}
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
 {

@@ -1629,7 +1629,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                                 feedbackType,@"invalid_type",\
                                 reason,@"memo",\
                                 nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
      {
 //         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
 //                                                         message:@"问题提交成功，我们会尽快处理，谢谢！"

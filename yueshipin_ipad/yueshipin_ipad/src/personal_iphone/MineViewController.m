@@ -920,65 +920,16 @@
 
 - (void)willPlayVideo:(UIButton *)btn
 {
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
     int num = btn.tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
     int type = [[item objectForKey:@"prod_type"] intValue];
     NSString *prodId = [item objectForKey:@"prod_id"];
-
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [tempHUD hide:YES];
-        NSDictionary *videoInfo = nil;
-        if (type == 1) {
-         videoInfo = (NSDictionary *)[result objectForKey:@"movie"];
-        }
-        else if(type == 2){
-         videoInfo = (NSDictionary *)[result objectForKey:@"tv"];
-        }
-        else if (type == 3){
-         videoInfo = (NSDictionary *)[result objectForKey:@"show"];
-        }
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-            int num = [[item objectForKey:@"prod_subname"] intValue];
-            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
-            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
-            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
-        }
-        else{
-            int playNum = 0;
-            if (subnameArray == nil || subnameArray.count == 0) {
-                subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-                for (NSDictionary *oneEpisode in [videoInfo objectForKey:@"episodes"]) {
-                    NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-                    [subnameArray addObject:tempName];
-                }
-            }
-            if (type != 1 && subnameArray.count > 0) {
-                playNum = [subnameArray indexOfObject:[item objectForKey:@"prod_subname"]];
-                if (playNum < 0 || playNum >= subnameArray.count) {
-                    playNum = 0;
-                }
-            }
-            IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-            iphoneWebPlayerViewController.playNum = playNum;
-            iphoneWebPlayerViewController.subnameArray = subnameArray;
-            iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
-            iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
-            iphoneWebPlayerViewController.videoType = type;
-            iphoneWebPlayerViewController.prodId = prodId;
-            iphoneWebPlayerViewController.playBackTime = (NSNumber *)[item objectForKey:@"playback_time"];
-            [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       [tempHUD hide:YES];
-    }];
-
+    IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+    iphoneWebPlayerViewController.videoType = type;
+    iphoneWebPlayerViewController.prodId = prodId;
+    iphoneWebPlayerViewController.isPlayFromRecord = YES;
+    iphoneWebPlayerViewController.continuePlayInfo = item;
+    [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
     
 }
 
