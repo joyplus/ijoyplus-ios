@@ -1112,10 +1112,10 @@
 }
 #pragma mark -
 #pragma mark - FeedBackDelegate
-- (void)feedBackType:(NSInteger)type
+- (void)feedBackType:(NSString *)type
         detailReason:(NSString *)reason
 {
-    NSString *feedbackType = [NSString stringWithFormat:@"%d",type];
+    NSString *feedbackType = type;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: \
                                 prodId_, @"prod_id",\
                                 name_ ,@"prod_name",\
@@ -1125,7 +1125,6 @@
                                 nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
     {
-        
         
     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
     {

@@ -11,6 +11,13 @@
 #define FEEDBACK_REASON_OTHER   (6)
 #define SPACE                   (@" ")
 #define FEEDBACK_VEWI_TAG       (11123)
+#define one @"1"
+#define two @"2"
+#define three @"3"
+#define four @"4"
+#define five @"5"
+#define six @"6"
+#define seven @"7"
 
 @interface FeedBackView ()
 
@@ -22,13 +29,14 @@
 @implementation FeedBackView
 @synthesize delegate;
 @synthesize _lastSelected;
+@synthesize selectArr = selectArr_;
 #pragma mark -
 #pragma mark - lifeCycle
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self)
-    {
+    {  
         // Initialization code
         
         _arrFeedBackOption = [[NSArray alloc] initWithObjects:@"影片无法播放",@"影片播放不流畅",@"影片加载比较慢",@"影片不能加载",@"观看影片时出现闪退",@"画质不清晰",@"音画不同步", nil];
@@ -150,21 +158,22 @@
                forState:UIControlStateNormal];
     [feedback addSubview:commitBtn];
     
+    selectArr_ = [NSMutableArray arrayWithCapacity:5];
 }
 
 - (void)commitButtonClick:(id)sender
 {
-    NSInteger selectedIndex = NSNotFound;
-    
-    if (_lastSelected.selected)
-    {
-        selectedIndex = _lastSelected.tag + 1;
-    }
-    else
-    {
-        selectedIndex = 8;
-    }
-    if (nil == _textViewOther.text && 8 == selectedIndex)
+//    NSInteger selectedIndex = NSNotFound;
+//    
+//    if (_lastSelected.selected)
+//    {
+//        selectedIndex = _lastSelected.tag + 1;
+//    }
+//    else
+//    {
+//        selectedIndex = 8;
+//    }
+    if (nil == _textViewOther.text && [selectArr_ count] == 0)
     {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"提示"
                                                          message:@"亲，您还没有告诉我们问题哟！"
@@ -177,7 +186,19 @@
     
     if (delegate && [delegate respondsToSelector:@selector(feedBackType:detailReason:)])
     {
-        [delegate feedBackType:selectedIndex detailReason:_textViewOther.text];
+        NSMutableString *typeStr = [[NSMutableString alloc] initWithCapacity:5];
+        NSArray *tempArr = [selectArr_ sortedArrayUsingSelector:@selector(compare:)];
+        for (int i = 0; i<[tempArr count];i++) {
+            NSString *tempstr = [tempArr objectAtIndex:i];
+            if (i == [tempArr count]-1) {
+                [typeStr appendString:tempstr];
+            }
+            else{
+                [typeStr appendString:[NSString stringWithFormat:@"%@%@",tempstr,@","]];
+            }
+            
+        }
+        [delegate feedBackType:typeStr detailReason:_textViewOther.text];
     }
     [self backgroundClicked:nil];
     
@@ -193,7 +214,70 @@
 - (void)selectBtnClicked:(id)sender
 {
     UIButton * select = (UIButton *)sender;
+    select.selected = !select.selected;
     
+    switch (select.tag) {
+        case 0:
+            if ([selectArr_ containsObject:one]) {
+                [selectArr_ removeObject:one];
+            }
+            else{
+                [selectArr_ addObject:one];
+            }
+            break;
+        case 1:
+            if ([selectArr_ containsObject:two]) {
+                [selectArr_ removeObject:two];
+            }
+            else{
+                [selectArr_ addObject:two];
+            }
+            break;
+        case 2:
+            if ([selectArr_ containsObject:three]) {
+                [selectArr_ removeObject:three];
+            }
+            else{
+                [selectArr_ addObject:three];
+            }
+            break;
+        case 3:
+            if ([selectArr_ containsObject:four]) {
+                [selectArr_ removeObject:four];
+            }
+            else{
+                [selectArr_ addObject:four];
+            }
+            break;
+        case 4:
+            if ([selectArr_ containsObject:five]) {
+                [selectArr_ removeObject:five];
+            }
+            else{
+                [selectArr_ addObject:five];
+            }
+            break;
+        case 5:
+            if ([selectArr_ containsObject:six]) {
+                [selectArr_ removeObject:six];
+            }
+            else{
+                [selectArr_ addObject:six];
+            }
+            break;
+        case 6:
+            if ([selectArr_ containsObject:seven]) {
+                [selectArr_ removeObject:seven];
+            }
+            else{
+                [selectArr_ addObject:seven];
+            }
+            break;
+        default:
+            break;
+    }
+    
+    return;
     if (select != _lastSelected)
     {
         if (_lastSelected.selected)
@@ -205,6 +289,7 @@
     {
         select.selected = !select.selected;
     }
+    
 }
 
 - (void)backgroundClicked:(id)sender
@@ -267,14 +352,14 @@
 {
     static NSString *CellIdentifier = @"feedBackCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UIButton * selectBtn = nil;
     if(cell == nil)
     {
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         
-        UIButton * selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         selectBtn.frame = CGRectMake(217, 0, 58, 29);
         selectBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 29, 0, 0);
-        selectBtn.tag = indexPath.row;
         [cell addSubview:selectBtn];
         [selectBtn addTarget:self
                       action:@selector(selectBtnClicked:)
@@ -285,6 +370,7 @@
                    forState:UIControlStateNormal];
         selectBtn.adjustsImageWhenHighlighted = NO;
     }
+     selectBtn.tag = indexPath.row;
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = [_arrFeedBackOption objectAtIndex:indexPath.row];

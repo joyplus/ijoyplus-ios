@@ -15,13 +15,15 @@
     NSArray         *_arrFeedBackOption;
     UITextField     *_textViewOther;
     UITableView     *_tableView;
+    NSMutableArray *selectArr_;
 }
 
 @property (nonatomic, weak) id <FeedBackViewDelegate> delegate;
+@property (nonatomic, strong)  NSMutableArray *selectArr;
 
 @end
 @protocol FeedBackViewDelegate <NSObject>
 
-- (void)feedBackType:(NSInteger)type detailReason:(NSString *)reason;
+- (void)feedBackType:(NSString *)types detailReason:(NSString *)reason;
 
 @end
