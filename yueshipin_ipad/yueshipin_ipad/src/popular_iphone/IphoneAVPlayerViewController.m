@@ -23,6 +23,8 @@
 
 /* PlayerItem keys */
  NSString * const k_StatusKey         = @"status";
+ NSString * const k_BufferEmpty       = @"playbackBufferEmpty";
+ NSString * const k_ToKeepUp          = @"playbackLikelyToKeepUp";
 
 /* AVPlayer keys */
  NSString * const k_RateKey			= @"rate";
@@ -40,6 +42,8 @@
 #define PLAIN_CLEAR 100
 #define HIGH_CLEAR 200
 #define SUPER_CLEAR 300
+#define MINI_PLAY_DURATION  (3.0f)
+
 @interface IphoneAVPlayerViewController ()
 {
     NSURLConnection     *urlConnection;
@@ -52,6 +56,7 @@
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
+static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext;
 @implementation IphoneAVPlayerViewController
 @synthesize seekBeginTime;
 @synthesize topToolBar = topToolBar_;
@@ -155,7 +160,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                        forKeyPath:k_StatusKey
                           options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                           context:AVPlayerDemoPlaybackViewControllerStatusObservationContext];
-	
+    //buffering
+	[self.mPlayerItem addObserver:self
+                       forKeyPath:k_BufferEmpty
+                          options:NSKeyValueObservingOptionNew
+                          context:AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext];
+    [self.mPlayerItem addObserver:self
+                       forKeyPath:k_ToKeepUp
+                          options:NSKeyValueObservingOptionNew
+                          context:AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext];
     /* When the player item has played to its end time we'll toggle
      the movie controller Pause button to be the Play button */
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -420,7 +433,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	/* AVPlayer "rate" property value observer. */
 	else if (context == AVPlayerDemoPlaybackViewControllerRateObservationContext)
 	{
-           [self syncPlayPauseButtons];
+           //[self syncPlayPauseButtons];
 	}
 	/* AVPlayer "currentItem" property observer.
      Called when the AVPlayer replaceCurrentItemWithPlayerItem:
@@ -447,6 +460,70 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self syncPlayPauseButtons];
         }
 	}
+    else if (context == AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext)
+    {
+        AVPlayerItem * pItem = (AVPlayerItem *)object;
+        if (k_BufferEmpty == path)
+        {
+            if (pItem.playbackBufferEmpty)
+            {
+                
+            }
+            else
+            {
+                if (![self isPlaying] && playButton_.hidden)
+                {
+                    [mPlayer play];
+                }
+            }
+        }
+        else if (k_ToKeepUp == path)
+        {
+            if (pItem.playbackLikelyToKeepUp)
+            {
+                
+            }
+            else
+            {
+                
+            }
+            
+            
+//            if (pItem.playbackLikelyToKeepUp)
+//            {
+//                if (playCacheView_.superview)
+//                {
+//                    [playCacheView_ removeFromSuperview];
+//                    myHUD.hidden = YES;
+//                }
+//                if (![self isPlaying])
+//                {
+//                    [mPlayer play];
+//                }
+//                NSLog(@"playbackLikelyToKeepUp,YES");
+//            }
+//            else
+//            {
+//                NSLog(@"playbackLikelyToKeepUp,NO");
+//            }
+//            if (![self isPlaying] && playButton_.hidden)
+//            {
+//                NSArray * range = pItem.loadedTimeRanges;
+//                if (0 == range.count)
+//                {
+//                    return;
+//                }
+//                NSValue * value = [range objectAtIndex:0];
+//                CMTimeRange timeRange = [value CMTimeRangeValue];
+//                CMTime time = timeRange.duration;
+//                if ((time.value/time.timescale) >= MINI_PLAY_DURATION)
+//                {
+//                    [mPlayer play];
+//                }
+//
+//            }
+        }
+    }
 	else
 	{
 		[super observeValueForKeyPath:path ofObject:object change:change context:context];
@@ -1529,6 +1606,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
             [self.player removeObserver:self forKeyPath:@"rate"];
             [self.player .currentItem removeObserver:self forKeyPath:@"status"];
+            //buffering
+            [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
+            [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
             
             [self removePlayerTimeObserver];
             [self stopMyTimer];
