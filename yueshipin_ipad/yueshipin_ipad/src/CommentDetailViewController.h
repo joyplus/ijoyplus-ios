@@ -9,4 +9,7 @@
 #import "CommonHeader.h"
 
 @interface CommentDetailViewController : SlideBaseViewController
+
+@property (nonatomic, strong)NSString *titleContent;
+@property (nonatomic, strong)NSString *content;
 @end

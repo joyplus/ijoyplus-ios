@@ -446,6 +446,8 @@
 {
     CommentDetailViewController *viewController = [[CommentDetailViewController alloc]init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    viewController.titleContent = [commentItem objectForKey:@"title"];
+    viewController.content = [commentItem objectForKey:@"comments"];
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:YES];
     self.moveToLeft = NO;
 }
