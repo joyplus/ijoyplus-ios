@@ -21,8 +21,6 @@
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
-    UIImageView *topIcon;
-    UIImageView *bgImage;
     UIImageView *nodownloadImage;
     int leftWidth;
     
@@ -51,7 +49,6 @@
 - (void)viewDidUnload
 {
     topImage = nil;
-    bgImage = nil;
     _gmGridView = nil;
     spaceInfoLabel = nil;
     diskUsedProgress_ = nil;
@@ -92,19 +89,15 @@
         [self.view setBackgroundColor:[UIColor clearColor]];
         
         nodownloadImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 200, 200)];
-        nodownloadImage.center = CGPointMake(bgImage.center.x, bgImage.center.y - 100);
+        nodownloadImage.center = CGPointMake(self.view.center.x, self.view.center.y - 100);
         nodownloadImage.image = [UIImage imageNamed:@"nodownload"];
         [self.view addSubview:nodownloadImage];
         
-        leftWidth = 80;
+        leftWidth = 15;
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth + 50, 40, 143, 35)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"download_title"];
         [self.view addSubview:topImage];
-        
-        topIcon = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 32, 32)];
-        topIcon.image = [UIImage imageNamed:@"download_icon"];
-        [self.view addSubview:topIcon];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         editBtn.frame = CGRectMake(410, 80, 74, 26);

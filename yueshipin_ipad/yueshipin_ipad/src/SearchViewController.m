@@ -47,9 +47,9 @@
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         
-        leftWidth = 80;
+        leftWidth = 15;
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 140, 35)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"search_title"];
         [self.view addSubview:topImage];
         

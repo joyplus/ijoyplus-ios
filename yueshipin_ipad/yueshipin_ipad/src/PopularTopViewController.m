@@ -527,6 +527,22 @@
     }
 }
 
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)ascrollView
+{
+    if(ascrollView.tag == 1011){
+        UIView *cellView = ascrollView.superview;
+        UIButton *leftScrollBtn = (UIButton *)[cellView viewWithTag:5011];
+        UIButton *rightScrollBtn = (UIButton *)[cellView viewWithTag:5012];
+        if (ascrollView.contentOffset.x > 10) {
+            [leftScrollBtn setEnabled:YES];
+            [rightScrollBtn setEnabled:NO];
+        } else {
+            [leftScrollBtn setEnabled:NO];
+            [rightScrollBtn setEnabled:YES];
+        }
+    }
+}
+
 
 - (void)movieListBtnClicked:(UIButton *)sender
 {
@@ -706,7 +722,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 5, 200, 30)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
         [titleLabel setTextColor:[UIColor blackColor]];
         [titleLabel setFont:[UIFont systemFontOfSize:15]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
@@ -716,9 +732,11 @@
         UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(32, 28, 450, MOVIE_LOGO_HEIGHT + 10)];
         cellScrollView.backgroundColor = [UIColor clearColor];
         cellScrollView.tag = 1011;
+        cellScrollView.delegate = self;
         for (int i=0; i < MOVIE_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
             placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 4, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.tag = 8011;
             [cellScrollView addSubview:placeHolderImage];
             
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -758,24 +776,30 @@
         UIButton *leftScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
         [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
         [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
-        leftScrollBtn.tag = 5012;
+        leftScrollBtn.tag = 5011;
         [leftScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:leftScrollBtn];
         
-        UIButton *scrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        scrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [scrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [scrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
-        scrollBtn.tag = 5011;
-        [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.contentView addSubview:scrollBtn];
+        UIButton *rightScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        rightScrollBtn.tag = 5012;
+        [rightScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:rightScrollBtn];
         
     }
     if (indexPath.row < movieTopsArray.count) {
         NSDictionary *item = [movieTopsArray objectAtIndex:indexPath.row];
         UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
-        cellScrollView.contentOffset = CGPointMake(0, 0);
+        [cellScrollView setContentOffset:CGPointZero];
+        UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
+        UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
+        [leftScrollBtn setEnabled:NO];
+        [rightScrollBtn setEnabled:YES];
         NSArray *subitemArray = [item objectForKey:@"items"];
         
         //add code by huokun at 13/03/21 for BUG#398
@@ -784,12 +808,15 @@
         {
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             NSDictionary *subitem = [subitemArray objectAtIndex:i];
-            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] ];
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
             tempLabel.text = [subitem objectForKey:@"prod_name"];            
         }
         for (int i=subitemArray.count; i < MOVIE_NUMBER; i++)
         {
+            UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
+            [placeHolderImage removeFromSuperview];
+            
             UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
             [tempBtn removeFromSuperview];
             
@@ -799,7 +826,6 @@
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             [contentImage removeFromSuperview];
         }
-        
         cellScrollView.contentSize = CGSizeMake((MOVIE_POSTER_WIDTH + 8 + 12) * subitemArray.count, MOVIE_LOGO_HEIGHT);
         //add code end
         
@@ -817,22 +843,30 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-        UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(12, 32, 450, MOVIE_LOGO_HEIGHT + 10)];
-        cellScrollView.tag = 1021;
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
+        [titleLabel setTextColor:[UIColor blackColor]];
+        [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setBackgroundColor:[UIColor clearColor]];
+        titleLabel.tag = 4011;
+        [cell.contentView addSubview:titleLabel];
+        
+        UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(32, 28, 450, MOVIE_LOGO_HEIGHT + 10)];
+        cellScrollView.backgroundColor = [UIColor clearColor];
+        cellScrollView.tag = 1011;
+        cellScrollView.delegate = self;
         for (int i=0; i < DRAMA_NUMBER; i++) {
+            UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 4, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.tag = 8011;
+            [cellScrollView addSubview:placeHolderImage];
+            
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            tempBtn.tag = 2011 + i;
             UIImageView *movieImage = [[UIImageView alloc]init];
-            movieImage.tag = 6021 + i;
-            if(i == 5){
-                tempBtn.frame = CGRectMake(12 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
-                movieImage.frame = CGRectMake(16 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
-            } else {
-                tempBtn.frame = CGRectMake(6 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
-                movieImage.frame = CGRectMake(10 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
-            }
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
-            tempBtn.tag = 2021 + i;
+            movieImage.tag = 6011 + i;
+            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+            tempBtn.frame = movieImage.frame;
+            [tempBtn setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:0.4]] forState:UIControlStateHighlighted];
             [tempBtn addTarget:self action:@selector(dramaImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
             [cellScrollView addSubview:tempBtn];
@@ -842,48 +876,80 @@
             [tempLabel setTextColor:[UIColor blackColor]];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
             [tempLabel setFont:[UIFont systemFontOfSize:13]];
-            tempLabel.center = CGPointMake(tempBtn.center.x, 22 + MOVIE_LOGO_HEIGHT * 0.7);
-            tempLabel.tag = 3021 + i;
+            tempLabel.center = CGPointMake(tempBtn.center.x, 25 + MOVIE_LOGO_HEIGHT * 0.7);
+            tempLabel.tag = 3011 + i;
             [cellScrollView addSubview:tempLabel];
-            
-            UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_LOGO_HEIGHT + 40 - 2, 450, 2)];
-            lineImage.image = [UIImage imageNamed:@"dividing"];
-            [self.view addSubview:lineImage];
-            [cell.contentView addSubview:lineImage];
         }
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 7, 200, 30)];
-        [titleLabel setTextColor:[UIColor blackColor]];
-        [titleLabel setFont:[UIFont systemFontOfSize:15]];
-        [titleLabel setBackgroundColor:[UIColor clearColor]];
-        titleLabel.tag = 4021;
-        [cell.contentView addSubview:titleLabel];
         
-        [cellScrollView setContentSize:CGSizeMake((MOVIE_LOGO_WEIGHT+5) * DRAMA_NUMBER + 12, MOVIE_LOGO_HEIGHT)];
+        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 10, (MOVIE_LOGO_WEIGHT+5)*5 - 10, 30)];
+        titleImage1.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        [cellScrollView addSubview:titleImage1];
+        
+        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((MOVIE_LOGO_WEIGHT+5)*5 + 20, MOVIE_POSTER_HEIGHT + 10, (MOVIE_LOGO_WEIGHT+5)*5 - 10, 30)];
+        titleImage2.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        [cellScrollView addSubview:titleImage2];
+        
+        [cellScrollView setContentSize:CGSizeMake(cellScrollView.frame.size.width * 2, MOVIE_LOGO_HEIGHT)];
         cellScrollView.pagingEnabled = YES;
         cellScrollView.showsHorizontalScrollIndicator = NO;
         [cell.contentView addSubview:cellScrollView];
         
-        UIButton *scrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        scrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [scrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [scrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
-        scrollBtn.tag = 5021;
-        [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.contentView addSubview:scrollBtn];
+        UIButton *leftScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        leftScrollBtn.tag = 5011;
+        [leftScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:leftScrollBtn];
+        
+        UIButton *rightScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        rightScrollBtn.tag = 5012;
+        [rightScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:rightScrollBtn];
     }
     if (indexPath.row < tvTopsArray.count) {
         NSDictionary *item = [tvTopsArray objectAtIndex:indexPath.row];
-        UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
-        cellScrollView.contentOffset = CGPointMake(0, 0);
+        UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
+        [cellScrollView setContentOffset:CGPointZero];
+        UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
+        UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
+        [leftScrollBtn setEnabled:NO];
+        [rightScrollBtn setEnabled:YES];
         NSArray *subitemArray = [item objectForKey:@"items"];
-        for(int i = 0; i < subitemArray.count; i++){
-            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
+        
+        //add code by huokun at 13/03/21 for BUG#398
+        //根据网络回掉数据，设置scrollView的ContentSize
+        for (int i=0; i < subitemArray.count; i++)
+        {
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             NSDictionary *subitem = [subitemArray objectAtIndex:i];
-            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
+            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]]];
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
             tempLabel.text = [subitem objectForKey:@"prod_name"];
         }
-        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4021];
+        for (int i=subitemArray.count; i < DRAMA_NUMBER; i++)
+        {
+            UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
+            [placeHolderImage removeFromSuperview];
+            
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            [tempBtn removeFromSuperview];
+            
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
+            [tempLabel removeFromSuperview];
+            
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
+            [contentImage removeFromSuperview];
+        }
+        cellScrollView.contentSize = CGSizeMake((MOVIE_POSTER_WIDTH + 8 + 12) * subitemArray.count, MOVIE_LOGO_HEIGHT);
+        //add code end
+        
+        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
         [titleLabel setText:[item objectForKey:@"name"]];
         [titleLabel sizeToFit];
     }
@@ -898,23 +964,31 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-        UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(12, 32, 450, MOVIE_LOGO_HEIGHT + 10)];
-        cellScrollView.tag = 1021;
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
+        [titleLabel setTextColor:[UIColor blackColor]];
+        [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setBackgroundColor:[UIColor clearColor]];
+        titleLabel.tag = 4011;
+        [cell.contentView addSubview:titleLabel];
+        
+        UIScrollView *cellScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(32, 28, 450, MOVIE_LOGO_HEIGHT + 10)];
+        cellScrollView.backgroundColor = [UIColor clearColor];
+        cellScrollView.tag = 1011;
+        cellScrollView.delegate = self;
         for (int i=0; i < DRAMA_NUMBER; i++) {
+            UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 4, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.tag = 8011 + i;
+            [cellScrollView addSubview:placeHolderImage];
+            
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            tempBtn.tag = 2011 + i;
             UIImageView *movieImage = [[UIImageView alloc]init];
-            movieImage.tag = 6021 + i;
-            if(i == 5){
-                tempBtn.frame = CGRectMake(12 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
-                movieImage.frame = CGRectMake(16 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
-            } else {
-                tempBtn.frame = CGRectMake(6 + (MOVIE_LOGO_WEIGHT+5) * i, 0, MOVIE_LOGO_WEIGHT, MOVIE_LOGO_HEIGHT);
-                movieImage.frame = CGRectMake(10 + (MOVIE_LOGO_WEIGHT+5) * i, 5, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
-            }
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard"] forState:UIControlStateNormal];
-            [tempBtn setBackgroundImage:[UIImage imageNamed:@"moviecard_pressed"] forState:UIControlStateHighlighted];
-            tempBtn.tag = 2021 + i;
-            [tempBtn addTarget:self action:@selector(dramaImageClicked:) forControlEvents:UIControlEventTouchUpInside];
+            movieImage.tag = 6011 + i;
+            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+            tempBtn.frame = movieImage.frame;
+            [tempBtn setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:0.4]] forState:UIControlStateHighlighted];
+            [tempBtn addTarget:self action:@selector(comicImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
             [cellScrollView addSubview:tempBtn];
             
@@ -923,48 +997,80 @@
             [tempLabel setTextColor:[UIColor blackColor]];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
             [tempLabel setFont:[UIFont systemFontOfSize:13]];
-            tempLabel.center = CGPointMake(tempBtn.center.x, 22 + MOVIE_LOGO_HEIGHT * 0.7);
-            tempLabel.tag = 3021 + i;
+            tempLabel.center = CGPointMake(tempBtn.center.x, 25 + MOVIE_LOGO_HEIGHT * 0.7);
+            tempLabel.tag = 3011 + i;
             [cellScrollView addSubview:tempLabel];
-            
-            UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_LOGO_HEIGHT + 40 - 2, 450, 2)];
-            lineImage.image = [UIImage imageNamed:@"dividing"];
-            [self.view addSubview:lineImage];
-            [cell.contentView addSubview:lineImage];
         }
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(22, 7, 200, 30)];
-        [titleLabel setTextColor:[UIColor blackColor]];
-        [titleLabel setFont:[UIFont systemFontOfSize:15]];
-        [titleLabel setBackgroundColor:[UIColor clearColor]];
-        titleLabel.tag = 4021;
-        [cell.contentView addSubview:titleLabel];
         
-        [cellScrollView setContentSize:CGSizeMake((MOVIE_LOGO_WEIGHT+5) * DRAMA_NUMBER + 12, MOVIE_LOGO_HEIGHT)];
+        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 10, (MOVIE_LOGO_WEIGHT+5)*5 - 10, 30)];
+        titleImage1.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        [cellScrollView addSubview:titleImage1];
+        
+        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((MOVIE_LOGO_WEIGHT+5)*5 + 20, MOVIE_POSTER_HEIGHT + 10, (MOVIE_LOGO_WEIGHT+5)*5 - 10, 30)];
+        titleImage2.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        [cellScrollView addSubview:titleImage2];
+        
+        [cellScrollView setContentSize:CGSizeMake(cellScrollView.frame.size.width * 2, MOVIE_LOGO_HEIGHT)];
         cellScrollView.pagingEnabled = YES;
         cellScrollView.showsHorizontalScrollIndicator = NO;
         [cell.contentView addSubview:cellScrollView];
         
-        UIButton *scrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        scrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [scrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [scrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
-        scrollBtn.tag = 5021;
-        [scrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.contentView addSubview:scrollBtn];
+        UIButton *leftScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        leftScrollBtn.tag = 5011;
+        [leftScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:leftScrollBtn];
+        
+        UIButton *rightScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        rightScrollBtn.tag = 5012;
+        [rightScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.contentView addSubview:rightScrollBtn];
     }
     if (indexPath.row < comicTopsArray.count) {
         NSDictionary *item = [comicTopsArray objectAtIndex:indexPath.row];
-        UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
-        cellScrollView.contentOffset = CGPointMake(0, 0);
+        UIScrollView *cellScrollView = (UIScrollView *)[cell viewWithTag:1011];
+        [cellScrollView setContentOffset:CGPointZero];
+        UIButton *leftScrollBtn = (UIButton *)[cell viewWithTag:5011];
+        UIButton *rightScrollBtn = (UIButton *)[cell viewWithTag:5012];
+        [leftScrollBtn setEnabled:NO];
+        [rightScrollBtn setEnabled:YES];
         NSArray *subitemArray = [item objectForKey:@"items"];
-        for(int i = 0; i < subitemArray.count; i++){
-            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6021 + i];
+        
+        //add code by huokun at 13/03/21 for BUG#398
+        //根据网络回掉数据，设置scrollView的ContentSize
+        for (int i=0; i < subitemArray.count; i++)
+        {
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             NSDictionary *subitem = [subitemArray objectAtIndex:i];
-            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3021 + i];
+            [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]]];
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
             tempLabel.text = [subitem objectForKey:@"prod_name"];
         }
-        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4021];
+        for (int i=subitemArray.count; i < DRAMA_NUMBER; i++)
+        {
+            UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
+            [placeHolderImage removeFromSuperview];
+            
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            [tempBtn removeFromSuperview];
+            
+            UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
+            [tempLabel removeFromSuperview];
+            
+            UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
+            [contentImage removeFromSuperview];
+        }
+        cellScrollView.contentSize = CGSizeMake((MOVIE_POSTER_WIDTH + 8 + 12) * subitemArray.count, MOVIE_LOGO_HEIGHT);
+        //add code end
+        
+        UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011];
         [titleLabel setText:[item objectForKey:@"name"]];
         [titleLabel sizeToFit];
     }
@@ -1047,8 +1153,23 @@
     
     if (indexPath.row >= 0 && indexPath.row < tvTopsArray.count) {
         NSArray *items = [[tvTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
-        if(btn.tag - 2021 < items.count){
-            NSDictionary *item = [items objectAtIndex:btn.tag - 2021];
+        if(btn.tag - 2011 < items.count){
+            NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
+            [self showDetailScreen:item];
+        }
+    }
+}
+
+- (void)comicImageClicked:(UIButton *)btn
+{
+    CGPoint point = btn.center;
+    point = [table convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    
+    if (indexPath.row >= 0 && indexPath.row < comicTopsArray.count) {
+        NSArray *items = [[comicTopsArray objectAtIndex:indexPath.row] objectForKey:@"items"];
+        if(btn.tag - 2011 < items.count){
+            NSDictionary *item = [items objectAtIndex:btn.tag - 2011];
             [self showDetailScreen:item];
         }
     }
@@ -1059,14 +1180,15 @@
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
-    NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
-    [self showDetailScreen:item];
+    if (indexPath.row < showTopsArray.count) {
+        NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
+        [self showDetailScreen:item];
+    }
 }
 
 
-- (void)scrollBtnClicked:(UIButton *)sender
+- (void)scrollBtnClicked:(UIButton *)btn
 {
-    UIButton *btn = (UIButton *)sender;
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
@@ -1075,7 +1197,17 @@
     if(cellScrollView == nil){
         cellScrollView = (UIScrollView *)[cell viewWithTag:1021];
     }
-    [cellScrollView setContentOffset: CGPointMake(cellScrollView.frame.size.width, 0) animated: YES] ;
+    UIButton *leftBtn = (UIButton *)[cell viewWithTag:5011];
+    UIButton *rightBtn = (UIButton *)[cell viewWithTag:5012];
+    if (btn.tag == 5011) {
+        [cellScrollView setContentOffset: CGPointZero animated:YES];
+        [leftBtn setEnabled:NO];
+        [rightBtn setEnabled:YES];
+    } else {
+        [cellScrollView setContentOffset: CGPointMake(cellScrollView.frame.size.width, 0) animated:YES];
+        [leftBtn setEnabled:YES];
+        [rightBtn setEnabled:NO];
+    }
 }
 
 - (void)lunboImageClicked:(UIButton *)btn
