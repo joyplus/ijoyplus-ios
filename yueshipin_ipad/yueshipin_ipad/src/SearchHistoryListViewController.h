@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SearchViewController.h"
 
-@interface SearchHistoryListViewController : UITableViewController
-
+@interface SearchHistoryListViewController : UITableViewController <UITableViewDelegate>
+@property (nonatomic, strong)NSMutableArray *historyArray;
+@property (nonatomic, weak)id<SearchViewControllerDelegate>parentDelegate;
 @end

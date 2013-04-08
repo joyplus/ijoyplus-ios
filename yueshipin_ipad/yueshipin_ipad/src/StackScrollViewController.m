@@ -846,12 +846,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         for (int i = 0; i < indexOfViewController; i ++)
         {
             UIViewController * ctrl = [viewControllersStack objectAtIndex:i];
-            if ([ctrl isKindOfClass:[SearchViewController class]])
-            {
-                SearchViewController * searchCtrl = (SearchViewController *)ctrl;
-                [searchCtrl reloadSearchList];
-            }
-            else if ([ctrl isKindOfClass:[PersonalViewController class]] && moveToLeft)
+            if ([ctrl isKindOfClass:[PersonalViewController class]] && moveToLeft)
             {
                 PersonalViewController * pCtrl = (PersonalViewController *)ctrl;
                 [pCtrl reloadHistory];
