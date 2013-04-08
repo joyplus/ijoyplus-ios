@@ -115,9 +115,24 @@
             [tempArr addObject:item];
         }
     }
-    NSSortDescriptor*asd = [NSSortDescriptor sortDescriptorWithKey:@"subitemId"ascending:YES];
-    itemArr_ = [NSMutableArray arrayWithArray: [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:asd]]];
+   // itemArr_ = tempArr;
+   
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES comparator:cmptr1];
+    itemArr_ = [NSMutableArray arrayWithArray: [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]]];
 }
+    NSComparator cmptr1 = ^(NSString *obj1, NSString * obj2){
+        NSString *str1 = [[obj1 componentsSeparatedByString:@"_"]objectAtIndex:1];
+        NSString *str2 = [[obj2 componentsSeparatedByString:@"_"]objectAtIndex:1];
+        
+        if ([str1 integerValue] > [str2 integerValue]) {
+            return (NSComparisonResult)NSOrderedDescending;
+        }
+        
+        if ([str1 integerValue] < [str2 integerValue]) {
+            return (NSComparisonResult)NSOrderedAscending;
+        }
+        return (NSComparisonResult)NSOrderedSame;
+    };
 -(void)reloadDataSource{
     [self initData];
     [gMGridView_ reloadData];

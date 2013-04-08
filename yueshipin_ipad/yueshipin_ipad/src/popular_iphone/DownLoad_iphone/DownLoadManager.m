@@ -246,7 +246,7 @@ static NSMutableArray *downLoadQueue_ = nil;
         }
         if (!isDownloading) {
             for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
-                if ([downloadRequestOperation.operationStatus isEqualToString:@"waiting"]|| [downloadRequestOperation.operationStatus isEqualToString:@"fail"]) {
+                if ([downloadRequestOperation.operationStatus isEqualToString:@"waiting"]/*|| [downloadRequestOperation.operationStatus isEqualToString:@"fail"]*/) {
                     if (!IS_M3U8(downloadRequestOperation.fileType)) { //非m3u8格式
                         [self beginDownloadTask:downloadRequestOperation];
                     }
@@ -320,7 +320,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 
         //}
         
-        [self startDownLoad];
+    [self startDownLoad];
     }];
     
     [downloadRequestOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
