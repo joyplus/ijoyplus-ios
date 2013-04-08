@@ -656,10 +656,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
             if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
                 UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 100, 30);
+                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 200, 60);
                 //[moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
                 [moreBtn setTitle:@"更多影评 >" forState:UIControlStateNormal];
                 moreBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+                [moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 30, 100)];
                 moreBtn.titleLabel.textColor = [UIColor orangeColor];
                 [moreBtn setTitleColor:[UIColor orangeColor]
                               forState:UIControlStateNormal];
@@ -732,7 +733,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     else if (3 == indexPath.section)
     {
-        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 15.0f + 15.0f;
+        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 50.0f;
         return height;
     }
        return 0;

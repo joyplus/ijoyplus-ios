@@ -649,8 +649,9 @@
             if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
                 UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 100, 30);
-                //[moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 200, 60);
+                moreBtn.backgroundColor = [UIColor clearColor];
+                [moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 30, 100)];
                 [moreBtn setTitle:@"更多影评 >" forState:UIControlStateNormal];
                 moreBtn.titleLabel.font = [UIFont systemFontOfSize:12];
                 moreBtn.titleLabel.textColor = [UIColor orangeColor];
@@ -722,7 +723,7 @@
     }
     else if (3 == indexPath.section)
     {
-        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 15.0f + 15;
+        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 50;
         return height;
     }
         return 0;
