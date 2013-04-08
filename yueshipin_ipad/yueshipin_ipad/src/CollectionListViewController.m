@@ -48,6 +48,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
     
     titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 62, 26)];
     titleImage.image = [UIImage imageNamed:@"collect_title"];
@@ -377,7 +380,7 @@
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
     }];
 }

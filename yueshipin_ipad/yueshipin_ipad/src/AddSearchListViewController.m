@@ -64,6 +64,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
 
     titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 107, 26)];
     titleImage.image = [UIImage imageNamed:@"add_video_title"];
@@ -407,7 +410,7 @@
         if([responseCode isEqualToString:kSuccessResCode]){
             [[AppDelegate instance].rootViewController showSuccessModalView:2];
             [[NSNotificationCenter defaultCenter] postNotificationName:MY_LIST_VIEW_REFRESH object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }

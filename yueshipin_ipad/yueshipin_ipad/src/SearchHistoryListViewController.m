@@ -33,6 +33,11 @@
     self.view.layer.borderWidth = 1;
     self.view.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     self.tableView.separatorColor = CMConstants.tableBorderColor;
+    self.tableView.backgroundColor = [UIColor clearColor];
+    UIImageView *bgImage = [[UIImageView alloc]initWithFrame:self.view.frame];
+    bgImage.image = [UIImage imageNamed:@"search_history_bg@2x.jpg"];
+    [self.tableView setBackgroundView:bgImage];
+    self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.delegate = self;
 }
 
@@ -66,12 +71,13 @@
     if (indexPath.row == historyArray.count) {
         UIButton *clearAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         clearAllBtn.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 35);
+        [clearAllBtn setTitle:@"删除历史记录" forState:UIControlStateNormal];
+        [clearAllBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [clearAllBtn setBackgroundImage:[UIImage imageNamed:@"clear"] forState:UIControlStateNormal];
         [clearAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_pressed"] forState:UIControlStateHighlighted];
         [clearAllBtn addTarget:self action:@selector(clearAllHistory) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:clearAllBtn];
     }
-    
     return cell;
 }
 
@@ -120,6 +126,11 @@
     if (indexPath.row == historyArray.count) {
         // do nothing
     }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [self.parentDelegate resignFirstRespond];
 }
 
 @end

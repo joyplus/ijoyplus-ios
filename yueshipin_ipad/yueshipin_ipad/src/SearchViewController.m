@@ -402,5 +402,9 @@
     [self search:keyword];
 }
 
+- (void)resignFirstRespond
+{
+    [sBar resignFirstResponder];
+}
 
 @end

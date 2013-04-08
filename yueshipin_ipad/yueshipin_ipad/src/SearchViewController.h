@@ -14,6 +14,7 @@
 
 - (void)clearSearchBarContent;
 - (void)historyCellClicked:(NSString *)keyword;
+- (void)resignFirstRespond;
 @end
 
 @interface SearchViewController : GenericBaseViewController <SearchViewControllerDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>{

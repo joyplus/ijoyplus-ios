@@ -196,31 +196,23 @@
 {
     [MobClick beginLogPageView:POPULAR_TOP_LIST];
     umengPageName = POPULAR_TOP_LIST;
-    MBProgressHUD *tempHUD;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache: [NSString stringWithFormat: @"top_list_%i", topicType]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
     } else {
-        if(tempHUD == nil){
-            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [table reloadData];
-            [self.view addSubview:tempHUD];
-            tempHUD.labelText = @"加载中...";
-            tempHUD.opacity = 0.5;
-            [tempHUD show:YES];
-        }
+        [myHUD showProgressBar:self.view];
     }
     if([hostReach currentReachabilityStatus] == NotReachable) {
-        [tempHUD hide:YES];
+        [myHUD hide];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseTopsListData:result];
-            [tempHUD hide:YES];
+            [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
-            [tempHUD hide:YES];
+            [myHUD hide];
             [UIUtility showSystemError:self.view];
         }];
     }
@@ -398,6 +390,7 @@
 
 - (void)movieListBtnClicked:(UIButton *)sender
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
@@ -411,6 +404,7 @@
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [dramaPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];

@@ -58,6 +58,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
     self.titleLabel.frame = CGRectMake(LEFT_WIDTH, 35, 310, 27);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:26];
     self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -148,7 +152,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
         } else {

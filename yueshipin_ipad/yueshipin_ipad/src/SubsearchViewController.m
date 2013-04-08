@@ -27,7 +27,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
     self.moveToLeft = YES;
     [self.view addGestureRecognizer:self.swipeRecognizer];
@@ -38,7 +37,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.view setBackgroundColor:CMConstants.backgroundColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,8 +47,10 @@
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    bgImage.image = nil;
-    [bgImage removeFromSuperview];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     closeBtn.frame = CGRectMake(456, 0, 50, 50);

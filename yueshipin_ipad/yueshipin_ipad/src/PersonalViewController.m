@@ -32,13 +32,9 @@
     UITableView *table;
     UIImageView *avatarImage;
     UILabel *nameLabel;
-    UIButton *editBtn;
     UIImageView *personalImage;
-    UILabel *supportLabel;
     UIButton *supportBtn;
-    UILabel *collectionLabel;
     UIButton *collectionBtn;
-    UILabel *listLabel;
     UIButton *listBtn;
     UIImageView *myRecordImage;
     UIButton *createBtn;
@@ -48,29 +44,19 @@
     int tableHeight;
     BOOL accessed;
     UIButton *clickedBtn;
-    UIImageView *tableBg;
 }
-
-@property (nonatomic, retain) UIColor* fadeColor;
-@property (nonatomic, retain) UIColor* baseColor;
-@property (nonatomic, retain) CAGradientLayer *g2;
-@property (nonatomic, retain) UIView* bottomFadingView;
-@property (nonatomic, assign) fade_orientation fadeOrientation;
 @property (nonatomic, strong) MNMBottomPullToRefreshManager *pullToRefreshManager_;
 @property (nonatomic) NSUInteger reloads_;
 @property (nonatomic, strong) EGORefreshTableHeaderView *_refreshHeaderView;
 @property (nonatomic) BOOL _reloading;
+@property (nonatomic, strong)UIImageView *avatarImageBg;
 @end
 
 @implementation PersonalViewController
-@synthesize fadeColor = fadeColor_;
-@synthesize baseColor = baseColor_;
-@synthesize g2 = g2_;
-@synthesize bottomFadingView;
 @synthesize pullToRefreshManager_, reloads_;
-@synthesize fadeOrientation = fadeOrientation_;
 @synthesize _refreshHeaderView;
 @synthesize _reloading;
+@synthesize avatarImageBg;
 
 - (void)didReceiveMemoryWarning
 {
@@ -81,13 +67,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WATCH_HISTORY_REFRESH object:nil];
-    self.fadeColor = nil;
-    self.baseColor = nil;
-    self.g2 = nil;
-    tableBg = nil;
-    bottomFadingView = nil;
     pullToRefreshManager_ = nil;
     backgroundView = nil;
     topImage = nil;
@@ -95,13 +75,9 @@
     table = nil;
     avatarImage = nil;
     nameLabel = nil;
-    editBtn = nil;
     personalImage = nil;
-    supportLabel = nil;
     supportBtn = nil;
-    collectionLabel = nil;
     collectionBtn = nil;
-    listLabel = nil;
     listBtn = nil;
     myRecordImage = nil;
     createBtn = nil;
@@ -122,97 +98,76 @@
         topImage.image = [UIImage imageNamed:@"my_title"];
         [self.view addSubview:topImage];
         
-        personalImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 164, 404, 102)];
+        personalImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 164, 404, 102)];
         personalImage.image = [UIImage imageNamed:@"my_summary_bg"];
         [self.view addSubview:personalImage];
         
-        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 110, 70, 70)];
-        avatarImage.layer.borderWidth = 1;
-        avatarImage.layer.borderColor = [UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1].CGColor;
-        avatarImage.layer.cornerRadius = 5;
-        avatarImage.layer.masksToBounds = YES;
+        avatarImageBg = [[UIImageView alloc]initWithFrame:CGRectMake(50, 90, 73, 73)];
+        avatarImageBg.image = [UIImage imageNamed:@"self_icon"];
+        [self.view addSubview:avatarImageBg];
+        
+        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(avatarImageBg.frame.origin.x + 7, avatarImageBg.frame.origin.y + 7, avatarImageBg.frame.size.width - 14, avatarImageBg.frame.size.height - 14)];
         [self.view addSubview:avatarImage];
         
-        nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(165, 130, 260, 22)];
+        nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 130, 260, 22)];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.textColor = [UIColor blackColor];
         nameLabel.font = [UIFont systemFontOfSize:20];
         [self.view addSubview:nameLabel];
         
-        //        editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        //        editBtn.frame = CGRectMake(430, 122, 25, 27);
-        //        [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_btn"] forState:UIControlStateNormal];
-        //        [editBtn addTarget:self action:@selector(editNameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        //        [self.view addSubview:editBtn];
-        
-        supportLabel = [[UILabel alloc]initWithFrame:CGRectMake(80, 228, 100, 30)];
-        supportLabel.backgroundColor = [UIColor clearColor];
-        supportLabel.textColor = CMConstants.titleBlueColor;
-        supportLabel.text = @"0";
-        supportLabel.textAlignment = NSTextAlignmentCenter;
-        supportLabel.font = [UIFont boldSystemFontOfSize:22];
-        [self.view addSubview:supportLabel];
         supportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        supportBtn.frame = CGRectMake(90, 180, 88, 87);
+        supportBtn.frame = CGRectMake(50, 190, 131, 79);
         supportBtn.tag = 1001;
-        [supportBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [supportBtn setBackgroundImage:[UIImage imageNamed:@"support_btn_bg"] forState:UIControlStateNormal];
+        [supportBtn setBackgroundImage:[UIImage imageNamed:@"support_btn_bg_pressed"] forState:UIControlStateHighlighted];
+        [supportBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchDown];
         [self.view addSubview:supportBtn];
         
-        collectionLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + supportLabel.frame.size.width + 34, 228, 100, 30)];
-        collectionLabel.textColor = CMConstants.titleBlueColor;
-        collectionLabel.textAlignment = NSTextAlignmentCenter;
-        collectionLabel.backgroundColor = [UIColor clearColor];
-        collectionLabel.font = [UIFont boldSystemFontOfSize:22];
-        collectionLabel.text = @"0";
-        [self.view addSubview:collectionLabel];
         collectionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        collectionBtn.frame = CGRectMake(90 + supportLabel.frame.size.width + 34, 180, 88, 87);
+        collectionBtn.frame = CGRectMake(185, 190, 131, 79);
         collectionBtn.tag = 1002;
-        [collectionBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg"] forState:UIControlStateNormal];
+        [collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg_pressed"] forState:UIControlStateHighlighted];
+        [collectionBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchDown];
         [self.view addSubview:collectionBtn];
         
-        listLabel = [[UILabel alloc]initWithFrame:CGRectMake(80 + (supportLabel.frame.size.width + 33)*2, 228, 100, 30)];
-        listLabel.textAlignment = NSTextAlignmentCenter;
-        listLabel.textColor = CMConstants.titleBlueColor;
-        listLabel.backgroundColor = [UIColor clearColor];
-        listLabel.font = [UIFont boldSystemFontOfSize:22];
-        listLabel.text = @"0";
-        [self.view addSubview:listLabel];
         listBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        listBtn.frame = CGRectMake(90 + (supportLabel.frame.size.width + 33)*2, 180, 88, 87);
+        listBtn.frame = CGRectMake(315, 190, 131, 79);
         listBtn.tag = 1003;
-        [listBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+        [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_bg"] forState:UIControlStateNormal];
+        [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_bg_pressed"] forState:UIControlStateHighlighted];
+        [listBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchDown];
         [self.view addSubview:listBtn];
         
-        myRecordImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 283, 95, 25)];
+        myRecordImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 283, 71, 18)];
         myRecordImage.image = [UIImage imageNamed:@"my_record"];
         [self.view addSubview:myRecordImage];
         
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        createBtn.frame = CGRectMake(358, 282, 104, 31);
+        createBtn.frame = CGRectMake(380, 265, 67, 51);
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
         [createBtn addTarget:self action:@selector(createBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:createBtn];
         
         removeAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        removeAllBtn.frame = CGRectMake(252, 282, 96, 31);
+        removeAllBtn.frame = CGRectMake(280, 265, 67, 51);
         [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play"] forState:UIControlStateNormal];
         [removeAllBtn setBackgroundImage:[UIImage imageNamed:@"clear_play_pressed"] forState:UIControlStateHighlighted];
         [removeAllBtn addTarget:self action:@selector(removeAllBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:removeAllBtn];
         
         tableHeight = 370;
-        table = [[UITableView alloc] initWithFrame:CGRectMake(60, 325, 400, tableHeight) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(50, 325, 400, tableHeight) style:UITableViewStylePlain];
+        table.layer.borderWidth = 1;
+        table.layer.borderColor = [UIColor colorWithRed:208/255.0 green:203/255.0 blue:192.0/255.0 alpha:1].CGColor;
+        table.separatorColor = [UIColor colorWithRed:208/255.0 green:203/255.0 blue:192.0/255.0 alpha:1];
         [table setBackgroundColor:[UIColor clearColor]];
         table.tableFooterView = [[UIView alloc] init];
         table.showsVerticalScrollIndicator = NO;
         [table setDelegate:self];
         [table setDataSource:self];
         [table setScrollEnabled:YES];
-        tableBg = [[UIImageView alloc]initWithFrame:table.frame];
-        tableBg.image = [UIImage imageNamed:@"watch_record_bg"];
-        [self.view addSubview:tableBg];
         [self.view addSubview:table];
         
         if (_refreshHeaderView == nil) {
@@ -224,13 +179,6 @@
         }
         
         pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-
-        self.baseColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
-        bottomFadingView = [[UIView alloc]initWithFrame:CGRectZero];
-        [bottomFadingView setBackgroundColor: [UIColor yellowColor]];
-        self.g2.frame = CGRectMake(60, 325 + tableHeight - 80, 400, 80);
-        [bottomFadingView.layer insertSublayer:self.g2 atIndex:0];
-        [self.view addSubview:bottomFadingView];
     }
     return self;
 }
@@ -238,7 +186,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
    
     reloads_ = 2;
@@ -248,15 +195,11 @@
     if(sortedwatchRecordArray.count > 0){
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
-        [tableBg setHidden:NO];
-        [bottomFadingView setHidden:NO];
         [removeAllBtn setHidden:NO];
     } else {
         [removeAllBtn setHidden:YES];
-        [tableBg setHidden:YES];
         [myRecordImage setHidden:YES];
         [table setHidden:YES];
-        [bottomFadingView setHidden:YES];
     }
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
@@ -310,23 +253,18 @@
     if(sortedwatchRecordArray.count > 0){
         [myRecordImage setHidden:NO];
         [table setHidden:NO];
-        [tableBg setHidden:NO];
-        [bottomFadingView setHidden:NO];
         [removeAllBtn setHidden:NO];
     } else {
         [removeAllBtn setHidden:YES];
-        [tableBg setHidden:YES];
         [myRecordImage setHidden:YES];
         [table setHidden:YES];
-        [bottomFadingView setHidden:YES];
     }
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
-    [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:avatarUrl]];
     nameLabel.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
     if (!accessed) {
         accessed = YES;
         [self parseWatchHistory];
-        [self parseResult];
     }
     [MobClick beginLogPageView:PERSONAL];
 }
@@ -376,40 +314,6 @@
         }
     }
     [self loadTable];
-}
-
-- (void)parseResult
-{
-    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"PersonalData"];
-    if(cacheResult != nil){
-        [self parseResultData:cacheResult];
-    }
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", nil];
-        [[AFServiceAPIClient sharedClient] getPath:kPathUserView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [self parseResultData:result];
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
-            [UIUtility showSystemError:self.view];
-        }];
-    }
-}
-
-- (void)parseResultData:(id)result
-{
-    NSString *responseCode = [result objectForKey:@"res_code"];
-    if(responseCode == nil){
-        [[CacheUtility sharedCache] putInCache:@"PersonalData" result:result];
-        supportLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"support_num"]];
-        //        sharelabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"share_num"]];
-        collectionLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"favority_num"]];
-        listLabel.text = [NSString stringWithFormat:@"%@", [result objectForKey:@"tops_num"]];
-    }
-}
-
-- (void)refreshData:(NSNotification *)notification
-{
-    [self parseResult];
 }
 
 - (void)refreshWatchHistory:(NSNotification *)notification
@@ -524,7 +428,7 @@
             [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
             [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
         }
-        playButton.frame = CGRectMake(300, (size.height + 40 - 26)/2.0, 74, 26);
+        playButton.frame = CGRectMake(330, (size.height + 40 - 49)/2.0, 52, 49);
     }
     return cell;
 }
@@ -619,22 +523,28 @@
 
 - (void)summaryBtnClicked:(UIButton *)sender
 {
-    for(int i = 0; i < 4; i++){
-        UIButton *btn = (UIButton *)[self.view viewWithTag:1001 + i];
-        [btn setBackgroundImage:nil forState:UIControlStateNormal];
-        [btn setBackgroundImage:nil forState:UIControlStateHighlighted];
-    }
-    [sender setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateNormal];
-    [sender setBackgroundImage:[UIImage imageNamed:@"selected_bg"] forState:UIControlStateHighlighted];
+//    for(int i = 0; i < 3; i++){
+//        UIButton *btn = (UIButton *)[self.view viewWithTag:1001 + i];
+//        if (i == 0) {
+//            [btn setBackgroundImage:[UIImage imageNamed:@"support_btn_bg"] forState:UIControlStateNormal];
+//        } else if (i == 1){
+//            [btn setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg"] forState:UIControlStateNormal];
+//        } else if(i == 2){
+//            [btn setBackgroundImage:[UIImage imageNamed:@"list_btn_bg"] forState:UIControlStateNormal];
+//        }
+//    }
     if(sender.tag == 1001){
+//        [sender setBackgroundImage:[UIImage imageNamed:@"support_btn_bg_pressed"] forState:UIControlStateNormal];
         DingListViewController *viewController = [[DingListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if(sender.tag == 1002){
+//        [sender setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg_pressed"] forState:UIControlStateNormal];
         CollectionListViewController *viewController = [[CollectionListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
     } else if(sender.tag == 1003){
+//        [sender setBackgroundImage:[UIImage imageNamed:@"list_btn_bg_pressed"] forState:UIControlStateNormal];
         TopicListViewController *viewController = [[TopicListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -713,10 +623,8 @@
             sortedwatchRecordArray = tempArray;
             if (sortedwatchRecordArray.count == 0) {
                 [removeAllBtn setHidden:YES];
-                [tableBg setHidden:YES];
                 [myRecordImage setHidden:YES];
                 [table setHidden:YES];
-                [bottomFadingView setHidden:YES];
             }
 //            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self loadTable];
@@ -761,38 +669,13 @@
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [removeAllBtn setHidden:YES];
-        [tableBg setHidden:YES];
         [myRecordImage setHidden:YES];
         [table setHidden:YES];
-        [bottomFadingView setHidden:YES];
         [self loadTable];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         
     }];
 }
-
-//Sets fadeColor to be 10% alpha of baseColor
--(UIColor*)fadeColor {
-    if (fadeColor_ == nil) {
-        const CGFloat* components = CGColorGetComponents(self.baseColor.CGColor);
-        fadeColor_ = [UIColor colorWithRed:components[0] green:components[1] blue:components[2] alpha:CGColorGetAlpha(self.baseColor.CGColor)*.1];
-    }
-    return fadeColor_;
-}
-
--(CAGradientLayer*)g2 {
-    if (g2_ == nil) {
-        g2_ = [CAGradientLayer layer];
-        
-        if (self.fadeOrientation == FADE_LEFTNRIGHT) {
-            g2_.startPoint = CGPointMake(0, 0.5);
-            g2_.endPoint = CGPointMake(1.0, 0.5);
-        }
-        
-        g2_.colors = [NSArray arrayWithObjects: (id)[self.fadeColor CGColor],(id)[self.baseColor CGColor], nil];
-    }
-    return g2_;
-} 
 
 
 @end

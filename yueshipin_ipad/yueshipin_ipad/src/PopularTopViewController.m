@@ -546,6 +546,7 @@
 
 - (void)movieListBtnClicked:(UIButton *)sender
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -562,6 +563,7 @@
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -578,6 +580,7 @@
 
 - (void)showListBtnClicked:(UIButton *)sender
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -594,6 +597,7 @@
 
 - (void)comicListBtnClicked:(UIButton *)sender
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -774,19 +778,19 @@
         [cell.contentView addSubview:cellScrollView];
         
         UIButton *leftScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y+30, 20, 70);
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn"] forState:UIControlStateNormal];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn_pressed"] forState:UIControlStateHighlighted];
         leftScrollBtn.tag = 5011;
         [leftScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:leftScrollBtn];
         
         UIButton *rightScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y+30, 20, 70);
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn"] forState:UIControlStateNormal];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn_pressed"] forState:UIControlStateHighlighted];
         rightScrollBtn.tag = 5012;
         [rightScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:rightScrollBtn];
@@ -895,19 +899,19 @@
         [cell.contentView addSubview:cellScrollView];
         
         UIButton *leftScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y+30, 23, 70);
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn"] forState:UIControlStateNormal];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn_pressed"] forState:UIControlStateHighlighted];
         leftScrollBtn.tag = 5011;
         [leftScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:leftScrollBtn];
         
         UIButton *rightScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y+30, 23, 70);
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn"] forState:UIControlStateNormal];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn_pressed"] forState:UIControlStateHighlighted];
         rightScrollBtn.tag = 5012;
         [rightScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:rightScrollBtn];
@@ -1016,19 +1020,19 @@
         [cell.contentView addSubview:cellScrollView];
         
         UIButton *leftScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
-        [leftScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        leftScrollBtn.frame = CGRectMake(10, cellScrollView.frame.origin.y+30, 23, 70);
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn"] forState:UIControlStateNormal];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [leftScrollBtn setImage:[UIImage imageNamed:@"left_scroll_btn_pressed"] forState:UIControlStateHighlighted];
         leftScrollBtn.tag = 5011;
         [leftScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:leftScrollBtn];
         
         UIButton *rightScrollBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y, 23, MOVIE_LOGO_HEIGHT);
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn"] forState:UIControlStateNormal];
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_disabled"] forState:UIControlStateDisabled];
-        [rightScrollBtn setImage:[UIImage imageNamed:@"scroll_btn_pressed"] forState:UIControlStateHighlighted];
+        rightScrollBtn.frame = CGRectMake(cellScrollView.frame.origin.x + cellScrollView.frame.size.width, cellScrollView.frame.origin.y+30, 23, 70);
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn"] forState:UIControlStateNormal];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn_disabled"] forState:UIControlStateDisabled];
+        [rightScrollBtn setImage:[UIImage imageNamed:@"right_scroll_btn_pressed"] forState:UIControlStateHighlighted];
         rightScrollBtn.tag = 5012;
         [rightScrollBtn addTarget:self action:@selector(scrollBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cell.contentView addSubview:rightScrollBtn];

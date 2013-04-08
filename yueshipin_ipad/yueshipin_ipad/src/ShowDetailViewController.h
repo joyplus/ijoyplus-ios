@@ -22,7 +22,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *playTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *regionLabel;
 @property (weak, nonatomic) IBOutlet UILabel *regionNameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *shareLabel;
 @property (weak, nonatomic) IBOutlet UIButton *dingBtn;
+@property (weak, nonatomic) IBOutlet UILabel *reportLabel;
 @property (weak, nonatomic) IBOutlet UIButton *collectionBtn;
 @property (weak, nonatomic) IBOutlet UIButton *playBtn;
 @property (weak, nonatomic) IBOutlet UIButton *shareBtn;
@@ -32,7 +34,6 @@
 @property (weak, nonatomic)UITableViewController *listViewController;
 @property (weak, nonatomic)UITableViewController *commentViewController;
 @property (weak, nonatomic) IBOutlet UIImageView *commentImage;
-@property (weak, nonatomic) IBOutlet UILabel *numberLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *dingNumberImage;
 @property (weak, nonatomic) IBOutlet UIImageView *collectioNumber;
 @property (weak, nonatomic) IBOutlet UILabel *dingNumberLabel;

@@ -266,7 +266,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
         [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
         [ActionUtility generateUserId:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         }];
         [_sinaweibo logOut];
@@ -383,7 +383,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                 [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
-                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];

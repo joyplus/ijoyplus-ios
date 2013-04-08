@@ -227,7 +227,7 @@
     episodeView.delegate = self;
     episodeView.backgroundColor = [UIColor clearColor];
     
-    [self.commentImage setHidden:NO];
+    [self.commentImage setHidden:YES];
 }
 
 - (void)introBtnClicked
@@ -697,7 +697,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int dingNum = [[video objectForKey:@"support_num"] intValue] + 1;
             if (dingNum >= 1000) {
@@ -724,7 +724,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
             if (collectioNum > 1000) {

@@ -36,7 +36,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
     [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 

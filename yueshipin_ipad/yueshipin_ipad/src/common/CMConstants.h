@@ -63,7 +63,7 @@
 #define CHAO_QING @"hd2"
 #define LIU_CHANG @"3gp"
 
-#define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
+//#define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
 #define WATCH_HISTORY_REFRESH @"PersonalWatchHistoryViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 
