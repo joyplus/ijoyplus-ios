@@ -51,6 +51,8 @@
 @property (nonatomic) double seekBeginTime;
 - (void)stopMyTimer;
 - (void)beginMyTimer;
+- (void)showActivityView;
+- (void)dismissActivityView;
 
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
@@ -419,6 +421,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 
                 playButton_.hidden = YES;
                 pauseButton_.hidden = NO;
+                NSLog(@"Ready to play");
             }
                 break;
                 
@@ -467,61 +470,35 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         {
             if (pItem.playbackBufferEmpty)
             {
-                
+                NSLog(@"Buffer Empty");
             }
             else
             {
-                if (![self isPlaying] && playButton_.hidden)
-                {
-                    [mPlayer play];
-                }
+                NSLog(@"Not Empty");
             }
         }
         else if (k_ToKeepUp == path)
         {
             if (pItem.playbackLikelyToKeepUp)
             {
-                
+                [self dismissActivityView];
+                NSLog(@"KeepUp, dismiss waitting view");
+                BOOL isPlaying = [self isPlaying];
+                BOOL isHidden = playButton_.hidden;
+                if (!isPlaying && isHidden)
+                {
+                    [mPlayer play];
+                    NSLog(@"AVPlayer play");
+                }
             }
             else
             {
-                
+                if (![self isPlaying])
+                {
+                    NSLog(@"Not KeepUp, show waitting view");
+                    [self showActivityView];
+                }
             }
-            
-            
-//            if (pItem.playbackLikelyToKeepUp)
-//            {
-//                if (playCacheView_.superview)
-//                {
-//                    [playCacheView_ removeFromSuperview];
-//                    myHUD.hidden = YES;
-//                }
-//                if (![self isPlaying])
-//                {
-//                    [mPlayer play];
-//                }
-//                NSLog(@"playbackLikelyToKeepUp,YES");
-//            }
-//            else
-//            {
-//                NSLog(@"playbackLikelyToKeepUp,NO");
-//            }
-//            if (![self isPlaying] && playButton_.hidden)
-//            {
-//                NSArray * range = pItem.loadedTimeRanges;
-//                if (0 == range.count)
-//                {
-//                    return;
-//                }
-//                NSValue * value = [range objectAtIndex:0];
-//                CMTimeRange timeRange = [value CMTimeRangeValue];
-//                CMTime time = timeRange.duration;
-//                if ((time.value/time.timescale) >= MINI_PLAY_DURATION)
-//                {
-//                    [mPlayer play];
-//                }
-//
-//            }
         }
     }
 	else
@@ -674,6 +651,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (nil == myTimer_)
     {
         myTimer_ = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
+    }
+}
+
+- (void)showActivityView
+{
+    if (!playCacheView_.superview)
+    {
+        [self.view addSubview:playCacheView_];
+        
+        myHUD.hidden = NO;
+        [self.view bringSubviewToFront:myHUD];
+        [myHUD show:YES];
+        willPlayLabel_.text = nil;
+    }
+}
+- (void)dismissActivityView
+{
+    if (playCacheView_.superview)
+    {
+        [playCacheView_ removeFromSuperview];
+        myHUD.hidden = YES;
     }
 }
 
@@ -1645,6 +1643,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             break;
         }
         case PLAY_BUTTON_TAG:{
+            [self dismissActivityView];
             [mPlayer play];
             btn.hidden = YES;
             pauseButton_.hidden = NO;

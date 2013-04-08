@@ -153,7 +153,7 @@
     }
     
     //prodId_ = itemId;
-    NSString *key = [NSString stringWithFormat:@"%@%@", @"movie",itemId ];
+    NSString *key = [NSString stringWithFormat:@"%@%@", @"movie",itemId];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     
     if (nil != cacheResult)
@@ -186,7 +186,29 @@
 
 - (void)setViewWithData:(id)result
 {
-    _dicVideoInfo = (NSDictionary *)[result objectForKey:@"movie"];
+    NSString * type = [_dicDataSource objectForKey:@"prod_type"];
+    
+    if (nil == type)
+    {
+        type = [_dicDataSource objectForKey:@"content_type"];
+    }
+    
+    if ([type isEqualToString:@"1"])
+    {
+        _dicVideoInfo = (NSDictionary *)[result objectForKey:@"movie"];
+    }
+    else if ([type isEqualToString:@"2"] || [type isEqualToString:@"131"])
+    {
+        _dicVideoInfo = (NSDictionary *)[result objectForKey:@"tv"];
+    }
+    else if ([type isEqualToString:@"3"])
+    {
+        _dicVideoInfo = (NSDictionary *)[result objectForKey:@"show"];
+    }
+    else
+    {
+        _dicDataSource = nil;
+    }
     
     //Poster
     NSString *imageUrl = [_dicVideoInfo objectForKey:@"prod_pic_url"];
