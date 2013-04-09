@@ -188,12 +188,11 @@
 }
 
 -(void)setting:(id)sender{
+
     IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
     iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
-//    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
-//    downloadViewController.hidesBottomBarWhenPushed = YES;
-//    [self.navigationController pushViewController:downloadViewController animated:YES];
+
 }
 
 

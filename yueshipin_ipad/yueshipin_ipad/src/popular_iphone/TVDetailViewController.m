@@ -221,6 +221,7 @@
 -(void)notificationData{
     infoDic_ = videoInfo_;
     self.title = [infoDic_ objectForKey:@"name"];
+    name_ = self.title;
     [self loadTable];
 }
 //将所有的剧集排序。

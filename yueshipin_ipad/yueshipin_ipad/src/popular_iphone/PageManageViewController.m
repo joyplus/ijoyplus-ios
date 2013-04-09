@@ -397,12 +397,13 @@
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:showTableList_ withClient:self];
     
-}
--(void)viewWillAppear:(BOOL)animated{
-    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
+    
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -660,7 +661,7 @@
         [self loadTVTopsData];
     }
     else if (view == refreshHeaderViewForShowList_){
-        [self loadShowTopsData];
+        [self loadMoreShowTopsData];
     
     }
     
