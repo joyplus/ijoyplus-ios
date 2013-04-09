@@ -70,8 +70,6 @@
     self.mTableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"messages_tableview_background"]];
     self.mToolBar.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"messages_toolbar_background"]];
 
-   
-    
     feedbackClient = [UMFeedback sharedInstance];
     [feedbackClient setAppkey:umengAppKey delegate:(id<UMFeedbackDataDelegate>)self];
 
