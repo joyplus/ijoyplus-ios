@@ -21,14 +21,22 @@
 #import "IphoneSettingViewController.h"
 #import "UIImage+Scale.h"
 #import "CommonMotheds.h"
+#import "UnbundingViewController.h"
+
 #define PAGE_NUM 3
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
 #define SHOW_TYPE 9002
 #define PAGESIZE 10
+#define TOP_SEGMENT_VIEW_TAG    (123456)
+enum
+{
+    TYPE_BUNDING_TV = 1,
+    TYPE_UNBUNDING
+};
 
 @interface PageManageViewController ()
-
+- (void)setViewType:(NSInteger)type;
 @end
 
 @implementation PageManageViewController
@@ -284,12 +292,24 @@
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
     rightButton.frame = CGRectMake(0, 0, 49, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"settings.png"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"settings_f.png"] forState:UIControlStateHighlighted];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
 	// Do any additional setup after loading the view.
+    if (nil == bundingTipsView)
+    {
+        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tips.png"]];
+        bundingTipsView.frame = CGRectMake(0, 0, 320, 34);
+        [self.view addSubview:bundingTipsView];
+        bundingTipsView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(TopImageTaped)];
+        tapGesture.numberOfTapsRequired = 1;
+        tapGesture.numberOfTouchesRequired = 1;
+        [bundingTipsView addGestureRecognizer:tapGesture];
+    }
+    
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, kCurrentWindowHeight-88-30)];
     self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight-88-30);
     self.scrollView.pagingEnabled = YES;
@@ -300,7 +320,7 @@
     UIImageView *scrBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_bg.png"]];
     scrBg.userInteractionEnabled = YES;
     scrBg.frame = CGRectMake(0, 0, 320, 30);
-    
+    scrBg.tag = TOP_SEGMENT_VIEW_TAG;
     movieBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateNormal];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted];
@@ -439,10 +459,82 @@
     
 }
 
--(void)setting:(id)sender{
-    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
-    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
+-(void)setting:(id)sender
+{
+    UIImageView * scanView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"scan_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(440, 0, 10, 0)]];
+    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 64));
+    scanView.backgroundColor = [UIColor clearColor];
+    
+    DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
+    reader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
+    reader.showsZBarControls = NO;
+    reader.cameraOverlayView = scanView;
+    ZBarImageScanner *scanner = reader.scanner;
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    reader.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:reader
+                                         animated:YES];
+}
+
+- (void)TopImageTaped
+{
+    UnbundingViewController *ubCtrl = [[UnbundingViewController alloc] init];
+    [self.navigationController pushViewController:ubCtrl animated:YES];
+}
+
+- (void)setViewType:(NSInteger)type
+{
+    /*
+     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, kCurrentWindowHeight-88-30)];
+     self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight-88-30);
+     */
+    
+    UIImageView * topView = (UIImageView *)[self.view viewWithTag:TOP_SEGMENT_VIEW_TAG];
+    
+    CGRect scrollRect = scrollView_.frame;
+    CGRect topRect = topView.frame;
+    
+    CGRect movieRect = movieTableList_.frame;
+    CGRect tvRect = tvTableList_.frame;
+    CGRect showRect = showTableList_.frame;
+    
+    if (TYPE_BUNDING_TV == type)
+    {
+        bundingTipsView.hidden = NO;
+        
+        scrollRect.origin.y = 64;
+        scrollRect.size.height = kCurrentWindowHeight - 118 - 34;
+        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 118 - 34);
+        topRect.origin.y = 34;
+        
+        movieRect.size.height = (kCurrentWindowHeight - 122 - 34);
+        tvRect.size.height = (kCurrentWindowHeight - 122 - 34);
+        showRect.size.height = (kCurrentWindowHeight - 122 - 34);
+        
+    }
+    else if (TYPE_UNBUNDING == type)
+    {
+        bundingTipsView.hidden = NO;
+        
+        scrollRect.origin.y = 30;
+        scrollRect.size.height = kCurrentWindowHeight - 118;
+        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 118);
+        topRect.origin.y = 0;
+        
+        movieRect.size.height = (kCurrentWindowHeight - 122);
+        tvRect.size.height = (kCurrentWindowHeight - 122);
+        showRect.size.height = (kCurrentWindowHeight - 122);
+        
+    }
+    
+    topView.frame = topRect;
+    scrollView_.frame = scrollRect;
+    movieTableList_.frame = movieRect;
+    tvTableList_.frame = tvRect;
+    showTableList_.frame = showRect;
     
 }
 

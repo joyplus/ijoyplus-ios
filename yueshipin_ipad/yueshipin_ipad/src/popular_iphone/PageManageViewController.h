@@ -10,6 +10,7 @@
 #import "DDPageControl.h"
 #import "EGORefreshTableHeaderView.h"
 #import "MNMBottomPullToRefreshManager.h"
+#import "DimensionalCodeScanViewController.h"
 @interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient,EGORefreshTableHeaderDelegate>{
 
     UIScrollView *scrollView_;
@@ -29,7 +30,7 @@
     UIImageView *slider_;
     
     UIImageView *pageMGIcon_;
-    
+    UIImageView *bundingTipsView;
     EGORefreshTableHeaderView *refreshHeaderViewForMovieList_;
     EGORefreshTableHeaderView *refreshHeaderViewForTvList_;
     EGORefreshTableHeaderView *refreshHeaderViewForShowList_;
