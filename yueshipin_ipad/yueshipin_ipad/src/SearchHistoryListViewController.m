@@ -63,6 +63,7 @@
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
     if (indexPath.row < historyArray.count) {
         cell.textLabel.text = [NSString stringWithFormat:@"%@", [[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"]];
         cell.textLabel.font = [UIFont systemFontOfSize:15];

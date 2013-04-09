@@ -412,7 +412,7 @@
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(765, 258, 40, 42);
+    closeBtn.frame = CGRectMake(770, 250, 40, 42);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -463,22 +463,23 @@
         UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         pageBtn.frame = CGRectMake(i * (63 + 10) + 1, 0, 64, 27);
         pageBtn.tag = 1001 + i;
-        [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*30+1, (int)fmin((i+1)*30, episodeArray.count)] forState:UIControlStateNormal];
         if(i == 0){
-            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
+            [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
         } else {
+            [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
             [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
         }
         [pageBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
-        [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateHighlighted];
+        [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
         [pageBtn addTarget:self action:@selector(pageBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [pageView addSubview:pageBtn];
     }
     
     UIScrollView *episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     episodeView.tag = 3268143;
-//    episodeView.delegate = self;
+    episodeView.delegate = self;
     episodeView.scrollEnabled = YES;
     [episodeView setShowsHorizontalScrollIndicator:NO];
     episodeView.backgroundColor = [UIColor clearColor];
@@ -501,7 +502,7 @@
         btn.contentEdgeInsets = UIEdgeInsetsMake(2, 0, 0, 0);
         btn.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download"] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_pressed"] forState:UIControlStateHighlighted];
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
         [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -510,7 +511,7 @@
         }
         for (SubdownloadItem *subitem in downloadingItems) {
             if(subitem.subitemId.intValue == i+1){
-                [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
                 [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
                 [btn setEnabled:NO];
                 break;
@@ -523,29 +524,33 @@
     [self.view addSubview:view];
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    if (scrollView.tag == 3268143) {
-//        int page = floor(scrollView.contentOffset.x/520.0);
-//        if (page > 0 && page < dramaPageNum) {
-//            UIView *view = (UIView *)[self.view viewWithTag:3268142];
-//            for (int i = 0; i < dramaPageNum; i++) {
-//                UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + i];
-//                if (i == page) {
-//                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
-//                } else {
-//                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
-//                }
-//            }
-//        }
-//    }
-//}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView; 
+{
+    if (scrollView.tag == 3268143) {
+        int page = floor(scrollView.contentOffset.x/520.0);
+        if (page > 0 && page < dramaPageNum) {
+            UIScrollView *episodeView = (UIScrollView *)[self.view viewWithTag:74378420];
+            [episodeView setContentOffset:CGPointMake(floor(page/7.0) * episodeView.frame.size.width, 0) animated:YES];
+            UIView *view = (UIView *)[self.view viewWithTag:3268142];
+            for (int i = 0; i < dramaPageNum; i++) {
+                UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + i];
+                if (i == page) {
+                    [tabBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
+                } else {
+                    [tabBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
+                }
+            }
+        }
+    }
+}
 
 - (void)dramaDownload:(UIButton *)btn
 {
    BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
     if (success) {
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
     }
 }
@@ -573,9 +578,11 @@
     UIView *view = (UIView *)[self.view viewWithTag:3268142];
     for (int i = 0; i < dramaPageNum; i++) {
         UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + i];
+        [tabBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
     }
-    [btn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
 
     UIScrollView *episodeView = (UIScrollView *)[view viewWithTag:3268143];
     [episodeView setContentOffset:CGPointMake(520*(btn.tag - 1001), 0) animated:YES];

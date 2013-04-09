@@ -77,7 +77,6 @@
 		220E487C169BECB400A29756 /* nolist@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47EF169BECB200A29756 /* nolist@2x.png */; };
 		220E487D169BECB400A29756 /* notice.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47F0169BECB200A29756 /* notice.png */; };
 		220E487E169BECB400A29756 /* notice@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47F1169BECB200A29756 /* notice@2x.png */; };
-		220E487F169BECB400A29756 /* popup_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47F2169BECB200A29756 /* popup_bg.png */; };
 		220E4880169BECB400A29756 /* popup_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47F3169BECB300A29756 /* popup_bg@2x.png */; };
 		220E4881169BECB400A29756 /* RadioButton-Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47F4169BECB300A29756 /* RadioButton-Selected.png */; };
 		220E4882169BECB400A29756 /* RadioButton-Unselected.png in Resources */ = {isa = PBXBuildFile; fileRef = 220E47F5169BECB300A29756 /* RadioButton-Unselected.png */; };
@@ -890,7 +889,6 @@
 		220E47EF169BECB200A29756 /* nolist@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nolist@2x.png"; sourceTree = "<group>"; };
 		220E47F0169BECB200A29756 /* notice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notice.png; sourceTree = "<group>"; };
 		220E47F1169BECB200A29756 /* notice@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "notice@2x.png"; sourceTree = "<group>"; };
-		220E47F2169BECB200A29756 /* popup_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = popup_bg.png; sourceTree = "<group>"; };
 		220E47F3169BECB300A29756 /* popup_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup_bg@2x.png"; sourceTree = "<group>"; };
 		220E47F4169BECB300A29756 /* RadioButton-Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RadioButton-Selected.png"; sourceTree = "<group>"; };
 		220E47F5169BECB300A29756 /* RadioButton-Unselected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "RadioButton-Unselected.png"; sourceTree = "<group>"; };
@@ -2564,7 +2562,6 @@
 				220E47EF169BECB200A29756 /* nolist@2x.png */,
 				220E47F0169BECB200A29756 /* notice.png */,
 				220E47F1169BECB200A29756 /* notice@2x.png */,
-				220E47F2169BECB200A29756 /* popup_bg.png */,
 				220E47F3169BECB300A29756 /* popup_bg@2x.png */,
 				220E47F4169BECB300A29756 /* RadioButton-Selected.png */,
 				220E47F5169BECB300A29756 /* RadioButton-Unselected.png */,
@@ -3558,7 +3555,6 @@
 				220E487C169BECB400A29756 /* nolist@2x.png in Resources */,
 				220E487D169BECB400A29756 /* notice.png in Resources */,
 				220E487E169BECB400A29756 /* notice@2x.png in Resources */,
-				220E487F169BECB400A29756 /* popup_bg.png in Resources */,
 				220E4880169BECB400A29756 /* popup_bg@2x.png in Resources */,
 				220E4881169BECB400A29756 /* RadioButton-Selected.png in Resources */,
 				220E4882169BECB400A29756 /* RadioButton-Unselected.png in Resources */,
