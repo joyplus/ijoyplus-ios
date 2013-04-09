@@ -16,6 +16,7 @@
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className;
+-(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used;
 @end
 
 
@@ -59,7 +60,7 @@
 
 +(int)downloadTaskCount;
 
--(void)appDidEnterBackground;
+-(void)pauseAllTask;
 
 -(void)appDidEnterForeground;
 

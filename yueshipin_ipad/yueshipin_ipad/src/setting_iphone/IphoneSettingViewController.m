@@ -7,7 +7,6 @@
 //
 
 #import "IphoneSettingViewController.h"
-#import "FeedBackViewController.h"
 #import "AboutViewController.h"
 #import "StatementsViewController.h"
 #import "MBProgressHUD.h"
@@ -29,6 +28,7 @@
 #import "UMUFPGridCell.h"
 #import "GridViewCellDemo.h"
 #import "CommonMotheds.h"
+#import "FeedbackViewController.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -288,8 +288,10 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    FeedbackViewController *feedbackViewController = [[FeedbackViewController alloc] init];
+    [self.navigationController pushViewController:feedbackViewController animated:YES];
 
-    [UMFeedback showFeedback:self withAppkey:umengAppKey];
+    //[UMFeedback showFeedback:self withAppkey:umengAppKey];
 }
 
 -(void)suggest:(id)sender{

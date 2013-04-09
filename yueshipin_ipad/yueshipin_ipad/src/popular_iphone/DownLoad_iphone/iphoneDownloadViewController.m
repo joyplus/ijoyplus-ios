@@ -123,25 +123,22 @@
     spaceBackground.backgroundColor = [UIColor colorWithRed:121.0f/255.0f green:121.0f/255.0f blue:121.0f/255.0f alpha:1.0f];
     
     float freePresent = [self getFreeDiskspacePercent];
-    
+
     UIView * innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 320 * freePresent, 18)];
     innerView.backgroundColor = [UIColor colorWithRed:0.0f/255.0f green:102.0f/255.0f blue:180.0f/255.0f alpha:1.0f];
+    innerView.tag = 12345;
     [spaceBackground addSubview:innerView];
     
     [self.view addSubview:spaceBackground];
     
     UILabel *spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
-    spaceInfoLabel.text = [NSString stringWithFormat:@"共:%0.2fGB/剩余%0.2fGB",totalSpace_,totalFreeSpace_];
+    spaceInfoLabel.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",totalSpace_,totalFreeSpace_];
     spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
     spaceInfoLabel.backgroundColor = [UIColor clearColor];
     spaceInfoLabel.font = [UIFont systemFontOfSize:8];
     spaceInfoLabel.textColor = [UIColor whiteColor];
+    spaceInfoLabel.tag = 12346;
     [spaceBackground addSubview:spaceInfoLabel];
-    
-//    [diskUsedProgress_ addSubview:spaceInfoLabel];
-//    [diskView addSubview:diskUsedProgress_];
-//    
-//    [self.view addSubview:diskView];
     
     downLoadManager_ = [AppDelegate instance].downLoadManager;
     downLoadManager_.downLoadMGdelegate = self;
@@ -247,6 +244,14 @@
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
         [self reloadDataSource];
     }
+}
+-(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used{
+    UIView *view = [self.view viewWithTag:12345];
+    float freePresent = used /total ;
+    view.frame = CGRectMake(0, 1, 320 * freePresent, 18);
+    UILabel *label = (UILabel *)[self.view viewWithTag:12346];
+    label.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",(total-used),total];
+
 }
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];

@@ -194,6 +194,9 @@
     }
     
 }
+-(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used{
+
+}
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }

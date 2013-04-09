@@ -27,6 +27,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 @synthesize downloadItem = downloadItem_;
 @synthesize subdownloadItem = subdownloadItem_;
 @synthesize lock = lock_;
+
 +(DownLoadManager *)defaultDownLoadManager{
     if (downLoadManager_ == nil) {
         downLoadManager_ = [[DownLoadManager alloc] init];
@@ -47,11 +48,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 
 -(void)addtoDownLoadQueue:(id)sender{
-    if ([self getFreeSpace]< 500) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"剩余磁盘容量已不足500M." delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
-        return;
-    }
+  
     NSArray *infoArr = (NSArray *)((NSNotification *)sender).object;
     NSString *prodId = [infoArr objectAtIndex:0];
     NSString *tempUrlStr = [infoArr objectAtIndex:1];
@@ -331,21 +328,27 @@ static NSMutableArray *downLoadQueue_ = nil;
             if (range.location == NSNotFound) {
              int count = (int)(percentDone*100) - downloadItem_.percentage;
 //                NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
-                downloadItem_.percentage = (int)(percentDone*100);
-                if (count >= 1){     
+                
+                if (count >= 1){
+                    
                     [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneDownloadViewController"];
                     if (count >=5) {
+                        downloadItem_.percentage = (int)(percentDone*100);
                         [downloadItem_ save];
+                        [self updateSapce];
                     }
                 }
             }else{
                  int count = (int)(percentDone*100) - subdownloadItem_.percentage;
 //                 NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
-                 subdownloadItem_.percentage = (int)(percentDone*100);
+                 
                   if (count >= 1) {
+                    
                     [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
                     if (count >=5) {
+                        subdownloadItem_.percentage = (int)(percentDone*100);
                         [subdownloadItem_ save];
+                        [self updateSapce];
                     }
                 }
          }
@@ -671,7 +674,7 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     return count;
 }
--(void)appDidEnterBackground{
+-(void)pauseAllTask{
     for (AFDownloadRequestOperation *mc in downLoadQueue_){
         
         if (IS_M3U8(mc.fileType) && mc.m3u8MG != nil) {
@@ -684,9 +687,6 @@ static NSMutableArray *downLoadQueue_ = nil;
         }
         
     }
-
-}
--(void)appDidEnterForeground{
     NSMutableArray *tempQueue = [NSMutableArray arrayWithArray:downLoadQueue_];
     [downLoadQueue_ removeAllObjects];
     for (AFDownloadRequestOperation *downloadOperation in tempQueue){
@@ -696,8 +696,11 @@ static NSMutableArray *downLoadQueue_ = nil;
         newDownloadingOperation.operationStatus = downloadOperation.operationStatus;
         newDownloadingOperation.fileType = downloadOperation.fileType;
         [downLoadQueue_ addObject:newDownloadingOperation];
-
     }
+
+}
+-(void)appDidEnterForeground{
+    
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
         if ([downloadRequestOperation.operationStatus isEqualToString:@"loading"]) {
             if (!IS_M3U8(downloadRequestOperation.fileType)) { //非m3u8格式
@@ -747,6 +750,7 @@ static NSMutableArray *downLoadQueue_ = nil;
 }
 - (void)M3u8DownLoadreFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className{
     [self.downLoadMGdelegate reFreshProgress:progress withId:itemId inClass:className ];
+    [self updateSapce];
 }
 
 - (void)M3u8DownLoadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
@@ -778,6 +782,31 @@ static NSMutableArray *downLoadQueue_ = nil;
     
 }
 
+-(void)updateSapce{
+    
+    NSError *error = nil;
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
+    
+    NSNumber *fileSystemSizeInBytes = [dictionary objectForKey: NSFileSystemSize];
+        
+    NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
+        
+    float totalSpace = [fileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
+    
+    float totalFreeSpace = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
+    
+    if ((totalSpace - totalFreeSpace)*1024 <= 300 ) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"空间不足，请清理磁盘后重试" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        [self pauseAllTask];
+    }
+
+    [self.downLoadMGdelegate updateFreeSapceWithTotalSpace:totalSpace UsedSpace:(totalSpace-totalFreeSpace)];
+}
+
 -(void)networkChanged:(int)status{
     if (status == netWorkStatus) {
         return;
@@ -785,29 +814,14 @@ static NSMutableArray *downLoadQueue_ = nil;
     else{
         netWorkStatus = status;
         if(netWorkStatus == 0){
-            [self appDidEnterBackground];
+            [self pauseAllTask];
         }
         else{
             [self appDidEnterForeground];
         }
     }
 }
--(float)getFreeSpace{
-    NSError *error = nil;
-    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-    NSDictionary *dictionary = [[NSFileManager defaultManager] attributesOfFileSystemForPath:[paths lastObject] error: &error];
-    
-    if (dictionary) {
-          
-        NSNumber *freeFileSystemSizeInBytes = [dictionary objectForKey:NSFileSystemFreeSize];
-       return [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f;
-    }
-    return 0.0;
 
-
-}
 -(void)waringPlus{
     NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
     int num = 0;

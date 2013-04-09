@@ -305,7 +305,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [self.downLoadManager appDidEnterBackground];
+    [self.downLoadManager pauseAllTask];
     
     //When app enter background, add a new local Notification
     //7天（1周）后下午9点提示

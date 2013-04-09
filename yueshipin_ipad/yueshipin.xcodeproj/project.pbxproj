@@ -227,7 +227,6 @@
 		22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5516899AE100A71EF4 /* SortedViewCell.m */; };
 		22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE5916899AE100A71EF4 /* TabBarViewController.m */; };
 		22FEEE7B168A945800A71EF4 /* MineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE7A168A945800A71EF4 /* MineViewController.m */; };
-		22FEEE7F168A96FF00A71EF4 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */; };
 		22FEEE95168AAB3E00A71EF4 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE94168AAB3D00A71EF4 /* AboutViewController.m */; };
 		22FEEE98168AD8A300A71EF4 /* RecordListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE97168AD8A300A71EF4 /* RecordListCell.m */; };
 		22FEEE9B168AE14300A71EF4 /* MoreListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE9A168AE14300A71EF4 /* MoreListViewController.m */; };
@@ -240,6 +239,10 @@
 		22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		E73688131695C5B300549C74 /* StatementsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E73688121695C5B300549C74 /* StatementsViewController.m */; };
+		E738CD391713B8EB004C97E8 /* FeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E738CD331713B8EB004C97E8 /* FeedbackViewController.m */; };
+		E738CD3A1713B8EB004C97E8 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E738CD341713B8EB004C97E8 /* FeedbackViewController.xib */; };
+		E738CD3B1713B8EB004C97E8 /* L_FeedbackTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E738CD361713B8EB004C97E8 /* L_FeedbackTableViewCell.m */; };
+		E738CD3C1713B8EB004C97E8 /* R_FeedbackTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E738CD381713B8EB004C97E8 /* R_FeedbackTableViewCell.m */; };
 		E74DE6A217119E8D00D4453C /* iphone_share_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74DE6A017119E8D00D4453C /* iphone_share_f@2x.png */; };
 		E74DE6A317119E8D00D4453C /* iphone_share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74DE6A117119E8D00D4453C /* iphone_share@2x.png */; };
 		E7872DA816FC35B100017785 /* CommonMotheds.m in Sources */ = {isa = PBXBuildFile; fileRef = E7872DA716FC35B100017785 /* CommonMotheds.m */; };
@@ -1107,8 +1110,6 @@
 		22FEEE5916899AE100A71EF4 /* TabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarViewController.m; sourceTree = "<group>"; };
 		22FEEE79168A945800A71EF4 /* MineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MineViewController.h; sourceTree = "<group>"; };
 		22FEEE7A168A945800A71EF4 /* MineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MineViewController.m; sourceTree = "<group>"; };
-		22FEEE7D168A96FF00A71EF4 /* FeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackViewController.h; sourceTree = "<group>"; };
-		22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedBackViewController.m; sourceTree = "<group>"; };
 		22FEEE93168AAB3D00A71EF4 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		22FEEE94168AAB3D00A71EF4 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		22FEEE96168AD8A200A71EF4 /* RecordListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordListCell.h; sourceTree = "<group>"; };
@@ -1133,6 +1134,13 @@
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E73688111695C5B300549C74 /* StatementsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatementsViewController.h; sourceTree = "<group>"; };
 		E73688121695C5B300549C74 /* StatementsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatementsViewController.m; sourceTree = "<group>"; };
+		E738CD321713B8EB004C97E8 /* FeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedbackViewController.h; sourceTree = "<group>"; };
+		E738CD331713B8EB004C97E8 /* FeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FeedbackViewController.m; sourceTree = "<group>"; };
+		E738CD341713B8EB004C97E8 /* FeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedbackViewController.xib; sourceTree = "<group>"; };
+		E738CD351713B8EB004C97E8 /* L_FeedbackTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = L_FeedbackTableViewCell.h; sourceTree = "<group>"; };
+		E738CD361713B8EB004C97E8 /* L_FeedbackTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = L_FeedbackTableViewCell.m; sourceTree = "<group>"; };
+		E738CD371713B8EB004C97E8 /* R_FeedbackTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R_FeedbackTableViewCell.h; sourceTree = "<group>"; };
+		E738CD381713B8EB004C97E8 /* R_FeedbackTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = R_FeedbackTableViewCell.m; sourceTree = "<group>"; };
 		E74DE6A017119E8D00D4453C /* iphone_share_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_share_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_share_f@2x.png"; sourceTree = SOURCE_ROOT; };
 		E74DE6A117119E8D00D4453C /* iphone_share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_share@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_share@2x.png"; sourceTree = SOURCE_ROOT; };
 		E7872DA616FC35B100017785 /* CommonMotheds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMotheds.h; sourceTree = "<group>"; };
@@ -2084,10 +2092,15 @@
 		22FEEE7C168A969800A71EF4 /* setting_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E738CD321713B8EB004C97E8 /* FeedbackViewController.h */,
+				E738CD331713B8EB004C97E8 /* FeedbackViewController.m */,
+				E738CD341713B8EB004C97E8 /* FeedbackViewController.xib */,
+				E738CD351713B8EB004C97E8 /* L_FeedbackTableViewCell.h */,
+				E738CD361713B8EB004C97E8 /* L_FeedbackTableViewCell.m */,
+				E738CD371713B8EB004C97E8 /* R_FeedbackTableViewCell.h */,
+				E738CD381713B8EB004C97E8 /* R_FeedbackTableViewCell.m */,
 				22FEEE93168AAB3D00A71EF4 /* AboutViewController.h */,
 				22FEEE94168AAB3D00A71EF4 /* AboutViewController.m */,
-				22FEEE7D168A96FF00A71EF4 /* FeedBackViewController.h */,
-				22FEEE7E168A96FF00A71EF4 /* FeedBackViewController.m */,
 				22FEEE9F168B0B2900A71EF4 /* IphoneSettingViewController.h */,
 				22FEEEA0168B0B2900A71EF4 /* IphoneSettingViewController.m */,
 				E73688111695C5B300549C74 /* StatementsViewController.h */,
@@ -3828,6 +3841,7 @@
 				227A45CD170C11E50002DCDE /* top_icon_common_writing_complete@2x.png in Resources */,
 				E74DE6A217119E8D00D4453C /* iphone_share_f@2x.png in Resources */,
 				E74DE6A317119E8D00D4453C /* iphone_share@2x.png in Resources */,
+				E738CD3A1713B8EB004C97E8 /* FeedbackViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3931,7 +3945,6 @@
 				22FEEE6216899AE100A71EF4 /* SortedViewCell.m in Sources */,
 				22FEEE6416899AE100A71EF4 /* TabBarViewController.m in Sources */,
 				22FEEE7B168A945800A71EF4 /* MineViewController.m in Sources */,
-				22FEEE7F168A96FF00A71EF4 /* FeedBackViewController.m in Sources */,
 				22FEEE95168AAB3E00A71EF4 /* AboutViewController.m in Sources */,
 				22FEEE98168AD8A300A71EF4 /* RecordListCell.m in Sources */,
 				22FEEE9B168AE14300A71EF4 /* MoreListViewController.m in Sources */,
@@ -4023,6 +4036,9 @@
 				227C09CD170A818700BEC1E5 /* RespForWXRootView.m in Sources */,
 				227C09DA170AF69F00BEC1E5 /* RespForWXDetailViewController.m in Sources */,
 				22513492171138620002886B /* ReviewViewController.m in Sources */,
+				E738CD391713B8EB004C97E8 /* FeedbackViewController.m in Sources */,
+				E738CD3B1713B8EB004C97E8 /* L_FeedbackTableViewCell.m in Sources */,
+				E738CD3C1713B8EB004C97E8 /* R_FeedbackTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
