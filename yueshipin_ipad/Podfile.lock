@@ -10,6 +10,7 @@ PODS:
   - Reachability (3.0.0)
   - SDWebImage (2.6)
   - SFHFKeychainUtils (0.0.1)
+  - ZBarSDK (1.2.2)
   - iRate (1.5.2)
 
 DEPENDENCIES:
@@ -20,4 +21,5 @@ DEPENDENCIES:
   - Reachability (= 3.0.0)
   - SDWebImage (= 2.6)
   - SFHFKeychainUtils (= 0.0.1)
+  - ZBarSDK (= 1.2.2)
   - iRate (= 1.5.2)
