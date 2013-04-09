@@ -233,8 +233,6 @@
 		22FEC511171438B300AEA9CD /* scan_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22FEC508171438B300AEA9CD /* scan_bg@2x.png */; };
 		22FEC512171438B300AEA9CD /* unbunding_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22FEC509171438B300AEA9CD /* unbunding_f@2x.png */; };
 		22FEC513171438B300AEA9CD /* unbunding@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22FEC50A171438B300AEA9CD /* unbunding@2x.png */; };
-		22FEC515171445B400AEA9CD /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FEC514171445B300AEA9CD /* CoreAudio.framework */; };
-		22FEC517171445DE00AEA9CD /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 22FEC516171445DE00AEA9CD /* libiconv.dylib */; };
 		22FEEE5A16899AE100A71EF4 /* AllListViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4516899AE100A71EF4 /* AllListViewCell.m */; };
 		22FEEE5B16899AE100A71EF4 /* allListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4716899AE100A71EF4 /* allListViewController.m */; };
 		22FEEE5D16899AE100A71EF4 /* ListDetailViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEE4B16899AE100A71EF4 /* ListDetailViewCell.m */; };
@@ -1127,8 +1125,6 @@
 		22FEC508171438B300AEA9CD /* scan_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "scan_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/scan_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		22FEC509171438B300AEA9CD /* unbunding_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "unbunding_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/unbunding_f@2x.png"; sourceTree = SOURCE_ROOT; };
 		22FEC50A171438B300AEA9CD /* unbunding@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "unbunding@2x.png"; path = "yueshipin_ipad/Resource_iphone/unbunding@2x.png"; sourceTree = SOURCE_ROOT; };
-		22FEC514171445B300AEA9CD /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
-		22FEC516171445DE00AEA9CD /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		22FEEE4416899AE100A71EF4 /* AllListViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllListViewCell.h; sourceTree = "<group>"; };
 		22FEEE4516899AE100A71EF4 /* AllListViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllListViewCell.m; sourceTree = "<group>"; };
 		22FEEE4616899AE100A71EF4 /* allListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = allListViewController.h; sourceTree = "<group>"; };
@@ -1825,8 +1821,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB6DEAA9165A347F00AF8003 /* QuartzCore.framework in Frameworks */,
-				22FEC517171445DE00AEA9CD /* libiconv.dylib in Frameworks */,
-				22FEC515171445B400AEA9CD /* CoreAudio.framework in Frameworks */,
 				EB02F6A816DB0130001C2E3A /* CoreMedia.framework in Frameworks */,
 				22EF023916B772460001F743 /* CoreLocation.framework in Frameworks */,
 				220E493B169BF03200A29756 /* libsqlite3.0.dylib in Frameworks */,
@@ -2800,8 +2794,6 @@
 		EB6DEA5D165A2F1A00AF8003 = {
 			isa = PBXGroup;
 			children = (
-				22FEC516171445DE00AEA9CD /* libiconv.dylib */,
-				22FEC514171445B300AEA9CD /* CoreAudio.framework */,
 				22D11DB316A641D900B49FFD /* Default-568h@2x.png */,
 				22F3E98C169D1815002723AF /* Default@2x.png */,
 				22F3E98A169D1806002723AF /* Default.png */,
