@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface CommentWebViewController : UIViewController
-
+@property (nonatomic, strong) NSString *titleContent;
 @property (nonatomic, strong) NSString *commentUrl;
 @end

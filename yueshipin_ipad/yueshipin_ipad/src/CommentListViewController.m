@@ -22,6 +22,7 @@
 @synthesize commentArray;
 @synthesize prodId;
 @synthesize tableHeight;
+@synthesize videoName;
 
 - (void)didReceiveMemoryWarning
 {
@@ -34,6 +35,7 @@
     [commentArray removeAllObjects];
     commentArray  = nil;
     prodId = nil;
+    videoName = nil;
     [super viewDidUnload];
 }
 
@@ -50,8 +52,8 @@
 {
     [super viewDidLoad];
     self.tableView.scrollEnabled = NO;
-//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view setBackgroundColor:[UIColor clearColor]];
     
     commentArray = [[NSMutableArray alloc]initWithCapacity:3];
     [self retrieveData];
@@ -69,7 +71,7 @@
         [self parseData:cacheResult];
     } 
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", @"1", @"page_num", @"4" ,@"page_size", nil];
+        NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", @"1", @"page_num", @"3" ,@"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews parameters:reqData success:^(AFHTTPRequestOperation *operation, id result) {
             NSArray *tempArray = [result objectForKey:@"reviews"];
             if (tempArray.count > 0) {
@@ -103,11 +105,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (commentArray.count > 3) {
-        return 4;
-    } else {
-        return commentArray.count;
-    }
+    return commentArray.count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -117,18 +115,19 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
+        cell.backgroundColor = [UIColor clearColor];
         UIImageView *bgImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 160)];
         bgImageView.tag = 6503;
         [cell.contentView addSubview:bgImageView];
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 100, 30)];
+        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 5, 140, 30)];
         nameLabel.tag = 6501;
-        nameLabel.font = [UIFont systemFontOfSize:15];
-        [nameLabel setBackgroundColor:[UIColor yellowColor]];
+        nameLabel.font = [UIFont boldSystemFontOfSize:15];
+        [nameLabel setBackgroundColor:[UIColor clearColor]];
         nameLabel.textColor = CMConstants.grayColor;
         [cell.contentView addSubview:nameLabel];
         
-        UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 30, bgImageView.frame.size.width - 10, 120)];
+        UILabel *contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 40, bgImageView.frame.size.width - 10, 100)];
         contentLabel.tag = 6502;
         contentLabel.font = [UIFont systemFontOfSize:13];
         contentLabel.textColor = CMConstants.grayColor;
@@ -137,30 +136,28 @@
         contentLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [cell.contentView addSubview:contentLabel];
         
-        UILabel *allLabel = [[UILabel alloc]initWithFrame:CGRectZero];
-        allLabel.font = [UIFont systemFontOfSize:12];
-        allLabel.backgroundColor = [UIColor clearColor];
-        allLabel.textColor = CMConstants.yellowColor;
-        allLabel.tag = 6504;
-        [cell.contentView addSubview:allLabel];
+        UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        commentButton.tag = 6504;
+        [commentButton addTarget:self action:@selector(showDetail:) forControlEvents:UIControlEventTouchDown];
+        [cell.contentView addSubview:commentButton];
     }
     UILabel *nameLabel = (UILabel *)[cell.contentView viewWithTag:6501];
     UITextView *contentLabel = (UITextView *)[cell.contentView viewWithTag:6502];
     UIImageView *bgImageView = (UIImageView *)[cell.contentView viewWithTag:6503];
-    UILabel *allLabel = (UILabel *)[cell.contentView viewWithTag:6504];
-    if (indexPath.row < fmin(commentArray.count, 3)) {
+    UIButton *commentButton = (UIButton *)[cell.contentView viewWithTag:6504];
+    if (indexPath.row < commentArray.count) {
         NSDictionary *item = [commentArray objectAtIndex:indexPath.row];
         nameLabel.text = [item objectForKey:@"title"];
         contentLabel.text = [item objectForKey:@"comments"];
-        bgImageView.image = [UIImage imageNamed:@"comment_bg"];
-        allLabel.frame = CGRectMake(tableView.frame.size.width-40, 140, 100, 30);
-        allLabel.text = @"全部 》";
-    } else if (indexPath.row == 3){
+        bgImageView.image = [UIImage imageNamed:@"comment_list_bg"];
+        commentButton.frame = CGRectMake(tableView.frame.size.width-80, 130, 84, 34);
+        [commentButton setBackgroundImage:[UIImage imageNamed:@"more_comment"] forState:UIControlStateNormal];
+    } else if (indexPath.row == commentArray.count){
         nameLabel.text = @"";
         contentLabel.text = @"";
         bgImageView.image = nil;
-        allLabel.frame = CGRectMake(tableView.frame.size.width-60, 5, 100, 30);
-        allLabel.text = @"更多影评 》";
+        commentButton.frame = CGRectMake(tableView.frame.size.width-65, 0, 54, 34);
+        [commentButton setBackgroundImage:[UIImage imageNamed:@"all_comment"] forState:UIControlStateNormal];
     }
     
     return cell;
@@ -172,7 +169,7 @@
     if(indexPath.row == 0){
         tableHeight = 0;
     }
-    if(indexPath.row < 3){//loadmore cell
+    if(indexPath.row < commentArray.count){//loadmore cell
         tableHeight += 170;
         return 170;
     } else {
@@ -224,16 +221,30 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row < fmin(commentArray.count, 3)) {
+    [self showCommentDetail:indexPath];
+}
+
+- (void)showDetail:(UIButton *)btn
+{
+    CGPoint point = btn.center;
+    point = [self.tableView convertPoint:point fromView:btn.superview];
+    NSIndexPath* indexPath = [self.tableView indexPathForRowAtPoint:point];
+    [self showCommentDetail:indexPath];
+}
+
+- (void)showCommentDetail:(NSIndexPath *)indexPath
+{
+    if (indexPath.row < commentArray.count) {
         NSDictionary *item = [commentArray objectAtIndex:indexPath.row];
         [self.parentDelegate showCommentDetail:item];
-    } else if (indexPath.row == 3){
-        NSDictionary *item = [commentArray objectAtIndex:indexPath.row];
+    } else if (indexPath.row == commentArray.count){
+        NSDictionary *item = [commentArray objectAtIndex:0];
         CommentWebViewController *viewController = [[CommentWebViewController alloc]init];
-        viewController.commentUrl = [item objectForKey:@""];
+        viewController.titleContent = videoName;
+        viewController.commentUrl = [NSString stringWithFormat:@"http://movie.douban.com/subject/%@/reviews", [item objectForKey:@"review_id"]];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
-    }
+    }    
 }
 
 @end

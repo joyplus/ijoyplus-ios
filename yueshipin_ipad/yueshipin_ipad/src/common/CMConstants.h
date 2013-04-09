@@ -73,6 +73,8 @@
 #define NO_ENOUGH_SPACE @"no_enough_space"
 #define LEAST_DISK_SPACE 300.0/1024.0
 
+#define MOVE_TO_CLOSE_TAG 867394029
+
 #define WATCH_RECORD_NUMBER 5
 
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"

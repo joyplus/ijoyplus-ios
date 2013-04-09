@@ -36,12 +36,7 @@
     historyViewController = nil;
     bgImage = nil;
     sBar = nil;
-    table = nil;
     hotKeyArray = nil;
-    [hotKeyIndex removeAllObjects];
-    hotKeyIndex = nil;
-    [hotKeyBtnWidth removeAllObjects];
-    hotKeyBtnWidth = nil;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -72,7 +67,6 @@
         
         removePreviousView = YES;
         
-        
         historyViewController = [[SearchHistoryListViewController alloc]initWithStyle:UITableViewStylePlain];
         historyViewController.parentDelegate = self;
         historyViewController.view.frame = CGRectMake(50, sBar.frame.origin.y + sBar.frame.size.height, sBar.frame.size.width - 56, 0);
@@ -85,21 +79,24 @@
     [super viewWillAppear:animated];
     if (!accessed) {
         accessed = YES;
-        if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
-            [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if(responseCode == nil){
-                    [self parseData:result];
-                }
-                [table reloadData];
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                
-            }];
-        }
+        [self performSelectorInBackground:@selector(getHotKeys) withObject:nil];
     } 
-    [table reloadData];
     [MobClick beginLogPageView:SEARCH];
+}
+
+- (void)getHotKeys
+{
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil){
+                [self parseData:result];
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            
+        }];
+    }    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -131,15 +128,15 @@
     }
 }
 
-- (int)calculateBtnWidth:(NSString *)btnTitle
-{
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, MAX_BUTTON_WIDTH -  2 * BUTTON_TITLE_GAP, 25)];
-    label.text = btnTitle;
-    [label sizeToFit];
-    int btnWidth = label.frame.size.width + 2 * BUTTON_TITLE_GAP;
-    [hotKeyBtnWidth setValue:[NSNumber numberWithInt:btnWidth] forKey:btnTitle];
-    return btnWidth;
-}
+//- (int)calculateBtnWidth:(NSString *)btnTitle
+//{
+//    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, MAX_BUTTON_WIDTH -  2 * BUTTON_TITLE_GAP, 25)];
+//    label.text = btnTitle;
+//    [label sizeToFit];
+//    int btnWidth = label.frame.size.width + 2 * BUTTON_TITLE_GAP;
+//    [hotKeyBtnWidth setValue:[NSNumber numberWithInt:btnWidth] forKey:btnTitle];
+//    return btnWidth;
+//}
 
 - (void)viewDidLoad
 {
@@ -191,84 +188,84 @@
 }
 
 
-// Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"cell";
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    if(indexPath.section == 0){
-        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        int btnPositionX = 6; // left gap
-        int rowNumber = 0;
-        for (int i = 0; i < hotKeyArray.count; i++) {
-            NSString *content = [[hotKeyArray objectAtIndex:i] valueForKey:@"content"];
-            if(i == [[hotKeyIndex objectAtIndex: rowNumber] intValue]){
-                btnPositionX = 6;
-                rowNumber++;
-            }else {
-                NSString *preContent = [[hotKeyArray objectAtIndex:i-1] valueForKey:@"content"];
-                int preBtnWidth = [[hotKeyBtnWidth valueForKey:preContent] intValue];
-                btnPositionX += preBtnWidth + 5; // 5: inner gap
-            }
-            int btnPositionY = 10 + (BUTTON_HEIGHT + 5)* (rowNumber-1); // 5: inner gap
-            UIButton *hotKeyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            int btnWidth = [[hotKeyBtnWidth valueForKey:content] intValue];
-            hotKeyBtn.frame = CGRectMake(btnPositionX, btnPositionY, btnWidth, BUTTON_HEIGHT);
-            [hotKeyBtn setTitle:content forState:UIControlStateNormal];
-            [hotKeyBtn setTag:2001 + i];
-            [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
-            [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
-            [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-            [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
-            [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
-            [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [cell.contentView addSubview:hotKeyBtn];
-        }
-    } else {
-        if(indexPath.row < historyArray.count){
-            [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
-            UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
-            [name setTextColor:[UIColor blackColor]];
-            [name setFont:[UIFont systemFontOfSize:14]];
-            [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
-            [name sizeToFit];
-            [name setBackgroundColor:[UIColor clearColor]];
-            [cell.contentView addSubview:name];
-        }
-    }
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if(indexPath.section == 0){
-        if(hotKeyArray.count > 0){
-            return (hotKeyIndex.count - 1) * 40 + 10;
-        } else {
-            return 40;
-        }
-    } else {
-        return 40;
-    }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 40;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, TABLE_VIEW_WIDTH, 40)];
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:view.frame];
-    if(section == 0){
-        imageView.image = [UIImage imageNamed:@"hotkeys"];
-    } else {
-        imageView.image = [UIImage imageNamed:@"history"];
-    }
-    [view addSubview:imageView];
-    return view;
-}
+//// Customize the appearance of table view cells.
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    static NSString *CellIdentifier = @"cell";
+//    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+//    if(indexPath.section == 0){
+//        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+//        int btnPositionX = 6; // left gap
+//        int rowNumber = 0;
+//        for (int i = 0; i < hotKeyArray.count; i++) {
+//            NSString *content = [[hotKeyArray objectAtIndex:i] valueForKey:@"content"];
+//            if(i == [[hotKeyIndex objectAtIndex: rowNumber] intValue]){
+//                btnPositionX = 6;
+//                rowNumber++;
+//            }else {
+//                NSString *preContent = [[hotKeyArray objectAtIndex:i-1] valueForKey:@"content"];
+//                int preBtnWidth = [[hotKeyBtnWidth valueForKey:preContent] intValue];
+//                btnPositionX += preBtnWidth + 5; // 5: inner gap
+//            }
+//            int btnPositionY = 10 + (BUTTON_HEIGHT + 5)* (rowNumber-1); // 5: inner gap
+//            UIButton *hotKeyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            int btnWidth = [[hotKeyBtnWidth valueForKey:content] intValue];
+//            hotKeyBtn.frame = CGRectMake(btnPositionX, btnPositionY, btnWidth, BUTTON_HEIGHT);
+//            [hotKeyBtn setTitle:content forState:UIControlStateNormal];
+//            [hotKeyBtn setTag:2001 + i];
+//            [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:14]];
+//            [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
+//            [hotKeyBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+//            [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label"] forState:UIControlStateNormal];
+//            [hotKeyBtn setBackgroundImage:[UIImage imageNamed:@"label_pressed"] forState:UIControlStateHighlighted];
+//            [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+//            [cell.contentView addSubview:hotKeyBtn];
+//        }
+//    } else {
+//        if(indexPath.row < historyArray.count){
+//            [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+//            UILabel *name = [[UILabel alloc]initWithFrame:CGRectMake(15, 10, MAX_BUTTON_WIDTH, 25)];
+//            [name setTextColor:[UIColor blackColor]];
+//            [name setFont:[UIFont systemFontOfSize:14]];
+//            [name setText:[[historyArray objectAtIndex:indexPath.row] valueForKey:@"content" ]];
+//            [name sizeToFit];
+//            [name setBackgroundColor:[UIColor clearColor]];
+//            [cell.contentView addSubview:name];
+//        }
+//    }
+//    return cell;
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if(indexPath.section == 0){
+//        if(hotKeyArray.count > 0){
+//            return (hotKeyIndex.count - 1) * 40 + 10;
+//        } else {
+//            return 40;
+//        }
+//    } else {
+//        return 40;
+//    }
+//}
+//
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 40;
+//}
+//
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, TABLE_VIEW_WIDTH, 40)];
+//    UIImageView *imageView = [[UIImageView alloc]initWithFrame:view.frame];
+//    if(section == 0){
+//        imageView.image = [UIImage imageNamed:@"hotkeys"];
+//    } else {
+//        imageView.image = [UIImage imageNamed:@"history"];
+//    }
+//    [view addSubview:imageView];
+//    return view;
+//}
 
 - (void)hotKeyBtnClicked:(UIButton *)btn
 {
@@ -312,7 +309,6 @@
 {
     [searchBar resignFirstResponder];
     [self search:searchBar.text];
-    [table reloadData];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *) searchBar

@@ -22,14 +22,9 @@
     UIImageView *topImage;
     UIImageView *bgImage;
     CustomSearchBar *sBar;
-    UITableView *table;
     
     NSMutableArray *historyArray;
     NSMutableArray *hotKeyArray;
-    
-    NSMutableArray *hotKeyIndex;
-    
-    NSMutableDictionary *hotKeyBtnWidth;
     BOOL removePreviousView;
     
     int leftWidth;

@@ -119,7 +119,7 @@
         }
         [self.view addSubview:topCategoryView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 150, self.view.frame.size.width - 18, self.view.frame.size.height - 170) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 150, self.view.frame.size.width - 18, self.view.frame.size.height - 185) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [table setBackgroundColor:[UIColor clearColor]];
 		[table setDelegate:self];

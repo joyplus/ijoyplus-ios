@@ -17,6 +17,7 @@
 @implementation CommentWebViewController
 @synthesize webView;
 @synthesize commentUrl;
+@synthesize titleContent;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,6 +35,7 @@
     [webView stopLoading];
     webView = nil;
     commentUrl = nil;
+    titleContent = nil;
 }
 
 - (void)viewDidLoad
@@ -57,6 +59,14 @@
     [webView loadRequest:requestObj];
     [webView setScalesPageToFit:YES];
     [self.view addSubview:webView];
+    
+    UILabel *t = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 400, 30)];
+    t.font = [UIFont boldSystemFontOfSize:18];
+    t.textColor = [UIColor whiteColor];
+    t.backgroundColor = [UIColor clearColor];
+    t.textAlignment = UITextAlignmentCenter;
+    t.text = [NSString stringWithFormat:@"%@", titleContent];
+    self.navigationItem.titleView = t;
 }
 
 - (void)didReceiveMemoryWarning

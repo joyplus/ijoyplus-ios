@@ -599,6 +599,8 @@
         commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
         commentListViewController.parentDelegate = self;
         commentListViewController.prodId = self.prodId;
+        [commentListViewController.view setHidden:YES];
+        commentListViewController.videoName = [video objectForKey:@"name"];
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
@@ -640,8 +642,9 @@
 {
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+episodeView.frame.size.height + commentListViewController.tableHeight + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 430, tableHeight);
-    if (tableHeight > 0) {
+    if (tableHeight > 30) {
         [self.commentImage setHidden:NO];
+        [commentListViewController.view setHidden:NO];
     }
 }
 

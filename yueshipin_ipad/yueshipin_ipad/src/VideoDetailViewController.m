@@ -39,7 +39,7 @@
     [super viewDidLoad];
     [self.view addGestureRecognizer:self.swipeRecognizer];
     // Custom initialization
-    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     self.bgImage.layer.zPosition = -1;
     [self.view addSubview:self.bgImage];
@@ -448,7 +448,7 @@
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     viewController.titleContent = [commentItem objectForKey:@"title"];
     viewController.content = [commentItem objectForKey:@"comments"];
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO moveToLeft:YES];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:YES];
     self.moveToLeft = NO;
 }
 

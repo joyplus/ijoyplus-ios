@@ -7,6 +7,7 @@
 //
 
 #import "CloseTipsView.h"
+#import "CMConstants.h"
 
 @interface CloseTipsView (private)
 
@@ -35,6 +36,7 @@
         [self addSubview:arrow];
         
         UILabel * tips = [[UILabel alloc] initWithFrame:CGRectMake(350, self.frame.size.height - 40,150, 30)];
+        tips.tag = MOVE_TO_CLOSE_TAG;
         tips.textAlignment = UITextAlignmentLeft;
         tips.text = @"向右滑动可关闭窗口";
         tips.font = [UIFont systemFontOfSize:14.0];

@@ -11,8 +11,8 @@
 
 @interface CommentListViewController : UITableViewController
 
-@property (nonatomic, strong)NSString *prodId;
-@property (nonatomic, assign)int tableHeight;
-
+@property (nonatomic, strong) NSString *prodId;
+@property (nonatomic, assign) int tableHeight;
+@property (nonatomic, strong) NSString *videoName;
 @property (nonatomic, weak)id<VideoDetailViewControllerDelegate>parentDelegate;
 @end
