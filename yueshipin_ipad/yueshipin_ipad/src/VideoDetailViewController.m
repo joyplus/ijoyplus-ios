@@ -280,6 +280,9 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    [AppDelegate instance].rootViewController.prodId = self.prodId;
+    [AppDelegate instance].rootViewController.prodName = [video objectForKey:@"name"];
+    [AppDelegate instance].rootViewController.prodType = [NSString stringWithFormat:@"%i", type];
     [[AppDelegate instance].rootViewController showReportPopup:self.prodId];
 }
 

@@ -40,6 +40,8 @@
 #import "MenuViewController.h"
 #import "StackScrollViewController.h"
 #import "AFSinaWeiboAPIClient.h"
+#import "CustomTextField.h"
+#import "SSCheckBoxView.h"
 
 #define EPISODE_NUMBER_IN_ROW 10
 
@@ -81,10 +83,14 @@
 
 @end
 
+@interface RootViewController ()
+@property (nonatomic, strong)NSMutableSet *checkboxes;
+@end
+
 @implementation RootViewController
 @synthesize menuViewController, stackScrollViewController;
-@synthesize prodUrl, prodId, prodName;
-@synthesize videoDetailDelegate;
+@synthesize prodUrl, prodId, prodName, prodType;
+@synthesize videoDetailDelegate, checkboxes;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -815,20 +821,131 @@
 
 - (void)showReportPopup:(NSString *)prodId
 {
+    if (checkboxes == nil) {
+        checkboxes = [[NSMutableSet alloc]initWithCapacity:10];
+    } else {
+        [checkboxes removeAllObjects];
+    }
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
-    UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"comment_frame"]];
-    frame.frame = CGRectMake(0, 0, 424, 265);
-    frame.center = CGPointMake(view.center.x, view.center.y - 180);
-    [view addSubview:frame];
+    [self.view addSubview:view];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(675, 80, 50, 50);
+    closeBtn.frame = CGRectMake(715, 65, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:closeBtn];
+    
+    UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"report_frame"]];
+    frame.frame = CGRectMake(0, 0, 480, 480);
+    frame.center = CGPointMake(view.center.x + 20, view.center.y - 80);
+    [view addSubview:frame];
+    
+    for (int i = 0; i < 7; i++) {
+        SSCheckBoxView *checkbox1 = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
+        checkbox1.tag = 3301 + i;
+        [checkbox1 setValue: [NSString stringWithFormat:@"%i", i+1]];
+        checkbox1.center = CGPointMake(view.center.x + 200, 154 + 38 * i);
+        [checkbox1 setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
+        [view addSubview:checkbox1];
+    }    
+    
+    UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    submitBtn.tag = 90847223;
+    submitBtn.frame = CGRectMake(0, 0, 118, 70);
+    submitBtn.center = CGPointMake(view.center.x + 10, view.center.y + 120);
+    [submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn"] forState:UIControlStateNormal];
+    [submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_pressed"] forState:UIControlStateHighlighted];
+    [submitBtn addTarget:self action:@selector(reportIssues) forControlEvents:UIControlEventTouchUpInside];
+    [submitBtn setEnabled:NO];
+    [view addSubview:submitBtn];
+    
+    CustomTextField *textField = [[CustomTextField alloc] initWithFrame:CGRectMake(0, 0, 345, 26)];
+    textField.tag = 3234757301;
+    textField.delegate = self;
+    textField.center = CGPointMake(view.center.x + 40, view.center.y + 58);
+    textField.placeholder = @"请输入您对本部影片的意见和建议...";
+    [view addSubview:textField];
+}
+
+- (void)reportIssues
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    CustomTextField *textField = (CustomTextField *)[view viewWithTag:3234757301];
+    NSString *advice = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSMutableString *reasons = [[NSMutableString alloc]init];
+    for(NSString *reason in checkboxes){
+        [reasons appendFormat:@"%@,", reason];
+    }
+    NSString *reaonsStr;
+    if(reasons.length > 0){
+        reaonsStr = [reasons substringToIndex:reasons.length - 1];
+    }
+    if (advice.length > 0) {
+        if (reaonsStr.length > 0) {
+            reaonsStr = [reaonsStr stringByAppendingString:@",8"];
+        } else {
+            reaonsStr = @"8";
+        }
+    }
+    if(reaonsStr.length > 0 || advice.length > 0) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: reaonsStr, @"invalid_type", prodId, @"prod_id", prodName, @"prod_name", prodType, @"prod_type", advice, @"memo", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+        [self removeOverlay];
+        [self showSuccessModalView:1.5];
+    }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y - 200, view.frame.size.width, view.frame.size.height);
+    } completion:^(BOOL finished) {        
+        [self enabledSubmitBtn];
+    }];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y + 200, view.frame.size.width, view.frame.size.height);
+    } completion:^(BOOL finished) {
+        [self enabledSubmitBtn];        
+    }];
+}
+
+- (void) checkBoxViewChangedState:(SSCheckBoxView *)cbv
+{
+    if(cbv.checked){
+        if(![checkboxes containsObject:[cbv value]]){
+            [checkboxes addObject:[cbv value]];
+        }
+    } else {
+        if([checkboxes containsObject:[cbv value]]){
+            [checkboxes removeObject:[cbv value]];
+        }
+    }
+    [self enabledSubmitBtn];
+}
+
+- (void)enabledSubmitBtn
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    UIButton *submitBtn = (UIButton *)[view viewWithTag:90847223];
+    CustomTextField *textField = (CustomTextField *)[view viewWithTag:3234757301];
+    NSString *advice = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (advice.length > 0 || checkboxes.count > 0) {
+        [submitBtn setEnabled:YES];
+    } else{
+        [submitBtn setEnabled:NO];
+    }
+
 }
 
 - (void)removeIntroModalView

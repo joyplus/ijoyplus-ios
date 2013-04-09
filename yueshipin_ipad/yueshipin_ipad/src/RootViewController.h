@@ -44,7 +44,7 @@
 
 @class UIViewExt;
 
-@interface RootViewController : UIViewController <UITextViewDelegate> {
+@interface RootViewController : UIViewController <UITextViewDelegate, UITextFieldDelegate> {
 	UIViewExt* rootView;
 	UIView* leftMenuView;
 	UIView* rightSlideView;
@@ -63,6 +63,7 @@
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSString *prodUrl;
 @property (nonatomic, strong) NSString *prodName;
+@property (nonatomic, strong) NSString *prodType;
 @property (nonatomic, weak)id<VideoDetailViewControllerDelegate>videoDetailDelegate;
 - (void)showSuccessModalView:(int)closeTime;
 - (void)showFailureModalView:(int)closeTime;
