@@ -331,7 +331,6 @@
 - (void)updateBadgeIcon
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
 }
 
 - (void)playVideo:(int)num

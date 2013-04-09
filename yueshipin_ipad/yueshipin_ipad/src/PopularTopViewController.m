@@ -41,8 +41,6 @@
     int pageSize;
     
     NSTimer *timer;
-
-    JSBadgeView *badgeView;
     
     NSString *umengPageName;
 }
@@ -129,26 +127,6 @@
     }
 }
 
-- (void)updateDownloadNum:(NSNotification *)aNotification
-{
-    if(badgeView){
-        [badgeView removeFromSuperview];
-        badgeView = nil;
-    }
-    //    badgeView = [[JSBadgeView alloc] initWithParentView:menuBtn alignment:JSBadgeViewAlignmentTopRight];
-    badgeView.badgePositionAdjustment = CGPointMake(-10, 7);
-    badgeView.badgeText = @"0";
-    [badgeView setHidden:YES];
-    
-    int newNum = [ActionUtility getDownloadingItemNumber];
-    if(newNum == 0){
-        [badgeView setHidden:YES];
-    } else {
-        [badgeView setHidden:NO];
-        badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
-    }
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -162,7 +140,6 @@
     comicTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     showTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     [self retrieveMovieTopsData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
 }
 
 - (void)retrieveLunboData
