@@ -45,7 +45,7 @@
 //测试环境
 #else
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
-    #define PARSE_APP_ID @"FtAzML5ln4zKkcL28zc9XR6kSlSGwXLdnsQ2WESB"
-    #define PARSE_CLIENT_KEY @"YzMYsyKNV7ibjZMfIDSGoV5zxsylV4evtO8x64tl"
+    #define PARSE_APP_ID @"5FNbLx7dnRAx3knxV4rOdaLMRJMByqfKjWQRQakT"
+    #define PARSE_CLIENT_KEY @"RZHrZVn6MK8VGZxfpeshrC2tpxpzzMOZjU0rSS6X"
     #define kABaseURLString @"http://apitest.yue001.com/"
 #endif
