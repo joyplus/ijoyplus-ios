@@ -110,9 +110,11 @@
         }
         [self loadTable];
         [myHUD hide];
+        myHUD = nil;
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         [myHUD hide];
+        myHUD = nil;
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     }];
     [MobClick beginLogPageView:SEARCH_LIST];

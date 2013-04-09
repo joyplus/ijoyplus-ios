@@ -447,6 +447,7 @@
         commentListViewController.prodId = self.prodId;
         [commentListViewController.view setHidden:YES];
         commentListViewController.videoName = [video objectForKey:@"name"];
+        commentListViewController.doubanId = [NSString stringWithFormat:@"%@", [video objectForKey:@"douban_id"]];
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];

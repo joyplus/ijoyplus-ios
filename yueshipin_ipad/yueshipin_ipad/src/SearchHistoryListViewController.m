@@ -121,6 +121,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < historyArray.count) {
         [self.parentDelegate historyCellClicked:[[historyArray objectAtIndex:indexPath.row] objectForKey:@"content"]];
     }

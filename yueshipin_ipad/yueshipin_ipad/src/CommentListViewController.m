@@ -23,6 +23,7 @@
 @synthesize prodId;
 @synthesize tableHeight;
 @synthesize videoName;
+@synthesize doubanId;
 
 - (void)didReceiveMemoryWarning
 {
@@ -241,7 +242,7 @@
         NSDictionary *item = [commentArray objectAtIndex:0];
         CommentWebViewController *viewController = [[CommentWebViewController alloc]init];
         viewController.titleContent = videoName;
-        viewController.commentUrl = [NSString stringWithFormat:@"http://movie.douban.com/subject/%@/reviews", [item objectForKey:@"review_id"]];
+        viewController.commentUrl = [NSString stringWithFormat:@"http://movie.douban.com/subject/%@/reviews", doubanId];
         viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:viewController]];
     }    
