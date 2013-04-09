@@ -1322,7 +1322,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [bottomToolBar_ addSubview:nextButton];
     
     clarityButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    clarityButton_.frame = CGRectMake(422, 8, 57, 27);
+    clarityButton_.frame = CGRectMake(kFullWindowHeight-87, 8, 57, 27);
     clarityButton_.backgroundColor = [UIColor clearColor];
     [clarityButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_quality_bt"] forState:UIControlStateNormal];
     [clarityButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_quality_bt_pressed"] forState:UIControlStateHighlighted];
@@ -1479,7 +1479,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [clearBgView_ presentPointingAtView:clarityButton_ inView:self.view animated:YES];
         
         if ([[UIScreen mainScreen] bounds].size.height == 568) {
-            clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width-100, clearBgView_.frame.origin.y-25, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
+            clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width-20, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
         }
         else{
             clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);

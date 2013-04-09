@@ -86,7 +86,15 @@
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:cacheResult];
                 [listArr_ removeAllObjects];
-                [listArr_ addObjectsFromArray:tempTopsArray];
+                if ([tempTopsArray count] >10) {
+                    for (int i = 0; i < 10;i++) {
+                        NSDictionary *dic = [tempTopsArray objectAtIndex:i];
+                        [listArr_ addObject:dic];
+                    }
+                }
+                else{
+                    [listArr_ addObjectsFromArray:tempTopsArray];
+                }
                 
             }
             }
@@ -113,7 +121,16 @@
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:result];
                 [listArr_ removeAllObjects];
-                [listArr_ addObjectsFromArray:tempTopsArray];
+                if ([tempTopsArray count] >10) {
+                    for (int i = 0; i < 10;i++) {
+                        NSDictionary *dic = [tempTopsArray objectAtIndex:i];
+                        [listArr_ addObject:dic];
+                    }
+                }
+                else{
+                 [listArr_ addObjectsFromArray:tempTopsArray];
+                }
+                
                 
             }
             

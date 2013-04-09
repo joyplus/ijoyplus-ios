@@ -1313,7 +1313,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     scrollViewDownDL_.bounces = NO;
     scrollViewDownDL_.delegate = self;
     scrollViewDownDL_.showsHorizontalScrollIndicator = NO;
-    
+    scrollViewDownDL_.tag = 999999;
     NSString *cacheKey = [NSString stringWithFormat:@"drama_epi_%@",[videoInfo_ objectForKey:@"id"]];
     NSString *playNum = [[CacheUtility sharedCache]loadFromCache:cacheKey];
     int lastNum = -1;
@@ -1428,16 +1428,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(void)next:(id)sender{
     if (!isDownLoad_) {
+
         currentPage_++;
-        [UIView beginAnimations:nil context:NULL];
-        
-        [UIView setAnimationDuration:0.3f];
-        
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        
         [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(currentPage_-1), 0.0f) animated:YES];
-        
-        [UIView commitAnimations];
         if (currentPage_ == page_ ) {
             next_.enabled = NO;
         }
@@ -1457,15 +1450,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     else{
         currentPageDownLoad_++;
-        [UIView beginAnimations:nil context:NULL];
-        
-        [UIView setAnimationDuration:0.3f];
-        
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        
         [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(currentPageDownLoad_-1), 0.0f) animated:YES];
-        
-        [UIView commitAnimations];
         if (currentPageDownLoad_ == page_ ) {
             nextDL_.enabled = NO;
         }
@@ -1491,15 +1476,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
 -(void)pre:(id)sender{
     if (!isDownLoad_) {
         currentPage_--;
-        [UIView beginAnimations:nil context:NULL];
-        
-        [UIView setAnimationDuration:0.3f];
-        
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        
         [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(currentPage_-1), 0.0f) animated:YES];
         
-        [UIView commitAnimations];
         if (currentPage_ == page_ ) {
             next_.enabled = NO;
         }
@@ -1519,15 +1497,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     else{
     
         currentPageDownLoad_--;
-        [UIView beginAnimations:nil context:NULL];
-        
-        [UIView setAnimationDuration:0.3f];
-        
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        
+    
         [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(currentPageDownLoad_-1), 0.0f) animated:YES];
         
-        [UIView commitAnimations];
         if (currentPageDownLoad_ == page_ ) {
             nextDL_.enabled = NO;
         }
@@ -1569,21 +1541,112 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
-    //[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    if (scrollView.tag == 99999) {
+        CGFloat pageWidth = 285;
+        CGPoint offset = scrollView.contentOffset;
+        if (offset.x * offset.x> offset.y * offset.y) {
+            int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+            [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(page/5), 0.0f) animated:YES];
+            [self changeButoonStateInView:scrollViewUp_ atIndex:page];
+            
+        }
+    }
+   else if (scrollView.tag == 999999) {
+        CGFloat pageWidth = 285;
+        CGPoint offset = scrollView.contentOffset;
+        if (offset.x * offset.x> offset.y * offset.y) {
+            int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+            [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(page/5), 0.0f) animated:YES];
+            [self changeButoonStateInView:scrollViewUpDL_ atIndex:page];
+            
+            if (currentPageDownLoad_ == page_ ) {
+                nextDL_.enabled = NO;
+            }
+            else{
+                nextDL_.enabled = YES;
+                
+            }
+            if (currentPageDownLoad_ == 1 ) {
+                preDL_.enabled = NO;
+            }
+            else{
+                preDL_.enabled = YES;
+                
+            }
+
+        }
+    }
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    //[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    [pullToRefreshManager_ tableViewReleased];
-    
-    if (scrollView.tag == 99999) {
-        CGPoint point = scrollView.contentOffset;
-        NSLog(@"scroll scroll scroll scroll x:%f y:%f" ,point.x,point.y);
-        //[scrollViewUp_ setContentOffset:CGPointMake(point.x +52, 0.0f) animated:YES];
+-(void)changeButoonStateInView:(UIView *)view atIndex:(int)index{
+    for (UIView *v in view.subviews) {
+        if ([v isKindOfClass:[UIButton class]]) {
+            UIButton *btn = (UIButton *)v;
+            if (btn.tag == index) {
+                btn.selected = YES;
+            }
+            else{
+                btn.selected = NO;
+            }
+        }
     }
 
 }
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+
+    if (scrollView.tag == 99999) {
+        CGPoint point = scrollViewUp_.contentOffset;
+        NSLog(@"contentOffset %f  %f",point.x,point.y);
+        currentPage_ = point.x/260 +1;
+        NSLog(@"currentPage is %d",currentPage_);
+        NSLog(@"page is %d",page_);
+        if (currentPage_ == page_ ) {
+            next_.enabled = NO;
+        }
+        else{
+            next_.enabled = YES;
+            
+        }
+        
+        if (currentPage_ == 1 ) {
+            pre_.enabled = NO;
+        }
+        else{
+            pre_.enabled = YES;
+            
+        }
+    }
+    else if (scrollView.tag == 999999){
+        CGPoint point = scrollViewUpDL_.contentOffset;
+        NSLog(@"contentOffset %f  %f",point.x,point.y);
+        currentPageDownLoad_ = point.x/260 +1;
+        NSLog(@"currentPage is %d",currentPageDownLoad_);
+        NSLog(@"page is %d",page_);
+        if (currentPageDownLoad_ == page_ ) {
+            nextDL_.enabled = NO;
+        }
+        else{
+            nextDL_.enabled = YES;
+            
+        }
+        
+        if (currentPageDownLoad_ == 1 ) {
+            preDL_.enabled = NO;
+        }
+        else{
+            preDL_.enabled = YES;
+            
+        }
+
+    }
+    
+    [pullToRefreshManager_ tableViewReleased];
+    
+    
+
+}
+
+
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
     return;

@@ -1051,27 +1051,28 @@ static NSMutableArray *downLoadQueue_ = nil;
                 }
             }
         }
-                                                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                        
-                                                        [operation cancel];
-                                                        [downloadOperationQueue_ cancelAllOperations];
-                                                        
-                                                        //            if (retryCount_ <= 3) {
-                                                        //                NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
-                                                        //                [self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
-                                                        //            }
-                                                        
-                                                        if (range.location == NSNotFound){
-                                                            
-                                                            [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneDownloadViewController"];
-                                                            
-                                                        }
-                                                        else{
-                                                            [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneSubdownloadViewController"];
-                                                            
-                                                        }
-                                                        
-                                                    }];
+        failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [operation cancel];
+            [downloadOperationQueue_ cancelAllOperations];
+            
+            //            if (retryCount_ <= 3) {
+            //                NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
+            //                [self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
+            //            }
+            
+            if (range.location == NSNotFound){
+                
+                [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneDownloadViewController"];
+                
+            }
+            else{
+                [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneSubdownloadViewController"];
+                
+            }
+         
+            
+        }];
         [segmentDownloadingOp setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
             
         }];
