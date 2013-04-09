@@ -421,7 +421,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 
                 playButton_.hidden = YES;
                 pauseButton_.hidden = NO;
-                NSLog(@"Ready to play");
             }
                 break;
                 
@@ -470,11 +469,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         {
             if (pItem.playbackBufferEmpty)
             {
-                NSLog(@"Buffer Empty");
+                //NSLog(@"Buffer Empty");
             }
             else
             {
-                NSLog(@"Not Empty");
+                //NSLog(@"Not Empty");
             }
         }
         else if (k_ToKeepUp == path)
@@ -482,20 +481,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (pItem.playbackLikelyToKeepUp)
             {
                 [self dismissActivityView];
-                NSLog(@"KeepUp, dismiss waitting view");
+                //NSLog(@"KeepUp, dismiss waitting view");
                 BOOL isPlaying = [self isPlaying];
                 BOOL isHidden = playButton_.hidden;
                 if (!isPlaying && isHidden)
                 {
                     [mPlayer play];
-                    NSLog(@"AVPlayer play");
+                    //NSLog(@"AVPlayer play");
                 }
             }
             else
             {
                 if (![self isPlaying])
                 {
-                    NSLog(@"Not KeepUp, show waitting view");
+                    //NSLog(@"Not KeepUp, show waitting view");
                     [self showActivityView];
                 }
             }
@@ -2198,23 +2197,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (self.isPlaying)
         {
             [mPlayer pause];
+            playButton_.hidden = NO;
+            pauseButton_.hidden = YES;
         }
+        
         [self updateWatchRecord];
     }
 }
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-//    if (AVPlayerStatusReadyToPlay == mPlayer.status)
-//    {
-//        if (nil == playCacheView_.superview)
-//        {
-//            willPlayLabel_.text = nil;
-//            [self.view addSubview:playCacheView_];
-//            myHUD.hidden = NO;
-//            [self.view bringSubviewToFront:myHUD];
-//        }
-//    }
+    
 }
 
 #pragma mark -
