@@ -21,8 +21,6 @@
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
-    UIImageView *topIcon;
-    UIImageView *bgImage;
     UIImageView *nodownloadImage;
     int leftWidth;
     
@@ -51,7 +49,6 @@
 - (void)viewDidUnload
 {
     topImage = nil;
-    bgImage = nil;
     _gmGridView = nil;
     spaceInfoLabel = nil;
     diskUsedProgress_ = nil;
@@ -61,12 +58,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-//    closeMenuRecognizer.delegate = self;
-//    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
-    
+    [super viewDidLoad];    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
 }
@@ -96,25 +88,16 @@
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         
-        bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [self.view addSubview:bgImage];
-        
         nodownloadImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 200, 200)];
-        nodownloadImage.center = CGPointMake(bgImage.center.x, bgImage.center.y - 100);
+        nodownloadImage.center = CGPointMake(self.view.center.x, self.view.center.y - 100);
         nodownloadImage.image = [UIImage imageNamed:@"nodownload"];
         [self.view addSubview:nodownloadImage];
         
-        leftWidth = 80;
-        [self.view addSubview:menuBtn];
+        leftWidth = 15;
         
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth + 50, 40, 143, 35)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"download_title"];
         [self.view addSubview:topImage];
-        
-        topIcon = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 32, 32)];
-        topIcon.image = [UIImage imageNamed:@"download_icon"];
-        [self.view addSubview:topIcon];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         editBtn.frame = CGRectMake(410, 80, 74, 26);
@@ -190,11 +173,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
-    }
     _gmGridView.editing = NO;
     [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
@@ -485,7 +463,6 @@
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
-    [self closeMenu];
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
@@ -527,7 +504,6 @@
 
 - (void)editBtnClicked
 {
-    [self closeMenu];
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
     _gmGridView.editing = YES;
     [editBtn setHidden:YES];
@@ -536,7 +512,6 @@
 
 - (void)doneBtnClicked
 {
-    [self closeMenu];
     _gmGridView.editing = NO;
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];

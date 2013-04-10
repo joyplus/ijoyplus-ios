@@ -75,7 +75,7 @@
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, cell.bounds.size.width+100, 20)];
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.textColor = [UIColor blackColor];
+        nameLabel.textColor = CMConstants.grayColor;
         nameLabel.tag = 1001;
         nameLabel.font = [UIFont systemFontOfSize:14];
         [cell.contentView addSubview:nameLabel];

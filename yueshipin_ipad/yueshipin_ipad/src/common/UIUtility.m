@@ -98,14 +98,17 @@
 
 - (void)showProgressBar:(UIView *)view
 {
-    if(HUD == nil){
+    HUD = (MBProgressHUD *)[view viewWithTag:47569301];
+    HUD.layer.zPosition = 10;
+    if (HUD == nil) {
         HUD = [[MBProgressHUD alloc] initWithView:view];
-        HUD.frame = CGRectMake(HUD.frame.origin.x, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
         [view addSubview:HUD];
-        HUD.labelText = @"加载中...";
-        HUD.opacity = 0.5;
-        [HUD show:YES];
     }
+    HUD.tag = 47569301;
+    HUD.frame = CGRectMake(HUD.frame.origin.x, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
+    HUD.labelText = @"加载中...";
+    HUD.opacity = 0.5;
+    [HUD show:YES];
 }
 
 - (void)hideAtOnce

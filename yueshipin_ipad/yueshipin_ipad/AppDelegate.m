@@ -160,7 +160,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
-    if (ENVIRONMENT == 0 && LOG_ENABLED == 1) {
+    if (ENVIRONMENT == 0) {
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];

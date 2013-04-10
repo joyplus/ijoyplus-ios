@@ -11,10 +11,9 @@
 
 @interface CommentListViewController : UITableViewController
 
-@property (nonatomic, strong)NSMutableArray *listData;
-@property (nonatomic, strong)NSString *prodId;
-@property (nonatomic, assign)int totalCommentNum;
-@property (nonatomic, assign)int tableHeight;
-
+@property (nonatomic, strong) NSString *prodId;
+@property (nonatomic, assign) int tableHeight;
+@property (nonatomic, strong) NSString *videoName;
+@property (nonatomic, strong) NSString *doubanId;
 @property (nonatomic, weak)id<VideoDetailViewControllerDelegate>parentDelegate;
 @end

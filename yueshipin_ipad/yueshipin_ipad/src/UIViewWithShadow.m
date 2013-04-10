@@ -51,11 +51,11 @@
 }
 
 -(void) layoutSubviews {
-	CGFloat coloredBoxMargin = 40;
+	CGFloat coloredBoxMargin = 10;
     CGFloat coloredBoxHeight = self.frame.size.height;
     _coloredBoxRect = CGRectMake(coloredBoxMargin, 
                                  0, 
-                                 40, 
+                                 10,
                                  coloredBoxHeight);
 }
 
@@ -64,7 +64,7 @@
 	// Draw shadow
     CGContextSaveGState(context);
     CGContextSetShadowWithColor(context, CGSizeMake(-5, 0), 10, [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.8].CGColor);
-	CGContextSetFillColorWithColor(context, [UIColor colorWithRed:105.0f/255.0f green:179.0f/255.0f blue:216.0f/255.0f alpha:1].CGColor);
+	CGContextSetFillColorWithColor(context, [UIColor colorWithRed:105.0f/255.0f green:179.0f/255.0f blue:216.0f/255.0f alpha:0.4].CGColor);
     CGContextFillRect(context, _coloredBoxRect);
 	CGContextRestoreGState(context);
 }

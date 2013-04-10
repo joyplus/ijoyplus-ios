@@ -49,7 +49,7 @@
         [self startDownloadingThread:allSubdownloadItems status:@"start"];
         [self startDownloadingThread:allDownloadItems status:@"waiting"];
         [self startDownloadingThread:allSubdownloadItems status:@"waiting"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
+        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];// update download badge
         displayNoSpaceFlag = NO;
     }
     [myLock unlock];

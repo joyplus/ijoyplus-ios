@@ -16,4 +16,6 @@
 + (BOOL)isAirPlayActive;
 + (float)getFreeDiskspace;
 + (void)triggerSpaceNotEnough;
+
+
 @end

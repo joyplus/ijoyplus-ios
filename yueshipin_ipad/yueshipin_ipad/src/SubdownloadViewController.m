@@ -48,7 +48,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     [self reloadSubitems];
 }
 
@@ -66,7 +66,7 @@
         [self.view addSubview:titleLabel];
         
         closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        closeBtn.frame = CGRectMake(465, 20, 40, 42);
+        closeBtn.frame = CGRectMake(456, 0, 50, 50);
         [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
         [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
         [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -373,7 +373,6 @@
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
 {
-    [self closeMenu];
     if(position < subitems.count){
         SubdownloadItem *item = [subitems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){

@@ -58,6 +58,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
     self.titleLabel.frame = CGRectMake(LEFT_WIDTH, 35, 310, 27);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:26];
     self.titleLabel.backgroundColor = [UIColor clearColor];
@@ -68,7 +72,7 @@
     self.lineImage.frame = CGRectMake(LEFT_WIDTH, 80, 400, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
    
-    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(456, 0, 50, 50);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -93,7 +97,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:MY_LIST_VIEW_REFRESH object:nil];
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)refreshData:(NSNotification *)notification
@@ -148,7 +152,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
         } else {

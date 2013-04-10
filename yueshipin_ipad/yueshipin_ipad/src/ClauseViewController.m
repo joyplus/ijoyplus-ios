@@ -49,7 +49,7 @@
     [self.view addSubview:bgScrollView];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    closeBtn.frame = CGRectMake(456, 0, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -62,7 +62,7 @@
     contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 100, 418, 733)];
     contentImage.image = [UIImage imageNamed:@"clause_content"];
     [bgScrollView addSubview:contentImage];
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)didReceiveMemoryWarning

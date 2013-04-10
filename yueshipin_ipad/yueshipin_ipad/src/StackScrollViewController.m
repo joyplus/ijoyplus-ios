@@ -43,7 +43,6 @@
 #import "SearchViewController.h"
 #import "GenericBaseViewController.h"
 #import "PersonalViewController.h"
-const NSInteger SLIDE_VIEWS_MINUS_X_POSITION = -150;
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
 @implementation StackScrollViewController
@@ -847,12 +846,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         for (int i = 0; i < indexOfViewController; i ++)
         {
             UIViewController * ctrl = [viewControllersStack objectAtIndex:i];
-            if ([ctrl isKindOfClass:[SearchViewController class]])
-            {
-                SearchViewController * searchCtrl = (SearchViewController *)ctrl;
-                [searchCtrl reloadSearchList];
-            }
-            else if ([ctrl isKindOfClass:[PersonalViewController class]] && moveToLeft)
+            if ([ctrl isKindOfClass:[PersonalViewController class]] && moveToLeft)
             {
                 PersonalViewController * pCtrl = (PersonalViewController *)ctrl;
                 [pCtrl reloadHistory];
@@ -880,7 +874,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 	}
 	
 	if ([slideViews.subviews count] != 0) {
-		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(-40, 0, 40 , self.view.frame.size.height)];
+		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(0, 0, 0 , self.view.frame.size.height)];
 		[verticalLineView setBackgroundColor:[UIColor clearColor]];
 		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[verticalLineView setClipsToBounds:NO];
@@ -939,7 +933,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
             //                    [viewAtLeft2 setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION, viewAtLeft2.frame.origin.y, viewAtLeft2.frame.size.width, viewAtLeft2.frame.size.height)];
             //                }
             if(moveToLeft){
-                [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION+8, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
+                [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
 				[viewAtRight setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
             } else {
                 [viewAtRight setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
@@ -956,28 +950,6 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		}
 	}
 }
-
-
-- (void)menuToggle:(BOOL)menuClicked isStackStartView:(BOOL)isStackStartView
-{
-    if ([[slideViews subviews] count] > 0) {
-        viewAtLeft = [[slideViews subviews] objectAtIndex:0];
-        viewAtLeft2 = nil;
-        viewAtRight = nil;
-        viewAtRight2 = nil;
-    }
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
-    [UIView setAnimationDuration:0.3];
-    [UIView setAnimationBeginsFromCurrentState:NO];
-    if(menuClicked){
-        [viewAtLeft setFrame:CGRectMake(-LEFT_MENU_DIPLAY_WIDTH, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-    }else {
-        [viewAtLeft setFrame:CGRectMake(0, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-    }
-    [UIView commitAnimations];    
-}
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

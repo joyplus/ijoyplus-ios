@@ -13,7 +13,6 @@
     UIButton *createBtn;
     UIImageView *lineImage;
     UIButton *deleteBtn;
-    UIImageView *bgImage;
 }
 
 @end
@@ -26,7 +25,6 @@
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MY_LIST_VIEW_REFRESH object:nil];
     lineImage = nil;
-    bgImage = nil;
     createBtn = nil;
     deleteBtn = nil;
 }
@@ -48,8 +46,7 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-  
+    [super viewDidLoad];     
 	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 420);
     
 //    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
@@ -72,7 +69,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:MY_LIST_VIEW_REFRESH object:nil];
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)refreshData:(NSNotification *)notification
@@ -130,7 +127,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathTopDelete parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [closeBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
@@ -166,7 +163,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathRemoveItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if ([responseCode isEqualToString:kSuccessResCode]) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
     }];

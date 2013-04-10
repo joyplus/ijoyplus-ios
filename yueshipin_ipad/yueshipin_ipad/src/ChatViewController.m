@@ -48,7 +48,7 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self.view setBackgroundColor:[UIColor whiteColor]];
     [[UMFeedback sharedInstance] setAppkey:umengAppKey delegate:self];
     [[UMFeedback sharedInstance] get];
     
@@ -73,7 +73,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
 #endif
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkResponse) userInfo:nil repeats:YES];
 }

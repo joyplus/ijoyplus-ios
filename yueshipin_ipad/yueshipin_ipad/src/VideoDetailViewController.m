@@ -11,6 +11,7 @@
 #import "CommonHeader.h"
 #import "ListViewController.h"
 #import "AvVideoWebViewController.h"
+#import "CommentDetailViewController.h"
 
 @interface VideoDetailViewController ()
 
@@ -36,9 +37,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:CMConstants.backgroundColor];
-    [self.view addGestureRecognizer:swipeRecognizer];
-    
+    [self.view addGestureRecognizer:self.swipeRecognizer];
+    // Custom initialization
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
+
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
     m3u8DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
@@ -104,20 +109,6 @@
         [_sinaweibo logIn];
     }
 }
-
-- (void)commentBtnClicked
-{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-    [AppDelegate instance].rootViewController.prodId = self.prodId;
-    [AppDelegate instance].rootViewController.videoDetailDelegate = self;
-    [[AppDelegate instance].rootViewController showCommentPopup];
-    
-}
-
 
 - (void)removeAuthData
 {
@@ -200,7 +191,7 @@
                 [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
-                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
@@ -268,18 +259,31 @@
     return videoUrl;
 }
 
-- (void)addListBtnClicked
+//- (void)addListBtnClicked
+//{
+//    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+//    if([hostReach currentReachabilityStatus] == NotReachable) {
+//        [UIUtility showNetWorkError:self.view];
+//        return;
+//    }
+//    SelectListViewController *viewController = [[SelectListViewController alloc]init];
+//    viewController.prodId = self.prodId;
+//    viewController.type = self.type;
+//    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+//    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+//}
+
+- (void)reportBtnClicked
 {
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    SelectListViewController *viewController = [[SelectListViewController alloc]init];
-    viewController.prodId = self.prodId;
-    viewController.type = self.type;
-    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
+    [AppDelegate instance].rootViewController.prodId = self.prodId;
+    [AppDelegate instance].rootViewController.prodName = [video objectForKey:@"name"];
+    [AppDelegate instance].rootViewController.prodType = [NSString stringWithFormat:@"%i", type];
+    [[AppDelegate instance].rootViewController showReportPopup:self.prodId];
 }
 
 - (void)showSublistView:(int)num{
@@ -330,7 +334,6 @@
 - (void)updateBadgeIcon
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
 }
 
 - (void)playVideo:(int)num
@@ -439,6 +442,16 @@
 // This callback method will be implemented by subclasses.
 - (void)playNextEpisode{
     
+}
+
+- (void)showCommentDetail:(NSDictionary *)commentItem
+{
+    CommentDetailViewController *viewController = [[CommentDetailViewController alloc]init];
+    viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+    viewController.titleContent = [commentItem objectForKey:@"title"];
+    viewController.content = [commentItem objectForKey:@"comments"];
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:YES];
+    self.moveToLeft = NO;
 }
 
 @end

@@ -17,6 +17,7 @@
 #import "UMFeedback.h"
 #import "ChatViewController.h"
 #import "UMGridViewController.h"
+#import "Harpy.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
@@ -27,18 +28,14 @@
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
 @interface SettingsViewController (){
-    UIView *backgroundView;
     UIImageView *topImage;
-    UIImageView *bgImage;
     
     UIImageView *sinaWeiboBg;
-    UIImageView *sinaWeiboImg;
     UIButton *applicationsBtn;
     UIImageView *applicationsImg;
     
-    UIImageView *clearCacheBg;
     UIButton *clearCacheBtn;
-    UIImageView *aboutBg;
+
     UIButton *suggestionBtn;
     UIButton *commentBtn;
     UIButton *aboutBtn;
@@ -58,15 +55,10 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    backgroundView = nil;
     topImage = nil;
-    bgImage = nil;
     speakBtn = nil;
     sinaWeiboBg = nil;
-    sinaWeiboImg = nil;
-    clearCacheBg = nil;
     clearCacheBtn = nil;
-    aboutBg = nil;
     suggestionBtn = nil;
     commentBtn = nil;
     aboutBtn = nil;
@@ -82,107 +74,88 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
-        backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor clearColor]];
-        [self.view addSubview:backgroundView];
         
-        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [backgroundView addSubview:bgImage];
-        
-        [self.view addSubview:menuBtn];
-        
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 137, 34)];
+        int leftWidth = 15;
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
-        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 120, 370, 90)];
+        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 120, 467, 70)];
         sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
-        
-        UILabel *tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(40, 60, 300, 30)];
-        tipLabel.backgroundColor = [UIColor clearColor];
-        [tipLabel setFont:[UIFont systemFontOfSize:13]];
-        tipLabel.textColor = [UIColor lightGrayColor];
-        tipLabel.text = @"绑定后，可以在多个设备间同步您的记录。";
-        [sinaWeiboBg addSubview:tipLabel];
-        
-        sinaWeiboImg = [[UIImageView alloc]initWithFrame:CGRectMake(100, 134, 334, 45)];
-        sinaWeiboImg.image = [UIImage imageNamed:@"weibo"];
-        [self.view addSubview:sinaWeiboImg];
         
         sinaUsernameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 8, 135, 25)];
         sinaUsernameLabel.backgroundColor = [UIColor clearColor];
         sinaUsernameLabel.font = [UIFont boldSystemFontOfSize:13];
         sinaUsernameLabel.textColor = CMConstants.titleBlueColor;
-        [sinaWeiboImg addSubview:sinaUsernameLabel];
+        [sinaWeiboBg addSubview:sinaUsernameLabel];
         
-        sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(340, 140, 75, 27)];
+        sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(350, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
-        [self.view addSubview:sinaSwitch];
-                       
-        clearCacheBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 220, 370, 79)];
-        clearCacheBg.image = [UIImage imageNamed:@"setting_cell_bg"];
-        [self.view addSubview:clearCacheBg];
-        
+        [self.view addSubview:sinaSwitch];                       
+       
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearCacheBtn.frame = CGRectMake(100, 240, 334, 40);
+        clearCacheBtn.frame = CGRectMake(leftWidth, sinaWeiboBg.frame.origin.y + sinaWeiboBg.frame.size.height + 40, 467, 50);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
-        aboutBg = [[UIImageView alloc]initWithFrame:CGRectMake(80, 306, 372, 267)];
-        aboutBg.image = [[UIImage imageNamed:@"setting_cell_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] ;
-        [self.view addSubview:aboutBg];
-        
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(100, 325, 334, 40);
+        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 40, 467, 50);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(100, 372, 334, 40);
+        commentBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height + 10, 467, 50);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        followBtn.frame = CGRectMake(100, 419, 334, 40);
+        followBtn.frame = CGRectMake(leftWidth, commentBtn.frame.origin.y + commentBtn.frame.size.height + 10, 467, 50);
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow"] forState:UIControlStateNormal];
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow_pressed"] forState:UIControlStateHighlighted];
         [followBtn addTarget:self action:@selector(followBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:followBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(100, 466, 334, 40);
+        aboutBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 10, 467, 50);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:aboutBtn];
         
         speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        speakBtn.frame = CGRectMake(100, 513, 334, 40);
+        speakBtn.frame = CGRectMake(leftWidth, aboutBtn.frame.origin.y + aboutBtn.frame.size.height + 10, 467, 50);
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
         [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:speakBtn];
+        
+        UIButton *checkUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 10, 467, 50);
+        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
+        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
+        [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:checkUpdateBtn];
         
         
     }
     return self;
 }
 
+- (void)checkUpdateBtnClicked
+{
+    [Harpy checkVersion:self.view];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    closeMenuRecognizer.delegate = self;
-    [self.view addGestureRecognizer:closeMenuRecognizer];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -205,11 +178,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch.on = YES;
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
-    }
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
     }
     [MobClick beginLogPageView:SETTING];
 }
@@ -247,7 +215,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    [self closeMenu];
     ChatViewController *chatViewController = [[ChatViewController alloc] initWithNibName:@"ChatViewController" bundle:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:chatViewController];
     navController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
@@ -268,7 +235,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)aboutBtnClicked
 {
-    [self closeMenu];
     AboutUsViewController *viewController = [[AboutUsViewController alloc]init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -276,7 +242,6 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)speakBtnClicked
 {
-    [self closeMenu];
     ClauseViewController *viewController = [[ClauseViewController alloc]init];
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
@@ -314,7 +279,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
         [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
         [ActionUtility generateUserId:^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         }];
         [_sinaweibo logOut];
@@ -431,7 +396,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                 [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_support_list"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"my_collection_list"];
-                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
             } else {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
