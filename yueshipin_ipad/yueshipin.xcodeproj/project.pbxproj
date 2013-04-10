@@ -779,9 +779,6 @@
 		EBBE2509171518F600091F24 /* top_header_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE24B5171518F600091F24 /* top_header_bg@2x.png */; };
 		EBBE250A171518F600091F24 /* video_bg_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE24B6171518F600091F24 /* video_bg_placeholder@2x.png */; };
 		EBBE250B171518F600091F24 /* yellow_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE24B7171518F600091F24 /* yellow_bg@2x.png */; };
-		EBBE251A1715516300091F24 /* collectinguser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE250C1715516300091F24 /* collectinguser@2x.png */; };
-		EBBE25261715516300091F24 /* pushinguser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE25191715516300091F24 /* pushinguser@2x.png */; };
-		EBBE253F17155D0900091F24 /* show_overlay_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE253317155D0800091F24 /* show_overlay_pressed@2x.png */; };
 		EBC19B5316E97BC70001429C /* custom-cancel-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3816E97BC60001429C /* custom-cancel-normal@2x.png */; };
 		EBC19B5416E97BC70001429C /* custom-dialog-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3916E97BC60001429C /* custom-dialog-background@2x.png */; };
 		EBC19B5516E97BC70001429C /* logo_56.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3B16E97BC60001429C /* logo_56.png */; };
@@ -1796,9 +1793,6 @@
 		EBBE24B5171518F600091F24 /* top_header_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top_header_bg@2x.png"; sourceTree = "<group>"; };
 		EBBE24B6171518F600091F24 /* video_bg_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_bg_placeholder@2x.png"; sourceTree = "<group>"; };
 		EBBE24B7171518F600091F24 /* yellow_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "yellow_bg@2x.png"; sourceTree = "<group>"; };
-		EBBE250C1715516300091F24 /* collectinguser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "collectinguser@2x.png"; path = "yueshipin_ipad/Resource/collectinguser@2x.png"; sourceTree = SOURCE_ROOT; };
-		EBBE25191715516300091F24 /* pushinguser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pushinguser@2x.png"; path = "yueshipin_ipad/Resource/pushinguser@2x.png"; sourceTree = SOURCE_ROOT; };
-		EBBE253317155D0800091F24 /* show_overlay_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "show_overlay_pressed@2x.png"; sourceTree = "<group>"; };
 		EBC19B3816E97BC60001429C /* custom-cancel-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-cancel-normal@2x.png"; sourceTree = "<group>"; };
 		EBC19B3916E97BC60001429C /* custom-dialog-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-dialog-background@2x.png"; sourceTree = "<group>"; };
 		EBC19B3B16E97BC60001429C /* logo_56.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_56.png; sourceTree = "<group>"; };
@@ -2502,9 +2496,6 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
-				EBBE253317155D0800091F24 /* show_overlay_pressed@2x.png */,
-				EBBE250C1715516300091F24 /* collectinguser@2x.png */,
-				EBBE25191715516300091F24 /* pushinguser@2x.png */,
 				EBBE2463171518F500091F24 /* all_comment@2x.png */,
 				EBBE2464171518F500091F24 /* collection_btn_bg_pressed@2x.png */,
 				EBBE2465171518F500091F24 /* collection_btn_bg.png */,
@@ -3976,12 +3967,17 @@
 				EBBE250B171518F600091F24 /* yellow_bg@2x.png in Resources */,
 				22035EAF17152C4D0019A553 /* scan_symbol@2x.png in Resources */,
 <<<<<<< HEAD
+<<<<<<< HEAD
 				22035EB217153F220019A553 /* cloud_tv_f@2x.png in Resources */,
 				22035EB317153F220019A553 /* cloud_tv@2x.png in Resources */,
 =======
 				EBBE251A1715516300091F24 /* collectinguser@2x.png in Resources */,
 				EBBE25261715516300091F24 /* pushinguser@2x.png in Resources */,
 				EBBE253F17155D0900091F24 /* show_overlay_pressed@2x.png in Resources */,
+>>>>>>> new UI
+=======
+				22035EB217153F220019A553 /* cloud_tv_f@2x.png in Resources */,
+				22035EB317153F220019A553 /* cloud_tv@2x.png in Resources */,
 >>>>>>> new UI
 			);
 			runOnlyForDeploymentPostprocessing = 0;
