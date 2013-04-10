@@ -17,6 +17,7 @@
 #import "CacheUtility.h"
 #import "Reachability.h"
 #import "ActionUtility.h"
+#import <Parse/Parse.h>
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -39,6 +40,8 @@
 #define CLARITY_BUTTON_TAG 10007
 #define VOLUME_BUTTON_TAG 10008
 #define SELECT_BUTTON_TAG 10009
+#define CLOUND_TV_BUTTON_TAG    10010
+
 #define PLAIN_CLEAR 100
 #define HIGH_CLEAR 200
 #define SUPER_CLEAR 300
@@ -53,6 +56,7 @@
 - (void)beginMyTimer;
 - (void)showActivityView;
 - (void)dismissActivityView;
+- (void)pushWebURLToCloudTV;
 
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
@@ -69,6 +73,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize clarityButton = clarityButton_;
 @synthesize playButton = playButton_;
 @synthesize pauseButton = pauseButton;
+@synthesize cloundTVButton;
 @synthesize seeTimeLabel = seeTimeLabel_;
 @synthesize totalTimeLablel = totalTimeLable_;
 @synthesize playCacheView = playCacheView_;
@@ -651,6 +656,50 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     {
         myTimer_ = [NSTimer scheduledTimerWithTimeInterval:4.0 target:self selector:@selector(hiddenToolBar) userInfo:nil repeats:NO];
     }
+}
+
+- (void)pushWebURLToCloudTV
+{
+    /*
+     ### 在data中新加入push_type字段区分各种消息推送的类型。
+     “1”：标识为针对某一类设备的全体的群发消息。
+     "2":  标识为订阅某一视频的更新消息。
+     "3"：TV端用于绑定帐户的消息，同时消息体内带有user id.
+     “4”：云端视频推送消息，同时消息体内带有视频id.
+     "5"：TV端用于解除绑定帐户的消息，同时消息体内带有user id.
+     */
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    double curTime = CMTimeGetSeconds([self.mPlayer currentTime]);
+    
+    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                          @"4", @"push_type",
+                          userId, @"user_id",
+                          workingUrl_,@"video_url",
+                          [NSString stringWithFormat:@"%f",curTime],@"current_Time"
+                          nil];
+    
+    PFPush *push = [[PFPush alloc] init];
+    [push setData:data];
+    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (YES == succeeded
+            && nil == error)
+        {
+            //推送成功
+        }
+        else
+        {
+            NSLog(@"%@",error);
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                             message:@"投放到电视端失败"
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"确定"
+                                                   otherButtonTitles:nil, nil];
+            [alert show];
+        }
+    }];
+    [self.mPlayer pause];
+    playButton_.hidden = NO;
+    pauseButton_.hidden = YES;
 }
 
 - (void)showActivityView
@@ -1353,6 +1402,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
     [bottomToolBar_ addSubview:volumeView_];
     
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSNumber * isbunding = (NSNumber *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    if ([isbunding boolValue])
+    {
+        cloundTVButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        cloundTVButton.frame = CGRectMake(100, 8, 32.5, 27);
+        cloundTVButton.backgroundColor = [UIColor clearColor];
+        cloundTVButton.tag = CLOUND_TV_BUTTON_TAG;
+        [cloundTVButton setBackgroundImage:[UIImage imageNamed:@"cloud_tv.png"] forState:UIControlStateNormal];
+        [cloundTVButton setBackgroundImage:[UIImage imageNamed:@"cloud_tv_f.png"] forState:UIControlStateHighlighted];
+        [cloundTVButton addTarget:self
+                           action:@selector(action:)
+                 forControlEvents:UIControlEventTouchUpInside];
+        [bottomToolBar_ addSubview:cloundTVButton];
+    }
 }
 
 
@@ -1722,7 +1786,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             }
             break;
         }
-              
+        case CLOUND_TV_BUTTON_TAG:
+        {
+            [self pushWebURLToCloudTV];
+        }
+            break;
         default:
             break;
     }

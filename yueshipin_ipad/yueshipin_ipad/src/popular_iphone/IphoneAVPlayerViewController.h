@@ -93,6 +93,7 @@
 @property (nonatomic, strong) UISlider* mScrubber;
 @property (nonatomic, strong) UIButton *selectButton;
 @property (nonatomic, strong) UIButton *clarityButton;
+@property (nonatomic, strong) UIButton *cloundTVButton;
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *pauseButton;
 @property (nonatomic, strong) UILabel *seeTimeLabel;
