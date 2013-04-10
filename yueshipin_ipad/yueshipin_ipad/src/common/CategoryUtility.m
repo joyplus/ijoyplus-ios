@@ -760,7 +760,7 @@
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = REGION_TYPE;
-    item.label = @"欧洲地区";
+    item.label = @"欧洲";
     item.key = @"europe";
     item.value = @"欧洲地区";
     [categoryArray addObject:item];
@@ -768,7 +768,7 @@
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = REGION_TYPE;
-    item.label = @"东南亚地区";
+    item.label = @"东南亚";
     item.key = @"asia";
     item.value = @"东南亚地区";
     [categoryArray addObject:item];
@@ -776,7 +776,7 @@
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = REGION_TYPE;
-    item.label = @"其他地区";
+    item.label = @"其他";
     item.key = @"other";
     item.value = @"其他地区";
     [categoryArray addObject:item];
@@ -1108,7 +1108,7 @@
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
     item.subtype = REGION_TYPE;
-    item.label = @"其他地区";
+    item.label = @"其他";
     item.key = @"other";
     item.value = @"其他地区";
     [categoryArray addObject:item];

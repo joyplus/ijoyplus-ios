@@ -18,7 +18,7 @@
 #import "CategoryUtility.h"
 #import "CategoryItem.h"
 
-@interface VideoViewController ()
+@interface VideoViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong)NSString *typePrefix;
 
@@ -79,6 +79,7 @@
         
         UITapGestureRecognizer *hideSubcategoryViewGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(hideSubcategoryView)];
         [hideSubcategoryViewGesture setNumberOfTapsRequired:1];
+        hideSubcategoryViewGesture.delegate = self;
         [self.view addGestureRecognizer:hideSubcategoryViewGesture];
         
         sloganImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 36, 261, 42)];
@@ -142,6 +143,15 @@
         [_refreshHeaderView refreshLastUpdatedDate];
     }
     return self;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if([NSStringFromClass([touch.view class]) isEqualToString:@"UIButton"]){
+        return NO;
+    } else {        
+        return YES;
+    }
 }
 
 - (void)moreBtnClicked:(UIButton *)btn
@@ -423,7 +433,11 @@
         for (int i = 0; i < regionCategoryArray.count; i++) {
             CategoryItem *tempItem = [regionCategoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            tempBtn.frame = CGRectMake(70 + (i%8) * 51, regionLabel.frame.origin.y, 50, 45);
+            if (i/8 == 1) { // for movie
+                tempBtn.frame = CGRectMake(75 + (i%8) * 51, 40 + regionLabel.frame.origin.y, 50, 45);
+            } else {
+                tempBtn.frame = CGRectMake(70 + (i%8) * 51, regionLabel.frame.origin.y, 50, 45);
+            }
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
             [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
@@ -440,7 +454,11 @@
             [subcategoryView addSubview:tempBtn];
         }
         
-        UILabel *yearLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, 250, categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
+        int positionY = 250;
+        if (videoType == MOVIE_TYPE) {
+            positionY = 275;
+        }
+        UILabel *yearLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, positionY, categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
         yearLabel.contentMode = UIControlContentVerticalAlignmentCenter;
         yearLabel.textColor = CMConstants.grayColor;
         [yearLabel setFont:[UIFont systemFontOfSize:15]];
