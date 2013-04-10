@@ -66,6 +66,8 @@
     NSTimer *timeLabelTimer_;
     
     MPVolumeView *volumeView_;
+    
+    UIImageView * ariplayView;
     UILabel *airPlayLabel_;
     
     UIImageView *sourceLogo_;

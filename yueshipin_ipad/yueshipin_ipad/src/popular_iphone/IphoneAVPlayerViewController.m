@@ -348,7 +348,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                        context:(void*)context
 {
     if (mPlayer.airPlayVideoActive) {
-        [avplayerView_ addSubview:airPlayLabel_];
+        [avplayerView_ addSubview:ariplayView];
         for (UIView *asubview in volumeView_.subviews) {
             if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
                 UIButton *btn = (UIButton *)asubview;
@@ -362,7 +362,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
     }
     else{
-        [airPlayLabel_ removeFromSuperview];
+        [ariplayView removeFromSuperview];
         for (UIView *asubview in volumeView_.subviews) {
             if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
                 UIButton *btn = (UIButton *)asubview;
@@ -1258,8 +1258,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [avplayerView_ addGestureRecognizer:tapGesture];
     [self.view addSubview:avplayerView_];
     
-    airPlayLabel_ = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
-    airPlayLabel_.center = CGPointMake(avplayerView_.center.x, avplayerView_.center.y);
+    ariplayView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"airplay_bg.png"]];
+    ariplayView.frame = CGRectMake(0, 0, kFullWindowHeight, 320);
+    ariplayView.backgroundColor = [UIColor clearColor];
+    
+    airPlayLabel_ = [[UILabel alloc]initWithFrame:CGRectMake(0, 200, 300, 30)];
     airPlayLabel_.backgroundColor = [UIColor clearColor];
     airPlayLabel_.textColor = [UIColor lightGrayColor];
     airPlayLabel_.text = @"此视频正在通过 AirPlay 播放。";
