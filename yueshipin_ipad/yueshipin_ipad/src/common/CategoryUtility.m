@@ -147,9 +147,9 @@
     item = [[CategoryItem alloc]init];
     item.type = COMIC_TYPE;
     item.subtype = NO_TYPE;
-    item.label = @"其他";
+    item.label = @"更多";
     item.key = @"other";
-    item.value = @"其他";
+    item.value = @"更多";
     [categoryArray addObject:item];
     
     return categoryArray;
@@ -517,9 +517,9 @@
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = NO_TYPE;
-    item.label = @"其他";
+    item.label = @"更多";
     item.key = @"other";
-    item.value = @"其他";
+    item.value = @"更多";
     [categoryArray addObject:item];
     return categoryArray;
 }
@@ -760,17 +760,17 @@
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = REGION_TYPE;
-    item.label = @"欧洲";
-    item.key = @"europe";
-    item.value = @"欧洲地区";
+    item.label = @"东南亚";
+    item.key = @"asia";
+    item.value = @"东南亚地区";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = REGION_TYPE;
-    item.label = @"东南亚";
-    item.key = @"asia";
-    item.value = @"东南亚地区";
+    item.label = @"欧洲";
+    item.key = @"europe";
+    item.value = @"欧洲地区";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -895,9 +895,9 @@
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
     item.subtype = NO_TYPE;
-    item.label = @"其他";
+    item.label = @"更多";
     item.key = @"other";
-    item.value = @"其他";
+    item.value = @"更多";
     [categoryArray addObject:item];
     
     return categoryArray;
@@ -921,22 +921,6 @@
     item.label = @"剧情";
     item.key = @"plot";
     item.value = @"剧情";
-    [categoryArray addObject:item];
-    
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = CATEGORY_TYPE;
-    item.label = @"青春偶像";
-    item.key = @"youth";
-    item.value = @"青春偶像";
-    [categoryArray addObject:item];
-    
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = CATEGORY_TYPE;
-    item.label = @"家庭伦理";
-    item.key = @"family";
-    item.value = @"家庭伦理";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -977,6 +961,14 @@
     item.label = @"动作";
     item.key = @"action";
     item.value = @"动作";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
+    item.subtype = CATEGORY_TYPE;
+    item.label = @"青春偶像";
+    item.key = @"youth";
+    item.value = @"青春偶像";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -1033,6 +1025,14 @@
     item.label = @"TVB";
     item.key = @"TVB";
     item.value = @"TVB";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
+    item.subtype = CATEGORY_TYPE;
+    item.label = @"家庭伦理";
+    item.key = @"family";
+    item.value = @"家庭伦理";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -1227,9 +1227,9 @@
     item = [[CategoryItem alloc]init];
     item.type = SHOW_TYPE;
     item.subtype = NO_TYPE;
-    item.label = @"其他";
+    item.label = @"更多";
     item.key = @"other";
-    item.value = @"其他";
+    item.value = @"更多";
     [categoryArray addObject:item];
 
     return categoryArray;

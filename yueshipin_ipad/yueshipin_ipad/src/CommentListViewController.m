@@ -151,14 +151,14 @@
         nameLabel.text = [item objectForKey:@"title"];
         contentLabel.text = [item objectForKey:@"comments"];
         bgImageView.image = [UIImage imageNamed:@"comment_list_bg"];
-        commentButton.frame = CGRectMake(tableView.frame.size.width-80, 130, 84, 34);
-        [commentButton setBackgroundImage:[UIImage imageNamed:@"more_comment"] forState:UIControlStateNormal];
+        commentButton.frame = CGRectMake(tableView.frame.size.width-65, 130, 54, 34);
+        [commentButton setBackgroundImage:[UIImage imageNamed:@"all_comment"] forState:UIControlStateNormal];
     } else if (indexPath.row == commentArray.count){
         nameLabel.text = @"";
         contentLabel.text = @"";
         bgImageView.image = nil;
-        commentButton.frame = CGRectMake(tableView.frame.size.width-65, 0, 54, 34);
-        [commentButton setBackgroundImage:[UIImage imageNamed:@"all_comment"] forState:UIControlStateNormal];
+        commentButton.frame = CGRectMake(tableView.frame.size.width-95, 0, 84, 34);
+        [commentButton setBackgroundImage:[UIImage imageNamed:@"more_comment"] forState:UIControlStateNormal];
     }
     
     return cell;

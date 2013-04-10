@@ -187,6 +187,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    UIButton *allBtn = (UIButton *)[topCategoryView viewWithTag:1101];
+    [allBtn sendActionsForControlEvents:UIControlEventTouchDown];
     if (umengPageName) {
         [MobClick endLogPageView:umengPageName];
     }
@@ -411,7 +413,11 @@
         for (int i = 0; i < categoryArray.count; i++) {
             CategoryItem *tempItem = [categoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            tempBtn.frame = CGRectMake(70 + (i%8) * 51, categoryLabel.frame.origin.y + (i/8) * 50, 50, 45);
+            if (tempItem.label.length > 3) {
+                tempBtn.frame = CGRectMake(70 + (i%8) * 51, categoryLabel.frame.origin.y + (i/8) * 50, 65, 45);
+            } else {
+                tempBtn.frame = CGRectMake(70 + (i%8) * 51, categoryLabel.frame.origin.y + (i/8) * 50, 50, 45);
+            }
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
             [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
@@ -433,7 +439,7 @@
         for (int i = 0; i < regionCategoryArray.count; i++) {
             CategoryItem *tempItem = [regionCategoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            if (i/8 == 1) { // for movie
+            if (tempItem.label.length > 3) {
                 tempBtn.frame = CGRectMake(75 + (i%8) * 51, 40 + regionLabel.frame.origin.y, 50, 45);
             } else {
                 tempBtn.frame = CGRectMake(70 + (i%8) * 51, regionLabel.frame.origin.y, 50, 45);
@@ -666,7 +672,8 @@
             [tempBtn addTarget:self action:@selector(imageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:tempBtn];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(movieImage.frame.origin.x, movieImage.frame.origin.y + movieImage.frame.size.height, movieImage.frame.size.width, 25)];
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, movieImage.frame.origin.y + movieImage.frame.size.height, movieImage.frame.size.width + 10, 25)];
+            nameLabel.center = CGPointMake(movieImage.center.x, nameLabel.center.y);
             [nameLabel setTextAlignment:NSTextAlignmentCenter];
             [nameLabel setTextColor:[UIColor blackColor]];
             [nameLabel setBackgroundColor:[UIColor clearColor]];
@@ -674,8 +681,9 @@
             nameLabel.tag = 3011 + i;
             [cell.contentView addSubview:nameLabel];
             
-            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + nameLabel.frame.size.height-10, nameLabel.frame.size.width, 20)];
+            UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, nameLabel.frame.origin.y + nameLabel.frame.size.height-10, nameLabel.frame.size.width+20, 20)];
             [titleLabel setTextColor:CMConstants.grayColor];
+            titleLabel.center = CGPointMake(nameLabel.center.x, titleLabel.center.y);
             [titleLabel setFont:[UIFont systemFontOfSize:11]];
             titleLabel.contentMode = UIViewContentModeTop;
             [titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -699,9 +707,27 @@
             if (videoType == MOVIE_TYPE) {
                 nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
                 nameLabel.numberOfLines = 2;
-            } else {
+            } else if (videoType == SHOW_TYPE){
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
-                titleLabel.text = [NSString stringWithFormat:@"更新至第%@集", [item objectForKey:@"cur_episode"]];
+                NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
+                if (curEpisode == nil || [curEpisode isEqualToString:@"0"]) {
+                    NSDate * nowDate = [NSDate date];
+                    NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+                    [dateformat setDateFormat:@"yyyy"];
+                    curEpisode = [dateformat stringFromDate:nowDate];
+                } else if (![curEpisode hasPrefix:@"20"]) {
+                    curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
+                }
+                titleLabel.text = [NSString stringWithFormat:@"更新至%@", curEpisode];
+            }else {
+                UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
+                int curEpisode = [[item objectForKey:@"cur_episode"] integerValue];
+                int maxEpisode = [[item objectForKey:@"max_episode"] integerValue];
+                if (curEpisode == 0 || maxEpisode == curEpisode) {
+                    titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
+                } else{
+                    titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+                }
             }
             nameLabel.text = [item objectForKey:@"prod_name"];
         }
