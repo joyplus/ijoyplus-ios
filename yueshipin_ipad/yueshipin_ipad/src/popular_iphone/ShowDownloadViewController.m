@@ -197,7 +197,9 @@
         
         CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
         check.downloadInfoArr = infoArr;
-        [check checkDownloadUrls:[listArr_ objectAtIndex:num]];
+        check.oneEsp = [listArr_ objectAtIndex:num];
+        check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
+        [CheckDownloadUrlsManager addToCheckQueue:check];
     }
 }
 

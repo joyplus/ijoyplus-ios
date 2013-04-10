@@ -836,8 +836,9 @@
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;
-            [check checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
-            
+            check.oneEsp = [episodesArr_ objectAtIndex:0];
+            check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
+            [CheckDownloadUrlsManager addToCheckQueue:check];
             break;
         }
         case 10005:

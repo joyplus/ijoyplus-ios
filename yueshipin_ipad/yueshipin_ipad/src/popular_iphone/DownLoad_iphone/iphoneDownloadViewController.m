@@ -250,7 +250,7 @@
     float freePresent = used /total ;
     view.frame = CGRectMake(0, 1, 320 * freePresent, 18);
     UILabel *label = (UILabel *)[self.view viewWithTag:12346];
-    label.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",(total-used),total];
+    label.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",total,(total-used)];
 
 }
 -(void)back:(id)sender{

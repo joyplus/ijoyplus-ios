@@ -19,6 +19,7 @@
 #define IS_M3U8(str) [str isEqualToString:@"m3u8"] ? YES: NO
 static DownLoadManager *downLoadManager_ = nil;
 static NSMutableArray *downLoadQueue_ = nil;
+static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 @implementation DownLoadManager
 @synthesize downloadThread = downloadThread_;
 @synthesize downloadId = downloadId_;
@@ -27,11 +28,11 @@ static NSMutableArray *downLoadQueue_ = nil;
 @synthesize downloadItem = downloadItem_;
 @synthesize subdownloadItem = subdownloadItem_;
 @synthesize lock = lock_;
-
 +(DownLoadManager *)defaultDownLoadManager{
     if (downLoadManager_ == nil) {
         downLoadManager_ = [[DownLoadManager alloc] init];
         [downLoadManager_ initDownLoadManager];
+        checkDownloadUrlsManager_ = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
         
     }
     return downLoadManager_;
@@ -1133,7 +1134,9 @@ static NSMutableArray *downLoadQueue_ = nil;
 @synthesize fileType = fileType_;
 @synthesize allUrls = allUrls_;
 @synthesize currentConnection = currentConnection_;
--(void)checkDownloadUrls:(NSDictionary *)infoDic{
+@synthesize oneEsp = oneEsp_;
+-(void)checkDownloadUrls{
+    NSDictionary *infoDic = oneEsp_;
     allUrls_ = [[NSMutableArray alloc] initWithCapacity:5];
     NSMutableArray *mp4UrlsArr = [[NSMutableArray alloc] initWithCapacity:5];
     NSMutableArray *m3u8UrlsArr = [[NSMutableArray alloc] initWithCapacity:5];
@@ -1175,6 +1178,7 @@ static NSMutableArray *downLoadQueue_ = nil;
     }
     else{
         [self resetDataBase];
+        [self.checkDownloadUrlsDelegate checkUrlsFinishWithId:self.checkIndex];
     }
 }
 
@@ -1310,6 +1314,7 @@ static NSMutableArray *downLoadQueue_ = nil;
             NSArray *arr = [NSArray arrayWithObjects:proid,urlStr,name,imgUrl,type,num,fileType,nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"DOWNLOAD_MSG" object:arr];
             [connection cancel];
+             [self.checkDownloadUrlsDelegate checkUrlsFinishWithId:self.checkIndex];
             return;
             
         }
@@ -1322,5 +1327,53 @@ static NSMutableArray *downLoadQueue_ = nil;
 -(void)dealloc{
     [currentConnection_ cancel];
     currentConnection_ = nil;
+}
+
+@end
+
+
+
+@implementation CheckDownloadUrlsManager
+static CheckDownloadUrlsManager *checkDownloadUrlsManager_ = nil;
+static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
++(CheckDownloadUrlsManager *)defaultCheckDownloadUrlsManager{
+    if (checkDownloadUrlsManager_ == nil) {
+        checkDownloadUrlsManager_ = [[CheckDownloadUrlsManager alloc] init];
+        CheckDownloadUrlsQueue_ = [NSMutableArray arrayWithCapacity:5];
+        checkDownloadUrlsManager_.isDone = YES;
+    }
+    return checkDownloadUrlsManager_;
+}
+
++(void)addToCheckQueue:(CheckDownloadUrls *)check{
+    [CheckDownloadUrlsQueue_ addObject:check];
+    check.checkIndex = arc4random()%1000000;
+     //check.checkDownloadUrlsDelegate = self;
+    [CheckDownloadUrlsManager startCheck];
+    
+}
+
++(void)startCheck{
+    if (checkDownloadUrlsManager_.isDone) {
+        if ([CheckDownloadUrlsQueue_ count]>0) {
+            CheckDownloadUrls *check = [CheckDownloadUrlsQueue_ objectAtIndex:0];
+            [check checkDownloadUrls];
+            checkDownloadUrlsManager_.isDone = NO;
+        }
+    }
+}
+-(void)checkUrlsFinishWithId:(int)taskId{
+    [self removeTask:taskId];
+   checkDownloadUrlsManager_.isDone = YES;
+   [CheckDownloadUrlsManager startCheck];
+    NSLog(@"CheckDownloadUrlsQueue_ count is %d",[CheckDownloadUrlsQueue_ count]);
+}
+-(void)removeTask:(int)taskId{
+    for (CheckDownloadUrls *check in CheckDownloadUrlsQueue_) {
+        if (check.checkIndex == taskId) {
+            [CheckDownloadUrlsQueue_ removeObject:check];
+            break;
+        }
+    }
 }
 @end

@@ -26,6 +26,8 @@
 -(void)M3u8DownLoadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
 @end
 
+
+@class CheckDownloadUrlsManager;
 @interface DownLoadManager : NSObject<M3u8DownLoadManagerDelegate>{
     NSThread *downloadThread_;
     NSString *downloadId_;
@@ -37,7 +39,7 @@
     int netWorkStatus;
     NSLock *lock_;
     int retryCount_;
-
+  
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
@@ -76,6 +78,7 @@
     DownloadItem *currentItem_;
     NSMutableArray *segmentUrlArray_;
     int retryCount_;
+    
 }
 @property (nonatomic, strong) NSOperationQueue *downloadOperationQueue;
 
@@ -84,6 +87,7 @@
 @property (nonatomic, strong)DownloadItem *currentItem;
 
 @property (nonatomic, strong)  NSMutableArray *segmentUrlArray;
+
 -(void)stop;
 
 -(void)saveCurrentInfo;
@@ -94,18 +98,30 @@
 
 @end
 
+@protocol CheckDownloadUrlsDelegate <NSObject>
+-(void)checkUrlsFinishWithId:(int)taskId;
+@end
+
 @interface CheckDownloadUrls : NSObject{
     NSArray *downloadInfoArr_;
    int sendCount_;
     NSString *fileType_;
     NSMutableArray *allUrls_;
     NSURLConnection *currentConnection_;
-    
+    NSDictionary *oneEsp_;
 }
+@property (nonatomic, weak) id <CheckDownloadUrlsDelegate> checkDownloadUrlsDelegate;
 @property (nonatomic, strong) NSArray *downloadInfoArr;
 @property (nonatomic, strong) NSString *fileType;
 @property (nonatomic, strong) NSMutableArray *allUrls;
 @property (nonatomic, strong) NSURLConnection *currentConnection;
+@property (nonatomic, strong) NSDictionary *oneEsp;
+@property (nonatomic, assign) int checkIndex;
+-(void)checkDownloadUrls;
+@end
 
--(void)checkDownloadUrls:(NSDictionary *)infoDic;
+@interface CheckDownloadUrlsManager : NSObject<CheckDownloadUrlsDelegate>
+@property (nonatomic, assign)BOOL isDone;
++(CheckDownloadUrlsManager *)defaultCheckDownloadUrlsManager;
++(void)addToCheckQueue:(CheckDownloadUrls *)check;
 @end

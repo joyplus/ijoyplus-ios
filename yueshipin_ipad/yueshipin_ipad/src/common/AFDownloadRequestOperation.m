@@ -282,7 +282,9 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
         [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
     }
     if (self.progressiveDownloadProgress) {
-        self.progressiveDownloadProgress((long long)[data length], self.totalBytesRead, self.response.expectedContentLength,self.totalBytesReadPerDownload + self.offsetContentLength, self.totalContentLength);
+        dispatch_async(dispatch_get_main_queue(), ^{
+                       self.progressiveDownloadProgress((long long)[data length], self.totalBytesRead, self.response.expectedContentLength,self.totalBytesReadPerDownload + self.offsetContentLength, self.totalContentLength);
+                  });
     }
 }
 
