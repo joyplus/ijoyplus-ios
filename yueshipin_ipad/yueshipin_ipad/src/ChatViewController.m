@@ -145,7 +145,7 @@
 - (void)getFinishedWithError:(NSError *)error
 {
     if (error == nil) {
-        NSString *temMsg = @"您好，我是悦视频的产品经理，欢迎您给我们提产品的试用感受和建议！";
+        NSString *temMsg = @"亲，说说你的使用感受吧，有任何问题我们会在第一时间解决哦。你的陪伴会让我们做的更好，谢谢你的支持：)";
         UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"悦视频：%@", temMsg] from:NO];
         [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:temMsg, @"text", @"self", @"speaker", chatView, @"view", nil]];
         
@@ -244,7 +244,7 @@
         headImageView.frame = CGRectMake(bubbleImageView.frame.size.width, cellView.frame.size.height-50.0f, 50.0f, 50.0f);
     }
 	else{
-        [headImageView setImage:[UIImage imageNamed:@"Icon-72"]];
+        [headImageView setImage:[UIImage imageNamed:@"beauty.jpg"]];
         returnView.frame= CGRectMake(65.0f, 15.0f, returnView.frame.size.width, returnView.frame.size.height);
         bubbleImageView.frame = CGRectMake(50.0f, 14.0f, returnView.frame.size.width+24.0f, returnView.frame.size.height+24.0f);
 		cellView.frame = CGRectMake(10.0f, 0.0f, bubbleImageView.frame.size.width+30.0f,bubbleImageView.frame.size.height+30.0f);

@@ -783,6 +783,7 @@
 		EBBE254F17155F9F00091F24 /* collectinguser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE254017155F9F00091F24 /* collectinguser@2x.png */; };
 		EBBE255B17155F9F00091F24 /* pushinguser@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE254D17155F9F00091F24 /* pushinguser@2x.png */; };
 		EBBE255C17155F9F00091F24 /* show_overlay_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBE254E17155F9F00091F24 /* show_overlay_pressed@2x.png */; };
+		EBBE256A1715874500091F24 /* beauty.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBBE255D1715874500091F24 /* beauty.jpg */; };
 		EBC19B5316E97BC70001429C /* custom-cancel-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3816E97BC60001429C /* custom-cancel-normal@2x.png */; };
 		EBC19B5416E97BC70001429C /* custom-dialog-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3916E97BC60001429C /* custom-dialog-background@2x.png */; };
 		EBC19B5516E97BC70001429C /* logo_56.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC19B3B16E97BC60001429C /* logo_56.png */; };
@@ -1801,6 +1802,7 @@
 		EBBE254017155F9F00091F24 /* collectinguser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collectinguser@2x.png"; sourceTree = "<group>"; };
 		EBBE254D17155F9F00091F24 /* pushinguser@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pushinguser@2x.png"; sourceTree = "<group>"; };
 		EBBE254E17155F9F00091F24 /* show_overlay_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "show_overlay_pressed@2x.png"; sourceTree = "<group>"; };
+		EBBE255D1715874500091F24 /* beauty.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = beauty.jpg; sourceTree = "<group>"; };
 		EBC19B3816E97BC60001429C /* custom-cancel-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-cancel-normal@2x.png"; sourceTree = "<group>"; };
 		EBC19B3916E97BC60001429C /* custom-dialog-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "custom-dialog-background@2x.png"; sourceTree = "<group>"; };
 		EBC19B3B16E97BC60001429C /* logo_56.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_56.png; sourceTree = "<group>"; };
@@ -2505,6 +2507,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBBE255D1715874500091F24 /* beauty.jpg */,
 				EBBE254017155F9F00091F24 /* collectinguser@2x.png */,
 				EBBE254D17155F9F00091F24 /* pushinguser@2x.png */,
 				EBBE254E17155F9F00091F24 /* show_overlay_pressed@2x.png */,
@@ -3152,27 +3155,25 @@
 		EBBA0CEC165B253900D3F11B /* popular */ = {
 			isa = PBXGroup;
 			children = (
+				EB02F64916DAFFF0001C2E3A /* AVQueuePlayer */,
+				EBBE24431715186B00091F24 /* PopularTopViewController.h */,
+				EBBE24441715186B00091F24 /* PopularTopViewController.m */,
+				EBBE24411715186B00091F24 /* PopularListViewController.h */,
+				EBBE24421715186B00091F24 /* PopularListViewController.m */,
+				EBBE24491715186B00091F24 /* VideoViewController.h */,
+				EBBE244A1715186B00091F24 /* VideoViewController.m */,
+				EBBE243F1715186B00091F24 /* MovieViewController.h */,
+				EBBE24401715186B00091F24 /* MovieViewController.m */,
 				EBBE24371715186B00091F24 /* ComicViewController.h */,
 				EBBE24381715186B00091F24 /* ComicViewController.m */,
+				EBBE243D1715186B00091F24 /* DramaViewController.h */,
+				EBBE243E1715186B00091F24 /* DramaViewController.m */,
+				EBBE24471715186B00091F24 /* ShowViewController.h */,
+				EBBE24481715186B00091F24 /* ShowViewController.m */,
 				EBBE24391715186B00091F24 /* CommentDetailViewController.h */,
 				EBBE243A1715186B00091F24 /* CommentDetailViewController.m */,
 				EBBE243B1715186B00091F24 /* CommentWebViewController.h */,
 				EBBE243C1715186B00091F24 /* CommentWebViewController.m */,
-				EBBE243D1715186B00091F24 /* DramaViewController.h */,
-				EBBE243E1715186B00091F24 /* DramaViewController.m */,
-				EBBE243F1715186B00091F24 /* MovieViewController.h */,
-				EBBE24401715186B00091F24 /* MovieViewController.m */,
-				EBBE24411715186B00091F24 /* PopularListViewController.h */,
-				EBBE24421715186B00091F24 /* PopularListViewController.m */,
-				EBBE24431715186B00091F24 /* PopularTopViewController.h */,
-				EBBE24441715186B00091F24 /* PopularTopViewController.m */,
-				EBBE24451715186B00091F24 /* SearchHistoryListViewController.h */,
-				EBBE24461715186B00091F24 /* SearchHistoryListViewController.m */,
-				EBBE24471715186B00091F24 /* ShowViewController.h */,
-				EBBE24481715186B00091F24 /* ShowViewController.m */,
-				EBBE24491715186B00091F24 /* VideoViewController.h */,
-				EBBE244A1715186B00091F24 /* VideoViewController.m */,
-				EB02F64916DAFFF0001C2E3A /* AVQueuePlayer */,
 				EBB59CD516673CFC00F646C7 /* VideoDetailViewController.h */,
 				EBB59CD616673CFD00F646C7 /* VideoDetailViewController.m */,
 				EB14D43E165B4FED00CB3260 /* MovieDetailViewController.h */,
@@ -3186,6 +3187,8 @@
 				EBF3A966166301F100EBF56D /* ShowDetailViewController.xib */,
 				EBB59CEF166751D100F646C7 /* CommentListViewController.h */,
 				EBB59CF0166751D100F646C7 /* CommentListViewController.m */,
+				22EF004B16B767D90001F743 /* AvVideoWebViewController.h */,
+				22EF004C16B767D90001F743 /* AvVideoWebViewController.m */,
 				EBF3A961166301F100EBF56D /* ListViewController.h */,
 				EBF3A962166301F100EBF56D /* ListViewController.m */,
 				EBF3A963166301F100EBF56D /* ListViewController.xib */,
@@ -3195,8 +3198,6 @@
 				EB8201BD166636140015F447 /* SublistViewController.m */,
 				EBF3A99D1663979500EBF56D /* DeviceListViewController.h */,
 				EBF3A99E1663979600EBF56D /* DeviceListViewController.m */,
-				22EF004B16B767D90001F743 /* AvVideoWebViewController.h */,
-				22EF004C16B767D90001F743 /* AvVideoWebViewController.m */,
 				22B0FFC716F99F3C00ACDA07 /* CloseTipsView.h */,
 				22B0FFC816F99F3C00ACDA07 /* CloseTipsView.m */,
 			);
@@ -3233,6 +3234,8 @@
 			children = (
 				EBB732FE165C79E4008E407E /* SearchViewController.h */,
 				EBB732FF165C79E4008E407E /* SearchViewController.m */,
+				EBBE24451715186B00091F24 /* SearchHistoryListViewController.h */,
+				EBBE24461715186B00091F24 /* SearchHistoryListViewController.m */,
 				EBB59CC616670F6D00F646C7 /* SearchListViewController.h */,
 				EBB59CC716670F6D00F646C7 /* SearchListViewController.m */,
 				EB8201621665C4D30015F447 /* SubsearchViewController.h */,
@@ -3984,6 +3987,7 @@
 				EBBE255B17155F9F00091F24 /* pushinguser@2x.png in Resources */,
 				EBBE255C17155F9F00091F24 /* show_overlay_pressed@2x.png in Resources */,
 				22035EB5171562930019A553 /* airplay_bg@2x.png in Resources */,
+				EBBE256A1715874500091F24 /* beauty.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
