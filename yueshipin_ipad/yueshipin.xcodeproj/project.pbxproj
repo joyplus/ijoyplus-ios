@@ -15,7 +15,6 @@
 		220260E816E8414B0010322F /* iphone_biaoqing_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260BC16E8414B0010322F /* iphone_biaoqing_bt@2x.png */; };
 		220260E916E8414B0010322F /* iphone_chaoqing_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260BD16E8414B0010322F /* iphone_chaoqing_bt_pressed@2x.png */; };
 		220260EA16E8414B0010322F /* iphone_chaoqing_super_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260BE16E8414B0010322F /* iphone_chaoqing_super_bt@2x.png */; };
-		220260EB16E8414B0010322F /* iphone_clarity_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260BF16E8414B0010322F /* iphone_clarity_bg@2x.png */; };
 		220260EC16E8414B0010322F /* iphone_full_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260C016E8414B0010322F /* iphone_full_bt_pressed@2x.png */; };
 		220260ED16E8414B0010322F /* iphone_full_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260C116E8414B0010322F /* iphone_full_bt@2x.png */; };
 		220260EE16E8414B0010322F /* iphone_gaoqing_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 220260C216E8414B0010322F /* iphone_gaoqing_bt_pressed@2x.png */; };
@@ -176,9 +175,6 @@
 		22B262A91697EF7800B7732C /* CreateMyListTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262A81697EF7800B7732C /* CreateMyListTwoViewController.m */; };
 		22B262AD1697F29E00B7732C /* FindViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262AC1697F29E00B7732C /* FindViewController.m */; };
 		22B262B41697F86400B7732C /* SearchResultsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262B31697F86400B7732C /* SearchResultsViewCell.m */; };
-		22BA95F316D205BE00A774D8 /* download_loading@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F016D205BE00A774D8 /* download_loading@2x.png */; };
-		22BA95F416D205BE00A774D8 /* download_stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F116D205BE00A774D8 /* download_stop@2x.png */; };
-		22BA95F516D205BE00A774D8 /* download_wait@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BA95F216D205BE00A774D8 /* download_wait@2x.png */; };
 		22BC875416D7373300EEDC67 /* clear_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */; };
 		22BC875516D7373300EEDC67 /* clear_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875316D7373300EEDC67 /* clear_bt@2x.png */; };
 		22CE9F32169A729300D4FC76 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F31169A729300D4FC76 /* UIImage+Scale.m */; };
@@ -834,7 +830,6 @@
 		220260BC16E8414B0010322F /* iphone_biaoqing_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_biaoqing_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_biaoqing_bt@2x.png"; sourceTree = SOURCE_ROOT; };
 		220260BD16E8414B0010322F /* iphone_chaoqing_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_chaoqing_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_chaoqing_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		220260BE16E8414B0010322F /* iphone_chaoqing_super_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_chaoqing_super_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_chaoqing_super_bt@2x.png"; sourceTree = SOURCE_ROOT; };
-		220260BF16E8414B0010322F /* iphone_clarity_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_clarity_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_clarity_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		220260C016E8414B0010322F /* iphone_full_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_full_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_full_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		220260C116E8414B0010322F /* iphone_full_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_full_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_full_bt@2x.png"; sourceTree = SOURCE_ROOT; };
 		220260C216E8414B0010322F /* iphone_gaoqing_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_gaoqing_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_gaoqing_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1059,9 +1054,6 @@
 		22B262AC1697F29E00B7732C /* FindViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindViewController.m; sourceTree = "<group>"; };
 		22B262B21697F86400B7732C /* SearchResultsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultsViewCell.h; sourceTree = "<group>"; };
 		22B262B31697F86400B7732C /* SearchResultsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultsViewCell.m; sourceTree = "<group>"; };
-		22BA95F016D205BE00A774D8 /* download_loading@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_loading@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_loading@2x.png"; sourceTree = SOURCE_ROOT; };
-		22BA95F116D205BE00A774D8 /* download_stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_stop@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_stop@2x.png"; sourceTree = SOURCE_ROOT; };
-		22BA95F216D205BE00A774D8 /* download_wait@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_wait@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_wait@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BC875316D7373300EEDC67 /* clear_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt@2x.png"; sourceTree = SOURCE_ROOT; };
 		22CE9F30169A729300D4FC76 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
@@ -2267,7 +2259,6 @@
 				220260BC16E8414B0010322F /* iphone_biaoqing_bt@2x.png */,
 				220260BD16E8414B0010322F /* iphone_chaoqing_bt_pressed@2x.png */,
 				220260BE16E8414B0010322F /* iphone_chaoqing_super_bt@2x.png */,
-				220260BF16E8414B0010322F /* iphone_clarity_bg@2x.png */,
 				220260C016E8414B0010322F /* iphone_full_bt_pressed@2x.png */,
 				220260C116E8414B0010322F /* iphone_full_bt@2x.png */,
 				220260C216E8414B0010322F /* iphone_gaoqing_bt_pressed@2x.png */,
@@ -2298,9 +2289,6 @@
 				220260E116E8414B0010322F /* jishu_fen_ge_xian@2x.png */,
 				22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */,
 				22BC875316D7373300EEDC67 /* clear_bt@2x.png */,
-				22BA95F016D205BE00A774D8 /* download_loading@2x.png */,
-				22BA95F116D205BE00A774D8 /* download_stop@2x.png */,
-				22BA95F216D205BE00A774D8 /* download_wait@2x.png */,
 				EB63D2F016D07A0100B642C7 /* addFav_pressed@2x.png */,
 				EB63D2F116D07A0100B642C7 /* addFav@2x.png */,
 				EB63D2F316D07A0100B642C7 /* background_about_us@2x.png */,
@@ -3727,9 +3715,6 @@
 				EB63D72F16D0A0BE00B642C7 /* share_btn_pressed.png in Resources */,
 				EB63D73016D0A0BE00B642C7 /* share_btn.png in Resources */,
 				EBB1B16616D0B46000A8F99A /* menu_intro@2x.png in Resources */,
-				22BA95F316D205BE00A774D8 /* download_loading@2x.png in Resources */,
-				22BA95F416D205BE00A774D8 /* download_stop@2x.png in Resources */,
-				22BA95F516D205BE00A774D8 /* download_wait@2x.png in Resources */,
 				22BC875416D7373300EEDC67 /* clear_bt_pressed@2x.png in Resources */,
 				22BC875516D7373300EEDC67 /* clear_bt@2x.png in Resources */,
 				EB02F67B16DB0007001C2E3A /* back_bt_pressed@2x.png in Resources */,
@@ -3775,7 +3760,6 @@
 				220260E816E8414B0010322F /* iphone_biaoqing_bt@2x.png in Resources */,
 				220260E916E8414B0010322F /* iphone_chaoqing_bt_pressed@2x.png in Resources */,
 				220260EA16E8414B0010322F /* iphone_chaoqing_super_bt@2x.png in Resources */,
-				220260EB16E8414B0010322F /* iphone_clarity_bg@2x.png in Resources */,
 				220260EC16E8414B0010322F /* iphone_full_bt_pressed@2x.png in Resources */,
 				220260ED16E8414B0010322F /* iphone_full_bt@2x.png in Resources */,
 				220260EE16E8414B0010322F /* iphone_gaoqing_bt_pressed@2x.png in Resources */,
