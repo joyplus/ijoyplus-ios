@@ -512,13 +512,14 @@
         //输出字符串为格林威治时区，做8小时偏移
         NSString * now_str = [now description];
         //即北京时区21点整,(ti)天后，提示用户
-        NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"13:00:00"];
+        NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"12:00:00"];
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
         [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
         NSDate * Date9PM = [formatter dateFromString:today9PM];
         NSDate * fireDate = [Date9PM dateByAddingTimeInterval:ti];
         localNotification.fireDate = fireDate;
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
         localNotification.alertBody = @"亲，你已经至少一周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
         [[UIApplication sharedApplication]   scheduleLocalNotification:localNotification];
     }
