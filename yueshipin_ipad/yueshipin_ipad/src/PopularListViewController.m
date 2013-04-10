@@ -482,7 +482,7 @@
         for (int i = 0; i < 5 && i < lunboArray.count; i++){
             UIImageView *temp = (UIImageView *)[scrollView viewWithTag:9001 + i];
             NSDictionary *lunboItem = [lunboArray objectAtIndex:i];
-            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"lunbo_placeholder"]];
+            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
         }
     } else {
         cell = [self getListCell:tableView cellForRowAtIndexPath:indexPath];

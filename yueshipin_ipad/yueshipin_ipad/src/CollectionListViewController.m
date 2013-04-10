@@ -251,23 +251,21 @@
             areaNameLabel.tag = 8002;
             [cell.contentView addSubview:areaNameLabel];
             
-            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(120, 130, 75, 24)];
+            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(120, 130, 16, 16)];
             dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
             [cell.contentView addSubview:dingNumberImage];
             
-            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(125, 130, 40, 24)];
-            dingNumberLabel.textAlignment = NSTextAlignmentCenter;
+            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(140, 126, 40, 24)];
             dingNumberLabel.backgroundColor = [UIColor clearColor];
             dingNumberLabel.font = [UIFont systemFontOfSize:13];
             dingNumberLabel.tag = 6001;
             [cell.contentView addSubview:dingNumberLabel];
             
-            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(210, 130, 84, 24)];
+            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(210, 130, 16, 16)];
             collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
             [cell.contentView addSubview:collectioNumber];
             
-            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(215, 130, 40, 24)];
-            collectionNumberLabel.textAlignment = NSTextAlignmentCenter;
+            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(230, 126, 40, 24)];
             collectionNumberLabel.backgroundColor = [UIColor clearColor];
             collectionNumberLabel.font = [UIFont systemFontOfSize:13];
             collectionNumberLabel.tag = 7001;

@@ -39,9 +39,9 @@
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     int pageSize;
-    
+    int selectedRowNumber;
     NSTimer *timer;
-    
+    UIImageView *lastSelectedOverlay;
     NSString *umengPageName;
 }
 @property (nonatomic, strong) UIView *customHeaderView;
@@ -680,7 +680,7 @@
         for (int i = 0; i < 5 && i < lunboArray.count; i++){
             UIImageView *temp = (UIImageView *)[scrollView viewWithTag:9001 + i];
             NSDictionary *lunboItem = [lunboArray objectAtIndex:i];
-            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"lunbo_placeholder"]];
+            [temp setImageWithURL:[NSURL URLWithString:[lunboItem objectForKey:@"ipad_pic"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
         }
     } else {
         if (topType == MOVIE_TOP) {
@@ -1065,12 +1065,16 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UIImageView *tempImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 5, SHOW_LOGO_WEIGHT, SHOW_LOGO_HEIGHT)];
+        UIImageView *placeHolderImage = [[UIImageView alloc]initWithFrame:CGRectMake(8, 3, SHOW_LOGO_WEIGHT + 8, SHOW_LOGO_HEIGHT + 8)];
+        placeHolderImage.image = [UIImage imageNamed:@"show_placeholder"];
+        [cell.contentView addSubview:placeHolderImage];
+        
+        UIImageView *tempImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 8, SHOW_LOGO_WEIGHT, SHOW_LOGO_HEIGHT)];
         tempImage.tag = 1031;
         [cell.contentView addSubview:tempImage];
         
         UIImageView *overLayImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"show_overlay"]];
-        overLayImage.frame = CGRectMake(tempImage.frame.origin.x, 5 + SHOW_LOGO_HEIGHT-38 , tempImage.frame.size.width, 38);
+        overLayImage.frame = CGRectMake(tempImage.frame.origin.x, 6 + SHOW_LOGO_HEIGHT-35 , tempImage.frame.size.width, 38);
         overLayImage.tag = 2131;
         [cell.contentView addSubview:overLayImage];
         
@@ -1098,11 +1102,18 @@
     if (indexPath.row < showTopsArray.count) {
         NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
         UIImageView *tempImage = (UIImageView *)[cell viewWithTag:1031];
-        [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"show_placeholder"]];
+        [tempImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]]];
         
         UILabel *tempNameLabel = (UILabel *)[cell viewWithTag:3031];
         [tempNameLabel setText:[item objectForKey:@"prod_name"]];
         //    [tempNameLabel sizeToFit];
+        
+        UIImageView *overLayImage = (UIImageView *)[cell viewWithTag:2131];
+        if(selectedRowNumber == indexPath.row && lastSelectedOverlay == overLayImage){
+            overLayImage.image = [UIImage imageNamed:@"show_overlay_pressed"];
+        } else {
+            overLayImage.image = [UIImage imageNamed:@"show_overlay"];
+        }
               
         UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
         NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
@@ -1161,6 +1172,13 @@
     CGPoint point = btn.center;
     point = [table convertPoint:point fromView:btn.superview];
     NSIndexPath* indexPath = [table indexPathForRowAtPoint:point];
+    selectedRowNumber = indexPath.row;
+    if(lastSelectedOverlay != nil){
+        lastSelectedOverlay.image = [UIImage imageNamed:@"show_overlay"];
+    }
+    UIImageView *overlay = (UIImageView *)[[btn superview]viewWithTag:btn.tag + 100];
+    overlay.image = [UIImage imageNamed:@"show_overlay_pressed"];
+    lastSelectedOverlay = overlay;
     if (indexPath.row < showTopsArray.count) {
         NSDictionary *item = [showTopsArray objectAtIndex:indexPath.row];
         [self showDetailScreen:item];

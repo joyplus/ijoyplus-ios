@@ -198,8 +198,8 @@ static NSString *const iRateMacAppStoreURLFormat = @"macappstore://itunes.apple.
         self.promptAgainForEachNewVersion = YES;
         self.promptAtLaunch = YES;
         self.usesUntilPrompt = 5;
-        self.eventsUntilPrompt = 7;
-        self.daysUntilPrompt = 7;
+        self.eventsUntilPrompt = 5;
+        self.daysUntilPrompt = 5;
         self.remindPeriod = 5;
         self.verboseLogging = NO;
         self.previewMode = NO;
@@ -419,14 +419,14 @@ static NSString *const iRateMacAppStoreURLFormat = @"macappstore://itunes.apple.
     }
     
     //check if we've rated any version
-    else if (!self.promptAgainForEachNewVersion && self.ratedAnyVersion)
-    {
-        if (self.verboseLogging)
-        {
-            NSLog(@"iRate did not prompt for rating because the user has already rated this app, and promptAgainForEachNewVersion is disabled");
-        }
-        return NO;
-    }
+//    else if (!self.promptAgainForEachNewVersion && self.ratedAnyVersion)
+//    {
+//        if (self.verboseLogging)
+//        {
+//            NSLog(@"iRate did not prompt for rating because the user has already rated this app, and promptAgainForEachNewVersion is disabled");
+//        }
+//        return NO;
+//    }
     
     //check if we've declined to rate this version
     else if (self.declinedThisVersion)

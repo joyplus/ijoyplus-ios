@@ -74,7 +74,9 @@
 	[iRate sharedInstance].appStoreID = APPIRATER_APP_ID;
     [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
     [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
-    [iRate sharedInstance].daysUntilPrompt = 7;
+    [iRate sharedInstance].usesUntilPrompt = 3;
+    [iRate sharedInstance].daysUntilPrompt = 2; //第一次提醒
+    [iRate sharedInstance].remindPeriod = 4;
     [iRate sharedInstance].verboseLogging = NO;
     
     //enable preview mode
