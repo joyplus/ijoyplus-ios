@@ -182,19 +182,19 @@
     [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
     [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.reportLabel.frame = CGRectMake(260, 365, 40, 20);
+    self.reportLabel.frame = CGRectMake(270, 365, 40, 20);
     self.reportLabel.center = CGPointMake(self.addListBtn.center.x, self.reportLabel.center.y);
     self.reportLabel.textColor = CMConstants.grayColor;
     
-    self.dingNumberLabel.frame = CGRectMake(260, 365, 50, 20);
+    self.dingNumberLabel.frame = CGRectMake(270, 365, 50, 20);
     self.dingNumberLabel.center = CGPointMake(self.dingBtn.center.x, self.reportLabel.center.y);
     self.dingNumberLabel.textColor = CMConstants.grayColor;
     
-    self.collectionNumberLabel.frame = CGRectMake(260, 365, 50, 20);
+    self.collectionNumberLabel.frame = CGRectMake(270, 365, 50, 20);
     self.collectionNumberLabel.center = CGPointMake(self.collectionBtn.center.x, self.reportLabel.center.y);
     self.collectionNumberLabel.textColor = CMConstants.grayColor;
     
-    self.shareLabel.frame = CGRectMake(260, 365, 40, 20);
+    self.shareLabel.frame = CGRectMake(270, 365, 40, 20);
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     

@@ -432,7 +432,7 @@
     int year = [[dateformat stringFromDate:nowDate] integerValue];
     NSMutableArray *yearLabelArray = [[NSMutableArray alloc]initWithCapacity:12];
     [yearLabelArray addObject:@"全部"];
-    for (int i = 1; i < 11; i++) {
+    for (int i = 0; i < 10; i++) {
         [yearLabelArray addObject:[NSString stringWithFormat:@"%i", year - i]];
     }
     [yearLabelArray addObject:@"其他"];

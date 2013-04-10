@@ -146,4 +146,6 @@ typedef enum {
 
 + (UIColor *)backgroundColor;
 
++ (UIColor *)textColor;
+
 @end

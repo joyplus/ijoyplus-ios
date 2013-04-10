@@ -45,4 +45,9 @@
     return [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
 }
 
++ (UIColor *)textColor
+{
+    return [UIColor colorWithRed:101/255.0 green:99/255.0 blue:99/255.0 alpha:1];
+}
+
 @end

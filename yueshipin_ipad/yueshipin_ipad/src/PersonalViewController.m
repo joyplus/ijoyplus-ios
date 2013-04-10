@@ -111,7 +111,7 @@
         
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 130, 260, 22)];
         nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.textColor = [UIColor blackColor];
+        nameLabel.textColor = CMConstants.textColor;
         nameLabel.font = [UIFont systemFontOfSize:20];
         [self.view addSubview:nameLabel];
         
@@ -390,7 +390,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleGray;
         UILabel *movieNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(5, 10, 280, 20)];
         movieNameLabel.backgroundColor = [UIColor clearColor];
-        movieNameLabel.textColor = [UIColor blackColor];
+        movieNameLabel.textColor = CMConstants.textColor;
         movieNameLabel.tag = 1001;
         movieNameLabel.font = [UIFont systemFontOfSize:16];
         [cell.contentView addSubview:movieNameLabel];
