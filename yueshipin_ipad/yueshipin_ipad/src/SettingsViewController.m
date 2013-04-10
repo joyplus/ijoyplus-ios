@@ -138,8 +138,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         
         UIButton *checkUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 10, 467, 50);
-        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
-        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
+        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate"] forState:UIControlStateNormal];
+        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate_pressed"] forState:UIControlStateHighlighted];
         [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:checkUpdateBtn];
         
@@ -150,6 +150,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)checkUpdateBtnClicked
 {
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
     [Harpy checkVersion:self.view];
 }
 
