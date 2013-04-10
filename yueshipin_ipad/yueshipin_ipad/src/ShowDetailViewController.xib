@@ -407,7 +407,6 @@
 								<string key="NSFrame">{{69, 697}, {74, 19}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -468,7 +467,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">0</string>
+								<string key="IBUIText">顶( )</string>
 								<reference key="IBUITextColor" ref="155562371"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -497,7 +496,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<string key="IBUIText">0</string>
+								<string key="IBUIText">收藏( )</string>
 								<reference key="IBUITextColor" ref="155562371"/>
 								<nil key="IBUIHighlightedColor"/>
 								<int key="IBUIBaselineAdjustment">0</int>
@@ -1211,7 +1210,6 @@
 						<string key="introContentTextView">UITextView</string>
 						<string key="introImage">UIImageView</string>
 						<string key="nextShowBtn">UIButton</string>
-						<string key="numberLabel">UILabel</string>
 						<string key="placeholderImage">UIImageView</string>
 						<string key="playBtn">UIButton</string>
 						<string key="playLabel">UILabel</string>
@@ -1294,10 +1292,6 @@
 						<object class="IBToOneOutletInfo" key="nextShowBtn">
 							<string key="name">nextShowBtn</string>
 							<string key="candidateClassName">UIButton</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="numberLabel">
-							<string key="name">numberLabel</string>
-							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="placeholderImage">
 							<string key="name">placeholderImage</string>

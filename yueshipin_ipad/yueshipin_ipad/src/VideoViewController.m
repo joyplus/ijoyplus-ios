@@ -21,6 +21,7 @@
 @interface VideoViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong)NSString *typePrefix;
+@property (nonatomic)int lastPressedCategoryTag;
 
 @end
 
@@ -32,7 +33,7 @@
 @synthesize videoArray;
 @synthesize categoryType, regionType, yearType, lastSelectCategoryKey, lastSelectRegionKey, lastSelectYearKey;
 @synthesize videoType;
-@synthesize typePrefix;
+@synthesize typePrefix, lastPressedCategoryTag;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -308,7 +309,7 @@
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
     int num = btn.tag - 1101;
-    if (subcategoryView && !subcategoryView.hidden && num != hightLightCategoryArray.count - 1) {
+    if (subcategoryView && !subcategoryView.hidden && num != hightLightCategoryArray.count -1) {
         [self hideSubcategoryView];
     }
     for (int i = 0; i < hightLightCategoryArray.count; i++) {
@@ -324,12 +325,17 @@
         [self composeFilterCondition:item multipleCondition:NO];
         [self moveSliderView:num];
         if (num == hightLightCategoryArray.count - 1) {
-            [self showSubcategoryView];
+            if (lastPressedCategoryTag != btn.tag || subcategoryView.hidden) {
+                [self showSubcategoryView];
+            } else {
+                [self hideSubcategoryView];
+            }
         } else {
             [self changeLastSelectIndex:item];
             [self retrieveData];
         }
     }
+    lastPressedCategoryTag = btn.tag;
 }
 
 - (void)changeLastSelectIndex:(CategoryItem *)item
