@@ -830,17 +830,17 @@
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     [self.view addSubview:view];
     
-    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(715, 65, 50, 50);
-    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
-    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
-    [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
-    [view addSubview:closeBtn];
-    
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"report_frame"]];
     frame.frame = CGRectMake(0, 0, 480, 480);
     frame.center = CGPointMake(view.center.x + 20, view.center.y - 80);
     [view addSubview:frame];
+    
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(720, 65, 50, 50);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:closeBtn];
     
     for (int i = 0; i < 7; i++) {
         SSCheckBoxView *checkbox1 = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
@@ -865,6 +865,7 @@
     textField.tag = 3234757301;
     textField.delegate = self;
     textField.center = CGPointMake(view.center.x + 40, view.center.y + 58);
+    textField.font = [UIFont systemFontOfSize:14];
     textField.placeholder = @"请输入您对本部影片的意见和建议...";
     [view addSubview:textField];
 }
