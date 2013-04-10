@@ -172,7 +172,7 @@
 //    {
 //        selectedIndex = 8;
 //    }
-    if (nil == _textViewOther.text && [selectArr_ count] == 0)
+    if (0 == _textViewOther.text.length && [selectArr_ count] == 0)
     {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"提示"
                                                          message:@"亲，您还没有告诉我们问题哟！"
