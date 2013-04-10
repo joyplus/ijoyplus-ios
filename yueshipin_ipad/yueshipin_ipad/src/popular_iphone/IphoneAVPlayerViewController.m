@@ -675,7 +675,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                           @"4", @"push_type",
                           userId, @"user_id",
                           workingUrl_,@"video_url",
-                          [NSString stringWithFormat:@"%f",curTime],@"current_Time"
+                          [NSString stringWithFormat:@"%f",curTime],@"current_Time",
                           nil];
     
     PFPush *push = [[PFPush alloc] init];
