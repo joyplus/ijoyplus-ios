@@ -76,7 +76,7 @@
     [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
     [iRate sharedInstance].usesUntilPrompt = 3;
     [iRate sharedInstance].daysUntilPrompt = 2; //第一次提醒
-    [iRate sharedInstance].remindPeriod = 4;
+    [iRate sharedInstance].remindPeriod = 3;
     [iRate sharedInstance].verboseLogging = NO;
     
     //enable preview mode
