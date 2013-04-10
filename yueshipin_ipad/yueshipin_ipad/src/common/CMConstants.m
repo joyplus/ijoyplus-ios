@@ -11,7 +11,7 @@
 
 + (UIColor *)tableBorderColor
 {
-    return [UIColor colorWithRed:207/255.0 green:207/255.0 blue:207/255.0 alpha:1.0];
+    return [UIColor colorWithRed:194/255.0 green:190/255.0 blue:180.0/255.0 alpha:1];
 }
 
 + (UIColor *)yellowColor
@@ -22,7 +22,7 @@
 
 + (UIColor *)grayColor
 {
-    return [UIColor colorWithRed:149/255.0 green:146/255.0 blue:142/255.0 alpha:1.0];
+    return [UIColor colorWithRed:125/255.0 green:125/255.0 blue:125/255.0 alpha:1.0];
 }
 
 + (UIColor *)scoreBlueColor

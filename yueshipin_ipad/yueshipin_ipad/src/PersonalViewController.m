@@ -160,8 +160,8 @@
         tableHeight = 370;
         table = [[UITableView alloc] initWithFrame:CGRectMake(50, 325, 400, tableHeight) style:UITableViewStylePlain];
         table.layer.borderWidth = 1;
-        table.layer.borderColor = [UIColor colorWithRed:208/255.0 green:203/255.0 blue:192.0/255.0 alpha:1].CGColor;
-        table.separatorColor = [UIColor colorWithRed:208/255.0 green:203/255.0 blue:192.0/255.0 alpha:1];
+        table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+        table.separatorColor = CMConstants.tableBorderColor;
         [table setBackgroundColor:[UIColor clearColor]];
         table.tableFooterView = [[UIView alloc] init];
         table.showsVerticalScrollIndicator = NO;
