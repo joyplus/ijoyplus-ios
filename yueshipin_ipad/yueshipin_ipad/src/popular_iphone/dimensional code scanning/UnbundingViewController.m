@@ -28,6 +28,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor colorWithRed:242/255.0f green:242/255.0f blue:242/255.0f alpha:1.0f];
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -38,20 +39,20 @@
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
-    UIImageView * bgImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_bg.png"]];
+    UIImageView * bgImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_background.png"]];
     bgImage.frame = CGRectMake(76, 40, 168, 103);
     [self.view addSubview:bgImage];
     
     UILabel * tipsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 170, 320, 20)];
     tipsLabel.text = @"您已在电视端上成功绑定悅视频";
     tipsLabel.textAlignment = UITextAlignmentCenter;
-    tipsLabel.font = [UIFont systemFontOfSize:20];
+    tipsLabel.font = [UIFont systemFontOfSize:18];
     tipsLabel.backgroundColor = [UIColor clearColor];
     tipsLabel.textColor = [UIColor colorWithRed:82/255.f green:82/255.f blue:82/255.f alpha:1];
     [self.view addSubview:tipsLabel];
     
     UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    bundingBtn.frame = CGRectMake(70 , 265, 250, 38);
+    bundingBtn.frame = CGRectMake(35 , 265, 250, 38);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"unbunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"unbunding_f.png"] forState:UIControlStateHighlighted];
     [bundingBtn addTarget:self

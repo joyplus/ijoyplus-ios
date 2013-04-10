@@ -22,6 +22,7 @@
 #import "UIImage+Scale.h"
 #import "CommonMotheds.h"
 #import "UnbundingViewController.h"
+#import "ContainerUtility.h"
 
 #define PAGE_NUM 3
 #define TV_TYPE 9000
@@ -298,17 +299,6 @@ enum
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
 	// Do any additional setup after loading the view.
-    if (nil == bundingTipsView)
-    {
-        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tips.png"]];
-        bundingTipsView.frame = CGRectMake(0, 0, 320, 34);
-        [self.view addSubview:bundingTipsView];
-        bundingTipsView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(TopImageTaped)];
-        tapGesture.numberOfTapsRequired = 1;
-        tapGesture.numberOfTouchesRequired = 1;
-        [bundingTipsView addGestureRecognizer:tapGesture];
-    }
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, kCurrentWindowHeight-88-30)];
     self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight-88-30);
@@ -417,13 +407,45 @@ enum
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:showTableList_ withClient:self];
     
+    if (nil == bundingTipsView)
+    {
+        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]];
+        bundingTipsView.frame = CGRectMake(0, 0, 320, 34);
+        [self.view addSubview:bundingTipsView];
+        bundingTipsView.backgroundColor = [UIColor clearColor];
+        
+        bundingTipsView.userInteractionEnabled = YES;
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self
+                                                                                    action:@selector(TopImageTaped)];
+        tapGesture.numberOfTapsRequired = 1;
+        tapGesture.numberOfTouchesRequired = 1;
+        [bundingTipsView addGestureRecognizer:tapGesture];
+    }
+    
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(bundingTVSucceeded)
+                                                 name:@"bundingTVSucceeded"
+                                               object:nil];
+    
 }
 -(void)viewWillAppear:(BOOL)animated{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
+    
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSNumber * isbunding = (NSNumber *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    if (![isbunding boolValue] || nil == isbunding)
+    {
+        [self setViewType:TYPE_UNBUNDING];
+    }
+    else
+    {
+        [self setViewType:TYPE_BUNDING_TV];
+    }
+    
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -479,6 +501,11 @@ enum
                                          animated:YES];
 }
 
+- (void)bundingTVSucceeded
+{
+    [self setViewType:TYPE_BUNDING_TV];
+}
+
 - (void)TopImageTaped
 {
     UnbundingViewController *ubCtrl = [[UnbundingViewController alloc] init];
@@ -517,7 +544,7 @@ enum
     }
     else if (TYPE_UNBUNDING == type)
     {
-        bundingTipsView.hidden = NO;
+        bundingTipsView.hidden = YES;
         
         scrollRect.origin.y = 30;
         scrollRect.size.height = kCurrentWindowHeight - 118;
@@ -816,4 +843,12 @@ enum
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark -
+#pragma mark - dealloc
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"bundingTVSucceeded"
+                                                  object:nil];
+}
 @end
