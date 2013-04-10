@@ -427,7 +427,7 @@ enum
     [self loadShowTopsData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(bundingTVSucceeded)
+                                             selector:@selector(managerTVBunding)
                                                  name:@"bundingTVSucceeded"
                                                object:nil];
     
@@ -435,16 +435,7 @@ enum
 -(void)viewWillAppear:(BOOL)animated{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     
-    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
-    NSNumber * isbunding = (NSNumber *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-    if (![isbunding boolValue] || nil == isbunding)
-    {
-        [self setViewType:TYPE_UNBUNDING];
-    }
-    else
-    {
-        [self setViewType:TYPE_BUNDING_TV];
-    }
+    [self managerTVBunding];
     
 }
 - (void)viewDidUnload{
@@ -501,9 +492,18 @@ enum
                                          animated:YES];
 }
 
-- (void)bundingTVSucceeded
+- (void)managerTVBunding
 {
-    [self setViewType:TYPE_BUNDING_TV];
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSNumber * isbunding = (NSNumber *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    if (![isbunding boolValue] || nil == isbunding)
+    {
+        [self setViewType:TYPE_UNBUNDING];
+    }
+    else
+    {
+        [self setViewType:TYPE_BUNDING_TV];
+    }
 }
 
 - (void)TopImageTaped

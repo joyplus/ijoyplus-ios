@@ -102,11 +102,28 @@
         
         PFPush *push = [[PFPush alloc] init];
         [push setData:data];
-        [push sendPushInBackground];
+        [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (YES == succeeded
+                && nil == error)
+            {
+                //添加已绑定数据缓存
+                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO]
+                                                         forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+            }
+            else
+            {
+                NSLog(@"%@",error);
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                                 message:@"取消绑定电视端失败,请重试"
+                                                                delegate:nil
+                                                       cancelButtonTitle:@"确定"
+                                                       otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+        }];
         
-        //添加已绑定数据缓存
-        [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO]
-                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
