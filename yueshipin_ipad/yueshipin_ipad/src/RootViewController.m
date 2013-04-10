@@ -84,13 +84,11 @@
 @end
 
 @interface RootViewController ()
-@property (nonatomic) BOOL triggeredByDrag;
 @property (nonatomic, strong)NSMutableSet *checkboxes;
 @end
 
 @implementation RootViewController
 @synthesize menuViewController, stackScrollViewController;
-@synthesize triggeredByDrag;
 @synthesize prodUrl, prodId, prodName, prodType;
 @synthesize videoDetailDelegate, checkboxes;
 
@@ -532,11 +530,6 @@
     [self.view addSubview:view];
 }
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    triggeredByDrag = YES;
-}
-
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView; 
 {
     if (scrollView.tag == 3268143) {
@@ -597,7 +590,6 @@
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
     UIScrollView *episodeView = (UIScrollView *)[view viewWithTag:3268143];
-    triggeredByDrag = NO;
     [episodeView setContentOffset:CGPointMake(520*(btn.tag - 1001), 0) animated:YES];
 }
 
