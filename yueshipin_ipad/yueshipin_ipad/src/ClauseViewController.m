@@ -40,6 +40,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
     
     bgScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 520, 720)];
     [bgScrollView setBackgroundColor:[UIColor clearColor]];

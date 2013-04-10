@@ -48,7 +48,12 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view setBackgroundColor:[UIColor whiteColor]];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height*2)];
+    self.bgImage.layer.zPosition = -1;
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
+    
+    [self.view setBackgroundColor:[UIColor clearColor]];
     [[UMFeedback sharedInstance] setAppkey:umengAppKey delegate:self];
     [[UMFeedback sharedInstance] get];
     

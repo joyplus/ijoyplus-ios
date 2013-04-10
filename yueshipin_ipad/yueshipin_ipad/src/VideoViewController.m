@@ -445,8 +445,8 @@
         for (int i = 0; i < regionCategoryArray.count; i++) {
             CategoryItem *tempItem = [regionCategoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            if (tempItem.label.length > 3) {
-                tempBtn.frame = CGRectMake(75 + (i%8) * 51, 40 + regionLabel.frame.origin.y, 50, 45);
+            if (i > 7) {
+                tempBtn.frame = CGRectMake(70 + (i%8) * 51, 40 + regionLabel.frame.origin.y, 50, 45);
             } else {
                 tempBtn.frame = CGRectMake(70 + (i%8) * 51, regionLabel.frame.origin.y, 50, 45);
             }

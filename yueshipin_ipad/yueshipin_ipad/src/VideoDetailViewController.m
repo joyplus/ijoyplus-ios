@@ -450,8 +450,13 @@
     viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
     viewController.titleContent = [commentItem objectForKey:@"title"];
     viewController.content = [commentItem objectForKey:@"comments"];
+    viewController.parentDelegateController = self;
     [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:YES];
     self.moveToLeft = NO;
 }
 
+- (void)hideCloseBtn
+{
+    //error: never be here , implemented in subclasses.
+}
 @end

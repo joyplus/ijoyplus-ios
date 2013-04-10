@@ -186,11 +186,11 @@
     self.reportLabel.center = CGPointMake(self.addListBtn.center.x, self.reportLabel.center.y);
     self.reportLabel.textColor = CMConstants.grayColor;
     
-    self.dingNumberLabel.frame = CGRectMake(270, 365, 50, 20);
+    self.dingNumberLabel.frame = CGRectMake(270, 365, 60, 20);
     self.dingNumberLabel.center = CGPointMake(self.dingBtn.center.x, self.reportLabel.center.y);
     self.dingNumberLabel.textColor = CMConstants.grayColor;
     
-    self.collectionNumberLabel.frame = CGRectMake(270, 365, 50, 20);
+    self.collectionNumberLabel.frame = CGRectMake(270, 365, 60, 20);
     self.collectionNumberLabel.center = CGPointMake(self.collectionBtn.center.x, self.reportLabel.center.y);
     self.collectionNumberLabel.textColor = CMConstants.grayColor;
     
@@ -859,5 +859,15 @@
     [self setControlButtonDisplay];
 }
 
+//delegate method
+- (void)hideCloseBtn
+{
+    [self.closeBtn setHidden:YES];
+}
+
+- (void)showCloseBtn
+{
+    [self.closeBtn setHidden:NO];
+}
 
 @end

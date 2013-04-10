@@ -21,6 +21,7 @@
 @synthesize titleContent;
 @synthesize content;
 @synthesize titleLabel, contentLabel;
+@synthesize parentDelegateController;
 
 - (void)viewDidUnload
 {
@@ -78,10 +79,12 @@
     [super viewWillAppear:animated];
     titleLabel.text = titleContent;
     contentLabel.text = content;
+    [self.parentDelegateController hideCloseBtn];
 }
 
 - (void)closeBtnClicked
 {
+    [parentDelegateController showCloseBtn];
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:VideoDetailViewController.class];
 }
 

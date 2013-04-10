@@ -24,6 +24,8 @@
 
 - (void)changePlayingEpisodeBtn:(int)currentNum;
 - (void)playNextEpisode;
+- (void)hideCloseBtn;
+- (void)showCloseBtn;;
 @end
 
 @interface VideoDetailViewController : SlideBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate>{
