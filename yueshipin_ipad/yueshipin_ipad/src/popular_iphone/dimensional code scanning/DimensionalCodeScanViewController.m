@@ -8,12 +8,16 @@
 
 #import "DimensionalCodeScanViewController.h"
 #import "BundingViewController.h"
-@interface DimensionalCodeScanViewController ()
 
+#define SCAN_TIMER_INTERVAL (4.0f)
+
+@interface DimensionalCodeScanViewController ()
+@property (nonatomic,strong) NSTimer    *scanTimer;
+- (void)fireANewTimer;
 @end
 
 @implementation DimensionalCodeScanViewController
-
+@synthesize scanSymbolView,scanTimer;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -21,6 +25,15 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void)dealloc
+{
+    if (scanTimer)
+    {
+        [scanTimer invalidate];
+        scanTimer = nil;
+    }
 }
 
 - (void)viewDidLoad
@@ -46,12 +59,27 @@
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
+    scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_symbol.png"]];
+    scanSymbolView.frame = CGRectMake(73, 137.5, 172.5, 20.5);
+    [self.view addSubview:scanSymbolView];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self fireANewTimer];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,6 +91,30 @@
 - (void)back
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)fireANewTimer
+{
+    [scanTimer invalidate];
+    scanTimer = nil;
+    
+    scanTimer = [NSTimer timerWithTimeInterval:SCAN_TIMER_INTERVAL
+                                        target:self
+                                      selector:@selector(scanAnimation)
+                                      userInfo:nil
+                                       repeats:NO];
+    [scanTimer fire];
+}
+
+- (void)scanAnimation
+{
+    scanSymbolView.frame = CGRectMake(73, 137.5, 172.5, 20.5);
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:SCAN_TIMER_INTERVAL];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationDidStopSelector:@selector(fireANewTimer)];
+    scanSymbolView.frame = CGRectMake(73, 300, 172.5, 20.5);
+    [UIView commitAnimations];
 }
 
 #pragma mark - 

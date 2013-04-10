@@ -475,7 +475,7 @@ enum
 -(void)setting:(id)sender
 {
     UIImageView * scanView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"scan_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(440, 0, 10, 0)]];
-    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 64));
+    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 44));
     scanView.backgroundColor = [UIColor clearColor];
     
     DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
