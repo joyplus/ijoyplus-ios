@@ -32,10 +32,11 @@
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
 @property (atomic, strong) NSString *show3GAlertSeq;
 @property (nonatomic, strong)HTTPServer *httpServer;
-@property (nonatomic, strong) UILocalNotification *localNotification;
 - (void)monitorReachability;
 
-- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti;
+- (void)addLocalNotification;
+- (void)addLocalNotificationInterVal:(NSTimeInterval)time
+                             message:(NSString *)msg;
 - (void)cancelLocalNotification;
 
 @end
@@ -61,7 +62,6 @@
 @synthesize show3GAlertSeq;
 @synthesize padM3u8DownloadManager;
 @synthesize httpServer;
-@synthesize localNotification;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -310,8 +310,7 @@
     [self.downLoadManager pauseAllTask];
     
     //When app enter background, add a new local Notification
-    //7天（1周）后下午9点提示
-    [self addLocalNotificationWithTimeInterval:DAY(7)];
+    [self addLocalNotification];
     // end
     //add notification
     [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
@@ -502,36 +501,55 @@
     
 }
 
-- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti
+#pragma mark - 
+#pragma mark - LocalNotification
+
+- (void)addLocalNotification
 {
-    localNotification = [[UILocalNotification alloc] init];
+    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
+    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
+    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
+    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
+    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
     
-    if (nil != localNotification)
-    {
-        NSDate * now = [NSDate new];
-        //输出字符串为格林威治时区，做8小时偏移
-        NSString * now_str = [now description];
-        //即北京时区21点整,(ti)天后，提示用户
-        NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"12:00:00"];
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
-        NSDate * Date9PM = [formatter dateFromString:today9PM];
-        NSDate * fireDate = [Date9PM dateByAddingTimeInterval:ti];
-        localNotification.fireDate = fireDate;
-        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-        localNotification.soundName = UILocalNotificationDefaultSoundName;
-        localNotification.alertBody = @"亲，你已经至少一周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
-        [[UIApplication sharedApplication]   scheduleLocalNotification:localNotification];
-    }
+    [self addLocalNotificationInterVal:DAY(2)
+                               message:firstStr];
+    [self addLocalNotificationInterVal:DAY(4)
+                               message:secondStr];
+    [self addLocalNotificationInterVal:DAY(6)
+                               message:thirdStr];
+    [self addLocalNotificationInterVal:DAY(8)
+                               message:fourthStr];
+    [self addLocalNotificationInterVal:DAY(13)
+                               message:fifthStr];
+}
+
+- (void)addLocalNotificationInterVal:(NSTimeInterval)time
+                             message:(NSString *)msg
+{
+    
+    NSDate * now = [NSDate new];
+    //输出字符串为格林威治时区，做8小时偏移
+    NSString * now_str = [now description];
+    //即北京时区20点整,(ti)天后，提示用户
+    NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"12:00:00"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+    NSDate * Date9PM = [formatter dateFromString:today9PM];
+    
+    UILocalNotification * localNotification = [[UILocalNotification alloc] init];
+    NSDate * fireDate = [Date9PM dateByAddingTimeInterval:time];
+    localNotification.fireDate = fireDate;
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.alertBody = msg;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    
 }
 
 - (void)cancelLocalNotification
 {
-    if (nil != localNotification)
-    {
-        [[UIApplication sharedApplication] cancelLocalNotification:localNotification];
-        localNotification = nil;
-    }
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
 - (void)clearRespForWXView
