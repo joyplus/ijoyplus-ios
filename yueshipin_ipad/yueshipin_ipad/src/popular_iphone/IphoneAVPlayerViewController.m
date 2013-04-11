@@ -2017,15 +2017,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             return;
         
         if ((duration - playbackTime)>5) {
-            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:playbackTime] ];
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
         }
         else{ 
-           [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0] ];
+           [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:0] ];
         }
-        NSString *subname = @"";
-        if (videoType_ != 1 && playNum < subnameArray.count) {
-            subname = [subnameArray objectAtIndex:playNum];
-        }
+//        NSString *subname = @"";
+//        if (videoType_ != 1 && playNum < subnameArray.count) {
+//            subname = [subnameArray objectAtIndex:playNum];
+//        }
+        NSString *subname = [NSString stringWithFormat:@"%d",(playNum + 1)];
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];

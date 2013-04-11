@@ -104,11 +104,11 @@
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"悦视频"];
+    [titleText setText:@"悦单"];
     self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];

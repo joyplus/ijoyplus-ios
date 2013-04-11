@@ -159,11 +159,11 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"悦视频"];
+    [titleText setText:@"我的"];
     self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -382,7 +382,25 @@
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
-        sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:(NSArray *)[result objectForKey:@"histories"]];
+        NSArray *tempArr = (NSArray *)[result objectForKey:@"histories"];
+        sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:tempArr];
+        for (NSDictionary *item in sortedwatchRecordArray_) {
+            NSString *prodId = [item objectForKey:@"prod_id"];
+            NSString *playNum = [item objectForKey:@"prod_subname"];
+            NSString *videoType = [item objectForKey:@"prod_type"];
+            if ([videoType isEqualToString:@"2"]) {
+                [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId] result:[NSNumber numberWithInt:[playNum intValue]-1]];
+            }
+            
+            int playbackTime = [[item objectForKey:@"playback_time"] intValue];
+            int duration = [item objectForKey:@"duration"];
+            if ((duration - playbackTime)>5) {
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@",prodId,playNum] result:[NSNumber numberWithInt:playbackTime] ];
+            }
+            else{
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@",prodId,playNum] result:[NSNumber numberWithInt:0] ];
+            }
+        }
         if (sortedwatchRecordArray_.count > 0) {
             [noRecord_ removeFromSuperview];
         }

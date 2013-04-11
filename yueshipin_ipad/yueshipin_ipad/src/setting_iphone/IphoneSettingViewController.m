@@ -77,19 +77,20 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     scrollView.contentSize = CGSizeMake(320, kFullWindowHeight+160);
     [self.view addSubview:scrollView];
     
-    UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 17, 296, 59)];
+    UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 67)];
     view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view1.layer.borderWidth = 1;
     view1.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     UIImageView *sinaWeibo = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 272, 33)];
     sinaWeibo.image = [UIImage imageNamed:@"my_s_xinlang.png"];
     [view1 addSubview:sinaWeibo];
-    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 18, 120, 22)];
+    
+    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 16, 120, 22)];
     weiboName_.backgroundColor = [UIColor clearColor];
     weiboName_.textColor =  [UIColor colorWithRed:54/255.0 green:98/255.0 blue:156/255.0 alpha:1];
     weiboName_.font = [UIFont boldSystemFontOfSize:13];
     [view1 addSubview:weiboName_];
-    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 16, 50, 22)];
+    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 14, 50, 22)];
     [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
     [view1 addSubview:sinaSwith_];
     sinaweibo_ = [AppDelegate instance].sinaweibo;
@@ -100,6 +101,13 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         weiboName_.text = [NSString stringWithFormat:@"(%@)",username];;
     }
 
+    UILabel *infolabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 48, 250, 15)];
+    infolabel.text = @"绑定微博后，可以在多个设备间同步您的记录。";
+    infolabel.textColor = [UIColor grayColor];
+    infolabel.backgroundColor = [UIColor clearColor];
+    infolabel.font = [UIFont systemFontOfSize:11];
+    [view1 addSubview:infolabel];
+    
     [scrollView addSubview:view1];
    
     

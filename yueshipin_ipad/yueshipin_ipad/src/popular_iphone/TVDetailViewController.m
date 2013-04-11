@@ -1527,7 +1527,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
-    [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:playNum-1]];
+    NSString *cacheStr = [NSString stringWithFormat:@"drama_epi_%@", self.prodId];
+    [[CacheUtility sharedCache]putInCache:cacheStr result:[NSNumber numberWithInt:playNum-1]];
     curSelectedNum = playNum - 1;
     [self playVideo:playNum-1];
     [self.tableView reloadData];

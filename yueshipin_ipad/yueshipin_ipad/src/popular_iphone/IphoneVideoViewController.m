@@ -182,6 +182,7 @@
 
 
 -(void)share:(id)sender event:(UIEvent *)event{
+    
     if (![self checkNetWork]) {
         [UIUtility showNetWorkError:self.view];
         return;
@@ -440,7 +441,7 @@
 }
 
 -(NSNumber*)getRecordInfo:(int)num{
-    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
+    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1)]]];
 
     return cacheResult;
     
