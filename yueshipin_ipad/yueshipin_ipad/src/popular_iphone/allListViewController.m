@@ -22,6 +22,7 @@
 #import "DownLoadManager.h"
 #import "CommonMotheds.h"
 #import "DownLoadManager.h"
+#import "DimensionalCodeScanViewController.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 #define TV_TYPE 9000
@@ -121,26 +122,35 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
-    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
-    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
-    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 49, 30);
-   [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [customNavigationButtonView_ addGestureRecognizer:tapGesture];
-    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
-    int num = 0;
-    if (numStr != nil) {
-        num = [numStr intValue];
-    }
-    customNavigationButtonView_.badgeView.hidden = NO;
-        
-    customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
-    
-    
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+//    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
+//    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
+//    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 49, 30);
+//   [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
+//    tapGesture.numberOfTapsRequired = 1;
+//    tapGesture.numberOfTouchesRequired = 1;
+//    [customNavigationButtonView_ addGestureRecognizer:tapGesture];
+//    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
+//    int num = 0;
+//    if (numStr != nil) {
+//        num = [numStr intValue];
+//    }
+//    customNavigationButtonView_.badgeView.hidden = NO;
+//        
+//    customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
+//    
+//    
+//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+//    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
+    
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
@@ -188,11 +198,22 @@
 }
 
 -(void)setting:(id)sender{
-
-    IphoneSettingViewController *iphoneSettingViewController = [[IphoneSettingViewController alloc] init];
-    iphoneSettingViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:iphoneSettingViewController animated:YES];
-
+    UIImageView * scanView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"scan_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(440, 0, 10, 0)]];
+    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 44));
+    scanView.backgroundColor = [UIColor clearColor];
+    
+    DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
+    reader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
+    reader.showsZBarControls = NO;
+    reader.cameraOverlayView = scanView;
+    ZBarImageScanner *scanner = reader.scanner;
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    reader.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:reader
+                                         animated:YES];
 }
 
 
