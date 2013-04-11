@@ -29,6 +29,7 @@
 #import "GridViewCellDemo.h"
 #import "CommonMotheds.h"
 #import "FeedbackViewController.h"
+#import "Harpy.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -126,7 +127,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 //    [self.view addSubview:appRecommed];
     
     
-    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 172)];
+    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 212)];
     view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view3.layer.borderWidth = 1;
     view3.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
@@ -161,15 +162,22 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
     [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:careUs];
+    
+    UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
+    update.frame = CGRectMake(24, 325, 273, 33);
+    [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdate.png"] forState:UIControlStateNormal];
+    [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdatePress.png"] forState:UIControlStateHighlighted];
+    [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:update];
 	
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 335, 135, 15)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 375, 135, 15)];
     label.font = [UIFont systemFontOfSize:13];
     label.textColor = [UIColor colorWithRed:94/255.0 green:94/255.0 blue:94/255.0 alpha:1];
     label.backgroundColor = [UIColor clearColor];
     label.text = @"★精品推荐★";
     [scrollView addSubview:label];
     
-    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 356, 296, 260)];
+    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 396, 296, 260)];
     view4.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view4.layer.borderWidth = 1;
     view4.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
@@ -220,6 +228,9 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     }
 
 
+}
+-(void)update:(id)sender{
+  [Harpy checkVersion:self.view];
 }
 - (void)showSuccessModalView:(int)closeTime
 {
