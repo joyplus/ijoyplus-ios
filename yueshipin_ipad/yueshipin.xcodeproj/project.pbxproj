@@ -575,7 +575,6 @@
 		EBB59CBE16670A3E00F646C7 /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB59CB916670A3E00F646C7 /* libMobClickLibrary.a */; };
 		EBB59CBF16670A3E00F646C7 /* libUMFeedback.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB59CBA16670A3E00F646C7 /* libUMFeedback.a */; };
 		EBB59CC016670A3E00F646C7 /* umFeedback.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CBC16670A3E00F646C7 /* umFeedback.bundle */; };
-		EBB59CC816670F6E00F646C7 /* SearchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB59CC716670F6D00F646C7 /* SearchListViewController.m */; };
 		EBB59CD216673A0500F646C7 /* drama_type@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CCF16673A0500F646C7 /* drama_type@2x.png */; };
 		EBB59CD316673A0500F646C7 /* movie_type@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CD016673A0500F646C7 /* movie_type@2x.png */; };
 		EBB59CD416673A0500F646C7 /* result_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBB59CD116673A0500F646C7 /* result_title@2x.png */; };
@@ -876,6 +875,7 @@
 		EBC298BA16F04615009DF9FD /* IpadPageNameConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC298B916F04615009DF9FD /* IpadPageNameConstant.m */; };
 		EBC5438A16E9CC110041A31F /* download_line.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC5438916E9CC110041A31F /* download_line.png */; };
 		EBC9D92017165AE9005D5DBF /* clear_play_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC9D91317165AE9005D5DBF /* clear_play_pressed.png */; };
+		EBC9D9471716A221005D5DBF /* SearchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC9D9461716A221005D5DBF /* SearchListViewController.m */; };
 		EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */; };
 		EBF3A96A166301F100EBF56D /* DramaDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */; };
 		EBF3A96B166301F100EBF56D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A962166301F100EBF56D /* ListViewController.m */; };
@@ -1616,8 +1616,6 @@
 		EBB59CBB16670A3E00F646C7 /* MobClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClick.h; sourceTree = "<group>"; };
 		EBB59CBC16670A3E00F646C7 /* umFeedback.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = umFeedback.bundle; sourceTree = "<group>"; };
 		EBB59CBD16670A3E00F646C7 /* UMFeedback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMFeedback.h; sourceTree = "<group>"; };
-		EBB59CC616670F6D00F646C7 /* SearchListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchListViewController.h; sourceTree = "<group>"; };
-		EBB59CC716670F6D00F646C7 /* SearchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchListViewController.m; sourceTree = "<group>"; };
 		EBB59CCF16673A0500F646C7 /* drama_type@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drama_type@2x.png"; sourceTree = "<group>"; };
 		EBB59CD016673A0500F646C7 /* movie_type@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "movie_type@2x.png"; sourceTree = "<group>"; };
 		EBB59CD116673A0500F646C7 /* result_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "result_title@2x.png"; sourceTree = "<group>"; };
@@ -1963,6 +1961,8 @@
 		EBC298BB16F04DCF009DF9FD /* EnvConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvConstant.h; sourceTree = "<group>"; };
 		EBC5438916E9CC110041A31F /* download_line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = download_line.png; sourceTree = "<group>"; };
 		EBC9D91317165AE9005D5DBF /* clear_play_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clear_play_pressed.png; sourceTree = "<group>"; };
+		EBC9D9451716A221005D5DBF /* SearchListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchListViewController.h; sourceTree = "<group>"; };
+		EBC9D9461716A221005D5DBF /* SearchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchListViewController.m; sourceTree = "<group>"; };
 		EBF3A95E166301F100EBF56D /* DramaDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaDetailViewController.h; sourceTree = "<group>"; };
 		EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaDetailViewController.m; sourceTree = "<group>"; };
 		EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DramaDetailViewController.xib; sourceTree = "<group>"; };
@@ -3429,10 +3429,10 @@
 			children = (
 				EBB732FE165C79E4008E407E /* SearchViewController.h */,
 				EBB732FF165C79E4008E407E /* SearchViewController.m */,
+				EBC9D9451716A221005D5DBF /* SearchListViewController.h */,
+				EBC9D9461716A221005D5DBF /* SearchListViewController.m */,
 				EBBE24451715186B00091F24 /* SearchHistoryListViewController.h */,
 				EBBE24461715186B00091F24 /* SearchHistoryListViewController.m */,
-				EBB59CC616670F6D00F646C7 /* SearchListViewController.h */,
-				EBB59CC716670F6D00F646C7 /* SearchListViewController.m */,
 				EB8201621665C4D30015F447 /* SubsearchViewController.h */,
 				EB8201631665C4D30015F447 /* SubsearchViewController.m */,
 				EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */,
@@ -4331,7 +4331,6 @@
 				EB8201BE166636150015F447 /* SublistViewController.m in Sources */,
 				EB8201C216663A700015F447 /* SelectListViewController.m in Sources */,
 				EBB59CAE1666FE8400F646C7 /* MyListViewController.m in Sources */,
-				EBB59CC816670F6E00F646C7 /* SearchListViewController.m in Sources */,
 				EBB59CD716673CFE00F646C7 /* VideoDetailViewController.m in Sources */,
 				EBB59CF1166751D200F646C7 /* CommentListViewController.m in Sources */,
 				EBB59CF81667681E00F646C7 /* CommentCell.m in Sources */,
@@ -4461,6 +4460,7 @@
 				EBBE245C1715188600091F24 /* CategoryItem.m in Sources */,
 				EBBE245D1715188600091F24 /* CustomTextField.m in Sources */,
 				EBBE2462171518B500091F24 /* Harpy.m in Sources */,
+				EBC9D9471716A221005D5DBF /* SearchListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
