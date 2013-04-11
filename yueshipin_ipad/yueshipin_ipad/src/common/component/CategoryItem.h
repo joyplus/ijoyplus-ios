@@ -17,7 +17,8 @@ typedef enum
     YEAR_TYPE = 3,
     ALL_CATEGORY = 4,
     ALL_REGION = 5,
-    ALL_YEAR = 6
+    ALL_YEAR = 6,
+    MORE_TYPE = 7,
 } VideoCategoryType;
 
 @interface CategoryItem : NSObject

@@ -222,6 +222,9 @@
 {
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:videoType], @"type", categoryType, @"sub_type", regionType, @"area", yearType, @"year", nil];
+        if (ENVIRONMENT == 0) {            
+            NSLog(@"%@", parameters);
+        }
         [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [myHUD hide];
@@ -364,6 +367,7 @@
         categoryType = @"";
         regionType = @"";
         yearType = @"";
+    } else if (item.subtype == MORE_TYPE){//当点击更多时，什么都不做
     } else if (item.subtype == ALL_CATEGORY){
         categoryType = @"";
     } else if (item.subtype == ALL_REGION){

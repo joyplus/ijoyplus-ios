@@ -146,7 +146,7 @@
     
     item = [[CategoryItem alloc]init];
     item.type = COMIC_TYPE;
-    item.subtype = NO_TYPE;
+    item.subtype = MORE_TYPE;
     item.label = @"更多";
     item.key = @"other";
     item.value = @"更多";
@@ -516,7 +516,7 @@
     
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
-    item.subtype = NO_TYPE;
+    item.subtype = MORE_TYPE;
     item.label = @"更多";
     item.key = @"other";
     item.value = @"更多";
@@ -894,7 +894,7 @@
     
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
-    item.subtype = NO_TYPE;
+    item.subtype = MORE_TYPE;
     item.label = @"更多";
     item.key = @"other";
     item.value = @"更多";
@@ -1226,7 +1226,7 @@
     
     item = [[CategoryItem alloc]init];
     item.type = SHOW_TYPE;
-    item.subtype = NO_TYPE;
+    item.subtype = MORE_TYPE;
     item.label = @"更多";
     item.key = @"other";
     item.value = @"更多";
