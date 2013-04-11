@@ -839,6 +839,14 @@
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
     item.subtype = REGION_TYPE;
+    item.label = @"美国";
+    item.key = @"america";
+    item.value = @"美国";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
+    item.subtype = REGION_TYPE;
     item.label = @"香港";
     item.key = @"hongkang";
     item.value = @"香港";
@@ -850,14 +858,6 @@
     item.label = @"台湾";
     item.key = @"taiwan";
     item.value = @"台湾";
-    [categoryArray addObject:item];
-    
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = REGION_TYPE;
-    item.label = @"韩国";
-    item.key = @"america";
-    item.value = @"韩国";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];

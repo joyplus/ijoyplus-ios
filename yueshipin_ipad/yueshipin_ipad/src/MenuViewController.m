@@ -283,6 +283,10 @@
     }
     
     UIViewController *viewController = [self getViewControllerByIndex];
+    if (indexPath.row > 1 && indexPath.row < 6) {
+        VideoViewController *videoViewController = (VideoViewController *)viewController;
+        videoViewController.revertSearchCriteria = YES;
+    }
 	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
     if(selectedIndex < 10){
         BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];

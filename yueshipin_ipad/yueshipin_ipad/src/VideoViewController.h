@@ -37,6 +37,7 @@
 @property (nonatomic, strong) NSString *lastSelectRegionKey;
 @property (nonatomic, strong) NSString *lastSelectYearKey;
 @property (nonatomic)VideoType videoType;
+@property (nonatomic)BOOL revertSearchCriteria;
 
 - (id)initWithFrame:(CGRect)frame;
 

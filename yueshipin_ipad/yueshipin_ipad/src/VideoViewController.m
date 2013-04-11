@@ -34,6 +34,7 @@
 @synthesize categoryType, regionType, yearType, lastSelectCategoryKey, lastSelectRegionKey, lastSelectYearKey;
 @synthesize videoType;
 @synthesize typePrefix, lastPressedCategoryTag;
+@synthesize revertSearchCriteria;
 
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -182,14 +183,16 @@
     [super viewWillAppear:animated];
     if (videoArray.count == 0) {
         [self retrieveData];
+    } else if(revertSearchCriteria){
+        UIButton *allBtn = (UIButton *)[topCategoryView viewWithTag:1101];
+        [allBtn sendActionsForControlEvents:UIControlEventTouchDown];
+        revertSearchCriteria = NO;
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    UIButton *allBtn = (UIButton *)[topCategoryView viewWithTag:1101];
-    [allBtn sendActionsForControlEvents:UIControlEventTouchDown];
     if (umengPageName) {
         [MobClick endLogPageView:umengPageName];
     }
