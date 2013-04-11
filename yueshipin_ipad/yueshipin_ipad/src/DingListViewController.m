@@ -52,7 +52,7 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     [self.view addSubview:self.bgImage];
     
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 62, 26)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 132, 42)];
     titleImage.image = [UIImage imageNamed:@"push_title"];
     [self.view addSubview:titleImage];
     

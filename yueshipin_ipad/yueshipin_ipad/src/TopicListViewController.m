@@ -56,7 +56,7 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     [self.view addSubview:self.bgImage];
     
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 62, 26)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 132, 42)];
     titleImage.image = [UIImage imageNamed:@"list_title"];
     [self.view addSubview:titleImage];
     
@@ -67,7 +67,7 @@
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 80, 420, self.view.frame.size.height - 370)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 80, 420, self.view.frame.size.height - 390)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];

@@ -54,7 +54,7 @@
 //    [self.view addSubview:lineImage];
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 62, 31);
+    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 100, 75);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
