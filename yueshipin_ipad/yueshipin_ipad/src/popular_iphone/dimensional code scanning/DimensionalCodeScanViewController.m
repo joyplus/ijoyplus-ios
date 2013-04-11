@@ -60,7 +60,7 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     scanSymbolView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"scan_symbol.png"]];
-    scanSymbolView.frame = CGRectMake(73, 137.5, 172.5, 20.5);
+    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391, 175, 20.5);
     [self.view addSubview:scanSymbolView];
     
 }
@@ -108,12 +108,13 @@
 
 - (void)scanAnimation
 {
-    scanSymbolView.frame = CGRectMake(73, 137.5, 172.5, 20.5);
+    //kCurrentWindowHeight - 44 - 342.5
+    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391, 175, 20.5);
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:SCAN_TIMER_INTERVAL];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDidStopSelector:@selector(fireANewTimer)];
-    scanSymbolView.frame = CGRectMake(73, 300, 172.5, 20.5);
+    scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391 + 168.5, 175, 20.5);
     [UIView commitAnimations];
 }
 
