@@ -151,6 +151,7 @@
     
     self.playBtn.frame = CGRectMake(260, 280, 100, 50);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
@@ -272,6 +273,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"movie"];
         episodeArray = [video objectForKey:@"episodes"];
+        [super checkCanPlayVideo];
         topics = [result objectForKey:@"topics"];
         NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
         [commentArray removeAllObjects];
@@ -344,14 +346,21 @@
     
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
-    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
-        // do nothing
-//        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
-//        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
+    if (self.canPlayVideo) {
+        if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+            // do nothing
+            //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
+            //        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
+        } else {
+            [self.downloadBtn setEnabled:NO];
+            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+        }
     } else {
+        [self.playBtn setEnabled:NO];
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
+    
     [self checkIfDownloading];
     [self repositElements:0];
 }

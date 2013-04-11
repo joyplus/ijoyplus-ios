@@ -42,6 +42,8 @@
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
 @property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
+@property (nonatomic)BOOL canPlayVideo;
+- (void)checkCanPlayVideo;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 - (void)addListBtnClicked;

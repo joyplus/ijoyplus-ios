@@ -24,6 +24,7 @@
 @synthesize subname;
 @synthesize mp4DownloadUrls;
 @synthesize m3u8DownloadUrls;
+@synthesize canPlayVideo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -458,5 +459,39 @@
 - (void)hideCloseBtn
 {
     //error: never be here , implemented in subclasses.
+}
+
+- (void)checkCanPlayVideo
+{
+    for (NSDictionary *epi in episodeArray) {
+        NSArray *videoUrls = [epi objectForKey:@"video_urls"];
+        for (NSDictionary *videoUrl in videoUrls) {
+            NSString *url = [videoUrl objectForKey:@"url"];
+            NSString *trimUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (trimUrl && trimUrl.length > 0) {
+                canPlayVideo = YES;
+                break;
+            }
+        }
+        if (canPlayVideo) {
+            break;
+        } else {
+            NSArray *downUrls = [epi objectForKey:@"down_urls"];
+            for (NSDictionary *downUrl in downUrls) {
+                NSArray *urls = [downUrl objectForKey:@"urls"];
+                for (NSDictionary *url in urls) {
+                    NSString *realurl = [url objectForKey:@"url"];
+                    NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    if (trimUrl && trimUrl.length > 0) {
+                        canPlayVideo = YES;
+                        break;
+                    }
+                }
+                if (canPlayVideo) {
+                    break;
+                }
+            }
+        }
+    }
 }
 @end

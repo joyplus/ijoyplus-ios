@@ -153,6 +153,7 @@
     
     self.playBtn.frame = CGRectMake(260, 280, 100, 50);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
@@ -337,6 +338,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"tv"];
         episodeArray = [video objectForKey:@"episodes"];
+        [self checkCanPlayVideo];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         episodeArray = [episodeArray sortedArrayUsingComparator:^(NSDictionary *a, NSDictionary *b) {
             NSNumber *first =  [f numberFromString:[NSString stringWithFormat:@"%@", [a objectForKey:@"name"]]];
@@ -378,6 +380,12 @@
     self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [video objectForKey:@"stars"];
     self.actorName1Label.text = stars;
+    
+    if (!self.canPlayVideo) {
+        [self.playBtn setEnabled:NO];
+        [self.downloadBtn setEnabled:NO];
+        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+    }
 
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
