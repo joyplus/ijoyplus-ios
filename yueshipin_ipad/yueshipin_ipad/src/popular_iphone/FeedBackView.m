@@ -77,6 +77,11 @@
 
 - (void)customView
 {
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTaped)];
+    tapGesture.numberOfTapsRequired = 1;
+    tapGesture.numberOfTouchesRequired = 1;
+    [self addGestureRecognizer:tapGesture];
+    
     UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(10, 85, 295, 376)];
     feedback.backgroundColor = [UIColor clearColor];
     [self addSubview:feedback];
@@ -296,6 +301,11 @@
     [self removeFromSuperview];
 }
 
+- (void)backgroundTaped
+{
+    [self endEditing:YES];
+}
+
 #pragma mark -
 #pragma mark - 对外接口
 
@@ -385,7 +395,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    [self backgroundTaped];
 }
 
 @end
