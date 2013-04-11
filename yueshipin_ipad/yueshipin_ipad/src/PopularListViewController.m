@@ -520,7 +520,6 @@
         contentImage1.tag = 2001;
         [cell.contentView addSubview:contentImage1];
         
-        
         UIImageView *hotImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(25 + LIST_LOGO_WIDTH - 38, -3, 42, 42)];
         hotImage1.tag = 1111;
         [cell.contentView addSubview:hotImage1];
@@ -575,13 +574,13 @@
         
         for(int i = 0; i < 3; i++){
             UIView *dotView1 = [UIUtility getDotView:6];
-            dotView1.center = CGPointMake(120, 58 + 18 * i);
+            dotView1.center = CGPointMake(119, 58 + 18 * i);
             [imageView1 addSubview:dotView1];
             
             UILabel *label1 = [[UILabel alloc]initWithFrame:CGRectMake(150, 47 + i * 18, 80, 20)];
             [label1 setBackgroundColor:[UIColor clearColor]];
             [label1 setTextColor:CMConstants.grayColor];
-            [label1 setFont:[UIFont systemFontOfSize:12]];
+            [label1 setFont:[UIFont systemFontOfSize:13]];
             label1.tag = 4001 + i;
             [cell.contentView addSubview:label1];
             
@@ -592,12 +591,12 @@
             UILabel *label2 = [[UILabel alloc]initWithFrame:CGRectMake(388, 47 + i * 18, 80, 20)];
             [label2 setBackgroundColor:[UIColor clearColor]];
             [label2 setTextColor:CMConstants.grayColor];
-            [label2 setFont:[UIFont systemFontOfSize:12]];
+            [label2 setFont:[UIFont systemFontOfSize:13]];
             label2.tag = 5001 + i;
             [cell.contentView addSubview:label2];
             
             UIView *dotView2 = [UIUtility getDotView:6];
-            dotView2.center = CGPointMake(120, 58 + 18 * i);
+            dotView2.center = CGPointMake(117, 58 + 18 * i);
             [imageView2 addSubview:dotView2];
             
             UIView *dotView22 = [UIUtility getDotView:4];

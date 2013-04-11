@@ -52,7 +52,6 @@
     [self setBgScrollView:nil];
     [self setPlaceholderImage:nil];
     [self setFilmImage:nil];
-    [self setTitleImage:nil];
     [self setTitleLabel:nil];
     [self setScoreLabel:nil];
     [self setDoulanLogo:nil];
@@ -98,10 +97,10 @@
     self.type = 1;
     umengPageName = MOVIE_DETAIL;
     
-    self.bgScrollView.frame = CGRectMake(0, 255, self.view.frame.size.width, self.view.frame.size.height - 300);
+    self.bgScrollView.frame = CGRectMake(0, 228, self.view.frame.size.width, self.view.frame.size.height - 300);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
     
-    self.closeBtn.frame = CGRectMake(456, 1, 50, 50);
+    self.closeBtn.frame = CGRectMake(455, 0, 50, 50);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -118,9 +117,6 @@
     [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.playRoundBtn.center = self.filmImage.center;
-    
-    self.titleImage.frame = CGRectMake(LEFT_WIDTH, 35, 62, 26);
-    self.titleImage.image = [UIImage imageNamed:@"detail_title"];
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
