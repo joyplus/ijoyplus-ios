@@ -165,7 +165,7 @@
                 }
             }
             if ([[reply objectForKey:@"type"] isEqualToString:@"dev_reply"]){
-                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"悦视频", message] from:NO];
+                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"Angeline", message] from:NO];
                 [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:message, @"text", @"self", @"speaker", chatView, @"view", nil]];
             }else{
                 UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", NSLocalizedString(@"我",nil), message] from:YES];
