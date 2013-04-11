@@ -43,6 +43,11 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     self.bgImage.layer.zPosition = -1;
     [self.view addSubview:self.bgImage];
+    
+    [[self.view layer] setShadowOffset:CGSizeMake(5, 5)];
+    [[self.view layer] setShadowRadius:5];
+    [[self.view layer] setShadowOpacity:1];
+    [[self.view layer] setShadowColor:[UIColor blackColor].CGColor];
 
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
