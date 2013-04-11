@@ -333,9 +333,9 @@
     }
     int collectioNum = [[video objectForKey:@"favority_num"] intValue];
     if (collectioNum > 1000) {
-        self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", collectioNum/1000.0];
+        self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
     } else {
-        self.collectionNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", collectioNum];
+        self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
     }
 
     //在弹出窗口判断视频是否可以下载
