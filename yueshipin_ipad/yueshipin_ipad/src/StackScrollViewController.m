@@ -43,6 +43,7 @@
 #import "SearchViewController.h"
 #import "GenericBaseViewController.h"
 #import "PersonalViewController.h"
+#import "CommentDetailViewController.h"
 const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 
 @implementation StackScrollViewController
@@ -872,9 +873,8 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 		[[borderViews viewWithTag:2] setHidden:TRUE];
 		[[borderViews viewWithTag:1] setHidden:TRUE];
 	}
-	
-	if ([slideViews.subviews count] != 0) {
-		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(0, 0, 0 , self.view.frame.size.height)];
+	if ([slideViews.subviews count] != 0 && ![controller isKindOfClass:[CommentDetailViewController class]]) {
+		UIViewWithShadow* verticalLineView = [[UIViewWithShadow alloc] initWithFrame:CGRectMake(-5, 0, 5 , self.view.frame.size.height)];
 		[verticalLineView setBackgroundColor:[UIColor clearColor]];
 		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[verticalLineView setClipsToBounds:NO];
