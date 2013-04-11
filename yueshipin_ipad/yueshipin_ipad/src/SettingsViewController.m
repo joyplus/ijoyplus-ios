@@ -90,7 +90,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaUsernameLabel.textColor = CMConstants.titleBlueColor;
         [sinaWeiboBg addSubview:sinaUsernameLabel];
         
-        sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(370, 140, 75, 27)];
+        sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(380, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
         [self.view addSubview:sinaSwitch];                       
        

@@ -422,11 +422,11 @@
         NSNumber *playbackTime = (NSNumber *)[item objectForKey:@"playback_time"];
         NSNumber *duration = (NSNumber *)[item objectForKey:@"duration"];
         if(duration.doubleValue - playbackTime.doubleValue < 3){
-            [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
-            [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
-        } else {
             [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
             [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
+        } else {
+            [playButton setBackgroundImage:[UIImage imageNamed:@"replay"] forState:UIControlStateNormal];
+            [playButton setBackgroundImage:[UIImage imageNamed:@"replay_pressed"] forState:UIControlStateHighlighted];
         }
         playButton.frame = CGRectMake(345, (size.height + 40 - 49)/2.0, 52, 49);
     }
