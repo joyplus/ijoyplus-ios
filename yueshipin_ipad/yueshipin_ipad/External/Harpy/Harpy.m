@@ -33,7 +33,7 @@
     }
     HUD.tag = 63857392;
     HUD.frame = CGRectMake(HUD.frame.origin.x, HUD.frame.origin.y, HUD.frame.size.width, HUD.frame.size.height);
-    HUD.labelText = @"检查中...";
+    HUD.labelText = @"正在检测新版本...";
     HUD.opacity = 0.5;
     [HUD show:YES];
     // Asynchronously query iTunes AppStore for publically available version
@@ -84,7 +84,7 @@
 {
     
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:kHarpyAlertViewTitle
-                                                        message:@"已经是最新版了。"
+                                                        message:@"您使用的已经是最新版本了！"
                                                        delegate:nil
                                               cancelButtonTitle:@"确定"
                                               otherButtonTitles:nil, nil];
