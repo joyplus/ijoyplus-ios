@@ -23,6 +23,8 @@ static NSString * const kPlayableKey		= @"playable";
 
 /* PlayerItem keys */
 static NSString * const kStatusKey         = @"status";
+static NSString * const k_BufferEmpty       = @"playbackBufferEmpty";
+static NSString * const k_ToKeepUp          = @"playbackLikelyToKeepUp";
 
 /* AVPlayer keys */
 static NSString * const kRateKey			= @"rate";
@@ -91,6 +93,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
+static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext;
 
 #pragma mark -
 @implementation AVPlayerViewController
@@ -1046,6 +1049,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [mPlayer seekToTime:resolutionLastPlaytime];
         resolutionLastPlaytime = kCMTimeInvalid;
     }
+    [self dismissActivityView];
     mPlayer.allowsAirPlayVideo = YES;
 	[mPlayer play];
     [self showStopButton];
@@ -1086,7 +1090,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [mPlayer removeObserver:self forKeyPath:@"rate"];
 	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
     [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
-    
+    //buffering
+    [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
+    [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -1759,6 +1765,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
 }
 
+- (void)showActivityView
+{
+    if (!playCacheView.superview)
+    {
+        [self.view addSubview:playCacheView];
+        
+        myHUD.hidden = NO;
+        [self.view bringSubviewToFront:myHUD];
+        [myHUD show:YES];
+        UILabel *lastLabel = (UILabel *)[playCacheView viewWithTag:3232947504];
+        lastLabel.text = nil;
+    }
+}
+- (void)dismissActivityView
+{
+    if (playCacheView.superview)
+    {
+        myHUD.hidden = YES;
+        [playCacheView removeFromSuperview];
+        playCacheView = nil;
+    }
+}
+
 #pragma mark -
 #pragma mark Loading the Asset Keys Asynchronously
 
@@ -1828,6 +1857,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:AVPlayerDemoPlaybackViewControllerStatusObservationContext];
 	
+    //buffering
+	[self.mPlayerItem addObserver:self
+                       forKeyPath:k_BufferEmpty
+                          options:NSKeyValueObservingOptionNew
+                          context:AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext];
+    [self.mPlayerItem addObserver:self
+                       forKeyPath:k_ToKeepUp
+                          options:NSKeyValueObservingOptionNew
+                          context:AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext];
+    
     /* When the player item has played to its end time we'll toggle
      the movie controller Pause button to be the Play button */
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -2036,7 +2075,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	/* AVPlayer "rate" property value observer. */
 	else if (context == AVPlayerDemoPlaybackViewControllerRateObservationContext)
 	{
-        [self syncPlayPauseButtons];
+        //[self syncPlayPauseButtons];
 	}
 	/* AVPlayer "currentItem" property observer. 
         Called when the AVPlayer replaceCurrentItemWithPlayerItem: 
@@ -2060,6 +2099,41 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self syncPlayPauseButtons];
         }
 	}
+    else if (context == AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext)
+    {
+        AVPlayerItem * pItem = (AVPlayerItem *)object;
+        if (k_BufferEmpty == path)
+        {
+            if (pItem.playbackBufferEmpty)
+            {
+                
+            }
+            else
+            {
+                
+            }
+        }
+        else if (k_ToKeepUp == path)
+        {
+            if (pItem.playbackLikelyToKeepUp)
+            {
+                [self dismissActivityView];
+                BOOL isPlaying = [self isPlaying];
+                BOOL isHidden = mPlayButton.hidden;
+                if (!isPlaying && isHidden)
+                {
+                    [mPlayer play];
+                }
+            }
+            else
+            {
+                if (![self isPlaying])
+                {
+                    [self showPlayCacheView];
+                }
+            }
+        }
+    }
 	else
 	{
 		[super observeValueForKeyPath:path ofObject:object change:change context:context];
