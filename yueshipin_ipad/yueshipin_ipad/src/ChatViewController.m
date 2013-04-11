@@ -136,7 +136,7 @@
                 if (![self.chatArray containsObject:createAt]) {
                     [self.chatArray addObject:createAt];
                 }
-                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"悦视频", _content] from:NO];
+                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"Angeline", _content] from:NO];
                 [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:_content, @"text", @"self", @"speaker", chatView, @"view", nil]];
             }
         }
@@ -151,7 +151,7 @@
 {
     if (error == nil) {
         NSString *temMsg = @"亲，说说你的使用感受吧，有任何问题我们会在第一时间解决哦。你的陪伴会让我们做的更好，谢谢你的支持：)";
-        UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"悦视频：%@", temMsg] from:NO];
+        UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"Angeline：%@", temMsg] from:NO];
         [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:temMsg, @"text", @"self", @"speaker", chatView, @"view", nil]];
         
         for (NSDictionary *reply in [UMFeedback sharedInstance].topicAndReplies) {
