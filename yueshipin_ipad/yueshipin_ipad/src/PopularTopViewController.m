@@ -81,7 +81,7 @@
         sloganImageView.frame = CGRectMake(15, 36, 261, 42);
         [self.view addSubview:sloganImageView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 10) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 5) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
@@ -703,7 +703,7 @@
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
         [titleLabel setTextColor:CMConstants.textColor];
-        [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setFont:[UIFont systemFontOfSize:13]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.tag = 4011;
         [cell.contentView addSubview:titleLabel];
@@ -714,7 +714,7 @@
         cellScrollView.delegate = self;
         for (int i=0; i < MOVIE_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
-            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 4, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
             placeHolderImage.tag = 8011;
             [cellScrollView addSubview:placeHolderImage];
             
@@ -722,14 +722,14 @@
             tempBtn.tag = 2011 + i;
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6011 + i;
-            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 6, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             tempBtn.frame = movieImage.frame;
             [tempBtn setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:0.4]] forState:UIControlStateHighlighted];
             [tempBtn addTarget:self action:@selector(movieImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
             [cellScrollView addSubview:tempBtn];
             
-            UILabel *tempLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, NORMAL_VIDEO_HEIGHT + 11, NORMAL_VIDEO_WIDTH + 10, 30)];
+            UILabel *tempLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, NORMAL_VIDEO_HEIGHT + 9, NORMAL_VIDEO_WIDTH, 30)];
             [tempLabel setTextAlignment:NSTextAlignmentCenter];
             [tempLabel setTextColor:CMConstants.textColor];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
@@ -739,12 +739,12 @@
             [cellScrollView addSubview:tempLabel];
         }
         
-        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 13, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
-        titleImage1.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 11, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 26)];
+        titleImage1.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
         [cellScrollView addSubview:titleImage1];
         
-        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((NORMAL_VIDEO_WIDTH+5)*6 - 10 + 20, MOVIE_POSTER_HEIGHT + 13, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
-        titleImage2.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((NORMAL_VIDEO_WIDTH+5)*6 - 10 + 20, MOVIE_POSTER_HEIGHT + 11, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 26)];
+        titleImage2.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
         [cellScrollView addSubview:titleImage2];
         
         [cellScrollView setContentSize:CGSizeMake(cellScrollView.frame.size.width * 2, NORMAL_VIDEO_HEIGHT)];
@@ -824,7 +824,7 @@
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
         [titleLabel setTextColor:CMConstants.textColor];
-        [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setFont:[UIFont systemFontOfSize:13]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.tag = 4011;
         [cell.contentView addSubview:titleLabel];
@@ -835,7 +835,7 @@
         cellScrollView.delegate = self;
         for (int i=0; i < DRAMA_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
-            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 4, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
             placeHolderImage.tag = 8011;
             [cellScrollView addSubview:placeHolderImage];
             
@@ -843,14 +843,14 @@
             tempBtn.tag = 2011 + i;
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6011 + i;
-            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 6, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             tempBtn.frame = movieImage.frame;
             [tempBtn setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:0.4]] forState:UIControlStateHighlighted];
             [tempBtn addTarget:self action:@selector(dramaImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
             [cellScrollView addSubview:tempBtn];
             
-            UILabel *tempLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, NORMAL_VIDEO_HEIGHT + 11, NORMAL_VIDEO_WIDTH + 10, 30)];
+            UILabel *tempLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, NORMAL_VIDEO_HEIGHT + 9, NORMAL_VIDEO_WIDTH, 30)];
             [tempLabel setTextAlignment:NSTextAlignmentCenter];
             [tempLabel setTextColor:CMConstants.textColor];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
@@ -860,11 +860,11 @@
             [cellScrollView addSubview:tempLabel];
         }
         
-        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 13, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
+        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 11, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
         titleImage1.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
         [cellScrollView addSubview:titleImage1];
         
-        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((NORMAL_VIDEO_WIDTH+5)*6 - 10 + 20, MOVIE_POSTER_HEIGHT + 13, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
+        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((NORMAL_VIDEO_WIDTH+5)*6 - 10 + 20, MOVIE_POSTER_HEIGHT + 11, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
         titleImage2.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
         [cellScrollView addSubview:titleImage2];
         
@@ -945,7 +945,7 @@
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
         UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
         [titleLabel setTextColor:CMConstants.textColor];
-        [titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [titleLabel setFont:[UIFont systemFontOfSize:13]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
         titleLabel.tag = 4011;
         [cell.contentView addSubview:titleLabel];
@@ -956,7 +956,7 @@
         cellScrollView.delegate = self;
         for (int i=0; i < DRAMA_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
-            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 4, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
             placeHolderImage.tag = 8011 + i;
             [cellScrollView addSubview:placeHolderImage];
             
@@ -964,14 +964,14 @@
             tempBtn.tag = 2011 + i;
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6011 + i;
-            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 8, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
+            movieImage.frame = CGRectMake(placeHolderImage.frame.origin.x + 4, 6, MOVIE_POSTER_WIDTH, MOVIE_POSTER_HEIGHT);
             tempBtn.frame = movieImage.frame;
             [tempBtn setBackgroundImage:[UIUtility createImageWithColor:[UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:0.4]] forState:UIControlStateHighlighted];
             [tempBtn addTarget:self action:@selector(comicImageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cellScrollView addSubview:movieImage];
             [cellScrollView addSubview:tempBtn];
             
-            UILabel *tempLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, NORMAL_VIDEO_HEIGHT + 11, NORMAL_VIDEO_WIDTH + 10, 30)];
+            UILabel *tempLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, NORMAL_VIDEO_HEIGHT + 9, NORMAL_VIDEO_WIDTH, 30)];
             [tempLabel setTextAlignment:NSTextAlignmentCenter];
             [tempLabel setTextColor:CMConstants.textColor];
             [tempLabel setBackgroundColor:[UIColor clearColor]];
@@ -981,11 +981,11 @@
             [cellScrollView addSubview:tempLabel];
         }
         
-        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 13, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
+        UIImageView *titleImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(10, MOVIE_POSTER_HEIGHT + 9, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
         titleImage1.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
         [cellScrollView addSubview:titleImage1];
         
-        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((NORMAL_VIDEO_WIDTH+5)*6 - 10 + 20, MOVIE_POSTER_HEIGHT + 13, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
+        UIImageView *titleImage2 = [[UIImageView alloc]initWithFrame:CGRectMake((NORMAL_VIDEO_WIDTH+5)*6 - 10 + 20, MOVIE_POSTER_HEIGHT + 9, (NORMAL_VIDEO_WIDTH+5)*6 - 18, 30)];
         titleImage2.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
         [cellScrollView addSubview:titleImage2];
         
@@ -1259,7 +1259,7 @@
         if (topType == SHOW_TOP) {
             return SHOW_LOGO_HEIGHT + 10;
         } else {
-            return NORMAL_VIDEO_HEIGHT + 75;
+            return NORMAL_VIDEO_HEIGHT + 65;
         }
     }
 }
@@ -1269,7 +1269,7 @@
     if(section == 0){
         return 0;
     } else {
-        return 64;
+        return 70;
     }
 }
 
