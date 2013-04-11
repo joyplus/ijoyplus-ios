@@ -799,7 +799,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     
     float totalFreeSpace = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
     
-    if ((totalSpace - totalFreeSpace)*1024 <= 300 ) {
+    if (totalFreeSpace*1024 <= 300 ) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"空间不足，请清理磁盘后重试" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
         [alert show];
         [self pauseAllTask];
