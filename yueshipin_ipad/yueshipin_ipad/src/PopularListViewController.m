@@ -250,7 +250,13 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         return;
     }
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
+    NSNumber *pageNumber;
+    if (topicType == MOVIE_TOPIC) {
+        pageNumber = [NSNumber numberWithInt:reloads_];
+    } else if(topicType == DRAMA_TOPIC){
+        pageNumber = [NSNumber numberWithInt:dramaReloads];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: pageNumber, @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         NSArray *tempTopsArray;

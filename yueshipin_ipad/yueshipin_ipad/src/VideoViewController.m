@@ -66,9 +66,9 @@
     } else if(videoType == DRAMA_TYPE){
         sloganImageView.image = [UIImage imageNamed:@"slogan_drama"];
     } else if(videoType == COMIC_TYPE){
-        sloganImageView.image = [UIImage imageNamed:@"slogan_show"];
-    } else if(videoType == SHOW_TYPE){
         sloganImageView.image = [UIImage imageNamed:@"slogan_comic"];
+    } else if(videoType == SHOW_TYPE){
+        sloganImageView.image = [UIImage imageNamed:@"slogan_show"];
     }
 }
 
@@ -709,6 +709,8 @@
     if (indexPath.row < ceil(videoArray.count/5.0)) {
         int i = 0;
         for (i = 0; i < fmin(videoArray.count - 5 * indexPath.row, 5); i++) {
+            UIImageView *placeHolderImage = (UIImageView *)[cell viewWithTag:1011 + i];
+            placeHolderImage.image = [[UIImage imageNamed:@"video_bg_placeholder"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
             NSDictionary *item = [videoArray objectAtIndex: 5 * indexPath.row + i];
             [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]]];
@@ -750,6 +752,8 @@
                 nameLabel.text = @"";
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + j];
                 titleLabel.text = @"";
+                UIButton *tempBtn = (UIButton *)[cell viewWithTag:2011 + j];
+                [tempBtn removeFromSuperview];
             }
         }
         
