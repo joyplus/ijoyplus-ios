@@ -68,7 +68,7 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     [self.view addSubview:self.bgImage];
 
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 107, 26)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45, 107, 26)];
     titleImage.image = [UIImage imageNamed:@"add_video_title"];
     [self.view addSubview:titleImage];
     
@@ -80,7 +80,7 @@
     [self.view addSubview:closeBtn];
     
     addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(LEFT_WIDTH, 80, 62, 31);
+    addBtn.frame = CGRectMake(LEFT_WIDTH - 10, 80, 100, 75);
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -88,14 +88,14 @@
     [self.view addSubview:addBtn];
     
     doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    doneBtn.frame = CGRectMake(addBtn.frame.origin.x + 72, 80, 62, 31);
+    doneBtn.frame = CGRectMake(addBtn.frame.origin.x + addBtn.frame.size.width + 20, 80, 100, 75);
     [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish"] forState:UIControlStateNormal];
     [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish_pressed"] forState:UIControlStateHighlighted];
     [doneBtn addTarget:self action:@selector(doneBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [doneBtn setHidden:YES];
     [self.view addSubview:doneBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 120, 420, 580)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 150, 420, 540)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];

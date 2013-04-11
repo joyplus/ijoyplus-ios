@@ -62,14 +62,14 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     self.bgImage.layer.zPosition = -1;
     [self.view addSubview:self.bgImage];
-    self.titleLabel.frame = CGRectMake(LEFT_WIDTH, 35, 310, 27);
+    self.titleLabel.frame = CGRectMake(LEFT_WIDTH, 45, 310, 27);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:26];
     self.titleLabel.backgroundColor = [UIColor clearColor];
     self.titleLabel.textColor = CMConstants.titleBlueColor;
     self.titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
     self.titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
     
-    self.lineImage.frame = CGRectMake(LEFT_WIDTH, 80, 400, 2);
+    self.lineImage.frame = CGRectMake(LEFT_WIDTH, 85, 400, 2);
     self.lineImage.image = [UIImage imageNamed:@"dividing"];
    
     self.closeBtn.frame = CGRectMake(456, 0, 50, 50);
@@ -77,12 +77,12 @@
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.addBtn.frame = CGRectMake(LEFT_WIDTH, 100, 62, 31);
+    self.addBtn.frame = CGRectMake(LEFT_WIDTH - 10, 90, 100, 75);
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [self.addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteBtn.frame = CGRectMake(LEFT_WIDTH + self.addBtn.frame.size.width + 10, 100, 105, 31);
+    self.deleteBtn.frame = CGRectMake(LEFT_WIDTH + self.addBtn.frame.size.width + 10, 90, 140, 75);
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [self.deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];

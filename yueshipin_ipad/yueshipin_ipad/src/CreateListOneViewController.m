@@ -120,9 +120,9 @@
     self.contentText.frame = CGRectMake(LEFT_WIDTH+5, 180, 390, 92);
     self.contentText.placeholder = @"简介（可选）";
     
-    self.nextBtn.frame = CGRectMake(380, 285, 62, 39);
+    self.nextBtn.frame = CGRectMake(350, 285, 100, 75);
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
-    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
+//    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];
     [self.nextBtn setEnabled:NO];
     [self.nextBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
