@@ -94,10 +94,7 @@
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 
 #define SHOW_MENU_INTRO @"show_menu_intro"
-#define SHOW_PLAY_INTRO @"show_play_intro"
-#define DOWNLOAD_SETTING_INTRO @"download_setting_intro"
 #define WEIBO_INTRO @"weibbo_intro"
-#define SHOW_DOWNLOAD_INTRO @"show_download_intro"
 #define SHOW_PLAY_INTRO_WITH_DOWNLOAD @"show_play_intro_with_download"
 #define WIFI_IS_NOT_AVAILABLE @"wifi_is_not_available"
 

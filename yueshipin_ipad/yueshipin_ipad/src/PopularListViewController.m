@@ -117,7 +117,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO introImage:[UIImage imageNamed:@"menu_intro"]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

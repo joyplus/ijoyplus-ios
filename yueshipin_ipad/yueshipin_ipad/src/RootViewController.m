@@ -799,9 +799,10 @@
 
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage
 {
-    NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
+    NSString *newKey = [NSString stringWithFormat:@"%@_%@", VERSION, introScreenKey];
+    NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:newKey]];
     if (![showMenuIntro isEqualToString:@"1"]) {
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:newKey];
         UIView *view = [self.view viewWithTag:3268999];
         if (view == nil) {
             view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
