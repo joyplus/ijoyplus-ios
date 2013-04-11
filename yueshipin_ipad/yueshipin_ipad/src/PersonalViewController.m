@@ -428,7 +428,7 @@
             [playButton setBackgroundImage:[UIImage imageNamed:@"continue"] forState:UIControlStateNormal];
             [playButton setBackgroundImage:[UIImage imageNamed:@"continue_pressed"] forState:UIControlStateHighlighted];
         }
-        playButton.frame = CGRectMake(330, (size.height + 40 - 49)/2.0, 52, 49);
+        playButton.frame = CGRectMake(345, (size.height + 40 - 49)/2.0, 52, 49);
     }
     return cell;
 }
