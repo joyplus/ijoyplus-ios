@@ -96,6 +96,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [MobClick endLogPageView:SUPPORT_LIST];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"dingListViewDisappear" object:self userInfo:nil];
 }
 
 - (void)retrieveTopsListData

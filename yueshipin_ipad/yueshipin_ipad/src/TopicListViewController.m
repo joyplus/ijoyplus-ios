@@ -101,6 +101,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"topicListViewDisappear" object:self userInfo:nil];
     [MobClick endLogPageView:MY_TOP_LIST];
 }
 

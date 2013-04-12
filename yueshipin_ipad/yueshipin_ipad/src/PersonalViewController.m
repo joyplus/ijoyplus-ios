@@ -64,6 +64,15 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WATCH_HISTORY_REFRESH object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"dingListViewDisappear" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"collectionListViewDisappear" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"topicListViewDisappear" object:nil];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -119,7 +128,7 @@
         supportBtn.frame = CGRectMake(50, 190, 131, 79);
         supportBtn.tag = 1001;
         [supportBtn setBackgroundImage:[UIImage imageNamed:@"support_btn_bg"] forState:UIControlStateNormal];
-        [supportBtn setBackgroundImage:[UIImage imageNamed:@"support_btn_bg_pressed"] forState:UIControlStateHighlighted];
+        [supportBtn setBackgroundImage:[UIImage imageNamed:@"support_btn_bg_pressed"] forState:UIControlStateSelected];
         [supportBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchDown];
         [self.view addSubview:supportBtn];
         
@@ -127,7 +136,8 @@
         collectionBtn.frame = CGRectMake(185, 190, 131, 79);
         collectionBtn.tag = 1002;
         [collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg"] forState:UIControlStateNormal];
-        [collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg_pressed"] forState:UIControlStateHighlighted];
+        
+        [collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_btn_bg_pressed"] forState:UIControlStateSelected];
         [collectionBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchDown];
         [self.view addSubview:collectionBtn];
         
@@ -135,7 +145,8 @@
         listBtn.frame = CGRectMake(315, 190, 131, 79);
         listBtn.tag = 1003;
         [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_bg"] forState:UIControlStateNormal];
-        [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_bg_pressed"] forState:UIControlStateHighlighted];
+        
+        [listBtn setBackgroundImage:[UIImage imageNamed:@"list_btn_bg_pressed"] forState:UIControlStateSelected];
         [listBtn addTarget:self action:@selector(summaryBtnClicked:) forControlEvents:UIControlEventTouchDown];
         [self.view addSubview:listBtn];
         
@@ -146,6 +157,7 @@
         createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         createBtn.frame = CGRectMake(380, 265, 67, 51);
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list"] forState:UIControlStateNormal];
+        
         [createBtn setBackgroundImage:[UIImage imageNamed:@"create_list_pressed"] forState:UIControlStateHighlighted];
         [createBtn addTarget:self action:@selector(createBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:createBtn];
@@ -187,7 +199,21 @@
 {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshWatchHistory:) name:WATCH_HISTORY_REFRESH object:nil];
-   
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dingListDisappear)
+                                                 name:@"dingListViewDisappear"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(collectionListDisappear)
+                                                 name:@"collectionListViewDisappear"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(topicListDisappear)
+                                                 name:@"topicListViewDisappear"
+                                               object:nil];
+    
     reloads_ = 2;
 }
 
@@ -319,6 +345,19 @@
 - (void)refreshWatchHistory:(NSNotification *)notification
 {
     [self parseWatchHistory];
+}
+
+- (void)collectionListDisappear
+{
+    collectionBtn.selected = NO;
+}
+- (void)topicListDisappear
+{
+    listBtn.selected = NO;
+}
+- (void)dingListDisappear
+{
+    supportBtn.selected = NO;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -523,6 +562,17 @@
 
 - (void)summaryBtnClicked:(UIButton *)sender
 {
+
+    UIButton * btn = (UIButton *)sender;
+    if (btn.selected)
+    {
+        return;
+    }
+    collectionBtn.selected = NO;
+    listBtn.selected = NO;
+    supportBtn.selected = NO;
+    btn.selected = YES;
+    
     if(sender.tag == 1001){
 //        [sender setBackgroundImage:[UIImage imageNamed:@"support_btn_bg_pressed"] forState:UIControlStateNormal];
         DingListViewController *viewController = [[DingListViewController alloc] init];

@@ -95,6 +95,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [MobClick endLogPageView:COLLECTION_LIST];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"collectionListViewDisappear" object:self userInfo:nil];
 }
 
 
