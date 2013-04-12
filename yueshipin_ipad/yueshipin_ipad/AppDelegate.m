@@ -200,7 +200,9 @@
     }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+ 
+    [DatabaseManager initDatabase];
+    
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
         [self customizeAppearance];
@@ -235,9 +237,6 @@
 
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
     
-    if (ENVIRONMENT == 0) {
-        [self doDBMethodTest];
-    }
     return YES;
 }
 
@@ -624,20 +623,5 @@
     
     [WXApi sendResp:resp];
 }
-
-- (void)doDBMethodTest
-{
-    [DatabaseManager initDatabase];
-    [self shuangrongTest];
-//    [self stevenTest];
-}
-
-- (void)shuangrongTest
-{
-    //[DatabaseManager test];
-    
-}
-
-
 
 @end

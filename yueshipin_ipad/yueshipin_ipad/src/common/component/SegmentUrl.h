@@ -6,9 +6,8 @@
 //  Copyright (c) 2013年 joyplus. All rights reserved.
 //
 
-#import "SQLitePersistentObject.h"
-
-@interface SegmentUrl : SQLitePersistentObject
+#import "DatabaseObject.h"
+@interface SegmentUrl : DatabaseObject
 
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *subitemId;

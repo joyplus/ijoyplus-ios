@@ -234,17 +234,17 @@
         NSLog(@"Could not open db in DatabaseManager!");
         return;
     }
-    if ([dbObject isKindOfClass:[DownloadItem class]]) {
+    if ( dbObject.class == [DownloadItem class]) {
         NSString *itemId = ((DownloadItem *)dbObject).itemId;
         NSString *sqlString = [NSString stringWithFormat:@"delete from DownloadItem where itemId = '%@'",itemId];
         [db executeQuery:sqlString];
     }
-   else if ([dbObject isKindOfClass:[SubdownloadItem class]]) {
+   else if (dbObject.class == [SubdownloadItem class]) {
         NSString *subitemId = ((SubdownloadItem *)dbObject).subitemId;
         NSString *sqlString = [NSString stringWithFormat:@"delete from DownloadItem where subitemId = '%@'",subitemId];
         [db executeQuery:sqlString];
     }
-   else if ([dbObject isKindOfClass:[SegmentUrl class]]) {
+   else if (dbObject.class == [SegmentUrl class]) {
         NSString *itemId = ((SegmentUrl *)dbObject).itemId;
         NSString *sqlString = [NSString stringWithFormat:@"delete from DownloadItem where itemId = '%@'",itemId];
         [db executeQuery:sqlString];
@@ -303,8 +303,9 @@
             if (dbObject.class == DownloadItem.class) {
                 DownloadItem *obj = (DownloadItem *)dbObject;
                 NSArray *parameterArray = [NSArray arrayWithObjects:obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], obj.itemId, nil];
-                [db executeUpdate:@"update DownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ? \
+            BOOL b =  [db executeUpdate:@"update DownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ? \
                                      where itemId = ? " withArgumentsInArray:parameterArray];
+                NSLog(@"%@",b? @"YES":@"NO");
             } else if (dbObject.class == SubdownloadItem.class) {
                 SubdownloadItem *obj = (SubdownloadItem *)dbObject;
                 NSArray *parameterArray = [NSArray arrayWithObjects:obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration],  obj.itemId, obj.subitemId, nil];
@@ -355,32 +356,70 @@
     return totalCount;
 }
 +(void)test{
-    [NSThread  detachNewThreadSelector:@selector(test) toTarget:self withObject:nil];
-    [NSThread  detachNewThreadSelector:@selector(test1) toTarget:self withObject:nil];
-
+//    [NSThread  detachNewThreadSelector:@selector(test) toTarget:self withObject:nil];
+//    [NSThread  detachNewThreadSelector:@selector(test1) toTarget:self withObject:nil];
+    for (int i= 0; i< 10; i++) {
+        NSThread *test = [[NSThread alloc] initWithTarget:[[DatabaseManager alloc] init] selector:@selector(testSegmentUrl:) object:[NSNumber numberWithInt:i] ];
+        [test start];
+        
+//        NSThread *test1 = [[NSThread alloc] initWithTarget:[[DatabaseManager alloc] init] selector:@selector(test1) object:nil];
+//        [test1 start];
+    }
+}
+-(void)testSegmentUrl:(NSNumber *)num{
+    // FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    // if ([db open]) {
+    for (int i = 0; i<100; i++) {
+        SegmentUrl *item = [[SegmentUrl alloc] init];
+        item.itemId = [NSString stringWithFormat:@"%i", 100+[num intValue]];
+        item.subitemId = [NSString stringWithFormat:@"%i", [num intValue]];
+        item.seqNum = i;
+        
+        [DatabaseManager update:item];
+    }
+    // }
 }
 -(void)test{
-    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
-    if ([db open]) {
+   // FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+   // if ([db open]) {
         for (int i = 0; i<100; i++) {
             DownloadItem *item = [[DownloadItem alloc] init];
             item.itemId = @"123";
+            item.imageUrl = @"testImageUrl1";
+            item.name = @"testName1";
+            item.fileName = @"testFileName1";
+            item.downloadStatus = @"testDownloadStatus";
+            item.type = 1;
             item.percentage = i;
+            item.url = @"testurl";
+            item.isDownloadingNum = 25;
+            item.downloadType = @"mp4";
+            item.duration = 339.0;
+
             [DatabaseManager update:item];
         }
-    }
+   // }
 }
 
 -(void)test1{
-    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
-    if ([db open]) {
+   // FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    //if ([db open]) {
         for (int i = 0; i<100; i++) {
             DownloadItem *item = [[DownloadItem alloc] init];
             item.itemId = @"234";
+            item.imageUrl = @"testImageUrl1";
+            item.name = @"testName1";
+            item.fileName = @"testFileName1";
+            item.downloadStatus = @"testDownloadStatus";
+            item.type = 1;
             item.percentage = i;
+            item.url = @"testurl";
+            item.isDownloadingNum = 25;
+            item.downloadType = @"mp4";
+            item.duration = 339.0;
             [DatabaseManager update:item];
         }
-    }
+    //}
 }
 
 - (void)stevenTest

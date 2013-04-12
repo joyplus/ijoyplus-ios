@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SQLitePersistentObject.h"
-
-@interface DownloadItem : SQLitePersistentObject
+#import "DatabaseObject.h"
+@interface DownloadItem : DatabaseObject
 
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *imageUrl;

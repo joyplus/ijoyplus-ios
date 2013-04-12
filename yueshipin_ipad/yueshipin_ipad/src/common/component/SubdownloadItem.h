@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "DownloadItem.h"
-
 @interface SubdownloadItem : DownloadItem
 
 @property (nonatomic, strong)NSString *subitemId;
