@@ -15,12 +15,6 @@
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 #define DATABASE_PATH [DocumentsDirectory stringByAppendingPathComponent:@"yueshipin.db"]
 
-@interface DatabaseManager (){
-    NSString *path;
-}
-
-@end
-
 @implementation DatabaseManager
 
 + (void)initDatabase
@@ -29,13 +23,12 @@
     if (![db open]) {
         NSLog(@"Could not open db in DatabaseManager!");
     }
-    // CREATE TABEL
-    [db close];
-}
-
-- (void)createTable
-{
+    // Create tables
+    [db executeUpdate:@"create table if not exists DownloadItem (itemId text, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, isDownloadingNum integer, downloadType text, duration double)"];
+    [db executeUpdate:@"create table if not exists SubdownloadItem (itemId text, subitemId text, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, isDownloadingNum integer, downloadType text, duration double)"];
+    [db executeUpdate:@"create table if not exists SegmentUrl (itemId text, subitemId text, url text, seqNum integer)"];
     
+    [db close];
 }
 
 - (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
@@ -65,7 +58,7 @@
     return  resultArray;
 }
 
-- (NSObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
+- (DatabaseObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -187,8 +180,16 @@
 
     
 }
-- (double)performSQLAggregation: (NSString *)query
+- (BOOL)performSQLAggregation: (NSString *)query
 {
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if (![db open]) {
+        NSLog(@"Could not open db in DatabaseManager!");
+        return NO;
+    }
+    BOOL result = [db executeUpdate:query];
+    [db close];
+    return result;
     
 }
 
@@ -216,15 +217,82 @@
 }
 - (void)save:(DatabaseObject *)dbObject
 {
-    
+    FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
+    {
+        [queue inDatabase:^(FMDatabase *db) {
+            if ([dbObject isKindOfClass:DownloadItem.class]) {
+                DownloadItem *obj = (DownloadItem *)dbObject;
+                [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", \
+                                                         obj.itemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration];
+            } else if ([dbObject isKindOfClass:SubdownloadItem.class]) {
+                SubdownloadItem *obj = (SubdownloadItem *)dbObject;
+                [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", \
+                                                            obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration];
+            } else if ([dbObject isKindOfClass:SegmentUrl.class]) {
+                SegmentUrl *obj = (SegmentUrl *)dbObject;
+                [db executeUpdate:@"insert into SegmentUrl(itemId, subitemId, url, seqNum) values (?, ?, ?, ?)", \
+                                                       obj.itemId, obj.subitemId, obj.url, obj.seqNum];
+            }
+        }];
+    }
+    [queue close];
+}
+
+- (void)update:(DatabaseObject *)dbObject
+{
+    FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
+    {
+        [queue inDatabase:^(FMDatabase *db) {
+            if ([dbObject isKindOfClass:DownloadItem.class]) {
+                DownloadItem *obj = (DownloadItem *)dbObject;
+                [db executeUpdate:@"update DownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ?) \
+                                     where itemId = ?", obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration, \
+                                       obj.itemId];
+            } else if ([dbObject isKindOfClass:SubdownloadItem.class]) {
+                SubdownloadItem *obj = (SubdownloadItem *)dbObject;
+                [db executeUpdate:@"update SubdownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ?) \
+                      where itemId = ? and subitemId = ?", obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration, \
+                        obj.itemId, obj.subitemId];
+            } else if ([dbObject isKindOfClass:SegmentUrl.class]) {
+                SegmentUrl *obj = (SegmentUrl *)dbObject;
+                [db executeUpdate:@"update SegmentUrl set url = ?, seqNum = ? where itemId = ? and subitemId = ? ", \
+                                                      obj.url, obj.seqNum, obj.itemId, obj.subitemId];
+            }
+        }];
+    }
+    [queue close];
 }
 - (NSInteger)count:(Class)dbObjectClass
 {
-  return [[self allObjects:dbObjectClass] count];
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if (![db open]) {
+        NSLog(@"Could not open db in DatabaseManager!");
+        return 0;
+    }
+    NSString *tableName = [NSString stringWithFormat:@"%@", dbObjectClass];
+    FMResultSet *rs = [db executeQuery: [NSString stringWithFormat:@"select count(*) totalCount from %@", tableName]];
+    int totalCount = 0;
+    while ([rs next]) {
+        totalCount = [rs intForColumn:@"totalCount"];
+    }
+    [db close];
+    return totalCount;    
 }
-- (NSInteger)countByCriteria:(Class )dbObjectClass queryString:(NSString *)queryString
+- (NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
-    return [[self findByCriteria:dbObjectClass queryString:queryString] count];
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if (![db open]) {
+        NSLog(@"Could not open db in DatabaseManager!");
+        return 0;
+    }
+    NSString *tableName = [NSString stringWithFormat:@"%@", dbObjectClass];
+    FMResultSet *rs = [db executeQuery: [NSString stringWithFormat:@"select count(*) totalCount from %@ %@", tableName, queryString]];
+    int totalCount = 0;
+    while ([rs next]) {
+        totalCount = [rs intForColumn:@"totalCount"];
+    }
+    [db close];
+    return totalCount;
 }
 
 @end
