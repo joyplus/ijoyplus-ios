@@ -43,15 +43,45 @@
     while ([rs next]) {
         if (dbObjectClass == DownloadItem.class) {
             DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
+            tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
+            tempDbObj.fileName = [rs stringForColumn:@"fileName"];
+            tempDbObj.downloadStatus = [rs stringForColumn:@"downloadStatus"];
+            tempDbObj.type = [[rs stringForColumn:@"type"] intValue];
+            tempDbObj.percentage = [[rs stringForColumn:@"percentage"] intValue];
+            tempDbObj.url = [rs stringForColumn:@"url"];
+            tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
+            tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
+            tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
             [resultArray addObject:tempDbObj];
-        } else if (dbObjectClass ==  [SubdownloadItem class]) {
+            
+        } else if (dbObjectClass == SubdownloadItem.class) {
             SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
+            tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
+            tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
+            tempDbObj.fileName = [rs stringForColumn:@"fileName"];
+            tempDbObj.downloadStatus = [rs stringForColumn:@"downloadStatus"];
+            tempDbObj.type = [[rs stringForColumn:@"type"] intValue];
+            tempDbObj.percentage = [[rs stringForColumn:@"percentage"] intValue];
+            tempDbObj.url = [rs stringForColumn:@"url"];
+            tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
+            tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
+            tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+             [resultArray addObject:tempDbObj];
+            
         } else if (dbObjectClass == SegmentUrl.class) {
+            
             SegmentUrl *tempDbObj = [[SegmentUrl alloc]init];
             tempDbObj.url = [rs stringForColumn:@"url"];
+            tempDbObj.itemId = [rs stringForColumn:@"itemId"];
+            tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+            tempDbObj.seqNum = [[rs stringForColumn:@"seqNum"] intValue];
+            [resultArray addObject:tempDbObj];
         }
+
     }
     [rs close];
     [db close];
@@ -301,5 +331,32 @@
     [db close];
     return totalCount;
 }
++(void)test{
+    [NSThread  detachNewThreadSelector:@selector(test) toTarget:self withObject:nil];
+    [NSThread  detachNewThreadSelector:@selector(test1) toTarget:self withObject:nil];
 
+}
+-(void)test{
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if ([db open]) {
+        for (int i = 0; i<100; i++) {
+            DownloadItem *item = [[DownloadItem alloc] init];
+            item.itemId = @"123";
+            item.percentage = i;
+            [DatabaseManager update:item];
+        }
+    }
+}
+
+-(void)test1{
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if ([db open]) {
+        for (int i = 0; i<100; i++) {
+            DownloadItem *item = [[DownloadItem alloc] init];
+            item.itemId = @"234";
+            item.percentage = i;
+            [DatabaseManager update:item];
+        }
+    }
+}
 @end

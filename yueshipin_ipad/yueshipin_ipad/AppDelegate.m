@@ -632,6 +632,7 @@
 
 - (void)shuangrongTest
 {
+    //[DatabaseManager test];
     
 }
 
