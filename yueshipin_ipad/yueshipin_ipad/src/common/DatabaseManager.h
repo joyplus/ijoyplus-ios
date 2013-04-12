@@ -14,11 +14,11 @@
 - (id)initWithPath:(NSString*)aPath;
 
 - (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
-- (DatabaseObject *)findFirstByCriteria:(Class *)dbObjectClass queryString:(NSString *)queryString;
+- (NSObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 - (NSArray *)allObjects:(Class )dbObjectClass;
 - (double)performSQLAggregation: (NSString *)query;
 - (void)deleteObject:(DatabaseObject *)dbObject;
 - (void)save:(DatabaseObject *)dbObject;
-- (NSInteger)count:(Class*)dbObjectClass;
-- (NSInteger)countByCriteria:(Class *)dbObjectClass queryString:(NSString *)queryString;
+- (NSInteger)count:(Class)dbObjectClass;
+- (NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 @end

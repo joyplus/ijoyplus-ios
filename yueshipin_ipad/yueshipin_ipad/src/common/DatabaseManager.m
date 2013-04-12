@@ -65,14 +65,66 @@
     return  resultArray;
 }
 
-- (DatabaseObject *)findFirstByCriteria:(Class *)dbObjectClass queryString:(NSString *)queryString
+- (NSObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
-//    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
-//    if (![db open]) {
-//        NSLog(@"Could not open db in DatabaseManager!");
-//        return nil;
-//    }
-//    FMResultSet *rs = [db executeQuery:queryString];
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if (![db open]) {
+        NSLog(@"Could not open db in DatabaseManager!");
+        return nil;
+    }
+    FMResultSet *rs = [db executeQuery:queryString];
+    if (dbObjectClass == DownloadItem.class) {
+        DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+        tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
+        tempDbObj.name = [rs stringForColumn:@"name"];
+        tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
+        tempDbObj.fileName = [rs stringForColumn:@"fileName"];
+        tempDbObj.downloadStatus = [rs stringForColumn:@"downloadStatus"];
+        tempDbObj.type = [[rs stringForColumn:@"type"] intValue];
+        tempDbObj.percentage = [[rs stringForColumn:@"percentage"] intValue];
+        tempDbObj.url = [rs stringForColumn:@"url"];
+        tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
+        tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
+        tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+        [rs close];
+        [db close];
+        
+        return tempDbObj;
+        
+    } else if (dbObjectClass == SubdownloadItem.class) {
+        SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
+        tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
+        tempDbObj.name = [rs stringForColumn:@"name"];
+        tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
+        tempDbObj.fileName = [rs stringForColumn:@"fileName"];
+        tempDbObj.downloadStatus = [rs stringForColumn:@"downloadStatus"];
+        tempDbObj.type = [[rs stringForColumn:@"type"] intValue];
+        tempDbObj.percentage = [[rs stringForColumn:@"percentage"] intValue];
+        tempDbObj.url = [rs stringForColumn:@"url"];
+        tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
+        tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
+        tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+        tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+        [rs close];
+        [db close];
+        
+        return tempDbObj;
+       
+    } else if (dbObjectClass == SegmentUrl.class) {
+        
+        SegmentUrl *tempDbObj = [[SegmentUrl alloc]init];
+        tempDbObj.url = [rs stringForColumn:@"url"];
+        tempDbObj.itemId = [rs stringForColumn:@"itemId"];
+        tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+        tempDbObj.seqNum = [[rs stringForColumn:@"seqNum"] intValue];
+        [rs close];
+        [db close];
+        
+        return tempDbObj;
+    }
+
+    return nil;
+   
 }
 
 - (NSArray *)allObjects:(Class)dbObjectClass
@@ -166,13 +218,13 @@
 {
     
 }
-- (NSInteger)count:(Class *)dbObjectClass
+- (NSInteger)count:(Class)dbObjectClass
 {
-    
+  return [[self allObjects:dbObjectClass] count];
 }
-- (NSInteger)countByCriteria:(Class *)dbObjectClass queryString:(NSString *)queryString
+- (NSInteger)countByCriteria:(Class )dbObjectClass queryString:(NSString *)queryString
 {
-    
+    return [[self findByCriteria:dbObjectClass queryString:queryString] count];
 }
 
 @end
