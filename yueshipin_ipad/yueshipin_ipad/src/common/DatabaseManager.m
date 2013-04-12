@@ -303,12 +303,12 @@
             if (dbObject.class == DownloadItem.class) {
                 DownloadItem *obj = (DownloadItem *)dbObject;
                 NSArray *parameterArray = [NSArray arrayWithObjects:obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], obj.itemId, nil];
-                [db executeUpdate:@"update DownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ?) \
+                [db executeUpdate:@"update DownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ? \
                                      where itemId = ? " withArgumentsInArray:parameterArray];
             } else if (dbObject.class == SubdownloadItem.class) {
                 SubdownloadItem *obj = (SubdownloadItem *)dbObject;
                 NSArray *parameterArray = [NSArray arrayWithObjects:obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration],  obj.itemId, obj.subitemId, nil];
-                [db executeUpdate:@"update SubdownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ?) \
+                [db executeUpdate:@"update SubdownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ? \
                       where itemId = ? and subitemId = ? " withArgumentsInArray:parameterArray];
             } else if (dbObject.class == SegmentUrl.class) {
                 SegmentUrl *obj = (SegmentUrl *)dbObject;
@@ -381,5 +381,66 @@
             [DatabaseManager update:item];
         }
     }
+}
+
+- (void)stevenTest
+{
+    DownloadItem *item = [[DownloadItem alloc]init];
+    item.itemId = @"testItem1";
+    item.imageUrl = @"testImageUrl1";
+    item.name = @"testName1";
+    item.fileName = @"testFileName1";
+    item.downloadStatus = @"testDownloadStatus";
+    item.type = 1;
+    item.percentage = 25;
+    item.url = @"testurl";
+    item.isDownloadingNum = 25;
+    item.downloadType = @"mp4";
+    item.duration = 339.0;
+    [DatabaseManager save:item];
+    
+    item.name = @"testItemUpdated";
+    [DatabaseManager update:item];
+    
+    SubdownloadItem *item1 = [[SubdownloadItem alloc]init];
+    item1.itemId = @"testItem1";
+    item1.subitemId = @"subitemId1";
+    item1.imageUrl = @"testImageUrl1";
+    item1.name = @"testName1";
+    item1.fileName = @"testFileName1";
+    item1.downloadStatus = @"testDownloadStatus";
+    item1.type = 1;
+    item1.percentage = 25;
+    item1.url = @"testurl";
+    item1.isDownloadingNum = 25;
+    item1.downloadType = @"mp4";
+    item1.duration = 339.0;
+    [DatabaseManager save:item1];
+    
+    item1.name = @"testSubitemUpdated";
+    [DatabaseManager update:item1];
+    
+    SegmentUrl *item2 = [[SegmentUrl alloc]init];
+    item2.itemId = @"testItem1";
+    item2.url = @"testurl";
+    item2.subitemId = @"testSubitme1";
+    item2.seqNum = 3;
+    [DatabaseManager save:item2];
+    
+    item2.url = @"testSegmentUpdated";
+    [DatabaseManager update:item2];
+    
+    
+    SegmentUrl *item3 = [[SegmentUrl alloc]init];
+    item3.itemId = @"testItem1batch";
+    item3.url = @"testurl";
+    item3.subitemId = @"testSubitme1";
+    item3.seqNum = 3;
+    NSArray *temp = [NSArray arrayWithObjects:item2, item3, nil];
+    [DatabaseManager saveInBatch:temp];
+    
+    int num = [DatabaseManager count:DownloadItem.class];
+    int num1 = [DatabaseManager countByCriteria:DownloadItem.class queryString:@"where itemId = 'testItem1'"];
+    NSLog(@"ok");
 }
 @end

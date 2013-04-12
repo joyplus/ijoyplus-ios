@@ -629,7 +629,7 @@
 {
     [DatabaseManager initDatabase];
     [self shuangrongTest];
-    [self stevenTest];
+//    [self stevenTest];
 }
 
 - (void)shuangrongTest
@@ -638,52 +638,6 @@
     
 }
 
-- (void)stevenTest
-{
-    DownloadItem *item = [[DownloadItem alloc]init];
-    item.itemId = @"testItem1";
-    item.imageUrl = @"testImageUrl1";
-    item.name = @"testName1";
-    item.fileName = @"testFileName1";
-    item.downloadStatus = @"testDownloadStatus";
-    item.type = 1;
-    item.percentage = 25;
-    item.url = @"testurl";
-    item.isDownloadingNum = 25;
-    item.downloadType = @"mp4";
-    item.duration = 339.0;
-//    [DatabaseManager save:item];
-    
-    item.name = @"testItemUpdated";
-    [DatabaseManager update:item];
-    
-    SubdownloadItem *item1 = [[SubdownloadItem alloc]init];
-    item1.itemId = @"testItem1";
-    item1.subitemId = @"subitemId1";
-    item1.imageUrl = @"testImageUrl1";
-    item1.name = @"testName1";
-    item1.fileName = @"testFileName1";
-    item1.downloadStatus = @"testDownloadStatus";
-    item1.type = 1;
-    item1.percentage = 25;
-    item1.url = @"testurl";
-    item1.isDownloadingNum = 25;
-    item1.downloadType = @"mp4";
-    item1.duration = 339.0;
-//    [DatabaseManager save:item1];
-    
-    item1.name = @"testSubitemUpdated";
-//    [DatabaseManager update:item1];
-    
-    SegmentUrl *item2 = [[SegmentUrl alloc]init];
-    item2.itemId = @"testItem1";
-    item2.url = @"testurl";
-    item2.subitemId = @"testSubitme1";
-    item2.seqNum = 3;
-//    [DatabaseManager save:item2];
-    
-    item2.url = @"testSegmentUpdated";
-//    [DatabaseManager update:item2];
-}
+
 
 @end
