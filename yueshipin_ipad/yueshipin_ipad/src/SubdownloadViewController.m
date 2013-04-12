@@ -180,10 +180,10 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             }
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
-            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:tempitem.pk + 20000000];
+            UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:tempitem.rowId + 20000000];
             if(progressView != nil){
                 progressView.progress = progress;                
-                UILabel *progressLabel = (UILabel *)[cell viewWithTag:tempitem.pk + 10000000];
+                UILabel *progressLabel = (UILabel *)[cell viewWithTag:tempitem.rowId + 10000000];
                 progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", (int)(progress*100)];
             }
             break;            
@@ -210,14 +210,14 @@
     }
     GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:index];
     SubdownloadItem *subitem = [subitems objectAtIndex:index];
-    UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:subitem.pk + 10000000];
-    UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:subitem.pk + 20000000];
+    UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:subitem.rowId + 10000000];
+    UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:subitem.rowId + 20000000];
     subitem.percentage = (int)(progressView.progress*100);
     if([subitem.downloadStatus isEqualToString:@"start"] || [subitem.downloadStatus isEqualToString:@"waiting"]){
         [[AppDelegate instance].padDownloadManager stopDownloading];
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"stop";
-        [subitem save];
+        [DatabaseManager update:subitem];
         [AppDelegate instance].currentDownloadingNum = 0;
     } else {
         [self getFreeDiskspacePercent];
@@ -227,7 +227,7 @@
         }
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"waiting";
-        [subitem save];
+        [DatabaseManager update:subitem];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [_gmGridView reloadData];
@@ -278,14 +278,14 @@
     [cell.contentView addSubview:contentImage];
     
     UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
-    bgLabel.tag = item.pk + 30000000;
+    bgLabel.tag = item.rowId + 30000000;
     bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
     if (![item.downloadStatus isEqualToString:@"done"]) {
         [cell.contentView addSubview:bgLabel];
     }
     
     UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
-    progressLabel.tag = item.pk + 10000000;
+    progressLabel.tag = item.rowId + 10000000;
     progressLabel.backgroundColor = [UIColor clearColor];
     progressLabel.font = [UIFont boldSystemFontOfSize:13];
     progressLabel.textColor = [UIColor whiteColor];
@@ -310,7 +310,7 @@
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
         UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(5, 125, 94, 2)];
         progressView.progress = item.percentage/100.0;
-        progressView.tag = item.pk + 20000000;
+        progressView.tag = item.rowId + 20000000;
         [cell.contentView addSubview:progressView];
     }
     

@@ -199,7 +199,7 @@
         NSLog(@"percent in downloadmanager= %f", progress);
         previousProgress = progress;
         downloadingItem.percentage = progress;
-        [downloadingItem save];
+        [DatabaseManager update:downloadingItem];
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
     }
     float freeSpace = [ActionUtility getFreeDiskspace];

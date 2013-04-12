@@ -24,6 +24,7 @@
 #import "FilmReviewDetailView.h"
 #import "AppDelegate.h"
 #import "UIUtility.h"
+#import "DatabaseManager.h"
 #define REVIEW_VIEW_TAG (11112)
 
 @interface IphoneMovieDetailViewController ()
@@ -479,7 +480,7 @@
                     itemId = [self.infoDic objectForKey:@"id"];
                 }
                 NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
-                NSArray *tempArr = [DownloadItem findByCriteria:subquery];
+                NSArray *tempArr = [DatabaseManager findByCriteria:DownloadItem.class queryString:subquery];
                 if ([tempArr count] >0) {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
