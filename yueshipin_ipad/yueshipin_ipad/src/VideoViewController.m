@@ -128,7 +128,7 @@
         }
         [self.view addSubview:topCategoryView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 150, self.view.frame.size.width - 18, self.view.frame.size.height - 185) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(9, 150, 529 - 18, self.view.frame.size.height - 185) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
         [table setBackgroundColor:[UIColor clearColor]];
 		[table setDelegate:self];
@@ -216,8 +216,9 @@
     } else {
         [videoArray removeAllObjects];
         [table reloadData];
-        if(isReachable) {
-            [myHUD showProgressBar:self.view];
+        if(isReachable)
+        {
+            [myHUD showProgressBar:table];
         }
     }
     reloads_ = 1;
@@ -461,7 +462,7 @@
         UIButton * lastBtn = (UIButton *)[subcategoryView viewWithTag:(1201 + categoryArray.count - 1)];
         
         UIImageView * line1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"subcategory_bg_line.png"]];
-        line1.frame = CGRectMake(12, (lastBtn.frame.origin.y + lastBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER), 355, 1);
+        line1.frame = CGRectMake(32, (lastBtn.frame.origin.y + lastBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER), 355, 1);
         [subcategoryView addSubview:line1];
         
         UILabel *regionLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, (lastBtn.frame.origin.y + lastBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER * 2), categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
@@ -498,7 +499,7 @@
         UIButton * lastRegBtn = (UIButton *)[subcategoryView viewWithTag:(1301 + regionCategoryArray.count - 1)];
         
         UIImageView * line2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"subcategory_bg_line.png"]];
-        line2.frame = CGRectMake(12, (lastRegBtn.frame.origin.y + lastRegBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER), 355, 1);
+        line2.frame = CGRectMake(32, (lastRegBtn.frame.origin.y + lastRegBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER), 355, 1);
         [subcategoryView addSubview:line2];
         
         UILabel *yearLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, (lastRegBtn.frame.origin.y + lastRegBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER * 2), categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
