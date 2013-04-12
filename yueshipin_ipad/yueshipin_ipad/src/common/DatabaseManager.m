@@ -12,8 +12,8 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "SegmentUrl.h"
-
-#define DATABASE_PATH @""
+#define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
+#define DATABASE_PATH [DocumentsDirectory stringByAppendingPathComponent:@"yueshipin.db"]
 
 @interface DatabaseManager (){
     NSString *path;
