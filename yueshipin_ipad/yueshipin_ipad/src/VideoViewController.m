@@ -18,6 +18,12 @@
 #import "CategoryUtility.h"
 #import "CategoryItem.h"
 
+#define SUB_CATEGORY_NUM_PER_ROW            (4)
+#define SUB_CATEGORY_NUM_PER_COL            (6)
+#define SUB_CATEGORY_INTERVAL_V             (25)
+#define SUB_CATEGORY_INTERVAL_H             (25)
+#define SUB_CATEGORY_INTERVAL_TO_BORDER     (15)
+
 @interface VideoViewController ()<UIGestureRecognizerDelegate>
 
 @property (nonatomic, strong)NSString *typePrefix;
@@ -397,15 +403,15 @@
 
 - (void)showSubcategoryView
 {
+    UIImageView *subcategoryImage = nil;
+    
     if (subcategoryView == nil) {
-        subcategoryView = [[UIView alloc]initWithFrame:CGRectMake(10, 128, 505, 372)];
+        subcategoryView = [[UIView alloc]initWithFrame:CGRectMake(497, 85, 415, 386)];//CGRectMake(10, 128, 505, 372)];
         subcategoryView.alpha = 0;
         subcategoryView.layer.cornerRadius = 5;
         subcategoryView.layer.masksToBounds = YES;
         [subcategoryView setBackgroundColor:[UIColor clearColor]];
-        UIImageView *subcategoryImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, subcategoryView.frame.size.width, subcategoryView.frame.size.height)];
-        subcategoryImage.image = [UIImage imageNamed:@"subcategory_bg"];
-        [subcategoryView addSubview:subcategoryImage];
+        
         if (categoryArray == nil) {
             categoryArray = [CategoryUtility getCategoryByType:self.videoType];
         }
@@ -416,20 +422,29 @@
             yearCategoryArray = [CategoryUtility getYearTypeByType:self.videoType];
         }
         
-        UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 50, 40, 45)];
+        subcategoryImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, subcategoryView.frame.size.width, subcategoryView.frame.size.height)];
+        subcategoryImage.image = [UIImage imageNamed:@"subcategory_bg"];
+        [subcategoryView addSubview:subcategoryImage];
+        
+        UILabel *categoryLabel = [[UILabel alloc]initWithFrame:CGRectMake(24, 15, 40, 45)];
         categoryLabel.textColor = CMConstants.grayColor;
         [categoryLabel setFont:[UIFont systemFontOfSize:15]];
         categoryLabel.text = @"类型";
         categoryLabel.backgroundColor = [UIColor clearColor];
         [subcategoryView addSubview:categoryLabel];
         
-        for (int i = 0; i < categoryArray.count; i++) {
+        for (int i = 0; i < categoryArray.count; i++)
+        {
             CategoryItem *tempItem = [categoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            if (tempItem.label.length > 3) {
-                tempBtn.frame = CGRectMake(70 + (i%8) * 51, categoryLabel.frame.origin.y + (i/8) * 50, 65, 45);
-            } else {
-                tempBtn.frame = CGRectMake(70 + (i%8) * 51, categoryLabel.frame.origin.y + (i/8) * 50, 50, 45);
+            
+            if (tempItem.label.length > 3)
+            {
+                tempBtn.frame = CGRectMake(70 + (i%SUB_CATEGORY_NUM_PER_COL) * 51, categoryLabel.frame.origin.y + (i/SUB_CATEGORY_NUM_PER_COL) * 50, 65, 45);
+            }
+            else
+            {
+                tempBtn.frame = CGRectMake(70 + (i%SUB_CATEGORY_NUM_PER_COL) * 51, categoryLabel.frame.origin.y + (i/SUB_CATEGORY_NUM_PER_COL) * 50, 50, 45);
             }
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
@@ -443,19 +458,26 @@
             [subcategoryView addSubview:tempBtn];
         }
         
-        UILabel *regionLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, 200, categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
+        UIButton * lastBtn = (UIButton *)[subcategoryView viewWithTag:(1201 + categoryArray.count - 1)];
+        
+        UIImageView * line1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"subcategory_bg_line.png"]];
+        line1.frame = CGRectMake(12, (lastBtn.frame.origin.y + lastBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER), 355, 1);
+        [subcategoryView addSubview:line1];
+        
+        UILabel *regionLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, (lastBtn.frame.origin.y + lastBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER * 2), categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
         regionLabel.textColor = CMConstants.grayColor;
         [regionLabel setFont:[UIFont systemFontOfSize:15]];
         regionLabel.text = @"地区";
         regionLabel.backgroundColor = [UIColor clearColor];
         [subcategoryView addSubview:regionLabel];
+        
         for (int i = 0; i < regionCategoryArray.count; i++) {
             CategoryItem *tempItem = [regionCategoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            if (i > 7) {
-                tempBtn.frame = CGRectMake(70 + (i%8) * 51, 40 + regionLabel.frame.origin.y, 50, 45);
+            if (i >= SUB_CATEGORY_NUM_PER_COL) {
+                tempBtn.frame = CGRectMake(70 + (i%SUB_CATEGORY_NUM_PER_COL) * 51, 40 + regionLabel.frame.origin.y, 50, 45);
             } else {
-                tempBtn.frame = CGRectMake(70 + (i%8) * 51, regionLabel.frame.origin.y, 50, 45);
+                tempBtn.frame = CGRectMake(70 + (i%SUB_CATEGORY_NUM_PER_COL) * 51, regionLabel.frame.origin.y, 50, 45);
             }
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
@@ -473,11 +495,13 @@
             [subcategoryView addSubview:tempBtn];
         }
         
-        int positionY = 250;
-        if (videoType == MOVIE_TYPE) {
-            positionY = 275;
-        }
-        UILabel *yearLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, positionY, categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
+        UIButton * lastRegBtn = (UIButton *)[subcategoryView viewWithTag:(1301 + regionCategoryArray.count - 1)];
+        
+        UIImageView * line2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"subcategory_bg_line.png"]];
+        line2.frame = CGRectMake(12, (lastRegBtn.frame.origin.y + lastRegBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER), 355, 1);
+        [subcategoryView addSubview:line2];
+        
+        UILabel *yearLabel = [[UILabel alloc]initWithFrame:CGRectMake(categoryLabel.frame.origin.x, (lastRegBtn.frame.origin.y + lastRegBtn.frame.size.height + SUB_CATEGORY_INTERVAL_TO_BORDER * 2), categoryLabel.frame.size.width, categoryLabel.frame.size.height)];
         yearLabel.contentMode = UIControlContentVerticalAlignmentCenter;
         yearLabel.textColor = CMConstants.grayColor;
         [yearLabel setFont:[UIFont systemFontOfSize:15]];
@@ -487,7 +511,7 @@
         for (int i = 0; i < yearCategoryArray.count; i++) {
             CategoryItem *tempItem = [yearCategoryArray objectAtIndex:i];
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            tempBtn.frame = CGRectMake(70 + (i%8) * 51, yearLabel.frame.origin.y + (i/8) * 50, 50, 45);
+            tempBtn.frame = CGRectMake(70 + (i%SUB_CATEGORY_NUM_PER_COL) * 51, yearLabel.frame.origin.y + (i/SUB_CATEGORY_NUM_PER_COL) * 50, 50, 45);
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
             [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
@@ -531,6 +555,12 @@
             [tempBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
         }
     }
+    
+    UIButton * lastYearBtn = (UIButton *)[subcategoryView viewWithTag:(1401 + yearCategoryArray.count - 1)];
+    subcategoryView.frame = CGRectMake(497, 85, 415, lastYearBtn.frame.size.height + lastYearBtn.frame.origin.y + SUB_CATEGORY_INTERVAL_TO_BORDER);
+    
+    subcategoryImage.frame = CGRectMake(0, 0, subcategoryView.frame.size.width, subcategoryView.frame.size.height);
+    
     [self.view addSubview:subcategoryView];
     [subcategoryView setHidden:NO];
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{

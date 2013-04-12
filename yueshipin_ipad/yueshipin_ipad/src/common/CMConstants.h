@@ -80,6 +80,7 @@
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"
 
 #define LEFT_VIEW_WIDTH 529
+#define FULL_SCREEN_WIDTH (940)
 
 #define NORMAL_VIDEO_WIDTH 70
 #define NORMAL_VIDEO_HEIGHT 100

@@ -146,6 +146,7 @@
 		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
 		22513492171138620002886B /* ReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22513491171138620002886B /* ReviewViewController.m */; };
+		2257DB8C1717F05E001D5D61 /* subcategory_bg_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2257DB8B1717F05E001D5D61 /* subcategory_bg_line@2x.png */; };
 		2270AB8816B24F7D009A3861 /* ShowDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */; };
 		227A45BE170BF5140002DCDE /* download_edit_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BC170BF5140002DCDE /* download_edit_f@2x.png */; };
 		227A45BF170BF5140002DCDE /* download_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BD170BF5140002DCDE /* download_edit@2x.png */; };
@@ -1081,6 +1082,7 @@
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
 		22513490171138620002886B /* ReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReviewViewController.h; sourceTree = "<group>"; };
 		22513491171138620002886B /* ReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReviewViewController.m; sourceTree = "<group>"; };
+		2257DB8B1717F05E001D5D61 /* subcategory_bg_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subcategory_bg_line@2x.png"; sourceTree = "<group>"; };
 		2270AB8616B24F7D009A3861 /* ShowDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownloadViewController.h; sourceTree = "<group>"; };
 		2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownloadViewController.m; sourceTree = "<group>"; };
 		227A45BC170BF5140002DCDE /* download_edit_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit_f@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2769,6 +2771,7 @@
 				EBBE24AA171518F600091F24 /* slogan_movie@2x.png */,
 				EBBE24AB171518F600091F24 /* slogan_show@2x.png */,
 				EBBE24AC171518F600091F24 /* subcategory_bg@2x.png */,
+				2257DB8B1717F05E001D5D61 /* subcategory_bg_line@2x.png */,
 				EBBE24AD171518F600091F24 /* submit_btn_pressed@2x.png */,
 				EBBE24AE171518F600091F24 /* submit_btn@2x.png */,
 				EBBE24AF171518F600091F24 /* support_btn_bg_pressed@2x.png */,
@@ -4247,6 +4250,7 @@
 				E77DC12A17165E49002B6536 /* feedBackhead@2x.jpg in Resources */,
 				E77DC12B17165E49002B6536 /* iphoneCheckUpdate@2x.png in Resources */,
 				E77DC12C17165E49002B6536 /* iphoneCheckUpdatePress@2x.png in Resources */,
+				2257DB8C1717F05E001D5D61 /* subcategory_bg_line@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

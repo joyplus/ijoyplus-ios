@@ -139,13 +139,13 @@
     
     listViewController = [[PopularListViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
     
-    movieViewController = [[MovieViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    movieViewController = [[MovieViewController alloc] initWithFrame:CGRectMake(0, 0, FULL_SCREEN_WIDTH, frame.size.width)];
     
-    dramaViewController = [[DramaViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    dramaViewController = [[DramaViewController alloc] initWithFrame:CGRectMake(0, 0, FULL_SCREEN_WIDTH, frame.size.width)];
     
-    showViewController = [[ShowViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    showViewController = [[ShowViewController alloc] initWithFrame:CGRectMake(0, 0, FULL_SCREEN_WIDTH, frame.size.width)];
     
-    comicViewController = [[ComicViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
+    comicViewController = [[ComicViewController alloc] initWithFrame:CGRectMake(0, 0, FULL_SCREEN_WIDTH, frame.size.width)];
     
     searchViewController = [[SearchViewController alloc] initWithFrame:CGRectMake(0, 0, LEFT_VIEW_WIDTH, frame.size.width)];
 

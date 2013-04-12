@@ -950,6 +950,14 @@
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
     item.subtype = CATEGORY_TYPE;
+    item.label = @"青春偶像";
+    item.key = @"youth";
+    item.value = @"青春偶像";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
+    item.subtype = CATEGORY_TYPE;
     item.label = @"古装";
     item.key = @"actient";
     item.value = @"古装";
@@ -961,14 +969,6 @@
     item.label = @"动作";
     item.key = @"action";
     item.value = @"动作";
-    [categoryArray addObject:item];
-    
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = CATEGORY_TYPE;
-    item.label = @"青春偶像";
-    item.key = @"youth";
-    item.value = @"青春偶像";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -993,6 +993,14 @@
     item.label = @"乡村";
     item.key = @"country";
     item.value = @"乡村";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
+    item.subtype = CATEGORY_TYPE;
+    item.label = @"家庭伦理";
+    item.key = @"family";
+    item.value = @"家庭伦理";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -1025,14 +1033,6 @@
     item.label = @"TVB";
     item.key = @"TVB";
     item.value = @"TVB";
-    [categoryArray addObject:item];
-    
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = CATEGORY_TYPE;
-    item.label = @"家庭伦理";
-    item.key = @"family";
-    item.value = @"家庭伦理";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
