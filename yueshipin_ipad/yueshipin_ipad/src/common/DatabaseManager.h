@@ -11,15 +11,15 @@
 
 @interface DatabaseManager : NSObject
 
-- (id)initWithPath:(NSString*)aPath;
++ (void)initDatabase;
 
-- (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
-- (NSArray *)allObjects:(Class)dbObjectClass;
-- (BOOL)performSQLAggregation: (NSString *)query;
-- (DatabaseObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
-- (void)deleteObject:(DatabaseObject *)dbObject;
-- (void)save:(DatabaseObject *)dbObject;
-- (void)update:(DatabaseObject *)dbObject;
-- (NSInteger)count:(Class)dbObjectClass;
-- (NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
++ (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
++ (NSArray *)allObjects:(Class)dbObjectClass;
++ (BOOL)performSQLAggregation: (NSString *)query;
++ (NSObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
++ (void)deleteObject:(NSObject *)dbObject;
++ (void)save:(NSObject *)dbObject;
++ (void)update:(NSObject *)dbObject;
++ (NSInteger)count:(Class)dbObjectClass;
++(NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 @end

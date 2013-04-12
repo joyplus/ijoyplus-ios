@@ -22,6 +22,7 @@
 #import "PageManageViewController.h"
 #import "UIImage+ResizeAdditions.h"
 #import "CommonMotheds.h"
+#import "DatabaseManager.h"
 #define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
@@ -231,6 +232,10 @@
     }
 
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
+    
+    if (ENVIRONMENT == 0) {
+        [self doDBMethodTest];
+    }
     return YES;
 }
 
@@ -616,6 +621,23 @@
     resp.bText = NO;
     
     [WXApi sendResp:resp];
+}
+
+- (void)doDBMethodTest
+{
+    [DatabaseManager initDatabase];
+    [self shuangrongTest];
+    [self stevenTest];
+}
+
+- (void)shuangrongTest
+{
+    
+}
+
+- (void)stevenTest
+{
+    
 }
 
 @end

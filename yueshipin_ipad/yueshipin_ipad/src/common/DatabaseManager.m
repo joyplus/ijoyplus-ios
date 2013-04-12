@@ -31,7 +31,7 @@
     [db close];
 }
 
-- (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
++ (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -58,7 +58,7 @@
     return  resultArray;
 }
 
-- (DatabaseObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
++ (DatabaseObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -120,7 +120,7 @@
    
 }
 
-- (NSArray *)allObjects:(Class)dbObjectClass
++ (NSArray *)allObjects:(Class)dbObjectClass
 {
    
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
@@ -180,7 +180,7 @@
 
     
 }
-- (BOOL)performSQLAggregation: (NSString *)query
++ (BOOL)performSQLAggregation: (NSString *)query
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -193,7 +193,7 @@
     
 }
 
-- (void)deleteObject:(DatabaseObject *)dbObject
++ (void)deleteObject:(DatabaseObject *)dbObject
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -215,7 +215,7 @@
         [db executeQuery:sqlString];
     }
 }
-- (void)save:(DatabaseObject *)dbObject
++ (void)save:(DatabaseObject *)dbObject
 {
     FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
     {
@@ -238,7 +238,7 @@
     [queue close];
 }
 
-- (void)update:(DatabaseObject *)dbObject
++(void)update:(DatabaseObject *)dbObject
 {
     FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
     {
@@ -262,7 +262,7 @@
     }
     [queue close];
 }
-- (NSInteger)count:(Class)dbObjectClass
++ (NSInteger)count:(Class)dbObjectClass
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -278,7 +278,7 @@
     [db close];
     return totalCount;    
 }
-- (NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
++ (NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
