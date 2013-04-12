@@ -24,7 +24,7 @@
         NSLog(@"Could not open db in DatabaseManager!");
     }
     // Create tables
-    [db executeUpdate:@"create table if not exists DownloadItem (itemId text, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, isDownloadingNum integer, downloadType text, duration double)"];
+    [db executeUpdate:@"create table if not exists DownloadItem (itemId text PRIMARY KEY, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, isDownloadingNum integer, downloadType text, duration double)"];
     [db executeUpdate:@"create table if not exists SubdownloadItem (itemId text, subitemId text, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, isDownloadingNum integer, downloadType text, duration double)"];
     [db executeUpdate:@"create table if not exists SegmentUrl (itemId text, subitemId text, url text, seqNum integer)"];
     
