@@ -637,7 +637,19 @@
 
 - (void)stevenTest
 {
-    
+    DownloadItem *item = [[DownloadItem alloc]init];
+    item.itemId = @"testItem1";
+    item.imageUrl = @"testImageUrl1";
+    item.name = @"testName1";
+    item.fileName = @"testFileName1";
+    item.downloadStatus = @"testDownloadStatus";
+    item.type = 1;
+    item.percentage = 25;
+    item.url = @"testurl";
+    item.isDownloadingNum = 25;
+    item.downloadType = @"mp4";
+    item.duration = 339.0;
+    [DatabaseManager save:item];
 }
 
 @end
