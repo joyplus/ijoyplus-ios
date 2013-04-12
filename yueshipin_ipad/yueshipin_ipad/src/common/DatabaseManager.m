@@ -13,6 +13,8 @@
 #import "SubdownloadItem.h"
 #import "SegmentUrl.h"
 
+#define DATABASE_PATH @""
+
 @interface DatabaseManager (){
     NSString *path;
 }
@@ -21,20 +23,24 @@
 
 @implementation DatabaseManager
 
-+ (id)databaseQueueWithPath:(NSString*)aPath
++ (void)initDatabase
 {
-    DatabaseManager *dbManager = [[DatabaseManager alloc]init];
-    [dbManager setPath:aPath];
-    return dbManager;
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if (![db open]) {
+        NSLog(@"Could not open db in DatabaseManager!");
+    }
+    // CREATE TABEL
+    [db close];
 }
 
-- (void)setPath:(NSString*)aPath {
-    path = aPath;
+- (void)createTable
+{
+    
 }
 
 - (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString
 {
-    FMDatabase *db = [FMDatabase databaseWithPath:path];
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
         NSLog(@"Could not open db in DatabaseManager!");
         return nil;

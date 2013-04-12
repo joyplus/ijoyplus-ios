@@ -11,7 +11,7 @@
 
 @interface DatabaseManager : NSObject
 
-+ (id)databaseQueueWithPath:(NSString*)aPath;
+- (id)initWithPath:(NSString*)aPath;
 
 - (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 - (DatabaseObject *)findFirstByCriteria:(Class *)dbObjectClass queryString:(NSString *)queryString;
