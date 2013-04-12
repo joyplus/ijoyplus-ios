@@ -16,6 +16,7 @@
 #import "IphoneAVPlayerViewController.h"
 #import "Reachability.h"
 #import "CMConstants.h"
+#import "DatabaseManager.h"
 @interface IphoneDownloadViewController ()
 
 @end
@@ -172,7 +173,7 @@
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     
-    itemArr_ = [NSMutableArray arrayWithArray:[DownloadItem allObjects]];
+    itemArr_ = [NSMutableArray arrayWithArray:[DatabaseManager allObjects:[DownloadItem class]]];
 }
 -(void)reloadDataSource{
     [self initData];
@@ -365,7 +366,7 @@
     }
     else{
         NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",downloadItem.itemId];
-        NSArray *arr = [SubdownloadItem findByCriteria:query];
+        NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
         UILabel *labeltotal = [[UILabel alloc] initWithFrame:CGRectMake(17, 97, 67, 20)];
         labeltotal.text = [NSString stringWithFormat:@"共%d集",[arr count]];
         labeltotal.textColor = [UIColor whiteColor];
@@ -397,12 +398,13 @@
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
     
-    DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:index];
+    DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:index];
     NSString *itemId = item.itemId;
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
     if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
         //NSArray *arr = [SegmentUrl findByCriteria:subquery];
-        [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", itemId]];
+        //[SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", itemId]];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", itemId]];
         NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:itemId];
         [fileMgr removeItemAtPath:deletePath error:&error];
         [DownLoadManager stop:itemId];
@@ -412,12 +414,16 @@
     else{
     
         //删除从表的内容
-        NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
+        NSArray *subItems = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:subquery];
+        //NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
         for (SubdownloadItem *subItem in subItems) {
             
-            [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", subItem.subitemId]];
+            [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", subItem.subitemId]];
+            //[SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", subItem.subitemId]];
             [DownLoadManager stopAndClear:subItem.subitemId];
-            [subItem deleteObject];
+            
+            [DatabaseManager deleteObject:subItem];
+            //[subItem deleteObject];
         }
         
         
@@ -438,8 +444,8 @@
     }
        
 
-    [item deleteObject];
-    
+    //[item deleteObject];
+    [DownLoadManager stopAndClear:itemId];
     
 }
 
@@ -448,7 +454,7 @@
         return;
     }
     
-     DownloadItem *item = [[DownloadItem allObjects] objectAtIndex:position];
+     DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:position];
     if (item.type == 1) {
         
             if ([item.downloadStatus isEqualToString:@"finish"]) {
@@ -512,7 +518,8 @@
           
             [DownLoadManager stop:item.itemId];
             
-            [item save];
+           // [item save];
+           [DatabaseManager save:item];
            
            UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
            label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", item.percentage];
@@ -531,8 +538,8 @@
            }
            
            item.downloadStatus = @"waiting";
-           [item save];
-           
+           //[item save];
+           [DatabaseManager save:item];
            UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
            label.text = [NSString stringWithFormat:@"等待中：%i%%\n ", item.percentage];
            
@@ -555,7 +562,8 @@
 }
 -(DownloadItem *)getDownloadItemById:(NSString *)idstr{
     NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",idstr];
-    NSArray *arr = [DownloadItem findByCriteria:query];
+   // NSArray *arr = [DownloadItem findByCriteria:query];
+    NSArray *arr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
     if ([arr count]>0) {
         DownloadItem *item = [arr objectAtIndex:0];
         return item;

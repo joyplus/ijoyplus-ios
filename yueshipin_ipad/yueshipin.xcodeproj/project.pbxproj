@@ -981,8 +981,8 @@
 		220E4940169BF07F00A29756 /* DownloadHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadHandler.m; sourceTree = "<group>"; };
 		220E4941169BF07F00A29756 /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadioButton.h; sourceTree = "<group>"; };
 		220E4942169BF07F00A29756 /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadioButton.m; sourceTree = "<group>"; };
-		220E4945169BF07F00A29756 /* SubdownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubdownloadItem.h; sourceTree = "<group>"; };
-		220E4946169BF07F00A29756 /* SubdownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubdownloadItem.m; sourceTree = "<group>"; };
+		220E4945169BF07F00A29756 /* SubdownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SubdownloadItem.h; path = component/SubdownloadItem.h; sourceTree = "<group>"; };
+		220E4946169BF07F00A29756 /* SubdownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SubdownloadItem.m; path = component/SubdownloadItem.m; sourceTree = "<group>"; };
 		220E494B169BF08600A29756 /* DownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadItem.h; path = yueshipin_ipad/src/common/DownloadItem.h; sourceTree = SOURCE_ROOT; };
 		220E494C169BF08600A29756 /* DownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DownloadItem.m; path = yueshipin_ipad/src/common/DownloadItem.m; sourceTree = SOURCE_ROOT; };
 		220E494F169BF0B300A29756 /* DownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadViewController.h; sourceTree = "<group>"; };
@@ -1708,8 +1708,8 @@
 		EBBDCE34166C590200C7129F /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomColoredAccessory.h; sourceTree = "<group>"; };
 		EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomColoredAccessory.m; sourceTree = "<group>"; };
-		EBBE075416FFD05700A533F7 /* SegmentUrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentUrl.h; sourceTree = "<group>"; };
-		EBBE075516FFD05700A533F7 /* SegmentUrl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentUrl.m; sourceTree = "<group>"; };
+		EBBE075416FFD05700A533F7 /* SegmentUrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SegmentUrl.h; path = component/SegmentUrl.h; sourceTree = "<group>"; };
+		EBBE075516FFD05700A533F7 /* SegmentUrl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SegmentUrl.m; path = component/SegmentUrl.m; sourceTree = "<group>"; };
 		EBBE075716FFD0DB00A533F7 /* NewM3u8DownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewM3u8DownloadManager.h; path = common/NewM3u8DownloadManager.h; sourceTree = "<group>"; };
 		EBBE075816FFD0DB00A533F7 /* NewM3u8DownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewM3u8DownloadManager.m; path = common/NewM3u8DownloadManager.m; sourceTree = "<group>"; };
 		EBBE24371715186B00091F24 /* ComicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComicViewController.h; sourceTree = "<group>"; };
@@ -3207,16 +3207,10 @@
 				EBBE245B1715188600091F24 /* CustomTextField.m */,
 				EB5964BF170023930025B29C /* NSMutableArray+QueueAdditions.h */,
 				EB5964C0170023930025B29C /* NSMutableArray+QueueAdditions.m */,
-				EBBE075416FFD05700A533F7 /* SegmentUrl.h */,
-				EBBE075516FFD05700A533F7 /* SegmentUrl.m */,
-				220E494B169BF08600A29756 /* DownloadItem.h */,
-				220E494C169BF08600A29756 /* DownloadItem.m */,
 				220E493F169BF07F00A29756 /* DownloadHandler.h */,
 				220E4940169BF07F00A29756 /* DownloadHandler.m */,
 				220E4941169BF07F00A29756 /* RadioButton.h */,
 				220E4942169BF07F00A29756 /* RadioButton.m */,
-				220E4945169BF07F00A29756 /* SubdownloadItem.h */,
-				220E4946169BF07F00A29756 /* SubdownloadItem.m */,
 				EBBDCE35166C98A300C7129F /* CustomColoredAccessory.h */,
 				EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */,
 				EB93829716688CB20046A3B1 /* WatchRecordCell.h */,
@@ -3432,6 +3426,12 @@
 				EBE799071717C9420047535A /* DatabaseManager.m */,
 				EBE799091717C9DF0047535A /* DatabaseObject.h */,
 				EBE7990A1717C9DF0047535A /* DatabaseObject.m */,
+				EBBE075416FFD05700A533F7 /* SegmentUrl.h */,
+				EBBE075516FFD05700A533F7 /* SegmentUrl.m */,
+				220E494B169BF08600A29756 /* DownloadItem.h */,
+				220E494C169BF08600A29756 /* DownloadItem.m */,
+				220E4945169BF07F00A29756 /* SubdownloadItem.h */,
+				220E4946169BF07F00A29756 /* SubdownloadItem.m */,
 			);
 			name = database;
 			sourceTree = "<group>";

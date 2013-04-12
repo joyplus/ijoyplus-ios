@@ -610,6 +610,7 @@
     
     UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
     
+    
     [message setThumbImage:thumb];
     
     WXVideoObject *ext = [WXVideoObject object];

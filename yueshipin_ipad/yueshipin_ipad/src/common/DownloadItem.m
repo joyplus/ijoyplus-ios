@@ -9,6 +9,7 @@
 #import "DownloadItem.h"
 
 @implementation DownloadItem
+@synthesize rowId;
 @synthesize itemId;
 @synthesize name;
 @synthesize imageUrl;

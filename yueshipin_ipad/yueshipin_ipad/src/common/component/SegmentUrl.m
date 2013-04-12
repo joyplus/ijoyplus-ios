@@ -10,6 +10,7 @@
 
 @implementation SegmentUrl
 
+@synthesize rowId;
 @synthesize url;
 @synthesize itemId;
 @synthesize subitemId;

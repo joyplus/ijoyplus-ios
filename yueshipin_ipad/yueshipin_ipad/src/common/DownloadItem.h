@@ -10,6 +10,7 @@
 #import "DatabaseObject.h"
 @interface DownloadItem : DatabaseObject
 
+@property (nonatomic) int rowId;
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *imageUrl;
 @property (nonatomic, strong)NSString *name;

@@ -15,6 +15,7 @@
 #import "Reachability.h"
 #import "CMConstants.h"
 #import "SegmentUrl.h"
+#import "DatabaseManager.h"
 @interface IphoneSubdownloadViewController ()
 
 @end
@@ -109,7 +110,7 @@
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:5];
     //itemArr_ = [NSMutableArray arrayWithCapacity:5];
-    NSArray *items = [SubdownloadItem allObjects];
+    NSArray *items = [DatabaseManager allObjects:[SubdownloadItem class]];
     for (SubdownloadItem *item in items) {
         if ([item.subitemId hasPrefix:prodId_]) {
             [tempArr addObject:item];
@@ -331,7 +332,8 @@
     
     [itemArr_ removeObjectAtIndex:index];
     NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
-    NSArray *arr = [SubdownloadItem findByCriteria:query];
+    //NSArray *arr = [SubdownloadItem findByCriteria:query];
+    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     SubdownloadItem *item = [arr objectAtIndex:index];
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
@@ -362,17 +364,21 @@
         }
     }
    
-    [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'",itemId]];
+    //[SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'",itemId]];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'",itemId]];
+   // [item deleteObject];
+    [DatabaseManager deleteObject:item];
     
-    [item deleteObject];
-    
-    NSArray *tempArr = [SubdownloadItem findByCriteria:query];
+    NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+   // NSArray *tempArr = [SubdownloadItem findByCriteria:query];
     
     if ([tempArr count] == 0){
         NSString *subquery = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
-        NSArray *itemArr = [DownloadItem findByCriteria:subquery];
+        //NSArray *itemArr = [DownloadItem findByCriteria:subquery];
+        NSArray *itemArr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:subquery];
         for (DownloadItem *downloadItem in itemArr) {
-            [downloadItem deleteObject];
+            //[downloadItem deleteObject];
+            [DatabaseManager deleteObject:downloadItem];
         }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
     }
@@ -447,7 +453,8 @@
        }
        
         downloadItem.downloadStatus = @"stop";
-        [downloadItem save];
+        //[downloadItem save];
+       [DatabaseManager save:downloadItem];
         [DownLoadManager stop:downloadItem.subitemId];
        
        int num = [self getTagNum:downloadItem.subitemId];
@@ -468,8 +475,8 @@
         }
         
         downloadItem.downloadStatus = @"waiting";
-        [downloadItem save];
-       
+        //[downloadItem save];
+        [DatabaseManager save:downloadItem];
         int num = [self getTagNum:downloadItem.subitemId];
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         label.text =  [NSString stringWithFormat:@"等待中：%i%%\n ", downloadItem.percentage];
@@ -486,7 +493,8 @@
 
 -(SubdownloadItem *)getDownloadItemById:(NSString *)idstr{
     NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",idstr];
-    NSArray *arr = [SubdownloadItem findByCriteria:query];
+   // NSArray *arr = [SubdownloadItem findByCriteria:query];
+    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     if ([arr count]>0) {
         SubdownloadItem *item = [arr objectAtIndex:0];
         return item;

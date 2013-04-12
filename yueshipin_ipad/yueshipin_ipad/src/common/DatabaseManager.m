@@ -43,6 +43,7 @@
     while ([rs next]) {
         if (dbObjectClass == DownloadItem.class) {
             DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
             tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
@@ -58,6 +59,7 @@
             
         } else if (dbObjectClass == SubdownloadItem.class) {
             SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
             tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
@@ -75,6 +77,7 @@
         } else if (dbObjectClass == SegmentUrl.class) {
             
             SegmentUrl *tempDbObj = [[SegmentUrl alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.url = [rs stringForColumn:@"url"];
             tempDbObj.itemId = [rs stringForColumn:@"itemId"];
             tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
@@ -99,6 +102,7 @@
     if ([rs next]) {
         if (dbObjectClass == DownloadItem.class) {
             DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
             tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
@@ -117,6 +121,7 @@
             
         } else if (dbObjectClass == SubdownloadItem.class) {
             SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
             tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
@@ -137,6 +142,7 @@
         } else if (dbObjectClass == SegmentUrl.class) {
             
             SegmentUrl *tempDbObj = [[SegmentUrl alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.url = [rs stringForColumn:@"url"];
             tempDbObj.itemId = [rs stringForColumn:@"itemId"];
             tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
@@ -170,6 +176,7 @@
     while ([rs next]) {
         if (dbObjectClass == DownloadItem.class) {
             DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
             tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
@@ -185,6 +192,7 @@
             
         } else if (dbObjectClass == SubdownloadItem.class) {
             SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.itemId =  [rs stringForColumn:@"itemId"];
             tempDbObj.name = [rs stringForColumn:@"name"];
             tempDbObj.imageUrl = [rs stringForColumn:@"imageUrl"];
@@ -201,6 +209,7 @@
         } else if (dbObjectClass == SegmentUrl.class) {
         
             SegmentUrl *tempDbObj = [[SegmentUrl alloc]init];
+            tempDbObj.rowId =  [rs intForColumn:@"rowid"];
             tempDbObj.url = [rs stringForColumn:@"url"];
             tempDbObj.itemId = [rs stringForColumn:@"itemId"];
             tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
