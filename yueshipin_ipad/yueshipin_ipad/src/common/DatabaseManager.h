@@ -15,7 +15,7 @@
 
 - (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 - (DatabaseObject *)findFirstByCriteria:(Class *)dbObjectClass queryString:(NSString *)queryString;
-- (NSArray *)allObjects:(Class *)dbObjectClass;
+- (NSArray *)allObjects:(Class )dbObjectClass;
 - (double)performSQLAggregation: (NSString *)query;
 - (void)deleteObject:(DatabaseObject *)dbObject;
 - (void)save:(DatabaseObject *)dbObject;
