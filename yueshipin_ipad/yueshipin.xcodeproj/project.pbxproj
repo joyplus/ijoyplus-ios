@@ -871,6 +871,8 @@
 		EBC5438A16E9CC110041A31F /* download_line.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC5438916E9CC110041A31F /* download_line.png */; };
 		EBC9D92017165AE9005D5DBF /* clear_play_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC9D91317165AE9005D5DBF /* clear_play_pressed.png */; };
 		EBC9D9471716A221005D5DBF /* SearchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC9D9461716A221005D5DBF /* SearchListViewController.m */; };
+		EBE799081717C9420047535A /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE799071717C9420047535A /* DatabaseManager.m */; };
+		EBE7990B1717C9DF0047535A /* DatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE7990A1717C9DF0047535A /* DatabaseObject.m */; };
 		EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */; };
 		EBF3A96A166301F100EBF56D /* DramaDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */; };
 		EBF3A96B166301F100EBF56D /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A962166301F100EBF56D /* ListViewController.m */; };
@@ -1954,6 +1956,10 @@
 		EBC9D91317165AE9005D5DBF /* clear_play_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clear_play_pressed.png; sourceTree = "<group>"; };
 		EBC9D9451716A221005D5DBF /* SearchListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchListViewController.h; sourceTree = "<group>"; };
 		EBC9D9461716A221005D5DBF /* SearchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchListViewController.m; sourceTree = "<group>"; };
+		EBE799061717C9420047535A /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
+		EBE799071717C9420047535A /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
+		EBE799091717C9DF0047535A /* DatabaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseObject.h; sourceTree = "<group>"; };
+		EBE7990A1717C9DF0047535A /* DatabaseObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseObject.m; sourceTree = "<group>"; };
 		EBF3A95E166301F100EBF56D /* DramaDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DramaDetailViewController.h; sourceTree = "<group>"; };
 		EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DramaDetailViewController.m; sourceTree = "<group>"; };
 		EBF3A960166301F100EBF56D /* DramaDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DramaDetailViewController.xib; sourceTree = "<group>"; };
@@ -3122,6 +3128,7 @@
 		EB6DEAAA165A34F200AF8003 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				EBE799051717C9250047535A /* database */,
 				EBBE24551715187B00091F24 /* CategoryUtility.h */,
 				EBBE24561715187B00091F24 /* CategoryUtility.m */,
 				EBC298BB16F04DCF009DF9FD /* EnvConstant.h */,
@@ -3495,6 +3502,17 @@
 				EBC19B6F16E97BFC0001429C /* AHAlertView.m */,
 			);
 			path = AHAlert;
+			sourceTree = "<group>";
+		};
+		EBE799051717C9250047535A /* database */ = {
+			isa = PBXGroup;
+			children = (
+				EBE799061717C9420047535A /* DatabaseManager.h */,
+				EBE799071717C9420047535A /* DatabaseManager.m */,
+				EBE799091717C9DF0047535A /* DatabaseObject.h */,
+				EBE7990A1717C9DF0047535A /* DatabaseObject.m */,
+			);
+			name = database;
 			sourceTree = "<group>";
 		};
 		EBF3A9931663973200EBF56D /* FFPopController */ = {
@@ -4443,6 +4461,8 @@
 				EBBE2462171518B500091F24 /* Harpy.m in Sources */,
 				EBC9D9471716A221005D5DBF /* SearchListViewController.m in Sources */,
 				E7C037B11717C8BD00239BB1 /* DownLoader.m in Sources */,
+				EBE799081717C9420047535A /* DatabaseManager.m in Sources */,
+				EBE7990B1717C9DF0047535A /* DatabaseObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
