@@ -21,7 +21,7 @@
 #import "HTTPServer.h"
 #import "PageManageViewController.h"
 #import "UIImage+ResizeAdditions.h"
-
+#import "CommonMotheds.h"
 #define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
@@ -284,6 +284,11 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     self.alertUserInfo = userInfo;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if ([AppDelegate instance].isInPlayView) {
+            return;
+        }
+    }
     NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
     UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
     [alertView show];

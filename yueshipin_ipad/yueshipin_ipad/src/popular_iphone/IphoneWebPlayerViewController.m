@@ -14,6 +14,7 @@
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
 #import "AppDelegate.h"
+#import "CommonMotheds.h"
 @interface IphoneWebPlayerViewController ()
 
 @end
@@ -67,6 +68,7 @@
     }
 
    [self initPlayerView];
+    [AppDelegate instance].isInPlayView = YES;
   
 }
 
@@ -163,8 +165,10 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)dealloc{
+    [AppDelegate instance].isInPlayView = NO;
     webView_.delegate = nil;
     [subnameArray removeAllObjects];
     subnameArray = nil;
+    
 }
 @end

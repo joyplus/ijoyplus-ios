@@ -18,6 +18,7 @@
 #import "Reachability.h"
 #import "ActionUtility.h"
 #import <Parse/Parse.h>
+#import "CustomNavigationViewControllerPortrait.h"
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -1695,6 +1696,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             break;
         }
         case FULL_SCREEN_TAG:{
+            
+            UIViewController *vc = [[UIViewController alloc] init];
+            [self presentModalViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:vc] animated:YES];
+           
+            return;
             
             if([((AVPlayerLayer *)[avplayerView_ layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
                 [btn setBackgroundImage:[UIImage imageNamed:@"iphone_reduce_bt"] forState:UIControlStateNormal];
