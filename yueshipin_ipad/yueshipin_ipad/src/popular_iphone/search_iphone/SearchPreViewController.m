@@ -193,21 +193,27 @@
 }
 -(void)search:(NSString *)searchStr{
  
-  NSMutableArray *historyArr = [NSMutableArray arrayWithCapacity:10];
-  NSArray *arr = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
-  [historyArr addObjectsFromArray:arr];
+    NSMutableArray *historyArr = [NSMutableArray arrayWithCapacity:10];
+    NSArray *arr = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
+    [historyArr addObjectsFromArray:arr];
     BOOL isHave = NO;
-    for (NSString *str in historyArr) {
+    for (int i = 0; i< historyArr.count; i ++)
+    {
+        NSString *str = [historyArr objectAtIndex:i];
         if ([str isEqualToString:searchStr]) {
             isHave = YES;
+            [historyArr exchangeObjectAtIndex:i withObjectAtIndex:(historyArr.count - 1)];
             break;
         }
     }
+    
     if (!isHave) {
       [historyArr addObject:searchStr];
     }
- [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:historyArr ];
-    
+    [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:historyArr ];
+    listArr_ = historyArr;
+    [tableList_ reloadData];
+
     [self loadSearchData:searchStr];
     [self.view addSubview:searchResultList_];
     [searchResultList_ reloadData];
