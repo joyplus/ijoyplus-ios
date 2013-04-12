@@ -265,6 +265,7 @@
 		E7BD7D6016FABAA20091989B /* tab2_detailed_variety_More1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7BD7D5E16FABAA20091989B /* tab2_detailed_variety_More1@2x.png */; };
 		E7BD7D6316FABB940091989B /* tab2_detailed_variety_More2_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7BD7D6116FABB940091989B /* tab2_detailed_variety_More2_s@2x.png */; };
 		E7BD7D6416FABB940091989B /* tab2_detailed_variety_More2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7BD7D6216FABB940091989B /* tab2_detailed_variety_More2@2x.png */; };
+		E7C037B11717C8BD00239BB1 /* DownLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E7C037B01717C8BD00239BB1 /* DownLoader.m */; };
 		E7E262D816F94EFB00EA68EC /* sousuo_bg_fen_ge_xian@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7E262D716F94EFB00EA68EC /* sousuo_bg_fen_ge_xian@2x.png */; };
 		EB02F65016DAFFF0001C2E3A /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02F64B16DAFFF0001C2E3A /* AVPlayerView.m */; };
 		EB02F65116DAFFF0001C2E3A /* AVPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB02F64D16DAFFF0001C2E3A /* AVPlayerViewController.m */; };
@@ -1254,6 +1255,8 @@
 		E7BD7D5E16FABAA20091989B /* tab2_detailed_variety_More1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tab2_detailed_variety_More1@2x.png"; path = "yueshipin_ipad/Resource_iphone/tab2_detailed_variety_More1@2x.png"; sourceTree = SOURCE_ROOT; };
 		E7BD7D6116FABB940091989B /* tab2_detailed_variety_More2_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tab2_detailed_variety_More2_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/tab2_detailed_variety_More2_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		E7BD7D6216FABB940091989B /* tab2_detailed_variety_More2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tab2_detailed_variety_More2@2x.png"; path = "yueshipin_ipad/Resource_iphone/tab2_detailed_variety_More2@2x.png"; sourceTree = SOURCE_ROOT; };
+		E7C037AF1717C8BD00239BB1 /* DownLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownLoader.h; sourceTree = "<group>"; };
+		E7C037B01717C8BD00239BB1 /* DownLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownLoader.m; sourceTree = "<group>"; };
 		E7E262D716F94EFB00EA68EC /* sousuo_bg_fen_ge_xian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sousuo_bg_fen_ge_xian@2x.png"; path = "yueshipin_ipad/Resource_iphone/sousuo_bg_fen_ge_xian@2x.png"; sourceTree = SOURCE_ROOT; };
 		EB02F64A16DAFFF0001C2E3A /* AVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
 		EB02F64B16DAFFF0001C2E3A /* AVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
@@ -2159,6 +2162,8 @@
 		22B21C2116A7D4F000D57512 /* DownLoad_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E7C037AF1717C8BD00239BB1 /* DownLoader.h */,
+				E7C037B01717C8BD00239BB1 /* DownLoader.m */,
 				22B21C2316A7D60C00D57512 /* DownLoadManager.h */,
 				22B21C2416A7D60C00D57512 /* DownLoadManager.m */,
 				2281DA6016AD25D800333353 /* IphoneDownloadViewController.h */,
@@ -4437,6 +4442,7 @@
 				EBBE245D1715188600091F24 /* CustomTextField.m in Sources */,
 				EBBE2462171518B500091F24 /* Harpy.m in Sources */,
 				EBC9D9471716A221005D5DBF /* SearchListViewController.m in Sources */,
+				E7C037B11717C8BD00239BB1 /* DownLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
