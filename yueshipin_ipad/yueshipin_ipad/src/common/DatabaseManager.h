@@ -19,6 +19,7 @@
 + (NSObject *)findFirstByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 + (void)deleteObject:(NSObject *)dbObject;
 + (void)save:(NSObject *)dbObject;
++ (void)saveInBatch:(NSArray *)dbObjectArray;
 + (void)update:(NSObject *)dbObject;
 + (NSInteger)count:(Class)dbObjectClass;
 +(NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;

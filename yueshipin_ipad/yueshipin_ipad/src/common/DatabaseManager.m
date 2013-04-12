@@ -227,7 +227,7 @@
     
 }
 
-+ (void)deleteObject:(DatabaseObject *)dbObject
++ (void)deleteObject:(NSObject *)dbObject
 {
     FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
     if (![db open]) {
@@ -251,46 +251,69 @@
     }
     [db close];
 }
-+ (void)save:(DatabaseObject *)dbObject
++ (void)save:(NSObject *)dbObject
 {
     FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
     [queue inDatabase:^(FMDatabase *db) {
-        if ([dbObject isKindOfClass:DownloadItem.class]) {
+        if (dbObject.class == DownloadItem.class) {
             DownloadItem *obj = (DownloadItem *)dbObject;
-            [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", \
-                                                     obj.itemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration];
-        } else if ([dbObject isKindOfClass:SubdownloadItem.class]) {
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+            [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+        } else if (dbObject.class == SubdownloadItem.class) {
             SubdownloadItem *obj = (SubdownloadItem *)dbObject;
-            [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", \
-                                                        obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration];
-        } else if ([dbObject isKindOfClass:SegmentUrl.class]) {
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+            [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+        } else if (dbObject.class == SegmentUrl.class) {
             SegmentUrl *obj = (SegmentUrl *)dbObject;
-            [db executeUpdate:@"insert into SegmentUrl(itemId, subitemId, url, seqNum) values (?, ?, ?, ?)", \
-                                                   obj.itemId, obj.subitemId, obj.url, obj.seqNum];
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.url, [NSNumber numberWithInt:obj.seqNum], nil];
+            [db executeUpdate:@"insert into SegmentUrl(itemId, subitemId, url, seqNum) values (?, ?, ?, ?)"  withArgumentsInArray:parameterArray];
         }
     }];
     [queue close];
 }
 
-+(void)update:(DatabaseObject *)dbObject
++ (void)saveInBatch:(NSArray *)dbObjectArray
+{
+    FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
+    [queue inDatabase:^(FMDatabase *db) {
+        for (NSObject *dbObject in dbObjectArray) {            
+            if (dbObject.class == DownloadItem.class) {
+                DownloadItem *obj = (DownloadItem *)dbObject;
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+                [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+            } else if (dbObject.class == SubdownloadItem.class) {
+                SubdownloadItem *obj = (SubdownloadItem *)dbObject;
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+                [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+            } else if (dbObject.class == SegmentUrl.class) {
+                SegmentUrl *obj = (SegmentUrl *)dbObject;
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.url, [NSNumber numberWithInt:obj.seqNum], nil];
+                [db executeUpdate:@"insert into SegmentUrl(itemId, subitemId, url, seqNum) values (?, ?, ?, ?)"  withArgumentsInArray:parameterArray];
+            }
+        }
+    }];
+    [queue close];
+}
+
++(void)update:(NSObject *)dbObject
 {
     FMDatabaseQueue *queue = [FMDatabaseQueue databaseQueueWithPath:DATABASE_PATH];
     {
         [queue inDatabase:^(FMDatabase *db) {
-            if ([dbObject isKindOfClass:DownloadItem.class]) {
+            if (dbObject.class == DownloadItem.class) {
                 DownloadItem *obj = (DownloadItem *)dbObject;
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], obj.itemId, nil];
                 [db executeUpdate:@"update DownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ?) \
-                                     where itemId = ?", obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration, \
-                                       obj.itemId];
-            } else if ([dbObject isKindOfClass:SubdownloadItem.class]) {
+                                     where itemId = ? " withArgumentsInArray:parameterArray];
+            } else if (dbObject.class == SubdownloadItem.class) {
                 SubdownloadItem *obj = (SubdownloadItem *)dbObject;
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration],  obj.itemId, obj.subitemId, nil];
                 [db executeUpdate:@"update SubdownloadItem set imageUrl = ?, name = ?, fileName = ?, downloadStatus = ?, type = ?, percentage = ?, url = ?, isDownloadingNum = ?, downloadType = ?, duration = ?) \
-                      where itemId = ? and subitemId = ?", obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, obj.type, obj.percentage, obj.url, obj.isDownloadingNum, obj.downloadType, obj.duration, \
-                        obj.itemId, obj.subitemId];
-            } else if ([dbObject isKindOfClass:SegmentUrl.class]) {
+                      where itemId = ? and subitemId = ? " withArgumentsInArray:parameterArray];
+            } else if (dbObject.class == SegmentUrl.class) {
                 SegmentUrl *obj = (SegmentUrl *)dbObject;
                 [db executeUpdate:@"update SegmentUrl set url = ?, seqNum = ? where itemId = ? and subitemId = ? ", \
-                                                      obj.url, obj.seqNum, obj.itemId, obj.subitemId];
+                                                      obj.url, [NSNumber numberWithInt:obj.seqNum], obj.itemId, obj.subitemId];
             }
         }];
     }
