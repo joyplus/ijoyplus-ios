@@ -16,11 +16,12 @@
 #import "DownloadHandler.h"
 #import "DownloadUrlFinder.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import <Parse/Parse.h>
 
 #define DEFAULT_POSOTION_Y 540
 
-@interface MovieDetailViewController (){
+@interface MovieDetailViewController ()
+{
     NSMutableArray *commentArray;
     SublistViewController *topicListViewController;
     CommentListViewController *commentListViewController;
@@ -30,10 +31,12 @@
     UITapGestureRecognizer *tapGesture;
 }
 
+- (void)SubscribingToChannels;
+
 @end
 
 @implementation MovieDetailViewController
-
+@synthesize expectbtn;
 
 - (void)didReceiveMemoryWarning
 {
@@ -79,6 +82,7 @@
     [self setReportLabel:nil];
     [self setShareLabel:nil];
     [self setScoreLable:nil];
+    self.expectbtn = nil;
     [super viewDidUnload];
 }
 
@@ -150,6 +154,13 @@
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
+    [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:expectbtn];
     
     
     self.downloadBtn.frame = CGRectMake(384, 280, 100, 50);
@@ -343,6 +354,8 @@
     self.introContentTextView.text = [video objectForKey:@"summary"];
     
     if (self.canPlayVideo) {
+        self.playBtn.hidden = NO;
+        self.expectbtn.hidden = YES;
         if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
             // do nothing
             //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
@@ -352,7 +365,11 @@
             [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
         }
     } else {
-        [self.playBtn setEnabled:NO];
+        
+        self.playBtn.hidden = YES;
+        self.expectbtn.hidden = NO;
+        
+        //[self.playBtn setEnabled:NO];
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
@@ -449,6 +466,11 @@
     }
 }
 
+- (void)expectVideo
+{
+    [self collectionBtnClicked];
+}
+
 - (void)playVideo
 {
     self.subname = @"";
@@ -483,8 +505,29 @@
     }];
 }
 
+- (void)SubscribingToChannels
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",nil], nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+    
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
+}
+
 - (void)collectionBtnClicked
 {
+    [self SubscribingToChannels];
+    
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
