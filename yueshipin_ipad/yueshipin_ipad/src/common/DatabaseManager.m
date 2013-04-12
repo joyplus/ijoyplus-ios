@@ -38,7 +38,7 @@
         NSLog(@"Could not open db in DatabaseManager!");
         return nil;
     }
-    FMResultSet *rs = [db executeQuery:queryString];
+    FMResultSet *rs = [db executeQuery: [NSString stringWithFormat:@"SELECT rowid, * From %@ %@",dbObjectClass, queryString]];
     NSMutableArray *resultArray = [[NSMutableArray alloc]initWithCapacity:5];
     while ([rs next]) {
         if (dbObjectClass == DownloadItem.class) {
@@ -98,7 +98,7 @@
         NSLog(@"Could not open db in DatabaseManager!");
         return nil;
     }
-    FMResultSet *rs = [db executeQuery:queryString];
+    FMResultSet *rs = [db executeQuery:[NSString stringWithFormat:@"SELECT rowid, * From %@ %@",dbObjectClass, queryString]];
     if ([rs next]) {
         if (dbObjectClass == DownloadItem.class) {
             DownloadItem *tempDbObj = [[DownloadItem alloc]init];
@@ -170,7 +170,7 @@
     }
     
     //NSString *tableName = [NSString stringWithUTF8String:class_getName(dbObjectClass)];
-    NSString *queryString = [NSString stringWithFormat:@"SELECT * From %@",dbObjectClass];
+    NSString *queryString = [NSString stringWithFormat:@"SELECT rowid, * From %@",dbObjectClass];
     FMResultSet *rs = [db executeQuery:queryString];
     NSMutableArray *resultArray = [[NSMutableArray alloc]initWithCapacity:5];
     while ([rs next]) {

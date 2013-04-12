@@ -121,16 +121,12 @@
 {
     [super viewWillDisappear:animated];
     displayNoSpaceFlag = NO;
-    for (SubdownloadItem *item in subitems) {
-        [item save];
-    }
     [AppDelegate instance].padDownloadManager.subdelegate = [AppDelegate instance].padDownloadManager;
 }
 
 - (void)reloadSubitems
 {
-    NSArray *tempSubitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
-    
+    NSArray *tempSubitems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
     subitems = [tempSubitems sortedArrayUsingComparator:^(SubdownloadItem *a, SubdownloadItem *b) {
         NSNumber *first =  [NSNumber numberWithInt:a.subitemId.intValue];
         NSNumber *second = [NSNumber numberWithInt:b.subitemId.intValue];
@@ -163,7 +159,7 @@
             [AppDelegate instance].currentDownloadingNum = 0;
             tempitem.percentage = 100;
             tempitem.downloadStatus  = @"done";
-            [tempitem save];
+            [DatabaseManager update:tempitem];
             break;
         }
     }
@@ -180,7 +176,7 @@
             if (progress * 100 - tempitem.percentage > 5) {
                 NSLog(@"percent in SubdownloadViewController= %f", progress);
                 tempitem.percentage = (int)(progress*100);
-                [tempitem save];
+                [DatabaseManager update:tempitem];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             }
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
@@ -336,9 +332,9 @@
         [AppDelegate instance].currentDownloadingNum = 0;
     }
     [self removeLastPlaytime:item];
-    [item deleteObject];
-    [SubdownloadItem performSQLAggregation:[NSString stringWithFormat: @"delete from subdownload_item WHERE item_id = '%@' and subitem_id = '%@'", item.itemId, item.subitemId]];
-    double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", item.itemId]];
+    [DatabaseManager deleteObject:item];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from subdownload_item WHERE item_id = '%@' and subitem_id = '%@'", item.itemId, item.subitemId]];
+    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", item.itemId]];
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -358,8 +354,8 @@
     
     [self reloadSubitems];
     if(subitems == nil || subitems.count == 0){
-        DownloadItem *pItem = (DownloadItem *)[DownloadItem findFirstByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
-        [pItem deleteObject];
+        DownloadItem *pItem = (DownloadItem *)[DatabaseManager findFirstByCriteria: DownloadItem.class queryString:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
+        [DatabaseManager deleteObject:pItem];
         if ([item.downloadType isEqualToString:@"m3u8"]) {
             NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
             [fileManager removeItemAtPath:filePath error:nil];
@@ -378,7 +374,7 @@
         if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
             item.downloadStatus = @"done";
             item.percentage = 100;
-            [item save];
+            [DatabaseManager update:item];
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {
                 filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/%@_%@.m3u8", item.itemId, item.subitemId, item.itemId, item.subitemId]];

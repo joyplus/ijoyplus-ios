@@ -13,6 +13,7 @@
 #import "CommonMotheds.h"
 #import "DownLoadManager.h"
 #import "UIUtility.h"
+#import "DatabaseManager.h"
 @interface ShowDownloadViewController ()
 
 @end
@@ -313,7 +314,7 @@
 
 -(NSArray *)readDataFromDB{
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",prodId_];
-    NSArray *tempArr = [SubdownloadItem findByCriteria:subquery];
+    NSArray *tempArr = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
     return tempArr;
     
 }

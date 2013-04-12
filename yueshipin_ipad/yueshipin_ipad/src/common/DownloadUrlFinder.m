@@ -9,6 +9,7 @@
 #import "DownloadUrlFinder.h"
 #import "CMConstants.h"
 #import "AppDelegate.h"
+#import "DatabaseManager.h"
 
 @interface DownloadUrlFinder ()<NSURLConnectionDelegate>
 
@@ -38,7 +39,7 @@
     if (urlIndex >= 0 && urlIndex < item.urlArray.count) {
         if (urlIndex >= mp4DownloadUrlNum && [item.downloadType isEqualToString:@"mp4"]) {
             item.downloadType = @"m3u8";
-            [item save];
+            [DatabaseManager update:item];
         }
         NSString *tempUrl = [item.urlArray objectAtIndex:urlIndex];
         NSString *formattedUrl = tempUrl;
@@ -67,7 +68,7 @@
                 workingUrl = aconnection.originalRequest.URL.absoluteString;
                 NSLog(@"working url = %@", workingUrl);
                 item.url = workingUrl;
-                [item save];
+                [DatabaseManager update:item];
                 [[AppDelegate instance].padDownloadManager startDownloadingThreads];
             } else {
                 urlIndex++;

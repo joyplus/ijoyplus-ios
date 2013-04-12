@@ -629,7 +629,7 @@
 - (BOOL)downloadShow:(int)num
 {
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
-    DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if (item == nil) {
         BOOL success = [self addSubdownloadItem:num];
         if(success){
@@ -640,7 +640,7 @@
         }
     } else {
         NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@' and subitem_id = '%@'", self.prodId, [StringUtility md5:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:num] objectForKey:@"name"]]]];
-        SubdownloadItem *subitem = (SubdownloadItem *)[SubdownloadItem findFirstByCriteria:subquery];
+        SubdownloadItem *subitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:subquery];
         if(subitem == nil){
             return [self addSubdownloadItem:num];
         } else {
@@ -661,7 +661,7 @@
     item.percentage = 0;
     item.type = 3;
     item.downloadStatus = @"stop";
-    [item save];
+    [DatabaseManager save:item];
 }
 
 - (BOOL)addSubdownloadItem:(int)num
@@ -691,7 +691,7 @@
         } else if(self.m3u8DownloadUrls.count > 0){
             subitem.downloadType = @"m3u8";
         }
-        [subitem save];
+        [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
         finder.mp4DownloadUrlNum = self.mp4DownloadUrls;

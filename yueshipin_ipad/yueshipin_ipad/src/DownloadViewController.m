@@ -13,7 +13,6 @@
 #import "DownloadItem.h"
 #import "GMGridView.h"
 #import "SubdownloadViewController.h"
-#import "SQLiteInstanceManager.h"
 #import "AFDownloadRequestOperation.h"
 #import "AVPlayerViewController.h"
 #import "DDProgressView.h"
@@ -187,16 +186,13 @@
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
     displayNoSpaceFlag = NO;
-    for (DownloadItem *item in allDownloadItems) {
-        [item save];
-    }
     [self updateDiskStorage];
     [MobClick endLogPageView:DOWNLOAD];
 }
 
 - (void)reloadItems
 {
-    allDownloadItems = [DownloadItem allObjects];
+    allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
     if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
         [nodownloadImage setHidden:NO];
@@ -231,7 +227,7 @@
             [AppDelegate instance].currentDownloadingNum = 0;
             item.downloadStatus = @"done";
             item.percentage = 100;
-            [item save];
+            [DatabaseManager update:item];
             break;
         }
     }
@@ -248,7 +244,7 @@
             if (progress * 100 - item.percentage > 5) {
                 item.percentage = (int)(progress*100);
                 NSLog(@"percent in DownloadViewController= %f", progress);
-                [item save];
+                [DatabaseManager update:item];
                 [self updateDiskStorage];
             }
             GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:i];
@@ -290,7 +286,7 @@
         [[AppDelegate instance].padDownloadManager stopDownloading];
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
-        [item save];
+        [DatabaseManager update:item];
         [AppDelegate instance].currentDownloadingNum = 0;
     } else if([item.downloadStatus isEqualToString:@"stop"]){
         [self getFreeDiskspacePercent];
@@ -300,7 +296,7 @@
         }
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"waiting";
-        [item save];
+        [DatabaseManager update:item];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [_gmGridView reloadData];
@@ -408,8 +404,8 @@
         [AppDelegate instance].currentDownloadingNum = 0;
     }
     [self removeLastPlaytime:item];
-    [item deleteObject];
-    double result = [SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
+    [DatabaseManager deleteObject:item];
+    double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -431,15 +427,15 @@
     if ([fileManager fileExistsAtPath:filePath]) {
         [fileManager removeItemAtPath:filePath error:nil];
     }
-    NSArray *tempsubitems = [SubdownloadItem findByCriteria:[NSString stringWithFormat:@"WHERE item_id = %@", item.itemId]];
+    NSArray *tempsubitems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"WHERE item_id = %@", item.itemId]];
     for (SubdownloadItem *subitem in tempsubitems) {
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
             [AppDelegate instance].currentDownloadingNum = 0;
         }
         [self removeLastPlaytime:subitem];
-        [subitem deleteObject];
     }
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat:@"delete from SubdownloadItem WHERE item_id = %@", item.itemId]];
     [self reloadItems];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     if (allDownloadItems.count == 0) {

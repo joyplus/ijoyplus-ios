@@ -14,6 +14,7 @@
 #import "DownloadUrlFinder.h"
 #import "SegmentUrl.h"
 #import "StringUtility.h"
+#import "DatabaseManager.h"
 
 @interface NewM3u8DownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -38,9 +39,9 @@
     if (item.url) {
         [AppDelegate instance].currentDownloadingNum++;
         item.downloadStatus = @"start";
-        [item save];
+        [DatabaseManager update:item];
         downloadingItem = item;
-        NSArray *segmentUrlArray = [SegmentUrl findByCriteria: [NSString stringWithFormat: @"WHERE item_id = %@", item.itemId]];
+        NSArray *segmentUrlArray = [DatabaseManager findByCriteria:SegmentUrl.class queryString:[NSString stringWithFormat: @"WHERE item_id = %@", item.itemId]];
         if (segmentUrlArray.count > 0 && ![StringUtility stringIsEmpty:item.fileName]) {
             segmentIndex = item.isDownloadingNum;
             if (segmentIndex < segmentUrlArray.count) {
@@ -48,9 +49,7 @@
             }
         } else {
             if (segmentUrlArray.count > 0) {
-                for (SegmentUrl *segUrl in segmentUrlArray) {
-                    [segUrl deleteObject];
-                }
+                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE item_id = %@", item.itemId]];
             }
             segmentIndex = 0;
             // download m3u8 playlist
@@ -181,10 +180,10 @@
         }
         segUrl.url = [videoArray objectAtIndex:i];
         segUrl.seqNum = i;
-        [segUrl save];
         [segmentUrlArray addObject:segUrl];
     }
-    [item save];
+    [DatabaseManager saveInBatch:segmentUrlArray];
+    [DatabaseManager update:item];
     [self downloadVideoSegment:segmentUrlArray];
 }
 
@@ -214,7 +213,7 @@
             item.percentage = (int)((segmentDownloadingOp.downloadingSegmentIndex*1.0 / segmentUrlArray.count) * 100);
             item.isDownloadingNum = segmentDownloadingOp.downloadingSegmentIndex;
             if (segmentDownloadingOp.downloadingSegmentIndex % 5 == 0 || segmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {
-                [item save];
+                [DatabaseManager save:item];
             }
             if (segmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {//All segments are downloaded successfully.
                 if(item.type == 1){

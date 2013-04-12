@@ -42,6 +42,7 @@
 #import "AFSinaWeiboAPIClient.h"
 #import "CustomTextField.h"
 #import "SSCheckBoxView.h"
+#import "DatabaseManager.h"
 
 #define EPISODE_NUMBER_IN_ROW 10
 
@@ -496,7 +497,7 @@
     [view addSubview:episodeView];
     
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
-    NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
+    NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
     for (int i = 0; i < episodeArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag = i+1;
@@ -631,7 +632,7 @@
     showListView.contentOffset = CGPointMake(0, 0);
     [view addSubview:showListView];
     NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
-    NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
+    NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
         if(episodeArray.count > 5){
             UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [previousShowBtn setEnabled:NO];

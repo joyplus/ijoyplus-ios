@@ -381,7 +381,7 @@
 - (void)checkIfDownloading
 {
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
-    DownloadItem *downloadingItem = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    DownloadItem *downloadingItem = (DownloadItem *) [DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if(downloadingItem != nil){
         [self.downloadBtn setEnabled:NO];
         if(downloadingItem.percentage == 100){
@@ -599,7 +599,7 @@
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
 
     NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
-    DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if (item != nil) {
         return;
     }
@@ -624,7 +624,7 @@
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     item.urlArray = tempArray;
-    [item save];
+    [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
     finder.item = item;

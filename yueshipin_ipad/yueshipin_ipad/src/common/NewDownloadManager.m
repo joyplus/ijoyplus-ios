@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "DownloadUrlFinder.h"
 #import "ActionUtility.h"
+#import "DatabaseManager.h"
 
 @interface NewDownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -43,8 +44,8 @@
 {
     [myLock lock];
     if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
-        allDownloadItems = [DownloadItem allObjects];
-        allSubdownloadItems = [SubdownloadItem allObjects];
+        allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
+        allSubdownloadItems = [DatabaseManager allObjects:SubdownloadItem.class];
         [self startDownloadingThread:allDownloadItems status:@"start"];
         [self startDownloadingThread:allSubdownloadItems status:@"start"];
         [self startDownloadingThread:allDownloadItems status:@"waiting"];
@@ -72,7 +73,7 @@
                     if (item.url) {
                         [AppDelegate instance].currentDownloadingNum++;
                         item.downloadStatus = @"start";
-                        [item save];
+                        [DatabaseManager update:item];
                         NSURL *url = [NSURL URLWithString:item.url];
                         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
                         
@@ -152,7 +153,7 @@
 {
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
-    [downloadingItem save];
+    [DatabaseManager update:downloadingItem];
     [downloadingOperation pause];
     [downloadingOperation cancel];
     [self startNewDownloadItem];
@@ -178,12 +179,10 @@
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    if([downloadingItem isKindOfClass:[SubdownloadItem class]]){
-        SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
-        tempDownloadingItem.downloadStatus = @"done";
-        tempDownloadingItem.percentage = 100;
-        [tempDownloadingItem save];
-    }
+    SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
+    tempDownloadingItem.downloadStatus = @"done";
+    tempDownloadingItem.percentage = 100;
+    [DatabaseManager update:tempDownloadingItem];
     [downloadingOperation pause];
     [downloadingOperation cancel];
     [self startNewDownloadItem];        
