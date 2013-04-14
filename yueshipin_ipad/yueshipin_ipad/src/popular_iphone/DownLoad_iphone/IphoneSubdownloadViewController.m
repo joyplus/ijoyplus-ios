@@ -453,7 +453,7 @@
        
         downloadItem.downloadStatus = @"stop";
         //[downloadItem save];
-       [DatabaseManager save:downloadItem];
+       [DatabaseManager update:downloadItem];
         [DownLoadManager stop:downloadItem.subitemId];
        
        int num = [self getTagNum:downloadItem.subitemId];
@@ -475,7 +475,7 @@
         
         downloadItem.downloadStatus = @"waiting";
         //[downloadItem save];
-        [DatabaseManager save:downloadItem];
+        [DatabaseManager update:downloadItem];
         int num = [self getTagNum:downloadItem.subitemId];
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         label.text =  [NSString stringWithFormat:@"等待中：%i%%\n ", downloadItem.percentage];
