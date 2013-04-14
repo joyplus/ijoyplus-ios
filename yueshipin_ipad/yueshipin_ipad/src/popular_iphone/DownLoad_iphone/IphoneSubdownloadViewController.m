@@ -331,7 +331,7 @@
     }
     
     [itemArr_ removeObjectAtIndex:index];
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
     //NSArray *arr = [SubdownloadItem findByCriteria:query];
     NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     SubdownloadItem *item = [arr objectAtIndex:index];
@@ -364,8 +364,7 @@
         }
     }
    
-    //[SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'",itemId]];
-    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'",itemId]];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemIdd = '%@'",itemId]];
    // [item deleteObject];
     [DatabaseManager deleteObject:item];
     
@@ -373,7 +372,7 @@
    // NSArray *tempArr = [SubdownloadItem findByCriteria:query];
     
     if ([tempArr count] == 0){
-        NSString *subquery = [NSString stringWithFormat:@"WHERE item_id ='%@'",prodId_];
+        NSString *subquery = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
         //NSArray *itemArr = [DownloadItem findByCriteria:subquery];
         NSArray *itemArr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:subquery];
         for (DownloadItem *downloadItem in itemArr) {
@@ -492,7 +491,7 @@
 }
 
 -(SubdownloadItem *)getDownloadItemById:(NSString *)idstr{
-    NSString *query = [NSString stringWithFormat:@"WHERE subitem_id ='%@'",idstr];
+    NSString *query = [NSString stringWithFormat:@"WHERE subitemId ='%@'",idstr];
    // NSArray *arr = [SubdownloadItem findByCriteria:query];
     NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     if ([arr count]>0) {

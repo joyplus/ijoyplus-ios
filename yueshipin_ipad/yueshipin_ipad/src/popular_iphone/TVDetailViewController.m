@@ -1427,7 +1427,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         itemId = [self.infoDic objectForKey:@"id"];
     }
 
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
+    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
     NSArray *tempArr = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
     return tempArr;
 

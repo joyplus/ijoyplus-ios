@@ -23,4 +23,20 @@
 @synthesize downloadType;
 @synthesize duration;
 
+- (id)init
+{
+    self = [super init];
+    name = @"";
+    imageUrl = @"";
+    percentage = 0;
+    downloadStatus = @"";
+    fileName = @"";
+    url = @"";
+    type = 0;
+    isDownloadingNum = 0;
+    duration = 0;
+    downloadType = @"";
+    return self;
+}
+
 @end

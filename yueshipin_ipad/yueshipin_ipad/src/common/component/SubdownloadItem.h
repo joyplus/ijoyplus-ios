@@ -10,5 +10,7 @@
 #import "DownloadItem.h"
 @interface SubdownloadItem : DownloadItem
 
+- (id)init;
+
 @property (nonatomic, strong)NSString *subitemId;
 @end

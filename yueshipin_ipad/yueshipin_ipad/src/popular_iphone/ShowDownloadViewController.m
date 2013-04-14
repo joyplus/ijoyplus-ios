@@ -313,7 +313,7 @@
 }
 
 -(NSArray *)readDataFromDB{
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",prodId_];
+    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",prodId_];
     NSArray *tempArr = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
     return tempArr;
     

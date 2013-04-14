@@ -9,6 +9,8 @@
 #import "DatabaseObject.h"
 @interface SegmentUrl : DatabaseObject
 
+- (id)init;
+
 @property (nonatomic) int rowId;
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *subitemId;

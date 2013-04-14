@@ -498,7 +498,7 @@
                 if (itemId == nil) {
                     itemId = [self.infoDic objectForKey:@"id"];
                 }
-                NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
+                NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
                 NSArray *tempArr = [DatabaseManager findByCriteria:DownloadItem.class queryString:subquery];
                 if ([tempArr count] >0) {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];

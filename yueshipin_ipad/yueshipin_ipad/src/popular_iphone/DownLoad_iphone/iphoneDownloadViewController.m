@@ -365,7 +365,7 @@
         
     }
     else{
-        NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",downloadItem.itemId];
+        NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",downloadItem.itemId];
         NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
         UILabel *labeltotal = [[UILabel alloc] initWithFrame:CGRectMake(17, 97, 67, 20)];
         labeltotal.text = [NSString stringWithFormat:@"共%d集",[arr count]];
@@ -400,11 +400,10 @@
     
     DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:index];
     NSString *itemId = item.itemId;
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
+    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
     if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
         //NSArray *arr = [SegmentUrl findByCriteria:subquery];
-        //[SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", itemId]];
-        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", itemId]];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", itemId]];
         NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:itemId];
         [fileMgr removeItemAtPath:deletePath error:&error];
         [DownLoadManager stop:itemId];
@@ -418,13 +417,12 @@
         //NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
         for (SubdownloadItem *subItem in subItems) {
             
-            [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", subItem.subitemId]];
-            //[SegmentUrl performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", subItem.subitemId]];
+            [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", subItem.subitemId]];
             [DownLoadManager stopAndClear:subItem.subitemId];
             
-            [DatabaseManager deleteObject:subItem];
-            //[subItem deleteObject];
+            //[DatabaseManager deleteObject:subItem];
         }
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE subitemId like %@", itemId]];
         
         
         
@@ -432,8 +430,6 @@
         [DownLoadManager stopAndClear:itemId];
         
         //删除 对应的文件
-//        NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
-//        NSString *subfileName = [NSString stringWithFormat:@"%@_",itemId];
         for (NSString *nameStr in fileList) {
             if (/*[nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]||*/[nameStr hasPrefix:itemId]) {
                 NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
@@ -444,8 +440,9 @@
     }
        
 
-    //[item deleteObject];
     [DownLoadManager stopAndClear:itemId];
+    [DatabaseManager deleteObject:item];
+    
     
 }
 
@@ -519,7 +516,7 @@
             [DownLoadManager stop:item.itemId];
             
            // [item save];
-           [DatabaseManager save:item];
+           [DatabaseManager update:item];
            
            UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
            label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", item.percentage];
@@ -539,7 +536,7 @@
            
            item.downloadStatus = @"waiting";
            //[item save];
-           [DatabaseManager save:item];
+           [DatabaseManager update:item];
            UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
            label.text = [NSString stringWithFormat:@"等待中：%i%%\n ", item.percentage];
            
@@ -561,7 +558,7 @@
     }
 }
 -(DownloadItem *)getDownloadItemById:(NSString *)idstr{
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id ='%@'",idstr];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",idstr];
    // NSArray *arr = [DownloadItem findByCriteria:query];
     NSArray *arr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
     if ([arr count]>0) {

@@ -246,17 +246,17 @@
     if ( dbObject.class == [DownloadItem class]) {
         NSString *itemId = ((DownloadItem *)dbObject).itemId;
         NSString *sqlString = [NSString stringWithFormat:@"delete from DownloadItem where itemId = '%@'",itemId];
-        [db executeQuery:sqlString];
+       [db executeUpdate:sqlString];
     }
    else if (dbObject.class == [SubdownloadItem class]) {
         NSString *subitemId = ((SubdownloadItem *)dbObject).subitemId;
-        NSString *sqlString = [NSString stringWithFormat:@"delete from DownloadItem where subitemId = '%@'",subitemId];
-        [db executeQuery:sqlString];
+        NSString *sqlString = [NSString stringWithFormat:@"delete from SubdownloadItem where subitemId = '%@'",subitemId];
+        [db executeUpdate:sqlString];
     }
    else if (dbObject.class == [SegmentUrl class]) {
         NSString *itemId = ((SegmentUrl *)dbObject).itemId;
-        NSString *sqlString = [NSString stringWithFormat:@"delete from DownloadItem where itemId = '%@'",itemId];
-        [db executeQuery:sqlString];
+        NSString *sqlString = [NSString stringWithFormat:@"delete from SegmentUrl where itemId = '%@'",itemId];
+        [db executeUpdate:sqlString];
     }
     [db close];
 }
