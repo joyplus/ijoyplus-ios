@@ -509,7 +509,7 @@
 {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
-    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",nil], nil];
+    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
     [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
     
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
@@ -526,13 +526,14 @@
 
 - (void)collectionBtnClicked
 {
-    [self SubscribingToChannels];
-    
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    
+    [self SubscribingToChannels];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

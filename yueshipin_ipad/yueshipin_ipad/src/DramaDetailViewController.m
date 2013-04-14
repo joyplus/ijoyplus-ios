@@ -11,7 +11,7 @@
 #import "CommentListViewController.h"
 #import "SublistViewController.h"
 #import "DownloadUrlFinder.h"
-
+#import <Parse/Parse.h>
 #define DEFAULT_POSITION_Y 550
 #define EPISODE_NUMBER_IN_ROW 5
 
@@ -37,7 +37,7 @@
 @end
 
 @implementation DramaDetailViewController
-
+@synthesize expectbtn;
 
 - (void)didReceiveMemoryWarning
 {
@@ -152,6 +152,12 @@
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
+    [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.expectbtn];
     
     
     self.downloadBtn.frame = CGRectMake(384, 280, 100, 50);
@@ -712,13 +718,41 @@
     }];
 }
 
+- (void)expectVideo
+{
+    [self collectionBtnClicked];
+}
+
+- (void)SubscribingToChannels
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+    
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
+}
+
 - (void)collectionBtnClicked
 {
+    
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    
+    [self SubscribingToChannels];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

@@ -10,7 +10,7 @@
 #import "MovieDetailViewController.h"
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
-
+#import <Parse/Parse.h>
 @interface CollectionListViewController (){
     UITableView *table;
     UIImageView *titleImage;
@@ -354,6 +354,7 @@
     //NSLog(@"commitEditingStyle");
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSString *itemId = [NSString stringWithFormat:@"%@", [[videoArray objectAtIndex:indexPath.row] objectForKey:@"content_id"]];
+        [self unSubscribingToChannels:itemId];
         [self deleteVideo:itemId];
         [videoArray removeObjectAtIndex:indexPath.row];
         if(videoArray.count > 1){
@@ -366,6 +367,25 @@
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
     
+}
+
+- (void)unSubscribingToChannels:(NSString *)Id
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
+    //[currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+    [currentInstallation removeObject:channels forKey:@"channels"];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
 }
 
 - (void)deleteVideo:(NSString *)itemId

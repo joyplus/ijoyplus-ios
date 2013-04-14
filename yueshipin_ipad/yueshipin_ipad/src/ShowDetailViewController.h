@@ -41,6 +41,6 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
 @property (weak, nonatomic) IBOutlet UIButton *downloadBtn;
-
+@property (strong, nonatomic) UIButton *expectbtn;
 
 @end
