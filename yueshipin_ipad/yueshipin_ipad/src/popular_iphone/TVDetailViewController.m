@@ -17,6 +17,7 @@
 #import "CommonMotheds.h"
 #import "ServiceConstants.h"
 #import "ReviewViewController.h"
+#import <Parse/Parse.h>
 
 #define REVIEW_DATA_REQUEST_NUM     (@"3")
 #define REVIEW_VIEW_TAG             (11111)
@@ -435,6 +436,18 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
+                UIButton * expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                expectbtn.tag = 100010;
+                expectbtn.frame = CGRectMake(124, 155, 87, 27);
+//                [expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
+//                [expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
+                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+                [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 30, 0, 0)];
+                expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
+                [expectbtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
+                [cell addSubview:expectbtn];
+                
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
                 addFav.frame = CGRectMake(116, 20, 89, 27);
                 addFav.tag = 10002;
@@ -444,14 +457,17 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
                 if (favCount_ <1000) {
                     [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想看(%d)",favCount_] forState:UIControlStateNormal];
                 }
                 else if (favCount_ >= 1000 && favCount_<= 1100) {
                     
                     [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想看(1K)"] forState:UIControlStateNormal];
                 }
                 else {
                     float favNum = favCount_*1.0/1000;
                     [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想看(%.1fk)",favNum] forState:UIControlStateNormal];
                 }
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
@@ -484,6 +500,22 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
                 downLoad.frame = CGRectMake(225, 155, 74, 28);
                 downLoad.tag = 10004;
+                
+                NSArray * eArr = [videoInfo_ objectForKey:@"episodes"];
+                if (0 == eArr.count) {
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
+                    downLoad.enabled = NO;
+                    play.hidden = YES;
+                    expectbtn.hidden = NO;
+                }
+                else{
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
+                    play.hidden = NO;
+                    expectbtn.hidden = YES;
+                }
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
@@ -766,6 +798,52 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [self presentViewController:rCtrl animated:YES completion:NULL];
 }
 
+- (void)expectVideo
+{
+    [self SubscribingToChannels];
+    [self addVideotoFav:ADDEXPECT];
+}
+
+- (void)SubscribingToChannels
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+    
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
+}
+
+- (void)addVideotoFav:(NSInteger)type
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
+            favCount_++;
+            [self showOpSuccessModalView:2 with:type];
+            [self.tableView reloadData];
+            
+        } else {
+            [self showOpFailureModalView:2 with:type];
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self showOpFailureModalView:2 with:type];
+    }];
+}
+
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
         [UIUtility showNetWorkError:self.view];
@@ -779,25 +857,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
             break;
         }
         case 10002:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                if([responseCode isEqualToString:kSuccessResCode]){
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
-                    favCount_++;
-                    [self showOpSuccessModalView:1 with:DING];
-                    [self.tableView reloadData];
-                } else {
-                    [self showOpFailureModalView:1 with:DING];
-
-                }
-                
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:DING];
-       
-            }];
-            
-            
+            [self SubscribingToChannels];
+            [self addVideotoFav:ADDFAV];
             break;
         }
         case 10003:{

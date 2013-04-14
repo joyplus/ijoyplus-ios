@@ -117,7 +117,8 @@
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
    
-    if (type == REPORT) {
+    if (type == REPORT)
+    {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 80)];
         label.numberOfLines = 0;
         label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -130,11 +131,19 @@
         label.textColor = [UIColor whiteColor];
         [view addSubview:label];
     }
-    if (type == DING || type == ADDFAV ) {
+    else if (type == DING
+             || type == ADDFAV
+             || ADDEXPECT == type)
+    {
          UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
         temp.frame = CGRectMake(0, 0, 92, 27);
         temp.center = view.center;
         [view addSubview:temp];
+        
+        if (ADDEXPECT == type)
+        {
+            
+        }
     }
     
     //[[AppDelegate instance].window addSubview:view];
@@ -159,10 +168,17 @@
        label.text = @"已顶过";
         
     }
-    if (type == ADDFAV) {
+    else if (type == ADDFAV) {
        label.text = @"已收藏过";
     }
-    
+    else if (ADDEXPECT == type)
+    {
+        NSString * text = @"想看影片已加入收藏记录";
+        CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:12]];
+        label.frame = CGRectMake(0, 0, size.width, 27);
+        label.text = @"想看影片已加入收藏记录";
+        label.center = view.center;
+    }
     [view addSubview:label];
   
      [self.view addSubview:view];

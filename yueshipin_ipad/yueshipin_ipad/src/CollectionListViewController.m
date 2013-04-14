@@ -373,9 +373,9 @@
 {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
-    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
     //[currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    [currentInstallation removeObject:channels forKey:@"channels"];
+    [currentInstallation removeObjectsInArray:channels forKey:@"channels"];
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
         if (succeeded)
         {

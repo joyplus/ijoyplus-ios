@@ -155,7 +155,7 @@
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
-    
+    self.expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
     [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
     [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
@@ -509,7 +509,7 @@
 {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
-    NSArray *channels = [NSArray arrayWithObjects:@"", [NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
     [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
     
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){

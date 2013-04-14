@@ -28,6 +28,8 @@
 #import "CustomNavigationViewControllerPortrait.h"
 #import "Reachability.h"
 #import "CommonMotheds.h"
+#import <Parse/Parse.h>
+
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -849,6 +851,7 @@
                 NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
                 NSString *topicId = [infoDic objectForKey:@"content_id"];
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                [self unSubscribingToChannels:topicId];
                 [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [favArr_ removeObjectAtIndex:indexPath.row];
                     [tableView reloadData];
@@ -888,6 +891,24 @@
         }    
         
     }
+}
+
+- (void)unSubscribingToChannels:(NSString *)Id
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
+    
+    [currentInstallation removeObjectsInArray:channels forKey:@"channels"];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
 }
 
 - (NSString *)composeContent:(NSDictionary *)item
