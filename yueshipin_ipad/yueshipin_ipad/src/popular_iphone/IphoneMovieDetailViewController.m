@@ -406,13 +406,17 @@
                 
                 UIButton * expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 expectbtn.tag = 100010;
-                expectbtn.frame = CGRectMake(124, 155, 87, 27);
-//                [expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
-//                [expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
-                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-                [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 30, 0, 0)];
-                [expectbtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
+                expectbtn.frame = CGRectMake(124, 155, 87, 28);
+                [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_.png"] forState:UIControlStateNormal];
+                [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_s.png"] forState:UIControlStateHighlighted];
+                [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan.png"] forState:UIControlStateNormal];
+                [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan_s.png"] forState:UIControlStateHighlighted];
+                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 30)];
+                expectbtn.titleLabel.textAlignment = UITextAlignmentCenter;
+                [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                [expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:expectbtn];
                 
@@ -425,17 +429,17 @@
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
                 if (favCount_ <1000) {
                     [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
-                    [expectbtn setTitle:[NSString stringWithFormat:@"想看(%d)",favCount_] forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%d)",favCount_] forState:UIControlStateNormal];
                 }
                 else if (favCount_ >= 1000 && favCount_<= 1100) {
                     
                     [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
-                    [expectbtn setTitle:[NSString stringWithFormat:@"想看(1K)"] forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(1K)"] forState:UIControlStateNormal];
                 }
                 else {
                     float favNum = favCount_*1.0/1000;
                     [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
-                    [expectbtn setTitle:[NSString stringWithFormat:@"想看(%.1fk)",favNum] forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%.1fk)",favNum] forState:UIControlStateNormal];
                 }
                 
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
