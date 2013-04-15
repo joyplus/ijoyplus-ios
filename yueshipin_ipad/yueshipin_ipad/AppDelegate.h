@@ -44,7 +44,6 @@
 @property (strong, nonatomic)DownLoadManager *downLoadManager;
 
 @property (strong, nonatomic) NewDownloadManager *padDownloadManager;
-@property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
 
 @property (nonatomic, strong) NSString *playWithDownload;
 

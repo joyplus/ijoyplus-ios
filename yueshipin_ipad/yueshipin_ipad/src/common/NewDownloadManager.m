@@ -22,6 +22,7 @@
 @property (nonatomic, strong)NSArray *allDownloadItems;
 @property (nonatomic, strong)NSArray *allSubdownloadItems;
 @property (nonatomic, strong)NSLock *myLock;
+@property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
 @end
 
 @implementation NewDownloadManager
@@ -30,7 +31,7 @@
 @synthesize delegate, subdelegate;
 @synthesize previousProgress, displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
-
+@synthesize padM3u8DownloadManager;
 - (id)init
 {
     self = [super init];
@@ -63,12 +64,13 @@
             if([item.downloadStatus isEqualToString:status]){
                 downloadingItem = item;
                 if ([item.downloadType isEqualToString:@"m3u8"]) {
+                    padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
                     if(item.type == 1){
-                        [AppDelegate instance].padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
+                        padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
                     } else {
-                        [AppDelegate instance].padM3u8DownloadManager.subdelegate = subdelegate == nil ? self : subdelegate;
+                        padM3u8DownloadManager.subdelegate = subdelegate == nil ? self : subdelegate;
                     }
-                    [[AppDelegate instance].padM3u8DownloadManager startDownloadingThreads:item];
+                    [padM3u8DownloadManager startDownloadingThreads:item];
                 } else {
                     if (item.url) {
                         [AppDelegate instance].currentDownloadingNum++;
@@ -123,14 +125,14 @@
 {
     delegate = newdelegate;
     downloadingOperation.downloadingDelegate = newdelegate;
-    [AppDelegate instance].padM3u8DownloadManager.delegate = newdelegate;
+    padM3u8DownloadManager.delegate = newdelegate;
 }
 
 - (void)setSubdelegate:(id<SubdownloadingDelegate>)newdelegate
 {
     subdelegate = newdelegate;
     downloadingOperation.subdownloadingDelegate = newdelegate;
-    [AppDelegate instance].padM3u8DownloadManager.subdelegate = newdelegate;
+    padM3u8DownloadManager.subdelegate = newdelegate;
 }
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
@@ -216,7 +218,7 @@
 {
     [downloadingOperation pause];
     [downloadingOperation cancel];
-    [[AppDelegate instance].padM3u8DownloadManager stopDownloading];
+    [padM3u8DownloadManager stopDownloading];
 }
 
 - (float)getFreeDiskspace

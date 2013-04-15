@@ -387,10 +387,8 @@
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
-        [AppDelegate instance].currentDownloadingNum = 0;
     }
     [self removeLastPlaytime:item];
-    [DatabaseManager deleteObject:item];
     double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", item.itemId]];
     NSLog(@"result = %f", result);
     
@@ -417,12 +415,15 @@
     for (SubdownloadItem *subitem in tempsubitems) {
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [AppDelegate instance].currentDownloadingNum = 0;
         }
         [self removeLastPlaytime:subitem];
     }
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat:@"delete from SubdownloadItem WHERE itemId = %@", item.itemId]];
-    [self reloadItems];
+    [DatabaseManager deleteObject:item];
+    if ([ActionUtility getStartItemNumber] == 0) {
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
+    allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];

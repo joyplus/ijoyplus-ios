@@ -63,7 +63,6 @@
 @synthesize closeVideoMode;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
-@synthesize padM3u8DownloadManager;
 @synthesize httpServer;
 
 + (AppDelegate *) instance {
@@ -163,7 +162,6 @@
 - (void)initDownloadManager
 {
     padDownloadManager = [[NewDownloadManager alloc]init];    
-    padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

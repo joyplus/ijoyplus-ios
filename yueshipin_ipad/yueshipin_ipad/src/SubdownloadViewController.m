@@ -146,7 +146,7 @@
 
 - (void)restartNewDownloading
 {
-    [AppDelegate instance].padDownloadManager = 0;
+    [AppDelegate instance].currentDownloadingNum = 0;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] != NotReachable) {
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
@@ -331,7 +331,6 @@
     SubdownloadItem *item = [subitems objectAtIndex:index];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
-        [AppDelegate instance].currentDownloadingNum = 0;
     }
     [self removeLastPlaytime:item];
     [DatabaseManager deleteObject:item];
@@ -353,7 +352,9 @@
             }
         }
     }
-    
+    if ([ActionUtility getStartItemNumber] == 0) {
+        [AppDelegate instance].currentDownloadingNum = 0;
+    }
     [self reloadSubitems];
     if(subitems == nil || subitems.count == 0){
         DownloadItem *pItem = (DownloadItem *)[DatabaseManager findFirstByCriteria: DownloadItem.class queryString:[NSString stringWithFormat:@"WHERE itemId = %@", self.itemId]];

@@ -278,12 +278,12 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
     // track custom bytes read because totalBytesRead persists between pause/resume.
     self.totalBytesReadPerDownload += [data length];
     if (self.progressiveDownloadProgress) {
-    if (subdownloadingDelegate.class) {
-        [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
-    } else {
-        [downloadingDelegate updateProgress:operationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
-        
-    }
+        if (subdownloadingDelegate) {
+            [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
+        } else {
+            [downloadingDelegate updateProgress:operationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
+            
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
                        self.progressiveDownloadProgress((long long)[data length], self.totalBytesRead, self.response.expectedContentLength,self.totalBytesReadPerDownload + self.offsetContentLength, self.totalContentLength);
                   });
