@@ -394,9 +394,9 @@
     if(downloadingItem != nil){
         [self.downloadBtn setEnabled:NO];
         if(downloadingItem.percentage == 100){
-            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_disabled"] forState:UIControlStateDisabled];
+            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_finished"] forState:UIControlStateDisabled];
         } else {
-            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
+            [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateDisabled];
         }
     }
 }
