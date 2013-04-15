@@ -16,6 +16,7 @@
 #import "IphoneShowDetailViewController.h"
 #import "iphoneDownloadViewController.h"
 #import "RespForWXRootViewController.h"
+#import "CustomNavigationViewControllerPortrait.h"
 @interface TabBarViewController ()
 
 @end
@@ -79,14 +80,14 @@
             IphoneMovieDetailViewController *iphoneMovieDetailViewController = [[IphoneMovieDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             iphoneMovieDetailViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
             iphoneMovieDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
             break;
         }
         case 2 :{
             TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             tvDetailViewController.infoDic = infoDic;
             tvDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
             
             break;
         }
@@ -94,7 +95,7 @@
             TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             tvDetailViewController.infoDic = infoDic;
             tvDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
             
             break;
         }
@@ -102,7 +103,7 @@
             IphoneShowDetailViewController *iphoneShowDetailViewController = [[IphoneShowDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             iphoneShowDetailViewController.infoDic = infoDic;
             iphoneShowDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneShowDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:iphoneShowDetailViewController] animated:YES completion:nil];
             break;
         }
         default:
