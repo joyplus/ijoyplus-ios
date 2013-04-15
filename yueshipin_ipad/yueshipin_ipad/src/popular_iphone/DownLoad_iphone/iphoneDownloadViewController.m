@@ -73,7 +73,6 @@
                 forState:UIControlStateHighlighted];
     //[editButton setTitle:@"Edit" forState:UIControlStateNormal];
     editButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:editButton];
-    self.navigationItem.rightBarButtonItem = editButtonItem_;
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [doneButton addTarget:self action:@selector(donePressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -157,6 +156,14 @@
     downLoadManager_.downLoadMGdelegate = self;
     [gMGridView_ reloadData];
     
+    if (0 != itemArr_.count)
+    {
+        self.navigationItem.rightBarButtonItem = editButtonItem_;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated{
