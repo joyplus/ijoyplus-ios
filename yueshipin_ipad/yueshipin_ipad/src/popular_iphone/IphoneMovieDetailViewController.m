@@ -674,7 +674,7 @@
             if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
                 UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 10.0f, 200, 60);
+                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 20.0f, 200, 60);
                 moreBtn.backgroundColor = [UIColor clearColor];
                 [moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 30, 100)];
                 [moreBtn setTitle:@"更多影评 >" forState:UIControlStateNormal];
