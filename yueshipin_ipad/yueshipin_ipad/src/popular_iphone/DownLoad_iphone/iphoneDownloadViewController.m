@@ -205,6 +205,7 @@
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
         DownloadItem *item = [self getDownloadItemById:itemId];
         float percent = item.percentage/100.0;
+        item.downloadStatus = @"loading";
         UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
         [progressView setProgress:percent];
         UILabel *label = [progressLabelDic_ objectForKey:itemId];
@@ -218,6 +219,8 @@
         [progressView setProgress:value];
         
         int progressValue = (int)(100*value);
+         DownloadItem *item = [self getDownloadItemById:itemId];
+        item.percentage = (int)(100*value);
         UILabel *label = [progressLabelDic_ objectForKey:itemId];
         label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
     }
@@ -225,7 +228,10 @@
 
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
-    
+        DownloadItem *item = [self getDownloadItemById:itemId];
+        item.downloadStatus = @"finish";
+        item.percentage = 100;
+        
         UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
         [progressView removeFromSuperview];
         UILabel *label = [progressLabelDic_ objectForKey:itemId];
@@ -236,8 +242,10 @@
 
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){
-         UILabel *label = [progressLabelDic_ objectForKey:itemId];
-         label.text = [NSString stringWithFormat:@"下载失败\n "];
+        UILabel *label = [progressLabelDic_ objectForKey:itemId];
+        label.text = [NSString stringWithFormat:@"下载失败\n "];
+        DownloadItem *item = [self getDownloadItemById:itemId];
+        item.downloadStatus = @"fail";
     }
 }
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className{
@@ -558,16 +566,12 @@
     }
 }
 -(DownloadItem *)getDownloadItemById:(NSString *)idstr{
-    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",idstr];
-   // NSArray *arr = [DownloadItem findByCriteria:query];
-    NSArray *arr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
-    if ([arr count]>0) {
-        DownloadItem *item = [arr objectAtIndex:0];
-        return item;
+    for (DownloadItem *item in itemArr_) {
+        if ([item.itemId isEqualToString:idstr]) {
+            return item;
+        }
     }
-    else{
-        return nil;
-    }
+    return nil;
 }
 - (void)didReceiveMemoryWarning
 {

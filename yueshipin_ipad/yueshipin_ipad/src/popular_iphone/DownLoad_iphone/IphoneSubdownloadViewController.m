@@ -108,18 +108,12 @@
 -(void)initData{
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
-    NSMutableArray *tempArr = [NSMutableArray arrayWithCapacity:5];
-    //itemArr_ = [NSMutableArray arrayWithCapacity:5];
-    NSArray *items = [DatabaseManager allObjects:[SubdownloadItem class]];
-    for (SubdownloadItem *item in items) {
-        if ([item.subitemId hasPrefix:prodId_]) {
-            [tempArr addObject:item];
-        }
-    }
-   // itemArr_ = tempArr;
-   
+    
+    NSString *queryString = [NSString stringWithFormat:@"where itemId = '%@'",prodId_];
+    NSArray *items = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:queryString];
+    
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES comparator:cmptr1];
-    itemArr_ = [NSMutableArray arrayWithArray: [tempArr sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]]];
+    itemArr_ = [NSMutableArray arrayWithArray: [items sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]]];
 }
     NSComparator cmptr1 = ^(NSString *obj1, NSString * obj2){
         NSString *str1 = [[obj1 componentsSeparatedByString:@"_"]objectAtIndex:1];
@@ -144,6 +138,7 @@
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         int num = [self getTagNum:itemId];
         SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        subDownloadItem.downloadStatus = @"loading";
         float percent = subDownloadItem.percentage/100.0;
         UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         [progressView setProgress:percent];
@@ -173,6 +168,9 @@
 - (void)downloadFailedwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         int num = [self getTagNum:itemId];
+        SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        subDownloadItem.downloadStatus = @"fail";
+        
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         label.text = [NSString stringWithFormat:@"下载失败\n "];
     }
@@ -188,6 +186,9 @@
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         int num = [self getTagNum:itemId];
+        SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        subDownloadItem.downloadStatus = @"finish";
+        
         UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         [progressView removeFromSuperview];
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
@@ -332,7 +333,7 @@
     
     [itemArr_ removeObjectAtIndex:index];
     NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
-    //NSArray *arr = [SubdownloadItem findByCriteria:query];
+  
     NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     SubdownloadItem *item = [arr objectAtIndex:index];
     NSString *itemId = item.subitemId;
@@ -364,19 +365,16 @@
         }
     }
    
-    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemIdd = '%@'",itemId]];
-   // [item deleteObject];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
+
     [DatabaseManager deleteObject:item];
     
     NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-   // NSArray *tempArr = [SubdownloadItem findByCriteria:query];
-    
+
     if ([tempArr count] == 0){
         NSString *subquery = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
-        //NSArray *itemArr = [DownloadItem findByCriteria:subquery];
         NSArray *itemArr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:subquery];
         for (DownloadItem *downloadItem in itemArr) {
-            //[downloadItem deleteObject];
             [DatabaseManager deleteObject:downloadItem];
         }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
@@ -491,16 +489,12 @@
 }
 
 -(SubdownloadItem *)getDownloadItemById:(NSString *)idstr{
-    NSString *query = [NSString stringWithFormat:@"WHERE subitemId ='%@'",idstr];
-   // NSArray *arr = [SubdownloadItem findByCriteria:query];
-    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-    if ([arr count]>0) {
-        SubdownloadItem *item = [arr objectAtIndex:0];
-        return item;
+    for (SubdownloadItem *item in itemArr_) {
+        if ([item.subitemId isEqualToString:idstr]) {
+            return item;
+        }
     }
-    else{
-        return nil;
-    }
+    return nil;
 }
 
 -(int)getTagNum:(NSString *)str{
