@@ -233,7 +233,7 @@
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            if (progress * 100 - item.percentage > 2) {
+            if (progress * 100 - item.percentage > 1) {
                 item.percentage = (int)(progress*100);
                 NSLog(@"percent in DownloadViewController= %f", progress);
                 [DatabaseManager update:item];
@@ -296,7 +296,7 @@
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return fmax(allDownloadItems.count, 9);
+    return allDownloadItems.count;
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView

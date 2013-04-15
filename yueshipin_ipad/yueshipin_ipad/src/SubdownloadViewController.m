@@ -175,7 +175,7 @@
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            if (progress * 100 - tempitem.percentage > 2) {
+            if (progress * 100 - tempitem.percentage > 1) {
                 NSLog(@"percent in SubdownloadViewController= %f", progress);
                 tempitem.percentage = (int)(progress*100);
                 [DatabaseManager update:tempitem];
@@ -243,7 +243,7 @@
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
 {
-    return fmax([subitems count], 9);
+    return [subitems count];
 }
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
