@@ -20,7 +20,6 @@
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
     UIImageView *topImage;
-    UIImageView *nodownloadImage;
     int leftWidth;
     
     UIButton *editBtn;
@@ -86,11 +85,6 @@
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
-        
-        nodownloadImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 200, 200)];
-        nodownloadImage.center = CGPointMake(self.view.center.x, self.view.center.y - 100);
-        nodownloadImage.image = [UIImage imageNamed:@"nodownload"];
-        [self.view addSubview:nodownloadImage];
         
         leftWidth = 15;
         
@@ -195,10 +189,8 @@
     allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
     if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
-        [nodownloadImage setHidden:NO];
     } else {
         [editBtn setHidden:NO];
-        [nodownloadImage setHidden:YES];
     }
     [_gmGridView reloadData];
 }
@@ -441,7 +433,6 @@
     if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
         [doneBtn setHidden:YES];
-        [nodownloadImage setHidden:NO];
     }
     [self updateDiskStorage];
 }
