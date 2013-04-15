@@ -96,7 +96,7 @@
         
         topCategoryView = [[UIView alloc]initWithFrame:CGRectMake(5, 90, self.view.frame.size.width-20, 50)];
         [topCategoryView setBackgroundColor:[UIColor clearColor]];
-        UIImageView *topCatBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, topCategoryView.frame.size.width, 45)];
+        UIImageView *topCatBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 504, 45)];
         topCatBgImage.image = [UIImage imageNamed:@"top_category_bg"];
         [topCategoryView addSubview:topCatBgImage];
         
