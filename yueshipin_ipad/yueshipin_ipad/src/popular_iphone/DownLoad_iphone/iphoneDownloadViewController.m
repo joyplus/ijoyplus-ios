@@ -280,7 +280,14 @@
 
 -(void)donePressed:(id)sender{
     gMGridView_.editing = NO;
-   self.navigationItem.rightBarButtonItem = editButtonItem_;
+    if (0 != itemArr_.count)
+    {
+        self.navigationItem.rightBarButtonItem = editButtonItem_;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView{
