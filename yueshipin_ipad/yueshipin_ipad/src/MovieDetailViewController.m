@@ -157,11 +157,18 @@
     
     self.expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
-    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
-    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg.png"] forState:UIControlStateNormal];
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg.png"] forState:UIControlStateHighlighted];
+    [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
+    [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
+    [self.expectbtn setImageEdgeInsets:UIEdgeInsetsMake(17, 10, 17, 35)];
+    [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
+    self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [self.expectbtn setTitleColor:[UIColor colorWithRed:120.0/255.0 green:120.0/255.0 blue:120.0/255.0 alpha:1] forState:UIControlStateHighlighted];
+    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:expectbtn];
-    
+    [self.bgScrollView addSubview:self.expectbtn];
+    self.expectbtn.hidden = YES;
     
     self.downloadBtn.frame = CGRectMake(384, 280, 100, 50);
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
@@ -345,9 +352,11 @@
         self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
     }
     int collectioNum = [[video objectForKey:@"favority_num"] intValue];
-    if (collectioNum > 1000) {
+    if (collectioNum >= 1000) {
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+        [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
     } else {
+        [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
     }
     
@@ -542,9 +551,11 @@
 //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
-            if (collectioNum > 1000) {
+            if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
             } else {
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
             }
         } else {
