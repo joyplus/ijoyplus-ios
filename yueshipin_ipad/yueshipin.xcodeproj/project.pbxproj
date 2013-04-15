@@ -141,6 +141,18 @@
 		2266A165171BF5210062DB95 /* list_btn_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2266A15F171BF5200062DB95 /* list_btn_bg.png */; };
 		2266A166171BF5210062DB95 /* support_btn_bg_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 2266A160171BF5200062DB95 /* support_btn_bg_pressed.png */; };
 		2266A167171BF5210062DB95 /* support_btn_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 2266A161171BF5210062DB95 /* support_btn_bg.png */; };
+		2266A20D171C1DB30062DB95 /* NSDate-UTC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1F1171C1DB30062DB95 /* NSDate-UTC.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A20E171C1DB30062DB95 /* NSObject+PropertySupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1F3171C1DB30062DB95 /* NSObject+PropertySupport.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A20F171C1DB30062DB95 /* NSString+InflectionSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1F5171C1DB30062DB95 /* NSString+InflectionSupport.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A210171C1DB30062DB95 /* ObjectiveResourceDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1F7171C1DB30062DB95 /* ObjectiveResourceDateFormatter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A211171C1DB30062DB95 /* NSData+Serialize.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1FA171C1DB30062DB95 /* NSData+Serialize.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A212171C1DB30062DB95 /* NSDate+Serialize.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1FC171C1DB30062DB95 /* NSDate+Serialize.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A213171C1DB30062DB95 /* NSDictionary+KeyTranslation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A1FE171C1DB30062DB95 /* NSDictionary+KeyTranslation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A214171C1DB30062DB95 /* NSObject+Serialize.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A200171C1DB30062DB95 /* NSObject+Serialize.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A215171C1DB30062DB95 /* NSString+Serialize.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A202171C1DB30062DB95 /* NSString+Serialize.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A216171C1DB30062DB95 /* FayeClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A204171C1DB30062DB95 /* FayeClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A217171C1DB30062DB95 /* FayeMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A206171C1DB30062DB95 /* FayeMessage.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266A218171C1DB30062DB95 /* ZTWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A20C171C1DB30062DB95 /* ZTWebSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2270AB8816B24F7D009A3861 /* ShowDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */; };
 		227A45BE170BF5140002DCDE /* download_edit_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BC170BF5140002DCDE /* download_edit_f@2x.png */; };
 		227A45BF170BF5140002DCDE /* download_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BD170BF5140002DCDE /* download_edit@2x.png */; };
@@ -1054,6 +1066,32 @@
 		2266A15F171BF5200062DB95 /* list_btn_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = list_btn_bg.png; sourceTree = "<group>"; };
 		2266A160171BF5200062DB95 /* support_btn_bg_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = support_btn_bg_pressed.png; sourceTree = "<group>"; };
 		2266A161171BF5210062DB95 /* support_btn_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = support_btn_bg.png; sourceTree = "<group>"; };
+		2266A1F0171C1DB30062DB95 /* NSDate-UTC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-UTC.h"; sourceTree = "<group>"; };
+		2266A1F1171C1DB30062DB95 /* NSDate-UTC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-UTC.m"; sourceTree = "<group>"; };
+		2266A1F2171C1DB30062DB95 /* NSObject+PropertySupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PropertySupport.h"; sourceTree = "<group>"; };
+		2266A1F3171C1DB30062DB95 /* NSObject+PropertySupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PropertySupport.m"; sourceTree = "<group>"; };
+		2266A1F4171C1DB30062DB95 /* NSString+InflectionSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+InflectionSupport.h"; sourceTree = "<group>"; };
+		2266A1F5171C1DB30062DB95 /* NSString+InflectionSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+InflectionSupport.m"; sourceTree = "<group>"; };
+		2266A1F6171C1DB30062DB95 /* ObjectiveResourceDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectiveResourceDateFormatter.h; sourceTree = "<group>"; };
+		2266A1F7171C1DB30062DB95 /* ObjectiveResourceDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectiveResourceDateFormatter.m; sourceTree = "<group>"; };
+		2266A1F9171C1DB30062DB95 /* NSData+Serialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Serialize.h"; sourceTree = "<group>"; };
+		2266A1FA171C1DB30062DB95 /* NSData+Serialize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Serialize.m"; sourceTree = "<group>"; };
+		2266A1FB171C1DB30062DB95 /* NSDate+Serialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Serialize.h"; sourceTree = "<group>"; };
+		2266A1FC171C1DB30062DB95 /* NSDate+Serialize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Serialize.m"; sourceTree = "<group>"; };
+		2266A1FD171C1DB30062DB95 /* NSDictionary+KeyTranslation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+KeyTranslation.h"; sourceTree = "<group>"; };
+		2266A1FE171C1DB30062DB95 /* NSDictionary+KeyTranslation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+KeyTranslation.m"; sourceTree = "<group>"; };
+		2266A1FF171C1DB30062DB95 /* NSObject+Serialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Serialize.h"; sourceTree = "<group>"; };
+		2266A200171C1DB30062DB95 /* NSObject+Serialize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+Serialize.m"; sourceTree = "<group>"; };
+		2266A201171C1DB30062DB95 /* NSString+Serialize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Serialize.h"; sourceTree = "<group>"; };
+		2266A202171C1DB30062DB95 /* NSString+Serialize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Serialize.m"; sourceTree = "<group>"; };
+		2266A203171C1DB30062DB95 /* FayeClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FayeClient.h; sourceTree = "<group>"; };
+		2266A204171C1DB30062DB95 /* FayeClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FayeClient.m; sourceTree = "<group>"; };
+		2266A205171C1DB30062DB95 /* FayeMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FayeMessage.h; sourceTree = "<group>"; };
+		2266A206171C1DB30062DB95 /* FayeMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FayeMessage.m; sourceTree = "<group>"; };
+		2266A209171C1DB30062DB95 /* Zimt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zimt.h; sourceTree = "<group>"; };
+		2266A20A171C1DB30062DB95 /* ZTLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZTLog.h; sourceTree = "<group>"; };
+		2266A20B171C1DB30062DB95 /* ZTWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZTWebSocket.h; sourceTree = "<group>"; };
+		2266A20C171C1DB30062DB95 /* ZTWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZTWebSocket.m; sourceTree = "<group>"; };
 		2270AB8616B24F7D009A3861 /* ShowDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownloadViewController.h; sourceTree = "<group>"; };
 		2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownloadViewController.m; sourceTree = "<group>"; };
 		227A45BC170BF5140002DCDE /* download_edit_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit_f@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2085,6 +2123,71 @@
 			path = TSPopover;
 			sourceTree = "<group>";
 		};
+		2266A1EE171C1DB30062DB95 /* FayeObjc */ = {
+			isa = PBXGroup;
+			children = (
+				2266A1EF171C1DB30062DB95 /* Extensions */,
+				2266A203171C1DB30062DB95 /* FayeClient.h */,
+				2266A204171C1DB30062DB95 /* FayeClient.m */,
+				2266A205171C1DB30062DB95 /* FayeMessage.h */,
+				2266A206171C1DB30062DB95 /* FayeMessage.m */,
+				2266A207171C1DB30062DB95 /* zimt */,
+			);
+			path = FayeObjc;
+			sourceTree = "<group>";
+		};
+		2266A1EF171C1DB30062DB95 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				2266A1F0171C1DB30062DB95 /* NSDate-UTC.h */,
+				2266A1F1171C1DB30062DB95 /* NSDate-UTC.m */,
+				2266A1F2171C1DB30062DB95 /* NSObject+PropertySupport.h */,
+				2266A1F3171C1DB30062DB95 /* NSObject+PropertySupport.m */,
+				2266A1F4171C1DB30062DB95 /* NSString+InflectionSupport.h */,
+				2266A1F5171C1DB30062DB95 /* NSString+InflectionSupport.m */,
+				2266A1F6171C1DB30062DB95 /* ObjectiveResourceDateFormatter.h */,
+				2266A1F7171C1DB30062DB95 /* ObjectiveResourceDateFormatter.m */,
+				2266A1F8171C1DB30062DB95 /* Serialize */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2266A1F8171C1DB30062DB95 /* Serialize */ = {
+			isa = PBXGroup;
+			children = (
+				2266A1F9171C1DB30062DB95 /* NSData+Serialize.h */,
+				2266A1FA171C1DB30062DB95 /* NSData+Serialize.m */,
+				2266A1FB171C1DB30062DB95 /* NSDate+Serialize.h */,
+				2266A1FC171C1DB30062DB95 /* NSDate+Serialize.m */,
+				2266A1FD171C1DB30062DB95 /* NSDictionary+KeyTranslation.h */,
+				2266A1FE171C1DB30062DB95 /* NSDictionary+KeyTranslation.m */,
+				2266A1FF171C1DB30062DB95 /* NSObject+Serialize.h */,
+				2266A200171C1DB30062DB95 /* NSObject+Serialize.m */,
+				2266A201171C1DB30062DB95 /* NSString+Serialize.h */,
+				2266A202171C1DB30062DB95 /* NSString+Serialize.m */,
+			);
+			path = Serialize;
+			sourceTree = "<group>";
+		};
+		2266A207171C1DB30062DB95 /* zimt */ = {
+			isa = PBXGroup;
+			children = (
+				2266A208171C1DB30062DB95 /* Zimt */,
+			);
+			path = zimt;
+			sourceTree = "<group>";
+		};
+		2266A208171C1DB30062DB95 /* Zimt */ = {
+			isa = PBXGroup;
+			children = (
+				2266A209171C1DB30062DB95 /* Zimt.h */,
+				2266A20A171C1DB30062DB95 /* ZTLog.h */,
+				2266A20B171C1DB30062DB95 /* ZTWebSocket.h */,
+				2266A20C171C1DB30062DB95 /* ZTWebSocket.m */,
+			);
+			path = Zimt;
+			sourceTree = "<group>";
+		};
 		227C09C7170A7D0800BEC1E5 /* WechatShare */ = {
 			isa = PBXGroup;
 			children = (
@@ -2544,6 +2647,7 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				2266A1EE171C1DB30062DB95 /* FayeObjc */,
 				EBBE245E171518B500091F24 /* Harpy */,
 				22447FE916F18D4A00058985 /* TSPopover */,
 				22210B1C16EE0661008EDF11 /* WeChat */,
@@ -4399,6 +4503,18 @@
 				E7C037B11717C8BD00239BB1 /* DownLoader.m in Sources */,
 				EBE799081717C9420047535A /* DatabaseManager.m in Sources */,
 				EBE7990B1717C9DF0047535A /* DatabaseObject.m in Sources */,
+				2266A20D171C1DB30062DB95 /* NSDate-UTC.m in Sources */,
+				2266A20E171C1DB30062DB95 /* NSObject+PropertySupport.m in Sources */,
+				2266A20F171C1DB30062DB95 /* NSString+InflectionSupport.m in Sources */,
+				2266A210171C1DB30062DB95 /* ObjectiveResourceDateFormatter.m in Sources */,
+				2266A211171C1DB30062DB95 /* NSData+Serialize.m in Sources */,
+				2266A212171C1DB30062DB95 /* NSDate+Serialize.m in Sources */,
+				2266A213171C1DB30062DB95 /* NSDictionary+KeyTranslation.m in Sources */,
+				2266A214171C1DB30062DB95 /* NSObject+Serialize.m in Sources */,
+				2266A215171C1DB30062DB95 /* NSString+Serialize.m in Sources */,
+				2266A216171C1DB30062DB95 /* FayeClient.m in Sources */,
+				2266A217171C1DB30062DB95 /* FayeMessage.m in Sources */,
+				2266A218171C1DB30062DB95 /* ZTWebSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

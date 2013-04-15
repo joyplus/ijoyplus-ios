@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface UnbundingViewController : UIViewController <UIAlertViewDelegate>
-
+#import "FayeClient.h"
+@interface UnbundingViewController : UIViewController <UIAlertViewDelegate,FayeClientDelegate>
+{
+    NSString *userId;
+    FayeClient * sendClient;
+    FayeClient * listenClient;
+}
 @end

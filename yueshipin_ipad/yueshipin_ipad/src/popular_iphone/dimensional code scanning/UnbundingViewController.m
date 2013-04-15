@@ -60,6 +60,18 @@
          forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:bundingBtn];
     
+    userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",@"1"];
+    NSString * listenChannel = [NSString stringWithFormat:@"CHANNEL_MOBILE_%@",userId];
+    
+    sendClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:sendChannel];
+    listenClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:listenChannel];
+    sendClient.delegate = self;
+    listenClient.delegate = self;
+    [sendClient connectToServer];
+    [listenClient connectToServer];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,13 +105,14 @@
     }
     else
     {
-        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
-        
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"5", @"push_type",
+                              @"33", @"push_type",
                               userId, @"user_id",
                               nil];
         
+        [sendClient sendMessage:data];
+        
+        /*
         PFPush *push = [[PFPush alloc] init];
         [push setData:data];
         [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -125,7 +138,26 @@
         }];
         
         [self.navigationController popViewControllerAnimated:YES];
+         */
     }
+         
+}
+
+#pragma mark -
+#pragma mark FayeObjc delegate
+- (void) messageReceived:(NSDictionary *)messageDict
+{
+    
+}
+
+- (void)connectedToServer
+{
+    
+}
+
+- (void)disconnectedFromServer
+{
+    
 }
 
 @end

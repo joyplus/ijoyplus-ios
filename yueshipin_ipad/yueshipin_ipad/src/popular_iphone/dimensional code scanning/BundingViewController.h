@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface BundingViewController : UIViewController
+#import "FayeClient.h"
+@interface BundingViewController : UIViewController <FayeClientDelegate>
+{
+    FayeClient * sendClient;
+    FayeClient * listenClient;
+    
+    NSString   * userId;
+}
 @property (nonatomic, strong) NSString * strData;
 @end

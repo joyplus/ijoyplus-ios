@@ -8,7 +8,7 @@
 
 #import "BundingViewController.h"
 #import "ContainerUtility.h"
-#import <Parse/Parse.h>
+
 @interface BundingViewController ()
 
 @end
@@ -70,6 +70,18 @@
          forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:unbundingBtn];
     
+    userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",strData];
+    NSString * listenChannel = [NSString stringWithFormat:@"CHANNEL_MOBILE_%@",userId];
+    
+    sendClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:sendChannel];
+    listenClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:listenChannel];
+    sendClient.delegate = self;
+    listenClient.delegate = self;
+    [sendClient connectToServer];
+    [listenClient connectToServer];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,13 +99,14 @@
 {
     if (nil == strData)
         return;
-    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
-    
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                          @"3", @"push_type",
+                          @"31", @"push_type",
                           userId, @"user_id",
                           nil];
     
+    [sendClient sendMessage:[NSDictionary dictionaryWithObjectsAndKeys:data,@"reqBody",@"sendBindTv",@"name", nil]];
+    
+    /*
     PFPush *push = [[PFPush alloc] init];
     [push setChannel:strData];
     [push setData:data];
@@ -119,11 +132,36 @@
         
     }];
     [self.navigationController popToRootViewControllerAnimated:YES];
+     */
 }
 
 - (void)unbundingBtnClick
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark -
+#pragma mark FayeObjc delegate
+- (void) messageReceived:(NSDictionary *)messageDict
+{
+    if ([[messageDict objectForKey:@"name"] isEqualToString:@"sendBindTv"])
+    {
+        
+    }
+    else
+    {
+        
+    }
+}
+
+- (void)connectedToServer
+{
+    
+}
+
+- (void)disconnectedFromServer
+{
+    
 }
 
 @end
