@@ -836,15 +836,15 @@ NSComparator cmptr = ^(id obj1, id obj2){
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
-            [self showOpSuccessModalView:2 with:type];
+            [self showOpSuccessModalView:1.5 with:type];
             [self.tableView reloadData];
             
         } else {
-            [self showOpFailureModalView:2 with:type];
+            [self showOpFailureModalView:1.5 with:type];
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [self showOpFailureModalView:2 with:type];
+        [self showOpFailureModalView:1.5 with:type];
     }];
 }
 
