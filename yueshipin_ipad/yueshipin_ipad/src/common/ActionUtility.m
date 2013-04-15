@@ -75,8 +75,8 @@
 
 + (int)getDownloadingItemNumber
 {
-    NSInteger movieNum = [DatabaseManager countByCriteria:DownloadItem.class queryString: @"WHERE type = 1 and download_status != 'done'"];
-    NSInteger subitemNum = [DatabaseManager countByCriteria:SubdownloadItem.class queryString: @"WHERE download_status != 'done'"];
+    NSInteger movieNum = [DatabaseManager countByCriteria:DownloadItem.class queryString: @"WHERE type = 1 and downloadStatus != 'done'"];
+    NSInteger subitemNum = [DatabaseManager countByCriteria:SubdownloadItem.class queryString: @"WHERE downloadStatus != 'done'"];
     return movieNum + subitemNum;    
 }
 

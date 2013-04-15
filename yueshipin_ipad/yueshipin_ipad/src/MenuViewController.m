@@ -67,17 +67,16 @@
     UMGridViewController *appViewController;
     SettingsViewController *settingsViewController;
     NSInteger selectedIndex;
-    JSBadgeView *badgeView;
 }
 
 @property (nonatomic, strong) NSArray *menuIconArray;
-
+@property (nonatomic, strong) JSBadgeView *badgeView;
 @end
 
 @implementation MenuViewController
 @synthesize tableView;
 @synthesize menuIconArray;
-
+@synthesize badgeView;
 
 #pragma mark -
 #pragma mark View lifecycle
@@ -171,7 +170,16 @@
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
 {
-
+    badgeView.badgePositionAdjustment = CGPointMake(15, 18);
+    badgeView.badgeText = @"0";
+    [badgeView setHidden:YES];
+    int newNum = [ActionUtility getDownloadingItemNumber];
+    if(newNum == 0){
+        [badgeView setHidden:YES];
+    } else {
+        [badgeView setHidden:NO];
+        badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -217,16 +225,23 @@
         imageView.tag = 1001;
         [cell.contentView addSubview:imageView];
     }
+    if(indexPath.row == 8){
+        if (badgeView == nil) {
+            badgeView = [[JSBadgeView alloc] initWithParentView:cell alignment:JSBadgeViewAlignmentTopCenter];
+        }
+        [self updateDownloadNum:nil];
+    }
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:1001];
     if(indexPath.row == 0){
         imageView.image = [UIImage imageNamed:@"popular_top_selected"];
     } else if(indexPath.row == 10){
         imageView.image = nil;
     } else {
-        if (indexPath.row < menuIconArray.count) {            
+        if (indexPath.row < menuIconArray.count) {
             imageView.image = [UIImage imageNamed:[menuIconArray objectAtIndex:indexPath.row]];
         }
     }
+
     return cell;
 }
 
