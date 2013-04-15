@@ -447,7 +447,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                     //resume download
                     [self saveDataBaseIntable:@"SubdownloadItem" withId:idstr withStatus:@"loading" withPercentage:downloadItem.percentage];
                     [self.downLoadMGdelegate downloadBeginwithId:idstr inClass:@"IphoneSubdownloadViewController"];
-                   // NSArray *segArr = [SegmentUrl findByCriteria:[NSString stringWithFormat:@"WHERE item_id ='%@'",idstr]];
                     NSArray *segArr = [DatabaseManager findByCriteria:[SegmentUrl class] queryString:[NSString stringWithFormat:@"WHERE itemId ='%@'",idstr]];
                     NSArray *tempArr = [idstr componentsSeparatedByString:@"_"];
                     [downloadRequestOperation.m3u8MG startDownloadM3u8file:segArr withId:idstr withNum:[tempArr objectAtIndex:1]];

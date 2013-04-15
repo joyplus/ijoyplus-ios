@@ -41,7 +41,7 @@
         item.downloadStatus = @"start";
         [DatabaseManager update:item];
         downloadingItem = item;
-        NSArray *segmentUrlArray = [DatabaseManager findByCriteria:SegmentUrl.class queryString:[NSString stringWithFormat: @"WHERE item_id = %@", item.itemId]];
+        NSArray *segmentUrlArray = [DatabaseManager findByCriteria:SegmentUrl.class queryString:[NSString stringWithFormat: @"WHERE itemId = %@", item.itemId]];
         if (segmentUrlArray.count > 0 && ![StringUtility stringIsEmpty:item.fileName]) {
             segmentIndex = item.isDownloadingNum;
             if (segmentIndex < segmentUrlArray.count) {
@@ -49,7 +49,7 @@
             }
         } else {
             if (segmentUrlArray.count > 0) {
-                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE item_id = %@", item.itemId]];
+                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
             }
             segmentIndex = 0;
             // download m3u8 playlist
@@ -213,7 +213,7 @@
             item.percentage = (int)((segmentDownloadingOp.downloadingSegmentIndex*1.0 / segmentUrlArray.count) * 100);
             item.isDownloadingNum = segmentDownloadingOp.downloadingSegmentIndex;
             if (segmentDownloadingOp.downloadingSegmentIndex % 5 == 0 || segmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {
-                [DatabaseManager save:item];
+                [DatabaseManager update:item];
             }
             if (segmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {//All segments are downloaded successfully.
                 if(item.type == 1){

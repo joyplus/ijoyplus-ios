@@ -496,7 +496,7 @@
     episodeView.contentOffset = CGPointMake(0, 0);
     [view addSubview:episodeView];
     
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
+    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'", downloadingProdid];
     NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
     for (int i = 0; i < episodeArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];

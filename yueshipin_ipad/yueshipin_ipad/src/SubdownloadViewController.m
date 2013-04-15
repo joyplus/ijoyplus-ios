@@ -126,7 +126,7 @@
 
 - (void)reloadSubitems
 {
-    NSArray *tempSubitems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
+    NSArray *tempSubitems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"WHERE itemId = %@", self.itemId]];
     subitems = [tempSubitems sortedArrayUsingComparator:^(SubdownloadItem *a, SubdownloadItem *b) {
         NSNumber *first =  [NSNumber numberWithInt:a.subitemId.intValue];
         NSNumber *second = [NSNumber numberWithInt:b.subitemId.intValue];
@@ -173,7 +173,7 @@
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            if (progress * 100 - tempitem.percentage > 5) {
+            if (progress * 100 - tempitem.percentage > 2) {
                 NSLog(@"percent in SubdownloadViewController= %f", progress);
                 tempitem.percentage = (int)(progress*100);
                 [DatabaseManager update:tempitem];
@@ -333,8 +333,8 @@
     }
     [self removeLastPlaytime:item];
     [DatabaseManager deleteObject:item];
-    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from subdownload_item WHERE item_id = '%@' and subitem_id = '%@'", item.itemId, item.subitemId]];
-    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from segment_url WHERE item_id = '%@'", item.itemId]];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
+    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -354,7 +354,7 @@
     
     [self reloadSubitems];
     if(subitems == nil || subitems.count == 0){
-        DownloadItem *pItem = (DownloadItem *)[DatabaseManager findFirstByCriteria: DownloadItem.class queryString:[NSString stringWithFormat:@"WHERE item_id = %@", self.itemId]];
+        DownloadItem *pItem = (DownloadItem *)[DatabaseManager findFirstByCriteria: DownloadItem.class queryString:[NSString stringWithFormat:@"WHERE itemId = %@", self.itemId]];
         [DatabaseManager deleteObject:pItem];
         if ([item.downloadType isEqualToString:@"m3u8"]) {
             NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];

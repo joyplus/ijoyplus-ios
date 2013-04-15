@@ -195,7 +195,7 @@
 
 - (void)updateProgress:(float)progress downloadingArray:(NSArray *)downloadingArray
 {
-    if (progress * 100 - previousProgress * 100 > 5) {
+    if (progress * 100 - previousProgress * 100 > 2) {
         NSLog(@"percent in downloadmanager= %f", progress);
         previousProgress = progress;
         downloadingItem.percentage = progress;

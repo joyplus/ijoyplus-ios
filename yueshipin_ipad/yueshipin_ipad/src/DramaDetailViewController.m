@@ -788,7 +788,7 @@
 
 - (BOOL)downloadDrama:(int)num
 {
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if (item == nil) {
         BOOL success = [self addSubdownloadItem:num];
@@ -799,7 +799,7 @@
             return NO;
         }
     } else {
-        NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@' and subitem_id = '%@'", self.prodId, [NSString stringWithFormat:@"%i", num]];
+        NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@' and subitemId = '%@'", self.prodId, [NSString stringWithFormat:@"%i", num]];
         SubdownloadItem *subitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:subquery];
         if(subitem == nil){
             BOOL success = [self addSubdownloadItem:num];

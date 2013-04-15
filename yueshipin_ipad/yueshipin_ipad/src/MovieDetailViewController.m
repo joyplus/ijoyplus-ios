@@ -380,7 +380,7 @@
 
 - (void)checkIfDownloading
 {
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId = '%@'", self.prodId];
     DownloadItem *downloadingItem = (DownloadItem *) [DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if(downloadingItem != nil){
         [self.downloadBtn setEnabled:NO];
@@ -599,7 +599,7 @@
     [self.downloadBtn setEnabled:NO];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
 
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if (item != nil) {
         return;

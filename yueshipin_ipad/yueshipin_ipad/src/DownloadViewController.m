@@ -233,7 +233,7 @@
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            if (progress * 100 - item.percentage > 5) {
+            if (progress * 100 - item.percentage > 2) {
                 item.percentage = (int)(progress*100);
                 NSLog(@"percent in DownloadViewController= %f", progress);
                 [DatabaseManager update:item];
@@ -397,7 +397,7 @@
     }
     [self removeLastPlaytime:item];
     [DatabaseManager deleteObject:item];
-    double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from segment_url WHERE item_id = %@", item.itemId]];
+    double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", item.itemId]];
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -419,7 +419,7 @@
     if ([fileManager fileExistsAtPath:filePath]) {
         [fileManager removeItemAtPath:filePath error:nil];
     }
-    NSArray *tempsubitems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"WHERE item_id = %@", item.itemId]];
+    NSArray *tempsubitems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"WHERE itemId = %@", item.itemId]];
     for (SubdownloadItem *subitem in tempsubitems) {
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
@@ -427,7 +427,7 @@
         }
         [self removeLastPlaytime:subitem];
     }
-    [DatabaseManager performSQLAggregation:[NSString stringWithFormat:@"delete from SubdownloadItem WHERE item_id = %@", item.itemId]];
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat:@"delete from SubdownloadItem WHERE itemId = %@", item.itemId]];
     [self reloadItems];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     if (allDownloadItems.count == 0) {
