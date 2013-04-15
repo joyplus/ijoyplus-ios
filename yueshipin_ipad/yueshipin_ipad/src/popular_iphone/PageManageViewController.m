@@ -24,10 +24,11 @@
 #import "UnbundingViewController.h"
 #import "ContainerUtility.h"
 
-#define PAGE_NUM 3
+#define PAGE_NUM 4
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
 #define SHOW_TYPE 9002
+#define COMIC_TYPE  (9003)
 #define PAGESIZE 10
 #define TOP_SEGMENT_VIEW_TAG    (123456)
 enum
@@ -59,6 +60,11 @@ enum
 @synthesize refreshHeaderViewForTvList = refreshHeaderViewForTvList_;
 @synthesize showTopId = showTopId_;
 @synthesize pullToRefreshManager = pullToRefreshManager_;
+@synthesize refreshHeaderViewForComicList = refreshHeaderViewForComicList_;
+@synthesize comicTableList = comicTableList_;
+@synthesize comicListArr = comicListArr_;
+@synthesize comicBtn = comicBtn_;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -267,6 +273,63 @@ enum
     
 }
 
+-(void)loadComicTopsData
+{
+    MBProgressHUD *tempHUD;
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"comic_top_list"];
+    if(cacheResult != nil){
+        self.comicListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                
+                [ self.comicListArr addObjectsFromArray:tempTopsArray];
+            }
+        }
+        
+        [self.comicTableList reloadData];
+    }
+    else {
+        if(tempHUD == nil){
+            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.comicTableList reloadData];
+            [self.view addSubview:tempHUD];
+            tempHUD.labelText = @"加载中...";
+            tempHUD.opacity = 0.5;
+            [tempHUD show:YES];
+        }
+        
+        
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%d",comicLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathComicTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                [[CacheUtility sharedCache] putInCache:@"comic_top_list" result:result];
+                [ self.tvListArr addObjectsFromArray:tempTopsArray];
+            }
+        }
+        else {
+            
+        }
+        
+        [self loadTable:COMIC_TYPE];
+        [tempHUD hide:YES];
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@", error);
+        if(self.comicListArr == nil){
+            self.comicListArr = [[NSMutableArray alloc]initWithCapacity:10];
+        }
+        [tempHUD hide:YES];
+    }];
+}
+
 
 - (void)viewDidLoad
 {
@@ -313,44 +376,65 @@ enum
     scrBg.tag = TOP_SEGMENT_VIEW_TAG;
     movieBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateNormal];
-    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateHighlighted];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateSelected];
-    movieBtn_.frame = CGRectMake(0, 0, 106, 30);
+    movieBtn_.frame = CGRectMake(0, 0, 80, 30);
     movieBtn_.tag = 0;
     [movieBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
      movieBtn_.backgroundColor = [UIColor clearColor];
      movieBtn_.adjustsImageWhenHighlighted = NO;
     movieBtn_.selected = YES;
+    [movieBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     tvBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [tvBtn_ setImage:[UIImage imageNamed:@"List_series.png"] forState:UIControlStateNormal];
-    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateHighlighted];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series.png"] forState:UIControlStateHighlighted];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateSelected];
-    tvBtn_.frame = CGRectMake(106, 0, 108, 30);
+    tvBtn_.frame = CGRectMake(80, 0, 80, 30);
     tvBtn_.tag = 1;
     [tvBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
     tvBtn_.backgroundColor = [UIColor clearColor];
     tvBtn_.adjustsImageWhenHighlighted = NO;
+    [tvBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
+    
+    comicBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic.png"] forState:UIControlStateNormal];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic.png"] forState:UIControlStateHighlighted];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateSelected];
+    comicBtn_.frame = CGRectMake(160, 0, 80, 30);
+    comicBtn_.tag = 2;
+    [comicBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
+    comicBtn_.backgroundColor = [UIColor clearColor];
+    comicBtn_.adjustsImageWhenHighlighted = NO;
+    [comicBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     showBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [showBtn_ setImage:[UIImage imageNamed:@"List_show.png"] forState:UIControlStateNormal];
-    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateHighlighted];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show.png"] forState:UIControlStateHighlighted];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateSelected];
-    showBtn_.frame = CGRectMake(214, 0, 106, 30);
-    showBtn_.tag = 2;
+    showBtn_.frame = CGRectMake(240, 0, 80, 30);
+    showBtn_.tag = 3;
     [showBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
     showBtn_.backgroundColor = [UIColor clearColor];
     showBtn_.adjustsImageWhenHighlighted = NO;
+    [showBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
+    
+    //
     
     slider_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_s.png"]];
-    slider_.frame = CGRectMake(4, 28, 88, 2);
+    slider_.frame = CGRectMake(10, 28, 60, 2);
     
     pageMGIcon_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_s_icon.png"]];
     pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
     [scrBg addSubview:movieBtn_];
     [scrBg addSubview:tvBtn_];
     [scrBg addSubview:showBtn_];
-    [scrBg addSubview:pageMGIcon_];
+    [scrBg addSubview:comicBtn_];
+    //[scrBg addSubview:pageMGIcon_];
     [scrBg addSubview:slider_];
     scrBg.backgroundColor = [UIColor redColor];
     [self.view addSubview:scrBg];
@@ -369,13 +453,22 @@ enum
     self.movieTableList.tag = MOVIE_TYPE;
     [self.scrollView addSubview:self.movieTableList];
     
-    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(960, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.showTableList.tag = SHOW_TYPE;
     [self.scrollView addSubview:self.showTableList];
+    
+    self.comicTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.comicTableList.dataSource = self;
+    self.comicTableList.delegate = self;
+    self.comicTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.comicTableList.tag = COMIC_TYPE;
+    [self.scrollView addSubview:self.comicTableList];
+    
     [self.view addSubview:self.scrollView];
+    
     //添加上，下拉刷新控件
     
     if (refreshHeaderViewForMovieList_ == nil) {
@@ -405,6 +498,16 @@ enum
         showLoadCount_ = 1;
     }
     
+    if (nil == refreshHeaderViewForComicList_)
+    {
+        refreshHeaderViewForComicList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, 0.0f -showTableList_.bounds.size.height, self.view.frame.size.width, showTableList_.bounds.size.height)];
+        refreshHeaderViewForComicList_.backgroundColor = [UIColor clearColor];
+        refreshHeaderViewForComicList_.delegate = self;
+        [comicTableList_ addSubview:refreshHeaderViewForComicList_];
+        [refreshHeaderViewForComicList_ refreshLastUpdatedDate];
+        comicLoadCount_ = 1;
+    }
+    
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:showTableList_ withClient:self];
     
     if (nil == bundingTipsView)
@@ -425,6 +528,7 @@ enum
     [self loadMovieTopsData];
     [self loadTVTopsData];
     [self loadShowTopsData];
+    [self loadComicTopsData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(managerTVBunding)
@@ -443,26 +547,35 @@ enum
     self.tvListArr = nil;
     self.movieListArr = nil;;
     self.showListArr = nil;
+    self.comicTableList = nil;
+    self.comicListArr = nil;
     self.tvTableList = nil;
     self.movieTableList = nil;
     self.showTableList = nil;
     self.refreshHeaderViewForMovieList = nil;
     self.refreshHeaderViewForTvList = nil;
     self.refreshHeaderViewForShowList = nil;
+    self.refreshHeaderViewForComicList = nil;
 }
 -(void)buttonChange:(UIButton *)btn{
     int page = btn.tag;
-    movieBtn_.selected = NO;
-    tvBtn_.selected = NO;
-    showBtn_.selected = NO;
-    btn.selected = YES;
-        
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:0.3f];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
-    [UIView commitAnimations];
     
+    if (btn.selected)
+    {
+        return;
+    }
+    
+    movieBtn_ == btn ? (movieBtn_.selected = YES) : (movieBtn_.selected = NO);
+    tvBtn_ == btn ? (tvBtn_.selected = YES) : (tvBtn_.selected = NO);
+    showBtn_ == btn ? (movieBtn_.selected = YES) : (showBtn_.selected = NO);
+    comicBtn_ == btn ? (comicBtn_.selected = YES) : (comicBtn_.selected = NO);
+        
+//    [UIView beginAnimations:nil context:NULL];
+//    [UIView setAnimationDuration:0.3f];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
+//    [UIView commitAnimations];
+    [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
 
 }
 -(void)search:(id)sender{
@@ -527,6 +640,7 @@ enum
     CGRect movieRect = movieTableList_.frame;
     CGRect tvRect = tvTableList_.frame;
     CGRect showRect = showTableList_.frame;
+    CGRect comicRect = comicTableList_.frame;
     
     if (TYPE_BUNDING_TV == type)
     {
@@ -540,6 +654,7 @@ enum
         movieRect.size.height = (kCurrentWindowHeight - 122 - 34);
         tvRect.size.height = (kCurrentWindowHeight - 122 - 34);
         showRect.size.height = (kCurrentWindowHeight - 122 - 34);
+        comicRect.size.height = (kCurrentWindowHeight - 122 - 34);
         
     }
     else if (TYPE_UNBUNDING == type)
@@ -554,7 +669,7 @@ enum
         movieRect.size.height = (kCurrentWindowHeight - 122);
         tvRect.size.height = (kCurrentWindowHeight - 122);
         showRect.size.height = (kCurrentWindowHeight - 122);
-        
+        comicRect.size.height = (kCurrentWindowHeight - 122);
     }
     
     topView.frame = topRect;
@@ -562,7 +677,7 @@ enum
     movieTableList_.frame = movieRect;
     tvTableList_.frame = tvRect;
     showTableList_.frame = showRect;
-    
+    comicTableList_.frame = comicRect;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -575,9 +690,11 @@ enum
     else if(tableView.tag == SHOW_TYPE){
         return [showListArr_ count];
     }
-
+    else if (COMIC_TYPE == tableView.tag)
+    {
+        return comicListArr_.count;
+    }
         return 0;
-
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -650,6 +767,32 @@ enum
         
             return cell;
         }
+        case COMIC_TYPE:{
+            SortedViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+            if (cell == nil) {
+                cell = [[SortedViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            }
+            NSDictionary *item = [self.comicListArr objectAtIndex:indexPath.row];
+            NSMutableArray *items = [item objectForKey:@"items"];
+            for (int i = 0; i< [items count];i++) {
+                switch (i) {
+                    case 0:
+                        cell.labelOne.text = [[items objectAtIndex:0] objectForKey:@"prod_name" ];
+                        break;
+                    case 1:
+                        cell.labelTwo.text = [[items objectAtIndex:1] objectForKey:@"prod_name" ];
+                        break;
+                    case 2:
+                        cell.labelThree.text = [[items objectAtIndex:2] objectForKey:@"prod_name" ];
+                        break;
+                    default:
+                        break;
+                }
+            }
+            cell.title.text = [item objectForKey:@"name"];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            return cell;
+        }
         default:
             break;
     }
@@ -700,11 +843,16 @@ enum
         [self.navigationController pushViewController:detailViewController animated:YES];
     
     }
+    else if (COMIC_TYPE == tableViewTag)
+    {
+        
+    }
 
 }
 
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat pageWidth = self.view.frame.size.width;
@@ -715,12 +863,13 @@ enum
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.2f];
         [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        slider_.frame = CGRectMake(4*(page+1)+106*page, 28, 88, 2);
+        slider_.frame = CGRectMake(page*80 + 10, 28, 60, 2);
         [UIView commitAnimations];
         
         movieBtn_.selected = NO;
         tvBtn_.selected = NO;
         showBtn_.selected = NO;
+        comicBtn_.selected = NO;
         switch (page) {
             case 0:{
                 movieBtn_.selected = YES;
@@ -729,12 +878,18 @@ enum
             }
             case 1:{
                 tvBtn_.selected = YES;
-                 pageMGIcon_.frame = CGRectMake(109, 3, 15, 24);
+                 pageMGIcon_.frame = CGRectMake(88, 3, 15, 24);
                 break;
             }
             case 2:{
+                comicBtn_.selected = YES;
+                 pageMGIcon_.frame = CGRectMake(168, 3, 15, 24);
+                break;
+            }
+            case 3:
+            {
                 showBtn_.selected = YES;
-                 pageMGIcon_.frame = CGRectMake(222, 3, 15, 24);
+                pageMGIcon_.frame = CGRectMake(248, 3, 15, 24);
                 break;
             }
             default:
@@ -760,6 +915,10 @@ enum
             [refreshHeaderViewForShowList_ egoRefreshScrollViewDidEndDragging:aScrollView];
             break;
         }
+        case COMIC_TYPE:{
+            [refreshHeaderViewForComicList_ egoRefreshScrollViewDidEndDragging:aScrollView];
+            break;
+        }
         default:
             break;
     }
@@ -782,6 +941,10 @@ enum
     else if (view == refreshHeaderViewForShowList_){
         [self loadMoreShowTopsData];
     
+    }
+    else if (view == refreshHeaderViewForComicList_)
+    {
+        [self loadComicTopsData];
     }
     
 	reloading_ = YES;
@@ -809,7 +972,7 @@ enum
 	[refreshHeaderViewForMovieList_ egoRefreshScrollViewDataSourceDidFinishedLoading:movieTableList_];
     [refreshHeaderViewForTvList_ egoRefreshScrollViewDataSourceDidFinishedLoading:tvTableList_];
     [refreshHeaderViewForShowList_ egoRefreshScrollViewDataSourceDidFinishedLoading:showTableList_];
-	
+	[refreshHeaderViewForComicList_ egoRefreshScrollViewDataSourceDidFinishedLoading:comicTableList_];
 }
 
 
@@ -832,6 +995,10 @@ enum
     }
     else if (type == SHOW_TYPE){
         [showTableList_ reloadData];
+    }
+    else if (COMIC_TYPE == type)
+    {
+        [comicTableList_ reloadData];
     }
     [pullToRefreshManager_ tableViewReloadFinished];
     
