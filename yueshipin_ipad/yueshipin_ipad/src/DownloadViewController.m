@@ -93,7 +93,7 @@
         [self.view addSubview:topImage];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        editBtn.frame = CGRectMake(390, 70, 100, 75);
+        editBtn.frame = CGRectMake(390, 60, 100, 75);
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_pressed"] forState:UIControlStateHighlighted];
         [editBtn addTarget:self action:@selector(editBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -108,7 +108,7 @@
         [self.view addSubview:doneBtn];
         
         [self reloadItems];
-        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 580)];
+        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 120, 450, 580)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:gmGridView];
@@ -324,18 +324,16 @@
     
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectZero];
-    imageView.frame = CGRectMake(0, 0, 105, 146);
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 105, 146)];
+    imageView.image = [UIImage imageNamed:@"video_bg_placeholder"];
     [cell.contentView addSubview:imageView];
     
-    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 98, 138)];
-    [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(imageView.frame.origin.x + 6, imageView.frame.origin.y + 8, imageView.frame.size.width - 12, imageView.frame.size.height - 12)];
+    [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl]];
     [cell.contentView addSubview:contentImage];
     
     if (item.type == 1) {
-        imageView.image = [UIImage imageNamed:@"movie_frame"];
-        
-        UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
+        UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x, contentImage.frame.origin.y + contentImage.frame.size.height - 40, contentImage.frame.size.width, 40)];
         bgLabel.tag = item.itemId.intValue + 30000000;
         bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
         if(![item.downloadStatus isEqualToString:@"done"]){
@@ -372,11 +370,7 @@
             progressView.tag = item.itemId.intValue + 20000000;
             [cell.contentView addSubview:progressView];
         }
-    } else {
-        imageView.frame = CGRectMake(0, 0, 110, 150);
-        contentImage.frame = CGRectMake(10, 5, 88, 130);
-        imageView.image = [UIImage imageNamed:@"moviecard_list"];
-    }
+    } 
     
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(4, 150, 105, 30)];
     nameLabel.font = [UIFont systemFontOfSize:15];
