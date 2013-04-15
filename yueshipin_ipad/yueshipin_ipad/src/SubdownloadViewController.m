@@ -55,7 +55,9 @@
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
-        [self.view setBackgroundColor:CMConstants.backgroundColor];
+        self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+        self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+        [self.view addSubview:self.bgImage];
         
         titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 377, 30)];
         titleLabel.font = [UIFont boldSystemFontOfSize:23];
@@ -73,7 +75,7 @@
         [self.view addSubview:closeBtn];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        editBtn.frame = CGRectMake(410, 80, 74, 26);
+        editBtn.frame = CGRectMake(390, 70, 100, 75);
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_pressed"] forState:UIControlStateHighlighted];
         [editBtn addTarget:self action:@selector(editBtnClicked) forControlEvents:UIControlEventTouchUpInside];

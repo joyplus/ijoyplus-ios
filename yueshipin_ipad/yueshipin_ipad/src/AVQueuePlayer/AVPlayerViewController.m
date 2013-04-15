@@ -354,7 +354,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     for (NSDictionary *dic in down_load_urls) {
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
         NSString *source_str = [temp_dic objectForKey:@"source"];
-        if ([source_str isEqualToString:@"letv"]) {
+        if ([source_str isEqualToString:@"letv"] || [source_str isEqualToString:@"le_tv_fee"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
         } else if ([source_str isEqualToString:@"fengxing"]){
             [temp_dic setObject:@"2" forKey:@"level"];
@@ -2027,7 +2027,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //                    NSLog(@"%@", tempDic);
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
-                    if ([source_str isEqualToString:@"letv"]) {
+                    if ([source_str isEqualToString:@"letv"] || [source_str isEqualToString:@"le_tv_fee"]) {
+                        source_str = @"letv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
                     } else if ([source_str isEqualToString:@"fengxing"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);

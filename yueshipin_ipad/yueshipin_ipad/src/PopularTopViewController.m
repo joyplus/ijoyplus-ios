@@ -714,7 +714,7 @@
         cellScrollView.delegate = self;
         for (int i=0; i < MOVIE_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
-            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
             placeHolderImage.tag = 8011;
             [cellScrollView addSubview:placeHolderImage];
             
@@ -835,7 +835,7 @@
         cellScrollView.delegate = self;
         for (int i=0; i < DRAMA_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
-            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
             placeHolderImage.tag = 8011;
             [cellScrollView addSubview:placeHolderImage];
             
@@ -956,7 +956,7 @@
         cellScrollView.delegate = self;
         for (int i=0; i < DRAMA_NUMBER; i++) {
             UIImageView *placeHolderImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video_bg_placeholder"]];
-            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 8);
+            placeHolderImage.frame = CGRectMake(6 + (MOVIE_POSTER_WIDTH+12+8) * i, 2, MOVIE_POSTER_WIDTH + 8, MOVIE_POSTER_HEIGHT + 4);
             placeHolderImage.tag = 8011 + i;
             [cellScrollView addSubview:placeHolderImage];
             

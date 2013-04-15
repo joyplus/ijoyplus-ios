@@ -109,11 +109,10 @@
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.placeholderImage.frame = CGRectMake(LEFT_WIDTH, 78, 217, 312);
+    self.placeholderImage.frame = CGRectMake(LEFT_WIDTH, 78, 219, 312);
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
     
-    self.filmImage.frame = CGRectMake(LEFT_WIDTH+5, 84, 203, 298);
-    self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
+    self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
     self.playRoundBtn.frame = CGRectMake(0, 0, 91, 91);
     [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
@@ -319,7 +318,7 @@
     if([StringUtility stringIsEmpty:url]){
         url = [video objectForKey:@"poster"];
     }
-    [self.filmImage setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    [self.filmImage setImageWithURL:[NSURL URLWithString:url]];
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
@@ -634,7 +633,7 @@
         return;
     }
     [self.downloadBtn setEnabled:NO];
-    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"downloading"] forState:UIControlStateDisabled];
+    [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateDisabled];
 
     NSString *query = [NSString stringWithFormat:@"WHERE itemId = '%@'", self.prodId];
     DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
