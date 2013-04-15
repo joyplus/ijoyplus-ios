@@ -419,6 +419,7 @@
                 expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:expectbtn];
+                expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
                 addFav.frame = CGRectMake(116, 20, 89, 27);

@@ -845,7 +845,13 @@ enum
     }
     else if (COMIC_TYPE == tableViewTag)
     {
-        
+        NSDictionary *item = [self.comicListArr objectAtIndex:indexPath.row];
+        ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
+        listDetailViewController.title = [item objectForKey:@"name"];
+        listDetailViewController.topicId = [item objectForKey:@"id"];
+        listDetailViewController.hidesBottomBarWhenPushed = YES;
+        listDetailViewController.Type = MOVIE_TYPE;
+        [self.navigationController pushViewController:listDetailViewController animated:YES];
     }
 
 }

@@ -451,6 +451,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:expectbtn];
+                expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
                 addFav.frame = CGRectMake(116, 20, 89, 27);
@@ -727,7 +728,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
             return 181;
         }
         else if(row == 1){
-            return 152;
+            CGFloat height;
+            [episodesArr_ count] == 0 ? (height = 5) : (height = 152);
+            return height;
         }
         else if(row == 2){
             if (moreBtn_.selected) {
