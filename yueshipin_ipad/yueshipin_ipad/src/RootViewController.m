@@ -100,6 +100,7 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -143,6 +144,7 @@
 	[self.view addSubview:rootView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextViewChanged:) name:UITextViewTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextFieldChanged:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -920,6 +922,11 @@
     } completion:^(BOOL finished) {
         [self enabledSubmitBtn];        
     }];
+}
+
+- (void)contentTextFieldChanged:(NSNotification *)notification
+{
+     [self enabledSubmitBtn];
 }
 
 - (void) checkBoxViewChangedState:(SSCheckBoxView *)cbv
