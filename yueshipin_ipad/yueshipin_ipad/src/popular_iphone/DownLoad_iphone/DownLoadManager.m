@@ -171,7 +171,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             }
         }
         else{
-            NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@' AND download_status != '%@'", item.itemId,@"finish"];
+            NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@' AND downloadStatus != '%@'", item.itemId,@"finish"];
            //// NSArray *tempArr = [SubdownloadItem findByCriteria:subquery];
             NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:subquery];
             for (SubdownloadItem *sub in tempArr) {
