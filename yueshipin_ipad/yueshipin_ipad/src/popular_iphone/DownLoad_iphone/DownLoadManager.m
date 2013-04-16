@@ -469,7 +469,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             NSURL *url = operation.request.URL;
             if (range.location == NSNotFound){
                 downloadItem.fileName = [NSString stringWithFormat:@"%@_1.m3u8",idstr];
-                //[downloadItem save];
                 
                 [DatabaseManager update:downloadItem];
             
@@ -479,7 +478,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             else{
                 
                 downloadItem.fileName = [NSString stringWithFormat:@"%@.m3u8",idstr];
-                //[downloadItem save];
                 [DatabaseManager update:downloadItem];
                 [self saveDataBaseIntable:@"SubdownloadItem" withId:idstr withStatus:@"loading" withPercentage:0];
                 NSArray *arr  = [idstr componentsSeparatedByString:@"_"];
@@ -927,7 +925,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
                 double segmentDuration = 0;
                 if (lastRange.length == 0) {
-                    segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                    segmentDuration = [[stringContent substringFromIndex:(startRange.location+1)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
                 } else if(lastRange.location - startRange.location > 1){
                     segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location+1, lastRange.location-startRange.location-1)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
                 }
