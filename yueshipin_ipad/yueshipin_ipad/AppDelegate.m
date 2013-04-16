@@ -624,9 +624,9 @@
     [WXApi sendResp:resp];
 }
 
-- (void)setIdleTimerDisabled:(NSNumber *)num
+- (void)setIdleTimerDisabled:(NSNotification *)notification
 {
-    BOOL disabled = [num boolValue];
+    BOOL disabled = [notification.object boolValue];
     [[UIApplication sharedApplication] setIdleTimerDisabled: disabled];
 }
 
