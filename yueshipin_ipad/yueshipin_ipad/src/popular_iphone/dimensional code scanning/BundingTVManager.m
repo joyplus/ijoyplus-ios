@@ -71,7 +71,16 @@ static BundingTVManager * manager = nil;
 #pragma mark FayeObjc delegate
 - (void) messageReceived:(NSDictionary *)messageDict
 {
-    
+    //解除绑定
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"])
+    {
+        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+        //添加已绑定数据缓存
+        NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+    }
 }
 
 - (void)connectedToServer
