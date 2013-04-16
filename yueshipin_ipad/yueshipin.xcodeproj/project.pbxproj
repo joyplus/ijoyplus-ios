@@ -196,6 +196,7 @@
 		22D36918171CF2C400D2C6F8 /* xiangkan.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36915171CF2C400D2C6F8 /* xiangkan.png */; };
 		22D3691A171D004900D2C6F8 /* search_box_text.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36919171D004900D2C6F8 /* search_box_text.png */; };
 		22D3691C171D1A9200D2C6F8 /* drama_download_choose.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D3691B171D1A9100D2C6F8 /* drama_download_choose.png */; };
+		22D3691E171D27AC00D2C6F8 /* hot_signal.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D3691D171D27AC00D2C6F8 /* hot_signal.png */; };
 		22E7423D17098E72006DEB72 /* popview_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7423C17098E72006DEB72 /* popview_bg@2x.png */; };
 		22E7423F170992D2006DEB72 /* otherTextBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7423E170992D2006DEB72 /* otherTextBG@2x.png */; };
 		22E7424817099608006DEB72 /* search_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7424417099608006DEB72 /* search_f@2x.png */; };
@@ -1165,6 +1166,7 @@
 		22D36915171CF2C400D2C6F8 /* xiangkan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan.png; sourceTree = "<group>"; };
 		22D36919171D004900D2C6F8 /* search_box_text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_box_text.png; sourceTree = "<group>"; };
 		22D3691B171D1A9100D2C6F8 /* drama_download_choose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_download_choose.png; sourceTree = "<group>"; };
+		22D3691D171D27AC00D2C6F8 /* hot_signal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hot_signal.png; sourceTree = "<group>"; };
 		22E7423C17098E72006DEB72 /* popview_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popview_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/popview_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		22E7423E170992D2006DEB72 /* otherTextBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "otherTextBG@2x.png"; path = "yueshipin_ipad/Resource_iphone/otherTextBG@2x.png"; sourceTree = SOURCE_ROOT; };
 		22E7424417099608006DEB72 /* search_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/search_f@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -3098,6 +3100,7 @@
 				EB182CD8165CC50E00A347BA /* moviecard_pressed@2x.png */,
 				EB182CD9165CC50E00A347BA /* moviecard@2x.png */,
 				EB14D477165BB5DF00CB3260 /* hot_signal@2x.png */,
+				22D3691D171D27AC00D2C6F8 /* hot_signal.png */,
 				EB14D473165B80BA00CB3260 /* briefcard_blue@2x.png */,
 				EB14D465165B769600CB3260 /* popular_icon@2x.png */,
 				EB14D468165B769600CB3260 /* personal_icon@2x.png */,
@@ -4360,6 +4363,7 @@
 				22D36918171CF2C400D2C6F8 /* xiangkan.png in Resources */,
 				22D3691A171D004900D2C6F8 /* search_box_text.png in Resources */,
 				22D3691C171D1A9200D2C6F8 /* drama_download_choose.png in Resources */,
+				22D3691E171D27AC00D2C6F8 /* hot_signal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
