@@ -195,6 +195,7 @@
 		22D3691A171D004900D2C6F8 /* search_box_text.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36919171D004900D2C6F8 /* search_box_text.png */; };
 		22D3691C171D1A9200D2C6F8 /* drama_download_choose.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D3691B171D1A9100D2C6F8 /* drama_download_choose.png */; };
 		22D3691E171D27AC00D2C6F8 /* hot_signal.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D3691D171D27AC00D2C6F8 /* hot_signal.png */; };
+		22D36927171D439300D2C6F8 /* BundingTVManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 22D36926171D439300D2C6F8 /* BundingTVManager.m */; };
 		22E7423D17098E72006DEB72 /* popview_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7423C17098E72006DEB72 /* popview_bg@2x.png */; };
 		22E7423F170992D2006DEB72 /* otherTextBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7423E170992D2006DEB72 /* otherTextBG@2x.png */; };
 		22E7424817099608006DEB72 /* search_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7424417099608006DEB72 /* search_f@2x.png */; };
@@ -1175,6 +1176,8 @@
 		22D36919171D004900D2C6F8 /* search_box_text.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_box_text.png; sourceTree = "<group>"; };
 		22D3691B171D1A9100D2C6F8 /* drama_download_choose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_download_choose.png; sourceTree = "<group>"; };
 		22D3691D171D27AC00D2C6F8 /* hot_signal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hot_signal.png; sourceTree = "<group>"; };
+		22D36925171D439300D2C6F8 /* BundingTVManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundingTVManager.h; sourceTree = "<group>"; };
+		22D36926171D439300D2C6F8 /* BundingTVManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BundingTVManager.m; sourceTree = "<group>"; };
 		22E7423C17098E72006DEB72 /* popview_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popview_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/popview_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		22E7423E170992D2006DEB72 /* otherTextBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "otherTextBG@2x.png"; path = "yueshipin_ipad/Resource_iphone/otherTextBG@2x.png"; sourceTree = SOURCE_ROOT; };
 		22E7424417099608006DEB72 /* search_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/search_f@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2314,6 +2317,8 @@
 				22FEC4F9171433DB00AEA9CD /* BundingViewController.m */,
 				22FEC4FB171433EF00AEA9CD /* UnbundingViewController.h */,
 				22FEC4FC171433EF00AEA9CD /* UnbundingViewController.m */,
+				22D36925171D439300D2C6F8 /* BundingTVManager.h */,
+				22D36926171D439300D2C6F8 /* BundingTVManager.m */,
 			);
 			path = "dimensional code scanning";
 			sourceTree = "<group>";
@@ -4617,6 +4622,7 @@
 				2266A217171C1DB30062DB95 /* FayeMessage.m in Sources */,
 				2266A218171C1DB30062DB95 /* ZTWebSocket.m in Sources */,
 				E73462A4171CEC5000EC5DCE /* IntroductionView.m in Sources */,
+				22D36927171D439300D2C6F8 /* BundingTVManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

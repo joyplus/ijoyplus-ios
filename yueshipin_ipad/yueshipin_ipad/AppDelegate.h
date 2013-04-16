@@ -16,6 +16,7 @@
 #import "WXApi.h"
 #import "NewM3u8DownloadManager.h"
 #import "RespForWXRootViewController.h"
+#import "BundingTVManager.h"
 
 @class RootViewController;
 

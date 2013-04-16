@@ -622,7 +622,8 @@ enum
 - (void)managerTVBunding
 {
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
-    NSNumber * isbunding = (NSNumber *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber *isbunding = [data objectForKey:KEY_IS_BUNDING];
     if (![isbunding boolValue] || nil == isbunding)
     {
         [self setViewType:TYPE_UNBUNDING];

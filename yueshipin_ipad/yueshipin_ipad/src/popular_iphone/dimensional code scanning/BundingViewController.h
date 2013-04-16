@@ -7,13 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FayeClient.h"
+#import "BundingTVManager.h"
+
+@class MBProgressHUD;
+
 @interface BundingViewController : UIViewController <FayeClientDelegate>
 {
-    FayeClient * sendClient;
-    FayeClient * listenClient;
-    
-    NSString   * userId;
+    NSString        *userId;
+    MBProgressHUD   *HUDView;
+    NSTimer         *timer;
 }
 @property (nonatomic, strong) NSString * strData;
 @end

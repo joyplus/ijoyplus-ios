@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FayeClient.h"
+#import "BundingTVManager.h"
+@class MBProgressHUD;
 @interface UnbundingViewController : UIViewController <UIAlertViewDelegate,FayeClientDelegate>
 {
     NSString *userId;
-    FayeClient * sendClient;
-    FayeClient * listenClient;
+    MBProgressHUD   *HUDView;
+    NSTimer         *timer;
 }
 @end

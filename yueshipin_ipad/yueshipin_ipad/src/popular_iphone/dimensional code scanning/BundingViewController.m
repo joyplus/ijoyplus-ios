@@ -8,6 +8,7 @@
 
 #import "BundingViewController.h"
 #import "ContainerUtility.h"
+#import "MBProgressHUD.h"
 
 @interface BundingViewController ()
 
@@ -72,16 +73,17 @@
     
     userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     
-    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",strData];
-    NSString * listenChannel = [NSString stringWithFormat:@"CHANNEL_MOBILE_%@",userId];
+    strData = [strData stringByReplacingOccurrencesOfString:@"joy" withString:@""];
+    NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",strData];
     
-    sendClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:sendChannel];
-    listenClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:listenChannel];
-    sendClient.delegate = self;
-    listenClient.delegate = self;
-    [sendClient connectToServer];
-    [listenClient connectToServer];
-    
+    [[BundingTVManager shareInstance] connecteServerWithChannel:sendChannel];
+    [BundingTVManager shareInstance].sendClient.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
 }
 
 - (void)didReceiveMemoryWarning
@@ -92,47 +94,44 @@
 
 - (void)back
 {
+    if (timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)bundingBtnClick
 {
-    if (nil == strData)
-        return;
+    NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",strData];
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                           @"31", @"push_type",
                           userId, @"user_id",
+                          sendChannel, @"tv_channel",
                           nil];
     
-    [sendClient sendMessage:[NSDictionary dictionaryWithObjectsAndKeys:data,@"reqBody",@"sendBindTv",@"name", nil]];
+    [[BundingTVManager shareInstance] sendMsg:data];
     
-    /*
-    PFPush *push = [[PFPush alloc] init];
-    [push setChannel:strData];
-    [push setData:data];
-    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (YES == succeeded
-            && nil == error)
-        {
-            //添加已绑定数据缓存
-            [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:YES]
-                                                     forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
-        }
-        else
-        {
-            NSLog(@"%@",error);
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                             message:@"绑定电视端失败,请重试"
-                                                            delegate:nil
-                                                   cancelButtonTitle:@"确定"
-                                                   otherButtonTitles:nil, nil];
-            [alert show];
-        }
-        
-    }];
-    [self.navigationController popToRootViewControllerAnimated:YES];
-     */
+    if (nil == HUDView)
+    {
+        HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
+        HUDView.center = self.view.center;
+        HUDView.backgroundColor = [UIColor clearColor];
+        HUDView.userInteractionEnabled = NO;
+        HUDView.labelText = @"绑定中...";
+        HUDView.labelFont = [UIFont systemFontOfSize:12];
+        HUDView.opacity = 0;
+    }
+    [HUDView show:YES];
+    [self.view addSubview:HUDView];
+    
+    timer = [NSTimer timerWithTimeInterval:KEY_MAX_RESPOND_TIME
+                                    target:self
+                                  selector:@selector(dismissHUDView)
+                                  userInfo:nil
+                                   repeats:NO];
 }
 
 - (void)unbundingBtnClick
@@ -140,17 +139,53 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)dismissHUDView
+{
+    [timer invalidate];
+    timer = nil;
+    
+    [HUDView removeFromSuperview];
+    
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"绑定电视端失败"
+                                                    delegate:nil
+                                           cancelButtonTitle:@"确定"
+                                           otherButtonTitles:nil, nil];
+    [alert show];
+    
+}
+
 #pragma mark -
 #pragma mark FayeObjc delegate
 - (void) messageReceived:(NSDictionary *)messageDict
 {
-    if ([[messageDict objectForKey:@"name"] isEqualToString:@"sendBindTv"])
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"31"])
     {
         
     }
-    else
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
     {
+        [timer invalidate];
+        timer = nil;
+        [HUDView removeFromSuperview];
         
+        if ([[messageDict objectForKey:@"user_id"] isEqualToString:userId])
+        {
+            //添加已绑定数据缓存
+            [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:strData,@"macAddress",[NSNumber numberWithBool:YES],@"isBunding", nil]
+                                                     forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+        }
+        else
+        {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                             message:@"绑定电视端失败"
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"确定"
+                                                   otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 
@@ -160,6 +195,11 @@
 }
 
 - (void)disconnectedFromServer
+{
+    
+}
+
+- (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
 {
     
 }

@@ -661,43 +661,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)pushWebURLToCloudTV
 {
-    /*
-     ### 在data中新加入push_type字段区分各种消息推送的类型。
-     “1”：标识为针对某一类设备的全体的群发消息。
-     "2":  标识为订阅某一视频的更新消息。
-     "3"：TV端用于绑定帐户的消息，同时消息体内带有user id.
-     “4”：云端视频推送消息，同时消息体内带有视频id.
-     "5"：TV端用于解除绑定帐户的消息，同时消息体内带有user id.
-     */
+    NSNumber * type = [NSNumber numberWithInt:videoType_];
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     double curTime = CMTimeGetSeconds([self.mPlayer currentTime]);
-    
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                          @"4", @"push_type",
+                          @"41", @"push_type",
                           userId, @"user_id",
-                          workingUrl_,@"video_url",
-                          [NSString stringWithFormat:@"%f",curTime],@"current_Time",
+                          workingUrl_,@"prod_url",
+                          [NSNumber numberWithFloat:curTime],@"prod_time",
+                          prodId_,@"prod_id",
+                          nameStr_,@"prod_name",
+                          type,@"prod_type",
                           nil];
     
-    PFPush *push = [[PFPush alloc] init];
-    [push setData:data];
-    [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (YES == succeeded
-            && nil == error)
-        {
-            //推送成功
-        }
-        else
-        {
-            NSLog(@"%@",error);
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                             message:@"投放到电视端失败"
-                                                            delegate:nil
-                                                   cancelButtonTitle:@"确定"
-                                                   otherButtonTitles:nil, nil];
-            [alert show];
-        }
-    }];
+    [[BundingTVManager shareInstance] sendMsg:data];
+    
     [self.mPlayer pause];
     playButton_.hidden = NO;
     pauseButton_.hidden = YES;
@@ -1411,7 +1389,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [bottomToolBar_ addSubview:volumeView_];
     
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
-    NSNumber * isbunding = (NSNumber *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
     if ([isbunding boolValue])
     {
         cloundTVButton = [UIButton buttonWithType:UIButtonTypeCustom];

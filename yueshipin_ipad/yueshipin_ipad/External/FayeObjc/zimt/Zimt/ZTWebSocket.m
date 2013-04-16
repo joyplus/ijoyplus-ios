@@ -167,6 +167,7 @@ enum {
 
 -(void)dealloc {
     socket.delegate = nil;
+    delegate = nil;
     [socket disconnect];
     [socket release];
     [runLoopModes release];

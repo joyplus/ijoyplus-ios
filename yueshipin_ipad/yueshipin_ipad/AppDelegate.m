@@ -233,7 +233,9 @@
     if (![statement isEqualToString:@"1"]) {
         [self showStatement];
     }
-
+    
+    [[BundingTVManager shareInstance] connecteServer];
+    
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
     
     return YES;

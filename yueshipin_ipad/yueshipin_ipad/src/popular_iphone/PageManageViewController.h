@@ -11,6 +11,8 @@
 #import "EGORefreshTableHeaderView.h"
 #import "MNMBottomPullToRefreshManager.h"
 #import "DimensionalCodeScanViewController.h"
+#import "BundingTVManager.h"
+
 @interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient,EGORefreshTableHeaderDelegate>{
 
     UIScrollView *scrollView_;

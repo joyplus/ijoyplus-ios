@@ -8,7 +8,8 @@
 
 #import "UnbundingViewController.h"
 #import "ContainerUtility.h"
-#import <Parse/Parse.h>
+#import "MBProgressHUD.h"
+
 @interface UnbundingViewController ()
 
 @end
@@ -62,16 +63,18 @@
     
     userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     
-    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",@"1"];
-    NSString * listenChannel = [NSString stringWithFormat:@"CHANNEL_MOBILE_%@",userId];
+    if (![BundingTVManager shareInstance].isConnected)
+    {
+        [[BundingTVManager shareInstance] connecteServer];
+    }
     
-    sendClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:sendChannel];
-    listenClient = [[FayeClient alloc] initWithURLString:@"ws://comettest.joyplus.tv:8000/bindtv" channel:listenChannel];
-    sendClient.delegate = self;
-    listenClient.delegate = self;
-    [sendClient connectToServer];
-    [listenClient connectToServer];
-    
+    [BundingTVManager shareInstance].sendClient.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,6 +85,12 @@
 
 - (void)back
 {
+    if (timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -95,6 +104,22 @@
     [alertView show];
 }
 
+- (void)dismissHUDView
+{
+    [timer invalidate];
+    timer = nil;
+    
+    [HUDView removeFromSuperview];
+    
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"绑定电视端失败"
+                                                    delegate:nil
+                                           cancelButtonTitle:@"确定"
+                                           otherButtonTitles:nil, nil];
+    [alert show];
+    
+}
+
 #pragma mark -
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -105,40 +130,34 @@
     }
     else
     {
+        NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];   
+        NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               @"33", @"push_type",
                               userId, @"user_id",
+                              sendChannel, @"tv_channel",
                               nil];
         
-        [sendClient sendMessage:data];
+        [[BundingTVManager shareInstance] sendMsg:data];
         
-        /*
-        PFPush *push = [[PFPush alloc] init];
-        [push setData:data];
-        [push sendPushInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (YES == succeeded
-                && nil == error)
-            {
-                //添加已绑定数据缓存
-                [[ContainerUtility sharedInstance] setAttribute:[NSNumber numberWithBool:NO]
-                                                         forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
-            }
-            else
-            {
-                NSLog(@"%@",error);
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                                 message:@"取消绑定电视端失败,请重试"
-                                                                delegate:nil
-                                                       cancelButtonTitle:@"确定"
-                                                       otherButtonTitles:nil, nil];
-                [alert show];
-            }
-            
-        }];
+        if (nil == HUDView)
+        {
+            HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
+            HUDView.center = self.view.center;
+            HUDView.backgroundColor = [UIColor clearColor];
+            HUDView.userInteractionEnabled = NO;
+            HUDView.labelText = @"绑定中...";
+            HUDView.labelFont = [UIFont systemFontOfSize:12];
+            HUDView.opacity = 0;
+        }
+        [HUDView show:YES];
+        [self.view addSubview:HUDView];
         
-        [self.navigationController popViewControllerAnimated:YES];
-         */
+        timer = [NSTimer timerWithTimeInterval:KEY_MAX_RESPOND_TIME
+                                        target:self
+                                      selector:@selector(dismissHUDView)
+                                      userInfo:nil
+                                       repeats:NO];
     }
          
 }
@@ -147,7 +166,16 @@
 #pragma mark FayeObjc delegate
 - (void) messageReceived:(NSDictionary *)messageDict
 {
+    [timer invalidate];
+    timer = nil;
+    [HUDView removeFromSuperview];
+    //添加已绑定数据缓存
+    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+                                             forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
     
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)connectedToServer
@@ -156,6 +184,11 @@
 }
 
 - (void)disconnectedFromServer
+{
+    
+}
+
+- (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
 {
     
 }
