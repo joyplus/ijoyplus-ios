@@ -25,4 +25,33 @@
          [UIUtility showNetWorkError:view];
     }
 }
+
++(BOOL)isFirstTimeRun{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:@"App_version"]==nil){
+        
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
++(BOOL)isVersionUpdate{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *oldVersion = [defaults objectForKey:@"App_version"];
+    if(oldVersion!=nil){
+        NSString *newVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+        NSComparisonResult result = [oldVersion compare:newVersion];
+        if (result == NSOrderedAscending) {
+            return YES;
+        }
+    }
+    else{
+         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+         NSLog(@" %@is app version", bundleVersion);
+        [defaults setObject:bundleVersion forKey:@"App_version"];
+    }
+    return NO;
+}
 @end

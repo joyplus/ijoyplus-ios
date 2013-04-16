@@ -11,4 +11,6 @@
 @interface CommonMotheds : NSObject
 +(BOOL)isNetworkEnbled;
 +(void)showNetworkDisAbledAlert:(UIView *)view;
++(BOOL)isFirstTimeRun;
++(BOOL)isVersionUpdate;
 @end
