@@ -588,16 +588,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 //停止下载不清除缓存
 +(void)stop:(NSString *)downloadId{
-    if ([DownLoadManager defaultDownLoadManager].downloadItem != nil) {
-         //[[DownLoadManager defaultDownLoadManager].downloadItem save];
-        [DatabaseManager update:[DownLoadManager defaultDownLoadManager].downloadItem];
-    }
-    
-    if ([DownLoadManager defaultDownLoadManager].subdownloadItem != nil) {
-        //[[DownLoadManager defaultDownLoadManager].subdownloadItem save];
-        [DatabaseManager update:[DownLoadManager defaultDownLoadManager].subdownloadItem ];
-    }
-    
    AFDownloadRequestOperation *downloadOperation = nil;
     for (AFDownloadRequestOperation *mc in downLoadQueue_) {
         if ([mc.operationId isEqualToString:downloadId]) {

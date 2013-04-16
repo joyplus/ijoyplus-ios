@@ -445,9 +445,9 @@
        }
        
         downloadItem.downloadStatus = @"stop";
-        //[downloadItem save];
+       [DownLoadManager stop:downloadItem.subitemId];
        [DatabaseManager update:downloadItem];
-        [DownLoadManager stop:downloadItem.subitemId];
+        
        
        int num = [self getTagNum:downloadItem.subitemId];
        UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
@@ -467,7 +467,7 @@
         }
         
         downloadItem.downloadStatus = @"waiting";
-        //[downloadItem save];
+
         [DatabaseManager update:downloadItem];
         int num = [self getTagNum:downloadItem.subitemId];
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];

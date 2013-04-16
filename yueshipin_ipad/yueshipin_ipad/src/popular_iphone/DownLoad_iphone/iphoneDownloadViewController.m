@@ -429,7 +429,7 @@
         for (SubdownloadItem *subItem in subItems) {
             [DownLoadManager stopAndClear:subItem.subitemId];
         }
-        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@'", itemId]];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@%%'", itemId]];
         [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@'", itemId]];
         
         
