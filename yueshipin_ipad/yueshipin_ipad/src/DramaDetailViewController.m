@@ -212,8 +212,7 @@
     self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
     self.episodeImage.image = [UIImage imageNamed:@"video_title"];
     
-//    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
-    self.introContentTextView.frame = CGRectZero;
+    self.introContentTextView.frame = CGRectMake(0, 0, 0, 100);
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 1;
     self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
@@ -251,7 +250,8 @@
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 increasePositionY = introContentHeight - 100;
-                [self relocateComment];
+                CGFloat y = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
+                [self relocateCommentWithOriginY:y];
             } completion:^(BOOL finished) {
             }];
         } else {
@@ -260,7 +260,8 @@
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90, introBtn.frame.size.width, introBtn.frame.size.height);
                 increasePositionY = 0;
-                [self relocateComment];
+                CGFloat y = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
+                [self relocateCommentWithOriginY:y];
             } completion:^(BOOL finished) {
                 
             }];
@@ -570,27 +571,34 @@
         [previousBtn setHidden:YES];
     }
     
-    UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
-    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 5;
-    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
-    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
-    
-    y = previousBtn.frame.origin.y + lastBtnInPage.frame.size.height;
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, y, 45, 20);
-    self.introImage.image = [UIImage imageNamed:@"brief_title"];
-    
-    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
-    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, y, 430, 100);
-    self.introContentTextView.textColor = CMConstants.grayColor;
-    self.introContentTextView.text = [video objectForKey:@"summary"];
-    
-    introBtn.frame = CGRectMake(LEFT_WIDTH + 415, self.introContentTextView.frame.origin.y + 90, 14, 9);
     [self relocateComment];
 }
 
 - (void)relocateComment
 {
-    CGFloat y = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
+    UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
+    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 5;
+    [self relocateCommentForScroll:y];
+}
+
+
+- (void)relocateCommentForScroll:(CGFloat) y
+{
+    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
+    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
+    
+    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, y, 45, 20);
+    self.introImage.image = [UIImage imageNamed:@"brief_title"];
+    
+    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
+    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, y, 430, self.introContentTextView.frame.size.height);
+    self.introContentTextView.textColor = CMConstants.grayColor;
+    self.introContentTextView.text = [video objectForKey:@"summary"];
+    
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 415, self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height - 10, 14, 9);
+    
+    y = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
     [self relocateCommentWithOriginY:y];
 }
 
@@ -914,11 +922,13 @@
 
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height - 5.0f;
-    [self relocateCommentWithOriginY:y];
+    if(scrollView.contentOffset.x < episodeView.frame.size.width){
+        CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height;
+        [self relocateCommentForScroll:y];
+    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
