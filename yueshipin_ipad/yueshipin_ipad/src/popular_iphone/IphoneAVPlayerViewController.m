@@ -705,23 +705,27 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)showActivityView
 {
-    if (!playCacheView_.superview)
-    {
-        [self.view addSubview:playCacheView_];
-        
-        myHUD.hidden = NO;
-        [self.view bringSubviewToFront:myHUD];
-        [myHUD show:YES];
-        willPlayLabel_.text = nil;
-    }
+//    if (!playCacheView_.superview)
+//    {
+//        [self.view addSubview:playCacheView_];
+//        
+//        myHUD.hidden = NO;
+//        [self.view bringSubviewToFront:myHUD];
+//        [myHUD show:YES];
+//        willPlayLabel_.text = nil;
+//    }
+    myHUD.hidden = NO;
+    [self.view bringSubviewToFront:myHUD];
+    [myHUD show:YES];
 }
 - (void)dismissActivityView
 {
-    if (playCacheView_.superview)
-    {
-        [playCacheView_ removeFromSuperview];
-        myHUD.hidden = YES;
-    }
+//    if (playCacheView_.superview)
+//    {
+//        [playCacheView_ removeFromSuperview];
+//        myHUD.hidden = YES;
+//    }
+     myHUD.hidden = YES;
 }
 
 -(void)playerItemDidReachEnd:(id)sender{
