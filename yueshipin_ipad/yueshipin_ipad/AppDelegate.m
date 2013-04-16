@@ -175,6 +175,7 @@
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
     [self saveChannelRecord];
@@ -621,6 +622,12 @@
     resp.bText = NO;
     
     [WXApi sendResp:resp];
+}
+
+- (void)setIdleTimerDisabled:(NSNumber *)num
+{
+    BOOL disabled = [num boolValue];
+    [[UIApplication sharedApplication] setIdleTimerDisabled: disabled];
 }
 
 @end

@@ -144,9 +144,6 @@
     downLoadManager_.downLoadMGdelegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDataSource) name:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
-    
-    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -164,16 +161,6 @@
     {
         self.navigationItem.rightBarButtonItem = nil;
     }
-}
-
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
-}
-
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
 }
 
 -(void)initData{

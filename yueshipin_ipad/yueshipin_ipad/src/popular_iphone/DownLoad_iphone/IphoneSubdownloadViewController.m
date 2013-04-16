@@ -95,16 +95,6 @@
     
 }
 
--(void)viewDidAppear:(BOOL)animated{
-    [super viewDidAppear:animated];
-    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
-}
-
-- (void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:animated];
-    [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
-}
-
 -(void)initData{
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];

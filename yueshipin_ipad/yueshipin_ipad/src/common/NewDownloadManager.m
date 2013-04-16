@@ -51,8 +51,13 @@
         [self startDownloadingThread:allSubdownloadItems status:@"start"];
         [self startDownloadingThread:allDownloadItems status:@"waiting"];
         [self startDownloadingThread:allSubdownloadItems status:@"waiting"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];// update download badge
         displayNoSpaceFlag = NO;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];// update download badge
+    if ([ActionUtility getReadyItemNumber] > 0) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:YES]];
+    } else {
+        [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:NO]];
     }
     [myLock unlock];
 }

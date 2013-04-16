@@ -169,14 +169,12 @@
     _gmGridView.editing = NO;
     [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
-    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
     [MobClick beginLogPageView:DOWNLOAD];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
     displayNoSpaceFlag = NO;
@@ -204,7 +202,7 @@
 
 - (void)restartNewDownloading
 {
-    [AppDelegate instance].padDownloadManager = 0;
+    [AppDelegate instance].currentDownloadingNum = 0;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] != NotReachable) {
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];

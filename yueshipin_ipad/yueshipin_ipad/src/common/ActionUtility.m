@@ -87,6 +87,13 @@
     return movieNum + subitemNum;
 }
 
++ (int)getReadyItemNumber
+{
+    NSInteger movieNum = [DatabaseManager countByCriteria:DownloadItem.class queryString: @"WHERE type = 1 and (downloadStatus = 'start' or downloadStatus = 'waiting')"];
+    NSInteger subitemNum = [DatabaseManager countByCriteria:SubdownloadItem.class queryString: @"WHERE downloadStatus = 'start' or downloadStatus = 'waiting'"];
+    return movieNum + subitemNum;
+}
+
 + (BOOL)isAirPlayActive{
     CFDictionaryRef currentRouteDescriptionDictionary = nil;
     UInt32 dataSize = sizeof(currentRouteDescriptionDictionary);

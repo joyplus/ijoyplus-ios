@@ -67,6 +67,7 @@
 #define WATCH_HISTORY_REFRESH @"PersonalWatchHistoryViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
 #define SEARCH_LIST_VIEW_REFRESH @"SearchListViewRefresh"
+#define SYSTEM_IDLE_TIMER_DISABLED @"system_idle_timer_disabled"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
 #define UPDATE_DISK_STORAGE @"update_disk_storage"

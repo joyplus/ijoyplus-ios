@@ -17,6 +17,6 @@
 + (BOOL)isAirPlayActive;
 + (float)getFreeDiskspace;
 + (void)triggerSpaceNotEnough;
-
++ (int)getReadyItemNumber;
 
 @end
