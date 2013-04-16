@@ -418,7 +418,7 @@
                 [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
                 expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
-                [cell addSubview:expectbtn];
+             
                 expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -493,7 +493,8 @@
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
-                      [cell addSubview:downLoad];
+                    [cell addSubview:expectbtn];
+                    [cell addSubview:downLoad];
                 }
 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];

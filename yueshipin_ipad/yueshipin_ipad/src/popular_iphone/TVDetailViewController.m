@@ -450,7 +450,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
                 expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
-                [cell addSubview:expectbtn];
+                
                 expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -527,6 +527,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isloaded_) {
                      [cell addSubview:downLoad];
+                     [cell addSubview:expectbtn];
                 }
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
                 report.frame = CGRectMake(15, 155, 96, 28);
