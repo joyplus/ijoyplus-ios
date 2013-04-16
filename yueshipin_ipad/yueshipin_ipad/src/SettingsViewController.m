@@ -25,6 +25,10 @@
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
+#define SETTING_OPTION_WIDTH            (457.5)
+#define SETTING_OPTION_SINA_HEIGHT      (69.5)
+#define SETTING_OPTION_OTHER_HEIGHT     (50.5)
+
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
 @interface SettingsViewController (){
@@ -75,12 +79,12 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         
-        int leftWidth = 15;
+        int leftWidth = 28;
         topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
-        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 120, 467, 70)];
+        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 120, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
         sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
         
@@ -95,28 +99,28 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [self.view addSubview:sinaSwitch];                       
        
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearCacheBtn.frame = CGRectMake(leftWidth, sinaWeiboBg.frame.origin.y + sinaWeiboBg.frame.size.height + 40, 467, 50);
+        clearCacheBtn.frame = CGRectMake(leftWidth, sinaWeiboBg.frame.origin.y + sinaWeiboBg.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 40, 467, 50);
+        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height + 10, 467, 50);
+        commentBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        followBtn.frame = CGRectMake(leftWidth, commentBtn.frame.origin.y + commentBtn.frame.size.height + 10, 467, 50);
+        followBtn.frame = CGRectMake(leftWidth, commentBtn.frame.origin.y + commentBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow"] forState:UIControlStateNormal];
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow_pressed"] forState:UIControlStateHighlighted];
         [followBtn addTarget:self action:@selector(followBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -130,14 +134,14 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [self.view addSubview:aboutBtn];
         
         speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        speakBtn.frame = CGRectMake(leftWidth, aboutBtn.frame.origin.y + aboutBtn.frame.size.height + 10, 467, 50);
+        speakBtn.frame = CGRectMake(leftWidth, aboutBtn.frame.origin.y + aboutBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
         [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:speakBtn];
         
         UIButton *checkUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 10, 467, 50);
+        checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate"] forState:UIControlStateNormal];
         [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate_pressed"] forState:UIControlStateHighlighted];
         [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
