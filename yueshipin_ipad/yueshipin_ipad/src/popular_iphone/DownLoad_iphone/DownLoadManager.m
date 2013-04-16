@@ -266,21 +266,20 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             }
         }
     [lock_ unlock];
+    
+     [self postIsloadingBoolValue];
 }
 
+-(void)postIsloadingBoolValue{
+    for (AFDownloadRequestOperation *af in downLoadQueue_) {
+        if ([af.operationStatus isEqualToString:@"loading"]||[af.operationStatus isEqualToString:@"waiting"]) {
+            [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:YES]];
+            return;
+        }
+    }
+   [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:NO]];
+}
 
-//-(void)retry:(AFDownloadRequestOperation*)downloadRequestOperation{
-//    if (![CommonMotheds isNetworkEnbled]) {
-//        return;
-//    }
-//    if (retryCount_ > 3) {
-//        return;
-//    }
-//    retryCount_ ++;
-//    
-//    
-//    [self beginDownloadTask:newDownloadingOperation];
-//}
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
     __block AFDownloadRequestOperation *tempdownloadRequestOperation = downloadRequestOperation;
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {

@@ -152,7 +152,6 @@
     //重新将downLoadManager的代理指向self;
     downLoadManager_.downLoadMGdelegate = self;
     [gMGridView_ reloadData];
-    
     if (0 != itemArr_.count)
     {
         self.navigationItem.rightBarButtonItem = editButtonItem_;
@@ -161,6 +160,9 @@
     {
         self.navigationItem.rightBarButtonItem = nil;
     }
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    gMGridView_.editing = NO;
 }
 
 -(void)initData{
@@ -425,13 +427,10 @@
         NSArray *subItems = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:subquery];
         //NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
         for (SubdownloadItem *subItem in subItems) {
-            
-            [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", subItem.subitemId]];
             [DownLoadManager stopAndClear:subItem.subitemId];
-            
-            //[DatabaseManager deleteObject:subItem];
         }
-        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE subitemId like %@", itemId]];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@'", itemId]];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@'", itemId]];
         
         
         

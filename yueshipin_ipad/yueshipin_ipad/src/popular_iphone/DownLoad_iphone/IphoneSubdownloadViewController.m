@@ -95,6 +95,10 @@
     
 }
 
+- (void)viewWillDisappear:(BOOL)animated{
+    gMGridView_.editing = NO;
+}
+
 -(void)initData{
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
@@ -352,7 +356,6 @@
             if ([nameStr hasPrefix:fileName]) {
                 NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
                 [fileMgr removeItemAtPath:deleteFilePath error:&error];
-                break;
             }
         }
     }

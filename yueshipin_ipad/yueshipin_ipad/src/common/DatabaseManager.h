@@ -24,5 +24,4 @@
 + (NSInteger)count:(Class)dbObjectClass;
 +(NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 
-+(void)test;
 @end
