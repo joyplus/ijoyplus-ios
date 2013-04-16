@@ -13,4 +13,5 @@
 +(void)showNetworkDisAbledAlert:(UIView *)view;
 +(BOOL)isFirstTimeRun;
 +(BOOL)isVersionUpdate;
++(void)setVersion;
 @end

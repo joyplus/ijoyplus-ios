@@ -7,7 +7,7 @@
 //
 
 #import "IntroductionView.h"
-
+#import "CommonMotheds.h"
 @implementation IntroductionView
 
 - (id)initWithFrame:(CGRect)frame
@@ -82,7 +82,31 @@
 
 }
 -(void)next{
-   self.hidden = YES;
+   [CommonMotheds setVersion];
+   
+    [self disAppearAnimation];
+}
+-(void)disAppearAnimation{
+     CGSize size = [UIApplication sharedApplication].delegate.window.bounds.size;
+    
+    [UIView beginAnimations:nil context:nil];
+    //动画持续时间
+    [UIView setAnimationDuration:0.4];
+    //设置动画的回调函数，设置后可以使用回调方法
+    [UIView setAnimationDelegate:self];
+    //设置动画曲线，控制动画速度
+    self.alpha = 0;
+    self.frame = CGRectMake(-size.width, 0,size.width , size.height);
+    
+    [UIView  setAnimationCurve: UIViewAnimationCurveEaseInOut];
+    //设置动画方式，并指出动画发生的位置
+    [UIView setAnimationDidStopSelector:@selector(hidden)];
+    //提交UIView动画
+    [UIView commitAnimations];
+
+}
+-(void)hidden{
+ self.hidden = YES;
 }
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
@@ -99,6 +123,7 @@
     int page = offset.x/pageWidth;
     if (page == 3 && offset.x > 0) {
         [self next];
+       
     }
     
 }

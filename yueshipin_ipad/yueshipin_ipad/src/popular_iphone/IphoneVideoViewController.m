@@ -457,11 +457,8 @@
 }
 
 -(NSNumber*)getRecordInfo:(int)num{
-    int i = 0;
-    if (type_ == 2 || type_ ==3) {
-        i = 1;
-    }
-    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+i)]]];
+    
+    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1)]]];
 
     return cacheResult;
     

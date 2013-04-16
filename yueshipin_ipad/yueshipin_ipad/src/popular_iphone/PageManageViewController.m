@@ -542,6 +542,7 @@ enum
     if ([CommonMotheds isVersionUpdate]) {
         [self showIntroductionView];
     }
+    [self showIntroductionView];
 }
 
 

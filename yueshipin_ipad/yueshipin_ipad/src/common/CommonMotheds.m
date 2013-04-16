@@ -48,10 +48,14 @@
         }
     }
     else{
-         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
-         NSLog(@" %@is app version", bundleVersion);
-        [defaults setObject:bundleVersion forKey:@"App_version"];
+
     }
     return NO;
+}
++(void)setVersion{
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+     NSLog(@" %@is app version", bundleVersion);
+     [defaults setObject:bundleVersion forKey:@"App_version"];
 }
 @end
