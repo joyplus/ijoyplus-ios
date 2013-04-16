@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *dingBtn;
 @property (weak, nonatomic) IBOutlet UIButton *collectionBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *episodeImage;
+@property (weak, nonatomic) IBOutlet UIImageView *episodeViewBg;
 @property (weak, nonatomic) IBOutlet UIButton *playBtn;
 @property (weak, nonatomic) IBOutlet UIButton *shareBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addListBtn;

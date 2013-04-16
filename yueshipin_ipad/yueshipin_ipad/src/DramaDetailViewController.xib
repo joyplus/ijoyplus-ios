@@ -646,6 +646,16 @@
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
+							<object class="IBUIImageView" id="56426666">
+								<reference key="NSNextResponder" ref="163951952"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{153, 392}, {240, 128}}</string>
+								<reference key="NSSuperview" ref="163951952"/>
+								<reference key="NSWindow"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
+							</object>
 						</array>
 						<string key="NSFrameSize">{774, 1004}</string>
 						<reference key="NSSuperview" ref="766721923"/>
@@ -963,6 +973,14 @@
 					</object>
 					<int key="connectionID">2047</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">episodeViewBg</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="56426666"/>
+					</object>
+					<int key="connectionID">2049</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -1026,6 +1044,7 @@
 							<reference ref="225816328"/>
 							<reference ref="117471273"/>
 							<reference ref="149373989"/>
+							<reference ref="56426666"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>
@@ -1201,6 +1220,11 @@
 						<reference key="object" ref="149373989"/>
 						<reference key="parent" ref="163951952"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">2048</int>
+						<reference key="object" ref="56426666"/>
+						<reference key="parent" ref="163951952"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1231,6 +1255,7 @@
 				<string key="2041.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2043.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2046.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="2048.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="432.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="45.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -1246,7 +1271,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">2047</int>
+			<int key="maxID">2049</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1269,6 +1294,7 @@
 						<string key="doulanLogo">UIImageView</string>
 						<string key="downloadBtn">UIButton</string>
 						<string key="episodeImage">UIImageView</string>
+						<string key="episodeViewBg">UIImageView</string>
 						<string key="filmImage">UIImageView</string>
 						<string key="introContentTextView">UITextView</string>
 						<string key="introImage">UIImageView</string>
@@ -1346,6 +1372,10 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="episodeImage">
 							<string key="name">episodeImage</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="episodeViewBg">
+							<string key="name">episodeViewBg</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="filmImage">

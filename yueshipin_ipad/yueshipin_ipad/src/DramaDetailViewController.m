@@ -87,6 +87,9 @@
     [self setReportLabel:nil];
     [self setShareLabel:nil];
     [self setEpisodeImage:nil];
+    [self setEpisodeViewBg:nil];
+    [self setEpisodeViewBg:nil];
+    [self setEpisodeViewBg:nil];
     [super viewDidUnload];
 }
 
@@ -108,7 +111,7 @@
     
     self.bgScrollView.frame = CGRectMake(0, 228, self.view.frame.size.width, self.view.frame.size.height - 270);
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
-       
+    
     self.closeBtn.frame = CGRectMake(455, 0, 50, 50);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
@@ -212,6 +215,18 @@
     self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
     self.episodeImage.image = [UIImage imageNamed:@"video_title"];
     
+    self.episodeViewBg.frame = CGRectZero;
+    self.episodeViewBg.image = [UIImage imageNamed:@"episode_view_bg"];
+    
+    episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
+    //episodeView.scrollEnabled = NO;
+    episodeView.showsHorizontalScrollIndicator = NO;
+    episodeView.backgroundColor = [UIColor clearColor];
+    [episodeView setPagingEnabled:YES];
+    [self.bgScrollView addSubview:episodeView];
+    episodeView.delegate = self;
+    episodeView.backgroundColor = [UIColor clearColor];
+    
     self.introContentTextView.frame = CGRectMake(0, 0, 0, 100);
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 1;
@@ -227,15 +242,6 @@
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
-    
-    episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
-    //episodeView.scrollEnabled = NO;
-    episodeView.showsHorizontalScrollIndicator = NO;
-    episodeView.backgroundColor = [UIColor clearColor];
-    [episodeView setPagingEnabled:YES];
-    [self.bgScrollView addSubview:episodeView];
-    episodeView.delegate = self;
-    episodeView.backgroundColor = [UIColor clearColor];
     
     [self.commentImage setHidden:YES];
 }
@@ -399,7 +405,7 @@
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
-
+    
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
     int dingNum = [[video objectForKey:@"support_num"] intValue];
@@ -475,7 +481,8 @@
         changed = YES;
     }
     totalEpisodeNumber = episodeArray.count;
-    episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * 39);
+    episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (44+10) + 10);
+    self.episodeViewBg.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, episodeView.frame.size.width, episodeView.frame.size.height);
     episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
     if(changed){
         for (UIView *aview in episodeView.subviews) {
@@ -485,10 +492,10 @@
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.tag = i+1;
             int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
-            [btn setFrame:CGRectMake(pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * 87, floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 82, 34)];
+            [btn setFrame:CGRectMake(10 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (72 + 12), 10 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (44 + 10), 72, 44)];
             NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
             [btn setTitle:name forState:UIControlStateNormal];
-            [btn.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
+            [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
             btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
             BOOL btnStatus = NO;
             // 检查是否有有效的视频地址
@@ -540,13 +547,13 @@
     if(nextBtn == nil){
         nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
-        [nextBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [nextBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 60, 0, 5)];
         [nextBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 15)];
         nextBtn.titleLabel.font = [UIFont systemFontOfSize:13];
         [nextBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-        [nextBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
+        [nextBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
         [nextBtn setImage:[UIImage imageNamed:@"right"] forState:UIControlStateNormal];
+        [nextBtn setImage:[UIImage imageNamed:@"right_pressed"] forState:UIControlStateNormal];
         [nextBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
         nextBtn.tag = 9011;
         [self.bgScrollView addSubview:nextBtn];
@@ -556,11 +563,12 @@
         previousBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [previousBtn setTitle:@"前20集" forState:UIControlStateNormal];
         [previousBtn setImage:[UIImage imageNamed:@"left"] forState:UIControlStateNormal];
+        [previousBtn setImage:[UIImage imageNamed:@"left_pressed"] forState:UIControlStateHighlighted];
         previousBtn.titleLabel.font = [UIFont systemFontOfSize:13];
         [previousBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [previousBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
         [previousBtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 60)];
         [previousBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-        [previousBtn setTitleColor:[UIColor blackColor] forState:UIControlStateHighlighted];
         [previousBtn addTarget:self action:@selector(next20Epi:) forControlEvents:UIControlEventTouchUpInside];
         previousBtn.tag = 9012;
         [previousBtn setHidden:YES];
@@ -577,13 +585,16 @@
 - (void)relocateComment
 {
     UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
-    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 5;
+    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 10;
     [self relocateCommentForScroll:y];
 }
 
 
 - (void)relocateCommentForScroll:(CGFloat) y
 {
+    UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
+    self.episodeViewBg.frame = CGRectMake(self.episodeViewBg.frame.origin.x, self.episodeViewBg.frame.origin.y, self.episodeViewBg.frame.size.width, lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 10);
+    
     nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
     previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
     
@@ -591,7 +602,7 @@
     self.introImage.frame = CGRectMake(LEFT_WIDTH, y, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
+    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 15;
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, y, 430, self.introContentTextView.frame.size.height);
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
@@ -729,7 +740,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int dingNum = [[video objectForKey:@"support_num"] intValue] + 1;
             if (dingNum >= 1000) {
@@ -812,7 +823,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
             if (collectioNum >= 1000) {
