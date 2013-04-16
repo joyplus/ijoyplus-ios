@@ -191,6 +191,9 @@
 		22CE9F32169A729300D4FC76 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F31169A729300D4FC76 /* UIImage+Scale.m */; };
 		22CE9F5C169AA7FD00D4FC76 /* SendWeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */; };
 		22D11DB416A641D900B49FFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D11DB316A641D900B49FFD /* Default-568h@2x.png */; };
+		22D36916171CF2C400D2C6F8 /* xiangkan_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36913171CF2C400D2C6F8 /* xiangkan_bg.png */; };
+		22D36917171CF2C400D2C6F8 /* xiangkan_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36914171CF2C400D2C6F8 /* xiangkan_pressed.png */; };
+		22D36918171CF2C400D2C6F8 /* xiangkan.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36915171CF2C400D2C6F8 /* xiangkan.png */; };
 		22E7423D17098E72006DEB72 /* popview_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7423C17098E72006DEB72 /* popview_bg@2x.png */; };
 		22E7423F170992D2006DEB72 /* otherTextBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7423E170992D2006DEB72 /* otherTextBG@2x.png */; };
 		22E7424817099608006DEB72 /* search_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7424417099608006DEB72 /* search_f@2x.png */; };
@@ -1155,6 +1158,9 @@
 		22CE9F5A169AA7FD00D4FC76 /* SendWeiboViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendWeiboViewController.h; sourceTree = "<group>"; };
 		22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendWeiboViewController.m; sourceTree = "<group>"; };
 		22D11DB316A641D900B49FFD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		22D36913171CF2C400D2C6F8 /* xiangkan_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan_bg.png; sourceTree = "<group>"; };
+		22D36914171CF2C400D2C6F8 /* xiangkan_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan_pressed.png; sourceTree = "<group>"; };
+		22D36915171CF2C400D2C6F8 /* xiangkan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan.png; sourceTree = "<group>"; };
 		22E7423C17098E72006DEB72 /* popview_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "popview_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/popview_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		22E7423E170992D2006DEB72 /* otherTextBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "otherTextBG@2x.png"; path = "yueshipin_ipad/Resource_iphone/otherTextBG@2x.png"; sourceTree = SOURCE_ROOT; };
 		22E7424417099608006DEB72 /* search_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "search_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/search_f@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2710,6 +2716,9 @@
 			children = (
 				2266A156171BCB2E0062DB95 /* expect_succeed@2x.png */,
 				2266A154171BC1000062DB95 /* xiangkan_bg@2x.png */,
+				22D36913171CF2C400D2C6F8 /* xiangkan_bg.png */,
+				22D36914171CF2C400D2C6F8 /* xiangkan_pressed.png */,
+				22D36915171CF2C400D2C6F8 /* xiangkan.png */,
 				2257DB8D17180AEA001D5D61 /* xiangkan_pressed@2x.png */,
 				2257DB8E17180AEA001D5D61 /* xiangkan@2x.png */,
 				EBC9D91317165AE9005D5DBF /* clear_play_pressed.png */,
@@ -4340,6 +4349,9 @@
 				E73462B2171CED0000EC5DCE /* introductioniphone4_2@2x.jpg in Resources */,
 				E73462B3171CED0000EC5DCE /* introductioniphone4_3@2x.jpg in Resources */,
 				E73462B4171CED0000EC5DCE /* introductioniphone4_4@2x.jpg in Resources */,
+				22D36916171CF2C400D2C6F8 /* xiangkan_bg.png in Resources */,
+				22D36917171CF2C400D2C6F8 /* xiangkan_pressed.png in Resources */,
+				22D36918171CF2C400D2C6F8 /* xiangkan.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
