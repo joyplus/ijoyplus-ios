@@ -287,7 +287,6 @@ enum
                 [ self.comicListArr addObjectsFromArray:tempTopsArray];
             }
         }
-        
         [self.comicTableList reloadData];
     }
     else {
@@ -305,13 +304,13 @@ enum
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%d",comicLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathComicTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
+        self.comicListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:@"comic_top_list" result:result];
-                [ self.tvListArr addObjectsFromArray:tempTopsArray];
+                [ self.comicListArr addObjectsFromArray:tempTopsArray];
             }
         }
         else {
