@@ -214,6 +214,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
     isAppEnterBackground = NO;
+    isClosed = NO;
     if (type == 1) {
         umengPageName = MOVIE_PLAY;
     } else if(type == 2 || type == 131){
@@ -1087,9 +1088,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)closeSelf
 {
-    [mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-    [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
+    [self.mPlayer removeObserver:self forKeyPath:kRateKey];
+	[self.mPlayerItem removeObserver:self forKeyPath:kStatusKey];
+    [self.mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
     //buffering
     [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
     [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
@@ -1129,6 +1130,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [self.navigationController popViewControllerAnimated:NO];
         }
     }
+    isClosed = YES;
 }
 
 - (void)showEpisodeListView
@@ -1434,7 +1436,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
              dispatch_async( dispatch_get_main_queue(),
                             ^{
                                 /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                [myself prepareToPlayAsset:asset withKeys:requestedKeys];
+                                if (!isClosed)
+                                    [myself prepareToPlayAsset:asset withKeys:requestedKeys];
                             });
          }];
 	}

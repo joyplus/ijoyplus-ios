@@ -68,6 +68,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @private
 	float mRestoreAfterScrubbingRate;
 	BOOL seekToZeroBeforePlay;
+    BOOL isClosed;
 	id mTimeObserver;
     NSURL* mURL;
 }
