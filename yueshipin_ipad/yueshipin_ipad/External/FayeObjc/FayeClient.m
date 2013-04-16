@@ -149,6 +149,7 @@
 {
   self.delegate = nil;
   [webSocket release];
+    webSocket.delegate = nil;
   [fayeURLString release];
   [fayeClientId release];
   [activeSubChannel release];  
@@ -168,8 +169,10 @@
   // clean up any existing socket
   [webSocket setDelegate:nil];
   [webSocket close];
-  webSocket = [[ZTWebSocket alloc] initWithURLString:self.fayeURLString delegate:self];
-  [webSocket open];	    
+    ZTWebSocket * tmp = [[ZTWebSocket alloc] initWithURLString:self.fayeURLString delegate:self];
+    self.webSocket = tmp;
+    [tmp release];
+  [webSocket open];
 }
 
 - (void) closeWebSocketConnection { 
