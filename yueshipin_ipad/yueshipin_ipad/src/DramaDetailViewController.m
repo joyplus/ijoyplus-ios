@@ -12,7 +12,7 @@
 #import "SublistViewController.h"
 #import "DownloadUrlFinder.h"
 #import <Parse/Parse.h>
-#define DEFAULT_POSITION_Y 550
+#define DEFAULT_POSITION_Y 450
 #define EPISODE_NUMBER_IN_ROW 5
 
 @interface DramaDetailViewController (){

@@ -93,7 +93,7 @@
         [self.view addSubview:topImage];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        editBtn.frame = CGRectMake(390, 60, 100, 75);
+        editBtn.frame = CGRectMake(380, 25, 100, 75);
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_pressed"] forState:UIControlStateHighlighted];
         [editBtn addTarget:self action:@selector(editBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -108,13 +108,13 @@
         [self.view addSubview:doneBtn];
         
         [self reloadItems];
-        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 120, 450, 580)];
+        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 95, 490, 600)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:gmGridView];
         _gmGridView = gmGridView;
         
-        NSInteger spacing = 30;
+        NSInteger spacing = 25;
         _gmGridView.style = GMGridViewStyleSwap;
         _gmGridView.itemSpacing = spacing;
         _gmGridView.minEdgeInsets = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
@@ -299,7 +299,7 @@
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
 {
-    return CGSizeMake(110, 165);
+    return CGSizeMake(90, 165);
 }
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index

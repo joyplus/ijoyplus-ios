@@ -75,7 +75,7 @@
         [self.view addSubview:closeBtn];
         
         editBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        editBtn.frame = CGRectMake(390, 70, 100, 75);
+        editBtn.frame = CGRectMake(380, 25, 100, 75);
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit"] forState:UIControlStateNormal];
         [editBtn setBackgroundImage:[UIImage imageNamed:@"edit_pressed"] forState:UIControlStateHighlighted];
         [editBtn addTarget:self action:@selector(editBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -89,13 +89,13 @@
         [doneBtn setHidden:YES];
         [self.view addSubview:doneBtn];
         
-        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH, 110, 450, 610)];
+        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 95, 490, 590)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:gmGridView];
         _gmGridView = gmGridView;
         
-        NSInteger spacing = 30;
+        NSInteger spacing = 25;
         _gmGridView.style = GMGridViewStyleSwap;
         _gmGridView.itemSpacing = spacing;
         _gmGridView.minEdgeInsets = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
@@ -248,7 +248,7 @@
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
 {
-    return CGSizeMake(110, 165);
+    return CGSizeMake(90, 165);
 }
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
@@ -272,11 +272,11 @@
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 105, 146)];
-    imageView.image = [UIImage imageNamed:@"movie_frame"];
+    imageView.image = [UIImage imageNamed:@"video_bg_placeholder"];
     [cell.contentView addSubview:imageView];
     
-    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(3, 3, 98, 138)];
-    [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(imageView.frame.origin.x + 6, imageView.frame.origin.y + 8, imageView.frame.size.width - 12, imageView.frame.size.height - 12)];
+    [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl]];
     [cell.contentView addSubview:contentImage];
     
     UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
