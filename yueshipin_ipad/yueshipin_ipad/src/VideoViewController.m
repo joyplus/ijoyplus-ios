@@ -736,8 +736,9 @@
             [cell.contentView addSubview:titleLabel];
             
         }
-        UIImageView *titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, VIDEO_LOGO_HEIGHT + 9, (VIDEO_LOGO_WIDTH) * 6 + 7, 30)];
+        UIImageView *titleImage = [[UIImageView alloc]init];
         titleImage.image = [[UIImage imageNamed:@"name_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 2, 5, 2)];
+        titleImage.tag = 11123;
         [cell.contentView addSubview:titleImage];
 
     }
@@ -777,7 +778,14 @@
             }
             nameLabel.text = [item objectForKey:@"prod_name"];
         }
-        if (i < 5) {
+        
+        UIImageView * bgImage = (UIImageView *)[cell viewWithTag:11123];
+        if (i < 5)
+        {
+            CGFloat length;
+            UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
+            length = titleLabel.frame.origin.x - 25;
+            
             for (int j = i; j < 5; j++) {
                 UIImageView *placeHolderImage = (UIImageView *)[cell viewWithTag:1011 + j];
                 placeHolderImage.image = nil;
@@ -790,6 +798,12 @@
                 UIButton *tempBtn = (UIButton *)[cell viewWithTag:2011 + j];
                 [tempBtn removeFromSuperview];
             }
+            
+            bgImage.frame = CGRectMake(15, VIDEO_LOGO_HEIGHT + 9, length, 30);
+        }
+        else
+        {
+            bgImage.frame = CGRectMake(15, VIDEO_LOGO_HEIGHT + 9, (VIDEO_LOGO_WIDTH) * 6 + 7, 30);
         }
         
     }
