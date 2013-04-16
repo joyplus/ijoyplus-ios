@@ -12,7 +12,7 @@
 #import "SublistViewController.h"
 #import "DownloadUrlFinder.h"
 #import <Parse/Parse.h>
-#define DEFAULT_POSITION_Y 450
+#define DEFAULT_POSITION_Y 440
 #define EPISODE_NUMBER_IN_ROW 5
 
 @interface DramaDetailViewController (){
@@ -209,9 +209,9 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
-    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
- 
+    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
+    self.episodeImage.image = [UIImage imageNamed:@"video_title"];
+    
 //    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
     self.introContentTextView.frame = CGRectZero;
     self.introContentTextView.textColor = CMConstants.grayColor;
@@ -575,7 +575,7 @@
     nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
     previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
     
-    y = previousBtn.frame.origin.y + lastBtnInPage.frame.size.height + 5;
+    y = previousBtn.frame.origin.y + lastBtnInPage.frame.size.height;
     self.introImage.frame = CGRectMake(LEFT_WIDTH, y, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
@@ -596,7 +596,7 @@
 
 - (void)relocateCommentWithOriginY:(CGFloat)y
 {
-    int positionY = y + 10;    
+    int positionY = y;
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];

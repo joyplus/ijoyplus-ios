@@ -893,6 +893,7 @@
 		EBC9D9471716A221005D5DBF /* SearchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC9D9461716A221005D5DBF /* SearchListViewController.m */; };
 		EBD4A18D171D2A2A00396BD0 /* download_progress_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD4A17F171D2A2A00396BD0 /* download_progress_bg@2x.png */; };
 		EBD4A18E171D2A2A00396BD0 /* download_progress@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD4A180171D2A2A00396BD0 /* download_progress@2x.png */; };
+		EBD4A1B2171D3FDD00396BD0 /* video_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EBD4A1A6171D3FDD00396BD0 /* video_title@2x.png */; };
 		EBE799081717C9420047535A /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE799071717C9420047535A /* DatabaseManager.m */; };
 		EBE7990B1717C9DF0047535A /* DatabaseObject.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE7990A1717C9DF0047535A /* DatabaseObject.m */; };
 		EBF3A969166301F100EBF56D /* DramaDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A95F166301F100EBF56D /* DramaDetailViewController.m */; };
@@ -1999,6 +2000,7 @@
 		EBC9D9461716A221005D5DBF /* SearchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchListViewController.m; sourceTree = "<group>"; };
 		EBD4A17F171D2A2A00396BD0 /* download_progress_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_progress_bg@2x.png"; sourceTree = "<group>"; };
 		EBD4A180171D2A2A00396BD0 /* download_progress@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "download_progress@2x.png"; sourceTree = "<group>"; };
+		EBD4A1A6171D3FDD00396BD0 /* video_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "video_title@2x.png"; sourceTree = "<group>"; };
 		EBE799061717C9420047535A /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
 		EBE799071717C9420047535A /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
 		EBE799091717C9DF0047535A /* DatabaseObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseObject.h; sourceTree = "<group>"; };
@@ -2722,6 +2724,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBD4A1A6171D3FDD00396BD0 /* video_title@2x.png */,
 				EBD4A17F171D2A2A00396BD0 /* download_progress_bg@2x.png */,
 				EBD4A180171D2A2A00396BD0 /* download_progress@2x.png */,
 				2266A156171BCB2E0062DB95 /* expect_succeed@2x.png */,
@@ -4368,6 +4371,7 @@
 				22D3691E171D27AC00D2C6F8 /* hot_signal.png in Resources */,
 				EBD4A18D171D2A2A00396BD0 /* download_progress_bg@2x.png in Resources */,
 				EBD4A18E171D2A2A00396BD0 /* download_progress@2x.png in Resources */,
+				EBD4A1B2171D3FDD00396BD0 /* video_title@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
