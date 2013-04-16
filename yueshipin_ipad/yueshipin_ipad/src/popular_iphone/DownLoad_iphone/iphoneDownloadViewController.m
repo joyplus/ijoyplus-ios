@@ -450,8 +450,7 @@
 
     [DownLoadManager stopAndClear:itemId];
     [DatabaseManager deleteObject:item];
-    
-    
+    [[DownLoadManager defaultDownLoadManager]waringPlus];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position{

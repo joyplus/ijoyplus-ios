@@ -17,12 +17,14 @@
 #import "iphoneDownloadViewController.h"
 #import "RespForWXRootViewController.h"
 #import "CustomNavigationViewControllerPortrait.h"
+#import "CacheUtility.h"
+#import "DownLoadManager.h"
+
 @interface TabBarViewController ()
 
 @end
 
 @implementation TabBarViewController
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -66,12 +68,27 @@
         self.tabBar.selectedImageTintColor = [UIColor whiteColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentView:) name:@"push_notification" object:nil];
         
+        [self setBadgeValue];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentView:) name:@"push_notification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBadgeValue) name:@"SET_WARING_NUM" object:nil];
     }
     return self;
 }
 
+-(void)setBadgeValue{
+    int count = [DownLoadManager downloadTaskCount];
+    if (count > 0) {
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
+        
+    }
+    else{
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:nil];
+    }
+
+    
+}
 -(void)presentView:(NSNotification *)notification{
     NSDictionary *infoDic = [notification userInfo];
     NSString *type = [infoDic objectForKey:@"prod_type"];

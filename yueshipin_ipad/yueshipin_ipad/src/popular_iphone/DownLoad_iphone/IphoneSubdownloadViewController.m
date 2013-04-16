@@ -374,7 +374,7 @@
         }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
     }
-
+   [[DownLoadManager defaultDownLoadManager]waringPlus];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position{

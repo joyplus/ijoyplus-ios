@@ -130,6 +130,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
        downloadingOperation.operationStatus = @"waiting";
       [downLoadQueue_ addObject:downloadingOperation];
+    
+     [self waringPlus];
   
      [self startDownLoad];
    
@@ -237,6 +239,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         }
     }
     
+    [self waringPlus];
+    
 }
 
 -(void)startDownLoad{
@@ -267,6 +271,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         }
     [lock_ unlock];
     
+     [self waringPlus];
      [self postIsloadingBoolValue];
 }
 
@@ -285,6 +290,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([downLoadQueue_ containsObject:operation]) {
             [downLoadQueue_ removeObject:operation];
+            [self waringPlus];
         }
     
         NSRange range = [downloadId_ rangeOfString:@"_"];
@@ -580,8 +586,9 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
          [downloadOperation cancel];
        
         [downLoadQueue_ removeObject:downloadOperation];
-        //[[DownLoadManager defaultDownLoadManager] waringReduce];
+        
     }
+    [[DownLoadManager defaultDownLoadManager] waringPlus];
     [[DownLoadManager defaultDownLoadManager] startDownLoad];
    
 }
@@ -675,7 +682,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 +(int)downloadTaskCount{
     int count = 0;
     for (DownloadItem *item in [DatabaseManager allObjects:[DownloadItem class]]) {
-        if (![item.downloadStatus isEqualToString:@"finish"]&& item.downloadStatus != nil) {
+        if (![item.downloadStatus isEqualToString:@"finish"]&& ![item.downloadStatus isEqualToString:@""]) {
             count ++;
         }
     }

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #define YUEBANG     @"悦榜"
 #define YUEDAN      @"悦单"
 #define XIAZAI      @"下载"
