@@ -123,29 +123,29 @@
         _gmGridView.dataSource = self;
         _gmGridView.mainSuperView = self.view;
         
-        UIView *spaceView = [[UIView alloc]initWithFrame:CGRectMake(8, self.view.frame.size.height - 75, self.view.frame.size.width- 17, 45)];
-        spaceView.backgroundColor = [UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
+        UIView *spaceView = [[UIView alloc]initWithFrame:CGRectMake(10, self.view.frame.size.height - 75, self.view.frame.size.width- 30, 53)];
+        spaceView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:spaceView];
         
-        UIImageView *lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width, 2)];
-        lineImage.image = [[UIImage imageNamed:@"download_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
-        [spaceView addSubview:lineImage];
+        UIImageView *downalodBgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width, spaceView.frame.size.height)];
+        downalodBgImage.image = [[UIImage imageNamed:@"download_progress_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
+        [spaceView addSubview:downalodBgImage];
                
-        UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 25)];
-        diskFrame.image = [[UIImage imageNamed:@"tab2_download_2"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 5, 10, 5)];
+        UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 27)];
+        diskFrame.image = [[UIImage imageNamed:@"download_progress"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
         diskFrame.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
         [spaceView addSubview:diskFrame];
         
-        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 28, 27)];
-        diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
-        diskUsedProgress_.innerColor = [UIColor colorWithRed:100/255.0 green:165/255.0 blue:248/255.0 alpha:1];
+        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 30)];
+        diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2-1);
+        diskUsedProgress_.innerColor = CMConstants.yellowColor;
         diskUsedProgress_.outerColor = [UIColor clearColor];
         [spaceView addSubview:diskUsedProgress_];
         
         spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 25)];
         spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
         spaceInfoLabel.backgroundColor = [UIColor clearColor];
-        spaceInfoLabel.font = [UIFont systemFontOfSize:11];
+        spaceInfoLabel.font = [UIFont systemFontOfSize:12];
         spaceInfoLabel.textColor = [UIColor whiteColor];
         spaceInfoLabel.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
         [spaceView addSubview:spaceInfoLabel];

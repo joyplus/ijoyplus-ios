@@ -53,7 +53,7 @@
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 90, 453, 642)];
+    contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 90, 420, 609)];
     contentImage.image = [UIImage imageNamed:@"about_content"];
     [self.view addSubview:contentImage];
 
