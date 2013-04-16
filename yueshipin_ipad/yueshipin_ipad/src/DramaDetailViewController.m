@@ -86,6 +86,7 @@
     [self setScoreLable:nil];
     [self setReportLabel:nil];
     [self setShareLabel:nil];
+    [self setEpisodeImage:nil];
     [super viewDidUnload];
 }
 
@@ -208,10 +209,11 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, 410, 45, 20);
-    self.introImage.image = [UIImage imageNamed:@"brief_title"];
+    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
+    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
  
-    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
+//    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
+    self.introContentTextView.frame = CGRectZero;
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 1;
     self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
@@ -224,7 +226,6 @@
     
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_WIDTH + 415, self.introContentTextView.frame.origin.y + 90, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
     
@@ -250,7 +251,7 @@
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 increasePositionY = introContentHeight - 100;
-                [self repositElements];
+                [self relocateComment];
             } completion:^(BOOL finished) {
             }];
         } else {
@@ -259,7 +260,7 @@
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90, introBtn.frame.size.width, introBtn.frame.size.height);
                 increasePositionY = 0;
-                [self repositElements];
+                [self relocateComment];
             } completion:^(BOOL finished) {
                 
             }];
@@ -414,9 +415,6 @@
         [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
     }
-   
-    self.introContentTextView.textColor = CMConstants.grayColor;
-    self.introContentTextView.text = [video objectForKey:@"summary"];
     increasePositionY = 0;
     [self repositElements];
 }
@@ -571,24 +569,34 @@
         [nextBtn setHidden:YES];
         [previousBtn setHidden:YES];
     }
+    
+    UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
+    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height + 5;
+    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
+    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
+    
+    y = previousBtn.frame.origin.y + lastBtnInPage.frame.size.height + 5;
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, y, 45, 20);
+    self.introImage.image = [UIImage imageNamed:@"brief_title"];
+    
+    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
+    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, y, 430, 100);
+    self.introContentTextView.textColor = CMConstants.grayColor;
+    self.introContentTextView.text = [video objectForKey:@"summary"];
+    
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 415, self.introContentTextView.frame.origin.y + 90, 14, 9);
     [self relocateComment];
 }
 
 - (void)relocateComment
 {
-    UIButton *lastBtnInPage = (UIButton *)[episodeView viewWithTag:fmin((episodePageNumber+1) * EPISODE_NUMBER_IN_ROW * 4, totalEpisodeNumber)];
-    
-    CGFloat y = episodeView.frame.origin.y + lastBtnInPage.frame.origin.y + lastBtnInPage.frame.size.height;
+    CGFloat y = self.introContentTextView.frame.origin.y + self.introContentTextView.frame.size.height;
     [self relocateCommentWithOriginY:y];
 }
 
 - (void)relocateCommentWithOriginY:(CGFloat)y
 {
-    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
-    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
-    
-    int positionY = previousBtn.frame.origin.y + 10;
-    
+    int positionY = y + 10;    
     if(topics.count > 0){
         self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];

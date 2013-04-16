@@ -83,8 +83,8 @@
         
         doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         doneBtn.frame = editBtn.frame;
-        [doneBtn setBackgroundImage:[UIImage imageNamed:@"done"] forState:UIControlStateNormal];
-        [doneBtn setBackgroundImage:[UIImage imageNamed:@"done_pressed"] forState:UIControlStateHighlighted];
+        [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish"] forState:UIControlStateNormal];
+        [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish_pressed"] forState:UIControlStateHighlighted];
         [doneBtn addTarget:self action:@selector(doneBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [doneBtn setHidden:YES];
         [self.view addSubview:doneBtn];
