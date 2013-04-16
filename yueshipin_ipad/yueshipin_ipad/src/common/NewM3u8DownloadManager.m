@@ -132,7 +132,7 @@
                 NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
                 double segmentDuration = 0;
                 if (lastRange.length == 0) {
-                    segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                    segmentDuration = [[stringContent substringFromIndex:startRange.location+1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
                 } else if(lastRange.location - startRange.location > 1){
                     segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location+1, lastRange.location-startRange.location-1)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
                 }

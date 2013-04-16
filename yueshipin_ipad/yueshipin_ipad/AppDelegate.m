@@ -130,8 +130,8 @@
     [[UIProgressView appearance] setTrackTintColor:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.000]];
     
     [[UISwitch appearance] setOnTintColor:CMConstants.yellowColor];
-    [[UISwitch appearance] setTintColor:[UIColor colorWithRed:127/255.0 green:127/255.0 blue:127/255.0 alpha:1.000]];
-    [[UISwitch appearance] setThumbTintColor:[UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.000]];
+//    [[UISwitch appearance] setTintColor:[UIColor colorWithRed:127/255.0 green:127/255.0 blue:127/255.0 alpha:1.000]];
+//    [[UISwitch appearance] setThumbTintColor:[UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.000]];
 }
 - (void)initSinaweibo
 {

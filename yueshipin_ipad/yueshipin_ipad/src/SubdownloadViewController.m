@@ -59,7 +59,7 @@
         self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
         [self.view addSubview:self.bgImage];
         
-        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 35, 377, 30)];
+        titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH - 15, 50, 377, 30)];
         titleLabel.font = [UIFont boldSystemFontOfSize:23];
         titleLabel.backgroundColor = [UIColor clearColor];
         titleLabel.textColor = CMConstants.titleBlueColor;
@@ -393,9 +393,13 @@
             viewController.m3u8Duration = item.duration;
             viewController.closeAll = YES;
             viewController.videoUrl = filePath;
-            viewController.type = 3;
+            viewController.type = item.type;
             viewController.name = self.titleContent;
-            viewController.subname = item.name;
+            if (item.type == SHOW_TYPE) {
+                viewController.subname = item.name;
+            } else {
+                viewController.subname = item.subitemId;
+            }
             viewController.currentNum = 0;
             viewController.prodId = itemId;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
