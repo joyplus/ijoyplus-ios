@@ -131,14 +131,14 @@
         downalodBgImage.image = [[UIImage imageNamed:@"download_progress_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2, 0, 2)];
         [spaceView addSubview:downalodBgImage];
                
-        UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 27)];
+        UIImageView *diskFrame = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 28)];
         diskFrame.image = [[UIImage imageNamed:@"download_progress"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
         diskFrame.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2);
         [spaceView addSubview:diskFrame];
         
-        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 30, 30)];
-        diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2-1);
-        diskUsedProgress_.innerColor = CMConstants.yellowColor;
+        diskUsedProgress_ = [[DDProgressView alloc] initWithFrame:CGRectMake(0, 0, spaceView.frame.size.width - 26, 32)];
+        diskUsedProgress_.center = CGPointMake(spaceView.frame.size.width/2, spaceView.frame.size.height/2 - 1);
+        diskUsedProgress_.innerColor = [UIColor colorWithRed:248/255.0 green:148/255.0 blue:48/255.0 alpha:1];
         diskUsedProgress_.outerColor = [UIColor clearColor];
         [spaceView addSubview:diskUsedProgress_];
         
