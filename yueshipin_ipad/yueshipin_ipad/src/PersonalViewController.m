@@ -115,7 +115,7 @@
         avatarImageBg.image = [UIImage imageNamed:@"self_icon"];
         [self.view addSubview:avatarImageBg];
         
-        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(avatarImageBg.frame.origin.x + 7, avatarImageBg.frame.origin.y + 7, avatarImageBg.frame.size.width - 14, avatarImageBg.frame.size.height - 14)];
+        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(avatarImageBg.frame.origin.x + 5, avatarImageBg.frame.origin.y + 5, avatarImageBg.frame.size.width - 10, avatarImageBg.frame.size.height - 8)];
         [self.view addSubview:avatarImage];
         
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 130, 260, 22)];
