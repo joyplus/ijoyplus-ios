@@ -84,7 +84,8 @@
     
     NSDictionary *continuePlayInfo_;
     
-    BOOL isPlayFromRecord_; 
+    BOOL isPlayFromRecord_;
+    NSString * videoSource_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;

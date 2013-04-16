@@ -668,10 +668,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                           @"41", @"push_type",
                           userId, @"user_id",
                           workingUrl_,@"prod_url",
+                          [NSString stringWithFormat:@"%@",videoSource_],@"prod_src",
                           [NSNumber numberWithFloat:curTime],@"prod_time",
                           prodId_,@"prod_id",
                           nameStr_,@"prod_name",
                           type,@"prod_type",
+                          [NSNumber numberWithInt:0],@"prod_qua",
                           nil];
     
     [[BundingTVManager shareInstance] sendMsg:data];
@@ -1919,6 +1921,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             break;
         }
     }
+    videoSource_ = source_str;
     return [self parseLogo:source_str];
 }
 
