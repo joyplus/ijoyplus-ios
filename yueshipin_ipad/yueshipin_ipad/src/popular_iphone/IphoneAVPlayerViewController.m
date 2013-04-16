@@ -897,7 +897,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
         NSString *source_str = [temp_dic objectForKey:@"source"];
         
-        if ([source_str isEqualToString:@"letv"]) {
+        if ([source_str isEqualToString:@"letv"]||[source_str isEqualToString:@"le_fee"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
         }
         else if ([source_str isEqualToString:@"fengxing"]){
