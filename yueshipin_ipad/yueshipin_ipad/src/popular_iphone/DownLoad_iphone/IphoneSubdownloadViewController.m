@@ -157,8 +157,10 @@
         int num = [self getTagNum:itemId];
         UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         [progressView setProgress:value];
-        
         int progressValue = (int)(100*value);
+        
+        SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        subDownloadItem.percentage = progressValue;
         
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
          label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
