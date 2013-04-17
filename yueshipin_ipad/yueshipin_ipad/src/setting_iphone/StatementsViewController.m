@@ -41,13 +41,12 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.title = @"免责声明";
     UIImageView *img = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_mian_ze_sheng_ming.png"]];
-    img.frame = CGRectMake(0, 0, self.view.frame.size.width, 480);
-  
+    img.frame = CGRectMake(15, 20, 290, 602.5);
+    
     UIScrollView *scrollview = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kCurrentWindowHeight-44)];
-    [scrollview setContentSize:CGSizeMake(320, kFullWindowHeight)];
+    [scrollview setContentSize:CGSizeMake(320, 642.5)];
     [scrollview addSubview:img];
     [self.view addSubview:scrollview];
-    
 }
 
 -(void)back:(id)sender{
