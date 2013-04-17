@@ -677,6 +677,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                           nil];
     
     [[BundingTVManager shareInstance] sendMsg:data];
+    [MobClick event:KEY_PUSH_VIDEO];
     
     [self.mPlayer pause];
     playButton_.hidden = NO;

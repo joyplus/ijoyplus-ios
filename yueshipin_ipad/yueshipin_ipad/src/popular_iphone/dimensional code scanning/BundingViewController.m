@@ -112,6 +112,7 @@
                           nil];
     
     [[BundingTVManager shareInstance] sendMsg:data];
+    [MobClick event:KEY_IS_BUNDING];
     
     if (nil == HUDView)
     {
@@ -163,6 +164,8 @@
     }
     else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
     {
+        [MobClick event:KEY_BIND_SUCCESS];
+        
         [HUDView removeFromSuperview];
         
         if ([[messageDict objectForKey:@"user_id"] isEqualToString:userId])

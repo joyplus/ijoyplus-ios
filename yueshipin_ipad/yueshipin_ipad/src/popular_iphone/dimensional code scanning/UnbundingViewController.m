@@ -169,6 +169,7 @@
     timer = nil;
     [HUDView removeFromSuperview];
     //添加已绑定数据缓存
+    [MobClick event:KEY_UNBINDED];
     NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
     [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
                                              forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];

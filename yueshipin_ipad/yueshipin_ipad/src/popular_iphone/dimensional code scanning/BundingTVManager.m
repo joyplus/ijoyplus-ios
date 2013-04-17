@@ -92,6 +92,7 @@ static BundingTVManager * manager = nil;
 //        self.sendClient = fClient;
 //        [self.sendClient connectToServer];
 //    }
+    //[MobClick event:@"ue_wechat_friend_share"];
 }
 
 - (void)connecteServerWithChannel:(NSString *)channel
@@ -118,6 +119,7 @@ static BundingTVManager * manager = nil;
     //解除绑定
     if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"])
     {
+        [MobClick event:KEY_UNBINDED];
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
         //添加已绑定数据缓存
         NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];

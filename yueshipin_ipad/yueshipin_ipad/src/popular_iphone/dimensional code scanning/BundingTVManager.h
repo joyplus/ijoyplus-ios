@@ -9,7 +9,24 @@
 #import <Foundation/Foundation.h>
 #import "FayeClient.h"
 #import "ContainerUtility.h"
+#import "MobClick.h"
+
 @protocol BundingTVManagerDelegate;
+
+/*
+ ue_screencast_binded	绑定成功
+ 修改 重置
+ ue_screencast_binding	发出绑定消息
+ 修改 重置
+ ue_screencast_unbinded	解除绑定事件
+ 修改 重置
+ ue_screencast_video_push	云端推送视频
+ */
+
+#define KEY_BIND_SUCCESS        (@"ue_screencast_binded")
+#define KEY_BINDING             (@"ue_screencast_binding")
+#define KEY_UNBINDED            (@"ue_screencast_unbinded")
+#define KEY_PUSH_VIDEO          (@"ue_screencast_video_push")
 
 #define KEY_MAX_RESPOND_TIME    (5)
 
