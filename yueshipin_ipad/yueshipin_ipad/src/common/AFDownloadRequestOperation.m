@@ -53,6 +53,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 @synthesize deleteTempFileOnCancel = _deleteTempFileOnCancel;
 @synthesize progressiveDownloadProgress = _progressiveDownloadProgress;
 @synthesize totalBytesReadPerDownload, downloadingSegmentIndex;
+@synthesize isDownloadingType;
 #pragma mark - Static
 
 + (NSString *)cacheFolder {
@@ -277,11 +278,13 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 
     // track custom bytes read because totalBytesRead persists between pause/resume.
     self.totalBytesReadPerDownload += [data length];
+    NSLog(@"downloadingDelegate = %@", downloadingDelegate);
+    NSLog(@"subdownloadingDelegate = %@", subdownloadingDelegate);
     if (self.progressiveDownloadProgress) {
-        if (subdownloadingDelegate) {
-            [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
-        } else {
+        if (isDownloadingType == 1) {
             [downloadingDelegate updateProgress:operationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
+        } else if(isDownloadingType == 2){
+            [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
             
         }
         dispatch_async(dispatch_get_main_queue(), ^{

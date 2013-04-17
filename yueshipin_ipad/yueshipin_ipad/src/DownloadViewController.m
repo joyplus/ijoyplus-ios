@@ -167,14 +167,15 @@
 {
     [super viewWillAppear:animated];
     _gmGridView.editing = NO;
-    [self reloadItems];
     [AppDelegate instance].padDownloadManager.delegate = self;
+    [self reloadItems];
     [MobClick beginLogPageView:DOWNLOAD];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [AppDelegate instance].padDownloadManager.delegate = [AppDelegate instance].padDownloadManager; 
     [editBtn setHidden:NO];
     [doneBtn setHidden:YES];
     displayNoSpaceFlag = NO;
@@ -215,6 +216,7 @@
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             [AppDelegate instance].currentDownloadingNum = 0;
+            item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
             item.downloadStatus = @"done";
             item.percentage = 100;
             [DatabaseManager update:item];
@@ -231,9 +233,15 @@
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            if (progress * 100 - item.percentage > 1) {
-                item.percentage = (int)(progress*100);
+            item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+            int thisProgress = progress * 100;
+            if (thisProgress < 1 && item.percentage != 0) {
+                item.percentage = 0;
+                [DatabaseManager update:item];
+            }
+            if (thisProgress- item.percentage > 5) {
                 NSLog(@"percent in DownloadViewController= %f", progress);
+                item.percentage = thisProgress;
                 [DatabaseManager update:item];
                 [self updateDiskStorage];
             }
@@ -269,6 +277,7 @@
     }
     GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:index];
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
+    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:item.itemId.intValue + 10000000];
     UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.itemId.intValue + 20000000];
     item.percentage = (int)(progressView.progress*100);
@@ -289,7 +298,7 @@
         [DatabaseManager update:item];
     }
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-    [_gmGridView reloadData];
+    [self reloadItems];
 }
 
 - (NSInteger)numberOfItemsInGMGridView:(GMGridView *)gridView
@@ -363,7 +372,7 @@
         }
         
         if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
-            UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(5, 125, 94, 5)];
+            UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(7, 125, 90, 5)];
             progressView.progress = item.percentage/100.0;
             progressView.tag = item.itemId.intValue + 20000000;
             [cell.contentView addSubview:progressView];
@@ -383,6 +392,7 @@
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
+    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
     }

@@ -94,6 +94,15 @@
     return movieNum + subitemNum;
 }
 
++ (DownloadItem *)getDownloadingItem
+{
+    DownloadItem *downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:@"WHERE type = 1 and downloadStatus = 'start'"];
+    if (downloadingItem == nil) {
+        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:@"WHERE downloadStatus = 'start'"];
+    }
+    return downloadingItem;
+}
+
 + (BOOL)isAirPlayActive{
     CFDictionaryRef currentRouteDescriptionDictionary = nil;
     UInt32 dataSize = sizeof(currentRouteDescriptionDictionary);

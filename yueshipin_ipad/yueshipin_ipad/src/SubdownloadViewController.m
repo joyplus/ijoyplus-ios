@@ -159,6 +159,7 @@
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
             [AppDelegate instance].currentDownloadingNum = 0;
+            tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
             tempitem.percentage = 100;
             tempitem.downloadStatus  = @"done";
             [DatabaseManager update:tempitem];
@@ -175,9 +176,15 @@
     for (int i = 0; i < subitems.count; i++) {
         SubdownloadItem *tempitem = [subitems objectAtIndex:i];
         if ([tempitem.itemId isEqualToString:operationId] && [suboperationId isEqualToString:tempitem.subitemId]) {
-            if (progress * 100 - tempitem.percentage > 1) {
+            tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
+            int thisProgress = progress * 100;
+            if (thisProgress < 1 && tempitem.percentage != 0) {
+                tempitem.percentage = 0;
+                [DatabaseManager update:tempitem];
+            }
+            if (thisProgress - tempitem.percentage > 5) {
                 NSLog(@"percent in SubdownloadViewController= %f", progress);
-                tempitem.percentage = (int)(progress*100);
+                tempitem.percentage = thisProgress;
                 [DatabaseManager update:tempitem];
                 [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
             }
@@ -212,6 +219,7 @@
     }
     GMGridViewCell *cell = [_gmGridView cellForItemAtIndex:index];
     SubdownloadItem *subitem = [subitems objectAtIndex:index];
+    subitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", subitem.itemId, subitem.subitemId]];
     UILabel *progressLabel = (UILabel *)[cell.contentView viewWithTag:subitem.rowId + 10000000];
     UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:subitem.rowId + 20000000];
     subitem.percentage = (int)(progressView.progress*100);
@@ -268,7 +276,7 @@
         cell.contentView = view;
     }
     SubdownloadItem *item = [subitems objectAtIndex:index];
-    
+    item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 105, 146)];
@@ -279,7 +287,7 @@
     [contentImage setImageWithURL:[NSURL URLWithString:item.imageUrl]];
     [cell.contentView addSubview:contentImage];
     
-    UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 102, 98, 40)];
+    UILabel *bgLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x, contentImage.frame.origin.y + contentImage.frame.size.height - 40, contentImage.frame.size.width, 40)];
     bgLabel.tag = item.rowId + 30000000;
     bgLabel.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.5];
     if (![item.downloadStatus isEqualToString:@"done"]) {
@@ -310,7 +318,7 @@
     }
     
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
-        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(5, 125, 94, 2)];
+        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(7, 125, 90, 2)];
         progressView.progress = item.percentage/100.0;
         progressView.tag = item.rowId + 20000000;
         [cell.contentView addSubview:progressView];
@@ -375,6 +383,7 @@
     if(position < subitems.count){
         SubdownloadItem *item = [subitems objectAtIndex:position];
         if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
+            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
             item.downloadStatus = @"done";
             item.percentage = 100;
             [DatabaseManager update:item];

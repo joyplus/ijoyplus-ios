@@ -14,11 +14,13 @@
 @interface CacheUtility()
 
 @property (nonatomic, strong) NSCache *cache;
+@property (nonatomic, strong) NSLock *myLock;
 
 @end
 
 @implementation CacheUtility
 @synthesize cache;
+@synthesize myLock;
 
 #pragma mark - Initialization
 
@@ -36,6 +38,7 @@
     if (self) {
         self.cache = [[NSCache alloc] init];
     }
+    myLock = [[NSLock alloc]init];
     return self;
 }
 
@@ -107,11 +110,11 @@
 - (void)putInCache:(NSString *)cacheKey result:(id)result{
     NSDictionary *item = [NSDictionary dictionaryWithObjectsAndKeys:cacheKey, @"cacheKey", result, @"result", nil];
     [self performSelectorInBackground:@selector(addInCache:) withObject:item];
-    
 }
 
 - (void)addInCache:(NSDictionary *)item
 {
+    [myLock lock];
     NSString *cacheKey = [item objectForKey:@"cacheKey"];
     id result = [item objectForKey:@"result"];
     NSArray *cacheArray = [[NSUserDefaults standardUserDefaults] arrayForKey:CACHE_QUEUE];
@@ -145,6 +148,7 @@
     [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    [myLock unlock];
 }
 
 

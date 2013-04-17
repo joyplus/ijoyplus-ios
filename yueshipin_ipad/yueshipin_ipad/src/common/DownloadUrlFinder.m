@@ -52,6 +52,7 @@
     } else {
         NSLog(@"no download url");
         item.downloadStatus = @"error";
+        [DatabaseManager update:item];
     }
 }
 
