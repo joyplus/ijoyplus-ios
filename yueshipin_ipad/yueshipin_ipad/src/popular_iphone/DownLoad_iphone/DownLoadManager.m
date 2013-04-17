@@ -1258,7 +1258,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 //     NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:@"http://meta.video.qiyi.com/460/7c5df554d7d2477ab7c46d8195d670da.m3u8",@"url",@"m3u8",@"type", nil];
 //    [allUrls_ addObject:myDic];
     sendCount_ = 0;
-    [self saveDataBase];
+   // [self saveDataBase];
     [self sendHttpRequest];
 }
 
@@ -1276,62 +1276,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
 }
 
--(void)saveDataBase{
-    NSString *prodId = [downloadInfoArr_ objectAtIndex:0];
-    NSString *urlStr = [defaultUrlInfo_ objectForKey:@"url"];
-    NSString *fileName = [downloadInfoArr_ objectAtIndex:1];
-    NSString *imgUrl = [downloadInfoArr_ objectAtIndex:2];
-    NSString *type = [downloadInfoArr_ objectAtIndex:3];
-    int num = [[downloadInfoArr_ objectAtIndex:4] intValue];
-    num++;
-    NSString *fileType = [defaultUrlInfo_ objectForKey:@"type"];
-    if ([type isEqualToString:@"1"]){
-        DownloadItem *item = [[DownloadItem alloc]init];
-        item.itemId = prodId;
-        item.name = fileName;
-        item.percentage = 0;
-        item.type = 1;
-        item.url = urlStr;
-        item.imageUrl = imgUrl;
-        item.downloadStatus = @"waiting";
-        item.downloadType = fileType;
-        [DatabaseManager save:item];
-    } else {
-        //NSArray *itemArr = [DownloadItem allObjects];
-        NSArray *itemArr = [DatabaseManager allObjects:[DownloadItem class]];
-        BOOL isHave = NO;
-        for (DownloadItem *item in itemArr) {
-            if ([item.itemId isEqualToString:prodId]) {
-                isHave = YES;
-                break;
-            }
-        }
-        if (!isHave) {
-            DownloadItem *item = [[DownloadItem alloc]init];
-            item.itemId = prodId;
-            if ([fileName rangeOfString:@"_"].location != NSNotFound) {
-                item.name = [[fileName componentsSeparatedByString:@"_"] objectAtIndex:0];
-            }
-            
-            item.imageUrl = imgUrl;
-            //[item save];
-            [DatabaseManager save:item];
-        }
-        
-        SubdownloadItem *subItem = [[SubdownloadItem alloc] init];
-        subItem.itemId = prodId;
-        subItem.percentage = 0;
-        subItem.type = [type intValue];
-        subItem.url = urlStr;
-        subItem.imageUrl = imgUrl;
-        subItem.name = fileName;
-        subItem.subitemId = [NSString stringWithFormat:@"%@_%d",prodId,num];
-        subItem.downloadStatus = @"waiting";
-        subItem.downloadType = fileType;
-        [DatabaseManager save:subItem];
-    }
-
-}
 
 -(void)resetDataBase{
     NSString *prodId = [downloadInfoArr_ objectAtIndex:0];
@@ -1447,6 +1391,7 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
 
 +(void)addToCheckQueue:(CheckDownloadUrls *)check{
     [CheckDownloadUrlsQueue_ addObject:check];
+    [CheckDownloadUrlsManager saveDataBase:check];
     check.checkIndex = arc4random()%1000000;
      //check.checkDownloadUrlsDelegate = self;
     [CheckDownloadUrlsManager startCheck];
@@ -1475,5 +1420,79 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
             break;
         }
     }
+}
+
++(void)saveDataBase:(CheckDownloadUrls *)checkDownloadUrls{
+   NSDictionary *oneEsp = checkDownloadUrls.oneEsp;
+   NSDictionary *defaultUrlInfo = [CheckDownloadUrlsManager getDefaultUrlAndType:oneEsp];
+    
+    NSArray *downloadInfoArr = checkDownloadUrls.downloadInfoArr;
+    NSString *prodId = [downloadInfoArr objectAtIndex:0];
+    NSString *urlStr = [defaultUrlInfo objectForKey:@"url"];
+    NSString *fileName = [downloadInfoArr objectAtIndex:1];
+    NSString *imgUrl = [downloadInfoArr objectAtIndex:2];
+    NSString *type = [downloadInfoArr objectAtIndex:3];
+    int num = [[downloadInfoArr objectAtIndex:4] intValue];
+    num++;
+    NSString *fileType = [defaultUrlInfo objectForKey:@"type"];
+    if ([type isEqualToString:@"1"]){
+        DownloadItem *item = [[DownloadItem alloc]init];
+        item.itemId = prodId;
+        item.name = fileName;
+        item.percentage = 0;
+        item.type = 1;
+        item.url = urlStr;
+        item.imageUrl = imgUrl;
+        item.downloadStatus = @"waiting";
+        item.downloadType = fileType;
+        [DatabaseManager save:item];
+    } else {
+        NSArray *itemArr = [DatabaseManager allObjects:[DownloadItem class]];
+        BOOL isHave = NO;
+        for (DownloadItem *item in itemArr) {
+            if ([item.itemId isEqualToString:prodId]) {
+                isHave = YES;
+                break;
+            }
+        }
+        if (!isHave) {
+            DownloadItem *item = [[DownloadItem alloc]init];
+            item.itemId = prodId;
+            if ([fileName rangeOfString:@"_"].location != NSNotFound) {
+                item.name = [[fileName componentsSeparatedByString:@"_"] objectAtIndex:0];
+            }
+            
+            item.imageUrl = imgUrl;
+            [DatabaseManager save:item];
+        }
+        
+        SubdownloadItem *subItem = [[SubdownloadItem alloc] init];
+        subItem.itemId = prodId;
+        subItem.percentage = 0;
+        subItem.type = [type intValue];
+        subItem.url = urlStr;
+        subItem.imageUrl = imgUrl;
+        subItem.name = fileName;
+        subItem.subitemId = [NSString stringWithFormat:@"%@_%d",prodId,num];
+        subItem.downloadStatus = @"waiting";
+        subItem.downloadType = fileType;
+        [DatabaseManager save:subItem];
+    }
+    
+}
++(NSDictionary*)getDefaultUrlAndType:(NSDictionary *)oneDic{
+    NSArray *down_urlsArr = [oneDic objectForKey:@"down_urls"];
+    for (NSDictionary *dic in down_urlsArr) {
+        NSArray *oneSourceArr = [dic objectForKey:@"urls"];
+        for (NSDictionary *oneUrlInfo in oneSourceArr) {
+            NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+            NSString *type = [oneUrlInfo objectForKey:@"file"];
+            NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
+            return myDic;
+            
+        }
+        
+    }
+    return nil;
 }
 @end
