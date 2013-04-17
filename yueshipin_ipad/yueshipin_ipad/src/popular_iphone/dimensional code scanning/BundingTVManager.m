@@ -19,7 +19,7 @@
 static BundingTVManager * manager = nil;
 
 @implementation BundingTVManager
-@synthesize sendClient = _sendClient;
+@synthesize sendClient = _sendClient,isUserUnbind;
 
 + (BundingTVManager *)shareInstance
 {
@@ -35,6 +35,7 @@ static BundingTVManager * manager = nil;
     if ([super init])
     {
         _userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+        isUserUnbind = NO;
     }
     return self;
 }
@@ -127,7 +128,7 @@ static BundingTVManager * manager = nil;
 - (void) messageReceived:(NSDictionary *)messageDict
 {
     //解除绑定
-    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"])
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"] && !isUserUnbind)
     {
         [MobClick event:KEY_UNBINDED];
         //添加已绑定数据缓存
@@ -138,7 +139,7 @@ static BundingTVManager * manager = nil;
         
         [self showMsg:@"已断开与电视端的绑定"];
     }
-    
+    isUserUnbind = NO;
 }
 
 - (void)connectedToServer

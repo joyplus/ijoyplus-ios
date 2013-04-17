@@ -716,10 +716,10 @@
             [tempBtn addTarget:self action:@selector(imageClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:tempBtn];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, movieImage.frame.origin.y + movieImage.frame.size.height, movieImage.frame.size.width + 10, 25)];
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, movieImage.frame.origin.y + movieImage.frame.size.height, movieImage.frame.size.width + 8, 25)];
             nameLabel.center = CGPointMake(movieImage.center.x, nameLabel.center.y);
             [nameLabel setTextAlignment:NSTextAlignmentCenter];
-            [nameLabel setTextColor:[UIColor blackColor]];
+            [nameLabel setTextColor:[UIColor colorWithRed:87.0/255.0f green:87.0/255.0f blue:87.0/255.0f alpha:1]];
             [nameLabel setBackgroundColor:[UIColor clearColor]];
             [nameLabel setFont:[UIFont systemFontOfSize:13]];
             nameLabel.tag = 3011 + i;

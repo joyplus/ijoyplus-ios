@@ -43,6 +43,7 @@
     NSString   *_userId;
 }
 @property (nonatomic, strong) FayeClient *sendClient;
+@property (nonatomic) BOOL isUserUnbind;
 
 + (BundingTVManager *)shareInstance;
 - (BOOL)isConnected;

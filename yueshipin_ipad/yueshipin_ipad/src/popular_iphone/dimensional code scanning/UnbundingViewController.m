@@ -75,11 +75,7 @@
 {
     [super viewWillDisappear:animated];
     [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
-    if (timer)
-    {
-        [timer invalidate];
-        timer = nil;
-    }
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -138,7 +134,7 @@
                               nil];
         
         [[BundingTVManager shareInstance] sendMsg:data];
-        
+        [BundingTVManager shareInstance].isUserUnbind = YES;
         //添加已绑定数据缓存
         [MobClick event:KEY_UNBINDED];
         [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
@@ -173,17 +169,7 @@
 #pragma mark FayeObjc delegate
 - (void) messageReceived:(NSDictionary *)messageDict
 {
-//    [timer invalidate];
-//    timer = nil;
-//    [HUDView removeFromSuperview];
-//    //添加已绑定数据缓存
-//    [MobClick event:KEY_UNBINDED];
-//    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-//    [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
-//                                             forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
-//    
-//    [self.navigationController popViewControllerAnimated:YES];
+    
 }
 
 - (void)connectedToServer
