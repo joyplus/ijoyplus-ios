@@ -217,6 +217,7 @@
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];
         [self.downLoadManager resumeDownLoad];
         self.window.rootViewController = tabBarView;
+        [[BundingTVManager shareInstance] connecteServer];
     }
     
     [self.window makeKeyAndVisible];
@@ -233,8 +234,6 @@
     if (![statement isEqualToString:@"1"]) {
         [self showStatement];
     }
-    
-    [[BundingTVManager shareInstance] connecteServer];
     
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
     

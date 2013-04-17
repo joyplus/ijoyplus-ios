@@ -259,9 +259,9 @@
         return movieViewController;
     } else if(selectedIndex == 3){
         return dramaViewController;
-    } else if(selectedIndex == 4){
-        return showViewController;
     } else if(selectedIndex == 5){
+        return showViewController;
+    } else if(selectedIndex == 4){
         return comicViewController;
     } else if(selectedIndex == 6){
         return searchViewController;
