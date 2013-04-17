@@ -11,7 +11,7 @@
 #define FILM_DETAIL_REVIEW_FRAME(Height)    (CGRectMake(30, 80, 258, Height))
 #define FILM_DETAIL_CLOSE_BUTTON_FRAME      (CGRectMake(214, 6, 38, 38))
 #define FILM_DETAIL_TITLE_LABEL_FRAME       (CGRectMake(20, 30, 218, 30))
-#define FILM_DETAIL_CONTENT_FRAME(Height)   (CGRectMake(10, 65, 250, Height))
+#define FILM_DETAIL_CONTENT_FRAME(Height)   (CGRectMake(10, 70, 250, Height))
 
 @implementation FilmReviewDetailView
 
@@ -61,13 +61,21 @@
         detailLab.textColor = [UIColor colorWithRed:174.0/255.0 green:174.0/255.0 blue:174.0/255.0 alpha:1];
         [detailView addSubview:detailLab];
         
-        _labTitle   = [[UILabel alloc] initWithFrame:FILM_DETAIL_TITLE_LABEL_FRAME];
+        CGRect titleRect = FILM_DETAIL_TITLE_LABEL_FRAME;
+        _labTitle   = [[UILabel alloc] init];
         _labTitle.textAlignment = UITextAlignmentCenter;
-        _labTitle.font   = [UIFont boldSystemFontOfSize:14];
+        _labTitle.numberOfLines = 2;
+        _labTitle.font = [UIFont boldSystemFontOfSize:14];
         _labTitle.backgroundColor   = [UIColor clearColor];
         _labTitle.textColor   = [UIColor colorWithRed:174.0/255.0 green:174.0/255.0 blue:174.0/255.0 alpha:1];
         [detailView addSubview:_labTitle];
+        
+        CGSize size = [title sizeWithFont:[UIFont boldSystemFontOfSize:14]
+                        constrainedToSize:CGSizeMake(FILM_DETAIL_TITLE_LABEL_FRAME.size.width, CGFLOAT_MAX)];
+        titleRect.size.height = (size.width > 50) ? (50.0f) : (size.width);
+        _labTitle.frame = titleRect;
         _labTitle.text = title;
+        
         
         _viewContent = [[UITextView alloc] initWithFrame:FILM_DETAIL_CONTENT_FRAME(detailView.frame.size.height - 80)];
         _viewContent.editable = NO;
