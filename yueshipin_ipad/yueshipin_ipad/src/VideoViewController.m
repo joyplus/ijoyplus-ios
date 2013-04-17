@@ -100,7 +100,7 @@
         topCatBgImage.image = [UIImage imageNamed:@"top_category_bg"];
         [topCategoryView addSubview:topCatBgImage];
         
-        UIView *sliderView = [[UIView alloc]initWithFrame:CGRectMake(2, 3, 50, 45)];
+        UIView *sliderView = [[UIView alloc]initWithFrame:CGRectMake(0, 2, 50, 45)];
         sliderView.backgroundColor = [UIColor clearColor];
         sliderView.tag = SLIDER_VIEW_TAG;
         UIImageView *sliderImage = [[UIImageView alloc]initWithFrame:sliderView.frame];
@@ -626,7 +626,7 @@
     UIView *sliderView = [topCategoryView viewWithTag:SLIDER_VIEW_TAG];
     if (sliderView) {
         [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            sliderView.frame = CGRectMake(2 + num * 50, sliderView.frame.origin.y, sliderView.frame.size.width, sliderView.frame.size.height);
+            sliderView.frame = CGRectMake(num * 50.4, sliderView.frame.origin.y, sliderView.frame.size.width, sliderView.frame.size.height);
         } completion:^(BOOL finished) {
             
         }];
@@ -706,7 +706,7 @@
             
             UIImageView *movieImage = [[UIImageView alloc]init];
             movieImage.tag = 6011 + i;
-            movieImage.frame = CGRectMake(16 + (VIDEO_LOGO_WIDTH+22) * i, 8, VIDEO_LOGO_WIDTH-6, VIDEO_LOGO_HEIGHT-3);
+            movieImage.frame = CGRectMake(17 + (VIDEO_LOGO_WIDTH+22) * i, 10, VIDEO_LOGO_WIDTH - 8, VIDEO_LOGO_HEIGHT-8);
             [cell.contentView addSubview:movieImage];
             
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -799,11 +799,11 @@
                 [tempBtn removeFromSuperview];
             }
             
-            bgImage.frame = CGRectMake(15, VIDEO_LOGO_HEIGHT + 9, length, 30);
+            bgImage.frame = CGRectMake(15, VIDEO_LOGO_HEIGHT + 5, length, 30);
         }
         else
         {
-            bgImage.frame = CGRectMake(15, VIDEO_LOGO_HEIGHT + 9, (VIDEO_LOGO_WIDTH) * 6 + 7, 30);
+            bgImage.frame = CGRectMake(15, VIDEO_LOGO_HEIGHT + 5, (VIDEO_LOGO_WIDTH) * 6 + 7, 30);
         }
         
     }

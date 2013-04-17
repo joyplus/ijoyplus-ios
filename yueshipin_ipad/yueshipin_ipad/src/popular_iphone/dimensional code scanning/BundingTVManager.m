@@ -66,7 +66,7 @@ static BundingTVManager * manager = nil;
     }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                @"ijoyplus_ios_001bj",KEY_APP,
+                                //@"ijoyplus_ios_001bj",KEY_APP,
                                 sendChannel,KEY_CHANNEL,
                                 _userId,KEY_USER, nil];
     [[AFServiceAPIClient sharedClient] getPath:KPathCheckBinding
