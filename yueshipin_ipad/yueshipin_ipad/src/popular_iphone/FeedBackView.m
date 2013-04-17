@@ -77,10 +77,18 @@
 
 - (void)customView
 {
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTaped)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [self addGestureRecognizer:tapGesture];
+//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTaped)];
+//    tapGesture.numberOfTapsRequired = 1;
+//    tapGesture.numberOfTouchesRequired = 1;
+//    [self addGestureRecognizer:tapGesture];
+    
+    UIButton * bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [bgBtn setFrame:CGRectMake(0, 0, self.frame.size.width,self.frame.size.height)];
+    bgBtn.backgroundColor = [UIColor clearColor];
+    [bgBtn addTarget:self
+              action:@selector(backgroundTaped)
+    forControlEvents:UIControlEventTouchDown];
+    [self addSubview:bgBtn];
     
     UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(10, 85, 295, 376)];
     feedback.backgroundColor = [UIColor clearColor];
@@ -326,7 +334,7 @@
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     
     CGRect rect = [self viewWithTag:FEEDBACK_VEWI_TAG].frame;
-    rect.origin.y = 0;
+    rect.origin.y = -75;
     [self viewWithTag:FEEDBACK_VEWI_TAG].frame = rect;
     [UIView commitAnimations];
 
@@ -380,7 +388,7 @@
         selectBtn.adjustsImageWhenHighlighted = NO;
     }
      selectBtn.tag = indexPath.row;
-    
+    cell.clipsToBounds = YES;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = [_arrFeedBackOption objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont fontWithName:@"ArialMT" size:12];
