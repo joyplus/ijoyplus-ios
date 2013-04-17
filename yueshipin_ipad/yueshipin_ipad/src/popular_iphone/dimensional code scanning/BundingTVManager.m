@@ -7,7 +7,7 @@
 //
 
 #import "BundingTVManager.h"
-#import "AFServiceAPIClient.h"
+#import "AFCheckBindAPIClient.h"
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
 
@@ -57,19 +57,19 @@ static BundingTVManager * manager = nil;
 {
     NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
     
-    NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
-    
-    if (nil == sendChannel)
+    if (nil == data)
     {
         //无绑定记录
         return;
     }
     
+    NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 //@"ijoyplus_ios_001bj",KEY_APP,
                                 sendChannel,KEY_CHANNEL,
                                 _userId,KEY_USER, nil];
-    [[AFServiceAPIClient sharedClient] getPath:KPathCheckBinding
+    [[AFCheckBindAPIClient sharedClient] getPath:KPathCheckBinding
                                     parameters:parameters
                                        success:^(AFHTTPRequestOperation *operation, id result) {
                                             //TV与移动终端绑定

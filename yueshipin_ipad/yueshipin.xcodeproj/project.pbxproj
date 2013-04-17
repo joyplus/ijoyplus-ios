@@ -124,6 +124,7 @@
 		22513492171138620002886B /* ReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22513491171138620002886B /* ReviewViewController.m */; };
 		22558007171E88E5002385D1 /* xiangkan_bg_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 22558005171E88E4002385D1 /* xiangkan_bg_pressed.png */; };
 		22558008171E88E5002385D1 /* xiangkan_bg_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22558006171E88E5002385D1 /* xiangkan_bg_pressed@2x.png */; };
+		2255800B171EC6BB002385D1 /* AFCheckBindAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2255800A171EC6BB002385D1 /* AFCheckBindAPIClient.m */; };
 		2257DB8C1717F05E001D5D61 /* subcategory_bg_line@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2257DB8B1717F05E001D5D61 /* subcategory_bg_line@2x.png */; };
 		2257DB8F17180AEA001D5D61 /* xiangkan_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2257DB8D17180AEA001D5D61 /* xiangkan_pressed@2x.png */; };
 		2257DB9017180AEA001D5D61 /* xiangkan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2257DB8E17180AEA001D5D61 /* xiangkan@2x.png */; };
@@ -1079,6 +1080,8 @@
 		22513491171138620002886B /* ReviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReviewViewController.m; sourceTree = "<group>"; };
 		22558005171E88E4002385D1 /* xiangkan_bg_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan_bg_pressed.png; sourceTree = "<group>"; };
 		22558006171E88E5002385D1 /* xiangkan_bg_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xiangkan_bg_pressed@2x.png"; sourceTree = "<group>"; };
+		22558009171EC6BB002385D1 /* AFCheckBindAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFCheckBindAPIClient.h; sourceTree = "<group>"; };
+		2255800A171EC6BB002385D1 /* AFCheckBindAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFCheckBindAPIClient.m; sourceTree = "<group>"; };
 		2257DB8B1717F05E001D5D61 /* subcategory_bg_line@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "subcategory_bg_line@2x.png"; sourceTree = "<group>"; };
 		2257DB8D17180AEA001D5D61 /* xiangkan_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xiangkan_pressed@2x.png"; sourceTree = "<group>"; };
 		2257DB8E17180AEA001D5D61 /* xiangkan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "xiangkan@2x.png"; sourceTree = "<group>"; };
@@ -3463,6 +3466,8 @@
 			children = (
 				EBBA00FB1664BC510069FE7E /* AFSinaWeiboAPIClient.h */,
 				EBBA00FC1664BC510069FE7E /* AFSinaWeiboAPIClient.m */,
+				22558009171EC6BB002385D1 /* AFCheckBindAPIClient.h */,
+				2255800A171EC6BB002385D1 /* AFCheckBindAPIClient.m */,
 				EBBA00FD1664BC510069FE7E /* UIImage+AlphaAdditions.h */,
 				EBBA00FE1664BC510069FE7E /* UIImage+AlphaAdditions.m */,
 				EBBA00FF1664BC510069FE7E /* UIImage+ResizeAdditions.h */,
@@ -4639,6 +4644,7 @@
 				2266A218171C1DB30062DB95 /* ZTWebSocket.m in Sources */,
 				E73462A4171CEC5000EC5DCE /* IntroductionView.m in Sources */,
 				22D36927171D439300D2C6F8 /* BundingTVManager.m in Sources */,
+				2255800B171EC6BB002385D1 /* AFCheckBindAPIClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
