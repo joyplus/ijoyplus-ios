@@ -475,19 +475,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         {
             if (pItem.playbackBufferEmpty)
             {
-                //NSLog(@"Buffer Empty");
+                NSLog(@"Buffer Empty");
+                [self showActivityView];
             }
             else
             {
-                //NSLog(@"Not Empty");
+                NSLog(@"Not Empty");
             }
+            
         }
         else if (k_ToKeepUp == path)
         {
             if (pItem.playbackLikelyToKeepUp)
             {
                 [self dismissActivityView];
-                //NSLog(@"KeepUp, dismiss waitting view");
+                NSLog(@"KeepUp, dismiss waitting view");
                 BOOL isPlaying = [self isPlaying];
                 BOOL isHidden = playButton_.hidden;
                 if (!isPlaying && isHidden)
@@ -500,7 +502,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             {
                 if (![self isPlaying])
                 {
-                    //NSLog(@"Not KeepUp, show waitting view");
+                    NSLog(@"Not KeepUp, show waitting view");
                     [self showActivityView];
                 }
             }

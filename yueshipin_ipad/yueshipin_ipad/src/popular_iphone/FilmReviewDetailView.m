@@ -83,7 +83,7 @@
         _viewContent.text = [NSString stringWithFormat:@"%@",content];
         [_viewContent setBackgroundColor:[UIColor clearColor]];
         _viewContent.textColor = [UIColor colorWithRed:132.0/255.0 green:132.0/255.0 blue:132.0/255.0 alpha:1];
-        _viewContent.font = [UIFont systemFontOfSize:10];
+        _viewContent.font = [UIFont systemFontOfSize:12];
         
         for (UIGestureRecognizer * gRec in _viewContent.gestureRecognizers)
         {
