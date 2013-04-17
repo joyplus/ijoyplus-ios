@@ -77,7 +77,6 @@
     [self setCommentImage:nil];
     [self setDingNumberImage:nil];
     [self setCollectioNumber:nil];
-    [self setPlayRoundBtn:nil];
     [self setDingNumberLabel:nil];
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
@@ -121,12 +120,6 @@
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
     
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
-    
-    self.playRoundBtn.frame = CGRectMake(0, 0, 91, 91);
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
-    [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
-    self.playRoundBtn.center = self.filmImage.center;
     
     self.titleLabel.frame = CGRectMake(268, 85, 210, 20);
     self.titleLabel.font = CMConstants.titleFont;
@@ -212,7 +205,7 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
+    self.episodeImage.frame = CGRectZero;
     self.episodeImage.image = [UIImage imageNamed:@"video_title"];
     
     self.episodeViewBg.frame = CGRectZero;
@@ -481,6 +474,7 @@
         changed = YES;
     }
     totalEpisodeNumber = episodeArray.count;
+    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
     episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (44+10) + 10);
     self.episodeViewBg.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, episodeView.frame.size.width, episodeView.frame.size.height);
     episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);

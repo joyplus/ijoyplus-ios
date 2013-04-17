@@ -219,7 +219,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{361, 184}, {297, 21}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
-								<reference key="NSNextKeyView" ref="568387778"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -469,29 +469,6 @@
 								<reference key="IBUIFont" ref="1015669777"/>
 								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							</object>
-							<object class="IBUIButton" id="568387778">
-								<reference key="NSNextResponder" ref="163951952"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{122, 231}, {73, 44}}</string>
-								<reference key="NSSuperview" ref="163951952"/>
-								<reference key="NSNextKeyView" ref="471544401"/>
-								<string key="NSReuseIdentifierKey">_NS:9</string>
-								<bool key="IBUIOpaque">NO</bool>
-								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<int key="IBUIContentHorizontalAlignment">0</int>
-								<int key="IBUIContentVerticalAlignment">0</int>
-								<reference key="IBUIHighlightedTitleColor" ref="214439271"/>
-								<object class="NSColor" key="IBUINormalTitleColor">
-									<int key="NSColorSpace">1</int>
-									<bytes key="NSRGB">MC4xOTYwNzg0MzE0IDAuMzA5ODAzOTIxNiAwLjUyMTU2ODYyNzUAA</bytes>
-								</object>
-								<reference key="IBUINormalTitleShadowColor" ref="858057724"/>
-								<object class="IBUIFontDescription" key="IBUIFontDescription" id="745871732">
-									<int key="type">2</int>
-									<int key="size">2</int>
-								</object>
-								<reference key="IBUIFont" ref="48361716"/>
-							</object>
 							<object class="IBUILabel" id="284358067">
 								<reference key="NSNextResponder" ref="163951952"/>
 								<int key="NSvFlags">292</int>
@@ -647,7 +624,6 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{294, 68}, {64, 21}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -689,7 +665,10 @@
 							<bytes key="NSRGB">MC4xOTYwNzg0MzE0IDAuMzA5ODAzOTIxNiAwLjUyMTU2ODYyNzUAA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="858057724"/>
-						<reference key="IBUIFontDescription" ref="745871732"/>
+						<object class="IBUIFontDescription" key="IBUIFontDescription">
+							<int key="type">2</int>
+							<int key="size">2</int>
+						</object>
 						<reference key="IBUIFont" ref="48361716"/>
 					</object>
 				</array>
@@ -906,14 +885,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">playRoundBtn</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="568387778"/>
-					</object>
-					<int key="connectionID">2021</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dingNumberLabel</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="284358067"/>
@@ -1047,7 +1018,6 @@
 							<reference ref="779434329"/>
 							<reference ref="933452542"/>
 							<reference ref="281693807"/>
-							<reference ref="568387778"/>
 						</array>
 						<reference key="parent" ref="766721923"/>
 					</object>
@@ -1177,11 +1147,6 @@
 						<reference key="parent" ref="163951952"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">2020</int>
-						<reference key="object" ref="568387778"/>
-						<reference key="parent" ref="163951952"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">2022</int>
 						<reference key="object" ref="284358067"/>
 						<reference key="parent" ref="163951952"/>
@@ -1249,7 +1214,6 @@
 				<string key="171.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="198.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="2020.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2022.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2023.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2028.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

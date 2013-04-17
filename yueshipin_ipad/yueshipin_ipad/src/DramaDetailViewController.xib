@@ -457,27 +457,6 @@
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 							</object>
-							<object class="IBUIButton" id="568387778">
-								<reference key="NSNextResponder" ref="163951952"/>
-								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{311, 542}, {73, 44}}</string>
-								<reference key="NSSuperview" ref="163951952"/>
-								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="725471059"/>
-								<string key="NSReuseIdentifierKey">_NS:9</string>
-								<bool key="IBUIOpaque">NO</bool>
-								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
-								<int key="IBUIContentHorizontalAlignment">0</int>
-								<int key="IBUIContentVerticalAlignment">0</int>
-								<reference key="IBUIHighlightedTitleColor" ref="214439271"/>
-								<object class="NSColor" key="IBUINormalTitleColor">
-									<int key="NSColorSpace">1</int>
-									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
-								</object>
-								<reference key="IBUINormalTitleShadowColor" ref="858057724"/>
-								<reference key="IBUIFontDescription" ref="185923520"/>
-								<reference key="IBUIFont" ref="575809456"/>
-							</object>
 							<object class="IBUILabel" id="284358067">
 								<reference key="NSNextResponder" ref="163951952"/>
 								<int key="NSvFlags">292</int>
@@ -546,7 +525,7 @@
 								<string key="NSFrame">{{288, 570}, {73, 44}}</string>
 								<reference key="NSSuperview" ref="163951952"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="568387778"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBIPadFramework</string>
@@ -887,14 +866,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">playRoundBtn</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="568387778"/>
-					</object>
-					<int key="connectionID">2021</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">dingNumberLabel</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="284358067"/>
@@ -1035,7 +1006,6 @@
 							<reference ref="519895780"/>
 							<reference ref="284358067"/>
 							<reference ref="873855402"/>
-							<reference ref="568387778"/>
 							<reference ref="444360924"/>
 							<reference ref="1072307691"/>
 							<reference ref="862628934"/>
@@ -1171,11 +1141,6 @@
 						<reference key="parent" ref="163951952"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">2020</int>
-						<reference key="object" ref="568387778"/>
-						<reference key="parent" ref="163951952"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">2022</int>
 						<reference key="object" ref="284358067"/>
 						<reference key="parent" ref="163951952"/>
@@ -1245,7 +1210,6 @@
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2015.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2016.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="2020.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2022.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2023.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2028.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>

@@ -38,8 +38,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *dingNumberLabel;
 @property (weak, nonatomic) IBOutlet UILabel *collectionNumberLabel;
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
-
-@property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
 @property (weak, nonatomic) IBOutlet UIButton *downloadBtn;
 @property (strong, nonatomic) UIButton *expectbtn;
 

@@ -43,9 +43,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *reportLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shareLabel;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLable;
-
-@property (weak, nonatomic) IBOutlet UIButton *playRoundBtn;
-
 @property (weak, nonatomic) IBOutlet UIButton *downloadBtn;
 @property (strong, nonatomic) UIButton *expectbtn;
 

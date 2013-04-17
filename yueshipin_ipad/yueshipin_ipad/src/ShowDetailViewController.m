@@ -59,7 +59,6 @@
     [self setCommentImage:nil];
     [self setDingNumberImage:nil];
     [self setCollectioNumber:nil];
-    [self setPlayRoundBtn:nil];
     [self setDingNumberLabel:nil];
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
@@ -100,13 +99,6 @@
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
     
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
-    
-    self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
-    [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.playRoundBtn.center = self.filmImage.center;
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
