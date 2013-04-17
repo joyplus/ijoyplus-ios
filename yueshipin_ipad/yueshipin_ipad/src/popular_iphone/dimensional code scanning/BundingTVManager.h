@@ -11,7 +11,7 @@
 #import "ContainerUtility.h"
 @protocol BundingTVManagerDelegate;
 
-#define KEY_MAX_RESPOND_TIME    (6.0)
+#define KEY_MAX_RESPOND_TIME    (5)
 
 #define KEY_MACADDRESS      (@"macAddress")
 #define KEY_IS_BUNDING      (@"isBunding")

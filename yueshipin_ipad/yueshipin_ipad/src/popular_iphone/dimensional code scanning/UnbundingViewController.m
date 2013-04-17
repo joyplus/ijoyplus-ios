@@ -75,6 +75,11 @@
 {
     [super viewWillDisappear:animated];
     [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
+    if (timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,12 +90,6 @@
 
 - (void)back
 {
-    if (timer)
-    {
-        [timer invalidate];
-        timer = nil;
-    }
-    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -151,13 +150,13 @@
             HUDView.opacity = 0;
         }
         [HUDView show:YES];
-        [self.view addSubview:HUDView];
+        [[AppDelegate instance].tabBarView.view addSubview:HUDView];
         
-        timer = [NSTimer timerWithTimeInterval:KEY_MAX_RESPOND_TIME
-                                        target:self
-                                      selector:@selector(dismissHUDView)
-                                      userInfo:nil
-                                       repeats:NO];
+        timer = [NSTimer scheduledTimerWithTimeInterval:KEY_MAX_RESPOND_TIME
+                                                 target:self
+                                               selector:@selector(dismissHUDView)
+                                               userInfo:nil
+                                                repeats:NO];
     }
          
 }

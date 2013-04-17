@@ -84,6 +84,11 @@
 {
     [super viewWillDisappear:animated];
     [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
+    if (timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -94,12 +99,6 @@
 
 - (void)back
 {
-    if (timer)
-    {
-        [timer invalidate];
-        timer = nil;
-    }
-    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -116,22 +115,21 @@
     
     if (nil == HUDView)
     {
-        HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-        HUDView.center = self.view.center;
-        HUDView.backgroundColor = [UIColor clearColor];
-        HUDView.userInteractionEnabled = NO;
+        HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kFullWindowHeight)];
+        HUDView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.5];
         HUDView.labelText = @"绑定中...";
-        HUDView.labelFont = [UIFont systemFontOfSize:12];
+        HUDView.labelFont = [UIFont systemFontOfSize:15];
         HUDView.opacity = 0;
+        HUDView.userInteractionEnabled = YES;
     }
     [HUDView show:YES];
-    [self.view addSubview:HUDView];
+    [[AppDelegate instance].tabBarView.view addSubview:HUDView];
     
-    timer = [NSTimer timerWithTimeInterval:KEY_MAX_RESPOND_TIME
-                                    target:self
-                                  selector:@selector(dismissHUDView)
-                                  userInfo:nil
-                                   repeats:NO];
+    timer = [NSTimer scheduledTimerWithTimeInterval:KEY_MAX_RESPOND_TIME
+                                             target:self
+                                           selector:@selector(dismissHUDView)
+                                           userInfo:nil
+                                            repeats:NO];
 }
 
 - (void)unbundingBtnClick
@@ -165,8 +163,6 @@
     }
     else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
     {
-        [timer invalidate];
-        timer = nil;
         [HUDView removeFromSuperview];
         
         if ([[messageDict objectForKey:@"user_id"] isEqualToString:userId])
@@ -200,6 +196,15 @@
 }
 
 - (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
+{
+    
+}
+
+- (void)subscriptionFailedWithError:(NSString *)error
+{
+    
+}
+- (void)subscribedToChannel:(NSString *)channel
 {
     
 }

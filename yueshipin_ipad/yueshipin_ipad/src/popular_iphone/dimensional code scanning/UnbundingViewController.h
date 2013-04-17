@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "BundingTVManager.h"
+#import "AppDelegate.h"
+
 @class MBProgressHUD;
 @interface UnbundingViewController : UIViewController <UIAlertViewDelegate,FayeClientDelegate>
 {
