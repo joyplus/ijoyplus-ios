@@ -141,7 +141,7 @@
         pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
         
         if (_refreshHeaderView == nil) {
-            EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
+            EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, 529 - 18, table.bounds.size.height)];
             view.backgroundColor = [UIColor clearColor];
             view.delegate = self;
             [table addSubview:view];
