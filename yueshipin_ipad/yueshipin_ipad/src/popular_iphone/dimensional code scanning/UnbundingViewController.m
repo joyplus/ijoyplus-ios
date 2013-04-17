@@ -139,24 +139,32 @@
         
         [[BundingTVManager shareInstance] sendMsg:data];
         
-        if (nil == HUDView)
-        {
-            HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
-            HUDView.center = self.view.center;
-            HUDView.backgroundColor = [UIColor clearColor];
-            HUDView.userInteractionEnabled = NO;
-            HUDView.labelText = @"绑定中...";
-            HUDView.labelFont = [UIFont systemFontOfSize:12];
-            HUDView.opacity = 0;
-        }
-        [HUDView show:YES];
-        [[AppDelegate instance].tabBarView.view addSubview:HUDView];
+        //添加已绑定数据缓存
+        [MobClick event:KEY_UNBINDED];
+        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
         
-        timer = [NSTimer scheduledTimerWithTimeInterval:KEY_MAX_RESPOND_TIME
-                                                 target:self
-                                               selector:@selector(dismissHUDView)
-                                               userInfo:nil
-                                                repeats:NO];
+        [self.navigationController popViewControllerAnimated:YES];
+        
+//        if (nil == HUDView)
+//        {
+//            HUDView = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, kFullWindowHeight)];
+//            HUDView.center = self.view.center;
+//            HUDView.backgroundColor = [UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:0.5];
+//            HUDView.userInteractionEnabled = YES;
+//            HUDView.labelText = @"绑定中...";
+//            HUDView.labelFont = [UIFont systemFontOfSize:12];
+//            HUDView.opacity = 0;
+//        }
+//        [HUDView show:YES];
+//        [[AppDelegate instance].tabBarView.view addSubview:HUDView];
+//        
+//        timer = [NSTimer scheduledTimerWithTimeInterval:KEY_MAX_RESPOND_TIME
+//                                                 target:self
+//                                               selector:@selector(dismissHUDView)
+//                                               userInfo:nil
+//                                                repeats:NO];
     }
          
 }
@@ -165,17 +173,17 @@
 #pragma mark FayeObjc delegate
 - (void) messageReceived:(NSDictionary *)messageDict
 {
-    [timer invalidate];
-    timer = nil;
-    [HUDView removeFromSuperview];
-    //添加已绑定数据缓存
-    [MobClick event:KEY_UNBINDED];
-    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-    [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
-                                             forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
-    
-    [self.navigationController popViewControllerAnimated:YES];
+//    [timer invalidate];
+//    timer = nil;
+//    [HUDView removeFromSuperview];
+//    //添加已绑定数据缓存
+//    [MobClick event:KEY_UNBINDED];
+//    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+//    [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+//                                             forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+//    
+//    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)connectedToServer
