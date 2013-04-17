@@ -69,14 +69,12 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     NSString *filePath = nil;
     if ([type isEqualToString:@"1"]){
         NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId];
-       //// NSArray *arr = [DownloadItem findByCriteria:query];
         NSArray *arr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
         if ([arr count] > 0) {
             DownloadItem *downloadItem = [arr objectAtIndex:0];
             downloadItem.url = urlStr;
             downloadItem.downloadType = fileType;
             downloadItem.downloadStatus = @"waiting";
-            ////[downloadItem save];
             [DatabaseManager update:downloadItem];
             
         }
@@ -240,6 +238,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
     
     [self waringPlus];
+    [self postIsloadingBoolValue];
     
 }
 
@@ -781,6 +780,13 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         [self saveDataBaseIntable:@"SubdownloadItem" withId:itemId withStatus:@"fail" withPercentage:-1];
         [self.downLoadMGdelegate downloadFailedwithId:itemId inClass:@"IphoneSubdownloadViewController"];
     }
+    for (AFDownloadRequestOperation *af  in downLoadQueue_) {
+        if ([af.operationId isEqualToString:itemId]) {
+            [self downloadFail:af];
+            break;
+        }
+    }
+   
    [self startDownLoad];
 }
 -(void)M3u8DownLoadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
@@ -977,7 +983,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 -(void)startDownloadM3u8file:(NSArray *)urlArr withId:(NSString *)idStr withNum:(NSString *)num{
     NSArray *infoArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
-    //[self performSelectorInBackground:@selector(beginDownloadM3u8file:) withObject:infoArr];
     [self performSelector:@selector(beginDownloadM3u8file:) withObject:infoArr];
 }
 
@@ -1080,21 +1085,21 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             [operation cancel];
             [downloadOperationQueue_ cancelAllOperations];
             
-            //            if (retryCount_ <= 3) {
-            //                NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
-            //                [self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
-            //            }
-            
-            if (range.location == NSNotFound){
-                
-                [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneDownloadViewController"];
-                
-            }
-            else{
-                [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneSubdownloadViewController"];
-                
-            }
-         
+//            if (retryCount_ <= 3) {
+//                NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
+//                [self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
+//            }
+//            else{
+                if (range.location == NSNotFound){
+                    
+                    [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneDownloadViewController"];
+                    
+                }
+                else{
+                    [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneSubdownloadViewController"];
+                    
+                }
+           // }
             
         }];
         [segmentDownloadingOp setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
@@ -1163,6 +1168,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 @synthesize allUrls = allUrls_;
 @synthesize currentConnection = currentConnection_;
 @synthesize oneEsp = oneEsp_;
+@synthesize defaultUrlInfo = defaultUrlInfo_;
 -(void)checkDownloadUrls{
     NSDictionary *infoDic = oneEsp_;
     allUrls_ = [[NSMutableArray alloc] initWithCapacity:5];
@@ -1188,7 +1194,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
    [allUrls_ addObjectsFromArray:mp4UrlsArr];
    [allUrls_ addObjectsFromArray:m3u8UrlsArr];
-    
+    defaultUrlInfo_ = [allUrls_ objectAtIndex:0];
 //     NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:@"http://meta.video.qiyi.com/460/7c5df554d7d2477ab7c46d8195d670da.m3u8",@"url",@"m3u8",@"type", nil];
 //    [allUrls_ addObject:myDic];
     sendCount_ = 0;
@@ -1212,13 +1218,13 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 -(void)saveDataBase{
     NSString *prodId = [downloadInfoArr_ objectAtIndex:0];
-    NSString *urlStr = @"";
+    NSString *urlStr = [defaultUrlInfo_ objectForKey:@"url"];
     NSString *fileName = [downloadInfoArr_ objectAtIndex:1];
     NSString *imgUrl = [downloadInfoArr_ objectAtIndex:2];
     NSString *type = [downloadInfoArr_ objectAtIndex:3];
     int num = [[downloadInfoArr_ objectAtIndex:4] intValue];
     num++;
-    NSString *fileType = @"";
+    NSString *fileType = [defaultUrlInfo_ objectForKey:@"type"];
     if ([type isEqualToString:@"1"]){
         DownloadItem *item = [[DownloadItem alloc]init];
         item.itemId = prodId;
@@ -1229,7 +1235,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         item.imageUrl = imgUrl;
         item.downloadStatus = @"waiting";
         item.downloadType = fileType;
-        //[item save];
         [DatabaseManager save:item];
     } else {
         //NSArray *itemArr = [DownloadItem allObjects];
@@ -1263,10 +1268,9 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         subItem.subitemId = [NSString stringWithFormat:@"%@_%d",prodId,num];
         subItem.downloadStatus = @"waiting";
         subItem.downloadType = fileType;
-        //[subItem save];
         [DatabaseManager save:subItem];
     }
-      //[[DownLoadManager defaultDownLoadManager] waringPlus];
+
 }
 
 -(void)resetDataBase{

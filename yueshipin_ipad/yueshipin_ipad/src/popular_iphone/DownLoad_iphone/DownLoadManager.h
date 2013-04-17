@@ -112,6 +112,7 @@
     NSMutableArray *allUrls_;
     NSURLConnection *currentConnection_;
     NSDictionary *oneEsp_;
+    NSDictionary *defaultUrlInfo_;
 }
 @property (nonatomic, weak) id <CheckDownloadUrlsDelegate> checkDownloadUrlsDelegate;
 @property (nonatomic, strong) NSArray *downloadInfoArr;
@@ -120,6 +121,7 @@
 @property (nonatomic, strong) NSURLConnection *currentConnection;
 @property (nonatomic, strong) NSDictionary *oneEsp;
 @property (nonatomic, assign) int checkIndex;
+@property (nonatomic, strong)  NSDictionary *defaultUrlInfo;
 -(void)checkDownloadUrls;
 @end
 

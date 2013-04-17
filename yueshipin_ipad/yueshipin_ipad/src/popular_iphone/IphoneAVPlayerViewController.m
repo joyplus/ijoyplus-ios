@@ -1682,11 +1682,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         case FULL_SCREEN_TAG:{
             
-            UIViewController *vc = [[UIViewController alloc] init];
-            [self presentModalViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:vc] animated:YES];
-           
-            return;
-            
             if([((AVPlayerLayer *)[avplayerView_ layer]).videoGravity isEqualToString:AVLayerVideoGravityResizeAspect]){
                 [btn setBackgroundImage:[UIImage imageNamed:@"iphone_reduce_bt"] forState:UIControlStateNormal];
                 [btn setBackgroundImage:[UIImage imageNamed:@"iphone_reduce_bt_pressed"] forState:UIControlStateHighlighted];
