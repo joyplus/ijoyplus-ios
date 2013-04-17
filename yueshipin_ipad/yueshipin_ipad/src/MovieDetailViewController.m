@@ -149,13 +149,13 @@
     self.expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
     [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg.png"] forState:UIControlStateNormal];
-    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg.png"] forState:UIControlStateHighlighted];
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg_pressed.png"] forState:UIControlStateHighlighted];
     [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
     [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
     [self.expectbtn setImageEdgeInsets:UIEdgeInsetsMake(17, 10, 17, 35)];
     [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
     self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
-    [self.expectbtn setTitleColor:[UIColor colorWithRed:120.0/255.0 green:120.0/255.0 blue:120.0/255.0 alpha:1] forState:UIControlStateHighlighted];
+    [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:self.expectbtn];
