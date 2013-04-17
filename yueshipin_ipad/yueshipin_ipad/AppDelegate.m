@@ -347,7 +347,8 @@
 {
     Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
     if([myhostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.rootViewController.view];
+         UIView *rootView = self.window.rootViewController.view;
+         [UIUtility showNetWorkError:rootView];
     };
     
     if (application.applicationIconBadgeNumber != 0) {

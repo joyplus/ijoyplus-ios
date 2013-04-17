@@ -329,18 +329,18 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             retryTimer_ = nil;
         }
         else{
-            retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
+            retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
             
         }
 
         
-        if (retryCount_ <= 3) {
+        if (retryCount_ <= 6) {
             if (retryTimer_ != nil) {
                 [retryTimer_ invalidate];
                 retryTimer_ = nil;
             }
             else{
-                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
+                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
             
              }
        }
@@ -1130,7 +1130,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             [operation cancel];
             [downloadOperationQueue_ cancelAllOperations];
             
-            if (retryCount_ <= 3) {
+            if (retryCount_ <= 6) {
                 NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
                 if (retryTimer_ != nil) {
                     [retryTimer_ invalidate];
