@@ -63,7 +63,6 @@
         
         CGRect titleRect = FILM_DETAIL_TITLE_LABEL_FRAME;
         _labTitle   = [[UILabel alloc] init];
-        _labTitle.textAlignment = UITextAlignmentCenter;
         _labTitle.numberOfLines = 2;
         _labTitle.font = [UIFont boldSystemFontOfSize:14];
         _labTitle.backgroundColor   = [UIColor clearColor];

@@ -294,20 +294,24 @@
         [cell.contentView addSubview:bgLabel];
     }
     
-    UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectMake(3, 100, 98, 25)];
+    UILabel *progressLabel = [[UILabel alloc]initWithFrame:CGRectZero];
     progressLabel.tag = item.rowId + 10000000;
     progressLabel.backgroundColor = [UIColor clearColor];
     progressLabel.font = [UIFont boldSystemFontOfSize:13];
     progressLabel.textColor = [UIColor whiteColor];
     if([item.downloadStatus isEqualToString:@"start"]){
+        progressLabel.frame = CGRectMake(3, 100, 98, 25);
         progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", item.percentage];
     } else if([item.downloadStatus isEqualToString:@"stop"]){
+        progressLabel.frame = CGRectMake(3, 100, 98, 25);
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
     } else if([item.downloadStatus isEqualToString:@"done"]){
 //        progressLabel.text = @"下载完成";
     } else if([item.downloadStatus isEqualToString:@"waiting"]){
+        progressLabel.frame = CGRectMake(3, 100, 98, 25);
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
     } else if([item.downloadStatus isEqualToString:@"error"]){
+        progressLabel.frame = CGRectMake(3, 107, 98, 25);
         progressLabel.text = @"下载片源失效";
     } 
     progressLabel.textAlignment = NSTextAlignmentCenter;

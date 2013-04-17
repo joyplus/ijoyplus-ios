@@ -61,7 +61,6 @@
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont boldSystemFontOfSize:16];
     titleLabel.numberOfLines = 2;
-    titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.textColor = CMConstants.grayColor;
     [self.view addSubview:titleLabel];
     
