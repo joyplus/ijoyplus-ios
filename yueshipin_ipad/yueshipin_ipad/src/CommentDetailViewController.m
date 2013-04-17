@@ -57,9 +57,11 @@
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:closeBtn];
     
-    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 20, 220, 40)];
+    titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(75, 10, 220, 60)];
     titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont boldSystemFontOfSize:18];
+    titleLabel.font = [UIFont boldSystemFontOfSize:16];
+    titleLabel.numberOfLines = 2;
+    titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.textColor = CMConstants.grayColor;
     [self.view addSubview:titleLabel];
     
