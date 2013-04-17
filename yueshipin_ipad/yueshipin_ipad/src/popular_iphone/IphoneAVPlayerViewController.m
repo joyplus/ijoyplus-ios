@@ -1399,7 +1399,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if ([isbunding boolValue])
     {
         cloundTVButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        cloundTVButton.frame = CGRectMake(100, 8, 32.5, 27);
+        cloundTVButton.frame = CGRectMake(118, 8, 32.5, 27);
         cloundTVButton.backgroundColor = [UIColor clearColor];
         cloundTVButton.tag = CLOUND_TV_BUTTON_TAG;
         [cloundTVButton setBackgroundImage:[UIImage imageNamed:@"cloud_tv.png"] forState:UIControlStateNormal];
