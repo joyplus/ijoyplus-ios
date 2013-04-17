@@ -105,7 +105,7 @@
 //        bottomLineImageView.image = [[UIImage imageNamed:@"menu_bottom_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
 //        [self.view addSubview:bottomLineImageView];
         
-        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"show_icon", @"comic_icon", @"search_icon", @"personal_icon", @"download_icon", @"recommend_icon", @"", @"setting_icon", nil];
+        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"recommend_icon", @"", @"setting_icon", nil];
 		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MENU_DIPLAY_WIDTH, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
         [self.tableView setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[self.tableView setDelegate:self];
