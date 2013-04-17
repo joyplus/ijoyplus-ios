@@ -29,6 +29,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 @synthesize downloadItem = downloadItem_;
 @synthesize subdownloadItem = subdownloadItem_;
 @synthesize lock = lock_;
+@synthesize retryTimer = retryTimer_;
 +(DownLoadManager *)defaultDownLoadManager{
     if (downLoadManager_ == nil) {
         downLoadManager_ = [[DownLoadManager alloc] init];
@@ -283,7 +284,19 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
    [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:NO]];
 }
+-(void)retry:(NSTimer *)timer{
+    AFDownloadRequestOperation *oldDownloadRequestOperation = [timer userInfo];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:oldDownloadRequestOperation.request.URL cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    AFDownloadRequestOperation *newDownloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:oldDownloadRequestOperation.targetPath shouldResume:YES];
+    newDownloadingOperation.operationId = oldDownloadRequestOperation.operationId;
+    newDownloadingOperation.operationStatus = @"fail";
+    newDownloadingOperation.fileType = oldDownloadRequestOperation.fileType;
+    int index = [downLoadQueue_ indexOfObject:oldDownloadRequestOperation];
+    [downLoadQueue_ replaceObjectAtIndex:index withObject:newDownloadingOperation];
+    [self beginDownloadTask:newDownloadingOperation];
 
+}
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
     __block AFDownloadRequestOperation *tempdownloadRequestOperation = downloadRequestOperation;
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -310,29 +323,48 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         [operation cancel];
       
         tempdownloadRequestOperation.operationStatus = @"fail";
-           
-//        if (retryCount_ <= 3) {
-//            [self performSelector:@selector(retry:) withObject:tempdownloadRequestOperation afterDelay:10];
-//        }
-       // else{
-        [self downloadFail:tempdownloadRequestOperation];
-        NSRange range = [downloadId_ rangeOfString:@"_"];
-        if (range.location == NSNotFound){
-            [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
-            [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
-            
+        
+        if (retryTimer_ != nil) {
+            [retryTimer_ invalidate];
+            retryTimer_ = nil;
         }
         else{
-            [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
-            [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+            retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
+            
         }
 
-        //}
         
-    [self startDownLoad];
+        if (retryCount_ <= 3) {
+            if (retryTimer_ != nil) {
+                [retryTimer_ invalidate];
+                retryTimer_ = nil;
+            }
+            else{
+                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
+            
+             }
+       }
+       else{
+        
+          [self downloadFail:tempdownloadRequestOperation];
+           NSRange range = [downloadId_ rangeOfString:@"_"];
+           if (range.location == NSNotFound){
+               [self saveDataBaseIntable:@"DownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
+               [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneDownloadViewController"];
+               
+           }
+           else{
+               [self saveDataBaseIntable:@"SubdownloadItem" withId:downloadId_ withStatus:@"fail" withPercentage:-1];
+               [self.downLoadMGdelegate downloadFailedwithId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
+           }
+           
+           [self startDownLoad];
+       }
+    
     }];
     
     [downloadRequestOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+        
         retryCount_ = 0;
         float percentDone = totalBytesReadForFile/(float)totalBytesExpectedToReadForFile;
            
@@ -371,7 +403,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     [downloadRequestOperation start];
     downloadId_ = downloadRequestOperation.operationId;
     downloadRequestOperation.operationStatus = @"loading";
-
+    
      NSRange range = [downloadId_ rangeOfString:@"_"];
     if (range.location == NSNotFound) {
          NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",downloadId_];
@@ -570,6 +602,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 //停止下载并清除缓存
 +(void)stopAndClear:(NSString *)downloadId{
+    [[DownLoadManager defaultDownLoadManager] invalidateRetryTimer];
+    
     AFDownloadRequestOperation *downloadOperation = nil;
     for (AFDownloadRequestOperation *mc in downLoadQueue_) {
         if ([mc.operationId isEqualToString:downloadId]) {
@@ -592,6 +626,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 //停止下载不清除缓存
 +(void)stop:(NSString *)downloadId{
+    [[DownLoadManager defaultDownLoadManager] invalidateRetryTimer];
+    
    AFDownloadRequestOperation *downloadOperation = nil;
     for (AFDownloadRequestOperation *mc in downLoadQueue_) {
         if ([mc.operationId isEqualToString:downloadId]) {
@@ -691,6 +727,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     return count;
 }
 -(void)pauseAllTask{
+    [[DownLoadManager defaultDownLoadManager] invalidateRetryTimer];
+    
     for (AFDownloadRequestOperation *mc in downLoadQueue_){
         
         if (IS_M3U8(mc.fileType) && mc.m3u8MG != nil) {
@@ -715,6 +753,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
 
 }
+
 -(void)appDidEnterForeground{
     
     for (AFDownloadRequestOperation  *downloadRequestOperation in downLoadQueue_){
@@ -805,6 +844,14 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     
 }
 
+-(void)invalidateRetryTimer{
+    if (retryTimer_) {
+        [retryTimer_ invalidate];
+        retryTimer_ = nil;
+    }
+   retryCount_ = 0;
+}
+
 -(void)updateSapce{
     
     NSError *error = nil;
@@ -874,13 +921,13 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 @synthesize downloadOperationQueue = downloadOperationQueue_;
 @synthesize currentItem = currentItem_;
 @synthesize segmentUrlArray = segmentUrlArray_;
+@synthesize retryTimer = retryTimer_;
 -(void)setM3u8DownloadData:(NSString *)prodId withNum:(NSString *)num url:(NSString *)urlStr withOldPath:(NSString *)oldPath{
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,num,urlStr,oldPath,nil];
     [self performSelectorInBackground:@selector(doInBackground:) withObject:infoArr];
 }
 
 -(void)doInBackground:(id)sender{
-    NSLog(@"begin!!!!!!!!!!!!!!!!!!!!");
     NSArray *infoArr = (NSArray *)sender;
     NSString *prodId = [infoArr objectAtIndex:0];
     NSString *num = [infoArr objectAtIndex:1];
@@ -976,7 +1023,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 [segmentUrlArray_ addObject:segUrl];
           }
     }
-    NSLog(@"end!!!!!!!!!!!!!!!!!!!!");
     [self startDownloadM3u8file:segmentUrlArray_ withId:prodId withNum:num];
    
 }
@@ -1042,8 +1088,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             AFDownloadRequestOperation *tempDownloadRequestOperation = (AFDownloadRequestOperation*)operation;
             retryCount_ = 0;
             url_index = tempDownloadRequestOperation.downloadingSegmentIndex;
-            NSLog(@"url_index is %d",url_index);
-            NSLog(@"[urlArr count] is %d",[urlArr count]);
+    
             if (tempDownloadRequestOperation.downloadingSegmentIndex == [urlArr count]-1){
                 
                 if (range.location == NSNotFound){
@@ -1085,11 +1130,16 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             [operation cancel];
             [downloadOperationQueue_ cancelAllOperations];
             
-//            if (retryCount_ <= 3) {
-//                NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
-//                [self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
-//            }
-//            else{
+            if (retryCount_ <= 3) {
+                NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
+                if (retryTimer_ != nil) {
+                    [retryTimer_ invalidate];
+                    retryTimer_ = nil;
+                }
+                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(retry:) userInfo:tempArr repeats:NO];
+                //[self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
+            }
+            else{
                 if (range.location == NSNotFound){
                     
                     [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneDownloadViewController"];
@@ -1099,7 +1149,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                     [self.m3u8DownLoadManagerDelegate M3u8DownLoadFailedwithId:idStr inClass:@"IphoneSubdownloadViewController"];
                     
                 }
-           // }
+            }
             
         }];
         [segmentDownloadingOp setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
@@ -1115,10 +1165,11 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 }
 
--(void)retry:(id)sender{
+-(void)retry:(NSTimer *)timer{
     if ([CommonMotheds isNetworkEnbled]) {
         retryCount_++;
-        NSArray *arr = (NSArray *)sender;
+        NSLog(@"retry cout is %d",retryCount_);
+        NSArray *arr = [timer userInfo];
         [self startDownloadM3u8file:[arr objectAtIndex:0] withId:[arr objectAtIndex:1] withNum:[arr objectAtIndex:2]];
     }
 }
@@ -1149,7 +1200,16 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
 }
 -(void)stop{
+    [self invalidateRetryTimer];
     [downloadOperationQueue_ cancelAllOperations];
+}
+
+-(void)invalidateRetryTimer{
+    if (retryTimer_) {
+        [retryTimer_ invalidate];
+        retryTimer_ = nil;
+    }
+    retryCount_ = 0;
 }
 -(void)saveCurrentInfo{
     if (currentItem_) {

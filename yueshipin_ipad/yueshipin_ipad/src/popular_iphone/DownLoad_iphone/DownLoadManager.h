@@ -39,7 +39,7 @@
     int netWorkStatus;
     NSLock *lock_;
     int retryCount_;
-  
+    NSTimer *retryTimer_;
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
@@ -50,6 +50,7 @@
 @property (nonatomic, strong)SubdownloadItem *subdownloadItem;
 @property (nonatomic, strong)NSLock *lock;
 @property (nonatomic, assign)BOOL isResetLoading;
+@property (nonatomic, strong)NSTimer *retryTimer;
 +(DownLoadManager *)defaultDownLoadManager;
 
 -(void)resumeDownLoad;
@@ -81,7 +82,7 @@
     DownloadItem *currentItem_;
     NSMutableArray *segmentUrlArray_;
     int retryCount_;
-    
+    NSTimer *retryTimer_;
 }
 @property (nonatomic, strong) NSOperationQueue *downloadOperationQueue;
 
@@ -91,6 +92,7 @@
 
 @property (nonatomic, strong)  NSMutableArray *segmentUrlArray;
 
+@property (nonatomic, strong)  NSTimer *retryTimer;
 -(void)stop;
 
 -(void)saveCurrentInfo;
