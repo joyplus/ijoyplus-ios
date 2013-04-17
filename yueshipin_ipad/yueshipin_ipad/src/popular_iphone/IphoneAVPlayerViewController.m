@@ -713,7 +713,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 -(void)playerItemDidReachEnd:(id)sender{
     if (islocalFile_) {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self playEnd];
         return;
     }
     if (videoType_ == 1 || videoType_ == 3) {
@@ -1648,36 +1648,37 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         case CLOSE_BUTTON_TAG:{
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
             
-            [urlConnection cancel];
-            urlConnection = nil;
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-            [[AppDelegate instance] stopHttpServer];
-            
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
-            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-            [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
-            [self.player removeObserver:self forKeyPath:@"rate"];
-            [self.player .currentItem removeObserver:self forKeyPath:@"status"];
-            //buffering
-            [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
-            [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
-            
-            [self removePlayerTimeObserver];
-            [self stopMyTimer];
-            if (nil != timeLabelTimer_)
-            {
-                [timeLabelTimer_ invalidate];
-                timeLabelTimer_ = nil;
-            }
-            
+//            [urlConnection cancel];
+//            urlConnection = nil;
+//            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+//            [[AppDelegate instance] stopHttpServer];
+//            
+//            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+//            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
+//            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+//            [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
+//            [self.player removeObserver:self forKeyPath:@"rate"];
+//            [self.player .currentItem removeObserver:self forKeyPath:@"status"];
+//            //buffering
+//            [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
+//            [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
+//            
+//            [self removePlayerTimeObserver];
+//            [self stopMyTimer];
+//            if (nil != timeLabelTimer_)
+//            {
+//                [timeLabelTimer_ invalidate];
+//                timeLabelTimer_ = nil;
+//            }
+//            
+//           
+//            
+//            [self.player  pause];
+//            mPlayer = nil;
+//            mPlayerItem = nil;
+//            prodId_ = nil;
+            [self playEnd];
             [self updateWatchRecord];
-            
-            [self.player  pause];
-            mPlayer = nil;
-            mPlayerItem = nil;
-            prodId_ = nil;
-            
             [self dismissViewControllerAnimated:YES completion:nil];
           
             //[self.navigationController popViewControllerAnimated:YES];
@@ -1789,7 +1790,31 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 }
 
-
+-(void)playEnd{
+    [urlConnection cancel];
+    urlConnection = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [[AppDelegate instance] stopHttpServer];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
+    [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
+    [self.player removeObserver:self forKeyPath:@"rate"];
+    [self.player .currentItem removeObserver:self forKeyPath:@"status"];
+    //buffering
+    [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
+    [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
+    
+    [self removePlayerTimeObserver];
+    [self stopMyTimer];
+    if (nil != timeLabelTimer_)
+    {
+        [timeLabelTimer_ invalidate];
+        timeLabelTimer_ = nil;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 - (void)beginScrubbing:(id)sender
 {
     [self stopMyTimer];
@@ -1984,16 +2009,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 - (void)updateWatchRecord
 {
-   
+    int playbackTime = 0;
+    if(CMTimeGetSeconds([mPlayer currentTime])> 0){
+        playbackTime = [NSNumber numberWithFloat:CMTimeGetSeconds([mPlayer currentTime])].intValue;
+    }
+    int duration = 0;
+    if(CMTimeGetSeconds([self playerItemDuration]) > 0){
+        duration = [NSNumber numberWithFloat:CMTimeGetSeconds([self playerItemDuration])].intValue;
+    }
+    
     if(!islocalFile_){
-        int playbackTime = 0;
-        if(CMTimeGetSeconds([mPlayer currentTime])> 0){
-            playbackTime = [NSNumber numberWithFloat:CMTimeGetSeconds([mPlayer currentTime])].intValue;
-        }
-        int duration = 0;
-        if(CMTimeGetSeconds([self playerItemDuration]) > 0){
-            duration = [NSNumber numberWithFloat:CMTimeGetSeconds([self playerItemDuration])].intValue;
-        }
         NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
         NSString *tempPlayType = @"1";
 
@@ -2023,6 +2048,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
            
         }];
+    }
+    else{
+        if ((duration - playbackTime)>5) {
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum)] result:[NSNumber numberWithInt:playbackTime] ];
+        }
+        else{
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum)] result:[NSNumber numberWithInt:0] ];
+        }
     }
 }
 

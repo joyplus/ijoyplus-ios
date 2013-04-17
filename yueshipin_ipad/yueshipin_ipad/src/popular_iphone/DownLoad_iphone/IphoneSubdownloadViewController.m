@@ -16,6 +16,7 @@
 #import "CMConstants.h"
 #import "SegmentUrl.h"
 #import "DatabaseManager.h"
+#import "CacheUtility.h"
 @interface IphoneSubdownloadViewController ()
 
 @end
@@ -414,7 +415,8 @@
             if ([downloadItem.downloadType isEqualToString:@"m3u8"]){
               iphoneAVPlayerViewController.isM3u8 = YES;
               iphoneAVPlayerViewController.playDuration = downloadItem.duration;
-              iphoneAVPlayerViewController.lastPlayTime = CMTimeMake(1, NSEC_PER_SEC);
+                
+              iphoneAVPlayerViewController.playNum = 0;
             }
             iphoneAVPlayerViewController.islocalFile = YES;
             if (downloadItem.type == 2) {
@@ -422,10 +424,16 @@
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
                 iphoneAVPlayerViewController.nameStr = [NSString stringWithFormat:@"%@ 第%d集",name,num];
+                iphoneAVPlayerViewController.playNum = num;
             }
             else if (downloadItem.type == 3){
                 iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
             }
+            NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];
+            NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
+            iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
+            iphoneAVPlayerViewController.prodId = downloadItem.itemId;
+        
             [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         }
         else{

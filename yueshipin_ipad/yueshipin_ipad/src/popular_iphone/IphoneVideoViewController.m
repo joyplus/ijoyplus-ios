@@ -452,17 +452,14 @@
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
-    iphoneWebPlayerViewController.playBackTime = [self getRecordInfo:num];
+    NSString *str = [NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1) ]];
+    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
+    
+    iphoneWebPlayerViewController.playBackTime = cacheResult;
     [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
 }
 
--(NSNumber*)getRecordInfo:(int)num{
-    
-    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1)]]];
 
-    return cacheResult;
-    
-}
 
 -(BOOL)checkNetWork{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
