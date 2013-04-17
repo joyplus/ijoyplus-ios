@@ -7,9 +7,15 @@
 //
 
 #import "BundingTVManager.h"
+#import "AFServiceAPIClient.h"
+#import "ContainerUtility.h"
+#import "ServiceConstants.h"
 
-
-#define SERVER_URL  (@"ws://comettest.joyplus.tv:8000/bindtv")
+#define SERVER_URL  (@"ws://comettest.joyplus.tv:8080/binding")
+#define KEY_APP     (@"app_key")
+#define KEY_CHANNEL (@"tv_channel")
+#define KEY_USER    (@"user_id")
+ 
 static BundingTVManager * manager = nil;
 
 @implementation BundingTVManager
@@ -42,12 +48,50 @@ static BundingTVManager * manager = nil;
     
     NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
     
-    if ([[data objectForKey:KEY_IS_BUNDING] boolValue])
+    if (nil == sendChannel)
     {
-        FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:sendChannel];
-        self.sendClient = fClient;
-        [self.sendClient connectToServer];
+        //无绑定记录
+        return;
     }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                @"ijoyplus_ios_001bj",KEY_APP,
+                                sendChannel,KEY_CHANNEL,
+                                _userId,KEY_USER, nil];
+    [[AFServiceAPIClient sharedClient] getPath:KPathCheckBinding
+                                    parameters:parameters
+                                       success:^(AFHTTPRequestOperation *operation, id result) {
+                                            //TV与移动终端绑定
+                                           NSNumber * bind = nil;
+                                            if ([[result objectForKey:@"status"] isEqualToString:@"1"])
+                                            {
+                                                FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:sendChannel];
+                                                self.sendClient = fClient;
+                                                [self.sendClient connectToServer];
+                                                bind = [NSNumber numberWithBool:YES];
+                                            }
+                                           else
+                                           {
+                                               bind = [NSNumber numberWithBool:NO];
+                                           }
+                                           //添加已绑定数据缓存
+                                           [[ContainerUtility sharedInstance] setAttribute:\
+                                            [NSDictionary dictionaryWithObjectsAndKeys:
+                                            [data objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,
+                                            bind,KEY_IS_BUNDING, nil]
+                                                                                    forKey:\
+                                            [NSString stringWithFormat:@"%@_isBunding",_userId]];
+                                    }
+                                       failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+                                    }];
+    
+//    if ([[data objectForKey:KEY_IS_BUNDING] boolValue])
+//    {
+//        FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:sendChannel];
+//        self.sendClient = fClient;
+//        [self.sendClient connectToServer];
+//    }
 }
 
 - (void)connecteServerWithChannel:(NSString *)channel

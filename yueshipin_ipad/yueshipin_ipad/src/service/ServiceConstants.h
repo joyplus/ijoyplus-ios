@@ -122,3 +122,4 @@ extern NSString *const kPathRemoveAllPlay;
 extern NSString *const kPathShowTopItems;
 extern NSString *const kPathRecordPlay;
 extern NSString *const kPathFilter;
+extern NSString *const KPathCheckBinding;
