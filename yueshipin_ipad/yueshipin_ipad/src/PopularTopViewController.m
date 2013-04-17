@@ -33,7 +33,6 @@
     NSArray *lunboArray;
     MNMBottomPullToRefreshManager *showPullToRefreshManager_;
     NSUInteger showReloads;
-    NSUInteger dramaReloads;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     int pageSize;
@@ -354,21 +353,11 @@
 
 - (void)reloadTableViewDataSource{
     showReloads = 2;
-    [[CacheUtility sharedCache]removeObjectForKey: @"lunbo_list"];
-    [[CacheUtility sharedCache]removeObjectForKey: @"movie_top_list"];
-    [[CacheUtility sharedCache]removeObjectForKey: @"tv_top_list"];
-    [[CacheUtility sharedCache]removeObjectForKey: @"show_top_list"];
-    [[CacheUtility sharedCache]removeObjectForKey: @"comic_top_list"];
-    [movieTopsArray removeAllObjects];
-    [tvTopsArray removeAllObjects];
-    [showTopsArray removeAllObjects];
-    [comicTopsArray removeAllObjects];
-    [self performSelectorInBackground:@selector(reloadDataFromServer) withObject:nil];
-    _reloading = YES;
-}
-
-- (void)reloadDataFromServer
-{
+//    -    [[CacheUtility sharedCache]removeObjectForKey: @"lunbo_list"];
+//    -    [[CacheUtility sharedCache]removeObjectForKey: @"movie_top_list"];
+//    -    [[CacheUtility sharedCache]removeObjectForKey: @"tv_top_list"];
+//    -    [[CacheUtility sharedCache]removeObjectForKey: @"show_top_list"];
+//    -    [[CacheUtility sharedCache]removeObjectForKey: @"comic_top_list"];
     [self retrieveLunboData];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     if(topType == MOVIE_TOP){
@@ -380,7 +369,8 @@
     } else if(topType == SHOW_TOP){
         [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
         [self retrieveShowTopsData];
-    }    
+    }
+    _reloading = YES;
 }
 
 
