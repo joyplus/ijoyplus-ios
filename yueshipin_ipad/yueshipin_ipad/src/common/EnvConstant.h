@@ -49,5 +49,5 @@
     #define PARSE_APP_ID @"5FNbLx7dnRAx3knxV4rOdaLMRJMByqfKjWQRQakT"
     #define PARSE_CLIENT_KEY @"RZHrZVn6MK8VGZxfpeshrC2tpxpzzMOZjU0rSS6X"
     #define kABaseURLString @"http://apitest.yue001.com/"
-    #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8080"
+    #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8080/"
 #endif

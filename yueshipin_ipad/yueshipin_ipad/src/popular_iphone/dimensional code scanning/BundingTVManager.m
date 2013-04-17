@@ -69,6 +69,7 @@ static BundingTVManager * manager = nil;
                                 //@"ijoyplus_ios_001bj",KEY_APP,
                                 sendChannel,KEY_CHANNEL,
                                 _userId,KEY_USER, nil];
+    
     [[AFCheckBindAPIClient sharedClient] getPath:KPathCheckBinding
                                     parameters:parameters
                                        success:^(AFHTTPRequestOperation *operation, id result) {

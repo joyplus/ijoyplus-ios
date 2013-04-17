@@ -157,7 +157,7 @@
         nameLabel.text = @"";
         contentLabel.text = @"";
         bgImageView.image = nil;
-        commentButton.frame = CGRectMake(tableView.frame.size.width-95, 0, 84, 34);
+        commentButton.frame = CGRectMake(tableView.frame.size.width-75, 0, 84, 34);
         [commentButton setBackgroundImage:[UIImage imageNamed:@"more_comment"] forState:UIControlStateNormal];
     }
     

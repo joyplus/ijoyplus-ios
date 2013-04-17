@@ -10,4 +10,5 @@
 #import "AFHTTPClient.h"
 @interface AFCheckBindAPIClient : AFHTTPClient
 + (AFCheckBindAPIClient *)sharedClient;
+
 @end
