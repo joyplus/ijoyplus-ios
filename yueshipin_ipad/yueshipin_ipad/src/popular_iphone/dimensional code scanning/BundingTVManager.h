@@ -37,7 +37,7 @@
 #define KEY_TYPE_UNBUNDING      (@"33")
 #define KEY_TYPE_SEND_VIDEO     (@"41")
 
-@interface BundingTVManager : NSObject 
+@interface BundingTVManager : NSObject <UIAlertViewDelegate>
 {
     FayeClient *_sendClient;
     NSString   *_userId;

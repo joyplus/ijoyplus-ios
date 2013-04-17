@@ -39,6 +39,16 @@ static BundingTVManager * manager = nil;
     return self;
 }
 
+- (void)showMsg:(NSString *)msg
+{
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:msg
+                                                    delegate:nil
+                                           cancelButtonTitle:@"我知道了"
+                                           otherButtonTitles:nil, nil];
+    [alert show];
+}
+
 #pragma mark -
 #pragma mark - 对外接口
 
@@ -120,13 +130,15 @@ static BundingTVManager * manager = nil;
     if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"])
     {
         [MobClick event:KEY_UNBINDED];
-        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
         //添加已绑定数据缓存
-        NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
         [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
-                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+        
+        [self showMsg:@"已断开与电视端的绑定"];
     }
+    
 }
 
 - (void)connectedToServer
@@ -137,6 +149,23 @@ static BundingTVManager * manager = nil;
 - (void)disconnectedFromServer
 {
     NSLog(@"disconnect to server");
+    
+    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
+    if (nil != dic && [dic objectForKey:KEY_IS_BUNDING])
+    {
+        [MobClick event:KEY_UNBINDED];
+        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+        [self showMsg:@"已断开与电视端的绑定"];
+    }
+    
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
 }
 
 @end

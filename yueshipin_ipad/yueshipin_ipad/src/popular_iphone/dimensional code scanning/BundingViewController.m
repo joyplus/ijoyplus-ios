@@ -164,12 +164,11 @@
     }
     else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
     {
-        [MobClick event:KEY_BIND_SUCCESS];
-        
         [HUDView removeFromSuperview];
         
         if ([[messageDict objectForKey:@"user_id"] isEqualToString:userId])
         {
+            [MobClick event:KEY_BIND_SUCCESS];
             //添加已绑定数据缓存
             [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:strData,@"macAddress",[NSNumber numberWithBool:YES],@"isBunding", nil]
                                                      forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
