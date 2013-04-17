@@ -402,7 +402,6 @@
     }
     [self removeLastPlaytime:item];
     double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", item.itemId]];
-    NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];

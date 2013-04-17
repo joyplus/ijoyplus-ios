@@ -278,8 +278,6 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 
     // track custom bytes read because totalBytesRead persists between pause/resume.
     self.totalBytesReadPerDownload += [data length];
-    NSLog(@"downloadingDelegate = %@", downloadingDelegate);
-    NSLog(@"subdownloadingDelegate = %@", subdownloadingDelegate);
     if (self.progressiveDownloadProgress) {
         if (isDownloadingType == 1) {
             [downloadingDelegate updateProgress:operationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
