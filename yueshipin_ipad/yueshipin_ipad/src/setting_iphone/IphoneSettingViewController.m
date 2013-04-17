@@ -345,6 +345,21 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)unbundingWithTV:(NSString *)Id
+{
+    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",Id]];
+    if ([[dic objectForKey:KEY_IS_BUNDING] boolValue] && nil != dic)
+    {
+        NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
+        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @"33", @"push_type",
+                              Id, @"user_id",
+                              sendChannel, @"tv_channel",
+                              nil];
+        [[BundingTVManager shareInstance] sendMsg:data];
+    }
+}
+
 #pragma mark - SinaWeibo Delegate
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
@@ -363,6 +378,11 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
    
     [self removeAuthData];
     sinaSwith_.on = NO;
+    
+    //add code by huokun for "用户变换，取消与TV绑定数据"
+    [self unbundingWithTV:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+    //add code end
+    
     [[ContainerUtility sharedInstance] removeObjectForKey:kUserId];
     [[ContainerUtility sharedInstance] removeObjectForKey:kUserAvatarUrl];
     [[ContainerUtility sharedInstance] removeObjectForKey:kUserNickName];
@@ -372,8 +392,6 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
     }];
     weiboName_.text = @"";
-   
-
 }
 
 - (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
@@ -419,14 +437,21 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:userId, @"pre_user_id", [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
+            if(responseCode == nil)
+            {
+                //add code by huokun for "用户变换，取消与TV绑定数据"
+                [self unbundingWithTV:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+                //add code end
+                
                 NSString *user_id = [result objectForKey:@"user_id"];
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
                 [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
                  [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
-            } else {
+            }
+            else
+            {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];

@@ -11,7 +11,7 @@
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
 
-#define SERVER_URL  (@"ws://comettest.joyplus.tv:8080/binding")
+#define SERVER_URL  (@"ws://comettest.joyplus.tv:8080/bindtv")
 #define KEY_APP     (@"app_key")
 #define KEY_CHANNEL (@"tv_channel")
 #define KEY_USER    (@"user_id")
