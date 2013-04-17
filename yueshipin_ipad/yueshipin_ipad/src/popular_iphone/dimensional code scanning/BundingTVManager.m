@@ -150,15 +150,15 @@ static BundingTVManager * manager = nil;
 {
     NSLog(@"disconnect to server");
     
-    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
-    if (nil != dic && [dic objectForKey:KEY_IS_BUNDING])
-    {
-        [MobClick event:KEY_UNBINDED];
-        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
-                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
-        [self showMsg:@"已断开与电视端的绑定"];
-    }
+//    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
+//    if (nil != dic && [dic objectForKey:KEY_IS_BUNDING])
+//    {
+//        [MobClick event:KEY_UNBINDED];
+//        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+//                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+//        [self showMsg:@"已断开与电视端的绑定"];
+//    }
     
 }
 
