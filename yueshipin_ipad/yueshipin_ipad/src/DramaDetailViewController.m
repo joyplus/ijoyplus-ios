@@ -486,7 +486,7 @@
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.tag = i+1;
             int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
-            [btn setFrame:CGRectMake(10 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (72 + 12), 10 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (44 + 10), 72, 44)];
+            [btn setFrame:CGRectMake(10 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (65 + 25), 7 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (36 + 10), 65, 36)];
             NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
             [btn setTitle:name forState:UIControlStateNormal];
             [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
