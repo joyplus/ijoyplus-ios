@@ -636,7 +636,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"popup_bg"]];
-    frame.frame = CGRectMake(0, 0, 484, 250);
+    frame.frame = CGRectMake(0, 0, 484, 400);
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
@@ -646,26 +646,26 @@
     nameLabel.text = title;
 //    [nameLabel sizeToFit];
     nameLabel.textAlignment = NSTextAlignmentCenter;
-    nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
+    nameLabel.center = CGPointMake(frame.frame.size.width/2, 28);
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(704, 259, 50, 50);
+    closeBtn.frame = CGRectMake(704, 259 - 75, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:closeBtn];
     
-    UIScrollView *showListView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 370, 170)];
+    UIScrollView *showListView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 336.5, 308.5)];//370, 170)];
     showListView.tag = 3268143;
     showListView.scrollEnabled = NO;
     showListView.backgroundColor = [UIColor clearColor];
     [showListView setPagingEnabled:YES];
-    showListView.center = CGPointMake(frame.center.x, frame.center.y + 30);
+    showListView.center = CGPointMake(frame.center.x, frame.center.y + 10);
     showListView.contentSize = showListView.frame.size;
     showListView.contentOffset = CGPointMake(0, 0);
     [view addSubview:showListView];
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
+    NSString *subquery = [NSString stringWithFormat:@"where itemId = %@", downloadingProdid];
     NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
         if(episodeArray.count > 5){
             UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -673,8 +673,8 @@
             UIButton *nextShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [view addSubview:previousShowBtn];
             [view addSubview:nextShowBtn];
-            previousShowBtn.frame = CGRectMake(290,  330, 32, 161);
-            nextShowBtn.frame = CGRectMake(290 + 370 + 45,  330, 32, 161);
+            previousShowBtn.frame = CGRectMake(300,  330 - 90, 32, 308.5);
+            nextShowBtn.frame = CGRectMake(300 + 336.5 + 57,  330 - 90, 32, 308.5);
             
             [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
             [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
@@ -692,19 +692,22 @@
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 nameBtn.tag = i + 1;
-                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
+                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 9), showListView.frame.size.width, 54.5)];
                 NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                 if ([item objectForKey:@"name"] == nil) {
                     name = @"";
                 }
-                if(name.length > 23){
-                    name = [name substringToIndex:23];
-                }
+//                if(name.length > 23){
+//                    name = [name substringToIndex:23];
+//                }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
+                [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 60)];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
+                nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                nameBtn.titleLabel.numberOfLines = 2;
+                [nameBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -714,9 +717,18 @@
                     [nameBtn setEnabled:NO];
                 }
                 for (SubdownloadItem *subitem in downloadingItems) {
-                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
+                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]])
+                    {
+                        if (subitem.percentage == 100)
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        }
+                        else
+                        {
+                            
+                        }
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        
                         [nameBtn setEnabled:NO];
                         break;
                     }
@@ -728,14 +740,14 @@
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 nameBtn.tag = i + 1;
-                nameBtn.frame = CGRectMake(0, i * 32, showListView.frame.size.width, 30);
+                nameBtn.frame = CGRectMake(0, i * (54.5 + 9), showListView.frame.size.width, 54.5);
                 NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                 if ([item objectForKey:@"name"] == nil) {
                     name = @"";
                 }
-                if(name.length > 23){
-                    name = [name substringToIndex:23];
-                }
+//                if(name.length > 23){
+//                    name = [name substringToIndex:23];
+//                }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
@@ -787,9 +799,10 @@
 
 - (void)showBtnClicked:(UIButton *)btn
 {
+    btn.enabled = NO;
     BOOL success = [self.videoDetailDelegate downloadShow:btn.tag - 1];
     if(success){
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
     } else {
         [UIUtility showDownloadFailure:self.view];
@@ -829,7 +842,7 @@
     [self updatePageBtnState];
     UIView *view = (UIView *)[self.view viewWithTag:3268142];
     UIScrollView *showListView = (UIScrollView *)[view viewWithTag:3268143];
-    [showListView setContentOffset:CGPointMake(370*showPageNumber, 0) animated:YES];
+    [showListView setContentOffset:CGPointMake(336.5*showPageNumber, 0) animated:YES];
 }
 
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage
