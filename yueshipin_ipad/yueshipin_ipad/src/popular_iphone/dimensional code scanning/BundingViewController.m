@@ -104,7 +104,7 @@
 
 - (void)bundingBtnClick
 {
-    NSDictionary * cache = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:userId];
+    NSDictionary * cache = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
     
     if ([[cache objectForKey:KEY_IS_BUNDING] boolValue])
     {

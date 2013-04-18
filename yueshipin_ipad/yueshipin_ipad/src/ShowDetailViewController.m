@@ -368,8 +368,8 @@
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
         if(episodeArray.count > 5){
-            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH,  positionY, 42, 308.5);
-            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 390,  positionY, 42, 308.5);
+            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 22,  positionY, 64, 308.5);
+            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 388,  positionY, 64, 308.5);
         }
         showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
         if(!btnAdded){
