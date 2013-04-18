@@ -65,7 +65,7 @@
     titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45, 377, 30)];
     titleLabel.font = [UIFont boldSystemFontOfSize:23];
     titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.textColor = CMConstants.titleBlueColor;
+    titleLabel.textColor = CMConstants.textColor;
     titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
     titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
     [self.view addSubview:titleLabel];

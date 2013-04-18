@@ -183,120 +183,96 @@
         if(cell == nil){
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 110, 149)];
-            imageView.image = [UIImage imageNamed:@"moviecard_list"];
-            [cell.contentView addSubview:imageView];
+            UIImageView *placeHolderImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, (120-NORMAL_VIDEO_HEIGHT-8) / 2, NORMAL_VIDEO_WIDTH + 8, NORMAL_VIDEO_HEIGHT+ 8)];
+            placeHolderImage.image = [UIImage imageNamed:@"video_bg_placeholder"];
+            [cell.contentView addSubview:placeHolderImage];
             
-            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(52, 13, 85, 131)];
+            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, (120-NORMAL_VIDEO_HEIGHT) / 2, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 220, 25)];
-            nameLabel.font = CMConstants.titleFont;
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x + contentImage.frame.size.width + 20, contentImage.frame.origin.y, 250, 30)];
+            nameLabel.font = [UIFont systemFontOfSize:18];
             nameLabel.backgroundColor = [UIColor clearColor];
+            nameLabel.textColor = CMConstants.grayColor;
             nameLabel.tag = 2001;
             [cell.contentView addSubview:nameLabel];
             
-            
-            UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectZero];
+            UIImageView *typeImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(table.frame.size.width - 27, nameLabel.frame.origin.y+ 2, 27, 18)];
             typeImage1.tag = 8001;
             [cell.contentView addSubview:typeImage1];
             
-            int posx = 165;
-            UIView *dotView1 = [UIUtility getDotView:6];
-            dotView1.center = CGPointMake(posx, 55);
+            int posx = 100;
+            UIView *dotView1 = [UIUtility getDotView:8];
+            dotView1.center = CGPointMake(posx, 50);
             dotView1.tag = 3001;
             [cell.contentView addSubview:dotView1];
             
-            UIView *dotView2 = [UIUtility getDotView:6];
-            dotView2.center = CGPointMake(posx+140, 55);
+            UIView *dotView2 = [UIUtility getDotView:8];
+            dotView2.center = CGPointMake(posx+140, 50);
             dotView2.tag = 3002;
             [cell.contentView addSubview:dotView2];
             
-            UIView *dotView3 = [UIUtility getDotView:6];
-            dotView3.center = CGPointMake(posx, 80);
+            UIView *dotView3 = [UIUtility getDotView:8];
+            dotView3.center = CGPointMake(posx, 75);
             dotView3.tag = 3003;
             [cell.contentView addSubview:dotView3];
             
-            UIView *dotView4 = [UIUtility getDotView:6];
-            dotView4.center = CGPointMake(posx+140, 80);
+            UIView *dotView4 = [UIUtility getDotView:8];
+            dotView4.center = CGPointMake(posx+140, 75);
             dotView4.tag = 3004;
             [cell.contentView addSubview:dotView4];
             
-            UIView *dotView5 = [UIUtility getDotView:6];
-            dotView5.center = CGPointMake(posx, 105);
+            UIView *dotView5 = [UIUtility getDotView:8];
+            dotView5.center = CGPointMake(posx, 100);
             dotView5.tag = 3005;
             [cell.contentView addSubview:dotView5];
             
-            UIView *dotView6 = [UIUtility getDotView:6];
-            dotView6.center = CGPointMake(posx+140, 105);
-            dotView6.tag = 3006;
-            [cell.contentView addSubview:dotView6];
-            
-            UIView *dotView7 = [UIUtility getDotView:6];
-            dotView7.center = CGPointMake(posx, 130);
-            dotView7.tag = 3007;
-            [cell.contentView addSubview:dotView7];
-            
             for (int i = 0; i < 3; i++){
                 UIView *dotView8 = [UIUtility getDotView:4];
-                dotView8.center = CGPointMake(posx+140 + i * 6, 130);
+                dotView8.center = CGPointMake(posx+140 + i * 6, 100);
                 dotView8.tag = 3008 + i;
                 [cell.contentView addSubview:dotView8];
             }
             
-            UILabel *name1 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 42, 110, 25)];
+            UILabel *name1 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 37, 110, 25)];
             name1.font =[UIFont systemFontOfSize:14];
             name1.backgroundColor = [UIColor clearColor];
             [name1 setTextColor:CMConstants.grayColor];
             name1.tag = 4001;
             [cell.contentView addSubview:name1];
             
-            UILabel *name2 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 42, 110, 25)];
+            UILabel *name2 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 37, 110, 25)];
             name2.font = [UIFont systemFontOfSize:14];
             name2.backgroundColor = [UIColor clearColor];
             [name2 setTextColor:CMConstants.grayColor];
             name2.tag = 4002;
             [cell.contentView addSubview:name2];
             
-            UILabel *name3 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 67, 110, 25)];
+            UILabel *name3 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 62, 110, 25)];
             name3.font =[UIFont systemFontOfSize:14];
             name3.backgroundColor = [UIColor clearColor];
             [name3 setTextColor:CMConstants.grayColor];
             name3.tag = 4003;
             [cell.contentView addSubview:name3];
             
-            UILabel *name4 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 67, 110, 25)];
+            UILabel *name4 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 62, 110, 25)];
             name4.font =[UIFont systemFontOfSize:14];
             name4.backgroundColor = [UIColor clearColor];
             [name4 setTextColor:CMConstants.grayColor];
             name4.tag = 4004;
             [cell.contentView addSubview:name4];
             
-            UILabel *name5 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 91, 110, 25)];
+            UILabel *name5 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 86, 110, 25)];
             name5.font =[UIFont systemFontOfSize:14];
             name5.backgroundColor = [UIColor clearColor];
             [name5 setTextColor:CMConstants.grayColor];
             name5.tag = 4005;
             [cell.contentView addSubview:name5];
             
-            UILabel *name6 = [[UILabel alloc]initWithFrame:CGRectMake(posx+155, 91, 110, 25)];
-            name6.font =[UIFont systemFontOfSize:14];
-            name6.backgroundColor = [UIColor clearColor];
-            [name6 setTextColor:CMConstants.grayColor];
-            name6.tag = 4006;
-            [cell.contentView addSubview:name6];
-            
-            UILabel *name7 = [[UILabel alloc]initWithFrame:CGRectMake(posx+15, 115, 110, 25)];
-            name7.font =[UIFont systemFontOfSize:14];
-            name7.backgroundColor = [UIColor clearColor];
-            [name7 setTextColor:CMConstants.grayColor];
-            name7.tag = 4007;
-            [cell.contentView addSubview:name7];
-            
-            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
+            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 118, table.frame.size.width, 2)];
             devidingLine.image = [UIImage imageNamed:@"dividing"];
-            [cell.contentView addSubview:devidingLine];
+            [cell.contentView addSubview:devidingLine];  ;
         }
         NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
@@ -315,10 +291,9 @@
         } else {
             typeImage.image = [UIImage imageNamed:@"show_type"];
         }
-        typeImage.frame = CGRectMake(nameLabel.frame.origin.x + fmin(nameLabel.frame.size.width, 220)+ 5, nameLabel.frame.origin.y+ 2, 37, 18);
         
         NSArray *videos = [item objectForKey:@"items"];
-        for(int i = 0; i < 7; i++){
+        for(int i = 0; i < 5; i++){
             UIView *dotView =  (UIView *)[cell viewWithTag:3001 + i];
             UILabel *label = (UILabel *)[cell viewWithTag:4001 + i];
             if(i < videos.count){
@@ -329,7 +304,7 @@
                 dotView.backgroundColor = [UIColor clearColor];
             }
         }
-        if(videos.count < 7){
+        if(videos.count < 5){
             for (int i = 0; i < 3; i++){
                 UIView *dotView8 = (UIView *)[cell viewWithTag:3008 + i];
                 dotView8.backgroundColor = [UIColor clearColor];
@@ -349,7 +324,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 160;
+    return 120;
 }
 
 #pragma mark - Table view delegate

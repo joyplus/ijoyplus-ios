@@ -47,7 +47,7 @@
 
 + (UIColor *)textColor
 {
-    return [UIColor colorWithRed:101/255.0 green:99/255.0 blue:99/255.0 alpha:1];
+    return [UIColor colorWithRed:138/255.0 green:138/255.0 blue:136/255.0 alpha:1];
 }
 
 @end

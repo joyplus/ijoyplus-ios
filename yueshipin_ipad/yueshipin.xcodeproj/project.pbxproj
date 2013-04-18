@@ -713,8 +713,6 @@
 		EBBCDBD11675C4BA006E2F64 /* moviecard_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBCB1675C4B9006E2F64 /* moviecard_pressed.png */; };
 		EBBCDBDF1675D3FD006E2F64 /* lunbo_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBD91675D3FD006E2F64 /* lunbo_placeholder.png */; };
 		EBBCDBE21675D3FD006E2F64 /* video_placeholder.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBDC1675D3FD006E2F64 /* video_placeholder.png */; };
-		EBBCDBE61675D7EA006E2F64 /* movie_type.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBE51675D7E9006E2F64 /* movie_type.png */; };
-		EBBCDBFA1675DC09006E2F64 /* drama_type.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBCDBF91675DC09006E2F64 /* drama_type.png */; };
 		EBBD9E2916EDD80900AF96E0 /* progress_thumb_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */; };
 		EBBD9E2A16EDD80900AF96E0 /* progress_thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */; };
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
@@ -925,6 +923,8 @@
 		EBF3A99B1663973200EBF56D /* FPPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9971663973200EBF56D /* FPPopoverView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBF3A99C1663973200EBF56D /* FPTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A9991663973200EBF56D /* FPTouchView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EBF3A99F1663979600EBF56D /* DeviceListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBF3A99E1663979600EBF56D /* DeviceListViewController.m */; };
+		EBFCBBA5171FF18700267022 /* drama_type.png in Resources */ = {isa = PBXBuildFile; fileRef = EBFCBB97171FF18700267022 /* drama_type.png */; };
+		EBFCBBB1171FF18700267022 /* movie_type.png in Resources */ = {isa = PBXBuildFile; fileRef = EBFCBBA4171FF18700267022 /* movie_type.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1812,8 +1812,6 @@
 		EBBCDBCB1675C4B9006E2F64 /* moviecard_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = moviecard_pressed.png; sourceTree = "<group>"; };
 		EBBCDBD91675D3FD006E2F64 /* lunbo_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lunbo_placeholder.png; sourceTree = "<group>"; };
 		EBBCDBDC1675D3FD006E2F64 /* video_placeholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = video_placeholder.png; sourceTree = "<group>"; };
-		EBBCDBE51675D7E9006E2F64 /* movie_type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_type.png; sourceTree = "<group>"; };
-		EBBCDBF91675DC09006E2F64 /* drama_type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_type.png; sourceTree = "<group>"; };
 		EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = progress_thumb_pressed.png; sourceTree = "<group>"; };
 		EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = progress_thumb.png; sourceTree = "<group>"; };
 		EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSearchViewController.h; sourceTree = "<group>"; };
@@ -2059,6 +2057,8 @@
 		EBF3A9991663973200EBF56D /* FPTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FPTouchView.m; sourceTree = "<group>"; };
 		EBF3A99D1663979500EBF56D /* DeviceListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceListViewController.h; sourceTree = "<group>"; };
 		EBF3A99E1663979600EBF56D /* DeviceListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeviceListViewController.m; sourceTree = "<group>"; };
+		EBFCBB97171FF18700267022 /* drama_type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_type.png; sourceTree = "<group>"; };
+		EBFCBBA4171FF18700267022 /* movie_type.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = movie_type.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2758,6 +2758,8 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EBFCBB97171FF18700267022 /* drama_type.png */,
+				EBFCBBA4171FF18700267022 /* movie_type.png */,
 				22413859171F9A6F00FCF392 /* erweima@2x.png */,
 				EB98C2DA171D7B49008473BC /* episode_view_bg@2x.png */,
 				EB98C2CD171D761B008473BC /* right.png */,
@@ -3042,8 +3044,6 @@
 				EB513FB11677290F0072E013 /* my_summary_bg@2x.png */,
 				EB513F9F1676FDBD0072E013 /* follow_pressed@2x.png */,
 				EB513FA01676FDBD0072E013 /* follow@2x.png */,
-				EBBCDBF91675DC09006E2F64 /* drama_type.png */,
-				EBBCDBE51675D7E9006E2F64 /* movie_type.png */,
 				EBBCDBD91675D3FD006E2F64 /* lunbo_placeholder.png */,
 				EBBCDBDC1675D3FD006E2F64 /* video_placeholder.png */,
 				EBBCDBC81675C4B9006E2F64 /* comment.png */,
@@ -3878,8 +3878,6 @@
 				EBBCDBD11675C4BA006E2F64 /* moviecard_pressed.png in Resources */,
 				EBBCDBDF1675D3FD006E2F64 /* lunbo_placeholder.png in Resources */,
 				EBBCDBE21675D3FD006E2F64 /* video_placeholder.png in Resources */,
-				EBBCDBE61675D7EA006E2F64 /* movie_type.png in Resources */,
-				EBBCDBFA1675DC09006E2F64 /* drama_type.png in Resources */,
 				EB513FA11676FDBD0072E013 /* follow_pressed@2x.png in Resources */,
 				EB513FA21676FDBD0072E013 /* follow@2x.png in Resources */,
 				EB513FB91677290F0072E013 /* my_summary_bg@2x.png in Resources */,
@@ -4434,6 +4432,8 @@
 				22558007171E88E5002385D1 /* xiangkan_bg_pressed.png in Resources */,
 				22558008171E88E5002385D1 /* xiangkan_bg_pressed@2x.png in Resources */,
 				2241385A171F9A6F00FCF392 /* erweima@2x.png in Resources */,
+				EBFCBBA5171FF18700267022 /* drama_type.png in Resources */,
+				EBFCBBB1171FF18700267022 /* movie_type.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

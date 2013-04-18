@@ -47,7 +47,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];     
-	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 430);
+	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 440);
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     createBtn.frame = CGRectMake(195, 50, 100, 75);
