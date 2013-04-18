@@ -130,6 +130,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
+    
     [self retrieveLunboData];
     
     [self setAutoScrollTimer];
@@ -141,6 +143,13 @@
     comicTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     showTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     [self retrieveMovieTopsData];
+}
+
+- (void)handlePushNotification:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    [self showDetailScreen:userInfo];
+    
 }
 
 - (void)retrieveLunboData
