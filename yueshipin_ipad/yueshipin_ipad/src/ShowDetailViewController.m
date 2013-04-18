@@ -368,14 +368,14 @@
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
         if(episodeArray.count > 5){
-            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 10,  positionY, 42, 161);
-            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 400,  positionY, 42, 161);
+            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 10,  positionY, 42, 290);
+            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 400,  positionY, 42, 290);
         }
         showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
         if(!btnAdded){
             btnAdded = YES;
             if(episodeArray.count > 5){
-                showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 5 * 32);
+                showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 290);
                 showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 350, showListView.frame.size.height);
                 
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
@@ -396,12 +396,14 @@
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                     [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
+                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 60, showListView.frame.size.width, 50)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
                     }
                     [nameBtn setTitle:name forState:UIControlStateNormal];
+                    nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                    nameBtn.titleLabel.numberOfLines = 2;
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                     nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
