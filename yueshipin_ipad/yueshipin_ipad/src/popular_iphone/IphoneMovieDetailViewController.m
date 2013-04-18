@@ -196,18 +196,25 @@
         [tempHUD hide:YES];
     }];
     
+    NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"movie",itemId ];
+    id reviewsCacheResult = [[CacheUtility sharedCache] loadFromCache:reviews_key];
+    if (reviewsCacheResult != nil) {
+         arrReviewData_ = [reviewsCacheResult objectForKey:@"reviews"];
+         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }
     NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id",@"1",@"page_num",@"3",@"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews
                                     parameters:reqData
                                        success:^(AFHTTPRequestOperation *operation, id result)
      {
+        [[CacheUtility sharedCache] putInCache:reviews_key result:result];
          arrReviewData_ = [result objectForKey:@"reviews"];
          [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-         //[tempHUD hide:YES];
+         
      }
                                        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
      {
-         //[tempHUD hide:YES];
+        
      }];
     
 }

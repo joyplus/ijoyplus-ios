@@ -68,6 +68,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     NSArray  *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDir = [documentPaths objectAtIndex:0];
     NSString *filePath = nil;
+    NSString *currentItemStatus = nil;
     if ([type isEqualToString:@"1"]){
         NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId];
         NSArray *arr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
@@ -75,7 +76,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             DownloadItem *downloadItem = [arr objectAtIndex:0];
             downloadItem.url = urlStr;
             downloadItem.downloadType = fileType;
-            downloadItem.downloadStatus = @"waiting";
+            //downloadItem.downloadStatus = @"waiting";
+            currentItemStatus = downloadItem.downloadStatus;
             [DatabaseManager update:downloadItem];
             
         }
@@ -105,9 +107,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             SubdownloadItem *subItem = [arr objectAtIndex:0];
             subItem.url = urlStr;
             subItem.downloadType = fileType;
-            subItem.downloadStatus = @"waiting";
+            currentItemStatus = subItem.downloadStatus;
             [DatabaseManager update:subItem];
-            ////[subItem save];
         }
         
         if (!IS_M3U8(fileType)) {
@@ -127,7 +128,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         downloadingOperation.operationId = [NSString stringWithFormat:@"%@_%d",prodId,num];
         downloadingOperation.fileType = fileType;
     }
-       downloadingOperation.operationStatus = @"waiting";
+       downloadingOperation.operationStatus = currentItemStatus;
       [downLoadQueue_ addObject:downloadingOperation];
     
      [self waringPlus];
@@ -1369,9 +1370,15 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     
 }
 
+-(void)cancelConnection{
+    if (currentConnection_) {
+        [currentConnection_ cancel];
+        currentConnection_ = nil;
+    }
+
+}
 -(void)dealloc{
-    [currentConnection_ cancel];
-    currentConnection_ = nil;
+    [self cancelConnection];
 }
 
 @end
