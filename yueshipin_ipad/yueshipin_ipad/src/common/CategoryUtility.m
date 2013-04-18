@@ -862,6 +862,14 @@
     
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
+    item.subtype = REGION_TYPE;
+    item.label = @"韩国";
+    item.key = @"korea";
+    item.value = @"韩国";
+    [categoryArray addObject:item];
+    
+    item = [[CategoryItem alloc]init];
+    item.type = DRAMA_TYPE;
     item.subtype = CATEGORY_TYPE;
     item.label = @"犯罪";
     item.key = @"crime";
@@ -882,14 +890,6 @@
     item.label = @"古装";
     item.key = @"actient";
     item.value = @"古装";
-    [categoryArray addObject:item];
-    
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = CATEGORY_TYPE;
-    item.label = @"TVB";
-    item.key = @"TVB";
-    item.value = @"TVB";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];

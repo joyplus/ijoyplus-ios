@@ -89,13 +89,13 @@
         [doneBtn setHidden:YES];
         [self.view addSubview:doneBtn];
         
-        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 95, 490, 590)];
+        GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 90, 490, 590)];
         gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         gmGridView.backgroundColor = [UIColor clearColor];
         [self.view addSubview:gmGridView];
         _gmGridView = gmGridView;
         
-        NSInteger spacing = 25;
+        NSInteger spacing = 10;
         _gmGridView.style = GMGridViewStyleSwap;
         _gmGridView.itemSpacing = spacing;
         _gmGridView.minEdgeInsets = UIEdgeInsetsMake(spacing, spacing, spacing, spacing);
@@ -256,7 +256,7 @@
 
 - (CGSize)sizeForItemsInGMGridView:(GMGridView *)gridView
 {
-    return CGSizeMake(90, 165);
+    return CGSizeMake(110, 165);
 }
 
 - (GMGridViewCell *)GMGridView:(GMGridView *)gridView cellForItemAtIndex:(NSInteger)index
@@ -269,7 +269,7 @@
     if (!cell) {
         cell = [[GMGridViewCell alloc] init];
         cell.deleteButtonIcon = [UIImage imageNamed:@"close_x.png"];
-        cell.deleteButtonOffset = CGPointMake(-15, -15);
+        cell.deleteButtonOffset = CGPointMake(-10, -10);
         
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         view.backgroundColor = [UIColor clearColor];
@@ -279,7 +279,7 @@
     item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
-    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 105, 146)];
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 105, 146)];
     imageView.image = [UIImage imageNamed:@"video_bg_placeholder"];
     [cell.contentView addSubview:imageView];
     
@@ -300,18 +300,18 @@
     progressLabel.font = [UIFont boldSystemFontOfSize:13];
     progressLabel.textColor = [UIColor whiteColor];
     if([item.downloadStatus isEqualToString:@"start"]){
-        progressLabel.frame = CGRectMake(3, 100, 98, 25);
+        progressLabel.frame = CGRectMake(13, 110, 98, 25);
         progressLabel.text = [NSString stringWithFormat:@"下载中：%i%%", item.percentage];
     } else if([item.downloadStatus isEqualToString:@"stop"]){
-        progressLabel.frame = CGRectMake(3, 100, 98, 25);
+        progressLabel.frame = CGRectMake(13, 110, 98, 25);
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", item.percentage];
     } else if([item.downloadStatus isEqualToString:@"done"]){
 //        progressLabel.text = @"下载完成";
     } else if([item.downloadStatus isEqualToString:@"waiting"]){
-        progressLabel.frame = CGRectMake(3, 100, 98, 25);
+        progressLabel.frame = CGRectMake(13, 110, 98, 25);
         progressLabel.text = [NSString stringWithFormat:@"等待中：%i%%", item.percentage];
     } else if([item.downloadStatus isEqualToString:@"error"]){
-        progressLabel.frame = CGRectMake(3, 107, 98, 25);
+        progressLabel.frame = CGRectMake(13, 117, 98, 25);
         progressLabel.text = @"下载片源失效";
     } 
     progressLabel.textAlignment = NSTextAlignmentCenter;
@@ -322,14 +322,15 @@
     }
     
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"waiting"]){
-        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(7, 125, 90, 2)];
+        UIProgressView *progressView = [[UIProgressView alloc]initWithFrame:CGRectMake(17, 135, 90, 2)];
         progressView.progress = item.percentage/100.0;
         progressView.tag = item.rowId + 20000000;
         [cell.contentView addSubview:progressView];
     }
     
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(4, 150, 105, 30)];
-    nameLabel.font = [UIFont systemFontOfSize:15];
+    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(14, 150, 105, 30)];
+    nameLabel.font = [UIFont systemFontOfSize:14];
+    nameLabel.textColor = CMConstants.textColor;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.textAlignment = NSTextAlignmentCenter;
     nameLabel.text = [NSString stringWithFormat:@"%@", item.name];
