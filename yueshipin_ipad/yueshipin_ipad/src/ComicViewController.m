@@ -25,6 +25,7 @@
 
 
 - (id)initWithFrame:(CGRect)frame {
+    umengPageName = COMIC_CATEGORY;
     self.videoType = COMIC_TYPE;
     self = [super initWithFrame:frame];
 	return self;

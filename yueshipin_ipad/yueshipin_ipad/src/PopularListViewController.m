@@ -135,6 +135,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    umengPageName = POPULAR_MOVIE_LIST;
     [self retrieveLunboData];
     timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
@@ -176,8 +177,16 @@
 
 - (void)retrieveTopsListData
 {
-    [MobClick beginLogPageView:POPULAR_TOP_LIST];
-    umengPageName = POPULAR_TOP_LIST;
+    if (umengPageName) {
+        [MobClick endLogPageView:umengPageName];
+    }
+    if (topicType == MOVIE_TOPIC) {
+        umengPageName = POPULAR_MOVIE_LIST;
+    } else if(topicType == DRAMA_TOPIC){
+        umengPageName = POPULAR_TV_LIST;
+    }
+    umengPageName = POPULAR_MOVIE_LIST;
+    [MobClick beginLogPageView:umengPageName];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache: [NSString stringWithFormat: @"top_list_%i", topicType]];
     if(cacheResult != nil){

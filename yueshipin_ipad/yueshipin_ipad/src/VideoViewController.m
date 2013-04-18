@@ -194,6 +194,7 @@
         [allBtn sendActionsForControlEvents:UIControlEventTouchDown];
         revertSearchCriteria = NO;
     }
+    [MobClick beginLogPageView:umengPageName];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

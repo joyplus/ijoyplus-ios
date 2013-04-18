@@ -25,6 +25,7 @@
 
 
 - (id)initWithFrame:(CGRect)frame {
+    umengPageName = DRAMA_CATEGORY;
     self.videoType = DRAMA_TYPE;
     self = [super initWithFrame:frame];
 	return self;

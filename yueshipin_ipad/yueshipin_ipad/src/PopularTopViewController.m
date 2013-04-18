@@ -131,7 +131,6 @@
 {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
-    
     [self retrieveLunboData];
     
     [self setAutoScrollTimer];
@@ -184,7 +183,9 @@
 
 - (void)retrieveMovieTopsData
 {
-    [MobClick endLogPageView:umengPageName];
+    if (umengPageName) {
+        [MobClick endLogPageView:umengPageName];
+    }
     umengPageName = POPULAR_MOVIE_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -228,7 +229,9 @@
 
 - (void)retrieveTvTopsData
 {
-    [MobClick endLogPageView:umengPageName];
+    if (umengPageName) {
+        [MobClick endLogPageView:umengPageName];
+    }
     umengPageName = POPULAR_TV_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -271,7 +274,9 @@
 
 - (void)retrieveComicTopsData
 {
-    [MobClick endLogPageView:umengPageName];
+    if (umengPageName) {
+        [MobClick endLogPageView:umengPageName];
+    }
     umengPageName = POPULAR_COMIC_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -316,7 +321,9 @@
 
 - (void)retrieveShowTopsData
 {
-    [MobClick endLogPageView:umengPageName];
+    if (umengPageName) {
+        [MobClick endLogPageView:umengPageName];
+    }
     umengPageName = POPULAR_SHOW_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];

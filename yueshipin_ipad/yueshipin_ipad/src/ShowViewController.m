@@ -25,6 +25,7 @@
 
 
 - (id)initWithFrame:(CGRect)frame {
+    umengPageName = SHOW_CATEGORY;
     self.videoType = SHOW_TYPE;
     self = [super initWithFrame:frame];
 	return self;
