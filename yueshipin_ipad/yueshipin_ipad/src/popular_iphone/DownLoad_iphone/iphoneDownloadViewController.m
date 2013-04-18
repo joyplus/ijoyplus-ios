@@ -497,10 +497,11 @@
                   iphoneAVPlayerViewController.isM3u8 = YES;
                   iphoneAVPlayerViewController.playDuration = item.duration;
                     
+               
+                }
                 NSString *str = [NSString stringWithFormat:@"%@_1_local",item.itemId];
                 NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
-                  iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
-                }
+                iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
                 
                 iphoneAVPlayerViewController.islocalFile = YES;
                 iphoneAVPlayerViewController.nameStr = item.name;
