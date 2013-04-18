@@ -368,8 +368,8 @@
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
         if(episodeArray.count > 5){
-            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 10,  positionY, 42, 308.5);
-            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 400,  positionY, 42, 308.5);
+            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH,  positionY, 42, 308.5);
+            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 390,  positionY, 42, 308.5);
         }
         showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
         if(!btnAdded){
@@ -396,7 +396,7 @@
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                     [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 9), showListView.frame.size.width, 54.5)];
+                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 6) + 6, showListView.frame.size.width, 54.5)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
@@ -417,13 +417,13 @@
             } else {
                 [self.previousShowBtn setHidden:YES];
                 [self.nextShowBtn setHidden:YES];
-                showListView.frame = CGRectMake(LEFT_WIDTH, positionY, 430, episodeArray.count * 32);
+                showListView.frame = CGRectMake(LEFT_WIDTH, positionY, 336.5, episodeArray.count * (54.5 + 6));
                 showListView.contentSize = showListView.frame.size;
                 for(int i = 0; i < episodeArray.count; i++){
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                     nameBtn.tag = i + 1;
-                    nameBtn.frame = CGRectMake(0, i * 32, showListView.frame.size.width, 30);
+                    nameBtn.frame = CGRectMake(0, i * (54.5 + 6) + 6, showListView.frame.size.width, 54.5);
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";

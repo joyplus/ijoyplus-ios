@@ -673,8 +673,8 @@
             UIButton *nextShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [view addSubview:previousShowBtn];
             [view addSubview:nextShowBtn];
-            previousShowBtn.frame = CGRectMake(300,  330 - 90, 32, 308.5);
-            nextShowBtn.frame = CGRectMake(300 + 336.5 + 57,  330 - 90, 32, 308.5);
+            previousShowBtn.frame = CGRectMake(275,  330 - 90, 64, 308.5);
+            nextShowBtn.frame = CGRectMake(275 + 336.5 + 74,  330 - 90, 64, 308.5);
             
             [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
             [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
@@ -692,7 +692,7 @@
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 nameBtn.tag = i + 1;
-                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 9), showListView.frame.size.width, 54.5)];
+                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 6) + 6, showListView.frame.size.width, 54.5)];
                 NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                 if ([item objectForKey:@"name"] == nil) {
                     name = @"";
@@ -701,7 +701,7 @@
 //                    name = [name substringToIndex:23];
 //                }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
-                [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 60)];
+                [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 50)];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
@@ -714,6 +714,7 @@
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
                     [nameBtn setEnabled:NO];
                 }
                 for (SubdownloadItem *subitem in downloadingItems) {
@@ -725,7 +726,7 @@
                         }
                         else
                         {
-                            
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
                         }
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                         
@@ -740,7 +741,7 @@
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 nameBtn.tag = i + 1;
-                nameBtn.frame = CGRectMake(0, i * (54.5 + 9), showListView.frame.size.width, 54.5);
+                nameBtn.frame = CGRectMake(0, i * (54.5 + 6) + 6, showListView.frame.size.width, 54.5);
                 NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                 if ([item objectForKey:@"name"] == nil) {
                     name = @"";
@@ -764,7 +765,14 @@
                 for (SubdownloadItem *subitem in downloadingItems) {
                     if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        if (subitem.percentage == 100)
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        }
+                        else
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
+                        }
                         [nameBtn setEnabled:NO];
                         break;
                     }
@@ -802,8 +810,8 @@
     btn.enabled = NO;
     BOOL success = [self.videoDetailDelegate downloadShow:btn.tag - 1];
     if(success){
-        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
+        //[btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
     } else {
         [UIUtility showDownloadFailure:self.view];
     }
