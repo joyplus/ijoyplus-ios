@@ -408,7 +408,7 @@
         if([responseCode isEqualToString:kSuccessResCode]){
             [[AppDelegate instance].rootViewController showSuccessModalView:2];
             [[NSNotificationCenter defaultCenter] postNotificationName:MY_LIST_VIEW_REFRESH object:nil];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
         } else {
             [[AppDelegate instance].rootViewController showFailureModalView:1.5];
         }

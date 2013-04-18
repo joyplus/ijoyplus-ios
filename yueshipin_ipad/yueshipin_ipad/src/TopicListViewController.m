@@ -31,7 +31,7 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:PERSONAL_VIEW_REFRESH object:nil];
     table = nil;
     titleImage = nil;
     [videoArray removeAllObjects];
@@ -78,7 +78,7 @@
     pageSize = 10;
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
     [self loadTable];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     
     [self.view addGestureRecognizer:self.swipeRecognizer];
 }
