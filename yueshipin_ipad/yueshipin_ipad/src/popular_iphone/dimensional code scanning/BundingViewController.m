@@ -104,6 +104,36 @@
 
 - (void)bundingBtnClick
 {
+    NSDictionary * cache = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:userId];
+    
+    if ([[cache objectForKey:KEY_IS_BUNDING] boolValue])
+    {
+        if ([[cache objectForKey:KEY_MACADDRESS] isEqualToString:strData])
+        {
+            //若手机端已与该电视端绑定，提示用户
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                             message:@"设备已经与电视端绑定"
+                                                            delegate:nil
+                                                   cancelButtonTitle:@"我知道了"
+                                                   otherButtonTitles:nil, nil];
+            [alert show];
+            return;
+        }
+        else
+        {
+            //若手机端已有电视端与其绑定，解绑
+            NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[cache objectForKey:KEY_MACADDRESS]];
+            NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"33", @"push_type",
+                                  userId, @"user_id",
+                                  sendChannel, @"tv_channel",
+                                  nil];
+            
+            [[BundingTVManager shareInstance] sendMsg:data];
+            [BundingTVManager shareInstance].isUserUnbind = YES;
+        }
+    }
+    
     NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",strData];
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                           @"31", @"push_type",
@@ -170,7 +200,7 @@
         {
             [MobClick event:KEY_BIND_SUCCESS];
             //添加已绑定数据缓存
-            [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:strData,@"macAddress",[NSNumber numberWithBool:YES],@"isBunding", nil]
+            [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:strData,KEY_MACADDRESS,[NSNumber numberWithBool:YES],KEY_IS_BUNDING, nil]
                                                      forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
         }
