@@ -215,6 +215,7 @@
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
         scoreLabel.textColor = CMConstants.scoreBlueColor;
+        scoreLabel.textAlignment = NSTextAlignmentRight;
         [cell.contentView addSubview:scoreLabel];
         UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 10, 15, 15)];
         doubanLogo.image = [UIImage imageNamed:@"douban"];
@@ -279,12 +280,6 @@
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
     nameLabel.text = [item objectForKey:@"prod_name"];
-    
-//    int score = 3;
-//    for(int i = 0; i < score; i++){
-//        UIImageView *startImage = (UIImageView *)[cell viewWithTag:3001 + i];
-//        startImage.image = [UIImage imageNamed:@"star"];
-//    }
     
     UILabel *directorNameLabel = (UILabel *)[cell viewWithTag:6001];
     directorNameLabel.text = [item objectForKey:@"directors"];

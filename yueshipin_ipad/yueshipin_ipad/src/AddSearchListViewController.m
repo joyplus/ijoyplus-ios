@@ -80,7 +80,7 @@
     [self.view addSubview:closeBtn];
     
     addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(235, 90, 100, 75);//CGRectMake(LEFT_WIDTH - 10, 80, 100, 75);
+    addBtn.frame = CGRectMake(235, 50, 100, 75);//CGRectMake(LEFT_WIDTH - 10, 80, 100, 75);
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -88,14 +88,14 @@
     [self.view addSubview:addBtn];
     
     doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    doneBtn.frame = CGRectMake(352, 90, 100, 75);//CGRectMake(addBtn.frame.origin.x + addBtn.frame.size.width + 20, 80, 100, 75);
+    doneBtn.frame = CGRectMake(352, 50, 100, 75);//CGRectMake(addBtn.frame.origin.x + addBtn.frame.size.width + 20, 80, 100, 75);
     [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish"] forState:UIControlStateNormal];
     [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish_pressed"] forState:UIControlStateHighlighted];
     [doneBtn addTarget:self action:@selector(doneBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [doneBtn setHidden:YES];
     [self.view addSubview:doneBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 150, 420, 540)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 120, 420, 570)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];
@@ -205,17 +205,16 @@
         if(cell == nil){
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(40, 8, 102, 146)];
-            imageView.image = [UIImage imageNamed:@"movie_frame"];
-            [cell.contentView addSubview:imageView];
+            UIImageView *placeHolderImage = [[UIImageView alloc]initWithFrame:CGRectMake(40, (120-NORMAL_VIDEO_HEIGHT-8) / 2, NORMAL_VIDEO_WIDTH + 8, NORMAL_VIDEO_HEIGHT+ 8)];
+            placeHolderImage.image = [UIImage imageNamed:@"video_bg_placeholder"];
+            [cell.contentView addSubview:placeHolderImage];
             
-            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, 12, 94, 138)];
+            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(44, (120-NORMAL_VIDEO_HEIGHT) / 2, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 12, 306, 25)];
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x + contentImage.frame.size.width + 20, contentImage.frame.origin.y, 250, 30)];
             nameLabel.text = @"";
-            nameLabel.font = [UIFont boldSystemFontOfSize:20];
             nameLabel.backgroundColor = [UIColor clearColor];
             nameLabel.tag = 2001;
             [cell.contentView addSubview:nameLabel];
@@ -227,66 +226,71 @@
             //            [cell.contentView addSubview:startImage];
             //        }
             
-            UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 45, 45, 20)];
+            UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.frame.size.width - 40, nameLabel.frame.origin.y, 45, 30)];
             scoreLabel.tag = 3001;
             scoreLabel.backgroundColor = [UIColor clearColor];
             scoreLabel.font = [UIFont boldSystemFontOfSize:15];
             scoreLabel.textColor = CMConstants.scoreBlueColor;
+            scoreLabel.textAlignment = NSTextAlignmentRight;
             [cell.contentView addSubview:scoreLabel];
-            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(210, 50, 15, 15)];
+            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 9, 15, 15)];
             doubanLogo.image = [UIImage imageNamed:@"douban"];
             [cell.contentView addSubview:doubanLogo];
             
-            UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 75, 150, 25)];
+            UILabel *directorLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 30, 150, 25)];
             directorLabel.text = @"导演：";
+            directorLabel.textColor = CMConstants.grayColor;
             directorLabel.font = [UIFont systemFontOfSize:13];
             directorLabel.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:directorLabel];
             
-            UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(205, 75, 200, 25)];
+            UILabel *directorNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(directorLabel.frame.origin.x + 40, nameLabel.frame.origin.y + 30, 200, 25)];
+            directorNameLabel.textColor = CMConstants.grayColor;
             directorNameLabel.font = [UIFont systemFontOfSize:13];
             directorNameLabel.backgroundColor = [UIColor clearColor];
             directorNameLabel.tag = 4001;
             [cell.contentView addSubview:directorNameLabel];
             
-            UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(160, 100, 150, 25)];
+            UILabel *actorLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 50, 150, 25)];
             actorLabel.text = @"主演：";
+            actorLabel.textColor = CMConstants.grayColor;
             actorLabel.font = [UIFont systemFontOfSize:13];
             actorLabel.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:actorLabel];
             
-            UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(205, 100, 200, 25)];
+            UILabel *actorName1Label = [[UILabel alloc]initWithFrame:CGRectMake(actorLabel.frame.origin.x + 40, nameLabel.frame.origin.y + 50, 200, 25)];
             actorName1Label.font = [UIFont systemFontOfSize:13];
+            actorName1Label.textColor = CMConstants.grayColor;
             actorName1Label.backgroundColor = [UIColor clearColor];
             actorName1Label.tag = 5001;
             [cell.contentView addSubview:actorName1Label];
             
             
-            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(160, 130, 16, 16)];
+            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 80, 16, 16)];
             dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
             [cell.contentView addSubview:dingNumberImage];
             
-            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(185, 125, 40, 24)];
+            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + 20, nameLabel.frame.origin.y + 80, 40, 18)];
             dingNumberLabel.backgroundColor = [UIColor clearColor];
             dingNumberLabel.font = [UIFont systemFontOfSize:13];
             dingNumberLabel.tag = 6001;
             [cell.contentView addSubview:dingNumberLabel];
             
-            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(250, 130, 16, 16)];
+            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + 70, nameLabel.frame.origin.y + 80, 16, 16)];
             collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
             [cell.contentView addSubview:collectioNumber];
             
-            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(275, 125, 40, 24)];
+            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + 90, nameLabel.frame.origin.y + 78, 40, 18)];
             collectionNumberLabel.backgroundColor = [UIColor clearColor];
             collectionNumberLabel.font = [UIFont systemFontOfSize:13];
             collectionNumberLabel.tag = 7001;
             [cell.contentView addSubview:collectionNumberLabel];
             
-            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
+            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 118, table.frame.size.width, 2)];
             devidingLine.image = [UIImage imageNamed:@"dividing"];
             [cell.contentView addSubview:devidingLine];
             
-            SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(0, 65, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
+            SSCheckBoxView *checkbox = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(0, 45, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
             checkbox.tag = 8001;
             [checkbox setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
             [cell.contentView addSubview:checkbox];
@@ -361,7 +365,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 160;
+    return 120;
 }
 
 #pragma mark - Table view delegate

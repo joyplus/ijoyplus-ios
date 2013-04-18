@@ -47,21 +47,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];     
-	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 420);
-    
-//    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
-//    lineImage.image = [UIImage imageNamed:@"dividing"];
-//    [self.view addSubview:lineImage];
+	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 430);
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(195, 60, 100, 75);
+    createBtn.frame = CGRectMake(195, 50, 100, 75);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:createBtn];
     
     deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    deleteBtn.frame = CGRectMake(312, 60, 140, 75);
+    deleteBtn.frame = CGRectMake(312, 50, 140, 75);
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];

@@ -198,6 +198,7 @@
             scoreLabel.backgroundColor = [UIColor clearColor];
             scoreLabel.font = [UIFont boldSystemFontOfSize:15];
             scoreLabel.textColor = CMConstants.scoreBlueColor;
+            scoreLabel.textAlignment = NSTextAlignmentRight;
             [cell.contentView addSubview:scoreLabel];
             UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 10, 15, 15)];
             doubanLogo.tag = 9001;

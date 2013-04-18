@@ -185,28 +185,30 @@
         if(cell == nil){
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 8, 102, 146)];
-            imageView.image = [UIImage imageNamed:@"movie_frame"];
-            [cell.contentView addSubview:imageView];
             
-            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, 12, 94, 138)];
+            UIImageView *placeHolderImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, (120-NORMAL_VIDEO_HEIGHT-8) / 2, NORMAL_VIDEO_WIDTH + 8, NORMAL_VIDEO_HEIGHT+ 8)];
+            placeHolderImage.image = [UIImage imageNamed:@"video_bg_placeholder"];
+            [cell.contentView addSubview:placeHolderImage];
+            
+            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, (120-NORMAL_VIDEO_HEIGHT) / 2, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 12, 306, 25)];
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x + contentImage.frame.size.width + 20, contentImage.frame.origin.y, 250, 30)];
             nameLabel.font = CMConstants.titleFont;
             nameLabel.backgroundColor = [UIColor clearColor];
             nameLabel.tag = 2001;
             [cell.contentView addSubview:nameLabel];
             
-            UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 45, 45, 20)];
+            UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.frame.size.width, nameLabel.frame.origin.y, 45, 30)];
             scoreLabel.tag = 3001;
             scoreLabel.text = @"0 分";
             scoreLabel.backgroundColor = [UIColor clearColor];
             scoreLabel.font = [UIFont boldSystemFontOfSize:15];
             scoreLabel.textColor = CMConstants.scoreBlueColor;
+            scoreLabel.textAlignment = NSTextAlignmentRight;
             [cell.contentView addSubview:scoreLabel];
-            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(170, 48, 15, 15)];
+            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 9, 15, 15)];
             doubanLogo.tag = 9001;
             [cell.contentView addSubview:doubanLogo];
             
@@ -238,42 +240,42 @@
             actorName1Label.tag = 5001;
             [cell.contentView addSubview:actorName1Label];
             
-            UILabel *areaLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 220, 25)];
-            areaLabel.font = [UIFont systemFontOfSize:13];
-            areaLabel.textColor = CMConstants.grayColor;
-            areaLabel.backgroundColor = [UIColor clearColor];
-            areaLabel.tag = 8001;
-            [cell.contentView addSubview:areaLabel];
+//            UILabel *areaLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 220, 25)];
+//            areaLabel.font = [UIFont systemFontOfSize:13];
+//            areaLabel.textColor = CMConstants.grayColor;
+//            areaLabel.backgroundColor = [UIColor clearColor];
+//            areaLabel.tag = 8001;
+//            [cell.contentView addSubview:areaLabel];
+//            
+//            UILabel *areaNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(185, 100, 220, 25)];
+//            areaNameLabel.font = [UIFont systemFontOfSize:13];
+//            areaNameLabel.textColor = CMConstants.grayColor;
+//            areaNameLabel.backgroundColor = [UIColor clearColor];
+//            areaNameLabel.tag = 8002;
+//            [cell.contentView addSubview:areaNameLabel];
             
-            UILabel *areaNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(185, 100, 220, 25)];
-            areaNameLabel.font = [UIFont systemFontOfSize:13];
-            areaNameLabel.textColor = CMConstants.grayColor;
-            areaNameLabel.backgroundColor = [UIColor clearColor];
-            areaNameLabel.tag = 8002;
-            [cell.contentView addSubview:areaNameLabel];
             
-            
-            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(120, 128, 16, 16)];
+            UIImageView *dingNumberImage = [[UIImageView alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 80, 16, 16)];
             dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
             [cell.contentView addSubview:dingNumberImage];
             
-            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(140, 125, 40, 24)];
+            UILabel *dingNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + 20, nameLabel.frame.origin.y + 80, 40, 18)];
             dingNumberLabel.backgroundColor = [UIColor clearColor];
             dingNumberLabel.font = [UIFont systemFontOfSize:13];
             dingNumberLabel.tag = 6001;
             [cell.contentView addSubview:dingNumberLabel];
             
-            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(210, 130, 16, 16)];
+            UIImageView *collectioNumber = [[UIImageView alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + 70, nameLabel.frame.origin.y + 80, 16, 16)];
             collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
             [cell.contentView addSubview:collectioNumber];
             
-            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(230, 125, 40, 24)];
+            UILabel *collectionNumberLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + 90, nameLabel.frame.origin.y + 78, 40, 18)];
             collectionNumberLabel.backgroundColor = [UIColor clearColor];
             collectionNumberLabel.font = [UIFont systemFontOfSize:13];
             collectionNumberLabel.tag = 7001;
             [cell.contentView addSubview:collectionNumberLabel];
             
-            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 158, table.frame.size.width, 2)];
+            UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 118, table.frame.size.width, 2)];
             devidingLine.image = [UIImage imageNamed:@"dividing"];
             [cell.contentView addSubview:devidingLine];
             
@@ -301,25 +303,26 @@
             areaNameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"area"]];
             scoreLabel.text = @"";
             doubanlogo.image = nil;
-            directorLabel.frame = CGRectMake(120, 50, 150, 25);
-            actorLabel.frame = CGRectMake(120, 75, 150, 25);
             directorLabel.text = @"主持/嘉宾：";
+            directorLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 30, 150, 25);
+            directorNameLabel.frame = CGRectMake(nameLabel.frame.origin.x + 70, directorLabel.frame.origin.y, 250, 25);
             directorNameLabel.text = [item objectForKey:@"star"];
-            directorNameLabel.frame = CGRectMake(185, 50, 250, 25);
-            actorLabel.text = @"首播时间：";
-            actorLabel1.frame = CGRectMake(185, 75, 250, 25);
-            actorLabel1.text =[item objectForKey:@"publish_date"];
+            actorLabel1.text = @"首播时间：";
+            actorLabel1.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 50, 150, 25);
+            actorLabel.frame = CGRectMake(nameLabel.frame.origin.x + 70, actorLabel1.frame.origin.y, 250, 25);
+            actorLabel.text = [item objectForKey:@"publish_date"];
         } else {
             scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [item objectForKey:@"score"]];
             doubanlogo.image = [UIImage imageNamed:@"douban"];
-            directorLabel.frame = CGRectMake(120, 75, 150, 25);
-            actorLabel.frame = CGRectMake(120, 100, 150, 25);
             directorLabel.text = @"导演：";
-            actorLabel.text = @"主演：";
-            actorLabel1.frame = CGRectMake(160, 100, 250, 25);
+            directorLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 30, 150, 25);
+            directorNameLabel.frame = CGRectMake(nameLabel.frame.origin.x + 40, directorLabel.frame.origin.y, 250, 25);
             directorNameLabel.text = [item objectForKey:@"director"];
-            directorNameLabel.frame = CGRectMake(160, 75, 250, 25);
-            actorLabel1.text = [item objectForKey:@"star"];
+            actorLabel1.text = @"主演：";
+            actorLabel1.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y + 50, 150, 25);
+            actorLabel.frame = CGRectMake(nameLabel.frame.origin.x + 40, actorLabel1.frame.origin.y, 250, 25);
+            actorLabel.text = [item objectForKey:@"star"];
+            actorLabel.backgroundColor = [UIColor clearColor];
             
             areaLabel.text = @"";
             areaNameLabel.text = @"";
@@ -352,7 +355,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 160;
+    return 120;
 }
 
 #pragma mark - Table view delegate

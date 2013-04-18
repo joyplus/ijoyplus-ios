@@ -195,10 +195,12 @@
             scoreLabel.tag = 3001;
             scoreLabel.text = @"0 分";
             scoreLabel.backgroundColor = [UIColor clearColor];
+            scoreLabel.textAlignment = NSTextAlignmentRight;
             scoreLabel.font = [UIFont boldSystemFontOfSize:15];
             scoreLabel.textColor = CMConstants.scoreBlueColor;
+            scoreLabel.textAlignment = NSTextAlignmentRight;
             [cell.contentView addSubview:scoreLabel];
-            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 10, 15, 15)];
+            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 9, 15, 15)];
             doubanLogo.tag = 9001;
             [cell.contentView addSubview:doubanLogo];
             
