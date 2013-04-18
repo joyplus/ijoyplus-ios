@@ -175,7 +175,7 @@
     {
         NSString * text = @"想看影片已加入收藏记录";
         CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:12]];
-        label.frame = CGRectMake(0, 0, size.width, 27);
+        label.frame = CGRectMake(0, 0, size.width + 15, 27);
         label.text = @"想看影片已加入收藏记录";
         label.center = view.center;
     }
