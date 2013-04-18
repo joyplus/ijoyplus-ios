@@ -129,6 +129,7 @@
 
 - (void) showPopoverWithPoint:(CGPoint)senderPoint
 {
+
     if(self.titleText){
         titleLabelheight = TITLE_LABEL_HEIGHT;
     }
@@ -186,9 +187,10 @@
     [self.view addSubview:popoverView];
     
     UIWindow *appWindow = [[UIApplication sharedApplication] keyWindow];
-    //[appWindow addSubview:self.view];
+    appWindow.backgroundColor = [UIColor redColor];
+    [appWindow addSubview:self.view];
 
-    [appWindow.rootViewController.view addSubview:self.view];
+    //[appWindow.rootViewController.view addSubview:self.view];
 
     
     [UIView animateWithDuration:0.0
