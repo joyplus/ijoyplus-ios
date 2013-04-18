@@ -1683,9 +1683,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //            prodId_ = nil;
             [self playEnd];
             [self updateWatchRecord];
-            [self dismissViewControllerAnimated:YES completion:nil];
-          
-            //[self.navigationController popViewControllerAnimated:YES];
+         
             break;
         }
         case FULL_SCREEN_TAG:{
@@ -1817,6 +1815,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [timeLabelTimer_ invalidate];
         timeLabelTimer_ = nil;
     }
+    [self.player  pause];
+    mPlayer = nil;
+    mPlayerItem = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)beginScrubbing:(id)sender
