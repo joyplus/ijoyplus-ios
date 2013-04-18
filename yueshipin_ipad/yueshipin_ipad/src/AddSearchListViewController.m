@@ -80,7 +80,7 @@
     [self.view addSubview:closeBtn];
     
     addBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    addBtn.frame = CGRectMake(LEFT_WIDTH - 10, 80, 100, 75);
+    addBtn.frame = CGRectMake(235, 90, 100, 75);//CGRectMake(LEFT_WIDTH - 10, 80, 100, 75);
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -88,7 +88,7 @@
     [self.view addSubview:addBtn];
     
     doneBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    doneBtn.frame = CGRectMake(addBtn.frame.origin.x + addBtn.frame.size.width + 20, 80, 100, 75);
+    doneBtn.frame = CGRectMake(352, 90, 100, 75);//CGRectMake(addBtn.frame.origin.x + addBtn.frame.size.width + 20, 80, 100, 75);
     [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish"] forState:UIControlStateNormal];
     [doneBtn setBackgroundImage:[UIImage imageNamed:@"finish_pressed"] forState:UIControlStateHighlighted];
     [doneBtn addTarget:self action:@selector(doneBtnClicked) forControlEvents:UIControlEventTouchUpInside];

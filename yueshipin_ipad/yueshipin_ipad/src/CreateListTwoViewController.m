@@ -77,12 +77,12 @@
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.addBtn.frame = CGRectMake(LEFT_WIDTH - 10, 90, 100, 75);
+    self.addBtn.frame = CGRectMake(195, 90, 100, 75);//CGRectMake(LEFT_WIDTH - 10, 90, 100, 75);
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [self.addBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [self.addBtn addTarget:self action:@selector(addBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.deleteBtn.frame = CGRectMake(LEFT_WIDTH + self.addBtn.frame.size.width + 10, 90, 140, 75);
+    self.deleteBtn.frame = CGRectMake(312, 90, 140, 75);//CGRectMake(LEFT_WIDTH + self.addBtn.frame.size.width + 10, 90, 140, 75);
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [self.deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [self.deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
