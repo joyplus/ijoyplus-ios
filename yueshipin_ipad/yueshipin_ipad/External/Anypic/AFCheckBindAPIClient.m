@@ -11,16 +11,17 @@
 #import "EnvConstant.h"
 #import "CMConstants.h"
 #import "ContainerUtility.h"
+
 @implementation AFCheckBindAPIClient
 static AFCheckBindAPIClient *_sharedClient = nil;
 + (AFCheckBindAPIClient *)sharedClient
 {
     
     static dispatch_once_t oncePredicate;
-    NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
-    [_sharedClient setDefaultHeader:@"app_key" value:appKey];
     dispatch_once(&oncePredicate, ^{
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:CHECKBINDURLSTRING]];
+        NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
+        [_sharedClient setDefaultHeader:@"app_key" value:appKey];
     });
     
     return _sharedClient;

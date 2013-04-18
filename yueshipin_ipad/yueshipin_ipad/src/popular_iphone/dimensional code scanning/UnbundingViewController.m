@@ -126,7 +126,7 @@
     else
     {
         NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];   
-        NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
+        NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               @"33", @"push_type",
                               userId, @"user_id",

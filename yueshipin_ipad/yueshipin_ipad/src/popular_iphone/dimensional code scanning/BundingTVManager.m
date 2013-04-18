@@ -63,13 +63,14 @@ static BundingTVManager * manager = nil;
         return;
     }
     
-    NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 //@"ijoyplus_ios_001bj",KEY_APP,
                                 sendChannel,KEY_CHANNEL,
                                 _userId,KEY_USER, nil];
-    
+    AFCheckBindAPIClient * check = [AFCheckBindAPIClient sharedClient];
+    NSLog(@"%@",check);
     [[AFCheckBindAPIClient sharedClient] getPath:KPathCheckBinding
                                     parameters:parameters
                                        success:^(AFHTTPRequestOperation *operation, id result) {

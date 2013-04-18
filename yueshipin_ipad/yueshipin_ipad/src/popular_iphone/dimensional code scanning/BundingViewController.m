@@ -104,7 +104,7 @@
 
 - (void)bundingBtnClick
 {
-    NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",strData];
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",strData];
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                           @"31", @"push_type",
                           userId, @"user_id",

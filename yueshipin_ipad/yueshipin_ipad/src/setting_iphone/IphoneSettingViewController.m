@@ -350,7 +350,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",Id]];
     if ([[dic objectForKey:KEY_IS_BUNDING] boolValue] && nil != dic)
     {
-        NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
+        NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
         NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                               @"33", @"push_type",
                               Id, @"user_id",
