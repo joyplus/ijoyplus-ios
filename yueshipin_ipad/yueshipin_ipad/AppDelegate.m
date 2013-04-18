@@ -24,6 +24,8 @@
 #import "CommonMotheds.h"
 #import "DatabaseManager.h"
 #import "SegmentUrl.h"
+#import "CustomNavigationViewController.h"
+#import "IphoneAVPlayerViewController.h"
 
 #define DAY(day)        (day * 3600 * 24)
 
@@ -508,6 +510,27 @@
     RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
     respRootViewCtrl.delegate = self;
     UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    UIViewController * rootViewCtrl = navCtrl.topViewController;
+    if (rootViewCtrl.presentedViewController)
+    {
+        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
+        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
+        {
+            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
+            UIViewController * topCtrl = cNavCtrl.topViewController;
+            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
+            {
+                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
+                [playCtrl clearPlayerData];
+            }
+            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        }
+        else
+        {
+            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
+        }
+    }
     respRootViewCtrl.hidesBottomBarWhenPushed = YES;
     [navCtrl pushViewController:respRootViewCtrl animated:NO];
 }

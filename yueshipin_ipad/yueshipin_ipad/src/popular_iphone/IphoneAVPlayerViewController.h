@@ -136,5 +136,5 @@
 @property (nonatomic, assign) BOOL isPlayFromRecord;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
-
+- (void)clearPlayerData;
 @end

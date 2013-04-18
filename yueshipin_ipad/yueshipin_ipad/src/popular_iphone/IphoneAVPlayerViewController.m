@@ -1683,7 +1683,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //            prodId_ = nil;
             [self playEnd];
             [self updateWatchRecord];
-         
             break;
         }
         case FULL_SCREEN_TAG:{
@@ -1791,7 +1790,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 
 }
-
+- (void)clearPlayerData
+{
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    [self playEnd];
+}
 -(void)playEnd{
     [urlConnection cancel];
     urlConnection = nil;
