@@ -164,7 +164,7 @@
             [alert show];
         }
         else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"创建悅单失败,错误码:%@",responseCode] delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"请输入悦单名称" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
             [alert show];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
