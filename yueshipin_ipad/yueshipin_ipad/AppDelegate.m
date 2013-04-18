@@ -537,15 +537,15 @@
     NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
     NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
     
-    [self addLocalNotificationInterVal:DAY(2)
-                               message:firstStr];
     [self addLocalNotificationInterVal:DAY(4)
+                               message:firstStr];
+    [self addLocalNotificationInterVal:(DAY(4) * 2)
                                message:secondStr];
-    [self addLocalNotificationInterVal:DAY(6)
+    [self addLocalNotificationInterVal:(DAY(4) * 3)
                                message:thirdStr];
-    [self addLocalNotificationInterVal:DAY(8)
+    [self addLocalNotificationInterVal:(DAY(4) * 4)
                                message:fourthStr];
-    [self addLocalNotificationInterVal:DAY(13)
+    [self addLocalNotificationInterVal:(DAY(4) * 5)
                                message:fifthStr];
 }
 
