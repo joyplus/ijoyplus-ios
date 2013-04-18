@@ -115,6 +115,7 @@
 		223AD77D170560350017A09C /* icon_tab4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 223AD77C170560350017A09C /* icon_tab4@2x.png */; };
 		223AD781170562A10017A09C /* FilmReviewViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 223AD780170562A10017A09C /* FilmReviewViewCell.m */; };
 		223AD7871705B8950017A09C /* FilmReviewDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 223AD7861705B8950017A09C /* FilmReviewDetailView.m */; };
+		2241385A171F9A6F00FCF392 /* erweima@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22413859171F9A6F00FCF392 /* erweima@2x.png */; };
 		22447FF516F18D4A00058985 /* TSActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FEB16F18D4A00058985 /* TSActionSheet.m */; };
 		22447FF616F18D4A00058985 /* TSPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FED16F18D4A00058985 /* TSPopoverController.m */; };
 		22447FF716F18D4A00058985 /* TSPopoverPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FEF16F18D4A00058985 /* TSPopoverPopoverView.m */; };
@@ -1063,6 +1064,7 @@
 		223AD780170562A10017A09C /* FilmReviewViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilmReviewViewCell.m; sourceTree = "<group>"; };
 		223AD7851705B8950017A09C /* FilmReviewDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilmReviewDetailView.h; sourceTree = "<group>"; };
 		223AD7861705B8950017A09C /* FilmReviewDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilmReviewDetailView.m; sourceTree = "<group>"; };
+		22413859171F9A6F00FCF392 /* erweima@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "erweima@2x.png"; sourceTree = "<group>"; };
 		22447FEA16F18D4A00058985 /* TSActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSActionSheet.h; sourceTree = "<group>"; };
 		22447FEB16F18D4A00058985 /* TSActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSActionSheet.m; sourceTree = "<group>"; };
 		22447FEC16F18D4A00058985 /* TSPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSPopoverController.h; sourceTree = "<group>"; };
@@ -2756,6 +2758,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				22413859171F9A6F00FCF392 /* erweima@2x.png */,
 				EB98C2DA171D7B49008473BC /* episode_view_bg@2x.png */,
 				EB98C2CD171D761B008473BC /* right.png */,
 				EB98C29A171D6FA9008473BC /* add_pressed.png */,
@@ -4430,6 +4433,7 @@
 				EB98C2E7171D7B4A008473BC /* episode_view_bg@2x.png in Resources */,
 				22558007171E88E5002385D1 /* xiangkan_bg_pressed.png in Resources */,
 				22558008171E88E5002385D1 /* xiangkan_bg_pressed@2x.png in Resources */,
+				2241385A171F9A6F00FCF392 /* erweima@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

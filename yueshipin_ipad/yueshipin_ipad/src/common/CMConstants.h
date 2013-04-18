@@ -48,6 +48,7 @@
 #define kPhoneNumber @"kPhoneNumber"
 
 #define kIpadAppKey @"kIpadAppkey"
+#define KWXCODENUM  @"weixinImageNum"
 
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1

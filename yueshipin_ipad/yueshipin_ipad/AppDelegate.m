@@ -260,6 +260,15 @@
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
     }
+    NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
+    if ([pageNum intValue] <6 && [pageNum intValue] >= 0)
+    {
+        [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
+    }
+    else
+    {
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:KWXCODENUM];
+    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

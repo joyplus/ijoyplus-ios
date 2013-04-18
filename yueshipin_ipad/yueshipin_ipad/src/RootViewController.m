@@ -44,7 +44,8 @@
 #import "SSCheckBoxView.h"
 #import "DatabaseManager.h"
 
-#define EPISODE_NUMBER_IN_ROW 10
+#define EPISODE_NUMBER_IN_ROW   10
+#define TOP_VIEW_TAG            (54321)
 
 @interface UIViewExt : UIView {
 }
@@ -86,6 +87,7 @@
 
 @interface RootViewController ()
 @property (nonatomic, strong)NSMutableSet *checkboxes;
+
 @end
 
 @implementation RootViewController
@@ -161,6 +163,36 @@
 	[stackScrollViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
+#pragma mark -
+#pragma mark - 私有函数
+
+- (void)topViewTouchDown
+{
+    [[self.view viewWithTag:TOP_VIEW_TAG] removeFromSuperview];
+}
+
+#pragma mark - 
+#pragma mark - 对外接口
+- (void)addTopView:(UIView *)tView
+{
+    UIView * bgTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
+    bgTopView.backgroundColor = [UIColor clearColor];
+    bgTopView.tag = TOP_VIEW_TAG;
+    
+    UIButton * bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    bgBtn.frame = bgTopView.frame;
+    bgBtn.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.25];
+    [bgBtn addTarget:self
+              action:@selector(topViewTouchDown)
+    forControlEvents:UIControlEventTouchDown];
+    
+    tView.center = bgBtn.center;
+    
+    [bgTopView addSubview:bgBtn];
+    [bgTopView addSubview:tView];
+    [self.view addSubview:bgTopView];
+    //[rootView bringSubviewToFront:bgTopView];
+}
 - (void)showSuccessModalView:(int)closeTime
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];

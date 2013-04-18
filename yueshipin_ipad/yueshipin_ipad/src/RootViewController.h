@@ -76,4 +76,5 @@
 - (void)showModalView:(UIImage *)image closeTime:(int)closeTime;
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage;
 - (void)showReportPopup:(NSString *)prodId;
+- (void)addTopView:(UIView *)tView;
 @end

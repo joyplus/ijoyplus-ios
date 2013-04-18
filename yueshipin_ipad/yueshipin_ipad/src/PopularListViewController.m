@@ -15,6 +15,8 @@
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
 #import "CommonHeader.h"
+#import "ContainerUtility.h"
+#import "AppDelegate.h"
 
 #define TOP_IMAGE_HEIGHT 170
 #define LIST_LOGO_WIDTH 223
@@ -678,9 +680,25 @@
     int index = btn.tag - 9021;
     NSDictionary *item = [lunboArray objectAtIndex:index];
     NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"type"]];
-    if ([type isEqualToString:@"0"]) {
+    
+    //add code by huokun at 13/04/18 for 『获取轮播图位置』
+    NSString * pageNum = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:KWXCODENUM];
+    if ((index + 1) == [pageNum intValue])
+    {
+        //显示二维码页面
+        UIImageView * wxCode = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"erweima.png"]];
+        wxCode.frame = CGRectMake(0, 0, 263, 272);
+        [[AppDelegate instance].rootViewController addTopView:wxCode];
+        return;
+    }
+    //add code end
+    
+    if ([type isEqualToString:@"0"])
+    {
         [self showDetailScreen:item];
-    } else if ([type isEqualToString:@"1"]) {
+    }
+    else if ([type isEqualToString:@"1"])
+    {
         ListViewController *viewController = [[ListViewController alloc] init];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         NSString *topId = [NSString stringWithFormat:@"%@", [item objectForKey: @"prod_id"]];
