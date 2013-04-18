@@ -57,6 +57,9 @@
 @property (nonatomic, strong) NSMutableArray *movieTopsArray;
 @property (nonatomic, strong) NSMutableArray *tvTopsArray;
 
+- (void)setAutoScrollTimer;
+- (void)cancelAutoScrollTimer;
+
 @end
 
 @implementation PopularListViewController
@@ -223,6 +226,21 @@
 	
 }
 
+- (void)setAutoScrollTimer
+{
+    if (nil == timer)
+    {
+        timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
+    }
+}
+- (void)cancelAutoScrollTimer
+{
+    if (timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
+}
 
 #pragma mark -
 #pragma mark EGORefreshTableHeaderDelegate Methods
@@ -331,6 +349,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
+        [self cancelAutoScrollTimer];
         CGFloat pageWidth = scrollView.bounds.size.width ;
         float fractionalPage = scrollView.contentOffset.x / pageWidth ;
         NSInteger nearestNumber = lround(fractionalPage) ;
@@ -369,6 +388,13 @@
         } else if(topicType == DRAMA_TOPIC){
             [dramaPullToRefreshManager_ tableViewReleased];
         }
+    }
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)ascrollView
+{
+    if(ascrollView.tag == 11270014)
+    {
+        [self setAutoScrollTimer];
     }
 }
 

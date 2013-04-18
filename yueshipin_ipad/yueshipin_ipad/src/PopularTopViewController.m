@@ -53,6 +53,9 @@
 @property (nonatomic, strong) NSMutableArray *showTopsArray;
 @property (nonatomic) int showTopicId;
 
+- (void)setAutoScrollTimer;
+- (void)cancelAutoScrollTimer;
+
 @end
 
 @implementation PopularTopViewController
@@ -128,7 +131,8 @@
 {
     [super viewDidLoad];
     [self retrieveLunboData];
-    timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
+    
+    [self setAutoScrollTimer];
     
     pageSize = 20;
     topType = MOVIE_TOP;
@@ -382,6 +386,21 @@
 	
 }
 
+- (void)setAutoScrollTimer
+{
+    if (nil == timer)
+    {
+        timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
+    }
+}
+- (void)cancelAutoScrollTimer
+{
+    if (timer)
+    {
+        [timer invalidate];
+        timer = nil;
+    }
+}
 
 #pragma mark -
 #pragma mark EGORefreshTableHeaderDelegate Methods
@@ -456,6 +475,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
+        [self cancelAutoScrollTimer];
         CGFloat pageWidth = scrollView.bounds.size.width ;
         float fractionalPage = scrollView.contentOffset.x / pageWidth ;
         NSInteger nearestNumber = lround(fractionalPage) ;
@@ -505,6 +525,10 @@
             [leftScrollBtn setEnabled:NO];
             [rightScrollBtn setEnabled:YES];
         }
+    }
+    else if(ascrollView.tag == 11270014)
+    {
+        [self setAutoScrollTimer];
     }
 }
 
