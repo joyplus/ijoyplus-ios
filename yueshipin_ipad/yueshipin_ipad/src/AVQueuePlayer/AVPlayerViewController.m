@@ -1774,23 +1774,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
     if (!playCacheView.superview)
     {
-        [self.view addSubview:playCacheView];
+        [self.view addSubview:myHUD];
         
         myHUD.hidden = NO;
         [self.view bringSubviewToFront:myHUD];
         [myHUD show:YES];
-        UILabel *lastLabel = (UILabel *)[playCacheView viewWithTag:3232947504];
-        lastLabel.text = nil;
+        myHUD.labelText = @"正在加载，请稍等";
     }
 }
 - (void)dismissActivityView
 {
-    if (playCacheView.superview)
-    {
-        myHUD.hidden = YES;
-        [playCacheView removeFromSuperview];
-        playCacheView = nil;
-    }
+//    if (playCacheView.superview)
+//    {
+//        myHUD.hidden = YES;
+//        [playCacheView removeFromSuperview];
+//        playCacheView = nil;
+//    }
+      myHUD.hidden = YES;
 }
 
 #pragma mark -
@@ -2112,7 +2112,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         {
             if (pItem.playbackBufferEmpty)
             {
-                
+                [self showActivityView];
             }
             else
             {
@@ -2135,7 +2135,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             {
                 if (![self isPlaying])
                 {
-                    [self showPlayCacheView];
+                    [self showActivityView];
                 }
             }
         }

@@ -1202,6 +1202,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 -(void)stop{
     [self invalidateRetryTimer];
     [downloadOperationQueue_ cancelAllOperations];
+    downloadOperationQueue_ = nil;
 }
 
 -(void)invalidateRetryTimer{
@@ -1395,7 +1396,7 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
     check.checkIndex = arc4random()%1000000;
      //check.checkDownloadUrlsDelegate = self;
     [CheckDownloadUrlsManager startCheck];
-    
+    [[DownLoadManager defaultDownLoadManager] waringPlus];
 }
 
 +(void)startCheck{
