@@ -368,15 +368,15 @@
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
         if(episodeArray.count > 5){
-            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 10,  positionY, 42, 290);
-            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 400,  positionY, 42, 290);
+            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 10,  positionY, 42, 308.5);
+            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 400,  positionY, 42, 308.5);
         }
         showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
         if(!btnAdded){
             btnAdded = YES;
             if(episodeArray.count > 5){
-                showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 290);
-                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 350, showListView.frame.size.height);
+                showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
+                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
                 
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
                 [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
@@ -396,7 +396,7 @@
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                     [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 60, showListView.frame.size.width, 50)];
+                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 9), showListView.frame.size.width, 54.5)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
@@ -495,7 +495,7 @@
         showPageNumber = ceil(episodeArray.count / 5.0)-1;
     }
     [self updatePageBtnState];
-    [showListView setContentOffset:CGPointMake(350*showPageNumber, 0) animated:YES];
+    [showListView setContentOffset:CGPointMake(336.5*showPageNumber, 0) animated:YES];
 }
 
 - (void)updatePageBtnState
