@@ -342,6 +342,7 @@
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
     SubdownloadItem *item = [subitems objectAtIndex:index];
+    item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
     }
@@ -387,6 +388,7 @@
 {
     if(position < subitems.count){
         SubdownloadItem *item = [subitems objectAtIndex:position];
+        item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
         if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
             item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
             item.downloadStatus = @"done";

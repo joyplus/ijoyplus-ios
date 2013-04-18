@@ -459,6 +459,7 @@
 {
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
+        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {

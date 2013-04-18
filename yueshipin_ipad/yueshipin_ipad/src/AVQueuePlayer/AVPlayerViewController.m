@@ -926,7 +926,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         } else {
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
-            vidoeTitle.text = [video objectForKey:@"name"];
+            if (video) {                
+                vidoeTitle.text = [video objectForKey:@"name"];
+            }
         }
         [playCacheView addSubview:nameLabel];
         
