@@ -1203,6 +1203,19 @@
     int index = btn.tag - 9021;
     NSDictionary *item = [lunboArray objectAtIndex:index];
     NSString *type = [NSString stringWithFormat:@"%@", [item objectForKey:@"type"]];
+    
+    //add code by huokun at 13/04/18 for 『获取轮播图位置』
+    NSString * pageNum = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:KWXCODENUM];
+    if ((index + 1) == [pageNum intValue])
+    {
+        //显示二维码页面
+        UIImageView * wxCode = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"erweima.png"]];
+        wxCode.frame = CGRectMake(0, 0, 263, 272);
+        [[AppDelegate instance].rootViewController addTopView:wxCode];
+        return;
+    }
+    //add code end
+    
     if ([type isEqualToString:@"0"]) {
         [self showDetailScreen:item];
     } else if ([type isEqualToString:@"1"]) {

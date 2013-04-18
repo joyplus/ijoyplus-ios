@@ -181,7 +181,7 @@
     
     UIButton * bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     bgBtn.frame = bgTopView.frame;
-    bgBtn.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.25];
+    bgBtn.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
     [bgBtn addTarget:self
               action:@selector(topViewTouchDown)
     forControlEvents:UIControlEventTouchDown];
