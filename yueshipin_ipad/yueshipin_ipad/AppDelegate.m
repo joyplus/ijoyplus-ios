@@ -425,6 +425,7 @@
     
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
+        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
         [self triggerDownload];
         [ActionUtility generateUserId:nil];
         if ([self isWifiReachable]) {

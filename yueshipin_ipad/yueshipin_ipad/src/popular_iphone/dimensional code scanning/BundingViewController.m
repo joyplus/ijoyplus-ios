@@ -112,7 +112,7 @@
         {
             //若手机端已与该电视端绑定，提示用户
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
-                                                             message:@"设备已经与电视端绑定"
+                                                             message:@"该设备已绑定"
                                                             delegate:nil
                                                    cancelButtonTitle:@"我知道了"
                                                    otherButtonTitles:nil, nil];

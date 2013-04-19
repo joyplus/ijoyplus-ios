@@ -10,6 +10,7 @@
 #import "AFCheckBindAPIClient.h"
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
+#import "CMConstants.h"
 
 #define SERVER_URL  (@"ws://comettest.joyplus.tv:8080/bindtv")
 #define KEY_APP     (@"app_key")
@@ -36,8 +37,20 @@ static BundingTVManager * manager = nil;
     {
         _userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
         isUserUnbind = NO;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(netWorkBecomeAvailable)
+                                                     name:KEY_NETWORK_BECOME_AVAILABLE
+                                                   object:nil];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:KEY_NETWORK_BECOME_AVAILABLE
+                                                  object:nil];
 }
 
 - (void)showMsg:(NSString *)msg
@@ -48,6 +61,11 @@ static BundingTVManager * manager = nil;
                                            cancelButtonTitle:@"我知道了"
                                            otherButtonTitles:nil, nil];
     [alert show];
+}
+
+- (void)netWorkBecomeAvailable
+{
+    [self connectedToServer];
 }
 
 #pragma mark -
@@ -66,11 +84,9 @@ static BundingTVManager * manager = nil;
     NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                //@"ijoyplus_ios_001bj",KEY_APP,
                                 sendChannel,KEY_CHANNEL,
                                 _userId,KEY_USER, nil];
-    AFCheckBindAPIClient * check = [AFCheckBindAPIClient sharedClient];
-    NSLog(@"%@",check);
+    
     [[AFCheckBindAPIClient sharedClient] getPath:KPathCheckBinding
                                     parameters:parameters
                                        success:^(AFHTTPRequestOperation *operation, id result) {
@@ -94,18 +110,11 @@ static BundingTVManager * manager = nil;
                                             bind,KEY_IS_BUNDING, nil]
                                                                                     forKey:\
                                             [NSString stringWithFormat:@"%@_isBunding",_userId]];
+                                           [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
                                     }
                                        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         
                                     }];
-    
-//    if ([[data objectForKey:KEY_IS_BUNDING] boolValue])
-//    {
-//        FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:sendChannel];
-//        self.sendClient = fClient;
-//        [self.sendClient connectToServer];
-//    }
-    //[MobClick event:@"ue_wechat_friend_share"];
 }
 
 - (void)connecteServerWithChannel:(NSString *)channel
