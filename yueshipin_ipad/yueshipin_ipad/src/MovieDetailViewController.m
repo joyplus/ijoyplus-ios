@@ -114,7 +114,7 @@
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 30);
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:24];
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
     self.titleLabel.textColor = CMConstants.textColor;
 
     self.scoreLable.frame = CGRectMake(270, 120, 50, 20);

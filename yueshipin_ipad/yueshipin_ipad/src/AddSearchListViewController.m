@@ -217,6 +217,7 @@
             nameLabel.text = @"";
             nameLabel.backgroundColor = [UIColor clearColor];
             nameLabel.tag = 2001;
+            nameLabel.textColor = CMConstants.textColor;
             [cell.contentView addSubview:nameLabel];
             
             //        for (int i = 0; i < 5; i++){
@@ -230,10 +231,10 @@
             scoreLabel.tag = 3001;
             scoreLabel.backgroundColor = [UIColor clearColor];
             scoreLabel.font = [UIFont boldSystemFontOfSize:15];
-            scoreLabel.textColor = CMConstants.scoreBlueColor;
+            scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
             scoreLabel.textAlignment = NSTextAlignmentRight;
             [cell.contentView addSubview:scoreLabel];
-            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 9, 15, 15)];
+            UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 8, 15, 15)];
             doubanLogo.image = [UIImage imageNamed:@"douban"];
             [cell.contentView addSubview:doubanLogo];
             

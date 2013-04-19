@@ -754,7 +754,7 @@
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
+                [nameBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];

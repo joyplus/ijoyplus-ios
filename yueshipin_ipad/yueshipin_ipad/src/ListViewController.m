@@ -208,6 +208,7 @@
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.tag = 2001;
         [cell.contentView addSubview:nameLabel];
+        nameLabel.textColor = CMConstants.textColor;
         
         UILabel *scoreLabel = [[UILabel alloc]initWithFrame:CGRectMake(nameLabel.frame.origin.x + nameLabel.frame.size.width, nameLabel.frame.origin.y, 45, 30)];
         scoreLabel.tag = 4001;
