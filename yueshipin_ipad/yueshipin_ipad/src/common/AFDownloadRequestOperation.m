@@ -206,14 +206,26 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
         }else if(!self.error) {
             // move file to final position and capture error        
             @synchronized(self) {
-                NSFileManager *newManager = [NSFileManager new];
-                if ([newManager fileExistsAtPath:_targetPath]) {
-                    [newManager removeItemAtPath:_targetPath error:nil];
+                long long downloadedFileSize = [self fileSizeForPath:[self tempPath]];
+                if ((self.totalContentLength - downloadedFileSize) > (3*1024*1024)) {
+                    NSLog(@"downloadsize %lld expectedContentLength %lld ",downloadedFileSize,self.totalContentLength);
+                    NSLog(@"下载的文件大小和预期的相差太大");
+                    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"下载的文件大小和预期的相差太大",NSLocalizedDescriptionKey,nil];
+                    NSError *oneError = [NSError errorWithDomain:NSOSStatusErrorDomain code:1024 userInfo:userInfo];
+                    _fileError = oneError;
                 }
-                [newManager moveItemAtPath:[self tempPath] toPath:_targetPath error:&localError];
-                if (localError) {
-                    _fileError = localError;
+                else{
+                    NSFileManager *newManager = [NSFileManager new];
+                    if ([newManager fileExistsAtPath:_targetPath]) {
+                        [newManager removeItemAtPath:_targetPath error:nil];
+                    }
+                    [newManager moveItemAtPath:[self tempPath] toPath:_targetPath error:&localError];
+                    if (localError) {
+                        _fileError = localError;
+                    }
+            
                 }
+                
             }
         }
         
@@ -246,7 +258,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     [super connection:connection didReceiveResponse:response];
-    
+
     // check if we have the correct response
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     if (![httpResponse isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -255,6 +267,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
     
     // check for valid response to resume the download if possible
     long long totalContentLength = self.response.expectedContentLength;
+    NSLog(@"self.expectedContentLength %lld",totalContentLength);
     long long fileOffset = 0;
     if(httpResponse.statusCode == 206) {
         NSString *contentRange = [httpResponse.allHeaderFields valueForKey:@"Content-Range"];

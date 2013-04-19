@@ -325,22 +325,13 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
       
         tempdownloadRequestOperation.operationStatus = @"fail";
         
-        if (retryTimer_ != nil) {
-            [retryTimer_ invalidate];
-            retryTimer_ = nil;
-        }
-        else{
-            retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
-            
-        }
-
-        
         if (retryCount_ <= 6) {
             if (retryTimer_ != nil) {
                 [retryTimer_ invalidate];
                 retryTimer_ = nil;
             }
             else{
+                retryCount_ ++;
                 retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
             
              }
@@ -380,21 +371,17 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                     if (count >=5) {
                         downloadItem_.percentage = (int)(percentDone*100);
                         [DatabaseManager update:downloadItem_];
-                       //// [downloadItem_ save];
                         [self updateSapce];
                     }
                 }
             }else{
                  int count = (int)(percentDone*100) - subdownloadItem_.percentage;
-//                 NSLog(@"!!!!!!!!!!!!!!!!%d",(int)(percentDone*100));
-                 
                   if (count >= 1) {
                     
                     [self.downLoadMGdelegate reFreshProgress:percentDone withId:downloadId_ inClass:@"IphoneSubdownloadViewController"];
                     if (count >=5) {
                         subdownloadItem_.percentage = (int)(percentDone*100);
                         [DatabaseManager update:subdownloadItem_];
-                        ////[subdownloadItem_ save];
                         [self updateSapce];
                     }
                 }
@@ -408,7 +395,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
      NSRange range = [downloadId_ rangeOfString:@"_"];
     if (range.location == NSNotFound) {
          NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",downloadId_];
-        // NSArray *itemArr = [DownloadItem findByCriteria:query];
         NSArray *itemArr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
         if ([itemArr count]>0) {
             int percet = ((DownloadItem *)[itemArr objectAtIndex:0]).percentage;
@@ -424,7 +410,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
     else{
         NSString *query = [NSString stringWithFormat:@"WHERE subitemId ='%@'",downloadId_];
-        ////NSArray *itemArr = [SubdownloadItem findByCriteria:query];
         NSArray *itemArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
         if ([itemArr count]>0) {
             int percet = ((SubdownloadItem *)[itemArr objectAtIndex:0]).percentage;
@@ -463,7 +448,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                     [self saveDataBaseIntable:@"DownloadItem" withId:idstr withStatus:@"loading" withPercentage:downloadItem.percentage];
                     [self.downLoadMGdelegate downloadBeginwithId:idstr inClass:@"IphoneDownloadViewController"];
                     
-                    ////NSArray *segArr = [SegmentUrl findByCriteria:query];
                     NSArray *segArr = [DatabaseManager findByCriteria:[SegmentUrl class] queryString:query];
                     [downloadRequestOperation.m3u8MG startDownloadM3u8file:segArr withId:idstr withNum:@"1"];
                     return;
@@ -587,8 +571,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 if (percentage == 0) {
                     subdownloadItem_ = item;
                 }
-                //subdownloadItem_ = item;
-                //[item save];
+
                 [DatabaseManager update:item];
                 break;
             }
