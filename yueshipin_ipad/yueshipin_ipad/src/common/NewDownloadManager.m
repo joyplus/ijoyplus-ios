@@ -13,6 +13,7 @@
 #import "DownloadUrlFinder.h"
 #import "ActionUtility.h"
 #import "DatabaseManager.h"
+#import "Reachability.h"
 
 @interface NewDownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -161,15 +162,16 @@
     NSLog(@"error in download manager");
     [self stopDownloading];
     [AppDelegate instance].currentDownloadingNum = 0;
-    //    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-//        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
-//        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-//            item.downloadStatus = @"stop";
-//            [item save];
-//            break;
-//        }
-//    }
-//    [self startNewDownloadItem];
+    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+}
+
+- (void)restartNewDownloading
+{
+    [AppDelegate instance].currentDownloadingNum = 0;
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable) {
+        [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
+    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId
@@ -198,6 +200,7 @@
     NSLog(@"error in download manager");
     [self stopDownloading];
     [AppDelegate instance].currentDownloadingNum = 0;
+    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId

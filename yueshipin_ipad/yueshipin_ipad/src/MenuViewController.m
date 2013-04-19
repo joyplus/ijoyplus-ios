@@ -51,6 +51,9 @@
 #import "PersonalViewController.h"
 #import "DownloadViewController.h"
 #import "UMGridViewController.h"
+#import "MovieDetailViewController.h"
+#import "DramaDetailViewController.h"
+#import "ShowDetailViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
@@ -66,6 +69,7 @@
     DownloadViewController *downloadViewController;
     UMGridViewController *appViewController;
     SettingsViewController *settingsViewController;
+    UIViewController *currentViewController;
     NSInteger selectedIndex;
 }
 
@@ -159,6 +163,34 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
+}
+
+- (void)handlePushNotification:(NSNotification *)notification
+{
+    NSDictionary *userInfo = [notification userInfo];
+    [self showDetailScreen:userInfo];
+}
+
+- (void)showDetailScreen:(NSDictionary *)item
+{
+    int prodType = [[item objectForKey:@"prod_type"] integerValue];
+    if(prodType == MOVIE_TYPE){
+        MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
+        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:[self getViewControllerByIndex] isStackStartView:FALSE  removePreviousView:YES];
+    } else if(prodType == DRAMA_TYPE || prodType == COMIC_TYPE){
+        DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
+        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:[self getViewControllerByIndex] isStackStartView:FALSE removePreviousView:YES];
+    } else if(prodType == SHOW_TYPE){
+        ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
+        viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
+        viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:[self getViewControllerByIndex] isStackStartView:FALSE removePreviousView:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

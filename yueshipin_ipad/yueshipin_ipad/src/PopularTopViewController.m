@@ -130,7 +130,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handlePushNotification:) name:@"push_notification" object:nil];
     [self retrieveLunboData];
     
     [self setAutoScrollTimer];
@@ -159,13 +158,6 @@ void transferDataFromOldDbWithCatch()
     @catch (NSException *exception) {
         NSLog(@"%@", exception);
     }
-}
-
-- (void)handlePushNotification:(NSNotification *)notification
-{
-    NSDictionary *userInfo = [notification userInfo];
-    [self showDetailScreen:userInfo];
-    
 }
 
 - (void)retrieveLunboData
