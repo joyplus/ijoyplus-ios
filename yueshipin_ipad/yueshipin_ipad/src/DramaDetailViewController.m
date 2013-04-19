@@ -86,8 +86,6 @@
     [self setShareLabel:nil];
     [self setEpisodeImage:nil];
     [self setEpisodeViewBg:nil];
-    [self setEpisodeViewBg:nil];
-    [self setEpisodeViewBg:nil];
     [super viewDidUnload];
 }
 
