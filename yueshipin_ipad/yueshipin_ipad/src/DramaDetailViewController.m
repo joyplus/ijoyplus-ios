@@ -220,6 +220,7 @@
     pageTabScrollView.backgroundColor = [UIColor clearColor];
     
     episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
+    episodeView.tag = 323474820;
     //episodeView.scrollEnabled = NO;
     episodeView.showsHorizontalScrollIndicator = NO;
     episodeView.backgroundColor = [UIColor clearColor];
@@ -472,7 +473,7 @@
 - (void)pageBtnClicked:(UIButton *)btn
 {
     for (UIView *subview in pageTabScrollView.subviews) {
-        if ([subview isKindOfClass:[UIButton class]]) {
+        if ([subview isKindOfClass:[UIButton class]] && subview.tag != btn.tag) {
             UIButton *tabBtn = (UIButton *)subview;
             [tabBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
             [tabBtn setBackgroundImage:nil forState:UIControlStateNormal];
@@ -480,7 +481,7 @@
     }
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
-    [episodeView setContentOffset:CGPointMake(episodeView.frame.size.width*(btn.tag - 1001), 0) animated:YES];
+    [episodeView setContentOffset:CGPointMake(episodeView.frame.size.width*(btn.tag - 7101), 0) animated:YES];
 }
 
 - (void)repositElements
@@ -498,21 +499,25 @@
     
     totalEpisodeNumber = episodeArray.count;
     self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
-    pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-2, 30);
+    pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-4, 30);
     pageTabScrollView.backgroundColor = [UIColor clearColor];
     pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/7+1), pageTabScrollView.frame.size.height);
+    for (UIView *aview in pageTabScrollView.subviews) {
+        [aview removeFromSuperview];
+    }
     for (int i = 0; i < dramaPageNum; i++) {
         UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        pageBtn.frame = CGRectMake(i * (63 + 10), 0, 63, 27);
-        pageBtn.tag = 1001 + i;
-        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*20+1, (int)fmin((i+1)*20, episodeArray.count)] forState:UIControlStateNormal];
+        pageBtn.frame = CGRectMake(i * (63 + 8), 0, 63, 27);
+        pageBtn.tag = 7101 + i;
         if(i == 0){
             [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
         } else {
             [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         }
+        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*20+1, (int)fmin((i+1)*20, episodeArray.count)] forState:UIControlStateNormal];
         [pageBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
         [pageBtn addTarget:self action:@selector(pageBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [pageTabScrollView addSubview:pageBtn];
@@ -956,27 +961,17 @@
 
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
-//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView;
 {
-//    if(scrollView.contentOffset.x < episodeView.frame.size.width){
-//        CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height;
-//        [self relocateCommentForScroll:y];
-//    }
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    CGPoint offset = scrollView.contentOffset;
-    episodePageNumber = offset.x/430;
-//    [self setControlButtonDisplay];
-}
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
-{
-    CGPoint offset = scrollView.contentOffset;
-    episodePageNumber = offset.x/430;
-    
-//    [self setControlButtonDisplay];
+    if (scrollView.tag == 323474820) {
+        int page = floor(scrollView.contentOffset.x/scrollView.frame.size.width);
+        int dramaPageNum = ceil(episodeArray.count / 20.0);
+        if (page >= 0 && page < dramaPageNum) {
+            [pageTabScrollView setContentOffset:CGPointMake(floor(page/6.0) * pageTabScrollView.frame.size.width, 0) animated:YES];
+            UIButton *tabBtn = (UIButton *)[pageTabScrollView viewWithTag:7101 + page];
+            [self pageBtnClicked:tabBtn];
+        }
+    }
 }
 
 //delegate method

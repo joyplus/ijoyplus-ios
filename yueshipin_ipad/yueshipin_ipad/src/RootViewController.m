@@ -569,7 +569,7 @@
 {
     if (scrollView.tag == 3268143) {
         int page = floor(scrollView.contentOffset.x/520.0);
-        if (page > 0 && page < dramaPageNum) {
+        if (page >= 0 && page < dramaPageNum) {
             UIScrollView *episodeView = (UIScrollView *)[self.view viewWithTag:74378420];
             [episodeView setContentOffset:CGPointMake(floor(page/7.0) * episodeView.frame.size.width, 0) animated:YES];
             UIView *view = (UIView *)[self.view viewWithTag:3268142];
