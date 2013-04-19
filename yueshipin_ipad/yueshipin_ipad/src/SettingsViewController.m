@@ -88,7 +88,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
         
-        sinaUsernameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 8, 135, 25)];
+        sinaUsernameLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 10, 135, 25)];
         sinaUsernameLabel.backgroundColor = [UIColor clearColor];
         sinaUsernameLabel.font = [UIFont boldSystemFontOfSize:13];
         sinaUsernameLabel.textColor = CMConstants.titleBlueColor;
