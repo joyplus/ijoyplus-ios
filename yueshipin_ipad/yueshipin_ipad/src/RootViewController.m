@@ -694,7 +694,7 @@
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 if (![self checkDownloadStatus:episodeArray index:i]) {
-                    [nameBtn setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+                    [nameBtn setTitleColor:[UIColor colorWithRed:188.0/255.0 green:188.0/255.0 blue:188.0/255.0 alpha:1] forState:UIControlStateDisabled];
                     [nameBtn setEnabled:NO];
                 }
                 for (SubdownloadItem *subitem in downloadingItems) {
@@ -740,6 +740,7 @@
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setTitleColor:[UIColor colorWithRed:188.0/255.0 green:188.0/255.0 blue:188.0/255.0 alpha:1] forState:UIControlStateDisabled];
                     [nameBtn setEnabled:NO];
                 }
                 for (SubdownloadItem *subitem in downloadingItems) {
