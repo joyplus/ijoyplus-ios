@@ -227,10 +227,11 @@
     episodeView.delegate = self;
     episodeView.backgroundColor = [UIColor clearColor];
     
-    self.introContentTextView.frame = CGRectMake(0, 0, 0, 100);
+    self.introContentTextView = [[UITextView alloc]initWithFrame: CGRectMake(0, 0, 0, 100)];
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 1;
     self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    [self.bgScrollView addSubview:self.introContentTextView];
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;

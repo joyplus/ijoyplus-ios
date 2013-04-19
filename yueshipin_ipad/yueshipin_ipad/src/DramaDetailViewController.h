@@ -31,7 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *shareBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addListBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *introImage;
-@property (weak, nonatomic) IBOutlet UITextView *introContentTextView;
+@property (strong, nonatomic) IBOutlet UITextView *introContentTextView;
 @property (weak, nonatomic)UITableViewController *listViewController;
 @property (weak, nonatomic) IBOutlet UIImageView *relatedImage;
 @property (weak, nonatomic)UITableViewController *commentViewController;
