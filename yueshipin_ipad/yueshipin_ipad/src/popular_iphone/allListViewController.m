@@ -205,6 +205,8 @@
     DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
     reader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
     reader.showsZBarControls = NO;
+    reader.showsHelpOnFail = NO;
+    reader.showsCameraControls = NO;
     reader.cameraOverlayView = scanView;
     ZBarImageScanner *scanner = reader.scanner;
     [scanner setSymbology: ZBAR_I25

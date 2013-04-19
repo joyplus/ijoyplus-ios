@@ -12,7 +12,7 @@
 
 @class MBProgressHUD;
 
-@interface BundingViewController : UIViewController <FayeClientDelegate>
+@interface BundingViewController : UIViewController <FayeClientDelegate,UIAlertViewDelegate>
 {
     NSString        *userId;
     MBProgressHUD   *HUDView;

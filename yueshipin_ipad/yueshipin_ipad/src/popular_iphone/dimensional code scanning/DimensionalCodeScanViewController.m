@@ -130,6 +130,17 @@
     for(symbol in results)
         break;
     
+    if (![symbol.data hasPrefix:@"joy"])
+    {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"请扫描悦视频TV版的\"我的悅视频\"中的二维码哦"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"我知道了"
+                                               otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
+    
     BundingViewController * bCtrl = [[BundingViewController  alloc] init];
     bCtrl.strData = symbol.data;
     bCtrl.hidesBottomBarWhenPushed = NO;
