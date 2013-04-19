@@ -478,7 +478,7 @@
     pageView.scrollEnabled = YES;
     pageView.backgroundColor = [UIColor clearColor];
     [pageView setPagingEnabled:YES];
-    pageView.frame = CGRectMake(305, 300, 430-4, 30);
+    pageView.frame = CGRectMake(300, 300, 430-4, 30);
     pageView.contentSize = CGSizeMake(pageView.frame.size.width*(dramaPageNum/6+1), pageView.frame.size.height);
     pageView.contentOffset = CGPointMake(0, 0);
     [view addSubview:pageView];
