@@ -125,11 +125,11 @@
     
     self.directorLabel.frame = CGRectMake(270, 150, 50, 15);
     self.directorLabel.textColor = CMConstants.grayColor;
-    self.directorNameLabel.frame = CGRectMake(315, 150, 150, 15);
+    self.directorNameLabel.frame = CGRectMake(315, 150, 170, 15);
     self.directorNameLabel.textColor = CMConstants.grayColor;
     self.actorLabel.frame = CGRectMake(270, 180, 50, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(315, 180, 150, 15);
+    self.actorName1Label.frame = CGRectMake(315, 180, 170, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
     
     self.playLabel.frame = CGRectMake(270, 210, 50, 15);
@@ -141,14 +141,14 @@
     self.regionNameLabel.frame = CGRectMake(315, 240, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
-    self.playBtn.frame = CGRectMake(260, 280, 100, 50);
+    self.playBtn.frame = CGRectMake(265, 280, 100, 50);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
     [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
     self.expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
+    self.expectbtn.frame = CGRectMake(270, 280, 100, 50);
     [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg.png"] forState:UIControlStateNormal];
     [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg_pressed.png"] forState:UIControlStateHighlighted];
     [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
@@ -162,7 +162,7 @@
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;
     
-    self.downloadBtn.frame = CGRectMake(384, 280, 100, 50);
+    self.downloadBtn.frame = CGRectMake(376, 280, 100, 50);
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
