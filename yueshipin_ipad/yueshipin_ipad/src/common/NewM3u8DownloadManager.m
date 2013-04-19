@@ -93,7 +93,7 @@
     }
     [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file to %@", filePath);
-        [self performSelector:@selector(generatePlaylistFile:) withObject:filePath];
+        [self performSelectorInBackground:@selector(generatePlaylistFile:) withObject:filePath];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
         [self stopDownloading];
