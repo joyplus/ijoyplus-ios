@@ -24,6 +24,7 @@
 #import "UnbundingViewController.h"
 #import "ContainerUtility.h"
 #import "IntroductionView.h"
+#import "DatabaseManager.h"
 #define PAGE_NUM 4
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -74,6 +75,21 @@ enum
     return self;
 }
 
+-(void)dataBaseChanged{
+    MBProgressHUD *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:tempHUD];
+    tempHUD.labelText = @"缓存数据迁移中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
+    
+    @try {
+        [DatabaseManager transferFinishedDownloadFiles];//iphone 数据库迁移；
+    }
+    @catch (NSException *exception) {
+        NSLog(@"DatabaseManager error:%@",exception.description);
+    }
+    [tempHUD hide:YES];
+}
 
 -(void)loadTVTopsData{
 
@@ -333,6 +349,8 @@ enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self dataBaseChanged];
     
     UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
     titleText.backgroundColor = [UIColor clearColor];

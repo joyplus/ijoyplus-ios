@@ -380,7 +380,7 @@
             [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
         } else if (dbObject.class == SubdownloadItem.class) {
             SubdownloadItem *obj = (SubdownloadItem *)dbObject;
-            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName ==nil?@"":obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
             [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
         } else if (dbObject.class == SegmentUrl.class) {
             SegmentUrl *obj = (SegmentUrl *)dbObject;

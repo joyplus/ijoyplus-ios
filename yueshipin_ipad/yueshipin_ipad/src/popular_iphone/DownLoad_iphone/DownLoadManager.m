@@ -1386,6 +1386,7 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
     check.checkIndex = arc4random()%1000000;
      //check.checkDownloadUrlsDelegate = self;
     [CheckDownloadUrlsManager startCheck];
+    [[DownLoadManager defaultDownLoadManager] postIsloadingBoolValue];
     [[DownLoadManager defaultDownLoadManager] waringPlus];
 }
 
