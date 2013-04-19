@@ -28,7 +28,7 @@
 #define KEY_UNBINDED            (@"ue_screencast_unbinded")
 #define KEY_PUSH_VIDEO          (@"ue_screencast_video_push")
 
-#define KEY_MAX_RESPOND_TIME    (5)
+#define KEY_MAX_RESPOND_TIME    (8)
 
 #define KEY_MACADDRESS      (@"macAddress")
 #define KEY_IS_BUNDING      (@"isBunding")
