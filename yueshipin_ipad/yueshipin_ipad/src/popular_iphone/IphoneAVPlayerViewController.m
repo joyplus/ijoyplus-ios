@@ -2125,11 +2125,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
     [self showNOThisClearityUrl:NO];
     
-    [self removePlayerTimeObserver];
-    [self.player pause];
-    if (timeLabelTimer_ != nil) {
-        [timeLabelTimer_ invalidate];
-    }
+    [self destoryPlayer];
     
     playNum = indexPath.row;
     
