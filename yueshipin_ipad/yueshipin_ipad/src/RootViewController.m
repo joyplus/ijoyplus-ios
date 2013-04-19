@@ -660,27 +660,31 @@
     [view addSubview:showListView];
     NSString *subquery = [NSString stringWithFormat:@"where itemId = %@", downloadingProdid];
     NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
-        if(episodeArray.count > 5){
-            UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [previousShowBtn setEnabled:NO];
-            UIButton *nextShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [view addSubview:previousShowBtn];
-            [view addSubview:nextShowBtn];
-            previousShowBtn.frame = CGRectMake(275,  330 - 90, 64, 308.5);
-            nextShowBtn.frame = CGRectMake(275 + 336.5 + 74,  330 - 90, 64, 308.5);
-            
-            [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-            [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-            [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
-            [previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            previousShowBtn.tag = 9001;
-            
-            [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-            [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-            [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
-            [nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            nextShowBtn.tag = 9002;
-            for (int i = 0; i < episodeArray.count; i++) {
+    UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [previousShowBtn setEnabled:NO];
+    UIButton *nextShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [view addSubview:previousShowBtn];
+    [view addSubview:nextShowBtn];
+    previousShowBtn.frame = CGRectMake(275,  330 - 90, 64, 308.5);
+    nextShowBtn.frame = CGRectMake(275 + 336.5 + 74,  330 - 90, 64, 308.5);
+    
+    [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+    [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+    [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
+    [previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    previousShowBtn.tag = 9001;
+    
+    [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+    [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+    [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
+    [nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    nextShowBtn.tag = 9002;
+        if(episodeArray.count > 5)
+        {
+            previousShowBtn.enabled = NO;
+            nextShowBtn.enabled = YES;
+            for (int i = 0; i < episodeArray.count; i++)
+            {
                 int pageNum = floor(i/5.0);
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -729,7 +733,11 @@
                 }
                 [showListView addSubview:nameBtn];
             }
-        } else {
+        }
+        else
+        {
+            previousShowBtn.enabled = NO;
+            nextShowBtn.enabled = NO;
             for(int i = 0; i < episodeArray.count; i++){
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -822,8 +830,15 @@
     }
     if(showPageNumber == 0){
         [previousShowBtn setEnabled:NO];
+        [nextShowBtn setEnabled:YES];
     }
     if(showPageNumber == ceil(showEpisodeCount / 5.0)-1){
+        [previousShowBtn setEnabled:YES];
+        [nextShowBtn setEnabled:NO];
+    }
+    if (showEpisodeCount <= 5)
+    {
+        [previousShowBtn setEnabled:NO];
         [nextShowBtn setEnabled:NO];
     }
 }
