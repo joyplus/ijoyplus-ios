@@ -102,12 +102,7 @@
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
-<<<<<<< HEAD
     self.titleLabel.textColor = CMConstants.textColor;
-=======
-    self.titleLabel.textColor = [UIColor colorWithRed:100.0/255.0 green:100.0/255.0 blue:100.0/255.0 alpha:1];
-    
->>>>>>> UI bug
     self.actorLabel.frame = CGRectMake(270, 140, 80, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
     self.actorName1Label.frame = CGRectMake(350, 140, 140, 15);
