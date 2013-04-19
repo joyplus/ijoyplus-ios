@@ -1613,11 +1613,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     [self showNOThisClearityUrl:NO];
     
-    [self addCacheview];
+    
     CMTime previousLastPlayTime = [mPlayer currentTime];
     if (CMTIME_IS_VALID(previousLastPlayTime) && CMTimeCompare(previousLastPlayTime, kCMTimeZero) != 0) {
         lastPlayTime_ = previousLastPlayTime;
     }
+    [self addCacheview];
     
     clearBgView_.hidden = YES;
     
@@ -1681,8 +1682,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //            mPlayer = nil;
 //            mPlayerItem = nil;
 //            prodId_ = nil;
-            [self playEnd];
             [self updateWatchRecord];
+            [self playEnd];
+            
             break;
         }
         case FULL_SCREEN_TAG:{
@@ -2159,7 +2161,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 -(void)initplaytime{
     if (!CMTIME_IS_VALID(lastPlayTime_)) {
-        NSNumber *playtime = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",playNum]]];
+        NSNumber *playtime = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(playNum+1)]]];
         lastPlayTime_ = CMTimeMakeWithSeconds(playtime.doubleValue, NSEC_PER_SEC);
     }
     
