@@ -852,7 +852,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 13, 200, 30)];
         [titleLabel setTextColor:CMConstants.textColor];
         [titleLabel setFont:[UIFont systemFontOfSize:13]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
@@ -973,7 +973,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         [cell setSelectionStyle:UITableViewCellEditingStyleNone];
-        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 5, 200, 30)];
+        UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(38, 13, 200, 30)];
         [titleLabel setTextColor:CMConstants.textColor];
         [titleLabel setFont:[UIFont systemFontOfSize:13]];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
