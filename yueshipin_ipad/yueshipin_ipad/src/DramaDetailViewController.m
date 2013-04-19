@@ -394,7 +394,7 @@
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    self.scoreLabel.textColor = CMConstants.scoreBlueColor;
+    self.scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
     NSString *stars = [video objectForKey:@"stars"];
     self.actorName1Label.text = stars;
     
