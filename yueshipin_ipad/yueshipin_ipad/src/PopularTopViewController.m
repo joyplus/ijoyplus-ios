@@ -142,6 +142,23 @@
     comicTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     showTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     [self retrieveMovieTopsData];
+    
+    [self performSelectorInBackground:@selector(transferDataFromOldDb) withObject:nil];
+}
+
+- (void)transferDataFromOldDb
+{
+    transferDataFromOldDbWithCatch();
+}
+
+void transferDataFromOldDbWithCatch()
+{
+    @try {
+        [DatabaseManager transferFinishedDownloadFiles];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@", exception);
+    }
 }
 
 - (void)handlePushNotification:(NSNotification *)notification

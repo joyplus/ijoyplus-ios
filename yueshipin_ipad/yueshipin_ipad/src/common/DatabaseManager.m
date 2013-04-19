@@ -6,6 +6,7 @@
 //  Copyright (c) 2013年 joyplus. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>   
 #import "DatabaseManager.h"
 #import "FMDatabaseQueue.h"
 #import "FMDatabase.h"
@@ -19,7 +20,7 @@
 
 + (void)transferFinishedDownloadFiles
 {
-    NSFileManager *fileManager = [NSFileManager new];    
+    NSFileManager *fileManager = [NSFileManager new];
     if ([fileManager fileExistsAtPath:OLD_DATABASE_PATH]) {
         FMDatabase *db = [FMDatabase databaseWithPath:OLD_DATABASE_PATH];
         if (![db open]) {
@@ -28,7 +29,7 @@
         }
         FMResultSet *rs = [db executeQuery:[NSString stringWithFormat:@"SELECT * From subdownload_item"]];
         NSMutableArray *subdownloadArray = [[NSMutableArray alloc]initWithCapacity:5];
-        if ([rs next]) {
+        while ([rs next]) {
             SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
             tempDbObj.itemId =  [rs stringForColumn:@"item_id"];
             tempDbObj.name = [rs stringForColumn:@"name"];
@@ -48,7 +49,7 @@
         
         NSMutableArray *downloadArray = [[NSMutableArray alloc]initWithCapacity:5];
         rs = [db executeQuery:[NSString stringWithFormat:@"SELECT * From download_item"]];
-        if ([rs next]) {
+        while ([rs next]) {
             DownloadItem *tempDbObj = [[DownloadItem alloc]init];
             tempDbObj.itemId =  [rs stringForColumn:@"item_id"];
             tempDbObj.name = [rs stringForColumn:@"name"];
@@ -96,10 +97,10 @@
                     if ([fileManager fileExistsAtPath:m3u8FilePath]) {
                         [fileManager removeItemAtPath:m3u8FilePath error:NULL];
                     }
-                } 
+                }
             }
         }
-
+        
         NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
         NSEnumerator *e = [contents objectEnumerator];
         NSString *filename;
@@ -111,6 +112,7 @@
         
         [fileManager removeItemAtPath:OLD_DATABASE_PATH error:NULL];
     }
+
 }
 
 + (void)initDatabase
@@ -374,7 +376,7 @@
     [queue inDatabase:^(FMDatabase *db) {
         if (dbObject.class == DownloadItem.class) {
             DownloadItem *obj = (DownloadItem *)dbObject;
-            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName == nil ? @"":obj.fileName, obj.downloadStatus == nil ?@"":obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url == nil ? @"":obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType == nil ?@"":obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
             [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
         } else if (dbObject.class == SubdownloadItem.class) {
             SubdownloadItem *obj = (SubdownloadItem *)dbObject;
@@ -412,7 +414,7 @@
         for (NSObject *dbObject in dbObjectArray) {            
             if (dbObject.class == DownloadItem.class) {
                 DownloadItem *obj = (DownloadItem *)dbObject;
-                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName == nil ? @"":obj.fileName, obj.downloadStatus == nil ?@"":obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType == nil ?@"":obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
                 [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
             } else if (dbObject.class == SubdownloadItem.class) {
                 SubdownloadItem *obj = (SubdownloadItem *)dbObject;
