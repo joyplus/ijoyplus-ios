@@ -406,7 +406,7 @@
             topicListViewController.videoDelegate = self;
             [self.bgScrollView addSubview:topicListViewController.tableView];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 430, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 28, 430, (topics.count > 5 ? 5 : topics.count)*30);
         //        [topicListViewController.tableView reloadData];
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
@@ -424,7 +424,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 50, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+ (topics.count > 5 ? 5 : topics.count)*30+commentListViewController.tableHeight + increasePositionY)];
 }

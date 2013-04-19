@@ -498,94 +498,98 @@
     int dramaPageNum = ceil(episodeArray.count / 20.0);
     
     totalEpisodeNumber = episodeArray.count;
-    self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
-    pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-4, 30);
-    pageTabScrollView.backgroundColor = [UIColor clearColor];
-    pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/6+1), pageTabScrollView.frame.size.height);
-    for (UIView *aview in pageTabScrollView.subviews) {
-        [aview removeFromSuperview];
-    }
-    for (int i = 0; i < dramaPageNum; i++) {
-        UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        pageBtn.frame = CGRectMake(i * (63 + 8), 0, 63, 27);
-        pageBtn.tag = 7101 + i;
-        if(i == 0){
-            [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
-        } else {
-            [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-        }
-        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*20+1, (int)fmin((i+1)*20, episodeArray.count)] forState:UIControlStateNormal];
-        [pageBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
-        [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
-        [pageBtn addTarget:self action:@selector(pageBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [pageTabScrollView addSubview:pageBtn];
-    }
-    
-    episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY + 40, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (36+10) + 5);
-    self.episodeViewBg.frame = episodeView.frame;
-    episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
-    if(changed){
-        for (UIView *aview in episodeView.subviews) {
+    if (0 != totalEpisodeNumber)
+    {
+        self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
+        pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-4, 30);
+        pageTabScrollView.backgroundColor = [UIColor clearColor];
+        pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/6+1), pageTabScrollView.frame.size.height);
+        for (UIView *aview in pageTabScrollView.subviews) {
             [aview removeFromSuperview];
         }
-        for (int i = 0; i < totalEpisodeNumber; i++) {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            btn.tag = i+1;
-            int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
-            [btn setFrame:CGRectMake(13 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (65 + 20), 7 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (36 + 10), 65, 36)];
-            NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
-            [btn setTitle:name forState:UIControlStateNormal];
-            [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
-            btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-            BOOL btnStatus = NO;
-            // 检查是否有有效的视频地址
-            if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
-                NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
-                if(videoUrlArray.count > 0){
-                    for(NSDictionary *tempVideo in videoUrlArray){
-                        NSArray *urls = [tempVideo objectForKey:@"urls"];
-                        for (NSDictionary *url in urls) {
-                            if ([super validadUrl:[url objectForKey:@"url"]]) {
-                                btnStatus = YES;
+        for (int i = 0; i < dramaPageNum; i++) {
+            UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            pageBtn.frame = CGRectMake(i * (63 + 8), 0, 63, 27);
+            pageBtn.tag = 7101 + i;
+            if(i == 0){
+                [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
+            } else {
+                [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+            }
+            [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*20+1, (int)fmin((i+1)*20, episodeArray.count)] forState:UIControlStateNormal];
+            [pageBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
+            [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
+            [pageBtn addTarget:self action:@selector(pageBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [pageTabScrollView addSubview:pageBtn];
+        }
+        
+        episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY + 40, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (36+10) + 5);
+        self.episodeViewBg.frame = episodeView.frame;
+        episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
+        if(changed){
+            for (UIView *aview in episodeView.subviews) {
+                [aview removeFromSuperview];
+            }
+            for (int i = 0; i < totalEpisodeNumber; i++) {
+                UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+                btn.tag = i+1;
+                int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
+                [btn setFrame:CGRectMake(13 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (65 + 20), 7 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (36 + 10), 65, 36)];
+                NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
+                [btn setTitle:name forState:UIControlStateNormal];
+                [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
+                btn.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
+                BOOL btnStatus = NO;
+                // 检查是否有有效的视频地址
+                if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
+                    NSArray *videoUrlArray = [[episodeArray objectAtIndex:i] objectForKey:@"down_urls"];
+                    if(videoUrlArray.count > 0){
+                        for(NSDictionary *tempVideo in videoUrlArray){
+                            NSArray *urls = [tempVideo objectForKey:@"urls"];
+                            for (NSDictionary *url in urls) {
+                                if ([super validadUrl:[url objectForKey:@"url"]]) {
+                                    btnStatus = YES;
+                                    break;
+                                }
+                            }
+                            if (btnStatus) {
                                 break;
                             }
                         }
-                        if (btnStatus) {
+                    }
+                }
+                if(!btnStatus){
+                    // 检查是否有有效的网页地址
+                    NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
+                    for (NSDictionary *videoUrl in videoUrls) {
+                        NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+                        if([self validadUrl:url]){
+                            btnStatus = YES;
                             break;
                         }
                     }
                 }
-            }
-            if(!btnStatus){
-                // 检查是否有有效的网页地址
-                NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
-                for (NSDictionary *videoUrl in videoUrls) {
-                    NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
-                    if([self validadUrl:url]){
-                        btnStatus = YES;
-                        break;
-                    }
+                if (!btnStatus) {
+                    [btn setEnabled:NO];
                 }
+                if(lastNum == i+1 && btn.enabled){
+                    [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
+                    [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
+                } else {
+                    [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+                    [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+                }
+                [btn setBackgroundImage:[[UIImage imageNamed:@"drama_disabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] forState:UIControlStateDisabled];
+                [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
+                [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+                [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
+                [episodeView addSubview:btn];
             }
-            if (!btnStatus) {
-                [btn setEnabled:NO];
-            }
-            if(lastNum == i+1 && btn.enabled){
-                [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
-                [btn setBackgroundImage:[UIImage imageNamed:@"drama_watched"] forState:UIControlStateNormal];
-            } else {
-                [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-                [btn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
-            }
-            [btn setBackgroundImage:[[UIImage imageNamed:@"drama_disabled"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)] forState:UIControlStateDisabled];
-            [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
-            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-            [btn addTarget:self action:@selector(dramaPlay:)forControlEvents:UIControlEventTouchUpInside];
-            [episodeView addSubview:btn];
         }
     }
+
 //    if(nextBtn == nil){
 //        nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 //        [nextBtn setTitle:[NSString stringWithFormat:@"后%i集", (int)fmin(20, totalEpisodeNumber - (episodePageNumber+1)*20)] forState:UIControlStateNormal];
@@ -621,16 +625,20 @@
 //        [previousBtn setHidden:YES];
 //    }
     
-    CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height + 10;
+    CGFloat y = episodeView.frame.origin.y + episodeView.frame.size.height;
    
+    if (0 == y)
+    {
+        y = self.shareLabel.frame.origin.y + self.shareLabel.frame.size.height;
+    }
 //    nextBtn.frame = CGRectMake(LEFT_WIDTH + 350, y , 80, 30);
 //    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
 //    
 //    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, y+5, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, y + 20, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 15;
+    y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, y, 430, self.introContentTextView.frame.size.height);
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.text = [video objectForKey:@"summary"];
@@ -654,11 +662,11 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 55, 430, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 50, 430, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 41, 18);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 41, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     if(commentListViewController == nil){
@@ -671,7 +679,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+episodeView.frame.size.height + commentListViewController.tableHeight + increasePositionY +  (topics.count > 5 ? 5 : topics.count)*30)];
 }

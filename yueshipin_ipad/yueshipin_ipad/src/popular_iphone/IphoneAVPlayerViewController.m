@@ -189,10 +189,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     /* Create new player, if we don't already have one. */
     if (![self player])
     {
-        
-       
-    
-        
         /* Get a new AVPlayer initialized to play the specified player item. */
         [self setPlayer:[AVPlayer playerWithPlayerItem:self.mPlayerItem]];
         /* Observe the AVPlayer "currentItem" property to find out when any
@@ -208,6 +204,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                       forKeyPath:k_RateKey
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:AVPlayerDemoPlaybackViewControllerRateObservationContext];
+        
+        //self.player.usesExternalPlaybackWhileExternalScreenIsActive = YES;
     }
     
     /* Make our new AVPlayerItem the AVPlayer's current item. */
@@ -1260,7 +1258,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     airPlayLabel_.text = @"此视频正在通过 AirPlay 播放。";
     airPlayLabel_.font = [UIFont systemFontOfSize:15];
     airPlayLabel_.textAlignment = NSTextAlignmentCenter;
-
+    [ariplayView addSubview:airPlayLabel_];
 }
 
 -(void)initBottomToolBar{

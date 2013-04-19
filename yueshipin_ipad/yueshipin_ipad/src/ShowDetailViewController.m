@@ -182,10 +182,10 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, 405, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, 415, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 435, 430, 100);
+    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 445, 430, 100);
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 1;
     self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
@@ -366,7 +366,7 @@
 
 - (void)repositElements:(int)increasePositionY
 {
-    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
+    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 25;
         //if(episodeArray.count > 5)
         {
             self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 22,  positionY, 64, 308.5);
