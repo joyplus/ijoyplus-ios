@@ -110,7 +110,7 @@
         hightLightCategoryArray = [CategoryUtility getHightlightCategoryByType:videoType];
         for (int i = 0; i < hightLightCategoryArray.count; i++) {
             UIButton *tempBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            tempBtn.frame = CGRectMake(5 + i * 50, 5, 50, 45);
+            tempBtn.frame = CGRectMake( i * 50.4, 2, 50, 45);
             [tempBtn setBackgroundImage:nil forState:UIControlStateNormal];
             [tempBtn setBackgroundImage:nil forState:UIControlStateHighlighted];
             [tempBtn setBackgroundImage:nil forState:UIControlStateSelected];
@@ -337,7 +337,7 @@
     if (num < hightLightCategoryArray.count) {
         CategoryItem *item = [hightLightCategoryArray objectAtIndex:num];
         [self composeFilterCondition:item multipleCondition:NO];
-        [self moveSliderView:num];
+        [self moveSliderView:btn];
         if (num == hightLightCategoryArray.count - 1) {
             if (lastPressedCategoryTag != btn.tag || subcategoryView.hidden) {
                 [self showSubcategoryView];
@@ -622,12 +622,12 @@
     [self retrieveData];
 }
 
-- (void)moveSliderView:(int)num
+- (void)moveSliderView:(UIButton *)num
 {
     UIView *sliderView = [topCategoryView viewWithTag:SLIDER_VIEW_TAG];
     if (sliderView) {
         [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
-            sliderView.frame = CGRectMake(num * 50.4, sliderView.frame.origin.y, sliderView.frame.size.width, sliderView.frame.size.height);
+            sliderView.center = num.center;
         } completion:^(BOOL finished) {
             
         }];
