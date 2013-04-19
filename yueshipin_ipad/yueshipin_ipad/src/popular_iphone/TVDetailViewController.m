@@ -133,9 +133,11 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
+
 -(void)refreshRecord{
     [self.tableView reloadData];
 }

@@ -73,7 +73,8 @@
    [self.tableView reloadData];
 }
 - (void)viewWillAppear:(BOOL)animated {
-    
+
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     
 }
 -(void)initTopicData:(NSString *)topicId{

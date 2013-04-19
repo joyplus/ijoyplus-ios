@@ -324,6 +324,8 @@
 
 }
 - (void)viewWillAppear:(BOOL)animated{
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
+    
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
     
@@ -471,7 +473,8 @@
 }
 
 -(void)Selectbutton:(id)sender{
-
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
+    
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];

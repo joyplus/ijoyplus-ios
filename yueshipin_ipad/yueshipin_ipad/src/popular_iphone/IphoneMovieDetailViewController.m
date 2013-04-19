@@ -126,7 +126,9 @@
    
 }
 
-
+-(void)viewWillAppear:(BOOL)animated{
+  [CommonMotheds showNetworkDisAbledAlert:self.view];
+}
 -(void)back:(id)sender{
     if (!isNotification_) {
         [self.navigationController popViewControllerAnimated:YES];

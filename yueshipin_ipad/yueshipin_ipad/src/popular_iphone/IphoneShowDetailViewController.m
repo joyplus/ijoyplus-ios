@@ -121,6 +121,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
 }
 
 -(void)back:(id)sender{
