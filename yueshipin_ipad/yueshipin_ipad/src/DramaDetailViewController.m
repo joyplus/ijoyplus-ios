@@ -501,7 +501,7 @@
     self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
     pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-4, 30);
     pageTabScrollView.backgroundColor = [UIColor clearColor];
-    pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/7+1), pageTabScrollView.frame.size.height);
+    pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/6+1), pageTabScrollView.frame.size.height);
     for (UIView *aview in pageTabScrollView.subviews) {
         [aview removeFromSuperview];
     }
@@ -627,7 +627,7 @@
 //    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
 //    
 //    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, y, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, y+5, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
     y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 15;
@@ -645,7 +645,7 @@
 {
     int positionY = y;
     if(topics.count > 0){
-        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 80, 20);
+        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 80, 20);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
@@ -654,7 +654,7 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 55, 430, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
