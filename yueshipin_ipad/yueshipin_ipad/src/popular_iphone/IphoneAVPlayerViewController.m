@@ -722,16 +722,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 -(void)playNext{
     
-    
-   
-    [self removePlayerTimeObserver];
-    [self.player pause];
-    if (timeLabelTimer_ != nil) {
-        [timeLabelTimer_ invalidate];
-    }
     if (playNum == [episodesArr_ count]-1) {
         return;
     }
+    
+    [self destoryPlayer];
     
     playNum++;
     [tableList_ reloadData];
@@ -1252,7 +1247,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     ariplayView.frame = CGRectMake(0, 0, kFullWindowHeight, 320);
     ariplayView.backgroundColor = [UIColor clearColor];
     
-    airPlayLabel_ = [[UILabel alloc]initWithFrame:CGRectMake(0, 200, 300, 30)];
+    airPlayLabel_ = [[UILabel alloc]initWithFrame:CGRectMake(0, 200, kFullWindowHeight, 30)];
     airPlayLabel_.backgroundColor = [UIColor clearColor];
     airPlayLabel_.textColor = [UIColor lightGrayColor];
     airPlayLabel_.text = @"此视频正在通过 AirPlay 播放。";
@@ -1795,7 +1790,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [self playEnd];
 }
--(void)playEnd{
+
+- (void)destoryPlayer
+{
     [urlConnection cancel];
     urlConnection = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
@@ -1821,6 +1818,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self.player  pause];
     mPlayer = nil;
     mPlayerItem = nil;
+}
+
+-(void)playEnd{
+    [self destoryPlayer];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)beginScrubbing:(id)sender
