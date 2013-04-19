@@ -367,9 +367,21 @@
 - (void)repositElements:(int)increasePositionY
 {
     int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
-        if(episodeArray.count > 5){
+        //if(episodeArray.count > 5)
+        {
             self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 22,  positionY, 64, 308.5);
             self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 388,  positionY, 64, 308.5);
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
+            [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.previousShowBtn.tag = 9001;
+            
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
+            [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.nextShowBtn.tag = 9002;
         }
         showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
         if(!btnAdded){
@@ -377,18 +389,6 @@
             if(episodeArray.count > 5){
                 showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
                 showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
-                
-                [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-                [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-                [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
-                [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                self.previousShowBtn.tag = 9001;
-                
-                [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-                [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-                [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
-                [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                self.nextShowBtn.tag = 9002;
                 for (int i = 0; i < episodeArray.count; i++) {
                     btnAdded = YES;
                     int pageNum = floor(i/5.0);
@@ -415,10 +415,9 @@
                     [showListView addSubview:nameBtn];
                 }
             } else {
-                [self.previousShowBtn setHidden:YES];
-                [self.nextShowBtn setHidden:YES];
-                showListView.frame = CGRectMake(LEFT_WIDTH, positionY, 336.5, episodeArray.count * (54.5 + 6));
-                showListView.contentSize = showListView.frame.size;
+                
+                showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
+                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
                 for(int i = 0; i < episodeArray.count; i++){
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -440,6 +439,8 @@
                     [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                     [showListView addSubview:nameBtn];
                 }
+                [self.previousShowBtn setEnabled:NO];
+                [self.nextShowBtn setEnabled:NO];
             }
         }
         positionY = showListView.frame.origin.y + showListView.frame.size.height;
@@ -510,6 +511,11 @@
     }
     if(showPageNumber == ceil(episodeArray.count / 5.0)-1){
         [self.previousShowBtn setEnabled:YES];
+        [self.nextShowBtn setEnabled:NO];
+    }
+    if (episodeArray.count <= 5)
+    {
+        [self.previousShowBtn setEnabled:NO];
         [self.nextShowBtn setEnabled:NO];
     }
 }
