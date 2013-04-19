@@ -120,7 +120,7 @@
     self.regionNameLabel.frame = CGRectMake(310, 200, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
-    self.playBtn.frame = CGRectMake(260, 280, 100, 50);
+    self.playBtn.frame = CGRectMake(265, 280, 100, 50);
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
     [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
@@ -141,7 +141,7 @@
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;
     
-    self.downloadBtn.frame = CGRectMake(374, 280, 100, 50);
+    self.downloadBtn.frame = CGRectMake(376, 280, 100, 50);
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
