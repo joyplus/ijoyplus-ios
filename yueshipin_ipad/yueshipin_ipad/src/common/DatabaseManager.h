@@ -12,7 +12,7 @@
 @interface DatabaseManager : NSObject
 
 + (void)initDatabase;
-
++ (void)transferFinishedDownloadFiles;
 + (NSArray *)findByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
 + (NSArray *)allObjects:(Class)dbObjectClass;
 + (BOOL)performSQLAggregation: (NSString *)query;

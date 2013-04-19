@@ -163,7 +163,8 @@
 
 - (void)initDownloadManager
 {
-    padDownloadManager = [[NewDownloadManager alloc]init];    
+    padDownloadManager = [[NewDownloadManager alloc]init];
+//    [DatabaseManager transferFinishedDownloadFiles];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

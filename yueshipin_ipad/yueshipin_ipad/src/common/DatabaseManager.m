@@ -14,8 +14,104 @@
 #import "SegmentUrl.h"
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 #define DATABASE_PATH [DocumentsDirectory stringByAppendingPathComponent:@"yueshipin.db"]
-
+#define OLD_DATABASE_PATH [DocumentsDirectory stringByAppendingPathComponent:@"yueshipin.sqlite3"]
 @implementation DatabaseManager
+
++ (void)transferFinishedDownloadFiles
+{
+    NSFileManager *fileManager = [NSFileManager new];    
+    if ([fileManager fileExistsAtPath:OLD_DATABASE_PATH]) {
+        FMDatabase *db = [FMDatabase databaseWithPath:OLD_DATABASE_PATH];
+        if (![db open]) {
+            NSLog(@"No old database!");
+            return;
+        }
+        FMResultSet *rs = [db executeQuery:[NSString stringWithFormat:@"SELECT * From subdownload_item"]];
+        NSMutableArray *subdownloadArray = [[NSMutableArray alloc]initWithCapacity:5];
+        if ([rs next]) {
+            SubdownloadItem *tempDbObj = [[SubdownloadItem alloc]init];
+            tempDbObj.itemId =  [rs stringForColumn:@"item_id"];
+            tempDbObj.name = [rs stringForColumn:@"name"];
+            tempDbObj.imageUrl = [rs stringForColumn:@"image_url"];
+            tempDbObj.fileName = [rs stringForColumn:@"file_name"];
+            tempDbObj.downloadStatus = [rs stringForColumn:@"download_status"];
+            tempDbObj.type = [[rs stringForColumn:@"type"] intValue];
+            tempDbObj.percentage = [[rs stringForColumn:@"percentage"] intValue];
+            tempDbObj.url = [rs stringForColumn:@"url"];
+            tempDbObj.isDownloadingNum = [[rs stringForColumn:@"is_downloading_num"] intValue];
+            tempDbObj.downloadType = [rs stringForColumn:@"download_type"];
+            tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            tempDbObj.subitemId = [rs stringForColumn:@"subitem_id"];
+            [subdownloadArray addObject:tempDbObj];
+        }
+        [rs close];
+        
+        NSMutableArray *downloadArray = [[NSMutableArray alloc]initWithCapacity:5];
+        rs = [db executeQuery:[NSString stringWithFormat:@"SELECT * From download_item"]];
+        if ([rs next]) {
+            DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.itemId =  [rs stringForColumn:@"item_id"];
+            tempDbObj.name = [rs stringForColumn:@"name"];
+            tempDbObj.imageUrl = [rs stringForColumn:@"image_url"];
+            tempDbObj.fileName = [rs stringForColumn:@"file_name"];
+            tempDbObj.downloadStatus = [rs stringForColumn:@"download_status"];
+            tempDbObj.type = [[rs stringForColumn:@"type"] intValue];
+            tempDbObj.percentage = [[rs stringForColumn:@"percentage"] intValue];
+            tempDbObj.url = [rs stringForColumn:@"url"];
+            tempDbObj.isDownloadingNum = [[rs stringForColumn:@"is_downloading_num"] intValue];
+            tempDbObj.downloadType = [rs stringForColumn:@"download_type"];
+            tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            [downloadArray addObject:tempDbObj];
+        }
+        [rs close];
+        [db close];
+        
+        for (DownloadItem *item in downloadArray) {
+            if (item.type == 1 && (item.percentage == 100 || [item.downloadStatus isEqualToString:@"done"] || [item.downloadStatus isEqualToString:@"finish"])) {
+                [self save:item];
+            } else {
+                if ([item.downloadType isEqualToString:@"m3u8"]) {
+                    NSString *m3u8FilePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+                    if ([fileManager fileExistsAtPath:m3u8FilePath]) {
+                        [fileManager removeItemAtPath:m3u8FilePath error:NULL];
+                    }
+                }
+            }
+        }
+        for (SubdownloadItem *subdownloadItem in subdownloadArray) {
+            if (subdownloadItem.percentage == 100 || [subdownloadItem.downloadStatus isEqualToString:@"done"] || [subdownloadItem.downloadStatus isEqualToString:@"finish"]) {
+                for (DownloadItem *item in downloadArray) {
+                    if ([item.itemId isEqualToString:subdownloadItem.itemId]) {
+                        int num = [self countByCriteria:DownloadItem.class queryString: [NSString stringWithFormat:@"where itemId = '%@'", item.itemId]];
+                        if (num == 0) {
+                            [self save:item];
+                        }
+                        [self save:subdownloadItem];
+                        break;
+                    }
+                }
+            } else {
+                if ([subdownloadItem.downloadType isEqualToString:@"m3u8"]) {
+                    NSString *m3u8FilePath = [NSString stringWithFormat:@"%@/%@/%@", DocumentsDirectory, subdownloadItem.itemId, subdownloadItem.subitemId];
+                    if ([fileManager fileExistsAtPath:m3u8FilePath]) {
+                        [fileManager removeItemAtPath:m3u8FilePath error:NULL];
+                    }
+                } 
+            }
+        }
+
+        NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+        NSEnumerator *e = [contents objectEnumerator];
+        NSString *filename;
+        while ((filename = [e nextObject])) {
+            if ([filename hasSuffix:@"TEMP"]) {
+                [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+            }
+        }
+        
+        [fileManager removeItemAtPath:OLD_DATABASE_PATH error:NULL];
+    }
+}
 
 + (void)initDatabase
 {
