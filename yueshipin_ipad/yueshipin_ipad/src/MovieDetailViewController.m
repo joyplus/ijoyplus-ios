@@ -115,7 +115,7 @@
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 20);
     self.titleLabel.font = CMConstants.titleFont;
-    
+    self.titleLabel.textColor = CMConstants.textColor;
     self.scoreLable.frame = CGRectMake(270, 120, 50, 20);
     self.scoreLable.textColor = CMConstants.grayColor;
     self.scoreLabel.frame = CGRectMake(315, 120, 50, 20);
@@ -313,6 +313,7 @@
     [self.filmImage setImageWithURL:[NSURL URLWithString:url]];
     
     self.titleLabel.text = [video objectForKey:@"name"];
+    
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
     self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     self.directorNameLabel.text = [video objectForKey:@"directors"];

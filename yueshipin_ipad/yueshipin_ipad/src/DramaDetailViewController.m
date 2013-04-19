@@ -122,7 +122,7 @@
     
     self.titleLabel.frame = CGRectMake(268, 85, 210, 20);
     self.titleLabel.font = CMConstants.titleFont;
-    
+    self.titleLabel.textColor = CMConstants.textColor;
     self.scoreLable.frame = CGRectMake(270, 120, 50, 20);
     self.scoreLable.textColor = CMConstants.grayColor;
     self.scoreLabel.frame = CGRectMake(315, 120, 50, 20);

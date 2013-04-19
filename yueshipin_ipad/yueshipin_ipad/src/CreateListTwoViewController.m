@@ -64,7 +64,7 @@
     self.titleLabel.frame = CGRectMake(LEFT_WIDTH, 45, 310, 27);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:23];
     self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.textColor = CMConstants.titleBlueColor;
+    self.titleLabel.textColor = CMConstants.textColor;
     self.titleLabel.layer.shadowColor = [UIColor colorWithRed:141/255.0 green:182/255.0 blue:213/255.0 alpha:1].CGColor;
     self.titleLabel.layer.shadowOffset = CGSizeMake(1, 1);
    
