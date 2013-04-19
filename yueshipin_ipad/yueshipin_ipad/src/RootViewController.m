@@ -544,11 +544,13 @@
                 [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
                 if (subitem.percentage == 100)
                 {
+                    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 12, 0)];
                     [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
                 }
                 else
                 {
+                    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
                     [btn setBackgroundImage:[UIImage imageNamed:@"drama_downloading_icon"] forState:UIControlStateDisabled];
                 }
@@ -583,7 +585,7 @@
    BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
     if (success) {
         [btn setEnabled:NO];
-        [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
         [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_downloading_icon"] forState:UIControlStateDisabled];
     }
