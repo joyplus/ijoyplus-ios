@@ -299,6 +299,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
 }
 -(void)beginDownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
+     [self postIsloadingBoolValue];
     __block AFDownloadRequestOperation *tempdownloadRequestOperation = downloadRequestOperation;
     [downloadRequestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([downLoadQueue_ containsObject:operation]) {
@@ -426,6 +427,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 }
 
 -(void)beginM3u8DownloadTask:(AFDownloadRequestOperation*)downloadRequestOperation{
+        [self postIsloadingBoolValue];
        __block AFDownloadRequestOperation *tempdownloadRequestOperation = downloadRequestOperation;
         NSString *idstr = downloadRequestOperation.operationId;
         downloadRequestOperation.operationStatus = @"loading";
