@@ -115,7 +115,7 @@
         avatarImageBg.image = [UIImage imageNamed:@"self_icon"];
         [self.view addSubview:avatarImageBg];
         
-        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(avatarImageBg.frame.origin.x + 5, avatarImageBg.frame.origin.y + 5, avatarImageBg.frame.size.width - 10, avatarImageBg.frame.size.height - 8)];
+        avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(avatarImageBg.frame.origin.x + 4, avatarImageBg.frame.origin.y + 4, avatarImageBg.frame.size.width - 8, avatarImageBg.frame.size.height - 6)];
         [self.view addSubview:avatarImage];
         
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 130, 260, 22)];
@@ -494,6 +494,10 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
+    if (alertView.tag == 3391 && buttonIndex == 1) {
+        [self doRemoveAll];
+        return;
+    }
     if(buttonIndex == 1){
         [self playVideo:clickedBtn];
     }
@@ -703,6 +707,17 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil
+                                                       message:@"确定要删除所有播放记录吗？"
+                                                      delegate:self
+                                             cancelButtonTitle:@"取消"
+                                             otherButtonTitles:@"确定", nil];
+    alertView.tag = 3391;
+    [alertView show];
+}
+
+- (void)doRemoveAll
+{
     sortedwatchRecordArray = [[NSArray alloc]init];
     [self loadTable];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
