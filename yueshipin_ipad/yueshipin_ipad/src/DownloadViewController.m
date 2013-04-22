@@ -282,11 +282,13 @@
     UIProgressView *progressView = (UIProgressView *)[cell.contentView viewWithTag:item.itemId.intValue + 20000000];
     item.percentage = (int)(progressView.progress*100);
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]){
-        [[AppDelegate instance].padDownloadManager stopDownloading];
+        if ([item.downloadStatus isEqualToString:@"start"]) {
+            [[AppDelegate instance].padDownloadManager stopDownloading];
+            [AppDelegate instance].currentDownloadingNum = 0;
+        }
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
         [DatabaseManager update:item];
-        [AppDelegate instance].currentDownloadingNum = 0;
     } else if([item.downloadStatus isEqualToString:@"stop"]){
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {

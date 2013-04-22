@@ -568,11 +568,7 @@ void transferDataFromOldDbWithCatch()
     }
     topType = MOVIE_TOP;
     [self initTopButtonImage];
-    if (movieTopsArray.count > 0) {
-        [self loadTable];
-    } else {
-        [self retrieveMovieTopsData];
-    }
+    [self retrieveMovieTopsData];
 }
 
 - (void)dramaListBtnClicked:(UIButton *)sender
@@ -585,11 +581,7 @@ void transferDataFromOldDbWithCatch()
     }
     topType = DRAMA_TOP;
     [self initTopButtonImage];
-    if (tvTopsArray.count > 0) {
-        [self loadTable];
-    } else {
-        [self retrieveTvTopsData];
-    }
+    [self retrieveTvTopsData];
 }
 
 - (void)showListBtnClicked:(UIButton *)sender
@@ -602,11 +594,7 @@ void transferDataFromOldDbWithCatch()
     }
     topType = SHOW_TOP;
     [self initTopButtonImage];
-    if (showTopsArray.count > 0) {
-        [self loadTable];
-    } else {
-        [self retrieveShowTopsData];
-    }
+    [self retrieveShowTopsData];
 }
 
 - (void)comicListBtnClicked:(UIButton *)sender
@@ -619,11 +607,7 @@ void transferDataFromOldDbWithCatch()
     }
     topType = COMIC_TOP;
     [self initTopButtonImage];
-    if (comicTopsArray.count > 0) {
-        [self loadTable];
-    } else {
-        [self retrieveComicTopsData];
-    }
+    [self retrieveComicTopsData];
 }
 
 
@@ -828,21 +812,28 @@ void transferDataFromOldDbWithCatch()
             NSDictionary *subitem = [subitemArray objectAtIndex:i];
             [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]] ];
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
-            tempLabel.text = [subitem objectForKey:@"prod_name"];            
+            tempLabel.text = [subitem objectForKey:@"prod_name"];
+            
+            UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
+            [placeHolderImage setHidden:NO];
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            [tempBtn setHidden:NO];
+            [tempLabel setHidden:NO];
+            [contentImage setHidden:NO];
         }
-        for (int i=subitemArray.count; i < MOVIE_NUMBER; i++)
+        for (int i=subitemArray.count; i < DRAMA_NUMBER; i++)
         {
             UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
-            [placeHolderImage removeFromSuperview];
+            [placeHolderImage setHidden:YES];
             
             UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
-            [tempBtn removeFromSuperview];
+            [tempBtn setHidden:YES];
             
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
-            [tempLabel removeFromSuperview];
+            [tempLabel setHidden:YES];
             
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
-            [contentImage removeFromSuperview];
+            [contentImage setHidden:YES];
         }
         cellScrollView.contentSize = CGSizeMake((MOVIE_POSTER_WIDTH + 8 + 12) * subitemArray.count, NORMAL_VIDEO_HEIGHT);
         //add code end
@@ -949,20 +940,27 @@ void transferDataFromOldDbWithCatch()
             [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]]];
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
             tempLabel.text = [subitem objectForKey:@"prod_name"];
+        
+            UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
+            [placeHolderImage setHidden:NO];
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            [tempBtn setHidden:NO];
+            [tempLabel setHidden:NO];
+            [contentImage setHidden:NO];
         }
         for (int i=subitemArray.count; i < DRAMA_NUMBER; i++)
         {
             UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
-            [placeHolderImage removeFromSuperview];
+            [placeHolderImage setHidden:YES];
             
             UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
-            [tempBtn removeFromSuperview];
+            [tempBtn setHidden:YES];
             
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
-            [tempLabel removeFromSuperview];
+            [tempLabel setHidden:YES];
             
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
-            [contentImage removeFromSuperview];
+            [contentImage setHidden:YES];
         }
         cellScrollView.contentSize = CGSizeMake((MOVIE_POSTER_WIDTH + 8 + 12) * subitemArray.count, NORMAL_VIDEO_HEIGHT);
         //add code end
@@ -1070,20 +1068,27 @@ void transferDataFromOldDbWithCatch()
             [contentImage setImageWithURL:[NSURL URLWithString:[subitem objectForKey:@"prod_pic_url"]]];
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
             tempLabel.text = [subitem objectForKey:@"prod_name"];
+            
+            UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
+            [placeHolderImage setHidden:NO];
+            UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
+            [tempBtn setHidden:NO];
+            [tempLabel setHidden:NO];
+            [contentImage setHidden:NO];
         }
         for (int i=subitemArray.count; i < DRAMA_NUMBER; i++)
         {
             UIImageView *placeHolderImage = (UIImageView *)[cellScrollView viewWithTag:8011 + i];
-            [placeHolderImage removeFromSuperview];
+            [placeHolderImage setHidden:YES];
             
             UIButton *tempBtn = (UIButton *)[cellScrollView viewWithTag:2011 + i];
-            [tempBtn removeFromSuperview];
+            [tempBtn setHidden:YES];
             
             UILabel *tempLabel = (UILabel *)[cellScrollView viewWithTag:3011 + i];
-            [tempLabel removeFromSuperview];
+            [tempLabel setHidden:YES];
             
             UIImageView *contentImage = (UIImageView *)[cell viewWithTag:6011 + i];
-            [contentImage removeFromSuperview];
+            [contentImage setHidden:YES];
         }
         cellScrollView.contentSize = CGSizeMake((MOVIE_POSTER_WIDTH + 8 + 12) * subitemArray.count, NORMAL_VIDEO_HEIGHT);
         //add code end

@@ -14,6 +14,7 @@
 #import "ActionUtility.h"
 #import "DatabaseManager.h"
 #import "Reachability.h"
+#import "StringUtility.h"
 
 @interface NewDownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -79,7 +80,7 @@
                     }
                     [padM3u8DownloadManager startDownloadingThreads:item];
                 } else {
-                    if (item.url) {
+                    if (![StringUtility stringIsEmpty:item.url]) {
                         [AppDelegate instance].currentDownloadingNum++;
                         item.downloadStatus = @"start";
                         [DatabaseManager update:item];

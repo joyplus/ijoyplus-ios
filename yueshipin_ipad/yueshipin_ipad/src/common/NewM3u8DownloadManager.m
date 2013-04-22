@@ -36,7 +36,7 @@
 {
     displayNoSpaceFlag = NO;
     downloadingItem = item;    
-    if (item.url) {
+    if (![StringUtility stringIsEmpty:item.url]) {
         [AppDelegate instance].currentDownloadingNum++;
         item.downloadStatus = @"start";
         [DatabaseManager update:item];
