@@ -267,7 +267,6 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
     
     // check for valid response to resume the download if possible
     long long totalContentLength = self.response.expectedContentLength;
-    NSLog(@"self.expectedContentLength %lld",totalContentLength);
     long long fileOffset = 0;
     if(httpResponse.statusCode == 206) {
         NSString *contentRange = [httpResponse.allHeaderFields valueForKey:@"Content-Range"];

@@ -330,7 +330,7 @@
         cell.contentView = view;
     }
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
-    
+    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 105, 146)];
