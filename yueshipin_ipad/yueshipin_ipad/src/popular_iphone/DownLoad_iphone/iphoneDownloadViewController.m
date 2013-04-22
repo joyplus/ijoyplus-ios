@@ -465,7 +465,8 @@
         return;
     }
     
-     DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:position];
+     //DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:position];
+    DownloadItem *item = [itemArr_ objectAtIndex:position];
     if (item.type == 1) {
         
             if ([item.downloadStatus isEqualToString:@"finish"]) {
