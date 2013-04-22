@@ -211,15 +211,20 @@
 }
 - (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]) {
-        float value = (float)progress;
-        UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
-        [progressView setProgress:value];
-        
-        int progressValue = (int)(100*value);
-         DownloadItem *item = [self getDownloadItemById:itemId];
-        item.percentage = progressValue;
-        UILabel *label = [progressLabelDic_ objectForKey:itemId];
-        label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
+          DownloadItem *item = [self getDownloadItemById:itemId];
+        if ([item.downloadStatus isEqualToString:@"loading"]) {
+            float value = (float)progress;
+            UIProgressView *progressView = [progressViewDic_ objectForKey:itemId];
+            [progressView setProgress:value];
+            
+            int progressValue = (int)(100*value);
+            
+            item.percentage = progressValue;
+            
+            UILabel *label = [progressLabelDic_ objectForKey:itemId];
+            label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
+
+        }
     }
 }
 
@@ -527,14 +532,14 @@
                
             item.downloadStatus = @"stop";
           
-            [DownLoadManager stop:item.itemId];
+           [DownLoadManager stop:item.itemId];
             
-           // [item save];
            [DatabaseManager update:item];
            
            UILabel *label = [progressLabelDic_ objectForKey:item.itemId];
            label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", item.percentage];
-           
+
+           NSLog(@"label text is %@",label.text);
            UIProgressView *progressView = [progressViewDic_ objectForKey:item.itemId];
            progressView.progress = item.percentage/100.0;
            

@@ -148,17 +148,18 @@
 
 - (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]) {
-        float value = (float)progress;
-        int num = [self getTagNum:itemId];
-        UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
-        [progressView setProgress:value];
-        int progressValue = (int)(100*value);
-        
-        SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
-        subDownloadItem.percentage = progressValue;
-        
-        UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
-         label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
+         SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        if ([subDownloadItem.downloadStatus isEqualToString:@"loading"]) {
+            float value = (float)progress;
+            int num = [self getTagNum:itemId];
+            UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
+            [progressView setProgress:value];
+            int progressValue = (int)(100*value);
+            subDownloadItem.percentage = progressValue;
+            UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
+            label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
+        }
+       
     }
 }
 

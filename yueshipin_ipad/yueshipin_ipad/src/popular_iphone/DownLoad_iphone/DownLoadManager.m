@@ -1198,7 +1198,6 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 }
 -(void)saveCurrentInfo{
     if (currentItem_) {
-         //[currentItem_ save];
         [DatabaseManager update:currentItem_];
     }
 }
