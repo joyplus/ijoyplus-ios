@@ -161,15 +161,14 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    [AppDelegate instance].currentDownloadingNum = 0;
     [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
 }
 
 - (void)restartNewDownloading
 {
-    [AppDelegate instance].currentDownloadingNum = 0;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] != NotReachable) {
+        [AppDelegate instance].currentDownloadingNum = 0;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -199,7 +198,6 @@
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    [AppDelegate instance].currentDownloadingNum = 0;
     [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
 }
 

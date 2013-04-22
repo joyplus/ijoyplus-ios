@@ -203,9 +203,9 @@
 
 - (void)restartNewDownloading
 {
-    [AppDelegate instance].currentDownloadingNum = 0;
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] != NotReachable) {
+        [AppDelegate instance].currentDownloadingNum = 0;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -215,10 +215,10 @@
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-            [AppDelegate instance].currentDownloadingNum = 0;
             item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
             item.downloadStatus = @"done";
             item.percentage = 100;
+            [AppDelegate instance].currentDownloadingNum = 0;
             [DatabaseManager update:item];
             break;
         }
