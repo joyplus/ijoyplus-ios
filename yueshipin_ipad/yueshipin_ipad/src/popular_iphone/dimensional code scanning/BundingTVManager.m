@@ -11,8 +11,9 @@
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
 #import "CMConstants.h"
+#import "EnvConstant.h"
 
-#define SERVER_URL  (@"ws://comettest.joyplus.tv:8080/bindtv")
+#define SERVER_URL  (FAYE_SERVER_URL)
 #define KEY_APP     (@"app_key")
 #define KEY_CHANNEL (@"tv_channel")
 #define KEY_USER    (@"user_id")
@@ -65,7 +66,7 @@ static BundingTVManager * manager = nil;
 
 - (void)netWorkBecomeAvailable
 {
-    [self connectedToServer];
+    [self connecteServer];
 }
 
 #pragma mark -
@@ -94,7 +95,8 @@ static BundingTVManager * manager = nil;
                                            NSNumber * bind = nil;
                                             if ([[result objectForKey:@"status"] isEqualToString:@"1"])
                                             {
-                                                FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:sendChannel];
+                                                NSString * channel = [NSString stringWithFormat:@"/screencast/%@",sendChannel];
+                                                FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:channel];
                                                 self.sendClient = fClient;
                                                 [self.sendClient connectToServer];
                                                 bind = [NSNumber numberWithBool:YES];

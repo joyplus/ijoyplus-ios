@@ -12,7 +12,8 @@
 #import "MBProgressHUD.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "CMPopTipView.h"
-@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
+#import "BundingTVManager.h"
+@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,BundingTVManagerDelegate>{
     UIToolbar *topToolBar_;
     UIToolbar *bottomToolBar_;
     AVPlayerView *avplayerView_;
@@ -68,6 +69,7 @@
     MPVolumeView *volumeView_;
     
     UIImageView * ariplayView;
+    UIImageView * cloudTVView;
     UILabel *airPlayLabel_;
     
     UIImageView *sourceLogo_;
@@ -86,6 +88,9 @@
     
     BOOL isPlayFromRecord_;
     NSString * videoSource_;
+    
+    BOOL    isPlayOnTV;
+    BOOL    isTVReady;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;

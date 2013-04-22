@@ -19,6 +19,8 @@
 #import "ActionUtility.h"
 #import <Parse/Parse.h>
 #import "CustomNavigationViewControllerPortrait.h"
+#import "CommonMotheds.h"
+
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -46,7 +48,17 @@
 #define PLAIN_CLEAR 100
 #define HIGH_CLEAR 200
 #define SUPER_CLEAR 300
-#define MINI_PLAY_DURATION  (3.0f)
+#define MINI_PLAY_DURATION      (3.0f)
+#define KEY_MAX_CONNECT_TIME    (5)
+
+enum
+{
+    CLOUND_TV_PLAY,
+    CLOUND_TV_PAUSE,
+    CLOUND_TV_CLOSE,
+    CLOUND_TV_SEEK_TO_TIME,
+    UNKNOW_TYPE
+};
 
 @interface IphoneAVPlayerViewController ()
 {
@@ -57,7 +69,9 @@
 - (void)beginMyTimer;
 - (void)showActivityView;
 - (void)dismissActivityView;
-- (void)pushWebURLToCloudTV;
+- (void)pushWebURLToCloudTV:(NSString *)pushType;
+- (void)setPlayVolume:(CGFloat)volume;
+- (void)controlCloundTV:(NSInteger)controlType;
 
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
@@ -659,13 +673,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
-- (void)pushWebURLToCloudTV
+- (void)pushWebURLToCloudTV:(NSString *)pushType
 {
     NSNumber * type = [NSNumber numberWithInt:videoType_];
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     double curTime = CMTimeGetSeconds([self.mPlayer currentTime]);
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                          @"41", @"push_type",
+                          pushType, @"push_type",
                           userId, @"user_id",
                           workingUrl_,@"prod_url",
                           [NSString stringWithFormat:@"%@",videoSource_],@"prod_src",
@@ -678,10 +692,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     [[BundingTVManager shareInstance] sendMsg:data];
     [MobClick event:KEY_PUSH_VIDEO];
+    isTVReady = NO;
+//    [self.mPlayer pause];
+//    playButton_.hidden = NO;
+//    pauseButton_.hidden = YES;
     
-    [self.mPlayer pause];
-    playButton_.hidden = NO;
-    pauseButton_.hidden = YES;
+//    [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"%f",[self currentVolume]] forKey:@"current_volume"];
+//    
+//    [self setPlayVolume:0.0f];
 }
 
 - (void)showActivityView
@@ -796,7 +814,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
-
+    isPlayOnTV = NO;
+    isTVReady = NO;
+    
     self.view.backgroundColor = [UIColor blackColor];
     
     [self initTopToolBar];
@@ -1166,6 +1186,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (![content_type hasPrefix:@"text/html"]) {
              [self setURL:connection.originalRequest.URL];
              [connection cancel];
+            if (isPlayOnTV)
+            {
+                [self pushWebURLToCloudTV:@"411"];
+            }
              return;
         }
     
@@ -1246,6 +1270,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     ariplayView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"airplay_bg.png"]];
     ariplayView.frame = CGRectMake(0, 0, kFullWindowHeight, 320);
     ariplayView.backgroundColor = [UIColor clearColor];
+    
+    cloudTVView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"airplay_bg.png"]];
+    cloudTVView.frame = CGRectMake(0, 0, kFullWindowHeight, 320);
+    cloudTVView.backgroundColor = [UIColor clearColor];
     
     airPlayLabel_ = [[UILabel alloc]initWithFrame:CGRectMake(0, 200, kFullWindowHeight, 30)];
     airPlayLabel_.backgroundColor = [UIColor clearColor];
@@ -1395,12 +1423,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     NSNumber * isbunding = [data objectForKey:KEY_IS_BUNDING];
     if ([isbunding boolValue])
     {
+        
+        if (![BundingTVManager shareInstance].isConnected)
+        {
+            NSString * sendChannel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+            [[BundingTVManager shareInstance] connecteServerWithChannel:sendChannel];
+        }
+        
+        [BundingTVManager shareInstance].sendClient.delegate = self;
+        
         cloundTVButton = [UIButton buttonWithType:UIButtonTypeCustom];
         cloundTVButton.frame = CGRectMake(118, 8, 32.5, 27);
         cloundTVButton.backgroundColor = [UIColor clearColor];
         cloundTVButton.tag = CLOUND_TV_BUTTON_TAG;
         [cloundTVButton setBackgroundImage:[UIImage imageNamed:@"cloud_tv.png"] forState:UIControlStateNormal];
         [cloundTVButton setBackgroundImage:[UIImage imageNamed:@"cloud_tv_f.png"] forState:UIControlStateHighlighted];
+        [cloundTVButton setBackgroundImage:[UIImage imageNamed:@"cloud_tv_f.png"] forState:UIControlStateSelected];
         [cloundTVButton addTarget:self
                            action:@selector(action:)
                  forControlEvents:UIControlEventTouchUpInside];
@@ -1640,41 +1678,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             break;
     }
      [self beginToPlay];
+//    if (isPlayOnTV)
+//    {
+//        [self pushWebURLToCloudTV:@"411"];
+//    }
 }
 -(void)action:(UIButton *)btn{
     switch (btn.tag) {
         case CLOSE_BUTTON_TAG:{
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
-            
-//            [urlConnection cancel];
-//            urlConnection = nil;
-//            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-//            [[AppDelegate instance] stopHttpServer];
-//            
-//            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
-//            [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
-//            [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-//            [self.player removeObserver:self forKeyPath:k_CurrentItemKey];
-//            [self.player removeObserver:self forKeyPath:@"rate"];
-//            [self.player .currentItem removeObserver:self forKeyPath:@"status"];
-//            //buffering
-//            [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
-//            [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
-//            
-//            [self removePlayerTimeObserver];
-//            [self stopMyTimer];
-//            if (nil != timeLabelTimer_)
-//            {
-//                [timeLabelTimer_ invalidate];
-//                timeLabelTimer_ = nil;
-//            }
-//            
-//           
-//            
-//            [self.player  pause];
-//            mPlayer = nil;
-//            mPlayerItem = nil;
-//            prodId_ = nil;
+            if (isPlayOnTV)
+            {
+                [self controlCloundTV:CLOUND_TV_CLOSE];
+            }
+            [BundingTVManager shareInstance].sendClient.delegate = (id)[BundingTVManager shareInstance];
             [self updateWatchRecord];
             [self playEnd];
             
@@ -1695,40 +1712,64 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             break;
         }
         case PLAY_BUTTON_TAG:{
+            
+            if (isPlayOnTV && isTVReady)
+            {
+                [self controlCloundTV:CLOUND_TV_PLAY];
+            }
             [self dismissActivityView];
             [mPlayer play];
             btn.hidden = YES;
             pauseButton_.hidden = NO;
+            
             break;
         }
-        case PAUSE_BUTTON_TAG:{
+        case PAUSE_BUTTON_TAG:
+        {
+            
+            if (isPlayOnTV && isTVReady)
+            {
+                [self controlCloundTV:CLOUND_TV_PAUSE];
+            }
             [mPlayer pause];
             btn.hidden = YES;
             playButton_.hidden = NO;
             
             break;
         }
-        case PRE_BUTTON_TAG:{
+        case PRE_BUTTON_TAG:
+        {
             double time = CMTimeGetSeconds([mPlayer currentTime]);
             if (isnan(time)) {
                 time = 0;
             }
+            
             if (time>= 30) {
                 [mPlayer seekToTime:CMTimeMakeWithSeconds(time-30, NSEC_PER_SEC)];
             }
             else{
                 [mPlayer seekToTime:CMTimeMakeWithSeconds(0, NSEC_PER_SEC)];
-            
+                
             }
-            
+            if (isPlayOnTV)
+            {
+                [self controlCloundTV:CLOUND_TV_SEEK_TO_TIME];
+            }
             break;
         }
         case NEXT_BUTTON_TAG:{
             if (videoType_ == 1) {
                 return;
             }
+
             [self showNOThisClearityUrl:NO];
             [self playNext];
+            
+//            if (isPlayOnTV)
+//            {
+//                [self pushWebURLToCloudTV:@"411"];
+//            }
+            
             break;
         }
         case CLARITY_BUTTON_TAG:{
@@ -1777,7 +1818,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         case CLOUND_TV_BUTTON_TAG:
         {
-            [self pushWebURLToCloudTV];
+            btn.selected = !btn.selected;
+            isPlayOnTV = btn.selected;
+            if (isPlayOnTV)
+            {
+//                airPlayLabel_.text = @"此视频正在通过 JoyPlus 播放";
+//                [cloudTVView addSubview:airPlayLabel_];
+//                [avplayerView_ addSubview:cloudTVView];
+                [self pushWebURLToCloudTV:@"41"];
+            }
+            else
+            {
+                [self controlCloundTV:CLOUND_TV_CLOSE];
+//                [cloudTVView removeFromSuperview];
+//                [airPlayLabel_ removeFromSuperview];
+//                airPlayLabel_.text = @"此视频正在通过 AirPlay 播放";
+//                
+//                NSString * volume = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:@"current_volume"];
+//                [self setPlayVolume:[volume floatValue]];
+            }
         }
             break;
         default:
@@ -1855,6 +1914,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 tolerance = 0.1f;
             }
             __block typeof (self) myself = self;
+            //__block typeof (isPlayOnTV)isPlay = isPlayOnTV;
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
                              ^(CMTime time)
                              {
@@ -1874,7 +1934,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		[mPlayer setRate:mRestoreAfterScrubbingRate];
 		mRestoreAfterScrubbingRate = 0.f;
 	}
-
+    if (isPlayOnTV)
+    {
+        [self controlCloundTV:CLOUND_TV_SEEK_TO_TIME];
+    }
 }
 
 
@@ -2144,6 +2207,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     selectButton_.selected = YES;
     [self showToolBar];
     
+//    if (isPlayOnTV)
+//    {
+//        [self pushWebURLToCloudTV:@"411"];
+//    }
+    
 }
 - (void)recordPlayStatics
 {
@@ -2302,12 +2370,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         
         [self updateWatchRecord];
+        
+//        if (isPlayOnTV)
+//        {
+//            NSString * volume = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:@"current_volume"];
+//            [self setPlayVolume:[volume floatValue]];
+//        }
+        
     }
 }
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    
+//    if (isPlayOnTV)
+//    {
+//        [[ContainerUtility sharedInstance] setAttribute:[NSString stringWithFormat:@"%f",[self currentVolume]] forKey:@"current_volume"];
+//        
+//        [self setPlayVolume:0.0f];
+//    }
 }
 
 #pragma mark -
@@ -2330,6 +2410,113 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         UIButton *closeBtn = (UIButton *)[topToolBar_ viewWithTag:CLOSE_BUTTON_TAG];
         [self action:closeBtn];
     }
+}
+
+#pragma mark -
+#pragma mark FayeObjc delegate
+- (void) messageReceived:(NSDictionary *)messageDict
+{
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"31"])
+    {
+        
+    }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"32"])
+    {
+        
+    }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"42"])
+    {
+        isTVReady = YES;
+    }
+}
+
+- (void)connectedToServer
+{
+    
+}
+
+- (void)disconnectedFromServer
+{
+    if ([CommonMotheds isNetworkEnbled])
+    {
+        [[BundingTVManager shareInstance] connecteServer];
+        [BundingTVManager shareInstance].sendClient.delegate = self;
+    }
+}
+
+- (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
+{
+    
+}
+
+- (void)subscriptionFailedWithError:(NSString *)error
+{
+    
+}
+- (void)subscribedToChannel:(NSString *)channel
+{
+    
+}
+
+#pragma mark - 
+#pragma mark - 控制投放TV接口(private)
+- (void)controlCloundTV:(NSInteger)controlType
+{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[data objectForKey:KEY_MACADDRESS]];
+    double curTime = mScrubber.value * CMTimeGetSeconds([self playerItemDuration]);//CMTimeGetSeconds([self.mPlayer currentTime]);
+    NSNumber * type = [NSNumber numberWithInt:videoType_];
+    NSString * cType = nil;
+    switch (controlType)
+    {
+        case CLOUND_TV_PLAY:
+        {
+            cType = @"403";
+        }
+            break;
+        case CLOUND_TV_PAUSE:
+        {
+            cType = @"405";
+        }
+            break;
+        case CLOUND_TV_CLOSE:
+        {
+            cType = @"409";
+        }
+            break;
+        case CLOUND_TV_SEEK_TO_TIME:
+        {
+            cType = @"407";
+        }
+            break;
+        default:
+            break;
+    }
+    
+    NSDictionary *reqData = [NSDictionary dictionaryWithObjectsAndKeys:
+                          cType, @"push_type",
+                          userId, @"user_id",
+                          sendChannel, @"tv_channel",
+                          [NSNumber numberWithFloat:curTime],@"prod_time",
+                             workingUrl_,@"prod_url",
+                             prodId_,@"prod_id",
+                             nameStr_,@"prod_name",
+                             type,@"prod_type",
+                          nil];
+    
+    [[BundingTVManager shareInstance] sendMsg:reqData];
+}
+
+- (CGFloat)currentVolume
+{
+    return [MPMusicPlayerController applicationMusicPlayer].volume;
+}
+
+- (void)setPlayVolume:(CGFloat)volume
+{
+    MPMusicPlayerController *mpc = [MPMusicPlayerController applicationMusicPlayer];
+    mpc.volume = volume;
 }
 
 @end

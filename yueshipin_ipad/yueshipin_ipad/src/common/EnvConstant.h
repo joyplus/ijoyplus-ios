@@ -10,6 +10,7 @@
 
  //0: 测试环境     1. 正式环境
 #define ENVIRONMENT 1
+
 #define VERSION @"1.0.0"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
@@ -43,6 +44,7 @@
     #define PARSE_CLIENT_KEY @"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"
     #define kABaseURLString @"http://api.joyplus.tv/"
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
+    #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
 //测试环境
 #else
     #define kDefaultAppKey @"ijoyplus_android_0001bj"
@@ -50,4 +52,5 @@
     #define PARSE_CLIENT_KEY @"RZHrZVn6MK8VGZxfpeshrC2tpxpzzMOZjU0rSS6X"
     #define kABaseURLString @"http://apitest.yue001.com/"
     #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8000/"
+    #define FAYE_SERVER_URL @"ws://comettest.joyplus.tv:8000/bindtv"
 #endif
