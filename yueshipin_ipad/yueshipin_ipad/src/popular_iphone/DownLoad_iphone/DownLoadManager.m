@@ -662,7 +662,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 
         }
     }
-
+  [[DownLoadManager defaultDownLoadManager] postIsloadingBoolValue];
 }
 +(void)continueDownload:(NSString *)downloadId{
     for (AFDownloadRequestOperation *mc in downLoadQueue_) {
@@ -694,7 +694,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             }
         }
     }
-  
+  [[DownLoadManager defaultDownLoadManager] postIsloadingBoolValue];
     
 }
 
