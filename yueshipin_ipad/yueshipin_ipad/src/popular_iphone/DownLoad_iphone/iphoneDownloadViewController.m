@@ -43,11 +43,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(200, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(220, 0, 80, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"下载缓存"];
+    [titleText setText:@"视频下载"];
+    titleText.center = self.navigationItem.titleView.center;
     self.navigationItem.titleView=titleText;
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
