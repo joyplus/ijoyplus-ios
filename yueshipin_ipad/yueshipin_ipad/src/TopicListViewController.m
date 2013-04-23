@@ -187,7 +187,7 @@
             placeHolderImage.image = [UIImage imageNamed:@"video_bg_placeholder"];
             [cell.contentView addSubview:placeHolderImage];
             
-            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, (120-NORMAL_VIDEO_HEIGHT) / 2, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
+            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, (120-NORMAL_VIDEO_HEIGHT) / 2 + 1.5, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
