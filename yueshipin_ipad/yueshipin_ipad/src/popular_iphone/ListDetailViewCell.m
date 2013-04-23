@@ -67,6 +67,7 @@
         score_ = [[UILabel alloc] initWithFrame:CGRectMake(256, 19, 49, 14)];
         score_.font = [UIFont systemFontOfSize:15];
         score_.textColor = [UIColor colorWithRed:56/255.0 green:104/255.0 blue:188/255.0 alpha: 1.0f];
+        score_.backgroundColor = [UIColor clearColor];
         [self addSubview:score_];
         
         UIImageView *logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_numeral_watercress.png"]];

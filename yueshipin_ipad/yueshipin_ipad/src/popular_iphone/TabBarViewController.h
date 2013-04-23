@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
-#define YUEDAN @"悦单"
-#define YUEBANG @"悦榜"
-#define MINE @"我的"
+#define YUEBANG     @"悦榜"
+#define YUEDAN      @"悦单"
+#define XIAZAI      @"下载"
+#define MINE        @"我的"
 
 @interface TabBarViewController : UITabBarController
 @end

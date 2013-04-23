@@ -27,10 +27,13 @@
 }
 
 - (void)layoutSubviews {
-//    UITextField *searchField;
     for(id subview in self.subviews) {
-        if([subview isKindOfClass:[UITextField class]]) { 
-//            searchField = subview;
+        if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])
+        {
+            [subview removeFromSuperview];
+        } else if([subview isKindOfClass:NSClassFromString(@"UISearchBarTextField")]){
+            UITextField *textField = (UITextField *)subview;
+            [textField setBackground:nil];
         } else if([subview isKindOfClass:[UIButton class]]){
             cancelButton = (UIButton *)subview;
             
@@ -38,17 +41,9 @@
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             [btn setBackgroundImage:[UIImage imageNamed:@"search_btn_pressed"] forState:UIControlStateHighlighted];
             [btn setBackgroundImage:[UIImage imageNamed:@"search_btn"] forState:UIControlStateNormal];
-            btn.frame = CGRectMake(312, 1, 57, 38);
+            btn.frame = CGRectMake(335, -1, 68, 42);
             [btn addTarget:self action:@selector(cancelBtnClicked) forControlEvents:UIControlEventTouchUpInside];
             [self addSubview:btn];
-        }
-    }
-    for (UIView *subview in self.subviews)
-    {
-        if ([subview isKindOfClass:NSClassFromString(@"UISearchBarBackground")])
-        {
-            [subview removeFromSuperview];
-            break;
         }
     }
     UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"search_box_text"]];

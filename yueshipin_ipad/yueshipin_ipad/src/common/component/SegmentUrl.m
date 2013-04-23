@@ -10,8 +10,18 @@
 
 @implementation SegmentUrl
 
+@synthesize rowId;
 @synthesize url;
 @synthesize itemId;
 @synthesize subitemId;
 @synthesize seqNum;
+
+- (id)init
+{
+    self = [super init];
+    url = @"";
+    subitemId = @"";
+    seqNum = 0;
+    return self;
+}
 @end

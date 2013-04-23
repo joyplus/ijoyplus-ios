@@ -25,4 +25,8 @@ install_resource 'EGOTableViewPullRefresh/EGOTableViewPullRefresh/Resources/gray
 install_resource 'EGOTableViewPullRefresh/EGOTableViewPullRefresh/Resources/grayArrow@2x.png'
 install_resource 'EGOTableViewPullRefresh/EGOTableViewPullRefresh/Resources/whiteArrow.png'
 install_resource 'EGOTableViewPullRefresh/EGOTableViewPullRefresh/Resources/whiteArrow@2x.png'
+install_resource 'ZBarSDK/iphone/res/zbar-back.png'
+install_resource 'ZBarSDK/iphone/res/zbar-helpicons.png'
+install_resource 'ZBarSDK/iphone/res/zbar-samples.png'
+install_resource 'ZBarSDK/iphone/res/zbar-help.html'
 install_resource 'iRate/iRate/iRate.bundle'

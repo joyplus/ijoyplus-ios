@@ -7,12 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface MoreListViewController : UITableViewController{
+#import "MNMBottomPullToRefreshManager.h"
+@interface MoreListViewController : UITableViewController<MNMBottomPullToRefreshManagerClient>{
     NSMutableArray *listArr_;
     int type_;
+    int favLoadCount_;
+     MNMBottomPullToRefreshManager *pullToRefreshManagerFAV_;
 }
 
 @property (nonatomic, strong)NSMutableArray *listArr;
 @property (nonatomic, assign)int type;
+@property (nonatomic, strong)MNMBottomPullToRefreshManager *pullToRefreshManagerFAV;
 @end

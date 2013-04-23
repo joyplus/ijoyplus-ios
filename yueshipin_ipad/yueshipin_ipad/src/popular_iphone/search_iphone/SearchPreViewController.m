@@ -60,9 +60,10 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -101,18 +102,16 @@
     [self.view addSubview:hotView_];
 
     for (int i = 0; i < 10; i++) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(18+(i%2)*140, 92+(i/2)*30, 125, 20)];
-        label.userInteractionEnabled = YES;
-        label.backgroundColor = [UIColor clearColor];
-        label.font = [UIFont systemFontOfSize:14];
-        label.textColor = [UIColor grayColor];
-        label.highlightedTextColor  = [UIColor blueColor];
-        label.tag = 100+i;
-        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(selected:)];
-        tapGestureRecognizer.numberOfTapsRequired = 1;
-        tapGestureRecognizer.numberOfTouchesRequired = 1;
-        [label addGestureRecognizer:tapGestureRecognizer];
-        [self.view addSubview:label];
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(18+(i%2)*140, 92+(i/2)*45, 125, 20);
+        btn.titleLabel.font = [UIFont systemFontOfSize:16];
+        btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+        btn.tag= 100+i;
+        [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor colorWithRed:29/255.0 green:103/255.0 blue:196/255.0 alpha:1] forState:UIControlStateHighlighted];
+        [btn setBackgroundColor:nil];
+        [btn addTarget:self action:@selector(selected:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:btn];
     }
 
     
@@ -137,16 +136,16 @@
  listArr_ = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
 }
 -(void)intHotKeyWords{
-    [CommonMotheds showNetworkDisAbledAlert];
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *hotkeyArr = [result objectForKey:@"topKeywords"];
             for (int i = 0;i<[hotkeyArr count] ; i++) {
-                UILabel *label = (UILabel *)[self.view viewWithTag:100+i];
-                label.text = [[hotkeyArr objectAtIndex:i] objectForKey:@"content"];
-                }
+                UIButton *btn = (UIButton *)[self.view viewWithTag:100+i];
+                [btn setTitle:[[hotkeyArr objectAtIndex:i] objectForKey:@"content"] forState:UIControlStateNormal];
+            }
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -156,9 +155,8 @@
 }
 -(void)selected:(id)sender{
     [self hiddeViews];
-    UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
-    UILabel *label = (UILabel *)tapGestureRecognizer.view;
-    searchBar_.text = label.text;
+    UIButton *btn = (UIButton *)sender;
+    searchBar_.text = btn.titleLabel.text;
     [searchBar_ setShowsCancelButton:YES animated:NO];
     
     for (id view in searchBar_.subviews) {
@@ -169,7 +167,7 @@
             [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];        }
     }
 
-    [self search:label.text];
+    [self search:btn.titleLabel.text];
     
     
 }
@@ -195,27 +193,34 @@
 }
 -(void)search:(NSString *)searchStr{
  
-  NSMutableArray *historyArr = [NSMutableArray arrayWithCapacity:10];
-  NSArray *arr = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
-  [historyArr addObjectsFromArray:arr];
+    NSMutableArray *historyArr = [NSMutableArray arrayWithCapacity:10];
+    NSArray *arr = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
+    [historyArr addObjectsFromArray:arr];
     BOOL isHave = NO;
-    for (NSString *str in historyArr) {
+    for (int i = 0; i< historyArr.count; i ++)
+    {
+        NSString *str = [historyArr objectAtIndex:i];
         if ([str isEqualToString:searchStr]) {
             isHave = YES;
+            [historyArr exchangeObjectAtIndex:i withObjectAtIndex:(historyArr.count - 1)];
             break;
         }
     }
+    
     if (!isHave) {
       [historyArr addObject:searchStr];
     }
- [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:historyArr ];
-    
+    [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:historyArr ];
+    listArr_ = historyArr;
+    [tableList_ reloadData];
+
     [self loadSearchData:searchStr];
     [self.view addSubview:searchResultList_];
     [searchResultList_ reloadData];
     [searchBar_ resignFirstResponder];
     [tableList_ removeFromSuperview];
-    
+    [self hiddeViews];
+    searchBar_.text = searchStr;
     for (id view in searchBar_.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
             ((UIButton *)view).enabled = YES;
@@ -232,8 +237,7 @@
 -(void)loadSearchData:(NSString *)searchStr{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     
@@ -307,12 +311,14 @@
     [self search:searchBar.text];
 }
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar{
-    if ([searchResults_ count]== 0) {
+    if ([listArr_ count] > 0) {
       [self.view addSubview:tableList_];
     }
     
+    [searchResultList_ removeFromSuperview ];
     [self hiddeViews];
     [self removeOverlay];
+    searchBar_.text = nil;
     [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
@@ -334,12 +340,12 @@
             }
         }
         
-        if ([searchResults_ count] == 0) {
+        //if ([searchResults_ count] == 0) {
             [tableList_ removeFromSuperview];
             [self showViews];
             [searchBar setShowsCancelButton:NO animated:YES];
             searchBar_.text = nil;
-        }
+        //}
     }
     else{
         [searchResultList_ removeFromSuperview];
@@ -349,8 +355,8 @@
         searchBar_.text = nil;
     }
     [self removeOverlay];
-    [self initDataArr];
-    [tableList_ reloadData];
+    [tableList_ removeFromSuperview];
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -396,7 +402,8 @@
             return cell;
         }
         else if(indexPath.row < [listArr_ count]){
-            cell.textLabel.text = [listArr_ objectAtIndex:indexPath.row];
+            int count = [listArr_ count];
+            cell.textLabel.text = [listArr_ objectAtIndex:count-1-indexPath.row];
             cell.textLabel.font = [UIFont systemFontOfSize:14];
             line = [[UIImageView alloc] initWithFrame:CGRectMake(0, 29, self.view.bounds.size.width, 1)];
             line.backgroundColor = [UIColor clearColor];
@@ -447,7 +454,8 @@
         if (indexPath.row == [listArr_ count]) {
             return;
         }
-        NSString *str = [listArr_ objectAtIndex:indexPath.row];
+        int count = [listArr_ count];
+        NSString *str =  [listArr_ objectAtIndex:count-1-indexPath.row];
         [self search:str];
     }
     else if (tableView.tag == RESULT_LIST){

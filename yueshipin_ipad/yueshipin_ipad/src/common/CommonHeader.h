@@ -31,7 +31,8 @@
 #import "IpadPageNameConstant.h"
 #import "MobClick.h"
 #import "EnvConstant.h"
-
+#import "EGORefreshTableHeaderView.h"
+#import "DatabaseManager.h"
 @interface CommonHeader : NSObject
 
 @end

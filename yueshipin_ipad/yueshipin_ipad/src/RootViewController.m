@@ -40,8 +40,12 @@
 #import "MenuViewController.h"
 #import "StackScrollViewController.h"
 #import "AFSinaWeiboAPIClient.h"
+#import "CustomTextField.h"
+#import "SSCheckBoxView.h"
+#import "DatabaseManager.h"
 
-#define EPISODE_NUMBER_IN_ROW 10
+#define EPISODE_NUMBER_IN_ROW   5
+#define TOP_VIEW_TAG            (54321)
 
 @interface UIViewExt : UIView {
 }
@@ -81,10 +85,15 @@
 
 @end
 
+@interface RootViewController ()
+@property (nonatomic, strong)NSMutableSet *checkboxes;
+
+@end
+
 @implementation RootViewController
 @synthesize menuViewController, stackScrollViewController;
-@synthesize prodUrl, prodId, prodName;
-@synthesize videoDetailDelegate;
+@synthesize prodUrl, prodId, prodName, prodType;
+@synthesize videoDetailDelegate, checkboxes;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -93,6 +102,7 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextViewTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -114,7 +124,7 @@
     bgImageView.frame = CGRectMake(rootView.frame.origin.x, rootView.frame.origin.y-2, rootView.frame.size.width, 750);
     [rootView addSubview:bgImageView];
 	
-	leftMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.height/2, self.view.frame.size.height)];
+	leftMenuView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MENU_DIPLAY_WIDTH, self.view.frame.size.height)];
 	leftMenuView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
 	menuViewController = [[MenuViewController alloc] initWithFrame:CGRectMake(0, 0, leftMenuView.frame.size.width, leftMenuView.frame.size.height)];
 	[menuViewController.view setBackgroundColor:[UIColor clearColor]];
@@ -136,6 +146,7 @@
 	[self.view addSubview:rootView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextViewChanged:) name:UITextViewTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contentTextFieldChanged:) name:UITextFieldTextDidChangeNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -152,6 +163,36 @@
 	[stackScrollViewController willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
+#pragma mark -
+#pragma mark - 私有函数
+
+- (void)topViewTouchDown
+{
+    [[self.view viewWithTag:TOP_VIEW_TAG] removeFromSuperview];
+}
+
+#pragma mark - 
+#pragma mark - 对外接口
+- (void)addTopView:(UIView *)tView
+{
+    UIView * bgTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1024, 768)];
+    bgTopView.backgroundColor = [UIColor clearColor];
+    bgTopView.tag = TOP_VIEW_TAG;
+    
+    UIButton * bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    bgBtn.frame = bgTopView.frame;
+    bgBtn.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25];
+    [bgBtn addTarget:self
+              action:@selector(topViewTouchDown)
+    forControlEvents:UIControlEventTouchDown];
+    
+    tView.center = bgBtn.center;
+    
+    [bgTopView addSubview:bgBtn];
+    [bgTopView addSubview:tView];
+    [self.view addSubview:bgTopView];
+    //[rootView bringSubviewToFront:bgTopView];
+}
 - (void)showSuccessModalView:(int)closeTime
 {
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
@@ -211,7 +252,7 @@
     [frame addSubview:tempMovieImage];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(735, 80, 40, 42);
+    closeBtn.frame = CGRectMake(735, 80, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -289,7 +330,7 @@
     [view addSubview:frame];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(675, 80, 40, 42);
+    closeBtn.frame = CGRectMake(675, 80, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -397,7 +438,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"popup_bg"]];
-    frame.frame = CGRectMake(0, 0, 600, 265);
+    frame.frame = CGRectMake(0, 0, 477, 317);
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
@@ -405,14 +446,13 @@
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.text = [video objectForKey:@"name"];
-//    [nameLabel sizeToFit];
     nameLabel.textAlignment = NSTextAlignmentCenter;
-    nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
+    nameLabel.center = CGPointMake(frame.frame.size.width/2, 28);
     nameLabel.textColor = CMConstants.grayColor;
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(765, 258, 40, 42);
+    closeBtn.frame = CGRectMake(696, 230, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -429,89 +469,92 @@
             return NSOrderedSame;
         }
     }];
-    dramaPageNum = ceil(episodeArray.count / 30.0);
+    dramaPageNum = ceil(episodeArray.count / 20.0);
     
     UIScrollView *pageView = [[UIScrollView alloc]initWithFrame:CGRectZero];
     pageView.tag = 74378420;
     [pageView setShowsHorizontalScrollIndicator:NO];
-    pageView.scrollEnabled = NO;
+    pageView.scrollEnabled = YES;
     pageView.backgroundColor = [UIColor clearColor];
     [pageView setPagingEnabled:YES];
-    pageView.frame = CGRectMake(255, 320, 510, 30);
-    pageView.contentSize = CGSizeMake(510*(dramaPageNum/7+1), 30);
+    pageView.frame = CGRectMake(295, 275, 430-4, 30);
+    pageView.contentSize = CGSizeMake(pageView.frame.size.width*(dramaPageNum/6+1), pageView.frame.size.height);
     pageView.contentOffset = CGPointMake(0, 0);
     [view addSubview:pageView];
-    
-    if (dramaPageNum > 7) {
-        pageView.scrollEnabled = YES;
-        UIButton *prevBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        prevBtn.frame = CGRectMake(225, 317, 30, 30);
-        [prevBtn setImage:[UIImage imageNamed:@"left"] forState:UIControlStateNormal];
-        prevBtn.tag = 84737481;
-        [prevBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [view addSubview:prevBtn];
-        
-        UIButton *nextBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        nextBtn.frame = CGRectMake(260 + pageView.frame.size.width, 317, 30, 30);
-        [nextBtn setImage:[UIImage imageNamed:@"right"] forState:UIControlStateNormal];
-        nextBtn.tag = 84737482;
-        [nextBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [view addSubview:nextBtn];
-    }
 
     for (int i = 0; i < dramaPageNum; i++) {
         UIButton *pageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        pageBtn.frame = CGRectMake(i * (63 + 10) + 1, 0, 64, 27);
+        pageBtn.frame = CGRectMake(i * (63 + 8) + 1, 0, 63, 27);
         pageBtn.tag = 1001 + i;
-        [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
-        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*30+1, (int)fmin((i+1)*30, episodeArray.count)] forState:UIControlStateNormal];
+        [pageBtn setTitle:[NSString stringWithFormat:@"%i-%i", i*20+1, (int)fmin((i+1)*20, episodeArray.count)] forState:UIControlStateNormal];
         if(i == 0){
-            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
+            [pageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
         } else {
-            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
+            [pageBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+//            [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
         }
         [pageBtn.titleLabel setFont:[UIFont systemFontOfSize:15]];
-        [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateHighlighted];
+        [pageBtn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
         [pageBtn addTarget:self action:@selector(pageBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [pageView addSubview:pageBtn];
     }
     
-    UIScrollView *episodeView = [[UIScrollView alloc]initWithFrame:CGRectZero];
+    UIImageView *episodeViewBg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"episode_view_bg"]];
+    episodeViewBg.frame = CGRectMake(0, 0, 437, 200);
+    episodeViewBg.center = CGPointMake(view.center.x, view.center.y);
+    [view addSubview:episodeViewBg];
+    
+    UIScrollView *episodeView = [[UIScrollView alloc]initWithFrame:CGRectMake(295, 310, 430, 190)];
     episodeView.tag = 3268143;
-//    episodeView.delegate = self;
+    episodeView.delegate = self;
     episodeView.scrollEnabled = YES;
     [episodeView setShowsHorizontalScrollIndicator:NO];
     episodeView.backgroundColor = [UIColor clearColor];
     [episodeView setPagingEnabled:YES];
-    episodeView.frame = CGRectMake(255, 360, 520, 200);
-    episodeView.contentSize = CGSizeMake(520*dramaPageNum, episodeView.frame.size.height);
+    episodeView.contentSize = CGSizeMake(episodeView.frame.size.width*dramaPageNum, episodeView.frame.size.height);
     episodeView.contentOffset = CGPointMake(0, 0);
     [view addSubview:episodeView];
     
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
-    NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
+    episodeViewBg.center = episodeView.center;
+    
+    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'", downloadingProdid];
+    NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
     for (int i = 0; i < episodeArray.count; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag = i+1;
-        int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*3.0));
-        [btn setFrame:CGRectMake(pageNum*520 + (i % EPISODE_NUMBER_IN_ROW) * 52, floor((i%(EPISODE_NUMBER_IN_ROW*3))*1.0/ EPISODE_NUMBER_IN_ROW) * 39, 47, 38)];
+        int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
+        [btn setFrame:CGRectMake(6 + pageNum*episodeView.frame.size.width + (i % EPISODE_NUMBER_IN_ROW) * (72 + 15), 0 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (44 + 5), 72, 44)];//65, 36
         NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
         [btn setTitle:name forState:UIControlStateNormal];
         [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
-        btn.contentEdgeInsets = UIEdgeInsetsMake(2, 0, 0, 0);
-        btn.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
+        //btn.contentVerticalAlignment = UIControlContentVerticalAlignmentTop;
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_download"] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_pressed"] forState:UIControlStateHighlighted];
-        [btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateHighlighted];
+        //[btn setBackgroundImage:[UIImage imageNamed:@"drama_disabled"] forState:UIControlStateDisabled];
         [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        if(![self checkDownloadStatus:episodeArray index:i]){
+        if(![self checkDownloadStatus:episodeArray index:i])
+        {
             [btn setEnabled:NO];
         }
-        for (SubdownloadItem *subitem in downloadingItems) {
+        for (SubdownloadItem *subitem in downloadingItems)
+        {
             if(subitem.subitemId.intValue == i+1){
-                [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
+                [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+                if (subitem.percentage == 100)
+                {
+                    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 12, 0)];
+                    [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
+                }
+                else
+                {
+                    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+                    [btn setBackgroundImage:[UIImage imageNamed:@"drama_downloading_icon"] forState:UIControlStateDisabled];
+                }
+                
                 [btn setEnabled:NO];
                 break;
             }
@@ -523,30 +566,28 @@
     [self.view addSubview:view];
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    if (scrollView.tag == 3268143) {
-//        int page = floor(scrollView.contentOffset.x/520.0);
-//        if (page > 0 && page < dramaPageNum) {
-//            UIView *view = (UIView *)[self.view viewWithTag:3268142];
-//            for (int i = 0; i < dramaPageNum; i++) {
-//                UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + i];
-//                if (i == page) {
-//                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
-//                } else {
-//                    [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
-//                }
-//            }
-//        }
-//    }
-//}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView; 
+{
+    if (scrollView.tag == 3268143) {
+        int page = floor(scrollView.contentOffset.x/scrollView.frame.size.width);
+        if (page >= 0 && page < dramaPageNum) {
+            UIScrollView *episodeView = (UIScrollView *)[self.view viewWithTag:74378420];
+            [episodeView setContentOffset:CGPointMake(floor(page/6.0) * episodeView.frame.size.width, 0) animated:YES];
+            UIView *view = (UIView *)[self.view viewWithTag:3268142];
+            UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + page];
+            [self pageBtnClicked:tabBtn];
+        }
+    }
+}
 
 - (void)dramaDownload:(UIButton *)btn
 {
    BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
     if (success) {
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateNormal];
+        [btn setEnabled:NO];
+        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+        [btn setBackgroundImage:[UIImage imageNamed:@"drama_downloading_icon"] forState:UIControlStateDisabled];
     }
 }
 
@@ -573,12 +614,13 @@
     UIView *view = (UIView *)[self.view viewWithTag:3268142];
     for (int i = 0; i < dramaPageNum; i++) {
         UIButton *tabBtn = (UIButton *)[view viewWithTag:1001 + i];
-        [tabBtn setBackgroundImage:[UIImage imageNamed:@"drama_tab"] forState:UIControlStateNormal];
+        [tabBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [tabBtn setBackgroundImage:nil forState:UIControlStateNormal];
     }
-    [btn setBackgroundImage:[UIImage imageNamed:@"drama_tab_pressed"] forState:UIControlStateNormal];
-
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [btn setBackgroundImage:[UIImage imageNamed:@"drama_pressed"] forState:UIControlStateNormal];
     UIScrollView *episodeView = (UIScrollView *)[view viewWithTag:3268143];
-    [episodeView setContentOffset:CGPointMake(520*(btn.tag - 1001), 0) animated:YES];
+    [episodeView setContentOffset:CGPointMake(episodeView.frame.size.width*(btn.tag - 1001), 0) animated:YES];
 }
 
 - (void)showShowDownloadView:(NSString *)downloadingProdid title:(NSString *)title episodeArray:(NSArray *)episodeArray
@@ -589,7 +631,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"popup_bg"]];
-    frame.frame = CGRectMake(0, 0, 484, 250);
+    frame.frame = CGRectMake(0, 0, 484, 400);
     frame.center = CGPointMake(view.center.x, view.center.y);
     [view addSubview:frame];
     
@@ -597,115 +639,144 @@
     nameLabel.font = CMConstants.titleFont;
     nameLabel.backgroundColor = [UIColor clearColor];
     nameLabel.text = title;
-//    [nameLabel sizeToFit];
+    nameLabel.textColor = [UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1];
     nameLabel.textAlignment = NSTextAlignmentCenter;
-    nameLabel.center = CGPointMake(frame.frame.size.width/2, 40);
+    nameLabel.center = CGPointMake(frame.frame.size.width/2, 28);
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(708, 266, 40, 42);
+    closeBtn.frame = CGRectMake(701, 259 - 70, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:closeBtn];
     
-    UIScrollView *showListView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 370, 170)];
+    UIScrollView *showListView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, 336.5, 308.5)];//370, 170)];
     showListView.tag = 3268143;
     showListView.scrollEnabled = NO;
     showListView.backgroundColor = [UIColor clearColor];
     [showListView setPagingEnabled:YES];
-    showListView.center = CGPointMake(frame.center.x, frame.center.y + 30);
+    showListView.center = CGPointMake(frame.center.x, frame.center.y + 10);
     showListView.contentSize = showListView.frame.size;
     showListView.contentOffset = CGPointMake(0, 0);
     [view addSubview:showListView];
-    NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'", downloadingProdid];
-    NSArray *downloadingItems = [SubdownloadItem findByCriteria:subquery];
-        if(episodeArray.count > 5){
-            UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [previousShowBtn setEnabled:NO];
-            UIButton *nextShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [view addSubview:previousShowBtn];
-            [view addSubview:nextShowBtn];
-            previousShowBtn.frame = CGRectMake(290,  330, 32, 161);
-            nextShowBtn.frame = CGRectMake(290 + 370 + 45,  330, 32, 161);
-            
-            [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-            [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-            [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
-            [previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            previousShowBtn.tag = 9001;
-            
-            [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-            [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-            [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
-            [nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            nextShowBtn.tag = 9002;
-            for (int i = 0; i < episodeArray.count; i++) {
+    NSString *subquery = [NSString stringWithFormat:@"where itemId = %@", downloadingProdid];
+    NSArray *downloadingItems = [DatabaseManager findByCriteria:SubdownloadItem.class queryString:subquery];
+    UIButton *previousShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [previousShowBtn setEnabled:NO];
+    UIButton *nextShowBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [view addSubview:previousShowBtn];
+    [view addSubview:nextShowBtn];
+    previousShowBtn.frame = CGRectMake(275,  330 - 90, 64, 308.5);
+    nextShowBtn.frame = CGRectMake(275 + 336.5 + 74,  330 - 90, 64, 308.5);
+    
+    [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+    [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+    [previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
+    [previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    previousShowBtn.tag = 9001;
+    
+    [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+    [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+    [nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
+    [nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    nextShowBtn.tag = 9002;
+        if(episodeArray.count > 5)
+        {
+            previousShowBtn.enabled = NO;
+            nextShowBtn.enabled = YES;
+            for (int i = 0; i < episodeArray.count; i++)
+            {
                 int pageNum = floor(i/5.0);
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 nameBtn.tag = i + 1;
-                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
+                [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 6) + 6, showListView.frame.size.width, 54.5)];
                 NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                 if ([item objectForKey:@"name"] == nil) {
                     name = @"";
                 }
-                if(name.length > 23){
-                    name = [name substringToIndex:23];
-                }
+//                if(name.length > 23){
+//                    name = [name substringToIndex:23];
+//                }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
+                [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 50)];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
-                [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                nameBtn.titleLabel.numberOfLines = 2;
+                [nameBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateDisabled];
+                [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setTitleColor:[UIColor colorWithRed:188.0/255.0 green:188.0/255.0 blue:188.0/255.0 alpha:1] forState:UIControlStateDisabled];
                     [nameBtn setEnabled:NO];
                 }
                 for (SubdownloadItem *subitem in downloadingItems) {
-                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
+                    if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]])
+                    {
+                        if (subitem.percentage == 100)
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        }
+                        else
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
+                        }
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        
                         [nameBtn setEnabled:NO];
                         break;
                     }
                 }
                 [showListView addSubview:nameBtn];
             }
-        } else {
+        }
+        else
+        {
+            previousShowBtn.enabled = NO;
+            nextShowBtn.enabled = NO;
             for(int i = 0; i < episodeArray.count; i++){
                 NSDictionary *item = [episodeArray objectAtIndex:i];
                 UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 nameBtn.tag = i + 1;
-                nameBtn.frame = CGRectMake(0, i * 32, showListView.frame.size.width, 30);
+                nameBtn.frame = CGRectMake(0, i * (54.5 + 6) + 6, showListView.frame.size.width, 54.5);
                 NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                 if ([item objectForKey:@"name"] == nil) {
                     name = @"";
                 }
-                if(name.length > 23){
-                    name = [name substringToIndex:23];
-                }
+//                if(name.length > 23){
+//                    name = [name substringToIndex:23];
+//                }
                 [nameBtn setTitle:name forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateDisabled];
-                [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [nameBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateDisabled];
+                [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                 nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                 [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 if (![self checkDownloadStatus:episodeArray index:i]) {
+                    [nameBtn setTitleColor:[UIColor colorWithRed:188.0/255.0 green:188.0/255.0 blue:188.0/255.0 alpha:1] forState:UIControlStateDisabled];
                     [nameBtn setEnabled:NO];
                 }
                 for (SubdownloadItem *subitem in downloadingItems) {
                     if([subitem.subitemId isEqualToString:[StringUtility md5:[NSString stringWithFormat:@"%@", [item objectForKey:@"name"]]]]){
                         [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                        [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        if (subitem.percentage == 100)
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateDisabled];
+                        }
+                        else
+                        {
+                            [nameBtn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
+                        }
                         [nameBtn setEnabled:NO];
                         break;
                     }
@@ -740,10 +811,11 @@
 
 - (void)showBtnClicked:(UIButton *)btn
 {
+    btn.enabled = NO;
     BOOL success = [self.videoDetailDelegate downloadShow:btn.tag - 1];
     if(success){
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [btn setBackgroundImage:[UIImage imageNamed:@"tab_show_choose"] forState:UIControlStateNormal];
+        //[btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
     } else {
         [UIUtility showDownloadFailure:self.view];
     }
@@ -760,8 +832,15 @@
     }
     if(showPageNumber == 0){
         [previousShowBtn setEnabled:NO];
+        [nextShowBtn setEnabled:YES];
     }
     if(showPageNumber == ceil(showEpisodeCount / 5.0)-1){
+        [previousShowBtn setEnabled:YES];
+        [nextShowBtn setEnabled:NO];
+    }
+    if (showEpisodeCount <= 5)
+    {
+        [previousShowBtn setEnabled:NO];
         [nextShowBtn setEnabled:NO];
     }
 }
@@ -782,14 +861,15 @@
     [self updatePageBtnState];
     UIView *view = (UIView *)[self.view viewWithTag:3268142];
     UIScrollView *showListView = (UIScrollView *)[view viewWithTag:3268143];
-    [showListView setContentOffset:CGPointMake(370*showPageNumber, 0) animated:YES];
+    [showListView setContentOffset:CGPointMake(336.5*showPageNumber, 0) animated:YES];
 }
 
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage
 {
-    NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:introScreenKey]];
+    NSString *newKey = [NSString stringWithFormat:@"%@_%@", VERSION, introScreenKey];
+    NSString *showMenuIntro = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:newKey]];
     if (![showMenuIntro isEqualToString:@"1"]) {
-        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:introScreenKey];
+        [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:newKey];
         UIView *view = [self.view viewWithTag:3268999];
         if (view == nil) {
             view = [[UIView alloc]initWithFrame:CGRectMake(0, -10, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width + 10)];
@@ -804,6 +884,141 @@
         closeModalViewGesture.numberOfTapsRequired = 1;
         [view addGestureRecognizer:closeModalViewGesture];
     }
+}
+
+- (void)showReportPopup:(NSString *)prodId
+{
+    if (checkboxes == nil) {
+        checkboxes = [[NSMutableSet alloc]initWithCapacity:10];
+    } else {
+        [checkboxes removeAllObjects];
+    }
+    UIView *view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width)];
+    view.tag = 3268142;
+    [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
+    [self.view addSubview:view];
+    
+    UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"report_frame"]];
+    frame.frame = CGRectMake(0, 0, 480, 480);
+    frame.center = CGPointMake(view.center.x + 20, view.center.y - 80);
+    [view addSubview:frame];
+    
+    UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    closeBtn.frame = CGRectMake(720, 65, 50, 50);
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
+    [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
+    [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:closeBtn];
+    
+    for (int i = 0; i < 7; i++) {
+        SSCheckBoxView *checkbox1 = [[SSCheckBoxView alloc] initWithFrame:CGRectMake(0, 0, 40, 40) style:kSSCheckBoxViewStyleBox checked:NO];
+        checkbox1.tag = 3301 + i;
+        [checkbox1 setValue: [NSString stringWithFormat:@"%i", i+1]];
+        checkbox1.center = CGPointMake(view.center.x + 200, 154 + 38 * i);
+        [checkbox1 setStateChangedTarget:self selector:@selector(checkBoxViewChangedState:)];
+        [view addSubview:checkbox1];
+    }    
+    
+    UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    submitBtn.tag = 90847223;
+    submitBtn.frame = CGRectMake(0, 0, 118, 70);
+    submitBtn.center = CGPointMake(view.center.x + 10, view.center.y + 120);
+    [submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn"] forState:UIControlStateNormal];
+    [submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_pressed"] forState:UIControlStateHighlighted];
+    [submitBtn addTarget:self action:@selector(reportIssues) forControlEvents:UIControlEventTouchUpInside];
+    [submitBtn setEnabled:NO];
+    [view addSubview:submitBtn];
+    
+    CustomTextField *textField = [[CustomTextField alloc] initWithFrame:CGRectMake(0, 0, 345, 26)];
+    textField.tag = 3234757301;
+    textField.delegate = self;
+    textField.center = CGPointMake(view.center.x + 40, view.center.y + 58);
+    textField.font = [UIFont systemFontOfSize:14];
+    textField.placeholder = @"请输入您对本部影片的意见和建议...";
+    [view addSubview:textField];
+}
+
+- (void)reportIssues
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    CustomTextField *textField = (CustomTextField *)[view viewWithTag:3234757301];
+    NSString *advice = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSMutableString *reasons = [[NSMutableString alloc]init];
+    for(NSString *reason in checkboxes){
+        [reasons appendFormat:@"%@,", reason];
+    }
+    NSString *reaonsStr;
+    if(reasons.length > 0){
+        reaonsStr = [reasons substringToIndex:reasons.length - 1];
+    }
+    if (advice.length > 0) {
+        if (reaonsStr.length > 0) {
+            reaonsStr = [reaonsStr stringByAppendingString:@",8"];
+        } else {
+            reaonsStr = @"8";
+        }
+    }
+    if(reaonsStr.length > 0 || advice.length > 0) {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: reaonsStr, @"invalid_type", prodId, @"prod_id", prodName, @"prod_name", prodType, @"prod_type", advice, @"memo", nil];
+        [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+        [self removeOverlay];
+        [self showSuccessModalView:1.5];
+    }
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y - 200, view.frame.size.width, view.frame.size.height);
+    } completion:^(BOOL finished) {        
+        [self enabledSubmitBtn];
+    }];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
+        view.frame = CGRectMake(view.frame.origin.x, view.frame.origin.y + 200, view.frame.size.width, view.frame.size.height);
+    } completion:^(BOOL finished) {
+        [self enabledSubmitBtn];        
+    }];
+}
+
+- (void)contentTextFieldChanged:(NSNotification *)notification
+{
+     [self enabledSubmitBtn];
+}
+
+- (void) checkBoxViewChangedState:(SSCheckBoxView *)cbv
+{
+    if(cbv.checked){
+        if(![checkboxes containsObject:[cbv value]]){
+            [checkboxes addObject:[cbv value]];
+        }
+    } else {
+        if([checkboxes containsObject:[cbv value]]){
+            [checkboxes removeObject:[cbv value]];
+        }
+    }
+    [self enabledSubmitBtn];
+}
+
+- (void)enabledSubmitBtn
+{
+    UIView *view = (UIView *)[self.view viewWithTag:3268142];
+    UIButton *submitBtn = (UIButton *)[view viewWithTag:90847223];
+    CustomTextField *textField = (CustomTextField *)[view viewWithTag:3234757301];
+    NSString *advice = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (advice.length > 0 || checkboxes.count > 0) {
+        [submitBtn setEnabled:YES];
+    } else{
+        [submitBtn setEnabled:NO];
+    }
+
 }
 
 - (void)removeIntroModalView

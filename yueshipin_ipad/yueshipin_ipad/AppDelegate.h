@@ -15,10 +15,12 @@
 #import "NewDownloadManager.h"
 #import "WXApi.h"
 #import "NewM3u8DownloadManager.h"
+#import "RespForWXRootViewController.h"
+#import "BundingTVManager.h"
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate,RespForWXRootViewControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -43,11 +45,10 @@
 @property (strong, nonatomic)DownLoadManager *downLoadManager;
 
 @property (strong, nonatomic) NewDownloadManager *padDownloadManager;
-@property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
 
 @property (nonatomic, strong) NSString *playWithDownload;
 
-
+@property (nonatomic, assign)BOOL isInPlayView;
 + (AppDelegate *) instance;
 - (void)startHttpServer;
 - (void)stopHttpServer;

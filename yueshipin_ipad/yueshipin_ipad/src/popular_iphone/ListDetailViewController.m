@@ -44,9 +44,10 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
@@ -72,7 +73,8 @@
    [self.tableView reloadData];
 }
 - (void)viewWillAppear:(BOOL)animated {
-    
+
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     
 }
 -(void)initTopicData:(NSString *)topicId{
@@ -85,7 +87,15 @@
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:cacheResult];
                 [listArr_ removeAllObjects];
-                [listArr_ addObjectsFromArray:tempTopsArray];
+                if ([tempTopsArray count] >10) {
+                    for (int i = 0; i < 10;i++) {
+                        NSDictionary *dic = [tempTopsArray objectAtIndex:i];
+                        [listArr_ addObject:dic];
+                    }
+                }
+                else{
+                    [listArr_ addObjectsFromArray:tempTopsArray];
+                }
                 
             }
             }
@@ -112,7 +122,16 @@
             if(tempTopsArray.count > 0){
                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"top_detail_list%@", self.topicId] result:result];
                 [listArr_ removeAllObjects];
-                [listArr_ addObjectsFromArray:tempTopsArray];
+                if ([tempTopsArray count] >10) {
+                    for (int i = 0; i < 10;i++) {
+                        NSDictionary *dic = [tempTopsArray objectAtIndex:i];
+                        [listArr_ addObject:dic];
+                    }
+                }
+                else{
+                 [listArr_ addObjectsFromArray:tempTopsArray];
+                }
+                
                 
             }
             
@@ -181,7 +200,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *dic = [self.listArr objectAtIndex:indexPath.row];
     NSString *type = [dic objectForKey:@"prod_type"];

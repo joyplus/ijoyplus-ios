@@ -28,6 +28,8 @@
 #import "CustomNavigationViewControllerPortrait.h"
 #import "Reachability.h"
 #import "CommonMotheds.h"
+#import <Parse/Parse.h>
+
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -76,7 +78,7 @@
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -88,7 +90,10 @@
                 [ self.favArr addObjectsFromArray:tempTopsArray];
             }
         }
-        [self refreshMineViewWithTag:button2_.tag];
+        if (!button2_.enabled) {
+            [self refreshMineViewWithTag:button2_.tag];
+        }
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.favArr == nil){
@@ -116,13 +121,16 @@
                 [myListArr_ addObjectsFromArray:tempArr];
                 
             }
-            [self refreshMineViewWithTag:button3_.tag];
+            
+            if (!button3_.enabled) {
+                [self refreshMineViewWithTag:button3_.tag];
+            }
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
        
-       [tempHUD hide:YES];
+      [tempHUD hide:YES];
     }];
 
 
@@ -153,26 +161,28 @@
     bg.frame = CGRectMake(0, 0, 320, 480);
     [self.view addSubview:bg];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"悦视频"];
+    [titleText setText:@"我的"];
     self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 40, 30);
+    leftButton.frame = CGRectMake(0, 0, 49, 30);
     leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage imageNamed:@"top_search_common.png"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 40, 30);
+    rightButton.frame = CGRectMake(0, 0, 49, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"top_setting_common.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"settings.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"settings_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
@@ -284,14 +294,10 @@
         [self.bgView addSubview:recordTableList_];
     }
     else{
-        [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
+        [self.bgView setFrame:CGRectMake(12, 98, 296,0)];
         [self.bgView addSubview:noRecord_];
     }
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(addDone:) name:@"Update MineViewController" object:nil];
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(refreshFav) name:@"REFRESH_FAV" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(recordListReload) name:WATCH_HISTORY_REFRESH object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
 }
@@ -318,6 +324,8 @@
 
 }
 - (void)viewWillAppear:(BOOL)animated{
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
+    
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
     
@@ -344,6 +352,12 @@
 }
 - (void)loadRecordData
 {
+    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:tempHUD];
+    tempHUD.labelText = @"加载中...";
+    tempHUD.opacity = 0.5;
+    [tempHUD show:YES];
+    
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
     if(cacheResult != nil){
         @try {
@@ -357,8 +371,10 @@
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [tempHUD hide:YES];
         [self parseWatchResultData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [tempHUD hide:YES];
         NSLog(@"%@", error);
        
     }];
@@ -370,37 +386,42 @@
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
         [[CacheUtility sharedCache] putInCache:@"watch_record" result:result];
-        sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:(NSArray *)[result objectForKey:@"histories"]];
+        NSArray *tempArr = (NSArray *)[result objectForKey:@"histories"];
+        sortedwatchRecordArray_ =[NSMutableArray arrayWithArray:tempArr];
+        for (NSDictionary *item in sortedwatchRecordArray_) {
+            NSString *prodId = [item objectForKey:@"prod_id"];
+            NSString *playNum = [item objectForKey:@"prod_subname"];
+            NSString *videoType = [item objectForKey:@"prod_type"];
+            if ([videoType isEqualToString:@"2"]) {
+                [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", prodId] result:[NSNumber numberWithInt:[playNum intValue]-1]];
+            }
+            
+            int playbackTime = [[item objectForKey:@"playback_time"] intValue];
+            int duration = [item objectForKey:@"duration"];
+            if ((duration - playbackTime)>5) {
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@",prodId,playNum] result:[NSNumber numberWithInt:playbackTime] ];
+            }
+            else{
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%@",prodId,playNum] result:[NSNumber numberWithInt:0] ];
+            }
+        }
         if (sortedwatchRecordArray_.count > 0) {
             [noRecord_ removeFromSuperview];
         }
-        [self refreshMineViewWithTag:button1_.tag];
+        if (!button1_.enabled) {
+            [self refreshMineViewWithTag:button1_.tag];
+        }
+        
     }
 }
 
--(void)recordListReload{
-    return;
-    [self loadRecordData];
-    if (!button1_.enabled) {
-        [self Selectbutton:button1_];
-    }
-    [recordTableList_ reloadData];
-    
-
-}
--(void)refreshFav{
-    //[self loadMyFavsData];
-}
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
     
 }
--(void)addDone:(id)sender{
-    [self loadPersonalData];
-  
-}
+
 -(void)createList:(id)sender{
     CreateMyListOneViewController *createMyListOneViewController = [[CreateMyListOneViewController alloc] init];
     createMyListOneViewController.hidesBottomBarWhenPushed = YES;
@@ -409,8 +430,7 @@
 }
 -(void)seeMore:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     if (!button1_.enabled) {
@@ -453,13 +473,14 @@
 }
 
 -(void)Selectbutton:(id)sender{
-
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
+    
     [self.recordTableList removeFromSuperview];
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];
     [createList_ removeFromSuperview];
-    [self.bgView setFrame:CGRectMake(12, 98, 296, 180)];
-    [moreView_ setFrame:CGRectMake(12, 290, 296, 45)];
+    [self.bgView setFrame:CGRectMake(12, 98, 296, 0)];
+    [moreView_ removeFromSuperview];
     [noRecord_ removeFromSuperview];
     [noFav_ removeFromSuperview];
     [noPersonalList_ removeFromSuperview];
@@ -473,6 +494,7 @@
         //播放纪录
         case 100:{
             button1_.enabled = NO;
+            
             [self loadRecordData];
             break;
         }
@@ -719,7 +741,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (tableView.tag == RECORD_TYPE) {
         NSDictionary *dic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
@@ -812,7 +834,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
 
-        [CommonMotheds showNetworkDisAbledAlert];
+        [CommonMotheds showNetworkDisAbledAlert:self.view];
         switch (tableView.tag) {
             case RECORD_TYPE:
             {
@@ -832,6 +854,7 @@
                 NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
                 NSString *topicId = [infoDic objectForKey:@"content_id"];
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                [self unSubscribingToChannels:topicId];
                 [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [favArr_ removeObjectAtIndex:indexPath.row];
                     [tableView reloadData];
@@ -873,6 +896,24 @@
     }
 }
 
+- (void)unSubscribingToChannels:(NSString *)Id
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",Id], nil];
+    
+    [currentInstallation removeObjectsInArray:channels forKey:@"channels"];
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
+}
+
 - (NSString *)composeContent:(NSDictionary *)item
 {
     NSString *content;
@@ -896,8 +937,7 @@
 -(void)continuePlay:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }    
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isWifiReachable)]){
@@ -922,65 +962,16 @@
 
 - (void)willPlayVideo:(UIButton *)btn
 {
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
     int num = btn.tag;
     NSDictionary *item = [sortedwatchRecordArray_ objectAtIndex:num];
     int type = [[item objectForKey:@"prod_type"] intValue];
     NSString *prodId = [item objectForKey:@"prod_id"];
-
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [tempHUD hide:YES];
-        NSDictionary *videoInfo = nil;
-        if (type == 1) {
-         videoInfo = (NSDictionary *)[result objectForKey:@"movie"];
-        }
-        else if(type == 2){
-         videoInfo = (NSDictionary *)[result objectForKey:@"tv"];
-        }
-        else if (type == 3){
-         videoInfo = (NSDictionary *)[result objectForKey:@"show"];
-        }
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-            int num = [[item objectForKey:@"prod_subname"] intValue];
-            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
-            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
-            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
-        }
-        else{
-            int playNum = 0;
-            if (subnameArray == nil || subnameArray.count == 0) {
-                subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-                for (NSDictionary *oneEpisode in [videoInfo objectForKey:@"episodes"]) {
-                    NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-                    [subnameArray addObject:tempName];
-                }
-            }
-            if (type != 1 && subnameArray.count > 0) {
-                playNum = [subnameArray indexOfObject:[item objectForKey:@"prod_subname"]];
-                if (playNum < 0 || playNum >= subnameArray.count) {
-                    playNum = 0;
-                }
-            }
-            IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-            iphoneWebPlayerViewController.playNum = playNum;
-            iphoneWebPlayerViewController.subnameArray = subnameArray;
-            iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
-            iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
-            iphoneWebPlayerViewController.videoType = type;
-            iphoneWebPlayerViewController.prodId = prodId;
-            iphoneWebPlayerViewController.playBackTime = (NSNumber *)[item objectForKey:@"playback_time"];
-            [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-        }
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       [tempHUD hide:YES];
-    }];
-
+    IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+    iphoneWebPlayerViewController.videoType = type;
+    iphoneWebPlayerViewController.prodId = prodId;
+    iphoneWebPlayerViewController.isPlayFromRecord = YES;
+    iphoneWebPlayerViewController.continuePlayInfo = item;
+    [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
     
 }
 

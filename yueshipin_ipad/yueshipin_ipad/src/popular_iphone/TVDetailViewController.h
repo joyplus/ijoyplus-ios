@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "IphoneVideoViewController.h"
 #import "MNMBottomPullToRefreshManager.h"
-@interface TVDetailViewController :IphoneVideoViewController<MNMBottomPullToRefreshManagerClient>{
+#import "FeedBackView.h"
+#import "FilmReviewDetailView.h"
+#import "FilmReviewViewCell.h"
+
+@interface TVDetailViewController :IphoneVideoViewController<MNMBottomPullToRefreshManagerClient,FeedBackViewDelegate,FilmReviewViewCellDelegate>{
 
     NSDictionary *videoInfo_;
     int videoType_;
@@ -42,6 +46,8 @@
     UIButton *preDL_;
     BOOL isDownLoad_;
     BOOL isloaded_;
+    
+    NSArray *arrReviewData_;
 }
 @property (nonatomic, strong) NSDictionary *videoInfo;
 @property (nonatomic, assign) int videoType;

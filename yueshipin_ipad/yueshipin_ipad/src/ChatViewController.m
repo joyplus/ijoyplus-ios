@@ -48,7 +48,12 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height*2)];
+    self.bgImage.layer.zPosition = -1;
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    [self.view addSubview:self.bgImage];
     
+    [self.view setBackgroundColor:[UIColor clearColor]];
     [[UMFeedback sharedInstance] setAppkey:umengAppKey delegate:self];
     [[UMFeedback sharedInstance] get];
     
@@ -73,7 +78,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillChangeFrameNotification object:nil];
     }
 #endif
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     timer = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(checkResponse) userInfo:nil repeats:YES];
 }
@@ -131,7 +136,7 @@
                 if (![self.chatArray containsObject:createAt]) {
                     [self.chatArray addObject:createAt];
                 }
-                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"悦视频", _content] from:NO];
+                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"Angeline", _content] from:NO];
                 [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:_content, @"text", @"self", @"speaker", chatView, @"view", nil]];
             }
         }
@@ -145,8 +150,8 @@
 - (void)getFinishedWithError:(NSError *)error
 {
     if (error == nil) {
-        NSString *temMsg = @"您好，我是悦视频的产品经理，欢迎您给我们提产品的试用感受和建议！";
-        UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"悦视频：%@", temMsg] from:NO];
+        NSString *temMsg = @"亲，说说你的使用感受吧，有任何问题我们会在第一时间解决哦。你的陪伴会让我们做的更好，谢谢你的支持：)";
+        UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"Angeline：%@", temMsg] from:NO];
         [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:temMsg, @"text", @"self", @"speaker", chatView, @"view", nil]];
         
         for (NSDictionary *reply in [UMFeedback sharedInstance].topicAndReplies) {
@@ -160,7 +165,7 @@
                 }
             }
             if ([[reply objectForKey:@"type"] isEqualToString:@"dev_reply"]){
-                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"悦视频", message] from:NO];
+                UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", @"Angeline", message] from:NO];
                 [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:message, @"text", @"self", @"speaker", chatView, @"view", nil]];
             }else{
                 UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"%@：%@", NSLocalizedString(@"我",nil), message] from:YES];
@@ -244,7 +249,7 @@
         headImageView.frame = CGRectMake(bubbleImageView.frame.size.width, cellView.frame.size.height-50.0f, 50.0f, 50.0f);
     }
 	else{
-        [headImageView setImage:[UIImage imageNamed:@"Icon-72"]];
+        [headImageView setImage:[UIImage imageNamed:@"beauty.jpg"]];
         returnView.frame= CGRectMake(65.0f, 15.0f, returnView.frame.size.width, returnView.frame.size.height);
         bubbleImageView.frame = CGRectMake(50.0f, 14.0f, returnView.frame.size.width+24.0f, returnView.frame.size.height+24.0f);
 		cellView.frame = CGRectMake(10.0f, 0.0f, bubbleImageView.frame.size.width+30.0f,bubbleImageView.frame.size.height+30.0f);

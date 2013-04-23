@@ -7,10 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SQLitePersistentObject.h"
+#import "DatabaseObject.h"
+@interface DownloadItem : DatabaseObject
 
-@interface DownloadItem : SQLitePersistentObject
+- (id)init;
 
+@property (nonatomic) int rowId;
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *imageUrl;
 @property (nonatomic, strong)NSString *name;

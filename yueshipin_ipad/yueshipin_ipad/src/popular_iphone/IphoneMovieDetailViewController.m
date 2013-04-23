@@ -13,6 +13,7 @@
 #import "CacheUtility.h"
 #import "CMConstants.h"
 #import "AppDelegate.h"
+#import "ReviewViewController.h"
 #import "MBProgressHUD.h"
 #import "UIImage+Scale.h"
 #import "UIImage+Scale.h"
@@ -20,6 +21,14 @@
 #import "ListDetailViewController.h"
 #import "ProgramNavigationController.h"
 #import "CommonMotheds.h"
+#import "FilmReviewDetailView.h"
+#import "AppDelegate.h"
+#import "UIUtility.h"
+#import "DatabaseManager.h"
+#import <Parse/Parse.h>
+
+#define REVIEW_VIEW_TAG (11112)
+
 @interface IphoneMovieDetailViewController ()
 
 @end
@@ -53,18 +62,20 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 40, 30);
+    rightButton.frame = CGRectMake(0, 0, 49, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"iphone_share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"iphone_share_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
@@ -111,11 +122,13 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
+    //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
    
 }
 
-
+-(void)viewWillAppear:(BOOL)animated{
+  [CommonMotheds showNetworkDisAbledAlert:self.view];
+}
 -(void)back:(id)sender{
     if (!isNotification_) {
         [self.navigationController popViewControllerAnimated:YES];
@@ -185,10 +198,32 @@
         [tempHUD hide:YES];
     }];
     
+    NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"movie",itemId ];
+    id reviewsCacheResult = [[CacheUtility sharedCache] loadFromCache:reviews_key];
+    if (reviewsCacheResult != nil) {
+         arrReviewData_ = [reviewsCacheResult objectForKey:@"reviews"];
+         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }
+    NSDictionary * reqData = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id",@"1",@"page_num",@"3",@"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramReviews
+                                    parameters:reqData
+                                       success:^(AFHTTPRequestOperation *operation, id result)
+     {
+        [[CacheUtility sharedCache] putInCache:reviews_key result:result];
+         arrReviewData_ = [result objectForKey:@"reviews"];
+         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+         
+     }
+                                       failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     {
+        
+     }];
+    
 }
 -(void)notificationData{
     infoDic_ = videoInfo_;
     self.title = [infoDic_ objectForKey:@"name"];
+    name_ = self.title;
     [self loadTable];
 }
 -(void)loadComments{
@@ -233,6 +268,7 @@
     summaryBg_ = nil;
     summaryLabel_ = nil;
     moreBtn_ = nil;
+    arrReviewData_ = nil;
 }
 
 - (void)didReceiveMemoryWarning
@@ -244,7 +280,7 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{   int count = 2;
+{   int count = 3;
     
     if ([commentArray_ count] > 0) {
         count++;
@@ -268,12 +304,17 @@
        
     }
     else if (section == 2){
+        return 0;
         if ([commentArray_ count]>0) {
             return [commentArray_ count]+1;
         }
         else{
             return 0;
         }
+    }
+    else if (3 == section)
+    {
+        return arrReviewData_.count > 0 ? 1 : 0;
     }
     return 0;
 }
@@ -368,31 +409,73 @@
                 play.tag = 10001;
                 [play setImage:[UIImage imageNamed:@"play_video.png"] forState:UIControlStateNormal];
                 [play setImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
+                [play setImage:[UIImage imageNamed:@"no_video_source.png"] forState:UIControlStateDisabled];
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
+                UIButton * expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                expectbtn.tag = 100010;
+                expectbtn.frame = CGRectMake(124, 155, 87, 28);
+                [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_.png"] forState:UIControlStateNormal];
+                [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_s.png"] forState:UIControlStateHighlighted];
+                [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan.png"] forState:UIControlStateNormal];
+                [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan_s.png"] forState:UIControlStateHighlighted];
+                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 30)];
+                expectbtn.titleLabel.textAlignment = UITextAlignmentCenter;
+                [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
+                [expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
+                [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
+             
+                expectbtn.hidden = YES;
+                
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame = CGRectMake(116, 20, 89, 27);
+                addFav.frame =  CGRectMake(215, 20, 89, 27);
                 addFav.tag = 10002;
                 [addFav setBackgroundImage:[UIImage imageNamed:@"addFav.png"] forState:UIControlStateNormal];
                 [addFav setBackgroundImage:[UIImage imageNamed:@"addFav_pressed.png"] forState:UIControlStateHighlighted];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"]forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
-                [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                if (favCount_ <1000) {
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%d)",favCount_] forState:UIControlStateNormal];
+                }
+                else if (favCount_ >= 1000 && favCount_<= 1100) {
+                    
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(1K)"] forState:UIControlStateNormal];
+                }
+                else {
+                    float favNum = favCount_*1.0/1000;
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%.1fk)",favNum] forState:UIControlStateNormal];
+                }
+                
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 addFav.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:addFav];
                 
                 UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
-                support.frame = CGRectMake(219, 20, 80, 27);
+                support.frame = CGRectMake(116, 20, 80, 27);
                 support.tag = 10003;
                 [support setBackgroundImage:[UIImage imageNamed:@"collect.png"] forState:UIControlStateNormal];
                 [support setBackgroundImage:[UIImage imageNamed:@"collect_pressed.png"] forState:UIControlStateHighlighted];
                 [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
                 [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
+                if (supportCount_ <1000) {
+                    [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_]  forState:UIControlStateNormal];
+                }
+                else if (supportCount_ >= 1000 && supportCount_<= 1100) {
+                    
+                    [support setTitle:[NSString stringWithFormat:@"顶（1k）"]  forState:UIControlStateNormal];
+                }
+                else {
+                    float suppotNum = supportCount_*1.0/1000;
+                    [support setTitle:[NSString stringWithFormat:@"顶（%.1fk）",suppotNum]  forState:UIControlStateNormal];
+                }
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 support.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:support];
@@ -406,17 +489,21 @@
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                     downLoad.enabled = NO;
+                    play.hidden = YES;
+                    expectbtn.hidden = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
-                
+                    play.hidden = NO;
+                    expectbtn.hidden = YES;
                 }
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
-                      [cell addSubview:downLoad];
+                    [cell addSubview:expectbtn];
+                    [cell addSubview:downLoad];
                 }
 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
@@ -426,8 +513,8 @@
                 if (itemId == nil) {
                     itemId = [self.infoDic objectForKey:@"id"];
                 }
-                NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@'",itemId];
-                NSArray *tempArr = [DownloadItem findByCriteria:subquery];
+                NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
+                NSArray *tempArr = [DatabaseManager findByCriteria:DownloadItem.class queryString:subquery];
                 if ([tempArr count] >0) {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
@@ -568,7 +655,52 @@
         }
     
     }
-    
+    else if (3 == indexPath.section)
+    {
+        UILabel * review =[[UILabel alloc]initWithFrame:CGRectMake(12, 20, 100, 30)];
+        review.text = @"影评";
+        review.backgroundColor = [UIColor clearColor];
+        review.textColor = [UIColor grayColor];
+        review.font = [UIFont systemFontOfSize:13];
+        [cell addSubview:review];
+        
+        for (int i = 0; i < arrReviewData_.count; i ++)
+        {
+            NSDictionary * data = [arrReviewData_ objectAtIndex:i];
+            FilmReviewViewCell * preCell = (FilmReviewViewCell *)[cell viewWithTag:(REVIEW_VIEW_TAG + i - 1)];
+            
+            CGRect rect = CGRectMake(12, 44, 296, 133);
+            if (nil != preCell)
+            {
+                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 20.0f;
+            }
+            
+            FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
+                                                                            title:[data objectForKey:@"title"]
+                                                                          content:[data objectForKey:@"comments"]];
+            reviewCell.tag = REVIEW_VIEW_TAG + i;
+            [reviewCell setDelegate:self];
+            [cell addSubview:reviewCell];
+            
+            if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
+            {
+                UIButton * moreBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                moreBtn.frame = CGRectMake(220, reviewCell.frame.origin.y + reviewCell.frame.size.height + 20.0f, 200, 60);
+                moreBtn.backgroundColor = [UIColor clearColor];
+                [moreBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 30, 100)];
+                [moreBtn setTitle:@"更多影评 >" forState:UIControlStateNormal];
+                moreBtn.titleLabel.font = [UIFont systemFontOfSize:12];
+                moreBtn.titleLabel.textColor = [UIColor orangeColor];
+                [moreBtn setTitleColor:[UIColor orangeColor]
+                              forState:UIControlStateNormal];
+                [moreBtn addTarget:self
+                            action:@selector(moreBtnClicked:)
+                  forControlEvents:UIControlEventTouchUpInside];
+                [cell addSubview:moreBtn];
+            }
+        }
+        
+    }
     return cell;
 }
 
@@ -613,6 +745,7 @@
     
     }
     else if (indexPath.section == 2){
+        return 0;
         if (indexPath.row == 0) {
             return 20;
         }
@@ -624,14 +757,18 @@
         }
         
     }
+    else if (3 == indexPath.section)
+    {
+        CGFloat height = 44.0f + arrReviewData_.count * 133 + (arrReviewData_.count - 1)*20.0f + 50;
+        return height;
+    }
         return 0;
     
 }
 
 -(void)didSelect:(UIButton *)btn{
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     int num = btn.tag;
@@ -644,10 +781,55 @@
 
 }
 
+- (void)expectVideo
+{
+    [self SubscribingToChannels];
+    [self addVideotoFav:ADDEXPECT];
+}
+
+- (void)SubscribingToChannels
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+    
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
+    }];
+}
+
+- (void)addVideotoFav:(NSInteger)type
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
+            favCount_++;
+            [self showOpSuccessModalView:1.5 with:type];
+            [self.tableView reloadData];
+            
+        } else {
+            [self showOpFailureModalView:1.5 with:type];
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self showOpFailureModalView:1.5 with:type];
+    }];
+}
+
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     UIButton *button = (UIButton *)sender;
@@ -657,24 +839,9 @@
             break;
         }
         case 10002:{
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-                NSString *responseCode = [result objectForKey:@"res_code"];
-                  
-                if([responseCode isEqualToString:kSuccessResCode]){
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
-                    favCount_++;
-                    [self showOpSuccessModalView:1 with:ADDFAV];
-                    [self.tableView reloadData];
-                
-                } else {
-                    [self showOpFailureModalView:1 with:ADDFAV];
-                }
-                
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                   [self showOpFailureModalView:1 with:ADDFAV];
-            }];
             
+            [self SubscribingToChannels];
+            [self addVideotoFav:ADDFAV];
             
             break;
         }
@@ -735,11 +902,32 @@
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;
-            [check checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
-            
+            check.oneEsp = [episodesArr_ objectAtIndex:0];
+            check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
+            [CheckDownloadUrlsManager addToCheckQueue:check];
             break;
         }
-        case 10005:{
+        case 10005:
+        {
+            
+            FeedBackView * feedback = [[FeedBackView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)];
+            feedback.delegate = self;
+            UITabBarController * ctrl = [AppDelegate instance].tabBarView;
+            feedback.clipsToBounds = YES;
+            [ctrl.selectedViewController.view addSubview:feedback];
+            
+            [UIView beginAnimations:nil context:NULL];
+            
+            [UIView setAnimationDuration:0.5f];
+            
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            
+            feedback.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+            
+            [UIView commitAnimations];
+            
+            return;
+            
             NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
             [[AFServiceAPIClient sharedClient] getPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 
@@ -754,6 +942,20 @@
         default:
             break;
     }
+}
+
+- (void)moreBtnClicked:(id)sender
+{
+    NSString * douban_Id = [self.infoDic objectForKey:@"douban_id"];
+    
+    if (nil == douban_Id)
+    {
+        return;
+    }
+    
+    ReviewViewController * rCtrl = [[ReviewViewController alloc] init];
+    rCtrl.reqURL = douban_Id;
+    [self presentViewController:rCtrl animated:YES completion:NULL];
 }
 
 -(void)more{
@@ -838,9 +1040,11 @@
     return videoUrl;
 }
 
--(NSString *)getDownloadUrl{
+-(NSString *)getDownloadUrl
+{
     NSString *downloadUrl = nil;
-    
+    if (0 == episodesArr_.count)
+        return nil;
     NSArray *videoUrlArray = [[episodesArr_ objectAtIndex:0] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0){
         for(NSDictionary *tempVideo in videoUrlArray){
@@ -947,11 +1151,62 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert];
+    return;
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
 
 }
 
+#pragma mark -
+#pragma mark - FilmReviewViewCellDelegate 
 
+- (void)filmReviewTaped:(NSString *)title content:(NSString *)content
+{
+    FilmReviewDetailView * filmView = [[FilmReviewDetailView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)
+                                                                            title:title
+                                                                          content:content];
+    
+    UITabBarController * ctrl = [AppDelegate instance].tabBarView;
+    
+    [ctrl.selectedViewController.view addSubview:filmView];
+    
+    [UIView beginAnimations:nil context:NULL];
+    
+    [UIView setAnimationDuration:0.5f];
+    
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    
+    filmView.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    
+    [UIView commitAnimations];
+    
+}
+#pragma mark -
+#pragma mark - FeedBackDelegate
+- (void)feedBackType:(NSString *)type
+        detailReason:(NSString *)reason
+{
+    NSString *feedbackType = type;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: \
+                                prodId_, @"prod_id",\
+                                name_ ,@"prod_name",\
+                                @"1",@"prod_type",\
+                                feedbackType,@"invalid_type",\
+                                reason,@"memo",\
+                                nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
+    {
+        
+    }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+    {
+        
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+//                                                        message:@"问题反馈提交失败!"
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"我知道了"
+//                                              otherButtonTitles:nil, nil];
+//        [alert show];
+    }];
+}
 
 @end

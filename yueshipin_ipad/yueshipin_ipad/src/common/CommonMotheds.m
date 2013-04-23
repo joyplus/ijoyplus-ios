@@ -8,6 +8,7 @@
 
 #import "CommonMotheds.h"
 #import "Reachability.h"
+#import "UIUtility.h"
 @implementation CommonMotheds
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -19,10 +20,42 @@
     }
 }
 
-+(void)showNetworkDisAbledAlert{
++(void)showNetworkDisAbledAlert:(UIView *)view{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+         [UIUtility showNetWorkError:view];
     }
+}
+
++(BOOL)isFirstTimeRun{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:@"App_version"]==nil){
+        
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
++(BOOL)isVersionUpdate{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *oldVersion = [defaults objectForKey:@"App_version"];
+    if(oldVersion!=nil){
+        NSString *newVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+        NSComparisonResult result = [oldVersion compare:newVersion];
+        if (result == NSOrderedAscending) {
+            return YES;
+        }
+    }
+    else{
+
+    }
+    return NO;
+}
++(void)setVersion{
+     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+     NSLog(@" %@is app version", bundleVersion);
+     [defaults setObject:bundleVersion forKey:@"App_version"];
 }
 @end
