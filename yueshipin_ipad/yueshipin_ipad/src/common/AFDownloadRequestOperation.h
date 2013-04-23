@@ -46,7 +46,7 @@
  `AFDownloadRequestOperation` is a subclass of `AFHTTPRequestOperation` for streamed file downloading. Supports Content-Range. (http://tools.ietf.org/html/rfc2616#section-14.16)
  */
 @interface AFDownloadRequestOperation : AFHTTPRequestOperation
-
+@property (nonatomic) int isDownloadingType;
 @property (nonatomic, weak)id <DownloadingDelegate>downloadingDelegate;
 @property (nonatomic, weak)id <SubdownloadingDelegate>subdownloadingDelegate;
 @property (nonatomic, strong) NSString *operationId;

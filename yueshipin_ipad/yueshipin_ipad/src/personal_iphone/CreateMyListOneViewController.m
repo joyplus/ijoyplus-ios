@@ -15,6 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Reachability.h"
 #import "CommonMotheds.h"
+#import "UIUtility.h"
 @interface CreateMyListOneViewController ()
 
 @end
@@ -44,7 +45,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     [backButton setImage:[UIImage imageNamed:@"top_icon_common_writing_cancel.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"top_icon_common_writing_cancel_s.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
@@ -52,7 +53,7 @@
     
     nextBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [nextBtn_ addTarget:self action:@selector(nextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    nextBtn_.frame = CGRectMake(0, 0, 51, 31);
+    nextBtn_.frame = CGRectMake(0, 0, 49, 30);
     nextBtn_.enabled = NO;
     [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next.png"] forState:UIControlStateNormal];
     [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateHighlighted];
@@ -148,8 +149,7 @@
 -(void)nextButtonPressed:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
      NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content",[NSNumber numberWithInt:type_], @"type", nil];
@@ -164,7 +164,7 @@
             [alert show];
         }
         else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"创建悅单失败,错误码:%@",responseCode] delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"请输入悦单名称" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
             [alert show];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -175,8 +175,7 @@
 }
 -(void)next:(id)result{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-            [alert show];
+        [UIUtility showNetWorkError:self.view];
             return; 
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Update MineViewController" object:nil];

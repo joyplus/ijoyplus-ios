@@ -61,10 +61,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
     self.titleImage.frame = CGRectMake(LEFT_WIDTH, 35, 110, 27);
     self.titleImage.image = [UIImage imageNamed:@"create_list_title"];
     
-    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(456, 0, 50, 50);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -116,14 +120,14 @@
     self.contentText.frame = CGRectMake(LEFT_WIDTH+5, 180, 390, 92);
     self.contentText.placeholder = @"简介（可选）";
     
-    self.nextBtn.frame = CGRectMake(380, 285, 62, 39);
+    self.nextBtn.frame = CGRectMake(350, 285, 100, 75);
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next"] forState:UIControlStateNormal];
-    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
+//    [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_disabled"] forState:UIControlStateDisabled];
     [self.nextBtn setBackgroundImage:[UIImage imageNamed:@"next_pressed"] forState:UIControlStateHighlighted];
     [self.nextBtn setEnabled:NO];
     [self.nextBtn addTarget:self action:@selector(nextBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -172,7 +176,7 @@
         [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
-                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+//                [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
                 if(![StringUtility stringIsEmpty:self.prodId]){
                     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [result objectForKey:@"topic_id"], @"topic_id", self.prodId, @"prod_id", nil];
                     [[AFServiceAPIClient sharedClient] postPath:kPathAddItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id tempresult) {

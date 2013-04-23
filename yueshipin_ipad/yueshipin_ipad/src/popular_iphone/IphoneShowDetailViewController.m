@@ -17,8 +17,9 @@
 #import "UIImage+Scale.h"
 #import "SendWeiboViewController.h"
 #import "ProgramNavigationController.h"
-#import "ShowDownlooadViewController.h"
+#import "ShowDownloadViewController.h"
 #import "CommonMotheds.h"
+#import "UIUtility.h"
 @interface IphoneShowDetailViewController ()
 
 @end
@@ -54,18 +55,20 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 40, 30);
+    rightButton.frame = CGRectMake(0, 0, 49, 30);
     rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"top_common_share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"iphone_share.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"iphone_share_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
@@ -118,6 +121,7 @@
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
 }
 
 -(void)back:(id)sender{
@@ -185,6 +189,7 @@
 -(void)notificationData{
     infoDic_ = videoInfo_;
     self.title = [infoDic_ objectForKey:@"name"];
+    name_ = self.title;
     [self loadTable];
 }
 
@@ -353,27 +358,47 @@
                 [cell addSubview:play];
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame = CGRectMake(116, 20, 89, 27);
+                addFav.frame =  CGRectMake(215, 20, 89, 27);
                 addFav.tag = 10002;
                 [addFav setBackgroundImage:[UIImage imageNamed:@"addFav.png"] forState:UIControlStateNormal];
                 [addFav setBackgroundImage:[UIImage imageNamed:@"addFav_pressed.png"] forState:UIControlStateHighlighted];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"]forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
-                [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                if (favCount_ <1000) {
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                }
+                else if (favCount_ >= 1000 && favCount_<= 1100) {
+                    
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
+                }
+                else {
+                    float favNum = favCount_*1.0/1000;
+                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
+                }
                 [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 addFav.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:addFav];
                 
                 UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
-                support.frame = CGRectMake(219, 20, 80, 27);
+                support.frame = CGRectMake(116, 20, 80, 27);
                 support.tag = 10003;
                 [support setBackgroundImage:[UIImage imageNamed:@"collect.png"] forState:UIControlStateNormal];
                 [support setBackgroundImage:[UIImage imageNamed:@"collect_pressed.png"] forState:UIControlStateHighlighted];
                 [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
                 [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_] forState:UIControlStateNormal];
+                if (supportCount_ <1000) {
+                    [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_]  forState:UIControlStateNormal];
+                }
+                else if (supportCount_ >= 1000 && supportCount_<= 1100) {
+                    
+                    [support setTitle:[NSString stringWithFormat:@"顶（1k）"]  forState:UIControlStateNormal];
+                }
+                else {
+                    float suppotNum = supportCount_*1.0/1000;
+                    [support setTitle:[NSString stringWithFormat:@"顶（%.1fk）",suppotNum]  forState:UIControlStateNormal];
+                }
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 support.titleLabel.font = [UIFont systemFontOfSize:12];
                 [cell addSubview:support];
@@ -523,8 +548,7 @@
 }
 -(void)action:(id)sender {
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+       [UIUtility showNetWorkError:self.view];
         return;
     }
     UIButton *button = (UIButton *)sender;
@@ -575,7 +599,7 @@
         }
         case 10004:{
         
-            ShowDownlooadViewController *showDownlooadViewController = [[ShowDownlooadViewController alloc] init];
+            ShowDownloadViewController *showDownlooadViewController = [[ShowDownloadViewController alloc] init];
             showDownlooadViewController.title = self.title;
             NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
             if (itemId == nil) {
@@ -632,18 +656,6 @@
     
 }
 
-- (void)showPlayWebPage:(int)num
-{
-//    ProgramViewController *viewController = [[ProgramViewController alloc]initWithNibName:@"ProgramViewController" bundle:nil];
-//    NSDictionary *episode = [episodesArr_ objectAtIndex:num];
-//    NSArray *videoUrls = [episode objectForKey:@"video_urls"];
-//    viewController.programUrl = [[videoUrls objectAtIndex:0] objectForKey:@"url"];
-//    viewController.title = [videoInfo_ objectForKey:@"name"];
-//    viewController.type = 1;
-//    viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-//    ProgramNavigationController *pro = [[ProgramNavigationController alloc] initWithRootViewController:viewController];
-//    [self presentViewController:pro animated:YES completion:nil];
-}
 
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo
 {
@@ -891,7 +903,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     
 }

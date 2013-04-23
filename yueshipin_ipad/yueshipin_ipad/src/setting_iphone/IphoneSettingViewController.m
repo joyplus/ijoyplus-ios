@@ -7,7 +7,6 @@
 //
 
 #import "IphoneSettingViewController.h"
-#import "FeedBackViewController.h"
 #import "AboutViewController.h"
 #import "StatementsViewController.h"
 #import "MBProgressHUD.h"
@@ -29,6 +28,8 @@
 #import "UMUFPGridCell.h"
 #import "GridViewCellDemo.h"
 #import "CommonMotheds.h"
+#import "FeedbackViewController.h"
+#import "Harpy.h"
 @interface IphoneSettingViewController ()
 
 @end
@@ -59,9 +60,10 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -75,19 +77,20 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     scrollView.contentSize = CGSizeMake(320, kFullWindowHeight+160);
     [self.view addSubview:scrollView];
     
-    UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 17, 296, 59)];
+    UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 67)];
     view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view1.layer.borderWidth = 1;
     view1.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     UIImageView *sinaWeibo = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 272, 33)];
     sinaWeibo.image = [UIImage imageNamed:@"my_s_xinlang.png"];
     [view1 addSubview:sinaWeibo];
-    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 18, 120, 22)];
+    
+    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 16, 120, 22)];
     weiboName_.backgroundColor = [UIColor clearColor];
     weiboName_.textColor =  [UIColor colorWithRed:54/255.0 green:98/255.0 blue:156/255.0 alpha:1];
     weiboName_.font = [UIFont boldSystemFontOfSize:13];
     [view1 addSubview:weiboName_];
-    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 16, 50, 22)];
+    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 14, 50, 22)];
     [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
     [view1 addSubview:sinaSwith_];
     sinaweibo_ = [AppDelegate instance].sinaweibo;
@@ -98,6 +101,13 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         weiboName_.text = [NSString stringWithFormat:@"(%@)",username];;
     }
 
+    UILabel *infolabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 48, 250, 15)];
+    infolabel.text = @"绑定微博后，可以在多个设备间同步您的记录。";
+    infolabel.textColor = [UIColor grayColor];
+    infolabel.backgroundColor = [UIColor clearColor];
+    infolabel.font = [UIFont systemFontOfSize:11];
+    [view1 addSubview:infolabel];
+    
     [scrollView addSubview:view1];
    
     
@@ -125,7 +135,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 //    [self.view addSubview:appRecommed];
     
     
-    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 172)];
+    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 212)];
     view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view3.layer.borderWidth = 1;
     view3.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
@@ -160,15 +170,22 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
     [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:careUs];
+    
+    UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
+    update.frame = CGRectMake(24, 325, 273, 33);
+    [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdate.png"] forState:UIControlStateNormal];
+    [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdatePress.png"] forState:UIControlStateHighlighted];
+    [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:update];
 	
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 335, 135, 15)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 375, 135, 15)];
     label.font = [UIFont systemFontOfSize:13];
     label.textColor = [UIColor colorWithRed:94/255.0 green:94/255.0 blue:94/255.0 alpha:1];
     label.backgroundColor = [UIColor clearColor];
     label.text = @"★精品推荐★";
     [scrollView addSubview:label];
     
-    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 356, 296, 260)];
+    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 396, 296, 260)];
     view4.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
     view4.layer.borderWidth = 1;
     view4.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
@@ -202,8 +219,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 }
 -(void)careUs:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     sinaweibo_ = [AppDelegate instance].sinaweibo;
@@ -220,6 +236,9 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     }
 
 
+}
+-(void)update:(id)sender{
+  [Harpy checkVersion:self.view];
 }
 - (void)showSuccessModalView:(int)closeTime
 {
@@ -255,17 +274,17 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     if(flag){
         [sinaweibo_ logIn];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"确定要解除绑定吗？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"确定要解除绑定吗？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
         [alert show];
 
     }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 0) {
+    if (buttonIndex == 1) {
         [sinaweibo_ logOut];
     }
-    else if (buttonIndex == 1){
+    else if (buttonIndex == 0){
         sinaSwith_.on = YES;
     }
 }
@@ -285,12 +304,13 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 }
 -(void)feedBack:(id)sender{
     if (![CommonMotheds isNetworkEnbled]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
+    FeedbackViewController *feedbackViewController = [[FeedbackViewController alloc] init];
+    [self.navigationController pushViewController:feedbackViewController animated:YES];
 
-    [UMFeedback showFeedback:self withAppkey:umengAppKey];
+    //[UMFeedback showFeedback:self withAppkey:umengAppKey];
 }
 
 -(void)suggest:(id)sender{
@@ -325,6 +345,21 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)unbundingWithTV:(NSString *)Id
+{
+    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",Id]];
+    if ([[dic objectForKey:KEY_IS_BUNDING] boolValue] && nil != dic)
+    {
+        NSString * sendChannel = [NSString stringWithFormat:@"CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]];
+        NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @"33", @"push_type",
+                              Id, @"user_id",
+                              sendChannel, @"tv_channel",
+                              nil];
+        [[BundingTVManager shareInstance] sendMsg:data];
+    }
+}
+
 #pragma mark - SinaWeibo Delegate
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo
@@ -343,6 +378,11 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
    
     [self removeAuthData];
     sinaSwith_.on = NO;
+    
+    //add code by huokun for "用户变换，取消与TV绑定数据"
+    [self unbundingWithTV:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+    //add code end
+    
     [[ContainerUtility sharedInstance] removeObjectForKey:kUserId];
     [[ContainerUtility sharedInstance] removeObjectForKey:kUserAvatarUrl];
     [[ContainerUtility sharedInstance] removeObjectForKey:kUserNickName];
@@ -352,8 +392,6 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
     }];
     weiboName_.text = @"";
-   
-
 }
 
 - (void)sinaweiboLogInDidCancel:(SinaWeibo *)sinaweibo
@@ -399,14 +437,21 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:userId, @"pre_user_id", [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathUserValidate parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
-            if(responseCode == nil){
+            if(responseCode == nil)
+            {
+                //add code by huokun for "用户变换，取消与TV绑定数据"
+                [self unbundingWithTV:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId]];
+                //add code end
+                
                 NSString *user_id = [result objectForKey:@"user_id"];
                 [[AFServiceAPIClient sharedClient] setDefaultHeader:@"user_id" value:user_id];
                 [[ContainerUtility sharedInstance] setAttribute:user_id forKey:kUserId];
                 [[CacheUtility sharedCache] removeObjectForKey:@"PersonalData"];
                 [[CacheUtility sharedCache] removeObjectForKey:@"watch_record"];
                  [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];
-            } else {
+            }
+            else
+            {
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [userInfo objectForKey:@"idstr"], @"source_id", @"1", @"source_type", avatarUrl, @"pic_url", username, @"nickname", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathAccountBindAccount parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"SINAWEIBOCHANGED" object:nil];

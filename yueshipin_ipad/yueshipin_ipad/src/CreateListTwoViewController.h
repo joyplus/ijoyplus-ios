@@ -13,7 +13,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
 @property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
-@property (weak, nonatomic) IBOutlet UIImageView *lineImage;
 @property (strong, nonatomic) NSString *titleContent;
 @property (assign, nonatomic) int type;
 @property (strong, nonatomic) NSString *topId;

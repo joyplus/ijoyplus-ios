@@ -200,10 +200,10 @@
     
     if (deleteButtonIcon) 
     {
-        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x, 
+        self.deleteButton.frame = CGRectMake(self.deleteButton.frame.origin.x,
                                              self.deleteButton.frame.origin.y, 
-                                             deleteButtonIcon.size.width, 
-                                             deleteButtonIcon.size.height);
+                                             50,
+                                             50);
         
         [self.deleteButton setTitle:nil forState:UIControlStateNormal];
         [self.deleteButton setBackgroundColor:[UIColor clearColor]];

@@ -30,6 +30,7 @@
 @implementation MoreListViewController
 @synthesize listArr = listArr_;
 @synthesize type = type_;
+@synthesize pullToRefreshManagerFAV = pullToRefreshManagerFAV_;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -41,6 +42,7 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     if(type_ == 0){
        self.title = @"播放纪录";
     }
@@ -55,9 +57,10 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"]forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -74,8 +77,14 @@
     }
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [super viewDidLoad];
-
+    
+    if (type_ == 1) {
+        favLoadCount_ = 1;
+        pullToRefreshManagerFAV_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:600 tableView:self.tableView withClient:self];
+        [self.tableView reloadData];
+        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+    }
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -222,7 +231,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        [CommonMotheds showNetworkDisAbledAlert];
+        [CommonMotheds showNetworkDisAbledAlert:self.view];
         switch (type_) {
             case 0:
             {
@@ -281,58 +290,19 @@
 -(void)continuePlay:(id)sender{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+       [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
     int num = ((UIButton *)sender).tag;
     NSDictionary *item = [listArr_ objectAtIndex:num];
     int type = [[item objectForKey:@"prod_type"] intValue];
     NSString *prodId = [item objectForKey:@"prod_id"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId, @"prod_id", nil];
-    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [tempHUD hide:YES];
-        NSDictionary *videoInfo = nil;
-        if (type == 1) {
-            videoInfo = (NSDictionary *)[result objectForKey:@"movie"];
-        }
-        else if(type == 2){
-            videoInfo = (NSDictionary *)[result objectForKey:@"tv"];
-        }
-        else if (type == 3){
-            videoInfo = (NSDictionary *)[result objectForKey:@"show"];
-        }
-        
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-            int num = [[item objectForKey:@"prod_subname"] intValue];
-            NSDictionary *dic = [[videoInfo objectForKey:@"episodes"] objectAtIndex:num];
-            NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
-            NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
-            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
-        }
-        else{
-            IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
-            iphoneWebPlayerViewController.playNum = [[item objectForKey:@"prod_subname"] intValue];
-            iphoneWebPlayerViewController.nameStr = [item objectForKey:@"prod_name"];
-            iphoneWebPlayerViewController.episodesArr =  [videoInfo objectForKey:@"episodes"];
-            iphoneWebPlayerViewController.videoType = type;
-            iphoneWebPlayerViewController.prodId = prodId;
-            [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
-
-        }
-
-               
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [tempHUD hide:YES];
-    }];
-
-  
+    IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
+    iphoneWebPlayerViewController.videoType = type;
+    iphoneWebPlayerViewController.prodId = prodId;
+    iphoneWebPlayerViewController.isPlayFromRecord = YES;
+    iphoneWebPlayerViewController.continuePlayInfo = item;
+    [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
 }
 
 
@@ -346,8 +316,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 0) {
         if (![CommonMotheds isNetworkEnbled]) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-            [alert show];
+            [UIUtility showNetWorkError:self.view];
             return;
         }
         for (NSDictionary *dic in listArr_) {
@@ -390,6 +359,26 @@
     return content;
 }
 
+
+-(void)loadMyFavsData{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", [NSString stringWithFormat:@"%d",favLoadCount_], @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [result objectForKey:@"favorities"];
+            if(tempTopsArray.count > 0){
+                [listArr_ addObjectsFromArray:tempTopsArray];
+            }
+        }
+
+        [self.tableView reloadData];
+        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       
+    }];
+    
+}
+
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     
@@ -398,7 +387,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-     [CommonMotheds showNetworkDisAbledAlert];
+      [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     if (type_ == 0) {
@@ -474,5 +463,27 @@
     return UIInterfaceOrientationPortrait;
     
 }
+
+#pragma mark -
+#pragma mark ScrollViewDelegate Methods
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+        
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
+    
+    [pullToRefreshManagerFAV_ tableViewReleased];
+    
+}
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
+- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+     [CommonMotheds showNetworkDisAbledAlert:self.view];
+    favLoadCount_++;
+    [self loadMyFavsData];
+}
+
 
 @end

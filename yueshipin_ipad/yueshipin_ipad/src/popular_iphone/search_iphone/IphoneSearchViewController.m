@@ -49,9 +49,10 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"]forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
@@ -92,8 +93,7 @@
 -(void)loadSearchData{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus] == NotReachable){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     

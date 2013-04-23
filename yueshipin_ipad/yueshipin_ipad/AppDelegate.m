@@ -19,6 +19,13 @@
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "HTTPServer.h"
+#import "PageManageViewController.h"
+#import "UIImage+ResizeAdditions.h"
+#import "CommonMotheds.h"
+#import "DatabaseManager.h"
+#import "SegmentUrl.h"
+#import "CustomNavigationViewController.h"
+#import "IphoneAVPlayerViewController.h"
 
 #define DAY(day)        (day * 3600 * 24)
 
@@ -30,10 +37,11 @@
 @property (strong, nonatomic) NSMutableArray *downloaderArray;
 @property (atomic, strong) NSString *show3GAlertSeq;
 @property (nonatomic, strong)HTTPServer *httpServer;
-@property (nonatomic, strong) UILocalNotification *localNotification;
 - (void)monitorReachability;
 
-- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti;
+- (void)addLocalNotification;
+- (void)addLocalNotificationInterVal:(NSTimeInterval)time
+                             message:(NSString *)msg;
 - (void)cancelLocalNotification;
 
 @end
@@ -57,9 +65,7 @@
 @synthesize closeVideoMode;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
-@synthesize padM3u8DownloadManager;
 @synthesize httpServer;
-@synthesize localNotification;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -72,7 +78,9 @@
 	[iRate sharedInstance].appStoreID = APPIRATER_APP_ID;
     [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
     [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
-    [iRate sharedInstance].daysUntilPrompt = 7;
+    [iRate sharedInstance].usesUntilPrompt = 3;
+    [iRate sharedInstance].daysUntilPrompt = 2; //第一次提醒
+    [iRate sharedInstance].remindPeriod = 3;
     [iRate sharedInstance].verboseLogging = NO;
     
     //enable preview mode
@@ -122,6 +130,10 @@
     
     [[UIProgressView appearance] setProgressTintColor:[UIColor colorWithRed:95/255.0 green:169/255.0 blue:250/255.0 alpha:1.0]];
     [[UIProgressView appearance] setTrackTintColor:[UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:1.000]];
+    
+    [[UISwitch appearance] setOnTintColor:CMConstants.yellowColor];
+//    [[UISwitch appearance] setTintColor:[UIColor colorWithRed:127/255.0 green:127/255.0 blue:127/255.0 alpha:1.000]];
+//    [[UISwitch appearance] setThumbTintColor:[UIColor colorWithRed:230/255.0 green:230/255.0 blue:230/255.0 alpha:1.000]];
 }
 - (void)initSinaweibo
 {
@@ -151,14 +163,13 @@
 
 - (void)initDownloadManager
 {
-    padDownloadManager = [[NewDownloadManager alloc]init];    
-    padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
+    padDownloadManager = [[NewDownloadManager alloc]init];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
-    if (ENVIRONMENT == 0 && LOG_ENABLED == 1) {
+    if (ENVIRONMENT == 0) {
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
@@ -166,6 +177,7 @@
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
     [self saveChannelRecord];
@@ -189,17 +201,27 @@
     }
     self.closed = YES;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
+ 
+    [DatabaseManager initDatabase];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
         [self customizeAppearance];
         [self initDownloadManager];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-    } else {
-        self.rootViewController = [[TabBarViewController alloc] init];
+        self.window.rootViewController = self.rootViewController;
+    }
+    else
+    {
+        tabBarView = [[TabBarViewController alloc] init];
+        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
+        //navCtrl.navigationBarHidden = YES;
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];
         [self.downLoadManager resumeDownLoad];
+        self.window.rootViewController = tabBarView;
+        [[BundingTVManager shareInstance] connecteServer];
     }
-    self.window.rootViewController = self.rootViewController;
+    
     [self.window makeKeyAndVisible];
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -214,8 +236,9 @@
     if (![statement isEqualToString:@"1"]) {
         [self showStatement];
     }
-
+    
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
+    
     return YES;
 }
 
@@ -239,6 +262,8 @@
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
     }
+    NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
+    [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -269,6 +294,11 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     self.alertUserInfo = userInfo;
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
+        if ([AppDelegate instance].isInPlayView) {
+            return;
+        }
+    }
     NSString *alert = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
     UIAlertView* alertView = [[UIAlertView alloc]initWithTitle:nil message:alert delegate:self  cancelButtonTitle:@"不了" otherButtonTitles:@"看一下", nil];
     [alertView show];
@@ -290,15 +320,16 @@
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    
+    [self clearRespForWXView];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [self.downLoadManager appDidEnterBackground];
+    [self.downLoadManager pauseAllTask];
     
     //When app enter background, add a new local Notification
-    //7天（1周）后下午9点提示
-    [self addLocalNotificationWithTimeInterval:DAY(7)];
+    [self addLocalNotification];
     // end
     //add notification
     [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
@@ -319,7 +350,8 @@
 {
     Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
     if([myhostReach currentReachabilityStatus] == NotReachable) {
-        [UIUtility showNetWorkError:self.rootViewController.view];
+         UIView *rootView = self.window.rootViewController.view;
+         [UIUtility showNetWorkError:rootView];
     };
     
     if (application.applicationIconBadgeNumber != 0) {
@@ -329,7 +361,7 @@
         [installation saveInBackground];
     }
     [self.sinaweibo applicationDidBecomeActive];
-    [self performSelector:@selector(triggerDownload) withObject:self afterDelay:10];
+    [self performSelector:@selector(triggerDownload) withObject:self afterDelay:5];
     
     //when app become active ,cancel all local notification .
     [self cancelLocalNotification];
@@ -346,7 +378,6 @@
     }
     else{
     
-       //[self.downLoadManager restartDownload];
   }
     
 }
@@ -387,6 +418,7 @@
     
     if(self.networkStatus != NotReachable){
         NSLog(@"Network is fine.");
+        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
         [self triggerDownload];
         [ActionUtility generateUserId:nil];
         if ([self isWifiReachable]) {
@@ -399,10 +431,7 @@
                 }
             }
         }
-    } else {
-        [self.padDownloadManager stopDownloading];
-        [AppDelegate instance].currentDownloadingNum = 0;
-    }
+    } 
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
         [self.downLoadManager networkChanged:networkStatus];
@@ -464,49 +493,169 @@
     return @"        任何用户在使用悦视频客户端服务之前，均应仔细阅读本声明（未成年人应当在其法定监护人陪同下阅读），用户可以选择不使用悦视频客户端服务，一旦使用，既被视为对本声明全部内容的认可和接受。\n\n\
 1. 任何通过悦视频显示或下载的资源和产品均系聚合引擎技术自动搜录第三方网站所有者制作或提供的内容，悦视频中的所有材料、信息和产品仅按“原样”提供，我公司对其合法性、准确性、真实性、适用性、安全性等概不负责，也无法负责；并且悦视频自动搜录的内容不代表我公司之任何意见和主张，也不代表我公司同意或支持第三方网站上的任何内容、主张或立场。\n\n\
 2. 任何第三方网站如果不希望被我公司的聚合引擎技术收录，应该及时向我公司反映。否则，我公司的聚合引擎技术将视其为可收录的资源网站。\n\n\
-3. 任何单位或者个人如认为悦视频客户端聚合引擎技术收录的第三方网站视频内容可能侵犯了其合法权益，请及时向我公司书面反馈，并提供身份证明、权属证明以及详情侵权情况证明。权利通知书请寄至我公司，地址：上海杨浦区淞沪路333号802室，邮政编码：200082，电话：021-31169320。我公司在收到上述文件后，可依其合理判断，断开聚合引擎技术收录的涉嫌侵权的第三方网站内容。\n\n\
+3. 任何单位或者个人如认为悦视频客户端聚合引擎技术收录的第三方网站视频内容可能侵犯了其合法权益，请及时向我公司书面反馈，并提供身份证明、权属证明以及详情侵权情况证明。我公司在收到上述文件后，可依其合理判断，断开聚合引擎技术收录的涉嫌侵权的第三方网站内容。\n\n\
 4. 用户理解并且同意，用户通过悦视频所获得的材料、信息、产品以及服务完全处于用户自己的判断，并承担因使用该等内容而引起的所有风险，包括但不限于因对内容的正确性、完整性或实用性的依赖而产生的风险。用户在使用悦视频的过程中，因受视频或相关内容误导或欺骗而导致或可能导致的任何心理、生理上的伤害以及经济上的损失，一概与本公司无关。\n\n\
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
+-(void) onRequestAppMessage
+{
+    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
+    respRootViewCtrl.delegate = self;
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    UIViewController * rootViewCtrl = navCtrl.topViewController;
+    if (rootViewCtrl.presentedViewController)
+    {
+        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
+        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
+        {
+            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
+            UIViewController * topCtrl = cNavCtrl.topViewController;
+            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
+            {
+                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
+                [playCtrl clearPlayerData];
+            }
+            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
+            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+        }
+        else
+        {
+            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
+        }
+    }
+    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
+    [navCtrl pushViewController:respRootViewCtrl animated:NO];
+}
+
 // wecha sdk delegate
--(void) onReq:(BaseReq*)req{
-       
+-(void) onReq:(BaseReq*)req
+{
+    //
+    if([req isKindOfClass:[GetMessageFromWXReq class]])
+    {
+        [self onRequestAppMessage];
+    }
 }
 -(void) onResp:(BaseResp*)resp{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
     
 }
 
-- (void)addLocalNotificationWithTimeInterval:(NSTimeInterval)ti
+#pragma mark - 
+#pragma mark - LocalNotification
+
+- (void)addLocalNotification
 {
-    localNotification = [[UILocalNotification alloc] init];
+    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
+    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
+    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
+    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
+    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
     
-    if (nil != localNotification)
-    {
-        NSDate * now = [NSDate new];
-        //输出字符串为格林威治时区，做8小时偏移
-        NSString * now_str = [now description];
-        //即北京时区21点整,(ti)天后，提示用户
-        NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"13:00:00"];
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
-        [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
-        NSDate * Date9PM = [formatter dateFromString:today9PM];
-        NSDate * fireDate = [Date9PM dateByAddingTimeInterval:ti];
-        localNotification.fireDate = fireDate;
-        localNotification.timeZone = [NSTimeZone defaultTimeZone];
-        localNotification.alertBody = @"亲，你已经至少一周没来看我啦，小悦想你了。我们上了很多新片，记得来看哦！";
-        [[UIApplication sharedApplication]   scheduleLocalNotification:localNotification];
-    }
+    [self addLocalNotificationInterVal:DAY(4)
+                               message:firstStr];
+    [self addLocalNotificationInterVal:(DAY(4) * 2)
+                               message:secondStr];
+    [self addLocalNotificationInterVal:(DAY(4) * 3)
+                               message:thirdStr];
+    [self addLocalNotificationInterVal:(DAY(4) * 4)
+                               message:fourthStr];
+    [self addLocalNotificationInterVal:(DAY(4) * 5)
+                               message:fifthStr];
+}
+
+- (void)addLocalNotificationInterVal:(NSTimeInterval)time
+                             message:(NSString *)msg
+{
+    
+    NSDate * now = [NSDate new];
+    //输出字符串为格林威治时区，做8小时偏移
+    NSString * now_str = [now description];
+    //即北京时区20点整,(ti)天后，提示用户
+    NSString * today9PM = [now_str stringByReplacingCharactersInRange:NSMakeRange(11, 8) withString:@"12:00:00"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init] ;
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss zzz"];
+    NSDate * Date9PM = [formatter dateFromString:today9PM];
+    
+    UILocalNotification * localNotification = [[UILocalNotification alloc] init];
+    NSDate * fireDate = [Date9PM dateByAddingTimeInterval:time];
+    localNotification.fireDate = fireDate;
+    localNotification.timeZone = [NSTimeZone defaultTimeZone];
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.alertBody = msg;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    
 }
 
 - (void)cancelLocalNotification
 {
-    if (nil != localNotification)
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+}
+
+- (void)clearRespForWXView
+{
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
     {
-        [[UIApplication sharedApplication] cancelLocalNotification:localNotification];
-        localNotification = nil;
+        [navCtrl popViewControllerAnimated:NO];
     }
+    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
+    {
+        [navCtrl popViewControllerAnimated:NO];
+        [navCtrl popViewControllerAnimated:NO];
+    }
+}
+
+#pragma mark - RespForWXRootViewControllerDelegate
+- (void)removeRespForWXRootView
+{
+    tabBarView.tabBar.hidden = NO;
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    [navCtrl popViewControllerAnimated:NO];
+}
+
+- (void)backButtonClick
+{
+    [WXApi openWXApp];
+    tabBarView.tabBar.hidden = NO;
+    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+    [navCtrl popViewControllerAnimated:NO];
+}
+
+- (void)shareVideoResp:(NSDictionary *)data
+{
+    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
+    
+    WXMediaMessage *message = [WXMediaMessage message];
+    
+    message.title = [data objectForKey:@"name"];
+    message.description = [data objectForKey:@"description"];
+    
+    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
+    
+    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+    
+    
+    [message setThumbImage:thumb];
+    
+    WXVideoObject *ext = [WXVideoObject object];
+    ext.videoUrl = [data objectForKey:@"videoURL"];
+    
+    message.mediaObject = ext;
+    
+    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
+    resp.message = message;
+    resp.bText = NO;
+    
+    [WXApi sendResp:resp];
+}
+
+- (void)setIdleTimerDisabled:(NSNotification *)notification
+{
+    BOOL disabled = [notification.object boolValue];
+    [[UIApplication sharedApplication] setIdleTimerDisabled: disabled];
 }
 
 @end

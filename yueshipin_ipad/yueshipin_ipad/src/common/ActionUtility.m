@@ -17,6 +17,7 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "AppDelegate.h"
+#import "DatabaseManager.h"
 
 @implementation ActionUtility
 
@@ -74,9 +75,32 @@
 
 + (int)getDownloadingItemNumber
 {
-    NSInteger movieNum = [DownloadItem countByCriteria:@"WHERE type = 1 and download_status != 'done'"];
-    NSInteger subitemNum = [SubdownloadItem countByCriteria: @"WHERE download_status != 'done'"];
+    NSInteger movieNum = [DatabaseManager countByCriteria:DownloadItem.class queryString: @"WHERE type = 1 and downloadStatus != 'done'"];
+    NSInteger subitemNum = [DatabaseManager countByCriteria:SubdownloadItem.class queryString: @"WHERE downloadStatus != 'done'"];
     return movieNum + subitemNum;    
+}
+
++ (int)getStartItemNumber
+{
+    NSInteger movieNum = [DatabaseManager countByCriteria:DownloadItem.class queryString: @"WHERE type = 1 and downloadStatus = 'start'"];
+    NSInteger subitemNum = [DatabaseManager countByCriteria:SubdownloadItem.class queryString: @"WHERE downloadStatus = 'start'"];
+    return movieNum + subitemNum;
+}
+
++ (int)getReadyItemNumber
+{
+    NSInteger movieNum = [DatabaseManager countByCriteria:DownloadItem.class queryString: @"WHERE type = 1 and (downloadStatus = 'start' or downloadStatus = 'waiting')"];
+    NSInteger subitemNum = [DatabaseManager countByCriteria:SubdownloadItem.class queryString: @"WHERE downloadStatus = 'start' or downloadStatus = 'waiting'"];
+    return movieNum + subitemNum;
+}
+
++ (DownloadItem *)getDownloadingItem
+{
+    DownloadItem *downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:@"WHERE type = 1 and downloadStatus = 'start'"];
+    if (downloadingItem == nil) {
+        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:@"WHERE downloadStatus = 'start'"];
+    }
+    return downloadingItem;
 }
 
 + (BOOL)isAirPlayActive{
@@ -115,10 +139,10 @@
 + (void)triggerSpaceNotEnough
 {
     BOOL displayNoSpaceFlag = NO;
-    for (DownloadItem *item in [DownloadItem allObjects]) {
+    for (DownloadItem *item in [DatabaseManager allObjects:DownloadItem.class]) {
         displayNoSpaceFlag = [self changeItemStatusToStop:item];
     }
-    for (SubdownloadItem *item in [SubdownloadItem allObjects]) {
+    for (SubdownloadItem *item in [DatabaseManager allObjects:SubdownloadItem.class]) {
         displayNoSpaceFlag = [self changeItemStatusToStop:item];
     }
     if(displayNoSpaceFlag) {
@@ -135,7 +159,7 @@
     }
     if ([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]) {
         item.downloadStatus = @"stop";
-        [item save];
+        [DatabaseManager update:item];
         return YES;
     } else {
         return NO;

@@ -19,6 +19,8 @@
     NSString *prodId_;
     NSNumber *playBackTime_;
     NSString *webUrlSource_;
+    BOOL isPlayFromRecord_;
+    NSDictionary *continuePlayInfo_;
 }
 @property (nonatomic, strong) NSArray *episodesArr;
 @property (nonatomic, assign) int playNum;
@@ -30,4 +32,6 @@
 @property (nonatomic, strong) NSNumber *playBackTime;
 @property (nonatomic, strong) NSString *webUrlSource;
 @property (nonatomic, strong) NSMutableArray *subnameArray;
+@property (nonatomic, assign) BOOL isPlayFromRecord;
+@property (nonatomic, strong) NSDictionary *continuePlayInfo;
 @end

@@ -9,15 +9,18 @@
 #import "CacheUtility.h"
 #import "CMConstants.h"
 #import "NSMutableArray+QueueAdditions.h"
+#import "EnvConstant.h"
 
 @interface CacheUtility()
 
 @property (nonatomic, strong) NSCache *cache;
+@property (nonatomic, strong) NSLock *myLock;
 
 @end
 
 @implementation CacheUtility
 @synthesize cache;
+@synthesize myLock;
 
 #pragma mark - Initialization
 
@@ -35,6 +38,7 @@
     if (self) {
         self.cache = [[NSCache alloc] init];
     }
+    myLock = [[NSLock alloc]init];
     return self;
 }
 
@@ -104,6 +108,15 @@
 }
 
 - (void)putInCache:(NSString *)cacheKey result:(id)result{
+    NSDictionary *item = [NSDictionary dictionaryWithObjectsAndKeys:cacheKey, @"cacheKey", result, @"result", nil];
+    [self performSelectorInBackground:@selector(addInCache:) withObject:item];
+}
+
+- (void)addInCache:(NSDictionary *)item
+{
+    [myLock lock];
+    NSString *cacheKey = [item objectForKey:@"cacheKey"];
+    id result = [item objectForKey:@"result"];
     NSArray *cacheArray = [[NSUserDefaults standardUserDefaults] arrayForKey:CACHE_QUEUE];
     if (cacheArray == nil) {
         cacheArray = [[NSMutableArray alloc]initWithCapacity:100];
@@ -125,21 +138,38 @@
     NSDictionary *cacheObject = [NSDictionary dictionaryWithObjectsAndKeys:result, cacheKey, nil];
     [cacheQueue enqueue:cacheObject];
     if (cacheQueue.count > 100) {
-        for (int i = 0; i < cacheQueue.count - 100; i++) {
+        for (int i = 0; i < 30; i++) {
             [cacheQueue dequeue];
         }
     }
-    NSLog(@"cache num = %i", cacheQueue.count);
+    if(ENVIRONMENT == 0) {        
+        NSLog(@"cache num = %i", cacheQueue.count);
+    }
     [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    [myLock unlock];
 }
 
 
 - (void)removeObjectForKey:(NSString *)key
 {
     [self.cache removeObjectForKey:key];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    NSArray *cacheArray = [[NSUserDefaults standardUserDefaults] arrayForKey:CACHE_QUEUE];
+    if (cacheArray == nil) {
+        return;
+    }
+    NSMutableArray *cacheQueue = [[NSMutableArray alloc]initWithArray:cacheArray];
+    for (NSDictionary *tempObj in cacheQueue) {
+        id tempValue = [tempObj objectForKey:key];
+        if (tempValue) {
+            [cacheQueue removeObject:tempObj];
+            break;
+        }
+    }
+    NSLog(@"cache num = %i", cacheQueue.count);
+    [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
+    [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 

@@ -31,6 +31,7 @@
 #import "Reachability.h"
 #import "MobClick.h"
 #import "CustomNavigationViewControllerPortrait.h"
+#import "UIUtility.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -69,6 +70,10 @@
         [self.navigationController.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showSuccessModalView) name:@"wechat_share_success" object:nil];
+    
+    UIView *footview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    footview.backgroundColor = [UIColor clearColor];
+    self.tableView.tableFooterView = footview;
 }
 - (void)viewDidUnload{
 
@@ -112,7 +117,8 @@
     view.tag = VIEWTAG;
     [view setBackgroundColor:[UIColor clearColor]];
    
-    if (type == REPORT) {
+    if (type == REPORT)
+    {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 150, 80)];
         label.numberOfLines = 0;
         label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -125,11 +131,19 @@
         label.textColor = [UIColor whiteColor];
         [view addSubview:label];
     }
-    if (type == DING || type == ADDFAV ) {
+    else if (type == DING
+             || type == ADDFAV
+             || ADDEXPECT == type)
+    {
          UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
         temp.frame = CGRectMake(0, 0, 92, 27);
         temp.center = view.center;
         [view addSubview:temp];
+        
+        if (ADDEXPECT == type)
+        {
+            
+        }
     }
     
     //[[AppDelegate instance].window addSubview:view];
@@ -154,10 +168,17 @@
        label.text = @"已顶过";
         
     }
-    if (type == ADDFAV) {
+    else if (type == ADDFAV) {
        label.text = @"已收藏过";
     }
-    
+    else if (ADDEXPECT == type)
+    {
+        NSString * text = @"想看影片已加入收藏记录";
+        CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:12]];
+        label.frame = CGRectMake(0, 0, size.width + 15, 27);
+        label.text = @"想看影片已加入收藏记录";
+        label.center = view.center;
+    }
     [view addSubview:label];
   
      [self.view addSubview:view];
@@ -177,9 +198,9 @@
 
 
 -(void)share:(id)sender event:(UIEvent *)event{
+    
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
@@ -201,8 +222,7 @@
 }
 -(void)selectIndex:(int)index{
     if (![self checkNetWork]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-        [alert show];
+        [UIUtility showNetWorkError:self.view];
         return;
     }
     
@@ -432,16 +452,14 @@
     iphoneWebPlayerViewController.episodesArr = episodesArr_;
     iphoneWebPlayerViewController.videoType = type_;
     iphoneWebPlayerViewController.prodId = prodId_;
-    iphoneWebPlayerViewController.playBackTime = [self getRecordInfo:num];
+    NSString *str = [NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",(num+1) ]];
+    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
+    
+    iphoneWebPlayerViewController.playBackTime = cacheResult;
     [self presentViewController:[[CustomNavigationViewController alloc] initWithRootViewController:iphoneWebPlayerViewController] animated:YES completion:nil];
 }
 
--(NSNumber*)getRecordInfo:(int)num{
-    NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:[NSString stringWithFormat:@"%@_%@",prodId_,[NSString stringWithFormat:@"%d",num]]];
 
-    return cacheResult;
-    
-}
 
 -(BOOL)checkNetWork{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];

@@ -53,6 +53,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 @synthesize deleteTempFileOnCancel = _deleteTempFileOnCancel;
 @synthesize progressiveDownloadProgress = _progressiveDownloadProgress;
 @synthesize totalBytesReadPerDownload, downloadingSegmentIndex;
+@synthesize isDownloadingType;
 #pragma mark - Static
 
 + (NSString *)cacheFolder {
@@ -205,14 +206,26 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
         }else if(!self.error) {
             // move file to final position and capture error        
             @synchronized(self) {
-                NSFileManager *newManager = [NSFileManager new];
-                if ([newManager fileExistsAtPath:_targetPath]) {
-                    [newManager removeItemAtPath:_targetPath error:nil];
+                long long downloadedFileSize = [self fileSizeForPath:[self tempPath]];
+                if ((self.totalContentLength - downloadedFileSize) > (3*1024*1024)) {
+                    NSLog(@"downloadsize %lld expectedContentLength %lld ",downloadedFileSize,self.totalContentLength);
+                    NSLog(@"下载的文件大小和预期的相差太大");
+                    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"下载的文件大小和预期的相差太大",NSLocalizedDescriptionKey,nil];
+                    NSError *oneError = [NSError errorWithDomain:NSOSStatusErrorDomain code:1024 userInfo:userInfo];
+                    _fileError = oneError;
                 }
-                [newManager moveItemAtPath:[self tempPath] toPath:_targetPath error:&localError];
-                if (localError) {
-                    _fileError = localError;
+                else{
+                    NSFileManager *newManager = [NSFileManager new];
+                    if ([newManager fileExistsAtPath:_targetPath]) {
+                        [newManager removeItemAtPath:_targetPath error:nil];
+                    }
+                    [newManager moveItemAtPath:[self tempPath] toPath:_targetPath error:&localError];
+                    if (localError) {
+                        _fileError = localError;
+                    }
+            
                 }
+                
             }
         }
         
@@ -245,7 +258,7 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     [super connection:connection didReceiveResponse:response];
-    
+
     // check if we have the correct response
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
     if (![httpResponse isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -277,12 +290,16 @@ typedef void (^AFURLConnectionProgressiveOperationProgressBlock)(NSInteger bytes
 
     // track custom bytes read because totalBytesRead persists between pause/resume.
     self.totalBytesReadPerDownload += [data length];
-    [downloadingDelegate updateProgress:operationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
-    if (downloadingDelegate.class != subdownloadingDelegate.class) {
-        [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
-    }
     if (self.progressiveDownloadProgress) {
-        self.progressiveDownloadProgress((long long)[data length], self.totalBytesRead, self.response.expectedContentLength,self.totalBytesReadPerDownload + self.offsetContentLength, self.totalContentLength);
+        if (isDownloadingType == 1) {
+            [downloadingDelegate updateProgress:operationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
+        } else if(isDownloadingType == 2){
+            [subdownloadingDelegate updateProgress:operationId suboperationId:suboperationId progress:(float)(self.totalBytesReadPerDownload + self.offsetContentLength)/(float)self.totalContentLength];
+            
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+                       self.progressiveDownloadProgress((long long)[data length], self.totalBytesRead, self.response.expectedContentLength,self.totalBytesReadPerDownload + self.offsetContentLength, self.totalContentLength);
+                  });
     }
 }
 
