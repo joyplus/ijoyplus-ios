@@ -7,13 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DownloadItem.h"
 
 @interface ActionUtility : NSObject
 
 + (void)generateUserId:(void (^)(void))completion;
 + (UIImage*) thumbnailImageForVideo:(NSURL *)videoURL atTime:(NSTimeInterval)time;
 + (int)getDownloadingItemNumber;
++ (int)getStartItemNumber;
++ (DownloadItem *)getDownloadingItem;
 + (BOOL)isAirPlayActive;
 + (float)getFreeDiskspace;
 + (void)triggerSpaceNotEnough;
++ (int)getReadyItemNumber;
+
 @end

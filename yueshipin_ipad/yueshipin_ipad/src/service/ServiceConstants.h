@@ -90,6 +90,8 @@ extern NSString *const kPathProgramHiddenWatch;
 
 extern NSString *const kPathProgramView;
 
+extern NSString *const kPathProgramReviews;
+
 extern NSString *const kPathProgramViewRecommend;
 
 extern NSString *const kPathProgramInvalid;
@@ -101,6 +103,7 @@ extern NSString *const kPathAddItem;
 extern NSString *const kPathTops;
 extern NSString *const kPathSupport;
 extern NSString *const kPathTvTops;
+extern NSString *const kPathComicTops;
 extern NSString *const kPathMoiveTops;
 extern NSString *const kPathShowTops;
 extern NSString *const kPathLunbo;
@@ -118,3 +121,5 @@ extern NSString *const kPathHiddenPlay;
 extern NSString *const kPathRemoveAllPlay;
 extern NSString *const kPathShowTopItems;
 extern NSString *const kPathRecordPlay;
+extern NSString *const kPathFilter;
+extern NSString *const KPathCheckBinding;

@@ -48,8 +48,9 @@
 #define kPhoneNumber @"kPhoneNumber"
 
 #define kIpadAppKey @"kIpadAppkey"
+#define KWXCODENUM  @"weixinImageNum"
 
-#define LOCAL_KEYS_NUMBER 5
+#define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1
 #define umengAppKey @"50c069e25270154e81000056"
 
@@ -66,20 +67,31 @@
 #define PERSONAL_VIEW_REFRESH @"PersonalViewRefresh"
 #define WATCH_HISTORY_REFRESH @"PersonalWatchHistoryViewRefresh"
 #define MY_LIST_VIEW_REFRESH @"MyListViewRefresh"
+#define SEARCH_LIST_VIEW_REFRESH @"SearchListViewRefresh"
+#define SYSTEM_IDLE_TIMER_DISABLED @"system_idle_timer_disabled"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
-#define RELOAD_MENU_ITEM @ "reload_menu_item"
 #define UPDATE_DISK_STORAGE @"update_disk_storage"
 #define NO_ENOUGH_SPACE @"no_enough_space"
 #define LEAST_DISK_SPACE 300.0/1024.0
+
+#define MOVE_TO_CLOSE_TAG 867394029
 
 #define WATCH_RECORD_NUMBER 5
 
 #define LAST_UPDATE_DATE_FOR_TOPS @"last_update_date_for_tops"
 
 #define LEFT_VIEW_WIDTH 529
+#define FULL_SCREEN_WIDTH (940)
+
+#define NORMAL_VIDEO_WIDTH 70
+#define NORMAL_VIDEO_HEIGHT 100
 
 #define RIGHT_VIEW_WIDTH 515
+
+#define SLIDE_VIEWS_MINUS_X_POSITION -0
+
+#define LEFT_MENU_DIPLAY_WIDTH 80
 
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
@@ -88,13 +100,10 @@
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 
 #define SHOW_MENU_INTRO @"show_menu_intro"
-#define SHOW_PLAY_INTRO @"show_play_intro"
-#define DOWNLOAD_SETTING_INTRO @"download_setting_intro"
 #define WEIBO_INTRO @"weibbo_intro"
-#define SHOW_DOWNLOAD_INTRO @"show_download_intro"
 #define SHOW_PLAY_INTRO_WITH_DOWNLOAD @"show_play_intro_with_download"
 #define WIFI_IS_NOT_AVAILABLE @"wifi_is_not_available"
-
+#define KEY_NETWORK_BECOME_AVAILABLE    (@"network_available")
 #define APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION   (@"applicationDidEnterBackground")
 #define APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION      (@"applicationDidBecomeActive")
 
@@ -104,10 +113,31 @@
 
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 
+typedef enum {
+    MOVIE_TYPE = 1,
+    DRAMA_TYPE = 2,
+    SHOW_TYPE = 3,
+    COMIC_TYPE = 131,
+} VideoType;
+
+typedef enum {
+    MOVIE_TOPIC = 1,
+    DRAMA_TOPIC = 2,
+} TopicType;
+
+typedef enum {
+    MOVIE_TOP = 1,
+    DRAMA_TOP = 2,
+    COMIC_TOP = 3,
+    SHOW_TOP = 4,
+} TopType;
+
 @interface CMConstants : NSObject 
     extern NSString * const MyString;
 
 + (UIColor*)grayColor;
+
++ (UIColor*)yellowColor;
 
 + (UIColor *)scoreBlueColor;
 
@@ -118,5 +148,7 @@
 + (UIColor *)tableBorderColor;
 
 + (UIColor *)backgroundColor;
+
++ (UIColor *)textColor;
 
 @end

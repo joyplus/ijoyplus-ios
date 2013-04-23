@@ -17,15 +17,18 @@
 - (void)showSublistView:(int)num;
 - (BOOL)downloadDrama:(int)num;
 - (BOOL)downloadShow:(int)num;
+- (void)showCommentDetail:(NSDictionary *)commentItem;
 @end
 
 @protocol DramaDetailViewControllerDelegate <NSObject>
 
 - (void)changePlayingEpisodeBtn:(int)currentNum;
 - (void)playNextEpisode;
+- (void)hideCloseBtn;
+- (void)showCloseBtn;;
 @end
 
-@interface VideoDetailViewController : GenericBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate>{
+@interface VideoDetailViewController : SlideBaseViewController  <SinaWeiboDelegate, SinaWeiboRequestDelegate, VideoDetailViewControllerDelegate, UIAlertViewDelegate,  DramaDetailViewControllerDelegate>{
     SinaWeibo *_sinaweibo;
     NSDictionary *video;
     NSArray *topics;
@@ -39,6 +42,8 @@
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
 @property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
+@property (nonatomic)BOOL canPlayVideo;
+- (void)checkCanPlayVideo;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 - (void)addListBtnClicked;

@@ -10,6 +10,9 @@
 #import "DDPageControl.h"
 #import "EGORefreshTableHeaderView.h"
 #import "MNMBottomPullToRefreshManager.h"
+#import "DimensionalCodeScanViewController.h"
+#import "BundingTVManager.h"
+
 @interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient,EGORefreshTableHeaderDelegate>{
 
     UIScrollView *scrollView_;
@@ -18,21 +21,26 @@
     NSMutableArray *tvListArr_;
     NSMutableArray *movieListArr_;
     NSMutableArray *showListArr_;
+    NSMutableArray *comicListArr_;
+    
     UITableView *tvTableList_;
     UITableView *movieTableList_;
     UITableView *showTableList_;
+    UITableView *comicTableList_;
     
     UIButton *movieBtn_;
     UIButton *tvBtn_;
     UIButton *showBtn_;
+    UIButton *comicBtn_;
     
     UIImageView *slider_;
     
     UIImageView *pageMGIcon_;
-    
+    UIImageView *bundingTipsView;
     EGORefreshTableHeaderView *refreshHeaderViewForMovieList_;
     EGORefreshTableHeaderView *refreshHeaderViewForTvList_;
     EGORefreshTableHeaderView *refreshHeaderViewForShowList_;
+    EGORefreshTableHeaderView *refreshHeaderViewForComicList_;
     
     MNMBottomPullToRefreshManager *pullToRefreshManager_;
     
@@ -40,6 +48,7 @@
     int movieLoadCount_;
     int tvLoadCount_;
     int showLoadCount_;
+    int comicLoadCount_;
     NSString *showTopId_;
 }
 @property (strong, nonatomic)UIScrollView *scrollView;
@@ -48,6 +57,9 @@
 @property (strong, nonatomic)NSMutableArray *tvListArr;
 @property (strong, nonatomic)NSMutableArray *movieListArr;
 @property (strong, nonatomic)NSMutableArray *showListArr;
+@property (strong, nonatomic)NSMutableArray *comicListArr;
+@property (strong, nonatomic)UITableView *comicTableList;
+@property (strong, nonatomic)UIButton *comicBtn;
 @property (strong, nonatomic)UITableView *tvTableList;
 @property (strong, nonatomic)UITableView *movieTableList;
 @property (strong, nonatomic)UITableView *showTableList;
@@ -58,6 +70,7 @@
 @property (strong, nonatomic)UIImageView *pageMGIcon;
 @property (strong, nonatomic) NSString *showTopId;
 
+@property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForComicList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForMovieList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForTvList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForShowList;

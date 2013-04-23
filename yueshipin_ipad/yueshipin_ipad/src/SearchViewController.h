@@ -10,19 +10,21 @@
 #import "MenuViewController.h"
 #import "CustomSearchBar.h"
 
-@interface SearchViewController : GenericBaseViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>{
+@protocol SearchViewControllerDelegate
+
+- (void)clearSearchBarContent;
+- (void)historyCellClicked:(NSString *)keyword;
+- (void)resignFirstRespond;
+@end
+
+@interface SearchViewController : GenericBaseViewController <SearchViewControllerDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>{
 
     UIImageView *topImage;
     UIImageView *bgImage;
     CustomSearchBar *sBar;
-    UITableView *table;
     
     NSMutableArray *historyArray;
     NSMutableArray *hotKeyArray;
-    
-    NSMutableArray *hotKeyIndex;
-    
-    NSMutableDictionary *hotKeyBtnWidth;
     BOOL removePreviousView;
     
     int leftWidth;

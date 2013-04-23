@@ -23,6 +23,8 @@ static NSString * const kPlayableKey		= @"playable";
 
 /* PlayerItem keys */
 static NSString * const kStatusKey         = @"status";
+static NSString * const k_BufferEmpty       = @"playbackBufferEmpty";
+static NSString * const k_ToKeepUp          = @"playbackLikelyToKeepUp";
 
 /* AVPlayer keys */
 static NSString * const kRateKey			= @"rate";
@@ -91,6 +93,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext;
+static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext;
 
 #pragma mark -
 @implementation AVPlayerViewController
@@ -211,6 +214,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
     isAppEnterBackground = NO;
+    isClosed = NO;
     if (type == 1) {
         umengPageName = MOVIE_PLAY;
     } else if(type == 2 || type == 131){
@@ -351,7 +355,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     for (NSDictionary *dic in down_load_urls) {
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
         NSString *source_str = [temp_dic objectForKey:@"source"];
-        if ([source_str isEqualToString:@"letv"]) {
+        if ([source_str isEqualToString:@"wangpan"]) {
+            [temp_dic setObject:@"0.1" forKey:@"level"];
+        } else if ([source_str isEqualToString:@"le_tv_fee"]) {
+            [temp_dic setObject:@"0.2" forKey:@"level"];
+        } else if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
         } else if ([source_str isEqualToString:@"fengxing"]){
             [temp_dic setObject:@"2" forKey:@"level"];
@@ -699,7 +707,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
     
     mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, bottomView.frame.size.width - currentPlaybackTimeLabel.frame.size.width * 2 - 60 , 23)];
     [mScrubber setEnabled:NO];
-    mScrubber.center = CGPointMake(bottomView.center.x, (BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)/2);
+    mScrubber.center = CGPointMake(bottomView.center.x, (BOTTOM_TOOL_VIEW_HEIGHT - BOTTOM_TOOLBAR_HEIGHT)/2 + 1);
     UIImage *minImage = [[UIImage imageNamed:@"progress_slider_min"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)];
     float ver = [[[UIDevice currentDevice] systemVersion] floatValue];
     UIImage *maxImage;
@@ -922,7 +930,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         } else {
             nameLabel.text = [NSString stringWithFormat:@"即将播放：%@",name];
-            vidoeTitle.text = [video objectForKey:@"name"];
+            if (video) {                
+                vidoeTitle.text = [video objectForKey:@"name"];
+            }
         }
         [playCacheView addSubview:nameLabel];
         
@@ -1046,6 +1056,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         [mPlayer seekToTime:resolutionLastPlaytime];
         resolutionLastPlaytime = kCMTimeInvalid;
     }
+    [self dismissActivityView];
     mPlayer.allowsAirPlayVideo = YES;
 	[mPlayer play];
     [self showStopButton];
@@ -1083,10 +1094,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 
 - (void)closeSelf
 {
-    [mPlayer removeObserver:self forKeyPath:@"rate"];
-	[mPlayer.currentItem removeObserver:self forKeyPath:@"status"];
-    [mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
-    
+    [self.mPlayer removeObserver:self forKeyPath:kRateKey];
+	[self.mPlayerItem removeObserver:self forKeyPath:kStatusKey];
+    [self.mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
+    //buffering
+    [self.mPlayerItem removeObserver:self forKeyPath:k_BufferEmpty];
+    [self.mPlayerItem removeObserver:self forKeyPath:k_ToKeepUp];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -1123,6 +1136,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self.navigationController popViewControllerAnimated:NO];
         }
     }
+    isClosed = YES;
 }
 
 - (void)showEpisodeListView
@@ -1428,7 +1442,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
              dispatch_async( dispatch_get_main_queue(),
                             ^{
                                 /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                [myself prepareToPlayAsset:asset withKeys:requestedKeys];
+                                if (!isClosed)
+                                    [myself prepareToPlayAsset:asset withKeys:requestedKeys];
                             });
          }];
 	}
@@ -1556,6 +1571,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
         mTimeObserver = nil;
     }
 	/* Update the scrubber during normal playback. */
+    if (isnan(interval) || interval < 0.1f) {
+        interval = 0.1f;
+    }
     __block typeof (self) myself = self;
 	mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(interval, NSEC_PER_SEC)
 								queue:NULL /* If you pass NULL, the main queue is used. */
@@ -1643,6 +1661,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 		{
 			CGFloat width = CGRectGetWidth([mScrubber bounds]);
 			double tolerance = 0.5f * duration / width;
+            if (isnan(tolerance) || tolerance < 0.1f) {
+                tolerance = 0.1f;
+            }
             __block typeof (self) myself = self;
 			mTimeObserver = [mPlayer addPeriodicTimeObserverForInterval:CMTimeMakeWithSeconds(tolerance, NSEC_PER_SEC) queue:NULL usingBlock:
             ^(CMTime time) {
@@ -1753,6 +1774,29 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	}
 }
 
+- (void)showActivityView
+{
+    if (!playCacheView.superview)
+    {
+        [self.view addSubview:myHUD];
+        
+        myHUD.hidden = NO;
+        [self.view bringSubviewToFront:myHUD];
+        [myHUD show:YES];
+        myHUD.labelText = @"正在加载，请稍等";
+    }
+}
+- (void)dismissActivityView
+{
+//    if (playCacheView.superview)
+//    {
+//        myHUD.hidden = YES;
+//        [playCacheView removeFromSuperview];
+//        playCacheView = nil;
+//    }
+      myHUD.hidden = YES;
+}
+
 #pragma mark -
 #pragma mark Loading the Asset Keys Asynchronously
 
@@ -1822,6 +1866,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
                          options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew
                          context:AVPlayerDemoPlaybackViewControllerStatusObservationContext];
 	
+    //buffering
+	[self.mPlayerItem addObserver:self
+                       forKeyPath:k_BufferEmpty
+                          options:NSKeyValueObservingOptionNew
+                          context:AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext];
+    [self.mPlayerItem addObserver:self
+                       forKeyPath:k_ToKeepUp
+                          options:NSKeyValueObservingOptionNew
+                          context:AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext];
+    
     /* When the player item has played to its end time we'll toggle
      the movie controller Pause button to be the Play button */
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1982,7 +2036,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 //                    NSLog(@"%@", tempDic);
                     NSString *source_str = [[tempDic objectForKey:URL_KEY] objectForKey:@"source"];
                     BOOL exists = YES;
-                    if ([source_str isEqualToString:@"letv"]) {
+                    if ([source_str isEqualToString:@"letv"] || [source_str isEqualToString:@"le_tv_fee"]) {
+                        source_str = @"letv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 58, 17);
                     } else if ([source_str isEqualToString:@"fengxing"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
@@ -2030,7 +2085,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 	/* AVPlayer "rate" property value observer. */
 	else if (context == AVPlayerDemoPlaybackViewControllerRateObservationContext)
 	{
-        [self syncPlayPauseButtons];
+        //[self syncPlayPauseButtons];
 	}
 	/* AVPlayer "currentItem" property observer. 
         Called when the AVPlayer replaceCurrentItemWithPlayerItem: 
@@ -2054,6 +2109,41 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
             [self syncPlayPauseButtons];
         }
 	}
+    else if (context == AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext)
+    {
+        AVPlayerItem * pItem = (AVPlayerItem *)object;
+        if (k_BufferEmpty == path)
+        {
+            if (pItem.playbackBufferEmpty)
+            {
+                [self showActivityView];
+            }
+            else
+            {
+                
+            }
+        }
+        else if (k_ToKeepUp == path)
+        {
+            if (pItem.playbackLikelyToKeepUp)
+            {
+                [self dismissActivityView];
+                BOOL isPlaying = [self isPlaying];
+                BOOL isHidden = mPlayButton.hidden;
+                if (!isPlaying && isHidden)
+                {
+                    [mPlayer play];
+                }
+            }
+            else
+            {
+                if (![self isPlaying])
+                {
+                    [self showActivityView];
+                }
+            }
+        }
+    }
 	else
 	{
 		[super observeValueForKeyPath:path ofObject:object change:change context:context];
@@ -2115,11 +2205,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemObservationContext = &
 }
 
 NSComparator cmpStr = ^(id obj1, id obj2){
-    if ([obj1 integerValue] > [obj2 integerValue]) {
+    if ([obj1 floatValue] > [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedDescending;
     }
     
-    if ([obj1 integerValue] < [obj2 integerValue]) {
+    if ([obj1 floatValue] < [obj2 floatValue]) {
         return (NSComparisonResult)NSOrderedAscending;
     }
     return (NSComparisonResult)NSOrderedSame;

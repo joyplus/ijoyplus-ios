@@ -12,7 +12,8 @@
 #import "MBProgressHUD.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "CMPopTipView.h"
-@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
+#import "BundingTVManager.h"
+@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,BundingTVManagerDelegate>{
     UIToolbar *topToolBar_;
     UIToolbar *bottomToolBar_;
     AVPlayerView *avplayerView_;
@@ -66,6 +67,9 @@
     NSTimer *timeLabelTimer_;
     
     MPVolumeView *volumeView_;
+    
+    UIImageView * ariplayView;
+    UIImageView * cloudTVView;
     UILabel *airPlayLabel_;
     
     UIImageView *sourceLogo_;
@@ -79,6 +83,14 @@
     NSString *webUrlSource_;
     
     BOOL isM3u8_;
+    
+    NSDictionary *continuePlayInfo_;
+    
+    BOOL isPlayFromRecord_;
+    NSString * videoSource_;
+    
+    BOOL    isPlayOnTV;
+    BOOL    isTVReady;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -89,6 +101,7 @@
 @property (nonatomic, strong) UISlider* mScrubber;
 @property (nonatomic, strong) UIButton *selectButton;
 @property (nonatomic, strong) UIButton *clarityButton;
+@property (nonatomic, strong) UIButton *cloundTVButton;
 @property (nonatomic, strong) UIButton *playButton;
 @property (nonatomic, strong) UIButton *pauseButton;
 @property (nonatomic, strong) UILabel *seeTimeLabel;
@@ -124,7 +137,9 @@
 @property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (nonatomic, assign)  BOOL isM3u8;
 @property (nonatomic, assign) double playDuration;
+@property (nonatomic, strong)NSDictionary *continuePlayInfo;
+@property (nonatomic, assign) BOOL isPlayFromRecord;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
-
+- (void)clearPlayerData;
 @end

@@ -27,13 +27,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view setBackgroundColor:CMConstants.backgroundColor];
 	removePreviousView = NO;
     self.moveToLeft = YES;
-    [self.view addGestureRecognizer:swipeRecognizer];
-    
-    [self.view removeGestureRecognizer:closeMenuRecognizer];
-    [self.view removeGestureRecognizer:swipeCloseMenuRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
     
     [self setCloseTipsViewHidden:NO];
 }
@@ -41,7 +37,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.view setBackgroundColor:CMConstants.backgroundColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -52,13 +47,13 @@
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    bgImage.image = nil;
-    [bgImage removeFromSuperview];
-    
-    [menuBtn removeFromSuperview];
+    self.bgImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.frame.size.height)];
+    self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
+    self.bgImage.layer.zPosition = -1;
+    [self.view addSubview:self.bgImage];
     
     closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    closeBtn.frame = CGRectMake(456, 0, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -75,7 +70,6 @@
     }
     keyword = [keyword stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     sBar.text = keyword;
-    [self closeMenu];
     [self addKeyToLocalHistory:keyword];
     [sBar resignFirstResponder];
     SearchListViewController *viewController = [[SearchListViewController alloc] init];

@@ -11,12 +11,18 @@
 
 + (UIColor *)tableBorderColor
 {
-    return [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1.0];
+    return [UIColor colorWithRed:194/255.0 green:190/255.0 blue:180.0/255.0 alpha:1];
 }
+
++ (UIColor *)yellowColor
+{
+    return [UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:1.0];
+}
+
 
 + (UIColor *)grayColor
 {
-    return [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
+    return [UIColor colorWithRed:125/255.0 green:125/255.0 blue:125/255.0 alpha:1.0];
 }
 
 + (UIColor *)scoreBlueColor
@@ -37,6 +43,11 @@
 + (UIColor *)backgroundColor
 {
     return [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
+}
+
++ (UIColor *)textColor
+{
+    return [UIColor colorWithRed:138/255.0 green:138/255.0 blue:136/255.0 alpha:1];
 }
 
 @end

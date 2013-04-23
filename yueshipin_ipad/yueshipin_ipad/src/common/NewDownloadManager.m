@@ -12,24 +12,27 @@
 #import "AppDelegate.h"
 #import "DownloadUrlFinder.h"
 #import "ActionUtility.h"
+#import "DatabaseManager.h"
+#import "Reachability.h"
+#import "StringUtility.h"
 
 @interface NewDownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
 @property (nonatomic, strong)AFDownloadRequestOperation *downloadingOperation;
-@property (nonatomic)float previousProgress;
 @property (nonatomic) BOOL displayNoSpaceFlag;
 @property (nonatomic, strong)NSArray *allDownloadItems;
 @property (nonatomic, strong)NSArray *allSubdownloadItems;
 @property (nonatomic, strong)NSLock *myLock;
+@property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
 @end
 
 @implementation NewDownloadManager
 @synthesize downloadingItem, myLock;
 @synthesize downloadingOperation;
 @synthesize delegate, subdelegate;
-@synthesize previousProgress, displayNoSpaceFlag;
+@synthesize displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
-
+@synthesize padM3u8DownloadManager;
 - (id)init
 {
     self = [super init];
@@ -43,14 +46,19 @@
 {
     [myLock lock];
     if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
-        allDownloadItems = [DownloadItem allObjects];
-        allSubdownloadItems = [SubdownloadItem allObjects];
+        allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
+        allSubdownloadItems = [DatabaseManager allObjects:SubdownloadItem.class];
         [self startDownloadingThread:allDownloadItems status:@"start"];
         [self startDownloadingThread:allSubdownloadItems status:@"start"];
         [self startDownloadingThread:allDownloadItems status:@"waiting"];
         [self startDownloadingThread:allSubdownloadItems status:@"waiting"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];// update download badge
         displayNoSpaceFlag = NO;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DOWNLOAD_ITEM_NUM object:nil];// update download badge
+    if ([ActionUtility getReadyItemNumber] > 0) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:YES]];
+    } else {
+        [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:NO]];
     }
     [myLock unlock];
 }
@@ -62,17 +70,20 @@
             if([item.downloadStatus isEqualToString:status]){
                 downloadingItem = item;
                 if ([item.downloadType isEqualToString:@"m3u8"]) {
+                    padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
                     if(item.type == 1){
-                        [AppDelegate instance].padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
+                        padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
+                        padM3u8DownloadManager.subdelegate = nil;
                     } else {
-                        [AppDelegate instance].padM3u8DownloadManager.subdelegate = subdelegate == nil ? self : subdelegate;
+                        padM3u8DownloadManager.subdelegate = subdelegate == nil ? self : subdelegate;
+                        padM3u8DownloadManager.delegate = nil;
                     }
-                    [[AppDelegate instance].padM3u8DownloadManager startDownloadingThreads:item];
+                    [padM3u8DownloadManager startDownloadingThreads:item];
                 } else {
-                    if (item.url) {
+                    if (![StringUtility stringIsEmpty:item.url]) {
                         [AppDelegate instance].currentDownloadingNum++;
                         item.downloadStatus = @"start";
-                        [item save];
+                        [DatabaseManager update:item];
                         NSURL *url = [NSURL URLWithString:item.url];
                         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
                         
@@ -88,21 +99,30 @@
                         downloadingOperation.operationId = item.itemId;
                         if(item.type == 1){
                             downloadingOperation.downloadingDelegate = delegate == nil ? self : delegate;
+                            downloadingOperation.isDownloadingType = 1;
+                            downloadingOperation.subdownloadingDelegate = nil;
                             downloadingOperation.suboperationId = @"";
                         } else {
+                            downloadingOperation.downloadingDelegate = nil;
+                            downloadingOperation.isDownloadingType = 2;
                             downloadingOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
                             downloadingOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
                         }
                         
                         [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                             NSLog(@"Successfully downloaded file to %@", filePath);
+                            if (downloadingItem.type == 1) {
+                                [self downloadSuccess:downloadingItem.itemId];
+                            } else {
+                                [self downloadSuccess:downloadingItem.itemId suboperationId:((SubdownloadItem *)downloadingItem).subitemId];
+                            }
+                            [self stopDownloading];
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             NSLog(@"Error: %@", error);
                             [operation cancel];
                         }];
                         [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
                         }];
-                        previousProgress = 0;
                         [downloadingOperation start];
                     } else {
                         if (![item.downloadStatus isEqualToString:@"error"]) {
@@ -121,40 +141,46 @@
 - (void)setDelegate:(id<DownloadingDelegate>)newdelegate
 {
     delegate = newdelegate;
-    downloadingOperation.downloadingDelegate = newdelegate;
-    [AppDelegate instance].padM3u8DownloadManager.delegate = newdelegate;
+    if (downloadingItem.type == 1) {
+        [downloadingOperation setDownloadingDelegate: newdelegate];
+        [downloadingOperation setSubdownloadingDelegate: nil];
+        padM3u8DownloadManager.delegate = newdelegate;
+    } 
 }
 
 - (void)setSubdelegate:(id<SubdownloadingDelegate>)newdelegate
 {
     subdelegate = newdelegate;
-    downloadingOperation.subdownloadingDelegate = newdelegate;
-    [AppDelegate instance].padM3u8DownloadManager.subdelegate = newdelegate;
+    if (downloadingItem.type != 1) {
+        downloadingOperation.downloadingDelegate = nil;
+        downloadingOperation.subdownloadingDelegate = newdelegate;
+        padM3u8DownloadManager.subdelegate = newdelegate;
+    }
 }
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    [AppDelegate instance].currentDownloadingNum = 0;
-    //    for (int i = 0; i < [AppDelegate instance].downloadItems.count; i++) {
-//        DownloadItem *item = [[AppDelegate instance].downloadItems objectAtIndex:i];
-//        if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
-//            item.downloadStatus = @"stop";
-//            [item save];
-//            break;
-//        }
-//    }
-//    [self startNewDownloadItem];
+    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+}
+
+- (void)restartNewDownloading
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] != NotReachable) {
+        [AppDelegate instance].currentDownloadingNum = 0;
+        [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
+    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId
 {
+    downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
-    [downloadingItem save];
-    [downloadingOperation pause];
-    [downloadingOperation cancel];
+    [DatabaseManager update:downloadingItem];
+    [self stopDownloading];
     [self startNewDownloadItem];
 }
 
@@ -166,41 +192,48 @@
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
-    [self updateProgress:progress downloadingArray:allDownloadItems];
+    [self updateProgress:progress];
 }
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
 {
     NSLog(@"error in download manager");
     [self stopDownloading];
-    [AppDelegate instance].currentDownloadingNum = 0;
+    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    if([downloadingItem isKindOfClass:[SubdownloadItem class]]){
-        SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
-        tempDownloadingItem.downloadStatus = @"done";
-        tempDownloadingItem.percentage = 100;
-        [tempDownloadingItem save];
-    }
-    [downloadingOperation pause];
-    [downloadingOperation cancel];
-    [self startNewDownloadItem];        
+    SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
+    tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempDownloadingItem.itemId, tempDownloadingItem.subitemId]];
+    tempDownloadingItem.downloadStatus = @"done";
+    tempDownloadingItem.percentage = 100;
+    [DatabaseManager update:tempDownloadingItem];
+    [self stopDownloading];
+    [self startNewDownloadItem];
 }
 
 - (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress
 {
-    [self updateProgress:progress downloadingArray:allSubdownloadItems];
+    [self updateProgress:progress];
 }
 
-- (void)updateProgress:(float)progress downloadingArray:(NSArray *)downloadingArray
+- (void)updateProgress:(float)progress
 {
-    if (progress * 100 - previousProgress * 100 > 5) {
+    if(downloadingItem.class == DownloadItem.class) {
+        downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
+    } else if (downloadingItem.class == SubdownloadItem.class) {
+        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", downloadingItem.itemId, ((SubdownloadItem *)downloadingItem).subitemId]];
+    }
+    int thisProgress = progress * 100;
+    if (thisProgress < 1 && downloadingItem.percentage != 0) {
+        downloadingItem.percentage = 0;
+        [DatabaseManager update:downloadingItem];
+    }
+    if (thisProgress - downloadingItem.percentage > 5) {
         NSLog(@"percent in downloadmanager= %f", progress);
-        previousProgress = progress;
-        downloadingItem.percentage = progress;
-        [downloadingItem save];
+        downloadingItem.percentage = thisProgress;
+        [DatabaseManager update:downloadingItem];
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
     }
     float freeSpace = [ActionUtility getFreeDiskspace];
@@ -215,9 +248,11 @@
 
 - (void)stopDownloading
 {
+    downloadingItem = nil;
     [downloadingOperation pause];
     [downloadingOperation cancel];
-    [[AppDelegate instance].padM3u8DownloadManager stopDownloading];
+    downloadingOperation = nil;
+    [padM3u8DownloadManager stopDownloading];
 }
 
 - (float)getFreeDiskspace

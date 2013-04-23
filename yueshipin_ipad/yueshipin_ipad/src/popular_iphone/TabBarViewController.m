@@ -14,12 +14,17 @@
 #import "IphoneMovieDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
+#import "iphoneDownloadViewController.h"
+#import "RespForWXRootViewController.h"
+#import "CustomNavigationViewControllerPortrait.h"
+#import "CacheUtility.h"
+#import "DownLoadManager.h"
+
 @interface TabBarViewController ()
 
 @end
 
 @implementation TabBarViewController
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,6 +32,7 @@
         // Custom initialization
         
         allListViewController *allListview = [[allListViewController alloc] init];
+        //RespForWXRootViewController *allListview = [[RespForWXRootViewController alloc] init];
         UINavigationController *allListNav = [[UINavigationController alloc] initWithRootViewController:allListview];
         [allListNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
        
@@ -38,25 +44,51 @@
         UINavigationController *mineNav = [[UINavigationController alloc] initWithRootViewController:mineview];
         [mineNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
         
+        //init downLoad viewController
+        IphoneDownloadViewController * downloadCtrl = [[IphoneDownloadViewController alloc] init];
+        UINavigationController * downLoadNavCtrl = [[UINavigationController alloc] initWithRootViewController:downloadCtrl];
+        [downLoadNavCtrl.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"] forBarMetrics:UIBarMetricsDefault];
+        
         UIImage *tabBackground = [[UIImage imageNamed:@"tab_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
         [[UITabBar appearance] setBackgroundImage:tabBackground];
         [[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tab_bg_zhong_212.png"]];
-        self.viewControllers = [NSArray arrayWithObjects:allListNav,sortNav,mineNav, nil];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEDAN];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEBANG];
+        self.viewControllers = [NSArray arrayWithObjects:sortNav,allListNav,downLoadNavCtrl,mineNav, nil];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEDAN];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEBANG];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:MINE];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:MINE];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:XIAZAI];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         self.tabBar.selectedImageTintColor = [UIColor whiteColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentView:) name:@"push_notification" object:nil];
         
+        [self setBadgeValue];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(presentView:) name:@"push_notification" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setBadgeValue) name:@"SET_WARING_NUM" object:nil];
     }
     return self;
 }
 
+-(void)setBadgeValue{
+    int count = [DownLoadManager downloadTaskCount];
+    if (count > 0) {
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
+        
+    }
+    else{
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:nil];
+    }
+
+    
+}
 -(void)presentView:(NSNotification *)notification{
     NSDictionary *infoDic = [notification userInfo];
     NSString *type = [infoDic objectForKey:@"prod_type"];
@@ -65,14 +97,14 @@
             IphoneMovieDetailViewController *iphoneMovieDetailViewController = [[IphoneMovieDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             iphoneMovieDetailViewController.infoDic = [NSMutableDictionary dictionaryWithDictionary:infoDic];
             iphoneMovieDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:iphoneMovieDetailViewController] animated:YES completion:nil];
             break;
         }
         case 2 :{
             TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             tvDetailViewController.infoDic = infoDic;
             tvDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
             
             break;
         }
@@ -80,7 +112,7 @@
             TVDetailViewController *tvDetailViewController = [[TVDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             tvDetailViewController.infoDic = infoDic;
             tvDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:tvDetailViewController] animated:YES completion:nil];
             
             break;
         }
@@ -88,7 +120,7 @@
             IphoneShowDetailViewController *iphoneShowDetailViewController = [[IphoneShowDetailViewController alloc] initWithStyle:UITableViewStylePlain];
             iphoneShowDetailViewController.infoDic = infoDic;
             iphoneShowDetailViewController.isNotification = YES;
-            [self presentViewController:[[UINavigationController alloc] initWithRootViewController:iphoneShowDetailViewController] animated:YES completion:nil];
+            [self presentViewController:[[CustomNavigationViewControllerPortrait alloc] initWithRootViewController:iphoneShowDetailViewController] animated:YES completion:nil];
             break;
         }
         default:
