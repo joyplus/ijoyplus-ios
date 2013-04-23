@@ -16,9 +16,9 @@
     NSString *prodId_;
     NSMutableArray *itemArr_;
     NSURL *imageUrl_;
-    NSMutableArray *progressArr_;
-    NSMutableArray *progressLabelArr_;
-    NSMutableArray *statusImgArr_;
+    
+    NSMutableDictionary *progressLabelDic_;
+    NSMutableDictionary *progressViewDic_;
     DownLoadManager *downLoadManager_;
 }
 
@@ -27,7 +27,6 @@
 @property (nonatomic, strong)NSString *prodId;
 @property (nonatomic, strong)NSMutableArray *itemArr;
 @property (nonatomic, strong)NSURL *imageUrl;
-@property (nonatomic, strong)NSMutableArray *progressArr;
-@property (nonatomic, strong)NSMutableArray *progressLabelArr;
-@property (nonatomic, strong)NSMutableArray *statusImgArr;
+@property (nonatomic, strong) NSMutableDictionary *progressViewDic;
+@property (nonatomic, strong) NSMutableDictionary *progressLabelDic;
 @end

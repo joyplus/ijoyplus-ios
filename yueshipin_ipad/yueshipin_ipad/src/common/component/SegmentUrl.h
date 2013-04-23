@@ -6,10 +6,12 @@
 //  Copyright (c) 2013年 joyplus. All rights reserved.
 //
 
-#import "SQLitePersistentObject.h"
+#import "DatabaseObject.h"
+@interface SegmentUrl : DatabaseObject
 
-@interface SegmentUrl : SQLitePersistentObject
+- (id)init;
 
+@property (nonatomic) int rowId;
 @property (nonatomic, strong)NSString *itemId;
 @property (nonatomic, strong)NSString *subitemId;
 @property (nonatomic, strong)NSString *url;

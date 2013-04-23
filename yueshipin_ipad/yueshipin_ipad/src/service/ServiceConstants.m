@@ -93,6 +93,8 @@ NSString *const kPathProgramHiddenWatch = @"/joyplus-service/index.php/program/h
 
 NSString *const kPathProgramView = @"/joyplus-service/index.php/program/view";
 
+NSString *const kPathProgramReviews = @"/joyplus-service/index.php/program/reviews";
+
 NSString *const kPathProgramViewRecommend = @"/joyplus-service/index.php/program/viewRecommend";
 
 NSString *const kPathProgramInvalid = @"/joyplus-service/index.php/program/invalid";
@@ -107,6 +109,7 @@ NSString *const kPathUserSupport = @"/joyplus-service/index.php/user/supports";
 NSString *const kPathAddItem = @"/joyplus-service/index.php/top/addItem";
 NSString *const kPathNew = @"/joyplus-service/index.php/top/new";
 NSString *const kPathTvTops = @"/joyplus-service/index.php/tv_tops";
+NSString *const kPathComicTops = @"/joyplus-service/index.php/cart_tops";
 NSString *const kPathMoiveTops = @"/joyplus-service/index.php/movie_tops";
 NSString *const kPathShowTops = @"/joyplus-service/index.php/show_tops";
 NSString *const kPathLunbo = @"/joyplus-service/index.php/lunbo";
@@ -122,3 +125,5 @@ NSString *const kPathHiddenPlay =  @"/joyplus-service/index.php/program/hiddenPl
 NSString *const kPathRemoveAllPlay =  @"/joyplus-service/index.php/user/clearPlayHistories";
 NSString *const kPathShowTopItems =  @"/joyplus-service/index.php/show_top_items";
 NSString *const kPathRecordPlay =  @"/joyplus-service/index.php/program/recordPlay";
+NSString *const kPathFilter = @"/joyplus-service/index.php/filter";
+NSString *const KPathCheckBinding = @"/api/check_binding";

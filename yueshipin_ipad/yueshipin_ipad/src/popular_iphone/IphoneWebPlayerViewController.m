@@ -13,6 +13,8 @@
 #import "ContainerUtility.h"
 #import "AFServiceAPIClient.h"
 #import "ServiceConstants.h"
+#import "AppDelegate.h"
+#import "CommonMotheds.h"
 @interface IphoneWebPlayerViewController ()
 
 @end
@@ -28,7 +30,8 @@
 @synthesize playBackTime = playBackTime_;
 @synthesize webUrlSource = webUrlSource_;
 @synthesize subnameArray;
-
+@synthesize isPlayFromRecord = isPlayFromRecord_;
+@synthesize continuePlayInfo = continuePlayInfo_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -47,27 +50,28 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 40, 30);
+    backButton.frame = CGRectMake(0, 0, 49, 30);
     backButton.backgroundColor = [UIColor clearColor];
-    [backButton setImage:[UIImage imageNamed:@"top_return_common.png"]forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
+    [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
-    [self initDataSource];
+    if (!isPlayFromRecord_) {
+         [self initDataSource];
+    }
+   
     [self initWebView];
-    [self initPlayerView];
-    [self recordPlayStatics];
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+        [[UIApplication sharedApplication] openURL:webUrl_];
+        return;
+    }
+
+   [self initPlayerView];
+    [AppDelegate instance].isInPlayView = YES;
+  
 }
 
-- (void)recordPlayStatics
-{
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", nil];
-    [[AFServiceAPIClient sharedClient] postPath:kPathRecordPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSLog(@"succeed!");
-    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
-    }];
-}
 
 -(void)viewWillAppear:(BOOL)animated{
  [self.navigationController setNavigationBarHidden:NO animated:NO];
@@ -103,23 +107,28 @@
 }
 
 -(void)initPlayerView{
-    if (subnameArray == nil) {
-        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for (NSDictionary *oneEpisode in episodesArr_) {
-            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-            [subnameArray addObject:tempName];
-        }
-    }
+   
     IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
-    iphoneAVPlayerViewController.nameStr = nameStr_;
-    iphoneAVPlayerViewController.episodesArr = episodesArr_;
-    iphoneAVPlayerViewController.playNum = playNum;
-    iphoneAVPlayerViewController.subnameArray = subnameArray;
+    
+    if (!isPlayFromRecord_) {
+        iphoneAVPlayerViewController.nameStr = nameStr_;
+        iphoneAVPlayerViewController.episodesArr = episodesArr_;
+        iphoneAVPlayerViewController.playNum = playNum;
+        iphoneAVPlayerViewController.subnameArray = subnameArray;
+        
+        iphoneAVPlayerViewController.lastPlayTime =  CMTimeMakeWithSeconds(playBackTime_.doubleValue, NSEC_PER_SEC);
+        iphoneAVPlayerViewController.webPlayUrl = webUrl_.absoluteString;
+        iphoneAVPlayerViewController.webUrlSource = webUrlSource_;
+    }
+    else{
+        NSNumber *playBackTime = (NSNumber *)[continuePlayInfo_ objectForKey:@"playback_time"];
+        iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(playBackTime.doubleValue, NSEC_PER_SEC);
+    }
+    
     iphoneAVPlayerViewController.videoType = videoType_;
     iphoneAVPlayerViewController.prodId = prodId_;
-    iphoneAVPlayerViewController.webPlayUrl = webUrl_.absoluteString;
-    iphoneAVPlayerViewController.lastPlayTime =  CMTimeMakeWithSeconds(playBackTime_.doubleValue, NSEC_PER_SEC);
-    iphoneAVPlayerViewController.webUrlSource = webUrlSource_;
+    iphoneAVPlayerViewController.continuePlayInfo = continuePlayInfo_;
+    iphoneAVPlayerViewController.isPlayFromRecord = isPlayFromRecord_;
     [self.navigationController pushViewController:iphoneAVPlayerViewController animated:NO];
 }
 
@@ -132,10 +141,10 @@
 {
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
     NSString *tempPlayType = @"2";
-    NSString *subname = @"";
-    if (videoType_ != 1 && playNum < subnameArray.count) {
-        subname = [subnameArray objectAtIndex:playNum];
-    }
+    NSString *subname = [NSString stringWithFormat:@"%d",(playNum+1)];
+//    if (videoType_ != 1 && playNum < subnameArray.count) {
+//        subname = [subnameArray objectAtIndex:playNum];
+//    }
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", [NSNumber numberWithInt:0], @"duration", webUrl_, @"video_url", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
@@ -144,6 +153,7 @@
     }];
     
 }
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
     return toInterfaceOrientation == /*UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == */UIInterfaceOrientationLandscapeRight;
@@ -155,8 +165,10 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)dealloc{
+    [AppDelegate instance].isInPlayView = NO;
     webView_.delegate = nil;
     [subnameArray removeAllObjects];
     subnameArray = nil;
+    
 }
 @end

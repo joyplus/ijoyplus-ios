@@ -10,4 +10,10 @@
 
 @implementation SubdownloadItem
 @synthesize subitemId;
+
+- (id)init
+{
+    self = [super init];
+    return self;
+}
 @end

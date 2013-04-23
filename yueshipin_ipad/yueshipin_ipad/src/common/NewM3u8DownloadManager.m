@@ -14,6 +14,7 @@
 #import "DownloadUrlFinder.h"
 #import "SegmentUrl.h"
 #import "StringUtility.h"
+#import "DatabaseManager.h"
 
 @interface NewM3u8DownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -35,12 +36,12 @@
 {
     displayNoSpaceFlag = NO;
     downloadingItem = item;    
-    if (item.url) {
+    if (![StringUtility stringIsEmpty:item.url]) {
         [AppDelegate instance].currentDownloadingNum++;
         item.downloadStatus = @"start";
-        [item save];
+        [DatabaseManager update:item];
         downloadingItem = item;
-        NSArray *segmentUrlArray = [SegmentUrl findByCriteria: [NSString stringWithFormat: @"WHERE item_id = %@", item.itemId]];
+        NSArray *segmentUrlArray = [DatabaseManager findByCriteria:SegmentUrl.class queryString:[NSString stringWithFormat: @"WHERE itemId = %@", item.itemId]];
         if (segmentUrlArray.count > 0 && ![StringUtility stringIsEmpty:item.fileName]) {
             segmentIndex = item.isDownloadingNum;
             if (segmentIndex < segmentUrlArray.count) {
@@ -48,9 +49,7 @@
             }
         } else {
             if (segmentUrlArray.count > 0) {
-                for (SegmentUrl *segUrl in segmentUrlArray) {
-                    [segUrl deleteObject];
-                }
+                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
             }
             segmentIndex = 0;
             // download m3u8 playlist
@@ -94,11 +93,10 @@
     }
     [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file to %@", filePath);
-        [self performSelectorInBackground:@selector(generatePlaylistFile:) withObject:filePath];        
+        [self performSelectorInBackground:@selector(generatePlaylistFile:) withObject:filePath];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
-        [operation cancel];
-        [queue cancelAllOperations];
+        [self stopDownloading];
     }];
     [downloadingOperation setProgressiveDownloadProgressBlock:nil];
     previousProgress = 0;
@@ -133,7 +131,7 @@
                 NSRange lastRange = [stringContent rangeOfString:@"," options:NSBackwardsSearch];
                 double segmentDuration = 0;
                 if (lastRange.length == 0) {
-                    segmentDuration = [[stringContent substringFromIndex:startRange.location] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
+                    segmentDuration = [[stringContent substringFromIndex:startRange.location+1] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
                 } else if(lastRange.location - startRange.location > 1){
                     segmentDuration = [[stringContent substringWithRange:NSMakeRange(startRange.location+1, lastRange.location-startRange.location-1)] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]].doubleValue;
                 }
@@ -181,16 +179,15 @@
         }
         segUrl.url = [videoArray objectAtIndex:i];
         segUrl.seqNum = i;
-        [segUrl save];
         [segmentUrlArray addObject:segUrl];
     }
-    [item save];
+    [DatabaseManager saveInBatch:segmentUrlArray];
+    [DatabaseManager update:item];
     [self downloadVideoSegment:segmentUrlArray];
 }
 
 - (void)downloadVideoSegment:(NSArray *)segmentUrlArray
 {
-    DownloadItem *item = downloadingItem;
     queue=[[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount:1];
     do {
@@ -200,10 +197,10 @@
         
         NSString *segmentName = [url lastPathComponent];
         NSString *filePath;
-        if (item.type == 1) {
-            filePath = [NSString stringWithFormat:@"%@/%@/%i_%@", DocumentsDirectory, item.itemId, segmentIndex, segmentName];
+        if (downloadingItem.type == 1) {
+            filePath = [NSString stringWithFormat:@"%@/%@/%i_%@", DocumentsDirectory, downloadingItem.itemId, segmentIndex, segmentName];
         } else {
-            filePath = [NSString stringWithFormat:@"%@/%@/%@/%i_%@", DocumentsDirectory, item.itemId, ((SubdownloadItem *)item).subitemId, segmentIndex, segmentName];
+            filePath = [NSString stringWithFormat:@"%@/%@/%@/%i_%@", DocumentsDirectory, downloadingItem.itemId, ((SubdownloadItem *)downloadingItem).subitemId, segmentIndex, segmentName];
         }
         AFDownloadRequestOperation *segmentDownloadingOp = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
         segmentDownloadingOp.downloadingSegmentIndex = segmentIndex;
@@ -211,23 +208,28 @@
             if (ENVIRONMENT == 0) {
                 NSLog(@"Successfully downloaded file to %@", filePath);
             }
-            item.percentage = (int)((segmentDownloadingOp.downloadingSegmentIndex*1.0 / segmentUrlArray.count) * 100);
-            item.isDownloadingNum = segmentDownloadingOp.downloadingSegmentIndex;
+            if(downloadingItem.class == DownloadItem.class) {
+                downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
+            } else if (downloadingItem.class == SubdownloadItem.class) {
+                downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", downloadingItem.itemId, ((SubdownloadItem *)downloadingItem).subitemId]];
+            }
+            downloadingItem.percentage = (int)((segmentDownloadingOp.downloadingSegmentIndex*1.0 / segmentUrlArray.count) * 100);
+            downloadingItem.isDownloadingNum = segmentDownloadingOp.downloadingSegmentIndex;
             if (segmentDownloadingOp.downloadingSegmentIndex % 5 == 0 || segmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {
-                [item save];
+                [DatabaseManager update:downloadingItem];
             }
             if (segmentDownloadingOp.downloadingSegmentIndex == segmentUrlArray.count) {//All segments are downloaded successfully.
-                if(item.type == 1){
+                if(downloadingItem.type == 1){
                     // will call NewDownloadManager or DownloadViewController
-                    [delegate downloadSuccess:item.itemId];
+                    [delegate downloadSuccess:downloadingItem.itemId];
                 } else {
-                    [subdelegate downloadSuccess:item.itemId suboperationId:((SubdownloadItem *)item).subitemId];
+                    [subdelegate downloadSuccess:downloadingItem.itemId suboperationId:((SubdownloadItem *)downloadingItem).subitemId];
                 }
             } else {
-                if(item.type == 1){
-                    [delegate updateProgress:item.itemId progress:item.percentage/100.0];
+                if(downloadingItem.type == 1){
+                    [delegate updateProgress:downloadingItem.itemId progress:downloadingItem.percentage/100.0];
                 } else {
-                    [subdelegate updateProgress:item.itemId suboperationId:((SubdownloadItem *)item).subitemId progress:item.percentage/100.0];
+                    [subdelegate updateProgress:downloadingItem.itemId suboperationId:((SubdownloadItem *)downloadingItem).subitemId progress:downloadingItem.percentage/100.0];
                 }
             }
             float freeSpace = [ActionUtility getFreeDiskspace];
@@ -260,20 +262,21 @@
 - (void)setDelegate:(id<DownloadingDelegate>)newdelegate
 {
     delegate = newdelegate;
-    downloadingOperation.downloadingDelegate = newdelegate;
 }
 
 - (void)setSubdelegate:(id<SubdownloadingDelegate>)newdelegate
 {
     subdelegate = newdelegate;
-    downloadingOperation.subdownloadingDelegate = newdelegate;
 }
 
 - (void)stopDownloading
 {
-    [queue cancelAllOperations];
+    downloadingItem = nil;
     [downloadingOperation pause];
     [downloadingOperation cancel];
+    downloadingOperation = nil;
+    [queue cancelAllOperations];
+    queue = nil;
 }
 
 @end

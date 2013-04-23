@@ -179,6 +179,9 @@
         AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
         viewController.videoWebViewControllerDelegate = self;
         viewController.currentNum = self.currentNum;
+        if (videoHttpUrlArray.count > 0) {            
+            viewController.videoHttpUrl = [videoHttpUrlArray objectAtIndex:0];
+        }
         viewController.video = video;
         viewController.type = self.type;
         viewController.prodId = self.prodId;

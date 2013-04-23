@@ -21,6 +21,8 @@
 #import "IphoneDownloadViewController.h"
 #import "DownLoadManager.h"
 #import "CommonMotheds.h"
+#import "DownLoadManager.h"
+#import "DimensionalCodeScanViewController.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 #define TV_TYPE 9000
@@ -63,7 +65,7 @@
 
 
 -(void)loadData{
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
@@ -103,50 +105,51 @@
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 60, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"悦视频"];
+    [titleText setText:@"悦单"];
     self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 40, 30);
+    leftButton.frame = CGRectMake(0, 0, 49, 30);
     leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage imageNamed:@"top_search_common.png"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
+    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
-    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
-    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
-    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 40, 30);
-   [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
-    tapGesture.numberOfTapsRequired = 1;
-    tapGesture.numberOfTouchesRequired = 1;
-    [customNavigationButtonView_ addGestureRecognizer:tapGesture];
-    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
-    int num = 0;
-    if (numStr != nil) {
-        num = [numStr intValue];
-    }
-    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
-    customNavigationButtonView_.badgeView.hidden = NO;
-    if (num == 0) {
-         customNavigationButtonView_.badgeView.badgeText = nil;
-    }
-    else{
-         customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
-    }
-    
-    customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
-    
-    
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+//    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
+//    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
+//    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 49, 30);
+//   [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
+//    tapGesture.numberOfTapsRequired = 1;
+//    tapGesture.numberOfTouchesRequired = 1;
+//    [customNavigationButtonView_ addGestureRecognizer:tapGesture];
+//    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
+//    int num = 0;
+//    if (numStr != nil) {
+//        num = [numStr intValue];
+//    }
+//    customNavigationButtonView_.badgeView.hidden = NO;
+//        
+//    customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
+//    
+//    
+//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
+//    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setWarningNum) name:@"SET_WARING_NUM" object:nil];
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
     self.tableList.dataSource = self;
@@ -166,8 +169,6 @@
         [refreshHeaderView_ refreshLastUpdatedDate];
     }
    
-    
-    
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -175,27 +176,20 @@
     pullToRefreshManager_ = nil;
     refreshHeaderView_ = nil;
 }
--(void)setWarningNum{
-     NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
-    int num = 0;
-    if (numStr != nil) {
-        num = [numStr intValue];
-    }
-    if (num == 0) {
-        customNavigationButtonView_.warningNumber = 0;
-        customNavigationButtonView_.badgeView.badgeText = @"";
-        customNavigationButtonView_.badgeView.hidden = YES;
-    }
-    else {
-        customNavigationButtonView_.badgeView.hidden = NO;
-        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",num];
-        [customNavigationButtonView_.badgeView setNeedsLayout];
-        customNavigationButtonView_.warningNumber = 0;
-    }
-    
-     
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    return;
+    int count = [DownLoadManager downloadTaskCount];
+    if (count == 0) {
+        customNavigationButtonView_.badgeView.badgeText = nil;
+    }
+    else{
+        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",count];
+    }
+    [customNavigationButtonView_.badgeView setNeedsLayout];
 }
+
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
@@ -204,14 +198,24 @@
 }
 
 -(void)setting:(id)sender{
-//    customNavigationButtonView_.warningNumber = 0;
-//    customNavigationButtonView_.badgeView.badgeText = @"";
-//    customNavigationButtonView_.badgeView.hidden = YES;
-//    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",0]];
+    UIImageView * scanView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"scan_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 0, 342.5, 0)]];
+    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 44));
+    scanView.backgroundColor = [UIColor clearColor];
     
-    IphoneDownloadViewController *downloadViewController = [[IphoneDownloadViewController alloc] init];
-    downloadViewController.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:downloadViewController animated:YES];
+    DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
+    reader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
+    reader.showsZBarControls = NO;
+    reader.showsHelpOnFail = NO;
+    reader.showsCameraControls = NO;
+    reader.cameraOverlayView = scanView;
+    ZBarImageScanner *scanner = reader.scanner;
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    reader.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:reader
+                                         animated:YES];
 }
 
 
@@ -272,7 +276,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSDictionary *item = [self.listArray objectAtIndex:indexPath.row];
     ListDetailViewController *listDetailViewController = [[ListDetailViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -335,7 +339,7 @@
 }
 
 - (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert];
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

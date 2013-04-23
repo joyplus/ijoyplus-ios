@@ -41,11 +41,10 @@
 #import "StackScrollViewController.h"
 #import "CommonHeader.h"
 #import "VideoDetailViewController.h"
-#define LEFT_MENU_DIPLAY_WIDTH 150
 
 @class UIViewExt;
 
-@interface RootViewController : UIViewController <UITextViewDelegate> {
+@interface RootViewController : UIViewController <UITextViewDelegate, UITextFieldDelegate> {
 	UIViewExt* rootView;
 	UIView* leftMenuView;
 	UIView* rightSlideView;
@@ -64,6 +63,7 @@
 @property (nonatomic, strong) NSString *prodId;
 @property (nonatomic, strong) NSString *prodUrl;
 @property (nonatomic, strong) NSString *prodName;
+@property (nonatomic, strong) NSString *prodType;
 @property (nonatomic, weak)id<VideoDetailViewControllerDelegate>videoDetailDelegate;
 - (void)showSuccessModalView:(int)closeTime;
 - (void)showFailureModalView:(int)closeTime;
@@ -75,4 +75,6 @@
 - (void)showShowDownloadView:(NSString *)downloadingProdid title:(NSString *)title episodeArray:(NSArray *)episodeArray;
 - (void)showModalView:(UIImage *)image closeTime:(int)closeTime;
 - (void)showIntroModalView:(NSString *)introScreenKey introImage:(UIImage *)introImage;
+- (void)showReportPopup:(NSString *)prodId;
+- (void)addTopView:(UIView *)tView;
 @end

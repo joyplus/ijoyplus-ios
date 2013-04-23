@@ -10,11 +10,10 @@
 #import "CommonHeader.h"
 #import "CommentListViewController.h"
 #import "DownloadUrlFinder.h"
-
-#define DEFAULT_POSOTION_Y 585
+#import <Parse/Parse.h>
+#define DEFAULT_POSOTION_Y 530
 
 @interface ShowDetailViewController (){
-    NSMutableArray *commentArray;
     CommentListViewController *commentListViewController;
     UIButton *introBtn;
     float introContentHeight;
@@ -28,7 +27,7 @@
 @end
 
 @implementation ShowDetailViewController
-
+@synthesize expectbtn;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -36,8 +35,6 @@
 }
 
 - (void)viewDidUnload {
-    [commentArray removeAllObjects];
-    commentArray = nil;
     commentListViewController = nil;
     introBtn = nil;
     tapGesture = nil;
@@ -45,14 +42,9 @@
     [self setBgScrollView:nil];
     [self setPlaceholderImage:nil];
     [self setFilmImage:nil];
-    [self setTitleImage:nil];
     [self setTitleLabel:nil];
-    [self setScoreLabel:nil];
-    [self setDoulanLogo:nil];
     [self setActorLabel:nil];
     [self setActorName1Label:nil];
-    [self setActorName2Label:nil];
-    [self setActorName3Label:nil];
     [self setPlayLabel:nil];
     [self setPlayTimeLabel:nil];
     [self setRegionLabel:nil];
@@ -62,22 +54,19 @@
     [self setPlayBtn:nil];
     [self setShareBtn:nil];
     [self setAddListBtn:nil];
-    [self setLineImage:nil];
     [self setIntroImage:nil];
-    [self setIntroBgImage:nil];
     [self setIntroContentTextView:nil];
     [self setCommentImage:nil];
-    [self setNumberLabel:nil];
-    [self setCommentBtn:nil];
     [self setDingNumberImage:nil];
     [self setCollectioNumber:nil];
-    [self setPlayRoundBtn:nil];
     [self setDingNumberLabel:nil];
     [self setCollectionNumberLabel:nil];
     [self setCloseBtn:nil];
     [self setPreviousShowBtn:nil];
     [self setNextShowBtn:nil];
     [self setDownloadBtn:nil];
+    [self setReportLabel:nil];
+    [self setShareLabel:nil];
     [super viewDidUnload];
 }
 
@@ -98,112 +87,116 @@
     self.type = 3;
     umengPageName = SHOW_DETAIL;
     
-    self.bgScrollView.frame = CGRectMake(0, 260, self.view.frame.size.width, self.view.frame.size.height);
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height*1.5)];
+    self.bgScrollView.frame = CGRectMake(0, 228, self.view.frame.size.width, self.view.frame.size.height - 270);
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height)];
     
-    self.closeBtn.frame = CGRectMake(465, 20, 40, 42);
+    self.closeBtn.frame = CGRectMake(455, 0, 50, 50);
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [self.closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [self.closeBtn addTarget:self action:@selector(closeBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.filmImage.frame = CGRectMake(LEFT_WIDTH+5, 84, 205, 300);
-    self.filmImage.image = [UIImage imageNamed:@"video_placeholder"];
-    
-    self.placeholderImage.frame = CGRectMake(LEFT_WIDTH, 78, 217, 312);
+    self.placeholderImage.frame = CGRectMake(LEFT_WIDTH, 78, 219, 312);
     self.placeholderImage.image = [UIImage imageNamed:@"movie_frame"];
     
-    self.playRoundBtn.frame = CGRectMake(0, 0, 63, 63);
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn"] forState:UIControlStateNormal];
-    [self.playRoundBtn setBackgroundImage:[UIImage imageNamed:@"play_btn_pressed"] forState:UIControlStateHighlighted];
-    [self.playRoundBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
-    self.playRoundBtn.center = self.filmImage.center;
-    
-    self.titleImage.frame = CGRectMake(LEFT_WIDTH, 35, 62, 26);
-    self.titleImage.image = [UIImage imageNamed:@"detail_title"];
-    
-    self.titleLabel.frame = CGRectMake(278, 85, 200, 20);
-    self.titleLabel.font = CMConstants.titleFont;
-    
-    self.scoreLabel.frame = CGRectMake(280, 110, 50, 20);
-    self.doulanLogo.frame = CGRectMake(325, 113, 15, 15);
-    self.doulanLogo.image = [UIImage imageNamed:@"douban"];
-    
-    self.playBtn.frame = CGRectMake(280, 120, 185, 40);
-    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
-    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
-    [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.actorLabel.frame = CGRectMake(280, 180, 80, 15);
+    self.titleLabel.frame = CGRectMake(268, 85, 200, 30);
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.titleLabel.textColor = CMConstants.textColor;
+    self.actorLabel.frame = CGRectMake(270, 140, 80, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(355, 180, 140, 15);
+    self.actorName1Label.frame = CGRectMake(350, 140, 140, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
     //    self.actorName2Label.frame = CGRectMake(345, 235, 100, 15);
     //    self.actorName2Label.textColor = CMConstants.grayColor;
     //    self.actorName3Label.frame = CGRectMake(345, 260, 100, 15);
     //    self.actorName3Label.textColor = CMConstants.grayColor;
-    self.playLabel.frame = CGRectMake(280, 210, 80, 15);
+    self.playLabel.frame = CGRectMake(270, 170, 80, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(325, 210, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(310, 170, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(280, 240, 50, 15);
+    self.regionLabel.frame = CGRectMake(270, 200, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(325, 240, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(310, 200, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
-    self.dingNumberImage.frame = CGRectMake(280, 360, 75, 24);
-    self.dingNumberImage.image = [UIImage imageNamed:@"pushinguser"];
-    self.dingNumberLabel.frame = CGRectMake(295, 360, 40, 24);
+    self.playBtn.frame = CGRectMake(265, 280, 100, 50);
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play"] forState:UIControlStateNormal];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_disabled"] forState:UIControlStateDisabled];
+    [self.playBtn setBackgroundImage:[UIImage imageNamed:@"play_pressed"] forState:UIControlStateHighlighted];
+    [self.playBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
     
-    self.collectioNumber.frame = CGRectMake(380, 360, 84, 24);
-    self.collectioNumber.image = [UIImage imageNamed:@"collectinguser"];
-    self.collectionNumberLabel.frame = CGRectMake(395, 360, 40, 24);
+    self.expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.expectbtn.frame = CGRectMake(260, 280, 100, 50);
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg.png"] forState:UIControlStateNormal];
+    [self.expectbtn setBackgroundImage:[UIImage imageNamed:@"xiangkan_bg_pressed.png"] forState:UIControlStateHighlighted];
+    [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan"] forState:UIControlStateNormal];
+    [self.expectbtn setImage:[UIImage imageNamed:@"xiangkan_pressed"] forState:UIControlStateHighlighted];
+    [self.expectbtn setImageEdgeInsets:UIEdgeInsetsMake(17, 10, 17, 35)];
+    [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
+    self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
+    [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+    [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
+    [self.bgScrollView addSubview:self.expectbtn];
+    self.expectbtn.hidden = YES;
     
-    self.dingBtn.frame = CGRectMake(LEFT_WIDTH, 405, 55, 34);
-    [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];
-    [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push_pressed"] forState:UIControlStateHighlighted];
-    [self.dingBtn addTarget:self action:@selector(dingBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.collectionBtn.frame = CGRectMake(LEFT_WIDTH + 60, 405, 74, 34);
-    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
-    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
-    [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.shareBtn.frame = CGRectMake(LEFT_WIDTH + 140, 405, 74, 34);
-    [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-    [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
-    [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.downloadBtn.frame = CGRectMake(LEFT_WIDTH + 240, 405, 76, 34);
+    self.downloadBtn.frame = CGRectMake(376, 280, 100, 50);
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download"] forState:UIControlStateNormal];
     [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"download_pressed"] forState:UIControlStateHighlighted];
     [self.downloadBtn addTarget:self action:@selector(downloadBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    //    self.addListBtn.frame = CGRectMake(290, 405, 104, 34);
-    //    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing"] forState:UIControlStateNormal];
-    //    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"listing_pressed"] forState:UIControlStateHighlighted];
-    //    [self.addListBtn addTarget:self action:@selector(addListBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    self.addListBtn.frame = CGRectMake(260, 340, 44, 44);
+    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"report_ipad"] forState:UIControlStateNormal];
+    [self.addListBtn setBackgroundImage:[UIImage imageNamed:@"report_ipad_pressed"] forState:UIControlStateHighlighted];
+    [self.addListBtn addTarget:self action:@selector(reportBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
-    self.lineImage.frame = CGRectMake(LEFT_WIDTH, 450, 430, 2);
-    self.lineImage.image = [UIImage imageNamed:@"dividing"];
+    self.dingBtn.frame = CGRectMake(260 + 60, 340, 44, 44);
+    [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push"] forState:UIControlStateNormal];
+    [self.dingBtn setBackgroundImage:[UIImage imageNamed:@"push_pressed"] forState:UIControlStateHighlighted];
+    [self.dingBtn addTarget:self action:@selector(dingBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, 460, 45, 20);
+    self.collectionBtn.frame = CGRectMake(260 + 120, 340, 44, 44);
+    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
+    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
+    [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.shareBtn.frame = CGRectMake(260 + 180, 340, 44, 44);
+    [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    [self.shareBtn setBackgroundImage:[UIImage imageNamed:@"share_pressed"] forState:UIControlStateHighlighted];
+    [self.shareBtn addTarget:self action:@selector(shareBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.reportLabel.frame = CGRectMake(260, 365, 40, 20);
+    self.reportLabel.center = CGPointMake(self.addListBtn.center.x, self.reportLabel.center.y);
+    self.reportLabel.textColor = CMConstants.grayColor;
+    
+    self.dingNumberLabel.frame = CGRectMake(260, 365, 60, 20);
+    self.dingNumberLabel.center = CGPointMake(self.dingBtn.center.x, self.reportLabel.center.y);
+    self.dingNumberLabel.textColor = CMConstants.grayColor;
+    
+    self.collectionNumberLabel.frame = CGRectMake(260, 365, 60, 20);
+    self.collectionNumberLabel.center = CGPointMake(self.collectionBtn.center.x, self.reportLabel.center.y);
+    self.collectionNumberLabel.textColor = CMConstants.grayColor;
+    
+    self.shareLabel.frame = CGRectMake(260, 365, 40, 20);
+    self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
+    self.shareLabel.textColor = CMConstants.grayColor;
+    
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, 415, 45, 20);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
-    self.introBgImage.frame = CGRectMake(LEFT_WIDTH, 490, 430, 100);
-    self.introBgImage.image = [[UIImage imageNamed:@"brief"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5)];
-    
-    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH + 10, 490, 420, 100);
+    self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 445, 430, 100);
+    self.introContentTextView.textColor = CMConstants.grayColor;
+    self.introContentTextView.layer.borderWidth = 1;
+    self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [self.introContentTextView addGestureRecognizer:tapGesture];
-    
-    commentArray = [[NSMutableArray alloc]initWithCapacity:10];
-    
+       
     introBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
-    introBtn.frame = CGRectMake(LEFT_WIDTH + 413, self.introContentTextView.frame.origin.y + 90, 14, 9);
+    introBtn.frame = CGRectMake(LEFT_WIDTH + 415, self.introContentTextView.frame.origin.y + 90, 14, 9);
     [introBtn addTarget:self action:@selector(introBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:introBtn];
     
@@ -212,6 +205,8 @@
     showListView.backgroundColor = [UIColor clearColor];
     [showListView setPagingEnabled:YES];
     [self.bgScrollView addSubview:showListView];
+    
+    [self.commentImage setHidden:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -228,17 +223,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    if ([@"0" isEqualToString:[AppDelegate instance].showVideoSwitch] && self.downloadBtn.enabled) {
-        NSString *playWithDownload = [AppDelegate instance].playWithDownload;
-        if (![playWithDownload isEqualToString:@"1"]) {
-            [AppDelegate instance].playWithDownload = @"1";
-            [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download_2"]];
-            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_PLAY_INTRO];
-            [[ContainerUtility sharedInstance] setAttribute:@"1" forKey:SHOW_DOWNLOAD_INTRO];
-        }
-    } else {
-        [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO introImage:[UIImage imageNamed:@"play_intro"]];
-    }
+    [[AppDelegate instance].rootViewController showIntroModalView:SHOW_PLAY_INTRO_WITH_DOWNLOAD introImage:[UIImage imageNamed:@"play_intro_with_download"]];
 }
 
 
@@ -249,7 +234,6 @@
         if(introExpand){
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, introContentHeight)];
-                self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, introContentHeight);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90 + introContentHeight - 100, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:introContentHeight - 100];
@@ -258,7 +242,6 @@
         } else {
             [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                 [self.introContentTextView setFrame:CGRectMake(self.introContentTextView.frame.origin.x, self.introContentTextView.frame.origin.y, self.introContentTextView.frame.size.width, 100)];
-                self.introBgImage.frame = CGRectMake(LEFT_WIDTH, self.introBgImage.frame.origin.y, self.introBgImage.frame.size.width, 100);
                 [introBtn setBackgroundImage:[UIImage imageNamed:@"more"] forState:UIControlStateNormal];
                 introBtn.frame = CGRectMake(introBtn.frame.origin.x, self.introContentTextView.frame.origin.y + 90, introBtn.frame.size.width, introBtn.frame.size.height);
                 [self repositElements:0];
@@ -315,11 +298,7 @@
         [[CacheUtility sharedCache] putInCache:key result:result];
         video = (NSDictionary *)[result objectForKey:@"show"];
         episodeArray = [video objectForKey:@"episodes"];
-        NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-        [commentArray removeAllObjects];
-        if(tempArray != nil && tempArray.count > 0){
-            [commentArray addObjectsFromArray:tempArray];
-        }
+        [self checkCanPlayVideo];
         [self calculateIntroContentHeight];
         if(introContentHeight < 100){
             [introBtn removeFromSuperview];
@@ -338,32 +317,35 @@
     if([StringUtility stringIsEmpty:url]){
         url = [video objectForKey:@"poster"];
     }
-    [self.filmImage setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    [self.filmImage setImageWithURL:[NSURL URLWithString:url]];
     
     self.titleLabel.text = [video objectForKey:@"name"];
-    self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    self.scoreLabel.textColor = CMConstants.scoreBlueColor;
     NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     self.actorName1Label.text = stars;
-    //    NSArray *starArray;
-    //    if([stars rangeOfString:@"/"].length > 0){
-    //        starArray = [stars componentsSeparatedByString:@"/"];
-    //    } else if([stars rangeOfString:@","].length > 0){
-    //        starArray = [stars componentsSeparatedByString:@","];
-    //    } else {
-    //        starArray = [stars componentsSeparatedByString:@" "];
-    //    }
-    //    if(starArray.count > 0)
-    //        self.actorName1Label.text = [((NSString *)[starArray objectAtIndex:0]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-    //    if(starArray.count > 1)
-    //        self.actorName2Label.text = [((NSString *)[starArray objectAtIndex:1]) stringByReplacingOccurrencesOfString:@" " withString:@""];
-    //    if(starArray.count > 2)
-    //        self.actorName3Label.text = [((NSString *)[starArray objectAtIndex:2]) stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (!self.canPlayVideo) {
+        self.playBtn.hidden = NO;
+        self.expectbtn.hidden = YES;
+        [self.downloadBtn setEnabled:NO];
+        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+    }
     
     self.regionNameLabel.text = [video objectForKey:@"area"];
     self.playTimeLabel.text = [video objectForKey:@"publish_date"];
-    self.dingNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"support_num"]];
-    self.collectionNumberLabel.text = [NSString stringWithFormat:@"%@", [video objectForKey:@"favority_num"]];
+    int dingNum = [[video objectForKey:@"support_num"] intValue];
+    if (dingNum >= 1000) {
+        self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", dingNum/1000.0];
+    } else {
+        self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
+    }
+    int collectioNum = [[video objectForKey:@"favority_num"] intValue];
+    if (collectioNum >= 1000) {
+        self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+        [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
+    } else {
+        [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
+        self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
+    }
 
     //在弹出窗口判断视频是否可以下载
 //    if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
@@ -384,29 +366,29 @@
 
 - (void)repositElements:(int)increasePositionY
 {
-    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 15;
-        if(episodeArray.count > 5){
-            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH,  positionY, 32, 161);
-            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 390 + 10,  positionY, 32, 161);
+    int positionY = DEFAULT_POSOTION_Y + increasePositionY + 25;
+        //if(episodeArray.count > 5)
+        {
+            self.previousShowBtn.frame = CGRectMake(LEFT_WIDTH - 22,  positionY, 64, 308.5);
+            self.nextShowBtn.frame = CGRectMake(LEFT_WIDTH + 388,  positionY, 64, 308.5);
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
+            [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disabled"] forState:UIControlStateDisabled];
+            [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.previousShowBtn.tag = 9001;
+            
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
+            [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disabled"] forState:UIControlStateDisabled];
+            [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+            self.nextShowBtn.tag = 9002;
         }
         showListView.center = CGPointMake(showListView.center.x, positionY + showListView.frame.size.height/2);
         if(!btnAdded){
             btnAdded = YES;
             if(episodeArray.count > 5){
-                showListView.frame = CGRectMake(LEFT_WIDTH + 40, positionY, 350, 5 * 32);
-                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 350, showListView.frame.size.height);
-                
-                [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left"] forState:UIControlStateNormal];
-                [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_pressed"] forState:UIControlStateHighlighted];
-                [self.previousShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_left_disable"] forState:UIControlStateDisabled];
-                [self.previousShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                self.previousShowBtn.tag = 9001;
-                
-                [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right"] forState:UIControlStateNormal];
-                [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_pressed"] forState:UIControlStateHighlighted];
-                [self.nextShowBtn setBackgroundImage:[UIImage imageNamed:@"tab_right_disable"] forState:UIControlStateDisabled];
-                [self.nextShowBtn addTarget:self action:@selector(nextShowBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-                self.nextShowBtn.tag = 9002;
+                showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
+                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
                 for (int i = 0; i < episodeArray.count; i++) {
                     btnAdded = YES;
                     int pageNum = floor(i/5.0);
@@ -414,32 +396,33 @@
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                     [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * 32, showListView.frame.size.width, 30)];
+                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 6) + 6, showListView.frame.size.width, 54.5)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
                     }
                     [nameBtn setTitle:name forState:UIControlStateNormal];
+                    nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
+                    nameBtn.titleLabel.numberOfLines = 2;
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                     nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                    [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                    [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateHighlighted];
+                    [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
+                    [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                     [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                     nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                     [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                     [showListView addSubview:nameBtn];
                 }
             } else {
-                [self.previousShowBtn setHidden:YES];
-                [self.nextShowBtn setHidden:YES];
-                showListView.frame = CGRectMake(LEFT_WIDTH, positionY, 430, episodeArray.count * 32);
-                showListView.contentSize = showListView.frame.size;
+                
+                showListView.frame = CGRectMake(LEFT_WIDTH + 47, positionY, 336.5, 308.5);
+                showListView.contentSize = CGSizeMake(ceil(episodeArray.count/5.0) * 336.5, showListView.frame.size.height);
                 for(int i = 0; i < episodeArray.count; i++){
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                     nameBtn.tag = i + 1;
-                    nameBtn.frame = CGRectMake(0, i * 32, showListView.frame.size.width, 30);
+                    nameBtn.frame = CGRectMake(0, i * (54.5 + 6) + 6, showListView.frame.size.width, 54.5);
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
@@ -449,42 +432,34 @@
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                     [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                     nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                    [nameBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                    [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateHighlighted];
+                    [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
+                    [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                     [nameBtn addTarget:self action:@selector(nameBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
                     nameBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
                     [nameBtn setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                     [showListView addSubview:nameBtn];
                 }
+                [self.previousShowBtn setEnabled:NO];
+                [self.nextShowBtn setEnabled:NO];
             }
         }
         positionY = showListView.frame.origin.y + showListView.frame.size.height;
-    int totalCommentNum = [[video objectForKey:@"total_comment_number"] integerValue];
-    
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 74, 19);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 41, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
-    
-    self.numberLabel.frame = CGRectMake(139, positionY + 30, 100, 18);
-    self.numberLabel.textColor = CMConstants.grayColor;
-    self.numberLabel.text = [NSString stringWithFormat:@"(%i条)", totalCommentNum];
-    
-    self.commentBtn.frame = CGRectMake(405, positionY + 27, 66, 26);
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-    [self.commentBtn setBackgroundImage:[UIImage imageNamed:@"comment_pressed"] forState:UIControlStateHighlighted];
-    [self.commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-    
+   
     if(commentListViewController == nil){
         commentListViewController = [[CommentListViewController alloc]initWithStyle:UITableViewStylePlain];
         commentListViewController.parentDelegate = self;
         commentListViewController.prodId = self.prodId;
+        [commentListViewController.view setHidden:YES];
+        commentListViewController.videoName = [video objectForKey:@"name"];
+        commentListViewController.doubanId = [NSString stringWithFormat:@"%@", [video objectForKey:@"douban_id"]];
         [self.bgScrollView addSubview:commentListViewController.view];
     }
-    commentListViewController.totalCommentNum = totalCommentNum;
-    commentListViewController.listData = commentArray;
     [commentListViewController.tableView reloadData];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
     
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + 200 + increasePositionY)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + increasePositionY)];
     //    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 70, 425, commentListViewController.tableHeight);
 }
 
@@ -521,7 +496,7 @@
         showPageNumber = ceil(episodeArray.count / 5.0)-1;
     }
     [self updatePageBtnState];
-    [showListView setContentOffset:CGPointMake(350*showPageNumber, 0) animated:YES];
+    [showListView setContentOffset:CGPointMake(336.5*showPageNumber, 0) animated:YES];
 }
 
 - (void)updatePageBtnState
@@ -538,6 +513,11 @@
         [self.previousShowBtn setEnabled:YES];
         [self.nextShowBtn setEnabled:NO];
     }
+    if (episodeArray.count <= 5)
+    {
+        [self.previousShowBtn setEnabled:NO];
+        [self.nextShowBtn setEnabled:NO];
+    }
 }
 
 - (void)getTopComments:(int)num
@@ -550,11 +530,6 @@
             [[CacheUtility sharedCache] putInCache:key result:result];
             video = (NSDictionary *)[result objectForKey:@"show"];
             episodeArray = [video objectForKey:@"episodes"];
-            NSArray *tempArray = (NSMutableArray *)[result objectForKey:@"comments"];
-            [commentArray removeAllObjects];
-            if(tempArray != nil && tempArray.count > 0){
-                [commentArray addObjectsFromArray:tempArray];
-            }
             if(introContentHeight > 90){
                 if(introExpand){
                     [self repositElements:introContentHeight - 90];
@@ -569,8 +544,12 @@
 
 - (void)refreshCommentListView:(int)tableHeight
 {
-    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+5 * 30 + 200)];
+    [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+tableHeight+5 * 30)];
     commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, commentListViewController.view.frame.origin.y, 430, tableHeight);
+    if (tableHeight > 30) {
+        [self.commentImage setHidden:NO];
+        [commentListViewController.view setHidden:NO];
+    }
 }
 
 - (void)playVideo
@@ -607,14 +586,71 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathSupport parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
+//          [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            self.dingNumberLabel.text = [NSString stringWithFormat:@"%i", [self.dingNumberLabel.text intValue] + 1 ];
+            int dingNum = [[video objectForKey:@"support_num"] intValue] + 1;
+            if (dingNum >= 1000) {
+                self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%.1fK)", dingNum/1000.0];
+            } else {
+                self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
+            };
         } else {
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"pushed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showSystemError:self.view];
+    }];
+}
+
+- (void)expectVideo
+{
+    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([hostReach currentReachabilityStatus] == NotReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    
+    [self SubscribingToChannels];
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
+            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            if (collectioNum >= 1000) {
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
+            } else {
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
+            }
+        } else {
+            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showSystemError:self.view];
+    }];
+}
+
+- (void)SubscribingToChannels
+{
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
+    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+    
+    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
+        if (succeeded)
+        {
+            NSLog(@"Successfully subscribed to channel!");
+        }
+        else
+        {
+            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+        }
     }];
 }
 
@@ -625,13 +661,24 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
+    
+    [self SubscribingToChannels];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
+//          [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            self.collectionNumberLabel.text = [NSString stringWithFormat:@"%i", [self.collectionNumberLabel.text intValue] + 1 ];
+            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            if (collectioNum >= 1000) {
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
+            } else {
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
+            }
         } else {
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
         }
@@ -654,8 +701,8 @@
 
 - (BOOL)downloadShow:(int)num
 {
-    NSString *query = [NSString stringWithFormat:@"WHERE item_id = '%@'", self.prodId];
-    DownloadItem *item = (DownloadItem *)[DownloadItem findFirstByCriteria:query];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId = '%@'", self.prodId];
+    DownloadItem *item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:query];
     if (item == nil) {
         BOOL success = [self addSubdownloadItem:num];
         if(success){
@@ -665,8 +712,8 @@
             return NO;
         }
     } else {
-        NSString *subquery = [NSString stringWithFormat:@"WHERE item_id = '%@' and subitem_id = '%@'", self.prodId, [StringUtility md5:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:num] objectForKey:@"name"]]]];
-        SubdownloadItem *subitem = (SubdownloadItem *)[SubdownloadItem findFirstByCriteria:subquery];
+        NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@' and subitemId = '%@'", self.prodId, [StringUtility md5:[NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:num] objectForKey:@"name"]]]];
+        SubdownloadItem *subitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:subquery];
         if(subitem == nil){
             return [self addSubdownloadItem:num];
         } else {
@@ -687,7 +734,7 @@
     item.percentage = 0;
     item.type = 3;
     item.downloadStatus = @"stop";
-    [item save];
+    [DatabaseManager save:item];
 }
 
 - (BOOL)addSubdownloadItem:(int)num
@@ -717,7 +764,7 @@
         } else if(self.m3u8DownloadUrls.count > 0){
             subitem.downloadType = @"m3u8";
         }
-        [subitem save];
+        [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
         finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
@@ -729,5 +776,15 @@
     }
 }
 
+//delegate method
+- (void)hideCloseBtn
+{
+    [self.closeBtn setHidden:YES];
+}
+
+- (void)showCloseBtn
+{
+    [self.closeBtn setHidden:NO];
+}
 
 @end

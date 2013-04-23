@@ -13,7 +13,6 @@
     UIButton *createBtn;
     UIImageView *lineImage;
     UIButton *deleteBtn;
-    UIImageView *bgImage;
 }
 
 @end
@@ -26,7 +25,6 @@
     [super viewDidUnload];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:MY_LIST_VIEW_REFRESH object:nil];
     lineImage = nil;
-    bgImage = nil;
     createBtn = nil;
     deleteBtn = nil;
 }
@@ -48,23 +46,18 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-  
-	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 420);
-    
-//    lineImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_GAP, 70, 400, 2)];
-//    lineImage.image = [UIImage imageNamed:@"dividing"];
-//    [self.view addSubview:lineImage];
+    [super viewDidLoad];     
+	table.frame = CGRectMake(LEFT_WIDTH, 120, 420, self.view.frame.size.height - 440);
     
     createBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    createBtn.frame = CGRectMake(LEFT_WIDTH, 80, 62, 31);
+    createBtn.frame = CGRectMake(195, 50, 100, 75);
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     [createBtn setBackgroundImage:[UIImage imageNamed:@"add_pressed"] forState:UIControlStateHighlighted];
     [createBtn addTarget:self action:@selector(createBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:createBtn];
     
     deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    deleteBtn.frame = CGRectMake(LEFT_WIDTH + createBtn.frame.size.width + 10, 80, 105, 31);
+    deleteBtn.frame = CGRectMake(312, 50, 140, 75);
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [deleteBtn setBackgroundImage:[UIImage imageNamed:@"delete_pressed"] forState:UIControlStateHighlighted];
     [deleteBtn addTarget:self action:@selector(deleteBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -72,7 +65,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:MY_LIST_VIEW_REFRESH object:nil];
     
-    [self.view addGestureRecognizer:swipeRecognizer];
+    [self.view addGestureRecognizer:self.swipeRecognizer];
 }
 
 - (void)refreshData:(NSNotification *)notification

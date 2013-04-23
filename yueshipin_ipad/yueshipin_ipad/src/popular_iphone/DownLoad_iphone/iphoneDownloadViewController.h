@@ -15,9 +15,8 @@
     UIBarButtonItem *editButtonItem_;
     UIBarButtonItem *doneButtonItem_;
     NSMutableArray *itemArr_;
-    NSMutableArray *progressArr_;
-    NSMutableArray *progressLabelArr_;
-    NSMutableArray *statusImgArr_;
+    NSMutableDictionary *progressLabelDic_;
+    NSMutableDictionary *progressViewDic_;
     DDProgressView *diskUsedProgress_;
     float totalSpace_;
     float totalFreeSpace_;
@@ -26,9 +25,8 @@
 @property (nonatomic, strong)UIBarButtonItem *editButtonItem;
 @property (nonatomic, strong)UIBarButtonItem *doneButtonItem;
 @property (nonatomic, strong)NSMutableArray *itemArr;
-@property (nonatomic, strong)NSMutableArray *progressArr;
-@property (nonatomic, strong)NSMutableArray *progressLabelArr;
-@property (nonatomic, strong)NSMutableArray *statusImgArr;
+@property (nonatomic, strong)NSMutableDictionary *progressViewDic;
+@property (nonatomic, strong)NSMutableDictionary *progressLabelDic;
 @property (nonatomic, strong)DDProgressView *diskUsedProgress;
 @property (nonatomic, strong)DownLoadManager *downLoadManager;
 @end

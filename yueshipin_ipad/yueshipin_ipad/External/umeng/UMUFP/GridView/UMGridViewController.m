@@ -16,21 +16,17 @@
 
 @interface UMGridViewController (){
     UIImageView *topImage;
-    UIButton *closeBtn;
-    UIView *backgroundView;
-    UIImageView *bgImage;
 }
 @end
 
 @implementation UMGridViewController
 
-static int NUMBER_OF_COLUMNS = 3;
-static int NUMBER_OF_APPS_PERPAGE = 18;
+static int NUMBER_OF_COLUMNS = 4;
+static int NUMBER_OF_APPS_PERPAGE = 24;
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    closeBtn = nil;
     _mGridView.delegate = nil;
     _mGridView.datasource = nil;
     _mGridView.dataLoadDelegate = nil;
@@ -85,17 +81,8 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
-        backgroundView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 24)];
-        [backgroundView setBackgroundColor:[UIColor clearColor]];
-        [self.view addSubview:backgroundView];
-        
-        bgImage = [[UIImageView alloc]initWithFrame:backgroundView.frame];
-        bgImage.image = [UIImage imageNamed:@"left_background"];
-        [backgroundView addSubview:bgImage];
-        
-        [self.view addSubview:menuBtn];
-        
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(80, 40, 197, 34)];
+
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 40, 260, 42)];
         topImage.image = [UIImage imageNamed:@"title_recommond"];
         [self.view addSubview:topImage];
         self.view.autoresizesSubviews = YES;
@@ -103,7 +90,7 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
         UIApplication *application = [UIApplication sharedApplication];
         [self updateNumberOfColumns:application.statusBarOrientation];
         
-        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(LEFT_WIDTH - 10, 115, self.view.frame.size.width - LEFT_WIDTH*2, self.view.frame.size.height-145) appkey:umengAppKey slotId:nil currentViewController:self];
+        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(25, 115, self.view.frame.size.width - 25*2, self.view.frame.size.height-145) appkey:umengAppKey slotId:nil currentViewController:self];
         [_mGridView setBackgroundColor:[UIColor clearColor]];
         _mGridView.datasource = self;
         _mGridView.delegate = self;
@@ -121,18 +108,11 @@ static int NUMBER_OF_APPS_PERPAGE = 18;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self.view addGestureRecognizer:swipeCloseMenuRecognizer];
-    [self.view addGestureRecognizer:openMenuRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if ([AppDelegate instance].closed) {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn"] forState:UIControlStateNormal];
-    } else {
-        [menuBtn setBackgroundImage:[UIImage imageNamed:@"menu_btn_pressed"] forState:UIControlStateNormal];
-    }
     [_mGridView reloadData];
 }
 

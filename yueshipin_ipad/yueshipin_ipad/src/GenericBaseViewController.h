@@ -11,23 +11,15 @@
 
 @interface GenericBaseViewController : UIViewController{
     UIUtility *myHUD;
-    UIButton *menuBtn;
-    UISwipeGestureRecognizer *swipeRecognizer;
-    
-    UISwipeGestureRecognizer *openMenuRecognizer;
-    
-    UITapGestureRecognizer *closeMenuRecognizer;
-    
-    UISwipeGestureRecognizer *swipeCloseMenuRecognizer;
     float totalSpace_;
     float totalFreeSpace_;
 }
 
-- (void)closeMenu;
+@property (nonatomic, strong) UIImageView *bgImage;
 
-- (void)menuBtnClicked;
+@property (nonatomic, strong)UISwipeGestureRecognizer *swipeRecognizer;
 
--(float)getFreeDiskspacePercent;
+- (float)getFreeDiskspacePercent;
 
 - (void)setCloseTipsViewHidden:(BOOL)isHidden;
 @end
