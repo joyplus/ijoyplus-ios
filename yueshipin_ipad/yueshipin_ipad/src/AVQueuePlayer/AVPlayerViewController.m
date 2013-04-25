@@ -553,6 +553,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (closeAll) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
+        [videoWebViewControllerDelegate reshowWebView];
         [self.navigationController popViewControllerAnimated:NO];
     }
     
@@ -974,12 +975,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)nextBtnClicked
 {
+    [self destoryPlayer];
     isFromSelectBtn = YES;
     [self resetControlVisibilityTimer];
     currentNum++;
     currentPlaybackTimeLabel.text = @"00:00:00";
     mScrubber.value = 0;
-    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum) {
+    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum)
+    {
         episodeListviewController.currentNum = currentNum;
         [episodeListviewController.table reloadData];
         [self disablePlayerButtons];
@@ -989,7 +992,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         [self preparePlayVideo];
         [self recordPlayStatics];
-    } else {
+    }
+    else
+    {
         currentNum--;
         [self closeSelf];
     }
@@ -1091,8 +1096,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
-
-- (void)closeSelf
+- (void)destoryPlayer
 {
     [self.mPlayer removeObserver:self forKeyPath:kRateKey];
 	[self.mPlayerItem removeObserver:self forKeyPath:kStatusKey];
@@ -1122,6 +1126,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
+}
+
+- (void)closeSelf
+{
+    [self destoryPlayer];
     if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
         [self dismissViewControllerAnimated:YES completion:^{
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -1567,8 +1576,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
     if (nil != mTimeObserver)
     {
-        [mTimeObserver invalidate];
-        mTimeObserver = nil;
+        [self removePlayerTimeObserver];
     }
 	/* Update the scrubber during normal playback. */
     if (isnan(interval) || interval < 0.1f) {
@@ -1695,6 +1703,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 - (void)playOneEpisode:(int)num
 {
+    [self destoryPlayer];
     isFromSelectBtn = YES;
     currentNum = num;
     currentPlaybackTimeLabel.text = @"00:00:00";

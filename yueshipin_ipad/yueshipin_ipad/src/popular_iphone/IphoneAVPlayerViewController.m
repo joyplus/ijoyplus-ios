@@ -1046,7 +1046,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             }
             else{
                 NSLog(@"Error:Get Play Url Fail!");
+                
+                [self destoryPlayer];
+                [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:NO];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebView"
+                                                                    object:self
+                                                                  userInfo:nil];
             }
 
             break;
@@ -1111,13 +1117,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             }
             else{
                 NSLog(@"没找到可播放的地址！");
-                [self removePlayerTimeObserver];
-                [self.player removeObserver:self forKeyPath:@"rate"];
-                [self.player.currentItem removeObserver:self forKeyPath:@"status"];
-                [self.player  pause];
-                mPlayerItem = nil;
-                mPlayer = nil;
+//                [self removePlayerTimeObserver];
+//                [self.player removeObserver:self forKeyPath:@"rate"];
+//                [self.player.currentItem removeObserver:self forKeyPath:@"status"];
+//                [self.player  pause];
+//                mPlayerItem = nil;
+//                mPlayer = nil;
+                
+                [self destoryPlayer];
+                [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:YES];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebView"
+                                                                    object:self
+                                                                  userInfo:nil];
             }
 
             break;

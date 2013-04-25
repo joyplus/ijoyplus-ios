@@ -61,7 +61,7 @@
          [self initDataSource];
     }
    
-    [self initWebView];
+    //[self initWebView];
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         [[UIApplication sharedApplication] openURL:webUrl_];
         return;
@@ -70,6 +70,12 @@
    [self initPlayerView];
     [AppDelegate instance].isInPlayView = YES;
   
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(initWebView)
+                                                 name:@"addWebView"
+                                               object:nil];
+    
 }
 
 
@@ -77,6 +83,7 @@
  [self.navigationController setNavigationBarHidden:NO animated:NO];
 
 }
+
 -(void)initDataSource{
    NSDictionary *episodesInfo = [episodesArr_ objectAtIndex:playNum];
     NSDictionary *oneEpisodeInfo = [[episodesInfo objectForKey:@"video_urls"] objectAtIndex:0];
@@ -87,12 +94,11 @@
 
 -(void)initWebView{
     CGRect bounds = [UIScreen mainScreen].bounds;
-    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-20)];
+    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-64)];
     webView_.scalesPageToFit = YES;
     webView_.delegate = self;
     [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
     [self.view addSubview:webView_];
-
 }
 
 
@@ -165,6 +171,9 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self
+                                                   name:@"addWebView"
+                                                 object:nil];
     [AppDelegate instance].isInPlayView = NO;
     webView_.delegate = nil;
     [subnameArray removeAllObjects];
