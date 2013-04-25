@@ -968,8 +968,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         lastLabel = nil;
         lastPlayTime = kCMTimeZero;
     }
-    tipLabel.text = @"正在加载，请稍等";
+    tipLabel.text = nil;
     [myHUD show:YES];
+    myHUD.labelText = @"正在加载，请稍等";
 }
 
 

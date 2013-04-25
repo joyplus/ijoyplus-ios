@@ -2449,11 +2449,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)disconnectedFromServer
 {
-    if ([CommonMotheds isNetworkEnbled])
-    {
-        [[BundingTVManager shareInstance] connecteServer];
-        [BundingTVManager shareInstance].sendClient.delegate = self;
-    }
+    [[BundingTVManager shareInstance] reconnectToServer];
+    [BundingTVManager shareInstance].sendClient.delegate = self;
 }
 
 - (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket

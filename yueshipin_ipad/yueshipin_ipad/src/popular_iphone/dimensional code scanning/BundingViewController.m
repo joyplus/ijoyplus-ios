@@ -233,7 +233,8 @@
 
 - (void)disconnectedFromServer
 {
-    
+    [[BundingTVManager shareInstance] reconnectToServer];
+    [BundingTVManager shareInstance].sendClient.delegate = self;
 }
 
 - (void)socketDidSendMessage:(ZTWebSocket *)aWebSocket
