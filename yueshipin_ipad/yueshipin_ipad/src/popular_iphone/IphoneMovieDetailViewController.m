@@ -424,7 +424,7 @@
                 [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_.png"] forState:UIControlStateHighlighted];
                 [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan.png"] forState:UIControlStateNormal];
                 [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan_s.png"] forState:UIControlStateHighlighted];
-                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 30)];
+                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 30)];
                 expectbtn.titleLabel.textAlignment = UITextAlignmentCenter;
                 [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 [expectbtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];

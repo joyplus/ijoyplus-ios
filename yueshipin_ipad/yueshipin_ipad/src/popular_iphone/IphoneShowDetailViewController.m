@@ -814,7 +814,8 @@
         NSString *title = [NSString stringWithFormat:@"%@", [dic objectForKey:@"name"]];
         button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [button setTitle:title forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor colorWithRed:190.0/255 green:190.0/255 blue:190.0/255 alpha:1] forState:UIControlStateDisabled];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
          button.titleLabel.font = [UIFont systemFontOfSize:12];
          button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;

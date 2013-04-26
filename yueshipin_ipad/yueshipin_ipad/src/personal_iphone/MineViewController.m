@@ -232,7 +232,7 @@
     typeLabel_.image = [UIImage imageNamed:@"bifangjilu"];
     [scrollBg addSubview:typeLabel_];
     
-    clearRecord_ = [[UIButton alloc] initWithFrame:CGRectMake(245, 131, 64, 22)];
+    clearRecord_ = [[UIButton alloc] initWithFrame:CGRectMake(245, 124, 64, 22)];
     [clearRecord_ addTarget:self action:@selector(clearMyRecord) forControlEvents:UIControlEventTouchUpInside];
     [clearRecord_ setBackgroundImage:[UIImage imageNamed:@"icon_qingchu.png"] forState:UIControlStateNormal];
     [clearRecord_ setBackgroundImage:[UIImage imageNamed:@"icon_qingchu_s.png"] forState:UIControlStateHighlighted];
@@ -284,7 +284,7 @@
     [scrollBg addSubview:moreButton_];
     
     createList_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    createList_.frame = CGRectMake(245, 131, 64, 22);
+    createList_.frame = CGRectMake(245, 124, 64, 22);
     [createList_ addTarget:self action:@selector(createList:) forControlEvents:UIControlEventTouchUpInside];
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single.png"] forState:UIControlStateNormal];
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single_s.png"] forState:UIControlStateHighlighted];
@@ -547,13 +547,13 @@
     switch (tag) {
         case 100:
         {
-            if ([self.sortedwatchRecordArray count] <= 6) {
+            if ([self.sortedwatchRecordArray count] <= 5) {
                 
                 [self.bgView setFrame:CGRectMake(12, 156, 296, 42*[sortedwatchRecordArray_ count])];
             }
             else {
-                [self.bgView setFrame:CGRectMake(12, 156, 296, 42*6)];
-                [moreButton_ setFrame:CGRectMake(245, 408, 64, 22)];
+                [self.bgView setFrame:CGRectMake(12, 156, 296, 42*5)];
+                [moreButton_ setFrame:CGRectMake(245, 380, 64, 22)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
                 [scrollBg addSubview:moreButton_];
@@ -638,11 +638,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView.tag == RECORD_TYPE) {
-        if ([sortedwatchRecordArray_ count] <= 6) {
+        if ([sortedwatchRecordArray_ count] <= 5) {
             return [sortedwatchRecordArray_ count];
         }
         else{
-            return 6;
+            return 5;
         }
     }
     if (tableView.tag == Fav_TYPE) {

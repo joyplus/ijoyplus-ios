@@ -99,7 +99,7 @@
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 35, 292, 90);
-    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 30, 264,90)];
+    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 32, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
     summaryLabel_.numberOfLines = 0;
@@ -572,7 +572,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
                 
             case 2:{
-                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 32, 13)];
+                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 32, 13)];
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
                 [cell addSubview:jianjie];
                 
@@ -1198,20 +1198,20 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [bgView addSubview:titleView];
     
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
-    scrollViewUp_ = [[UIScrollView alloc] initWithFrame:CGRectMake(22, 36, 260, 20)];
+    scrollViewUp_ = [[UIScrollView alloc] initWithFrame:CGRectMake(5, 36, 298, 20)];
     scrollViewUp_.backgroundColor = [UIColor clearColor];
-    scrollViewUp_.contentSize = CGSizeMake(260*page_, 20);
+    scrollViewUp_.contentSize = CGSizeMake(298*page_, 20);
   
     scrollViewUp_.pagingEnabled = YES;
     scrollViewUp_.bounces = NO;
     scrollViewUp_.showsHorizontalScrollIndicator = NO;
-    [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(currentPage_-1), 0.0f) animated:NO];
+    [scrollViewUp_ setContentOffset:CGPointMake(298.0f*(currentPage_-1), 0.0f) animated:NO];
     
         
     for (int i = 0; i < pageCount_; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
-        button.frame = CGRectMake(53*i, 0, 53, 23);
+        button.frame = CGRectMake(60*i, 0, 55, 23);
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
@@ -1243,10 +1243,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [pre_ setBackgroundImage:[UIImage imageNamed:@"detail_pre.png"] forState:UIControlStateNormal];
     pre_.enabled = NO;
     
-    if (page_ > 1) {
-        [bgView addSubview:next_];
-        [bgView addSubview:pre_];
-    }
+//    if (page_ > 1) {
+//        [bgView addSubview:next_];
+//        [bgView addSubview:pre_];
+//    }
     
     scrollViewDown_ = [[UIScrollView alloc] initWithFrame:CGRectMake(10,68, 285, 145)];
     scrollViewDown_.backgroundColor = [UIColor clearColor];
@@ -1356,18 +1356,18 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     currentPageDownLoad_ = 1;
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
-    scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(22, 47, 260, 20)];
+    scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 47, 288, 20)];
     scrollViewUpDL_.backgroundColor = [UIColor clearColor];
-    scrollViewUpDL_.contentSize = CGSizeMake(260*page_, 20);
+    scrollViewUpDL_.contentSize = CGSizeMake(288*page_, 20);
     scrollViewUpDL_.pagingEnabled = YES;
     scrollViewUpDL_.bounces = NO;
     scrollViewUpDL_.showsHorizontalScrollIndicator = NO;
-   [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(currentPageDownLoad_-1), 0.0f) animated:NO];
+   [scrollViewUpDL_ setContentOffset:CGPointMake(288*(currentPageDownLoad_-1), 0.0f) animated:NO];
         
     for (int i = 0; i < pageCount_; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
-        button.frame = CGRectMake(52*i, 0, 52, 20);
+        button.frame = CGRectMake(58*i, 0, 52, 20);
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
@@ -1397,10 +1397,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [preDL_ setBackgroundImage:[UIImage imageNamed:@"detail_pre.png"] forState:UIControlStateNormal];
     preDL_.enabled = NO;
     
-    if (page_ > 1) {
-        [bgView addSubview:nextDL_];
-        [bgView addSubview:preDL_];
-    }
+//    if (page_ > 1) {
+//        [bgView addSubview:nextDL_];
+//        [bgView addSubview:preDL_];
+//    }
     
     scrollViewDownDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(11, 77, 285, 145)];
     scrollViewDownDL_.backgroundColor = [UIColor clearColor];
@@ -1424,7 +1424,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [button setTitleColor:[UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [button setTitleColor:[UIColor colorWithRed:190.0/255 green:190.0/255 blue:190.0/255 alpha:1.0] forState:UIControlStateDisabled];
-        [button setTitleColor:[UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0] forState:UIControlStateSelected];
+        [button setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button addTarget:self action:@selector(download:) forControlEvents:UIControlEventTouchUpInside];
         [button setBackgroundImage:[UIImage imageNamed:@"icon_xuanji.png"] forState:UIControlStateNormal];
@@ -1526,7 +1526,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (!isDownLoad_) {
 
         currentPage_++;
-        [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(currentPage_-1), 0.0f) animated:YES];
+        [scrollViewUp_ setContentOffset:CGPointMake(298.0f*(currentPage_-1), 0.0f) animated:YES];
         if (currentPage_ == page_ ) {
             next_.enabled = NO;
         }
@@ -1546,7 +1546,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     else{
         currentPageDownLoad_++;
-        [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(currentPageDownLoad_-1), 0.0f) animated:YES];
+        [scrollViewUpDL_ setContentOffset:CGPointMake(288*(currentPageDownLoad_-1), 0.0f) animated:YES];
         if (currentPageDownLoad_ == page_ ) {
             nextDL_.enabled = NO;
         }
@@ -1572,7 +1572,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 -(void)pre:(id)sender{
     if (!isDownLoad_) {
         currentPage_--;
-        [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(currentPage_-1), 0.0f) animated:YES];
+        [scrollViewUp_ setContentOffset:CGPointMake(298.0f*(currentPage_-1), 0.0f) animated:YES];
         
         if (currentPage_ == page_ ) {
             next_.enabled = NO;
@@ -1594,7 +1594,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
         currentPageDownLoad_--;
     
-        [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(currentPageDownLoad_-1), 0.0f) animated:YES];
+        [scrollViewUpDL_ setContentOffset:CGPointMake(288*(currentPageDownLoad_-1), 0.0f) animated:YES];
         
         if (currentPageDownLoad_ == page_ ) {
             nextDL_.enabled = NO;
@@ -1618,6 +1618,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
    
     
 }
+ 
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
     NSString *cacheStr = [NSString stringWithFormat:@"drama_epi_%@", self.prodId];
@@ -1639,21 +1640,21 @@ NSComparator cmptr = ^(id obj1, id obj2){
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 99999) {
-        CGFloat pageWidth = 285;
+        CGFloat pageWidth = 298;
         CGPoint offset = scrollView.contentOffset;
         if (offset.x * offset.x> offset.y * offset.y) {
             int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-            [scrollViewUp_ setContentOffset:CGPointMake(260.0f*(page/5), 0.0f) animated:YES];
+            [scrollViewUp_ setContentOffset:CGPointMake(298.0f*(page/5), 0.0f) animated:YES];
             [self changeButoonStateInView:scrollViewUp_ atIndex:page];
             
         }
     }
    else if (scrollView.tag == 999999) {
-        CGFloat pageWidth = 285;
+        CGFloat pageWidth = 288;
         CGPoint offset = scrollView.contentOffset;
         if (offset.x * offset.x> offset.y * offset.y) {
             int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-            [scrollViewUpDL_ setContentOffset:CGPointMake(260.0f*(page/5), 0.0f) animated:YES];
+            [scrollViewUpDL_ setContentOffset:CGPointMake(288*(page/5), 0.0f) animated:YES];
             [self changeButoonStateInView:scrollViewUpDL_ atIndex:page];
             
             if (currentPageDownLoad_ == page_ ) {
@@ -1694,7 +1695,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (scrollView.tag == 99999) {
         CGPoint point = scrollViewUp_.contentOffset;
         NSLog(@"contentOffset %f  %f",point.x,point.y);
-        currentPage_ = point.x/260 +1;
+        currentPage_ = point.x/298 +1;
         NSLog(@"currentPage is %d",currentPage_);
         NSLog(@"page is %d",page_);
         if (currentPage_ == page_ ) {
@@ -1716,7 +1717,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     else if (scrollView.tag == 999999){
         CGPoint point = scrollViewUpDL_.contentOffset;
         NSLog(@"contentOffset %f  %f",point.x,point.y);
-        currentPageDownLoad_ = point.x/260 +1;
+        currentPageDownLoad_ = point.x/288 +1;
         NSLog(@"currentPage is %d",currentPageDownLoad_);
         NSLog(@"page is %d",page_);
         if (currentPageDownLoad_ == page_ ) {

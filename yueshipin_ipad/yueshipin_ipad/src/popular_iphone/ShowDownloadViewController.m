@@ -65,10 +65,10 @@
         [EpisodeIdArr_ addObject:episodeId];
     }
     
-    UIImageView *tableBg = [[UIImageView alloc] initWithFrame:CGRectMake(5, 29, 310,kCurrentWindowHeight-73)];
-    UIImage *bgImg = [UIImage imageNamed:@"list_bg.png"];
-    tableBg.image = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
-    [self.view addSubview:tableBg];
+//    UIImageView *tableBg = [[UIImageView alloc] initWithFrame:CGRectMake(5, 29, 310,kCurrentWindowHeight-73)];
+//    UIImage *bgImg = [UIImage imageNamed:@"list_bg.png"];
+//    tableBg.image = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
+//    [self.view addSubview:tableBg];
     
     tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 34, 320, kCurrentWindowHeight-78) style:UITableViewStylePlain];
     tableList_.dataSource = self;
@@ -127,7 +127,7 @@
     [btn setTitle:cellTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor colorWithRed:110/255.0 green:110/255.0 blue:110/255.0 alpha:1] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [btn setTitleColor:[UIColor colorWithRed:110/255.0 green:110/255.0 blue:110/255.0 alpha:1] forState:UIControlStateSelected];
+    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
     [btn setTitleColor:[UIColor colorWithRed:190/255.0 green:190/255.0 blue:190/255.0 alpha:1] forState:UIControlStateDisabled];
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];

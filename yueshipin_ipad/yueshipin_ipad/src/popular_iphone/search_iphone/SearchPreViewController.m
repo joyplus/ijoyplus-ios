@@ -109,7 +109,7 @@
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         btn.tag= 100+i;
         [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor colorWithRed:29/255.0 green:103/255.0 blue:196/255.0 alpha:1] forState:UIControlStateHighlighted];
+        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
         [btn setBackgroundColor:nil];
         [btn addTarget:self action:@selector(selected:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:btn];

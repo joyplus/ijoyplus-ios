@@ -72,9 +72,7 @@
     [doneButton setTitle:@"done" forState:UIControlStateNormal];
     doneButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     
-    
-   
-    
+    [self initData];
     GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight)];
     gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     gmGridView.backgroundColor = [UIColor clearColor];
