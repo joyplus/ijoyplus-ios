@@ -105,7 +105,7 @@
     btn.tag = indexPath.row;
     BOOL isDownload = NO;
     for (NSString *str in EpisodeIdArr_) {
-        if ([str intValue] == indexPath.row) {
+        if ([str intValue] == indexPath.row+1) {
             isDownload = YES;
             break;
         }

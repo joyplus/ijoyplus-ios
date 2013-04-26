@@ -77,7 +77,11 @@
         
     _arrHistory = [[CacheUtility sharedCache] loadFromCache:@"serach_history"];
     
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 40)];
+    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
+    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 42);
+    [self.view addSubview:imagview];
+    
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-147, 6, 294, 30)];
     searchBar_.tintColor = [UIColor clearColor];
     searchBar_.placeholder = @"请输入片名/导演/主演";
     [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
@@ -98,7 +102,7 @@
     if(!(searchField == nil))
     {
         //[searchField.leftView setHidden:YES];
-        [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 20, 10, 20)] ];
+        [searchField setBackground: [[UIImage imageNamed:@"rebo_sousuo_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(3, 2, 3, 2)] ];
         [searchField setBorderStyle:UITextBorderStyleNone];
     }
     searchBar_.delegate = self;

@@ -11,9 +11,9 @@
 #import "RecordListCell.h"
 
 #define SEGMENT_VIEW_FRAME      CGRectMake(12, 10, 297, 52)
-#define HOT_BUTTON_FRAME        CGRectMake(0, 0, 99, 51)
-#define FAV_BUTTON_FRAME        CGRectMake(99, 0, 99, 51)
-#define REC_BUTTON_FRAME        CGRectMake(198, 0, 99, 51)
+#define HOT_BUTTON_FRAME        CGRectMake(0, 10, 99, 51)
+#define FAV_BUTTON_FRAME        CGRectMake(99, 10, 99, 51)
+#define REC_BUTTON_FRAME        CGRectMake(198, 10, 99, 51)
 
 #define HOT_TABLEVIEW_FRAME(Y,Height)     CGRectMake(12, Y, 297, Height)
 #define FAV_TABLEVIEW_FRAME(Y,Height)     CGRectMake(12, Y, 297, Height)
@@ -74,8 +74,8 @@
 #pragma mark - private
 - (void)customView
 {
-    _viewSegment = [[UIView alloc] initWithFrame:SEGMENT_VIEW_FRAME];
-    _viewSegment.backgroundColor = [UIColor clearColor];
+    _viewSegment = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_shang_bg.png"]];
+    _viewSegment.frame = SEGMENT_VIEW_FRAME;
     [self addSubview:_viewSegment];
     
     _labNoData = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 170, 20)];
@@ -399,6 +399,7 @@
         UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(88, 12, 170, 20)];
         titleLab.font = [UIFont systemFontOfSize:14];
         titleLab.text = [infoDic objectForKey:@"prod_name"];
+        titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];
         
@@ -478,6 +479,7 @@
             UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
             titleLab.font = [UIFont systemFontOfSize:14];
             titleLab.text = [infoDic objectForKey:@"content_name"];
+            titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
             titleLab.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:titleLab];
             
@@ -528,6 +530,7 @@
             UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
             titleLab.font = [UIFont systemFontOfSize:14];
             titleLab.text = [infoDic objectForKey:@"prod_name"];
+            titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
             titleLab.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:titleLab];
             

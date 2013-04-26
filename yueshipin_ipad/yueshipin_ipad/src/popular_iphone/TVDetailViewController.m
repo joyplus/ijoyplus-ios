@@ -1356,7 +1356,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     currentPageDownLoad_ = 1;
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
-    scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 47, 288, 20)];
+    scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 52, 288, 20)];
     scrollViewUpDL_.backgroundColor = [UIColor clearColor];
     scrollViewUpDL_.contentSize = CGSizeMake(288*page_, 20);
     scrollViewUpDL_.pagingEnabled = YES;

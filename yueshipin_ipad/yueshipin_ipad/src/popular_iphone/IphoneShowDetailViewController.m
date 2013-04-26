@@ -626,6 +626,14 @@
             }
             showDownlooadViewController.prodId = itemId;
             showDownlooadViewController.listArr =  [NSMutableArray arrayWithArray:episodesArr_];
+            NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
+            if (titleStr == nil) {
+                titleStr = [self.infoDic objectForKey:@"content_name"];
+            }
+            if (titleStr == nil) {
+                titleStr = [self.infoDic objectForKey:@"name"];
+            }
+            showDownlooadViewController.title = titleStr;
             NSString *url = [videoInfo_ objectForKey:@"ipad_poster"];
             if(url == nil){
                 url = [videoInfo_ objectForKey:@"poster"];

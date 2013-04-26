@@ -72,10 +72,10 @@
     [self.view addSubview:hotView_];
     
 	// Do any additional setup after loading the view.
-//    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
-//    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
-//    [self.view addSubview:imagview];
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 40)];
+    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
+    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 42);
+    [self.view addSubview:imagview];
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-147, 6, 294, 29)];
     searchBar_.backgroundColor = [UIColor clearColor];
     searchBar_.tintColor = [UIColor clearColor];
     searchBar_.placeholder = @" 请输入片名/导演/主演";
@@ -88,15 +88,15 @@
         }
         if([[searchBar_.subviews objectAtIndex:i] isKindOfClass:[UIButton class]]){
             
-            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
-            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+//            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+//            [(UIButton *)[searchBar_.subviews objectAtIndex:i] setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];0
             
         }
     }
     
     if(!(searchField == nil)) {
         //[searchField.leftView setHidden:YES];
-        [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 20, 10, 20)] ];
+        [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(14, 13,14, 13)] ];
         [searchField setBorderStyle:UITextBorderStyleNone];
     }
     searchBar_.delegate = self;
@@ -162,8 +162,8 @@
     
     for (id view in searchBar_.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
-            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
-            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+//            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+//            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
             [(UIButton *)view setTitle:nil forState:UIControlStateNormal];
             [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];        }
     }
@@ -323,7 +323,7 @@
     [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
-            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
             [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
             [(UIButton *)view setTitle:nil forState:UIControlStateNormal];
             [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];
