@@ -755,22 +755,40 @@
             if (videoType == MOVIE_TYPE) {
                 nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
                 nameLabel.numberOfLines = 2;
-            } else if (videoType == SHOW_TYPE){
+            }
+            else if (videoType == SHOW_TYPE)
+            {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
-                if (curEpisode == nil || [curEpisode isEqualToString:@"0"])
+                //判断UserName是否为数字,字母，下滑线。
+                NSCharacterSet *dateCharacters = [[NSCharacterSet
+                                                   characterSetWithCharactersInString:@"1234567890-/"] invertedSet];
+                NSRange dateRange = [curEpisode rangeOfCharacterFromSet:dateCharacters];
+                
+                if (dateRange.location != NSNotFound
+                    || (curEpisode == nil || [curEpisode isEqualToString:@"0"]))
                 {
-                    NSDate * nowDate = [NSDate date];
-                    NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
-                    [dateformat setDateFormat:@"yyyy"];
-                    curEpisode = [dateformat stringFromDate:nowDate];
+                    titleLabel.hidden = YES;
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
+                    nameLabel.numberOfLines = 2;
                 }
-                else if (![curEpisode hasPrefix:@"20"])
+                else
                 {
-                    curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
+                    if (![curEpisode hasPrefix:@"20"])
+                    {
+                        curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
+                    }
+                    
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 23);
+                    nameLabel.numberOfLines = 1;
+                    titleLabel.hidden = NO;
+                    
                 }
+                
                 titleLabel.text = [NSString stringWithFormat:@"更新至%@", curEpisode];
-            }else {
+            }
+            else
+            {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 int curEpisode = [[item objectForKey:@"cur_episode"] integerValue];
                 int maxEpisode = [[item objectForKey:@"max_episode"] integerValue];
