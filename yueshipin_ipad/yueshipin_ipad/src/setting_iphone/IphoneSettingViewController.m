@@ -146,12 +146,6 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:update];
 	
-//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 385, 135, 15)];
-//    label.font = [UIFont systemFontOfSize:13];
-//    label.textColor = [UIColor colorWithRed:248/255.0 green:165/255.0 blue:85/255.0 alpha:1];
-//    label.backgroundColor = [UIColor clearColor];
-//    label.text = @"精品推荐";
-//    [scrollView addSubview:label];
     UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 390, 55, 13)];
     jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
     [scrollView addSubview:jinpin];

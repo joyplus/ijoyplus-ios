@@ -165,6 +165,7 @@
         UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 170, 15)];
         titleLab.font = [UIFont systemFontOfSize:14];
         titleLab.text = [infoDic objectForKey:@"content_name"];
+        titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];
         

@@ -34,6 +34,7 @@
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(105, 24, 169, 15)];
         self.label.backgroundColor = [UIColor clearColor];
+        self.label.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         [self addSubview:self.label];
         
         label1_ = [[UILabel alloc] initWithFrame:CGRectMake(105, 50, 90, 12)];

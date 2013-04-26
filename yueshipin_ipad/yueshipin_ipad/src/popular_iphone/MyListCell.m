@@ -35,7 +35,7 @@
     titleLabel.font = [UIFont systemFontOfSize:14];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.text = [infoDic objectForKey:@"name"];
-    titleLabel.textColor = [UIColor grayColor];
+    titleLabel.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
     [self.contentView addSubview:titleLabel];
     
     for (NSDictionary *dic in items) {

@@ -280,7 +280,7 @@
     
     moreButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
-    [moreButton_ setFrame:CGRectMake(250, 395, 64, 22)];
+    [moreButton_ setFrame:CGRectMake(245, 395, 64, 22)];
     [scrollBg addSubview:moreButton_];
     
     createList_ = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -501,7 +501,7 @@
     [noFav_ removeFromSuperview];
     [noPersonalList_ removeFromSuperview];
     [moreButton_ removeFromSuperview];
-    [moreButton_ setFrame:CGRectMake(250, 395, 64, 22)];
+    [moreButton_ setFrame:CGRectMake(245, 395, 64, 22)];
     button1_.enabled = YES;
     button2_.enabled = YES;
     button3_.enabled = YES;
@@ -553,7 +553,7 @@
             }
             else {
                 [self.bgView setFrame:CGRectMake(12, 156, 296, 42*6)];
-                [moreButton_ setFrame:CGRectMake(250, 408, 64, 22)];
+                [moreButton_ setFrame:CGRectMake(245, 408, 64, 22)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
                 [scrollBg addSubview:moreButton_];
@@ -715,6 +715,7 @@
         
         UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 170, 15)];
         titleLab.font = [UIFont systemFontOfSize:14];
+        titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         titleLab.text = [infoDic objectForKey:@"content_name"];
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];

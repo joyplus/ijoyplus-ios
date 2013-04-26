@@ -19,6 +19,7 @@
     if (self) {
         self.titleLab = [[UILabel alloc] initWithFrame:CGRectMake(12, 14, 200, 15)];
         self.titleLab.font = [UIFont systemFontOfSize:14];
+        self.titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         titleLab_.backgroundColor = [UIColor clearColor];
         [self addSubview:self.titleLab];
         

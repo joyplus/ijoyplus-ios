@@ -93,8 +93,8 @@
 //    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
-    summaryBg_.frame = CGRectMake(14, 30, 292, 90);
-    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 30, 264,90)];
+    summaryBg_.frame = CGRectMake(14, 35, 292, 90);
+    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 35, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
     summaryLabel_.numberOfLines = 0;
@@ -424,18 +424,18 @@
                 [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_.png"] forState:UIControlStateHighlighted];
                 [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan.png"] forState:UIControlStateNormal];
                 [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan_s.png"] forState:UIControlStateHighlighted];
-                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 30)];
+                [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 5, 0, 30)];
                 expectbtn.titleLabel.textAlignment = UITextAlignmentCenter;
                 [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 [expectbtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
                 [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
+                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:9];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
              
                 expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame =  CGRectMake(160, 165, 80, 35);
+                addFav.frame =  CGRectMake(170, 165, 80, 35);
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
@@ -549,7 +549,7 @@
                 break;
             }
             case 1:{
-                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 30, 13)];
+                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 32, 13)];
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
                 [cell addSubview:jianjie];
                
@@ -573,9 +573,9 @@
         
         int num = [relevantList_ count] > 5 ? 5:[relevantList_ count];
         if (indexPath.row == 0) {
-            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 50, 14)];
+            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 50, 14)];
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,30)];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 5, 320,30)];
             [view addSubview:commentV];
             [cell addSubview:view];
         }
@@ -673,7 +673,7 @@
     else if (3 == indexPath.section)
     {
         UIImageView *yingping = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yingping.png"]];
-        yingping.frame = CGRectMake(14, 30, 32, 14);
+        yingping.frame = CGRectMake(14, 22, 32, 14);
         [cell addSubview:yingping];
         
         for (int i = 0; i < arrReviewData_.count; i ++)
@@ -684,7 +684,7 @@
             CGRect rect = CGRectMake(12, 44, 296, 133);
             if (nil != preCell)
             {
-                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 20.0f;
+                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 10.0f;
             }
             
             FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
@@ -730,10 +730,10 @@
         }
         else if(row == 1){
             if (moreBtn_.selected) {
-                 return [self heightForString:summary_ fontSize:13 andWidth:271]+35;
+                 return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
             }
             else{
-                 return 120;
+                 return 125;
             }
            
         }
@@ -742,7 +742,7 @@
     else if (indexPath.section == 1){
         if ([relevantList_ count]>0) {
             if (indexPath.row == 0) {
-                return 30;
+                return 43;
             }
             else{
                 return 26;
@@ -974,14 +974,14 @@
    
         moreBtn_.selected = !moreBtn_.selected;
         if (moreBtn_.selected) {
-            summaryBg_.frame = CGRectMake(14, 30, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-            summaryLabel_.frame = CGRectMake(28, 33, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+            summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
+            summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
             
             
         }
         else{
-            summaryBg_.frame = CGRectMake(14, 30, 292, 90);
-            summaryLabel_.frame = CGRectMake(28, 30, 264,90);
+            summaryBg_.frame = CGRectMake(14, 35, 292, 90);
+            summaryLabel_.frame = CGRectMake(28, 35, 264,90);
             
         }
     [self loadTable];

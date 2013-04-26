@@ -86,7 +86,7 @@
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
-    summaryBg_.frame = CGRectMake(14, 20, 292, 90);
+    summaryBg_.frame = CGRectMake(14, 25, 292, 90);
     summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 20, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
@@ -362,7 +362,7 @@
                 [cell addSubview:play];
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame =  CGRectMake(160, 165, 80, 35);
+                addFav.frame =  CGRectMake(165, 165, 80, 35);
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
@@ -447,7 +447,7 @@
                 break;
             }
             case 1:{
-                UIImageView *onLine = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 50, 13)];
+                UIImageView *onLine = [[UIImageView alloc] initWithFrame:CGRectMake(12, 10, 50, 15)];
                 onLine.image = [UIImage imageNamed:@"tab2_detailed_common_writing2.png"];
                 [cell addSubview:onLine];
                 
@@ -475,7 +475,7 @@
     }
     else if (indexPath.section == 1){
         if (indexPath.row == 0) {
-            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 50, 14)];
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing4.png"];
             UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,20)];
             [view addSubview:commentV];
@@ -538,10 +538,10 @@
         }
         else if(row == 2){
             if (moreBtn_.selected) {
-                return [self heightForString:summary_ fontSize:13 andWidth:271]+25;
+                return [self heightForString:summary_ fontSize:13 andWidth:271]+30;
             }
             else{
-                return 110;
+                return 115;
             }
 
         }
@@ -549,7 +549,7 @@
     }
     else if (indexPath.section == 1){
         if (indexPath.row == 0) {
-            return 20;
+            return 30;
         }
         else{
             NSDictionary *item = [commentArray_ objectAtIndex:row -1];
@@ -656,14 +656,14 @@
 -(void)more{
     moreBtn_.selected = !moreBtn_.selected;
     if (moreBtn_.selected) {
-        summaryBg_.frame = CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-        summaryLabel_.frame = CGRectMake(28, 23, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+        summaryBg_.frame = CGRectMake(14, 25, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
+        summaryLabel_.frame = CGRectMake(28, 28, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
         //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
         
     }
     else{
-        summaryBg_.frame = CGRectMake(14, 20, 292, 90);
-        summaryLabel_.frame = CGRectMake(28, 20, 264,90);
+        summaryBg_.frame = CGRectMake(14, 25, 292, 90);
+        summaryLabel_.frame = CGRectMake(28, 25, 264,90);
         //moreBtn_.frame = CGRectMake(288, 90, 18, 14);
     }
     [self loadTable];

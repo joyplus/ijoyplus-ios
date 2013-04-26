@@ -98,7 +98,7 @@
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
-    summaryBg_.frame = CGRectMake(14, 30, 292, 90);
+    summaryBg_.frame = CGRectMake(14, 35, 292, 90);
     summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 30, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
@@ -463,13 +463,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
                 [expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
                 [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
+                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:9];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
                 
                 expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame =  CGRectMake(160, 165, 80, 35);
+                addFav.frame =  CGRectMake(170, 165, 80, 35);
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
@@ -572,7 +572,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
                 
             case 2:{
-                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 30, 13)];
+                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 32, 13)];
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
                 [cell addSubview:jianjie];
                 
@@ -594,9 +594,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         
         int num = [relevantList_ count] > 5 ? 5:[relevantList_ count];
         if (indexPath.row == 0) {
-            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 10, 50, 14)];
+            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 50, 14)];
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,30)];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 5, 320,30)];
             [view addSubview:commentV];
             [cell addSubview:view];
         }
@@ -692,7 +692,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     else if (3 == indexPath.section)
     {
         UIImageView *yingping = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yingping.png"]];
-        yingping.frame = CGRectMake(14, 5, 32, 14);
+        yingping.frame = CGRectMake(14, 22, 32, 14);
         [cell addSubview:yingping];
         
         for (int i = 0; i < arrReviewData_.count; i ++)
@@ -703,7 +703,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             CGRect rect = CGRectMake(12, 44, 296, 133);
             if (nil != preCell)
             {
-                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 20.0f;
+                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 10.0f;
             }
             
             FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
@@ -754,10 +754,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         else if(row == 2){
             if (moreBtn_.selected) {
-                return [self heightForString:summary_ fontSize:13 andWidth:271]+35;
+                return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
             }
             else{
-                return 120;
+                return 125;
             }
 
         }
@@ -766,7 +766,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     else if (indexPath.section == 1){
         if ([relevantList_ count]>0) {
             if (indexPath.row == 0) {
-                return 30;
+                return 43;
             }
             else{
                 return 26;
@@ -1020,13 +1020,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
 -(void)more{
     moreBtn_.selected = !moreBtn_.selected;
     if (moreBtn_.selected) {
-        summaryBg_.frame = CGRectMake(14, 30, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-        summaryLabel_.frame = CGRectMake(28, 33, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+        summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
+        summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
       
     }
     else{
-        summaryBg_.frame = CGRectMake(14, 30, 292, 90);
-        summaryLabel_.frame = CGRectMake(28, 30, 264,90);
+        summaryBg_.frame = CGRectMake(14, 35, 292, 90);
+        summaryLabel_.frame = CGRectMake(28, 35, 264,90);
     }
     [self loadTable];
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:1 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
@@ -1291,8 +1291,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
         NSDictionary *oneEpisoder = [episodesArr_ objectAtIndex:i];
         if (![self isWacthEnbled:oneEpisoder]) {
             button.enabled = NO;
-            [button setBackgroundImage:[UIImage imageNamed:@"download_disable.png"] forState:UIControlStateDisabled];
-            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+            [button setBackgroundImage:[UIImage imageNamed:@"icon_xuanji.png"] forState:UIControlStateDisabled];
+            [button setTitleColor:[UIColor colorWithRed:190.0/255 green:190.0/255 blue:190.0/255 alpha:1.0] forState:UIControlStateDisabled];
         }
       
         [scrollViewDown_ addSubview:button];
@@ -1424,13 +1424,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [button setTitleColor:[UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [button setTitleColor:[UIColor colorWithRed:190.0/255 green:190.0/255 blue:190.0/255 alpha:1.0] forState:UIControlStateDisabled];
-        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
+        [button setTitleColor:[UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0] forState:UIControlStateSelected];
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button addTarget:self action:@selector(download:) forControlEvents:UIControlEventTouchUpInside];
         [button setBackgroundImage:[UIImage imageNamed:@"icon_xuanji.png"] forState:UIControlStateNormal];
         [button setBackgroundImage:[UIImage imageNamed:@"downloaded_2.png"] forState:UIControlStateSelected];
         [button setBackgroundImage:[UIImage imageNamed:@"icon_xuanji_s.png"] forState:UIControlStateHighlighted];
-        [button setBackgroundImage:[UIImage imageNamed:@"download_disable.png"] forState:UIControlStateDisabled];
+        [button setBackgroundImage:[UIImage imageNamed:@"icon_xuanji.png"] forState:UIControlStateDisabled];
         
         for (NSString *str in EpisodeIdArr) {
             if ([str  intValue] == i) {
