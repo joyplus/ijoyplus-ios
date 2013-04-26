@@ -214,6 +214,7 @@
     else
     {
         tabBarView = [[TabBarViewController alloc] init];
+        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
         //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
         //navCtrl.navigationBarHidden = YES;
         self.downLoadManager = [DownLoadManager defaultDownLoadManager];

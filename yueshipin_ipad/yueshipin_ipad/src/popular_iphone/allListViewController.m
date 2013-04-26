@@ -114,7 +114,7 @@
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
@@ -144,7 +144,7 @@
 //    self.navigationItem.rightBarButtonItem = rightButtonItem;
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
@@ -152,6 +152,7 @@
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
+    self.tableList.backgroundColor = [UIColor clearColor];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
     self.tableList.separatorStyle = UITableViewCellSeparatorStyleNone;

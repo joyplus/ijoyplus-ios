@@ -12,11 +12,11 @@
 @synthesize actors = actors_;
 @synthesize date = date_;
 @synthesize play = play_;
+@synthesize line = line_;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.frame = CGRectMake(0, 0, 296, 60);
         self.titleLab = [[UILabel alloc] initWithFrame:CGRectMake(12, 14, 200, 15)];
         self.titleLab.font = [UIFont systemFontOfSize:14];
         titleLab_.backgroundColor = [UIColor clearColor];
@@ -35,15 +35,13 @@
         [self addSubview:date_];
         
         play_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        play_.frame = CGRectMake(230, 15, 60, 30);
+        play_.frame = CGRectMake(248,0, 47, 42);
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see.png"] forState:UIControlStateNormal];
-        [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see_s.png"] forState:UIControlStateHighlighted];
         [self addSubview:play_];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
-        line.frame = CGRectMake(0, 59, 320, 1);
-        [self addSubview:line];
-        
+        line_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
+        line_.frame = CGRectMake(0, 41, self.frame.size.width, 1);
+        [self addSubview:line_];
     }
     return self;
 }

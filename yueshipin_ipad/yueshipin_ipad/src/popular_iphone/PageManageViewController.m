@@ -361,7 +361,7 @@ enum
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
@@ -371,17 +371,22 @@ enum
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
+    [super viewDidLoad];
+    UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    [self.view addSubview:backGround];
 	// Do any additional setup after loading the view.
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, kCurrentWindowHeight-88-30)];
     self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight-88-30);
+    self.scrollView.backgroundColor = [UIColor clearColor];
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
@@ -453,10 +458,11 @@ enum
     [scrBg addSubview:comicBtn_];
     //[scrBg addSubview:pageMGIcon_];
     [scrBg addSubview:slider_];
-    scrBg.backgroundColor = [UIColor redColor];
+    scrBg.backgroundColor = [UIColor clearColor];
     [self.view addSubview:scrBg];
     
     self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.tvTableList.backgroundColor = [UIColor clearColor];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -464,6 +470,7 @@ enum
     [self.scrollView addSubview:self.tvTableList];
     
     self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.movieTableList.backgroundColor = [UIColor clearColor];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
     self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -471,6 +478,7 @@ enum
     [self.scrollView addSubview:self.movieTableList];
     
     self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(960, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.showTableList.backgroundColor = [UIColor clearColor];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -478,6 +486,7 @@ enum
     [self.scrollView addSubview:self.showTableList];
     
     self.comicTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.comicTableList.backgroundColor = [UIColor clearColor];
     self.comicTableList.dataSource = self;
     self.comicTableList.delegate = self;
     self.comicTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -529,7 +538,7 @@ enum
     
     if (nil == bundingTipsView)
     {
-        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]];
+        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]highlightedImage:[UIImage imageNamed:@"bunding_tv_s.png"]];
         bundingTipsView.frame = CGRectMake(0, 0, 320, 34);
         [self.view addSubview:bundingTipsView];
         bundingTipsView.backgroundColor = [UIColor clearColor];

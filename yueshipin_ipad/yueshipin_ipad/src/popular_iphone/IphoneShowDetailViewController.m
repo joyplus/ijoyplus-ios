@@ -55,22 +55,13 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
-    
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
-    rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"iphone_share.png"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"iphone_share_f.png"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -82,9 +73,9 @@
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"name"];
     }
-    self.title = titleStr;
+    self.title = @"综艺";
     type_ = 3;
-    name_ = self.title;
+    name_ = titleStr;
     
     isloaded_ = NO;
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
@@ -120,7 +111,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
      [CommonMotheds showNetworkDisAbledAlert:self.view];
 }
 
@@ -188,8 +179,7 @@
 
 -(void)notificationData{
     infoDic_ = videoInfo_;
-    self.title = [infoDic_ objectForKey:@"name"];
-    name_ = self.title;
+    name_ = [infoDic_ objectForKey:@"name"];
     [self loadTable];
 }
 
@@ -288,10 +278,10 @@
             case 0:{
                 
                 UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
-                frame.frame = CGRectMake(14, 14, 90, 133);
+                frame.frame = CGRectMake(14, 14, 90, 143);
                 [cell addSubview:frame];
                 
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 127)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 136)];
                 
                 NSString *url = [videoInfo_ objectForKey:@"ipad_poster"];
                 if(url == nil){
@@ -319,7 +309,21 @@
                     area = @" ";
                 }
                 
-                UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
+                NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
+                if (titleStr == nil) {
+                    titleStr = [self.infoDic objectForKey:@"content_name"];
+                }
+                if (titleStr == nil) {
+                    titleStr = [self.infoDic objectForKey:@"name"];
+                }
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                titleLabel.font = [UIFont systemFontOfSize:15];
+                titleLabel.textColor = [UIColor grayColor];
+                titleLabel.backgroundColor = [UIColor clearColor];
+                titleLabel.text = titleStr;
+                [cell addSubview:titleLabel];
+                
+                UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 39, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
                 actorsLabel.textColor = [UIColor grayColor];
                 actorsLabel.backgroundColor = [UIColor clearColor];
@@ -331,13 +335,13 @@
                 areaLabel.backgroundColor = [UIColor clearColor];
                 areaLabel.text = [NSString stringWithFormat:@"地区: %@",area];
                 
-                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 95, 200, 15)];
+                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 57, 200, 15)];
                 directorLabel.font = [UIFont systemFontOfSize:12];
                 directorLabel.textColor = [UIColor grayColor];
                 directorLabel.backgroundColor = [UIColor clearColor];
                 directorLabel.text = [NSString stringWithFormat:@"导演: %@",directors];
                 
-                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 113, 200, 15)];
+                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 93, 200, 15)];
                 dateLabel.font = [UIFont systemFontOfSize:12];
                 dateLabel.textColor = [UIColor grayColor];
                 dateLabel.backgroundColor = [UIColor clearColor];
@@ -350,7 +354,7 @@
                 [cell addSubview:dateLabel];;
                 
                 UIButton *play = [UIButton buttonWithType:UIButtonTypeCustom];
-                play.frame = CGRectMake(124, 155, 87, 27);
+                play.frame = CGRectMake(110, 110, 90, 45);
                 play.tag = 10001;
                 [play setImage:[UIImage imageNamed:@"play_video.png"] forState:UIControlStateNormal];
                 [play setImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
@@ -358,56 +362,59 @@
                 [cell addSubview:play];
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame =  CGRectMake(215, 20, 89, 27);
+                addFav.frame =  CGRectMake(160, 165, 80, 35);
                 addFav.tag = 10002;
-                [addFav setBackgroundImage:[UIImage imageNamed:@"addFav.png"] forState:UIControlStateNormal];
-                [addFav setBackgroundImage:[UIImage imageNamed:@"addFav_pressed.png"] forState:UIControlStateHighlighted];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"]forState:UIControlStateNormal];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
+                
                 if (favCount_ <1000) {
-                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
+                    [addFav setTitle:[NSString stringWithFormat:@"(%d)",favCount_]  forState:UIControlStateNormal];
                 }
                 else if (favCount_ >= 1000 && favCount_<= 1100) {
                     
-                    [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
+                    [addFav setTitle:[NSString stringWithFormat:@"(1k)"]  forState:UIControlStateNormal];
                 }
                 else {
                     float favNum = favCount_*1.0/1000;
-                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
+                    [addFav setTitle:[NSString stringWithFormat:@"(%.1fk)",favNum]  forState:UIControlStateNormal];
                 }
-                [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                addFav.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
+                addFav.titleEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
+                [addFav setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                [addFav setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                addFav.titleLabel.font = [UIFont systemFontOfSize:12];
+                addFav.titleLabel.font = [UIFont systemFontOfSize:10];
                 [cell addSubview:addFav];
                 
                 UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
-                support.frame = CGRectMake(116, 20, 80, 27);
+                support.frame = CGRectMake(80, 165, 80, 35);
                 support.tag = 10003;
-                [support setBackgroundImage:[UIImage imageNamed:@"collect.png"] forState:UIControlStateNormal];
-                [support setBackgroundImage:[UIImage imageNamed:@"collect_pressed.png"] forState:UIControlStateHighlighted];
-                [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
-                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
-                [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [support setImage:[UIImage imageNamed:@"icon_ding.png"] forState:UIControlStateNormal];
+                [support setImage:[UIImage imageNamed:@"icon_ding_s.png"] forState:UIControlStateHighlighted];
+                [support setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                [support setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 if (supportCount_ <1000) {
-                    [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_]  forState:UIControlStateNormal];
+                    [support setTitle:[NSString stringWithFormat:@"(%d)",supportCount_]  forState:UIControlStateNormal];
                 }
                 else if (supportCount_ >= 1000 && supportCount_<= 1100) {
                     
-                    [support setTitle:[NSString stringWithFormat:@"顶（1k）"]  forState:UIControlStateNormal];
+                    [support setTitle:[NSString stringWithFormat:@"(1k)"]  forState:UIControlStateNormal];
                 }
                 else {
                     float suppotNum = supportCount_*1.0/1000;
-                    [support setTitle:[NSString stringWithFormat:@"顶（%.1fk）",suppotNum]  forState:UIControlStateNormal];
+                    [support setTitle:[NSString stringWithFormat:@"(%.1fk)",suppotNum]  forState:UIControlStateNormal];
                 }
+                support.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+                support.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0);
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                support.titleLabel.font = [UIFont systemFontOfSize:12];
+                support.titleLabel.font = [UIFont systemFontOfSize:10];
                 [cell addSubview:support];
                 
                 UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
-                downLoad.frame = CGRectMake(225, 155, 74, 28);
+                downLoad.frame = CGRectMake(205, 110, 90, 45);
                 downLoad.tag = 10004;
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
-                [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
+                [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 if (![self isDownloadUrlEnable]) {
@@ -420,13 +427,22 @@
                 }
     
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
-                report.frame = CGRectMake(15, 155, 96, 28);
+                report.frame = CGRectMake(0, 165, 80, 35);
                 report.tag = 10005;
-                [report setBackgroundImage:[UIImage imageNamed:@"report.png"] forState:UIControlStateNormal];
-                [report setBackgroundImage:[UIImage imageNamed:@"report_pressed.png"] forState:UIControlStateHighlighted];
+                [report setImage:[UIImage imageNamed:@"icon_fankui.png"] forState:UIControlStateNormal];
+                [report setImage:[UIImage imageNamed:@"icon_fankui_s.png"] forState:UIControlStateHighlighted];
                 [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 report.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:report];
+                
+                UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
+                share.frame = CGRectMake(240, 165, 80, 35);
+                share.tag = 10005;
+                [share setImage:[UIImage imageNamed:@"icon_fenxiang.png"] forState:UIControlStateNormal];
+                [share setImage:[UIImage imageNamed:@"icon_fenxiang_s.png"] forState:UIControlStateHighlighted];
+                [share addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
+                share.titleLabel.font = [UIFont systemFontOfSize:14];
+                [cell addSubview:share];
                 
                 break;
             }
@@ -515,10 +531,10 @@
     int row = indexPath.row;
     if (indexPath.section == 0) {
         if (row == 0) {
-            return 181;
+            return 195;
         }
         else if(row == 1){
-            return 155;
+            return 250;
         }
         else if(row == 2){
             if (moreBtn_.selected) {
@@ -773,26 +789,33 @@
 }
 
 -(UIView *)showEpisodesplayView{
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 150)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 260)];
+    view.backgroundColor = [UIColor clearColor];
     int count = [episodesArr_ count];
     
-    pageCount_ = (count%4 == 0 ? (count/4):(count/4)+1);
+    pageCount_ = (count%5 == 0 ? (count/5):(count/5)+1);
     
-    scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(40, 33, 240, 122)];
+    UIImageView *listBgView = [[UIImageView alloc] initWithFrame:CGRectMake(40, 32, 236, 205)];
+    listBgView.image = [UIImage imageNamed:@"juji_liebiao_bg"];
+    [view addSubview:listBgView];
+    
+    scrollView_= [[UIScrollView alloc] initWithFrame:CGRectMake(42, 35, 240, 210)];
     scrollView_.contentSize = CGSizeMake(320*(count/15), 125);
+    scrollView_.backgroundColor = [UIColor clearColor];
     scrollView_.scrollEnabled = NO;
     scrollView_.pagingEnabled = YES;
     scrollView_.showsHorizontalScrollIndicator = NO;
     for (int i = 0; i < count; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake((i/4)*240, (i%4)*29, 240, 27);
+        button.frame = CGRectMake(2+(i/5)*240, (i%5)*40, 227, 37);
         button.tag = i+1;
         NSDictionary *dic = [episodesArr_ objectAtIndex:i];
         
         NSString *title = [NSString stringWithFormat:@"%@", [dic objectForKey:@"name"]];
         button.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [button setTitle:title forState:UIControlStateNormal];
-        [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
          button.titleLabel.font = [UIFont systemFontOfSize:12];
          button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         [button setContentEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
@@ -804,10 +827,10 @@
     currentPage_ = 1;
     
     next_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    next_.frame = CGRectMake(280, 30, 40, 125);
-    [next_ setTitle:@"PRE" forState:UIControlStateNormal];
-    [next_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More1"] forState:UIControlStateNormal];
-    [next_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More1_s"] forState:UIControlStateHighlighted];
+    next_.frame = CGRectMake(280, 30, 30, 208);
+   // [next_ setTitle:@"PRE" forState:UIControlStateNormal];
+    [next_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More1"] forState:UIControlStateNormal];
+    [next_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More1_s"] forState:UIControlStateHighlighted];
     [next_ addTarget:self action:@selector(next:) forControlEvents:UIControlEventTouchDown];
     [view  addSubview:next_];
     if (pageCount_ == 1) {
@@ -815,13 +838,13 @@
     }
 
     pre_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    pre_.frame = CGRectMake(0, 30, 40, 125);
+    pre_.frame = CGRectMake(8, 30, 30, 208);
     if (currentPage_ == 1) {
         pre_.enabled = NO;
     }
-    [pre_ setTitle:@"NEXT" forState:UIControlStateNormal];
-    [pre_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More2"] forState:UIControlStateNormal];
-    [pre_ setImage:[UIImage imageNamed:@"tab2_detailed_variety_More2_s"] forState:UIControlStateHighlighted];
+    //[pre_ setTitle:@"NEXT" forState:UIControlStateNormal];
+    [pre_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More2"] forState:UIControlStateNormal];
+    [pre_ setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_variety_More2_s"] forState:UIControlStateHighlighted];
     [pre_ addTarget:self action:@selector(pre:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:pre_];
    

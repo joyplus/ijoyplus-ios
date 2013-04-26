@@ -29,11 +29,13 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor colorWithRed:242/255.0f green:242/255.0f blue:242/255.0f alpha:1.0f];
+    UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    [self.view addSubview:backGround];
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -41,20 +43,16 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     UIImageView * bgImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_background.png"]];
-    bgImage.frame = CGRectMake(76, 40, 168, 103);
+    bgImage.frame = CGRectMake(0, 45, 320, 121);
     [self.view addSubview:bgImage];
     
-    UILabel * tipsLabel = [[UILabel alloc]initWithFrame:CGRectMake(62, 170, 210, 40)];
-    tipsLabel.text = @"即将在电视端上绑定悅视频  请确认是否本人操作";
-    tipsLabel.numberOfLines = 2;
-    tipsLabel.textAlignment = UITextAlignmentCenter;
-    tipsLabel.font = [UIFont systemFontOfSize:17];
-    tipsLabel.backgroundColor = [UIColor clearColor];
-    tipsLabel.textColor = [UIColor colorWithRed:82/255.f green:82/255.f blue:82/255.f alpha:1];
-    [self.view addSubview:tipsLabel];
+    UIImageView * tishi = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"queren_wenzi.png"]];
+    tishi.frame = CGRectMake(0, 235, 320, 42);
+    [self.view addSubview:tishi];
     
+
     UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    bundingBtn.frame = CGRectMake(35 , 230, 250, 38);
+    bundingBtn.frame = CGRectMake(65 , 320, 190, 55);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding_f.png"] forState:UIControlStateHighlighted];
     [bundingBtn addTarget:self
@@ -63,7 +61,7 @@
     [self.view addSubview:bundingBtn];
     
     UIButton * unbundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    unbundingBtn.frame = CGRectMake(35 , 282, 250, 38);
+    unbundingBtn.frame = CGRectMake(65 , 385, 190, 55);
     [unbundingBtn setBackgroundImage:[UIImage imageNamed:@"cancel_bunding.png"] forState:UIControlStateNormal];
     [unbundingBtn setBackgroundImage:[UIImage imageNamed:@"cancel_bunding_f.png"] forState:UIControlStateHighlighted];
     [unbundingBtn addTarget:self

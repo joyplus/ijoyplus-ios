@@ -60,18 +60,23 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
+    hotView_ = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 73)];
+    hotView_.image = [UIImage imageNamed:@"sou_suo_hot"];
+    [self.view addSubview:hotView_];
+    
 	// Do any additional setup after loading the view.
-    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
-    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
-    [self.view addSubview:imagview];
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 41)];
+//    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
+//    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
+//    [self.view addSubview:imagview];
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 40)];
+    searchBar_.backgroundColor = [UIColor clearColor];
     searchBar_.tintColor = [UIColor clearColor];
     searchBar_.placeholder = @" 请输入片名/导演/主演";
     [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
@@ -90,17 +95,13 @@
     }
     
     if(!(searchField == nil)) {
-        [searchField.leftView setHidden:YES];
-        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang.png"] ];
+        //[searchField.leftView setHidden:YES];
+        [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 20, 10, 20)] ];
         [searchField setBorderStyle:UITextBorderStyleNone];
     }
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
     
-    hotView_ = [[UIImageView alloc]initWithFrame:CGRectMake(0, 41, self.view.bounds.size.width, 31)];
-    hotView_.image = [UIImage imageNamed:@"sou_suo_hot"];
-    [self.view addSubview:hotView_];
-
     for (int i = 0; i < 10; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.frame = CGRectMake(18+(i%2)*140, 92+(i/2)*45, 125, 20);
@@ -391,7 +392,7 @@
             UIButton *clearBtn = [UIButton buttonWithType:UIButtonTypeCustom];
             [clearBtn setBackgroundImage:[UIImage imageNamed:@"sousuo_qing_chu"] forState:UIControlStateNormal];
             [clearBtn setBackgroundImage:[UIImage imageNamed:@"sousuo_qing_chu_"] forState:UIControlStateHighlighted];
-            clearBtn.frame = CGRectMake(cell.frame.size.width/2-55, 5, 110, 30);
+            clearBtn.frame = CGRectMake(0, 0, cell.frame.size.width, 30);
             [clearBtn addTarget:self action:@selector(clearHistory) forControlEvents:UIControlEventTouchUpInside];
             [cell.contentView addSubview:clearBtn];
             line = [[UIImageView alloc] initWithFrame:CGRectMake(0, 39, self.view.bounds.size.width, 1)];
@@ -425,9 +426,9 @@
         cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
         [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         NSString *supportNum = [item objectForKey:@"support_num"];
-        [cell.support setTitle:[NSString stringWithFormat:@"%@人顶",supportNum] forState:UIControlStateDisabled];
+        [cell.support setTitle:[NSString stringWithFormat:@"%@",supportNum] forState:UIControlStateDisabled];
         NSString *addFavNum = [item objectForKey:@"favority_num"];
-        [cell.addFav setTitle:[NSString stringWithFormat:@"%@人收藏",addFavNum] forState:UIControlStateDisabled];
+        [cell.addFav setTitle:[NSString stringWithFormat:@"%@",addFavNum] forState:UIControlStateDisabled];
         cell.score.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"score"]];
         return cell;
 
@@ -438,9 +439,9 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableView.tag == HISTORY_LIST) {
-        if (indexPath.row == [listArr_ count]) {
-            return 40;
-        }
+//        if (indexPath.row == [listArr_ count]) {
+//            return 40;
+//        }
         return 30;
     }
     else if (tableView.tag == RESULT_LIST){

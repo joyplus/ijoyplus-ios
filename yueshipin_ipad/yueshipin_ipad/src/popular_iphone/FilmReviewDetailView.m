@@ -9,7 +9,7 @@
 #import "FilmReviewDetailView.h"
 
 #define FILM_DETAIL_REVIEW_FRAME(Height)    (CGRectMake(30, 80, 258, Height))
-#define FILM_DETAIL_CLOSE_BUTTON_FRAME      (CGRectMake(214, 6, 38, 38))
+#define FILM_DETAIL_CLOSE_BUTTON_FRAME      (CGRectMake(224, 0, 40, 40))
 #define FILM_DETAIL_TITLE_LABEL_FRAME       (CGRectMake(20, 30, 218, 30))
 #define FILM_DETAIL_CONTENT_FRAME(Height)   (CGRectMake(10, 70, 250, Height))
 
@@ -31,8 +31,8 @@
         forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:bgBtn];
         
-        UIImageView * detailImage = [[UIImageView alloc] initWithFrame:CGRectMake(27, 77, 264, self.frame.size.height - 134)];
-        detailImage.image = [[UIImage imageNamed:@"popview_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
+        UIImageView * detailImage = [[UIImageView alloc] initWithFrame:CGRectMake(27, 77, 264, 430)];
+        detailImage.image = [[UIImage imageNamed:@"yingpingpop_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
         detailImage.backgroundColor = [UIColor clearColor];
         [self addSubview:detailImage];
         
@@ -46,14 +46,14 @@
                      action:@selector(closeButtonClick:)
            forControlEvents:UIControlEventTouchUpInside];
         [detailView addSubview:closeBtn];
-        closeBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 19, 19, 0);
+        closeBtn.imageEdgeInsets = UIEdgeInsetsMake(-6, -5, 0, 0);
         [closeBtn setImage:[UIImage imageNamed:@"download_shut.png"]
                   forState:UIControlStateNormal];
         [closeBtn setImage:[UIImage imageNamed:@"download_shut_pressed.png"]
                   forState:UIControlStateHighlighted];
         closeBtn.backgroundColor = [UIColor clearColor];
         
-        UILabel * detailLab   = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 80, 30)];
+        UILabel * detailLab   = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 80, 30)];
         detailLab.textAlignment = UITextAlignmentCenter;
         detailLab.font   = [UIFont boldSystemFontOfSize:16];
         detailLab.text = @"影评详情";

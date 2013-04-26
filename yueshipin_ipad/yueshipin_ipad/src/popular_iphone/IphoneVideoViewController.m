@@ -203,53 +203,44 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
-    [actionSheet addButtonWithTitle:@"新浪微博" block:^{
-        [self selectIndex:0];
-    }];
-    [actionSheet addButtonWithTitle:@"微信好友" block:^{
-        [self selectIndex:1];
-    }];
-    [actionSheet addButtonWithTitle:@"微信朋友圈" block:^{
-        [self selectIndex:2];
-    }];
-    [actionSheet cancelButtonWithTitle:@"取消" block:nil];
-    actionSheet.cornerRadius = 5;
-    
-    [actionSheet showWithTouch:event];
+//    TSActionSheet *actionSheet = [[TSActionSheet alloc] initWithTitle:@"分享到："];
+//    [actionSheet addButtonWithTitle:@"新浪微博" block:^{
+//        [self selectIndex:0];
+//    }];
+//    [actionSheet addButtonWithTitle:@"微信好友" block:^{
+//        [self selectIndex:1];
+//    }];
+//    [actionSheet addButtonWithTitle:@"微信朋友圈" block:^{
+//        [self selectIndex:2];
+//    }];
+//    [actionSheet cancelButtonWithTitle:@"取消" block:nil];
+//    actionSheet.cornerRadius = 5;
+//    
+//    [actionSheet showWithTouch:event];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"分享到：" delegate:self cancelButtonTitle:@"取消"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"新浪微博",@"微信好友",@"微信朋友圈", nil];
+    [sheet showInView:self.view];
 
     
 }
--(void)selectIndex:(int)index{
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
     if (![self checkNetWork]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-    switch (index) {
-            
-        case 0:
-            
-            [self sinaShare];
-            break;
-            
-        case 1:
-            
-            [self wechatShare:WXSceneSession];
-            [MobClick event:@"ue_wechat_friend_share"];
-            break;
-        case 2:
-            
-            [self wechatShare:WXSceneTimeline];
-            [MobClick event:@"ue_wechat_social_share"];
-            break;
-        default:
-            
-            break;
-            
+
+    if (buttonIndex == 0) {
+        [self sinaShare];
+    }else if (buttonIndex == 1) {
+        [self wechatShare:WXSceneSession];
+        [MobClick event:@"ue_wechat_friend_share"];
+    }else if(buttonIndex == 2) {
+        [self wechatShare:WXSceneTimeline];
+        [MobClick event:@"ue_wechat_social_share"];
     }
-
-
 }
 
 -(void)sinaShare{
@@ -439,13 +430,13 @@
         return;
     }
     //[[UIApplication sharedApplication] setStatusBarHidden:YES];
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        NSDictionary *dic = [episodesArr_ objectAtIndex:num];
-        NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
-        NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
-        return;
-    }
+//    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+//        NSDictionary *dic = [episodesArr_ objectAtIndex:num];
+//        NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+//        NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+//        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+//        return;
+//    }
     IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
     iphoneWebPlayerViewController.playNum = num;
     iphoneWebPlayerViewController.nameStr = name_;

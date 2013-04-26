@@ -21,6 +21,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.backgroundColor = [UIColor clearColor];
         self.frame = CGRectMake(0, 0, 320, 112);
         UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
         frame.frame = CGRectMake(14, 15, 59, 87);
@@ -45,28 +46,32 @@
         [self addSubview:area_];
         
         support_ = [UIButton buttonWithType:UIButtonTypeCustom];
-        support_.frame = CGRectMake(157, 76, 66, 21);
-        [support_ setBackgroundImage:[UIImage imageNamed:@"collect_number.png"] forState:UIControlStateDisabled];
+        support_.backgroundColor = [UIColor clearColor];
+        support_.frame = CGRectMake(82, 80, 66, 21);
+       // [support_ setBackgroundImage:[UIImage imageNamed:@"collect_number.png"] forState:UIControlStateDisabled];
         support_.enabled = NO;
         [support_ setImage:[UIImage imageNamed:@"list_push.png"] forState:UIControlStateDisabled];
         [support_ setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-        support_.titleLabel.font = [UIFont systemFontOfSize:10];
-        support_.titleEdgeInsets = UIEdgeInsetsMake(5, 3, 5, 0);
+        support_.titleLabel.font = [UIFont systemFontOfSize:12];
+        support_.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20);
+        support_.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 30);
         [self addSubview:support_];
         
         addFav_ = [UIButton buttonWithType:UIButtonTypeCustom];
-        addFav_.frame = CGRectMake(231, 76, 66, 21);
-        [addFav_ setBackgroundImage:[UIImage imageNamed:@"collect_number.png"] forState:UIControlStateDisabled];
+        addFav_.backgroundColor = [UIColor clearColor];
+        addFav_.frame = CGRectMake(156, 80, 66, 21);
+        //[addFav_ setBackgroundImage:[UIImage imageNamed:@"collect_number.png"] forState:UIControlStateDisabled];
         addFav_.enabled = NO;
         [addFav_ setImage:[UIImage imageNamed:@"list_collect.png"] forState:UIControlStateDisabled];
         [addFav_ setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-        addFav_.titleLabel.font = [UIFont systemFontOfSize:10];
-        addFav_.titleEdgeInsets = UIEdgeInsetsMake(5, 3, 5, 0);
+        addFav_.titleLabel.font = [UIFont systemFontOfSize:12];
+        addFav_.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 20);
+        addFav_.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 30);
         [self addSubview:addFav_];
             
         score_ = [[UILabel alloc] initWithFrame:CGRectMake(256, 19, 49, 14)];
         score_.font = [UIFont systemFontOfSize:15];
-        score_.textColor = [UIColor colorWithRed:56/255.0 green:104/255.0 blue:188/255.0 alpha: 1.0f];
+        score_.textColor = [UIColor orangeColor];
         score_.backgroundColor = [UIColor clearColor];
         [self addSubview:score_];
         

@@ -50,7 +50,7 @@
         [self addSubview:area_];
         [self addSubview:type_];
         
-        addImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(250, 46, 57, 26)];
+        addImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(270, 46, 19, 19)];
         addImageView_.backgroundColor = [UIColor clearColor];
         [self addSubview:addImageView_];
         

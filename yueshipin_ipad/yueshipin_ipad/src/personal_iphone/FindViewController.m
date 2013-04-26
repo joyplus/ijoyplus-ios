@@ -46,12 +46,12 @@
 	// Do any additional setup after loading the view.
     self.title = @"搜索";
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kCurrentWindowHeight);
     [self.view addSubview:bg];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -60,16 +60,16 @@
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(Done:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 37, 30);
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateHighlighted];
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
+    [rightButton setImage:[UIImage imageNamed:@"download_done.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"download_done_s.png"] forState:UIControlStateHighlighted];
     rightButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = nil;
     
-    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
-    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
-    [self.view addSubview:imagview];
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 41)];
+//    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
+//    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
+//    [self.view addSubview:imagview];
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 40)];
     searchBar_.tintColor = [UIColor clearColor];
     searchBar_.placeholder = @" 请输入片名/导演/主演";
     [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
@@ -89,14 +89,15 @@
         }
     }
     if(!(searchField == nil)) {
-        [searchField.leftView setHidden:YES];
-        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang"] ];
+        //[searchField.leftView setHidden:YES];
+        [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 20, 10, 20)] ];
         [searchField setBorderStyle:UITextBorderStyleNone];
     }
     searchBar_.delegate = self;
     [self.view addSubview:searchBar_];
     
     tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 42, 320, kCurrentWindowHeight-85) style:UITableViewStylePlain];
+    tableList_.backgroundColor = [UIColor clearColor];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -236,12 +237,12 @@
      cell.type.text = @"类型：电视剧";
     }
     if ([selectedArr_ containsObject:item]) {
-        cell.addImageView.image = [UIImage imageNamed:@"list_icon_add_pressed.png"];
+        cell.addImageView.image = [UIImage imageNamed:@"xuan_ze_s.png"];
     }
     else{
-        cell.addImageView.image = [UIImage imageNamed:@"list_icon_add.png"];
+        cell.addImageView.image = [UIImage imageNamed:@"xuan_ze.png"];
     }
-
+    
     return cell;
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

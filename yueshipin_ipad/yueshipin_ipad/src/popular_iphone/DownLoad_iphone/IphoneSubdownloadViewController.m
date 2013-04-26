@@ -48,7 +48,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -57,7 +57,7 @@
     
     UIButton *editButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [editButton addTarget:self action:@selector(editPressed:) forControlEvents:UIControlEventTouchUpInside];
-    editButton.frame = CGRectMake(0, 0, 49, 30);
+    editButton.frame = CGRectMake(0, 0, 55, 44);
     [editButton setImage:[UIImage imageNamed:@"download_edit.png"] forState:UIControlStateNormal];
     [editButton setImage:[UIImage imageNamed:@"download_edit_f.png"] forState:UIControlStateHighlighted];
     [editButton setTitle:@"Edit" forState:UIControlStateNormal];
@@ -66,15 +66,14 @@
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [doneButton addTarget:self action:@selector(donePressed:) forControlEvents:UIControlEventTouchUpInside];
-    doneButton.frame = CGRectMake(0, 0, 49, 30);
+    doneButton.frame = CGRectMake(0, 0, 55, 44);
     [doneButton setImage:[UIImage imageNamed:@"download_done.png"] forState:UIControlStateNormal];
     [doneButton setImage:[UIImage imageNamed:@"download_done_s.png"] forState:UIControlStateHighlighted];
     [doneButton setTitle:@"done" forState:UIControlStateNormal];
     doneButtonItem_ = [[UIBarButtonItem alloc] initWithCustomView:doneButton];
     
     
-    //初始化数据
-    [self initData];
+   
     
     GMGridView *gmGridView = [[GMGridView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight)];
     gmGridView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -109,6 +108,7 @@
     
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES comparator:cmptr1];
     itemArr_ = [NSMutableArray arrayWithArray: [items sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]]];
+
 }
     NSComparator cmptr1 = ^(NSString *obj1, NSString * obj2){
         NSString *str1 = [[obj1 componentsSeparatedByString:@"_"]objectAtIndex:1];

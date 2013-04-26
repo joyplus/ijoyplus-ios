@@ -29,7 +29,7 @@
 #import "Reachability.h"
 #import "CommonMotheds.h"
 #import <Parse/Parse.h>
-
+#import "MyListCell.h"
 #define RECORD_TYPE 0
 #define Fav_TYPE  1
 #define MYLIST_TYPE 2
@@ -49,7 +49,6 @@
 @synthesize myListArr = myListArr_;
 @synthesize recordTableList = recordTableList_;
 @synthesize favTableList = favTableList_;
-@synthesize moreView = moreView_;
 @synthesize moreButton = moreButton_;
 @synthesize avatarImage = avatarImage_;
 @synthesize userId = userId_;
@@ -62,7 +61,9 @@
 @synthesize noPersonalList = noPersonalList_;
 @synthesize subnameArray;
 @synthesize clickedBtn;
-
+@synthesize typeLabel = typeLabel_;
+@synthesize clearRecord = clearRecord_;
+@synthesize scrollBg;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -158,19 +159,24 @@
 	// Do any additional setup after loading the view.
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
-    bg.frame = CGRectMake(0, 0, 320, 480);
+    bg.frame = CGRectMake(0, 0, 320, kCurrentWindowHeight);
     [self.view addSubview:bg];
+    
+    scrollBg = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-44-48)];
+    scrollBg.backgroundColor = [UIColor clearColor];
+    scrollBg.contentSize = CGSizeMake(320, 500);
+    [self.view addSubview:scrollBg];
     
     UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"我的"];
+    [titleText setText:@"个人主页"];
     self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
@@ -179,15 +185,19 @@
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"settings.png"] forState:UIControlStateNormal];
     [rightButton setImage:[UIImage imageNamed:@"settings_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
+    UIImageView *buttonBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_shang_bg.png"]];
+    buttonBgView.frame = CGRectMake(10, 50, 300, 66);
+    [scrollBg addSubview:buttonBgView];
+    
     button1_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    button1_.frame = CGRectMake(12, 40, 99, 51);
+    button1_.frame = CGRectMake(12, 71, 95, 40);
     button1_.tag = 100;
     [button1_ addTarget:self action:@selector(Selectbutton:) forControlEvents:UIControlEventTouchUpInside];
     [button1_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon.png"] forState:UIControlStateNormal];
@@ -201,7 +211,7 @@
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2.png"] forState:UIControlStateNormal];
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"] forState:UIControlStateHighlighted];
     [button2_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon2_s.png"]forState:UIControlStateDisabled];
-    button2_.frame = CGRectMake(111, 40, 99, 51);
+    button2_.frame = CGRectMake(self.view.frame.size.width/2-48, 71, 95, 40);
     button2_.tag = 101;
     button2_.adjustsImageWhenDisabled = NO;
     
@@ -210,32 +220,41 @@
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3.png"] forState:UIControlStateNormal];
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"] forState:UIControlStateHighlighted];
     [button3_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon3_s.png"]forState:UIControlStateDisabled];
-    button3_.frame = CGRectMake(210, 40, 99, 51);
+    button3_.frame = CGRectMake(212, 71, 95, 40);
     button3_.tag = 102;
     button3_.adjustsImageWhenDisabled = NO;
      
-    [self.view addSubview:button1_];
-    [self.view addSubview:button2_];
-    [self.view addSubview:button3_];
+    [scrollBg addSubview:button1_];
+    [scrollBg addSubview:button2_];
+    [scrollBg addSubview:button3_];
     
-   //[self Selectbutton:button1_];
-        
-    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(12, 98, 296, 180)];
-    self.bgView.backgroundColor = [UIColor whiteColor];
+    typeLabel_ = [[UIImageView alloc] initWithFrame:CGRectMake(10, 131, 48, 13)];
+    typeLabel_.image = [UIImage imageNamed:@"bifangjilu"];
+    [scrollBg addSubview:typeLabel_];
+    
+    clearRecord_ = [[UIButton alloc] initWithFrame:CGRectMake(245, 131, 64, 22)];
+    [clearRecord_ addTarget:self action:@selector(clearMyRecord) forControlEvents:UIControlEventTouchUpInside];
+    [clearRecord_ setBackgroundImage:[UIImage imageNamed:@"icon_qingchu.png"] forState:UIControlStateNormal];
+    [clearRecord_ setBackgroundImage:[UIImage imageNamed:@"icon_qingchu_s.png"] forState:UIControlStateHighlighted];
+    clearRecord_.hidden = NO;
+    [scrollBg addSubview:clearRecord_];
+    
+    self.bgView = [[UIView alloc] initWithFrame:CGRectMake(10, 156, 300, 222)];
+    self.bgView.backgroundColor = [UIColor clearColor];
     bgView_.layer.borderWidth = 1;
     bgView_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    [self.view addSubview:self.bgView];
+    [scrollBg addSubview:self.bgView];
     
     noFav_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noFav.png"]];
-    noFav_.frame = CGRectMake(0, 0, 296, 180);
+    noFav_.frame = CGRectMake(self.view.frame.size.width/2-87, 106, 174, 12);
     
     noRecord_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noRecored.png"]];
-    noRecord_.frame = CGRectMake(0, 0, 296, 180);
+    noRecord_.frame = CGRectMake(self.view.frame.size.width/2-87, 106, 174, 12);
     
     noPersonalList_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"noPersonalList.png"]];
-    noPersonalList_.frame = CGRectMake(0, 45, 296, 180);
+    noPersonalList_.frame = CGRectMake(self.view.frame.size.width/2-87, 106, 174, 12);
      
-    self.recordTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
+    self.recordTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 42*6) style:UITableViewStylePlain];
     self.recordTableList.dataSource = self;
     self.recordTableList.delegate = self;
     self.recordTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -243,7 +262,7 @@
     self.recordTableList.scrollEnabled = NO;
     self.recordTableList.backgroundColor = [UIColor clearColor];
     
-    self.favTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 180) style:UITableViewStylePlain];
+    self.favTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 74*3) style:UITableViewStylePlain];
     self.favTableList.dataSource = self;
     self.favTableList.delegate = self;
     self.favTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -251,7 +270,7 @@
     self.favTableList.scrollEnabled = NO;
     self.favTableList.backgroundColor = [UIColor clearColor];
     
-    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 37, 296, 180) style:UITableViewStylePlain];
+    myTableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 296, 74*3) style:UITableViewStylePlain];
     myTableList_.dataSource = self;
     myTableList_.delegate = self;
     myTableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -259,35 +278,30 @@
     myTableList_.scrollEnabled = NO;
     myTableList_.backgroundColor = [UIColor clearColor];
     
-    
-    moreView_ = [[UIView alloc] initWithFrame:CGRectMake(12, 290, 296, 45)];
-    moreView_.backgroundColor = [UIColor whiteColor];
-    moreView_.layer.borderWidth = 1;
-    moreView_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     moreButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [moreButton_ addTarget:self action:@selector(seeMore:) forControlEvents:UIControlEventTouchUpInside];
-    [moreButton_ setFrame:CGRectMake(5, 7, 284, 30)];
-    [moreView_ addSubview:moreButton_];
+    [moreButton_ setFrame:CGRectMake(250, 395, 64, 22)];
+    [scrollBg addSubview:moreButton_];
     
     createList_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    createList_.frame = CGRectMake(5, 7, 284, 30);
+    createList_.frame = CGRectMake(245, 131, 64, 22);
     [createList_ addTarget:self action:@selector(createList:) forControlEvents:UIControlEventTouchUpInside];
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single.png"] forState:UIControlStateNormal];
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single_s.png"] forState:UIControlStateHighlighted];
     
     userId_ = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    avatarImage_ = [[UIImageView alloc] initWithFrame:CGRectMake(22, 12, 43, 43)];
+    avatarImage_ = [[UIImageView alloc] initWithFrame:CGRectMake(10, 6, 33, 33)];
     avatarImage_.layer.borderWidth = 1;
     avatarImage_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];
     [avatarImage_ setImageWithURL:[NSURL URLWithString:avatarUrl] placeholderImage:[UIImage imageNamed:@"self_icon"]];
-    [self.view addSubview:avatarImage_];
+    [scrollBg addSubview:avatarImage_];
     
-    nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(75, 18, 200, 14)];
+    nameLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(55, 25, 200, 14)];
     nameLabel_.font = [UIFont systemFontOfSize:15];
     nameLabel_.text = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserNickName];
     nameLabel_.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:nameLabel_];
+    [scrollBg addSubview:nameLabel_];
     
     //加载数据
     if ([sortedwatchRecordArray_ count]>0) {
@@ -310,7 +324,6 @@
     recordTableList_ = nil;
     favTableList_ = nil;
     myTableList_ = nil;
-    moreView_ = nil;
     moreButton_ = nil;
     avatarImage_ = nil;
     nameLabel_ = nil;
@@ -327,7 +340,7 @@
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:NO];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
     
     //request person data
     if (NO == button1_.enabled)
@@ -407,6 +420,10 @@
         }
         if (sortedwatchRecordArray_.count > 0) {
             [noRecord_ removeFromSuperview];
+            clearRecord_.hidden = NO;
+        }
+        else{
+            clearRecord_.hidden = YES;
         }
         if (!button1_.enabled) {
             [self refreshMineViewWithTag:button1_.tag];
@@ -479,12 +496,12 @@
     [self.favTableList removeFromSuperview];
     [self.myTableList removeFromSuperview];
     [createList_ removeFromSuperview];
-    [self.bgView setFrame:CGRectMake(12, 98, 296, 0)];
-    [moreView_ removeFromSuperview];
+    [self.bgView setFrame:CGRectMake(12, 156, 296, 0)];
     [noRecord_ removeFromSuperview];
     [noFav_ removeFromSuperview];
     [noPersonalList_ removeFromSuperview];
-    
+    [moreButton_ removeFromSuperview];
+    [moreButton_ setFrame:CGRectMake(250, 395, 64, 22)];
     button1_.enabled = YES;
     button2_.enabled = YES;
     button3_.enabled = YES;
@@ -494,18 +511,23 @@
         //播放纪录
         case 100:{
             button1_.enabled = NO;
-            
+            typeLabel_.image = [UIImage imageNamed:@"bifangjilu"];
+            clearRecord_.hidden = NO;
             [self loadRecordData];
             break;
         }
         //我的收藏
         case 101:{
             button2_.enabled = NO;
+           clearRecord_.hidden = YES;
+            typeLabel_.image = [UIImage imageNamed:@"wodeshoucang"];
             [self loadMyFavsData];
             break;
         }
         //我的悦单
         case 102:{
+            typeLabel_.image = [UIImage imageNamed:@"wodeyuedan"];
+            clearRecord_.hidden = YES;
             button3_.enabled = NO;
             [self loadPersonalData];
             
@@ -525,16 +547,16 @@
     switch (tag) {
         case 100:
         {
-            if ([self.sortedwatchRecordArray count] <= 3) {
+            if ([self.sortedwatchRecordArray count] <= 6) {
                 
-                [moreView_ removeFromSuperview];
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[sortedwatchRecordArray_ count])];
+                [self.bgView setFrame:CGRectMake(12, 156, 296, 42*[sortedwatchRecordArray_ count])];
             }
             else {
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*3)];
+                [self.bgView setFrame:CGRectMake(12, 156, 296, 42*6)];
+                [moreButton_ setFrame:CGRectMake(250, 408, 64, 22)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_see_s.png"] forState:UIControlStateHighlighted];
-                [self.view addSubview:moreView_];
+                [scrollBg addSubview:moreButton_];
             }
             
             if ([sortedwatchRecordArray_ count] == 0) {
@@ -549,15 +571,14 @@
         case 101:
         {
             if ([self.favArr count] <= 3) {
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*[favArr_ count])];
-                [moreView_ removeFromSuperview];
+                [self.bgView setFrame:CGRectMake(12, 156, 296, 74*[favArr_ count])];
+
             }
             else {
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 60*3)];
+                [self.bgView setFrame:CGRectMake(12, 156, 296, 74*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page2_see_s.png"] forState:UIControlStateHighlighted];
-                
-                [self.view addSubview:moreView_];
+                [scrollBg addSubview:moreButton_];
             }
             
             if ([favArr_ count]==0) {
@@ -575,27 +596,27 @@
         {
             if ([myListArr_ count] <= 3) {
                 if ([myListArr_ count]== 0){
-                    [self.bgView setFrame:CGRectMake(12, 98, 296, 44)];
+                    [self.bgView setFrame:CGRectMake(12, 156, 296, 0)];
                     [self.bgView addSubview:noPersonalList_];
                 }
                 else{
                     [noPersonalList_ removeFromSuperview];
-                    [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*[myListArr_ count])];
+                    [self.bgView setFrame:CGRectMake(12, 156, 296,74*[myListArr_ count])];
+                    
                 }
                 
-                [moreView_ removeFromSuperview];
+            
             }
             else {
                  [noPersonalList_ removeFromSuperview];
-                [self.bgView setFrame:CGRectMake(12, 98, 296, 37+ 60*3)];
+                [self.bgView setFrame:CGRectMake(12, 156, 296, 74*3)];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see.png"] forState:UIControlStateNormal];
                 [moreButton_ setBackgroundImage:[UIImage imageNamed:@"tab3_page3_see_s.png"] forState:UIControlStateHighlighted];
-                [moreView_ setFrame:CGRectMake(12, 320, 296, 45)];
-                [self.view addSubview:moreView_];
+                [scrollBg addSubview:moreButton_];
             }
             
             
-            [self.bgView addSubview:createList_];
+            [scrollBg addSubview:createList_];
             [self.bgView addSubview:myTableList_];
             [myTableList_ reloadData];
         }
@@ -607,13 +628,21 @@
     
 }
 
+-(void)clearMyRecord{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"确定清除播放记录？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+    alert.tag = 10002;
+    [alert show];
+    
+    
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableView.tag == RECORD_TYPE) {
-        if ([sortedwatchRecordArray_ count] <= 3) {
+        if ([sortedwatchRecordArray_ count] <= 6) {
             return [sortedwatchRecordArray_ count];
         }
         else{
-            return 3;
+            return 6;
         }
     }
     if (tableView.tag == Fav_TYPE) {
@@ -655,10 +684,10 @@
 
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
         cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
-        cell.titleLab.frame = CGRectMake(10, 20, 220, 15);
+        cell.titleLab.frame = CGRectMake(10, 5, 220, 15);
 
         cell.actors.text  = [self composeContent:infoDic];
-        [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
+        [cell.actors setFrame:CGRectMake(12, 20, 200, 15)];
      
         [cell.date removeFromSuperview];
         cell.play.tag = indexPath.row;
@@ -677,10 +706,10 @@
         NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
         
         UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
-        frame.frame = CGRectMake(14, 6, 39, 49);
+        frame.frame = CGRectMake(10, 7, 43, 64);
         [cell.contentView addSubview:frame];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 36, 45)];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(11, 8, 40, 60)];
         [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
         [cell.contentView addSubview:imageView];
         
@@ -697,47 +726,37 @@
         actors.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actors];
         
-       UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(70, 38, 200, 15)];
+       UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(70, 40, 200, 15)];
         date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
         date.font = [UIFont systemFontOfSize:12];
         date.textColor = [UIColor grayColor];
         date.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:date];
         
-               
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
-        line.frame = CGRectMake(0, 59, 320, 1);
+    
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
+        line.frame = CGRectMake(0,73, 320, 1);
         [cell.contentView addSubview:line];
         return cell;
     }
     else if (tableView.tag == MYLIST_TYPE){
-        RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        }
-
-    
         NSDictionary *infoDic = [myListArr_ objectAtIndex:indexPath.row];
-        NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
-        cell.titleLab.text = [infoDic objectForKey:@"name"];
-        if (items != nil && [items count] != 0) {
-            NSDictionary *item = [items objectAtIndex:0];
-            cell.actors.text = [item objectForKey:@"prod_name"];
-            [cell.actors setFrame:CGRectMake(12, 33, 200, 15)];
-            cell.date.text = @"...";
-            [cell.date setFrame:CGRectMake(14, 42, 200, 15)];
-        }
-       
-        [cell.play  removeFromSuperview];
+        MyListCell *cell = [[MyListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        [cell initCell:infoDic];
+        
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
+        line.frame = CGRectMake(0, 73, cell.frame.size.width, 1);
+        [cell.contentView addSubview:line];
         return cell;
-    
     }
     return nil;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    return 60;
+    if (tableView.tag == RECORD_TYPE) {
+        return 42;
+    }
+    return 74;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -947,6 +966,7 @@
                                                           delegate:self
                                                  cancelButtonTitle:@"取消"
                                                  otherButtonTitles:@"确定", nil];
+        alertView.tag = 10001;
         [alertView show];
     } else {
         [self willPlayVideo:sender];
@@ -955,9 +975,39 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1){
-        [self willPlayVideo:clickedBtn];
+    if (alertView.tag == 10001) {
+        if(buttonIndex == 1){
+            [self willPlayVideo:clickedBtn];
+        }
     }
+    if (alertView.tag == 10002) {
+            if (buttonIndex == 0) {
+                if (![CommonMotheds isNetworkEnbled]) {
+                    [UIUtility showNetWorkError:self.view];
+                    return;
+                }
+                for (NSDictionary *dic in sortedwatchRecordArray_) {
+                    NSString *type = [dic objectForKey:@"prod_type"];
+                    NSString *prodId = [dic objectForKey:@"prod_id"];
+                    NSString *subName = [dic objectForKey:@"prod_subname"];
+                    if ([type isEqualToString:@"1"]) {
+                        [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%d",prodId,0]];
+                    }
+                    else if([type isEqualToString:@"2"]|| [type isEqualToString:@"3"]){
+                        [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%@",prodId,subName]];
+                    }
+                    
+                }
+                NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"user_id", nil];
+                [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+                    [self loadRecordData];
+                } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                }];
+                
+            }
+    }
+
 }
 
 - (void)willPlayVideo:(UIButton *)btn

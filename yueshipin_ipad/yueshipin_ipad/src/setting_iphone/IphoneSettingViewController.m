@@ -60,7 +60,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -74,25 +74,22 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-44)];
     scrollView.backgroundColor = [UIColor clearColor];
     scrollView.showsHorizontalScrollIndicator = NO;
-    scrollView.contentSize = CGSizeMake(320, kFullWindowHeight+160);
+    scrollView.contentSize = CGSizeMake(320, kFullWindowHeight+180);
     [self.view addSubview:scrollView];
     
-    UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 67)];
-    view1.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-    view1.layer.borderWidth = 1;
-    view1.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    UIImageView *sinaWeibo = [[UIImageView alloc] initWithFrame:CGRectMake(12, 13, 272, 33)];
-    sinaWeibo.image = [UIImage imageNamed:@"my_s_xinlang.png"];
-    [view1 addSubview:sinaWeibo];
-    
-    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(85, 16, 120, 22)];
+    UIImageView *sinaImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 300, 45)];
+    sinaImg.image = [UIImage imageNamed:@"my_s_xinlang.png"];
+    sinaImg.userInteractionEnabled = YES;
+    weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(74, 4, 120, 22)];
     weiboName_.backgroundColor = [UIColor clearColor];
-    weiboName_.textColor =  [UIColor colorWithRed:54/255.0 green:98/255.0 blue:156/255.0 alpha:1];
+    weiboName_.textColor =  [UIColor orangeColor];
     weiboName_.font = [UIFont boldSystemFontOfSize:13];
-    [view1 addSubview:weiboName_];
-    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(200, 14, 50, 22)];
+    [sinaImg addSubview:weiboName_];
+    sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(215, 6, 40, 22)];
     [sinaSwith_ addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
-    [view1 addSubview:sinaSwith_];
+    sinaSwith_.onTintColor = [UIColor orangeColor];
+    [sinaImg addSubview:sinaSwith_];
+    
     sinaweibo_ = [AppDelegate instance].sinaweibo;
     sinaweibo_.delegate = self;
     if([sinaweibo_ isLoggedIn]){
@@ -101,47 +98,18 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
         weiboName_.text = [NSString stringWithFormat:@"(%@)",username];;
     }
 
-    UILabel *infolabel = [[UILabel alloc] initWithFrame:CGRectMake(25, 48, 250, 15)];
-    infolabel.text = @"绑定微博后，可以在多个设备间同步您的记录。";
-    infolabel.textColor = [UIColor grayColor];
-    infolabel.backgroundColor = [UIColor clearColor];
-    infolabel.font = [UIFont systemFontOfSize:11];
-    [view1 addSubview:infolabel];
-    
-    [scrollView addSubview:view1];
+    [scrollView addSubview:sinaImg];
    
-    
-    UIView *view2 = [[UIView alloc] initWithFrame:CGRectMake(12, 86, 296, 59)];
-    view2.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-    view2.layer.borderWidth = 1;
-    view2.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    [scrollView addSubview:view2];
-    
-    
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
-    clearCache.frame = CGRectMake(24, 100, 273, 33);
-    // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
+    clearCache.frame = CGRectMake(10, 90, 300, 35);
+    // [feedBack setTitle:@"清楚缓存" forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache.png"] forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache_s.png"] forState:UIControlStateHighlighted];
     [clearCache addTarget:self action:@selector(clearCache:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:clearCache];
-    
-//    UIButton *appRecommed = [UIButton buttonWithType:UIButtonTypeCustom];
-//    appRecommed.frame = CGRectMake(24, 100, 273, 33);
-//    //[appRecommed setTitle:@"精品推荐" forState:UIControlStateNormal];
-//    [appRecommed setBackgroundImage:[UIImage imageNamed:@"my_setting_app.png"] forState:UIControlStateNormal];
-//    [appRecommed setBackgroundImage:[UIImage imageNamed:@"my_setting_app_s.png"] forState:UIControlStateHighlighted];
-//    [appRecommed addTarget:self action:@selector(appRecommed:) forControlEvents:UIControlEventTouchUpInside];
-//    [self.view addSubview:appRecommed];
-    
-    
-    UIView *view3 = [[UIView alloc] initWithFrame:CGRectMake(12, 155, 296, 212)];
-    view3.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-    view3.layer.borderWidth = 1;
-    view3.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    [scrollView addSubview:view3];
+
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeCustom];
-    feedBack.frame = CGRectMake(24, 168, 273, 33);
+    feedBack.frame = CGRectMake(10, 155, 300, 35);
    // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other.png"] forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other_s.png"] forState:UIControlStateHighlighted];
@@ -149,48 +117,43 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:feedBack];
     
     UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
-    suggest.frame = CGRectMake(24, 208, 273, 33);
+    suggest.frame = CGRectMake(10, 200, 300, 35);
     //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
     [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:suggest];
     
+    UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
+    careUs.frame = CGRectMake(10, 245, 300, 35);
+    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
+    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
+    [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:careUs];
+    
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(24, 286, 273, 33);
+    aboutUs.frame = CGRectMake(10, 290, 300, 35);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
     [aboutUs addTarget:self action:@selector(aboutUs:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:aboutUs];
     
-    UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    careUs.frame = CGRectMake(24, 247, 273, 33);
-    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
-    [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
-    [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:careUs];
-    
     UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
-    update.frame = CGRectMake(24, 325, 273, 33);
+    update.frame = CGRectMake(10, 335, 300, 35);
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdate.png"] forState:UIControlStateNormal];
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdatePress.png"] forState:UIControlStateHighlighted];
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:update];
 	
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 375, 135, 15)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 385, 135, 15)];
     label.font = [UIFont systemFontOfSize:13];
-    label.textColor = [UIColor colorWithRed:94/255.0 green:94/255.0 blue:94/255.0 alpha:1];
+    label.textColor = [UIColor colorWithRed:248/255.0 green:165/255.0 blue:85/255.0 alpha:1];
     label.backgroundColor = [UIColor clearColor];
-    label.text = @"★精品推荐★";
+    label.text = @"精品推荐";
     [scrollView addSubview:label];
     
-    UIView *view4 = [[UIView alloc] initWithFrame:CGRectMake(12, 396, 296, 260)];
-    view4.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-    view4.layer.borderWidth = 1;
-    view4.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(0, 4,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(0, 410,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
     [_mGridView setBackgroundColor:[UIColor clearColor]];
     _mGridView.datasource = self;
     _mGridView.delegate = self;
@@ -199,9 +162,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     
     [_mGridView requestPromoterDataInBackground];
-    
-    [view4 addSubview:_mGridView];
-    [scrollView addSubview:view4];
+    [scrollView addSubview:_mGridView];
     
    
     

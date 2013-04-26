@@ -68,22 +68,18 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
-    
-    UIImageView *imagview = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bg_sou_suo"]];
-    imagview.frame = CGRectMake(0, 0, self.view.bounds.size.width, 41);
-    [self.view addSubview:imagview];
-    
+        
     _arrHistory = [[CacheUtility sharedCache] loadFromCache:@"serach_history"];
     
-    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 41)];
+    searchBar_ = [[UISearchBar alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-140, 0, 280, 40)];
     searchBar_.tintColor = [UIColor clearColor];
-    searchBar_.placeholder = @" 请输入片名/导演/主演";
+    searchBar_.placeholder = @"请输入片名/导演/主演";
     [[searchBar_.subviews objectAtIndex:0]removeFromSuperview];
     UITextField *searchField;
     NSUInteger numViews = [searchBar_.subviews count];
@@ -101,8 +97,8 @@
     
     if(!(searchField == nil))
     {
-        [searchField.leftView setHidden:YES];
-        [searchField setBackground: [UIImage imageNamed:@"my_search_sou_suo_kuang.png"] ];
+        //[searchField.leftView setHidden:YES];
+        [searchField setBackground: [[UIImage imageNamed:@"shuru_kuang_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 20, 10, 20)] ];
         [searchField setBorderStyle:UITextBorderStyleNone];
     }
     searchBar_.delegate = self;
@@ -119,7 +115,7 @@
     _viewRespForWX = [[RespForWXRootView alloc] initWithFrame:\
                                     CGRectMake(0, \
                                                41, 320,\
-                                               bg.frame.size.height - imagview.frame.origin.y - imagview.frame.size.height)];
+                                               bg.frame.size.height -41)];
     _viewRespForWX.delegate = self;
     [self.view addSubview:_viewRespForWX];
     
@@ -491,7 +487,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     line = [[UIImageView alloc] initWithFrame:CGRectMake(0, 29, self.view.bounds.size.width, 1)];
     line.backgroundColor = [UIColor clearColor];
-    line.image = [UIImage imageNamed:@"sousuo_bg_fen_ge_xian"];
+    line.image = [UIImage imageNamed:@"fengexian.png"];
     [cell.contentView addSubview:line];
     
     return cell;

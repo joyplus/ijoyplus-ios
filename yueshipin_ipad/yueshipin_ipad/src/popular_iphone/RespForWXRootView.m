@@ -100,11 +100,11 @@
     [hotBtn addTarget:self
                action:@selector(buttonClicked:)
      forControlEvents:UIControlEventTouchUpInside];
-    [hotBtn setBackgroundImage:[UIImage imageNamed:@"re_bo.png"]
+    [hotBtn setImage:[UIImage imageNamed:@"re_bo.png"]
                       forState:UIControlStateNormal];
-    [hotBtn setBackgroundImage:[UIImage imageNamed:@"re_bo_s.png"]
+    [hotBtn setImage:[UIImage imageNamed:@"re_bo_s.png"]
                       forState:UIControlStateHighlighted];
-    [hotBtn setBackgroundImage:[UIImage imageNamed:@"re_bo_s.png"]
+    [hotBtn setImage:[UIImage imageNamed:@"re_bo_s.png"]
                       forState:UIControlStateDisabled];
     hotBtn.enabled = NO;
     hotBtn.adjustsImageWhenDisabled = NO;
@@ -113,11 +113,11 @@
     [favBtn addTarget:self
                action:@selector(buttonClicked:)
      forControlEvents:UIControlEventTouchUpInside];
-    [favBtn setBackgroundImage:[UIImage imageNamed:@"shou_cang.png"]
+    [favBtn setImage:[UIImage imageNamed:@"shou_cang.png"]
                       forState:UIControlStateNormal];
-    [favBtn setBackgroundImage:[UIImage imageNamed:@"shou_cang_s.png"]
+    [favBtn setImage:[UIImage imageNamed:@"shou_cang_s.png"]
                       forState:UIControlStateHighlighted];
-    [favBtn setBackgroundImage:[UIImage imageNamed:@"shou_cang_s.png"]
+    [favBtn setImage:[UIImage imageNamed:@"shou_cang_s.png"]
                       forState:UIControlStateDisabled];
     favBtn.frame = FAV_BUTTON_FRAME;
     favBtn.tag = FAV_BUTTON_TAG;
@@ -127,11 +127,11 @@
     [recBtn addTarget:self
                action:@selector(buttonClicked:)
      forControlEvents:UIControlEventTouchUpInside];
-    [recBtn setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon.png"]
+    [recBtn setImage:[UIImage imageNamed:@"icon_jilu.png"]
                       forState:UIControlStateNormal];
-    [recBtn setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]
+    [recBtn setImage:[UIImage imageNamed:@"icon_jilu_s.png"]
                       forState:UIControlStateHighlighted];
-    [recBtn setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]
+    [recBtn setImage:[UIImage imageNamed:@"icon_jilu_s.png"]
                       forState:UIControlStateDisabled];
     recBtn.frame = REC_BUTTON_FRAME;
     recBtn.tag = REC_BUTTON_TAG;

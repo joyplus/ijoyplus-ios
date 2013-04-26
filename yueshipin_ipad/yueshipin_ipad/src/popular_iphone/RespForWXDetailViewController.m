@@ -55,7 +55,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -117,7 +117,7 @@
     [self.view addSubview:shareWXBG];
     
     UIButton * shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    shareBtn.frame = CGRectMake(0, 0, 134, 40);
+    shareBtn.frame = CGRectMake(0, 0, 132, 37);
     shareBtn.center = shareWXBG.center;
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"fenxiang_weixin.png"] forState:UIControlStateNormal];
     [shareBtn setBackgroundImage:[UIImage imageNamed:@"fenxiang_weixin_s.png"] forState:UIControlStateHighlighted];
@@ -277,8 +277,8 @@
         
         CGFloat height = contentSize.height > 150 ? 150 : contentSize.height;
         
-        UIImageView * summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
-        summaryBg_.frame = CGRectMake(14, 177, 292, height);
+//        UIImageView * summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
+//        summaryBg_.frame = CGRectMake(14, 177, 292, height);
         
         UILabel * summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 177, 264,height)];
         summaryLabel_.textColor = [UIColor grayColor];
@@ -287,7 +287,7 @@
         summaryLabel_.lineBreakMode = UILineBreakModeWordWrap;
         summaryLabel_.font = [UIFont systemFontOfSize:13];
         
-        [self.view addSubview:summaryBg_];
+        [self.view addSubview:summaryLabel_];
         
         summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
         

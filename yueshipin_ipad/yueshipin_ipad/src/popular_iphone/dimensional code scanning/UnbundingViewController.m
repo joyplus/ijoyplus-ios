@@ -33,7 +33,7 @@
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -41,19 +41,15 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     UIImageView * bgImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_background.png"]];
-    bgImage.frame = CGRectMake(76, 40, 168, 103);
+    bgImage.frame = CGRectMake(0, 45, 320, 121);
     [self.view addSubview:bgImage];
     
-    UILabel * tipsLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 170, 320, 20)];
-    tipsLabel.text = @"您已在电视端上成功绑定悅视频";
-    tipsLabel.textAlignment = UITextAlignmentCenter;
-    tipsLabel.font = [UIFont systemFontOfSize:18];
-    tipsLabel.backgroundColor = [UIColor clearColor];
-    tipsLabel.textColor = [UIColor colorWithRed:82/255.f green:82/255.f blue:82/255.f alpha:1];
-    [self.view addSubview:tipsLabel];
+    UIImageView * tishi = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"jiechu_wenzi.png"]];
+    tishi.frame = CGRectMake(0, 235, 320, 42);
+    [self.view addSubview:tishi];
     
     UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    bundingBtn.frame = CGRectMake(35 , 265, 250, 38);
+    bundingBtn.frame = CGRectMake(65 , 320, 190, 55);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"unbunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"unbunding_f.png"] forState:UIControlStateHighlighted];
     [bundingBtn addTarget:self

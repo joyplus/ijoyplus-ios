@@ -62,10 +62,10 @@
     }
    
     //[self initWebView];
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
-        [[UIApplication sharedApplication] openURL:webUrl_];
-        return;
-    }
+//    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+//        [[UIApplication sharedApplication] openURL:webUrl_];
+//        return;
+//    }
 
    [self initPlayerView];
     [AppDelegate instance].isInPlayView = YES;
