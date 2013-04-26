@@ -758,12 +758,15 @@
             } else if (videoType == SHOW_TYPE){
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
-                if (curEpisode == nil || [curEpisode isEqualToString:@"0"]) {
+                if (curEpisode == nil || [curEpisode isEqualToString:@"0"])
+                {
                     NSDate * nowDate = [NSDate date];
                     NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
                     [dateformat setDateFormat:@"yyyy"];
                     curEpisode = [dateformat stringFromDate:nowDate];
-                } else if (![curEpisode hasPrefix:@"20"]) {
+                }
+                else if (![curEpisode hasPrefix:@"20"])
+                {
                     curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
                 }
                 titleLabel.text = [NSString stringWithFormat:@"更新至%@", curEpisode];
@@ -771,10 +774,17 @@
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 int curEpisode = [[item objectForKey:@"cur_episode"] integerValue];
                 int maxEpisode = [[item objectForKey:@"max_episode"] integerValue];
-                if (curEpisode == 0 || maxEpisode == curEpisode) {
+                if (curEpisode == 0 || maxEpisode == curEpisode)
+                {
                     titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
-                } else{
+                }
+                else if (maxEpisode > curEpisode)
+                {
                     titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+                }
+                else
+                {
+                    titleLabel.text = nil;
                 }
             }
             nameLabel.text = [item objectForKey:@"prod_name"];
