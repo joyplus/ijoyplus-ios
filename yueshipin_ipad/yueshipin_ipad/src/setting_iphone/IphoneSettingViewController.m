@@ -146,15 +146,18 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:update];
 	
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 385, 135, 15)];
-    label.font = [UIFont systemFontOfSize:13];
-    label.textColor = [UIColor colorWithRed:248/255.0 green:165/255.0 blue:85/255.0 alpha:1];
-    label.backgroundColor = [UIColor clearColor];
-    label.text = @"精品推荐";
-    [scrollView addSubview:label];
+//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(33, 385, 135, 15)];
+//    label.font = [UIFont systemFontOfSize:13];
+//    label.textColor = [UIColor colorWithRed:248/255.0 green:165/255.0 blue:85/255.0 alpha:1];
+//    label.backgroundColor = [UIColor clearColor];
+//    label.text = @"精品推荐";
+//    [scrollView addSubview:label];
+    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 390, 55, 13)];
+    jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
+    [scrollView addSubview:jinpin];
     
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(0, 410,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
-    [_mGridView setBackgroundColor:[UIColor clearColor]];
+    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 410,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+    [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
     _mGridView.datasource = self;
     _mGridView.delegate = self;
     _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
