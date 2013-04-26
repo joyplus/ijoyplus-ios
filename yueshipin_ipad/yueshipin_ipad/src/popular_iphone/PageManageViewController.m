@@ -502,7 +502,7 @@ enum
         refreshHeaderViewForMovieList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForMovieList_.delegate = self;
         [movieTableList_ addSubview:refreshHeaderViewForMovieList_];
-        [refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
         movieLoadCount_ = 1;
     }
 
@@ -511,7 +511,7 @@ enum
         refreshHeaderViewForTvList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForTvList_.delegate = self;
         [tvTableList_ addSubview:refreshHeaderViewForTvList_];
-        [refreshHeaderViewForTvList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForTvList_ refreshLastUpdatedDate];
         tvLoadCount_ = 1;
     }
 
@@ -520,7 +520,7 @@ enum
         refreshHeaderViewForShowList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForShowList_.delegate = self;
         [showTableList_ addSubview:refreshHeaderViewForShowList_];
-        [refreshHeaderViewForShowList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForShowList_ refreshLastUpdatedDate];
         showLoadCount_ = 1;
     }
     
@@ -530,7 +530,7 @@ enum
         refreshHeaderViewForComicList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForComicList_.delegate = self;
         [comicTableList_ addSubview:refreshHeaderViewForComicList_];
-        [refreshHeaderViewForComicList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForComicList_ refreshLastUpdatedDate];
         comicLoadCount_ = 1;
     }
     
@@ -550,11 +550,6 @@ enum
         tapGesture.numberOfTouchesRequired = 1;
         [bundingTipsView addGestureRecognizer:tapGesture];
     }
-    
-    [self loadMovieTopsData];
-    [self loadTVTopsData];
-    [self loadShowTopsData];
-    [self loadComicTopsData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(managerTVBunding)
@@ -579,6 +574,22 @@ enum
 }
 -(void)viewWillAppear:(BOOL)animated{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
+    if (0 == self.movieListArr.count)
+    {
+        [self loadMovieTopsData];
+    }
+    if (0 == self.tvListArr.count)
+    {
+        [self loadTVTopsData];
+    }
+    if (0 == self.showListArr.count)
+    {
+        [self loadShowTopsData];
+    }
+    if (0 == self.comicListArr.count)
+    {
+        [self loadComicTopsData];
+    }
     
     [self managerTVBunding];
     

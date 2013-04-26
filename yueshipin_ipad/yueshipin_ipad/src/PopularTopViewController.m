@@ -103,7 +103,7 @@
             _refreshHeaderView = view;
             
         }
-        [_refreshHeaderView refreshLastUpdatedDate];
+        //[_refreshHeaderView refreshLastUpdatedDate];
 	}
     return self;
 }
@@ -111,6 +111,19 @@
 - (void)loadTable {
     [table reloadData];
     [showPullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if (0 == lunboArray.count)
+    {
+        [self retrieveLunboData];
+    }
+    if (0 == movieTopsArray.count)
+    {
+        [self retrieveMovieTopsData];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -130,9 +143,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self retrieveLunboData];
     
-    [self setAutoScrollTimer];
+    //[self setAutoScrollTimer];
     
     pageSize = 20;
     topType = MOVIE_TOP;
@@ -140,7 +152,6 @@
     tvTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     comicTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     showTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-    [self retrieveMovieTopsData];
     
     [self performSelectorInBackground:@selector(transferDataFromOldDb) withObject:nil];
 }

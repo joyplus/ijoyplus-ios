@@ -148,7 +148,7 @@
             _refreshHeaderView = view;
             
         }
-        [_refreshHeaderView refreshLastUpdatedDate];
+        //[_refreshHeaderView refreshLastUpdatedDate];
     }
     return self;
 }
