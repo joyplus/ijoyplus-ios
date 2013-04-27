@@ -77,6 +77,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) NSString *umengPageName;
 @property (nonatomic) BOOL isFromSelectBtn;
 @property (nonatomic) BOOL isAppEnterBackground;
+@property BOOL isChangeQuality;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -111,7 +112,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
-@synthesize m3u8Duration;
+@synthesize m3u8Duration,isChangeQuality;
 
 #pragma mark
 #pragma mark View Controller
@@ -946,7 +947,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             lastLabel.textColor = [UIColor lightGrayColor];
             lastLabel.text = [NSString stringWithFormat:@"上次播放到 %@", [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime)]];
             lastLabel.font = [UIFont systemFontOfSize:15];
-            [playCacheView addSubview:lastLabel];
+            if (!isChangeQuality)
+            {
+                [playCacheView addSubview:lastLabel];
+                isChangeQuality = NO;
+            }
         }
         
         tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
@@ -971,6 +976,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     tipLabel.text = nil;
     [myHUD show:YES];
     myHUD.labelText = @"正在加载，请稍等";
+    myHUD.userInteractionEnabled = NO;
 }
 
 
@@ -1278,6 +1284,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)resolutionBtnClicked:(UIButton *)btn
 {
+    [self updateWatchRecord];
     [self resetControlVisibilityTimer];
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
@@ -1310,6 +1317,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [mPlayer pause];
     mPlayer = nil;
     defaultErrorMessage = @"此分辨率已失效，请选择其他分辨率。";
+    
+    isChangeQuality = YES;
     [self showPlayCacheView];
     [self sendRequest];
 }
@@ -1788,12 +1797,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
     if (!playCacheView.superview)
     {
-        [self.view addSubview:myHUD];
+        //[self.view addSubview:myHUD];
         
         myHUD.hidden = NO;
         [self.view bringSubviewToFront:myHUD];
         [myHUD show:YES];
         myHUD.labelText = @"正在加载，请稍等";
+        myHUD.userInteractionEnabled = NO;
     }
 }
 - (void)dismissActivityView
