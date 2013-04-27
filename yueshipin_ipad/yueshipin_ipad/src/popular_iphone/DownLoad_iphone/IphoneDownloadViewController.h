@@ -10,7 +10,7 @@
 #import "GMGridView.h"
 #import "DDProgressView.h"
 #import "DownLoadManager.h"
-@interface IphoneDownloadViewController : UIViewController<GMGridViewDataSource, GMGridViewActionDelegate,DownloadManagerDelegate>{
+@interface IphoneDownloadViewController : UIViewController<GMGridViewDataSource, GMGridViewActionDelegate,DownloadManagerDelegate,UIAlertViewDelegate>{
     __gm_weak GMGridView *gMGridView_;
     UIBarButtonItem *editButtonItem_;
     UIBarButtonItem *doneButtonItem_;

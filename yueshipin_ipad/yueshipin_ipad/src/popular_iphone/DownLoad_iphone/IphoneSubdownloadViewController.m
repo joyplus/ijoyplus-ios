@@ -18,7 +18,11 @@
 #import "DatabaseManager.h"
 #import "CacheUtility.h"
 @interface IphoneSubdownloadViewController ()
-
+{
+    NSInteger delItemIndex;
+    GMGridView * delItem;
+}
+- (void)deleteItemWithIndex:(NSInteger)index;
 @end
 
 @implementation IphoneSubdownloadViewController
@@ -91,6 +95,7 @@
     downLoadManager_ = [AppDelegate instance].downLoadManager;
     downLoadManager_.downLoadMGdelegate = self;
     
+    delItemIndex = NSNotFound;
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
@@ -327,54 +332,18 @@
         return;
     }
     
-    [itemArr_ removeObjectAtIndex:index];
-    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
-  
-    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-    SubdownloadItem *item = [arr objectAtIndex:index];
-    NSString *itemId = item.subitemId;
-    [DownLoadManager stopAndClear:itemId];
-    
-    NSString *fileName = [itemId stringByAppendingString:@".mp4"];
-    //对于错误信息
-    NSError *error;
-    // 创建文件管理器
-    NSFileManager *fileMgr = [NSFileManager defaultManager];
-    //指向文件目录
-    NSString *documentsDirectory= [NSHomeDirectory()
-                                   stringByAppendingPathComponent:@"Documents"];
-    
-    
-    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
-    
-    if ([item.fileName hasSuffix:@"m3u8"]) {
-        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
-        [fileMgr removeItemAtPath:deleteFilePath error:&error];
+    if (index >= [itemArr_ count]) {
+        return;
     }
-    else{
-        for (NSString *nameStr in fileList) {
-            if ([nameStr hasPrefix:fileName]) {
-                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
-                [fileMgr removeItemAtPath:deleteFilePath error:&error];
-            }
-        }
-    }
-   
-    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
-
-    [DatabaseManager deleteObject:item];
     
-    NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-
-    if ([tempArr count] == 0){
-        NSString *subquery = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
-        NSArray *itemArr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:subquery];
-        for (DownloadItem *downloadItem in itemArr) {
-            [DatabaseManager deleteObject:downloadItem];
-        }
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
-    }
-   [[DownLoadManager defaultDownLoadManager]waringPlus];
+    delItemIndex = index;
+    delItem = gridView;
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"是否确认删除所选视频"
+                                                    delegate:self
+                                           cancelButtonTitle:@"取消"
+                                           otherButtonTitles:@"确定", nil];
+    [alert show];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position{
@@ -509,5 +478,73 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)deleteItemWithIndex:(NSInteger)index
+{
+    [itemArr_ removeObjectAtIndex:index];
+    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
+    
+    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+    SubdownloadItem *item = [arr objectAtIndex:index];
+    NSString *itemId = item.subitemId;
+    [DownLoadManager stopAndClear:itemId];
+    
+    NSString *fileName = [itemId stringByAppendingString:@".mp4"];
+    //对于错误信息
+    NSError *error;
+    // 创建文件管理器
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    //指向文件目录
+    NSString *documentsDirectory= [NSHomeDirectory()
+                                   stringByAppendingPathComponent:@"Documents"];
+    
+    
+    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+    
+    if ([item.fileName hasSuffix:@"m3u8"]) {
+        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+        [fileMgr removeItemAtPath:deleteFilePath error:&error];
+    }
+    else{
+        for (NSString *nameStr in fileList) {
+            if ([nameStr hasPrefix:fileName]) {
+                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
+                [fileMgr removeItemAtPath:deleteFilePath error:&error];
+            }
+        }
+    }
+    
+    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
+    
+    [DatabaseManager deleteObject:item];
+    
+    NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+    
+    if ([tempArr count] == 0){
+        NSString *subquery = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
+        NSArray *itemArr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:subquery];
+        for (DownloadItem *downloadItem in itemArr) {
+            [DatabaseManager deleteObject:downloadItem];
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
+    }
+    [[DownLoadManager defaultDownLoadManager]waringPlus];
+}
+
+#pragma mark -
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (1 == buttonIndex)
+    {
+        if (NSNotFound == delItemIndex)
+        {
+            return;
+        }
+        [delItem removeObjectAtIndex:delItemIndex];
+        [self deleteItemWithIndex:delItemIndex];
+    }
+}
+
 
 @end

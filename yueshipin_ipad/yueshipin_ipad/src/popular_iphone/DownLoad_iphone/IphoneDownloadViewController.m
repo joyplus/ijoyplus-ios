@@ -18,8 +18,13 @@
 #import "CMConstants.h"
 #import "DatabaseManager.h"
 #import "CacheUtility.h"
-@interface IphoneDownloadViewController ()
 
+@interface IphoneDownloadViewController ()
+{
+    NSInteger delItemIndex;
+    GMGridView * delItem;
+}
+- (void)deleteItemWithIndex:(NSInteger)index;
 @end
 
 @implementation IphoneDownloadViewController
@@ -95,6 +100,7 @@
     noItemView_.center = CGPointMake(160, 160);
     [self.view addSubview:noItemView_];
     
+    delItemIndex = NSNotFound;
     
     UIView * spaceBackground = [[UIView alloc] initWithFrame:CGRectMake(0, kCurrentWindowHeight - 140 + 27, 320, 20)];
     spaceBackground.backgroundColor = [UIColor colorWithRed:170.0f/255.0f green:170.0f/255.0f blue:161.0f/255.0f alpha:0.6f];
@@ -385,59 +391,15 @@
         return;
     }
     
-    [itemArr_ removeObjectAtIndex:index];
+    delItemIndex = index;
+    delItem = gridView;
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"是否确认删除所选视频"
+                                                    delegate:self
+                                           cancelButtonTitle:@"取消"
+                                           otherButtonTitles:@"确定", nil];
+    [alert show];
     
-    //对于错误信息
-    NSError *error;
-    // 创建文件管理器
-    NSFileManager *fileMgr = [NSFileManager defaultManager];
-    //指向文件目录
-    NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
-    
-    
-    DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:index];
-    NSString *itemId = item.itemId;
-    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
-    if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
-        //NSArray *arr = [SegmentUrl findByCriteria:subquery];
-        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", itemId]];
-        NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:itemId];
-        [fileMgr removeItemAtPath:deletePath error:&error];
-        [DownLoadManager stop:itemId];
-        [DownLoadManager stopAndClear:itemId];
-        
-    }
-    else{
-    
-        //删除从表的内容
-        NSArray *subItems = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:subquery];
-        //NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
-        for (SubdownloadItem *subItem in subItems) {
-            [DownLoadManager stopAndClear:subItem.subitemId];
-        }
-        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@%%'", itemId]];
-        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@'", itemId]];
-        
-        
-        
-        //停止该下载线程，并从下载队列中删除
-        [DownLoadManager stopAndClear:itemId];
-        
-        //删除 对应的文件
-        for (NSString *nameStr in fileList) {
-            if (/*[nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]||*/[nameStr hasPrefix:itemId]) {
-                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
-                [fileMgr removeItemAtPath:deleteFilePath error:&error];
-            }
-        }
-
-    }
-       
-
-    [DownLoadManager stopAndClear:itemId];
-    [DatabaseManager deleteObject:item];
-    [[DownLoadManager defaultDownLoadManager]waringPlus];
 }
 
 - (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position{
@@ -571,5 +533,78 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)deleteItemWithIndex:(NSInteger)index
+{
+    [itemArr_ removeObjectAtIndex:index];
+    
+    //对于错误信息
+    NSError *error;
+    // 创建文件管理器
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    //指向文件目录
+    NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+    
+    
+    DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:index];
+    NSString *itemId = item.itemId;
+    NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
+    if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
+        //NSArray *arr = [SegmentUrl findByCriteria:subquery];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", itemId]];
+        NSString *deletePath = [documentsDirectory stringByAppendingPathComponent:itemId];
+        [fileMgr removeItemAtPath:deletePath error:&error];
+        [DownLoadManager stop:itemId];
+        [DownLoadManager stopAndClear:itemId];
+        
+    }
+    else{
+        
+        //删除从表的内容
+        NSArray *subItems = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:subquery];
+        //NSArray *subItems = [SubdownloadItem findByCriteria:subquery];
+        for (SubdownloadItem *subItem in subItems) {
+            [DownLoadManager stopAndClear:subItem.subitemId];
+        }
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId like '%@%%'", itemId]];
+        [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@'", itemId]];
+        
+        
+        
+        //停止该下载线程，并从下载队列中删除
+        [DownLoadManager stopAndClear:itemId];
+        
+        //删除 对应的文件
+        for (NSString *nameStr in fileList) {
+            if (/*[nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]||*/[nameStr hasPrefix:itemId]) {
+                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
+                [fileMgr removeItemAtPath:deleteFilePath error:&error];
+            }
+        }
+        
+    }
+    
+    
+    [DownLoadManager stopAndClear:itemId];
+    [DatabaseManager deleteObject:item];
+    [[DownLoadManager defaultDownLoadManager]waringPlus];
+}
+
+#pragma mark -
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (1 == buttonIndex)
+    {
+        if (NSNotFound == delItemIndex)
+        {
+            return;
+        }
+        [delItem removeObjectAtIndex:delItemIndex];
+        [self deleteItemWithIndex:delItemIndex];
+    }
+}
+
 
 @end
