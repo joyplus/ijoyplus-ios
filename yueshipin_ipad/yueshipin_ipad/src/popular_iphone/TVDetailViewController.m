@@ -1640,17 +1640,18 @@ NSComparator cmptr = ^(id obj1, id obj2){
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (scrollView.tag == 99999) {
-        CGFloat pageWidth = 298;
+        CGFloat pageWidth = 285;
         CGPoint offset = scrollView.contentOffset;
         if (offset.x * offset.x> offset.y * offset.y) {
             int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
+            NSLog(@"!!!!!!!!!!!!!%d",page);
             [scrollViewUp_ setContentOffset:CGPointMake(298.0f*(page/5), 0.0f) animated:YES];
             [self changeButoonStateInView:scrollViewUp_ atIndex:page];
             
         }
     }
    else if (scrollView.tag == 999999) {
-        CGFloat pageWidth = 288;
+        CGFloat pageWidth = 285;
         CGPoint offset = scrollView.contentOffset;
         if (offset.x * offset.x> offset.y * offset.y) {
             int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
@@ -1680,6 +1681,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     for (UIView *v in view.subviews) {
         if ([v isKindOfClass:[UIButton class]]) {
             UIButton *btn = (UIButton *)v;
+
             if (btn.tag == index) {
                 btn.selected = YES;
             }

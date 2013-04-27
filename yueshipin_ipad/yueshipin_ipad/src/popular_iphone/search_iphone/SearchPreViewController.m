@@ -134,7 +134,8 @@
     searchResultList_.tag = RESULT_LIST;  
 }
 -(void)initDataArr{
- listArr_ = [[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY];
+  listArr_ = [NSMutableArray arrayWithArray:[[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY]];
+
 }
 -(void)intHotKeyWords{
      [CommonMotheds showNetworkDisAbledAlert:self.view];
@@ -230,9 +231,9 @@
     
 }
 -(void)clearHistory{
- [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:[NSMutableArray array]];
- [listArr_ removeAllObjects];
- [tableList_ reloadData];
+    [[CacheUtility sharedCache] putInCache:SEARCH_HISTORY result:[NSMutableArray array]];
+    [listArr_ removeAllObjects];
+    [tableList_ reloadData];
 }
 
 -(void)loadSearchData:(NSString *)searchStr{

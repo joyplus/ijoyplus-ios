@@ -167,11 +167,13 @@
     scrollBg.contentSize = CGSizeMake(320, 500);
     [self.view addSubview:scrollBg];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
+    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(220, 0, 80, 50)];
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [titleText setFont:[UIFont boldSystemFontOfSize:20.0]];
     [titleText setText:@"个人主页"];
+    titleText.shadowColor = [UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1];
+    titleText.center = self.navigationItem.titleView.center;
     self.navigationItem.titleView=titleText;
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
