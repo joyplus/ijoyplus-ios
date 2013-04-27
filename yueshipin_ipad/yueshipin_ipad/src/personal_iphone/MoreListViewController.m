@@ -187,6 +187,11 @@
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
         line.frame = CGRectMake(0, 59, 320, 1);
         [cell.contentView addSubview:line];
+        
+        UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        cell.selectedBackgroundView = selectedBg;
+        
         return cell;
 
     }

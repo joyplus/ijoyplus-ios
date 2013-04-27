@@ -45,11 +45,11 @@
     [self.view addSubview:bgImage];
     
     UIImageView * tishi = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"jiechu_wenzi.png"]];
-    tishi.frame = CGRectMake(0, 235, 320, 42);
+    tishi.frame = CGRectMake(0, 195, 320, 42);
     [self.view addSubview:tishi];
     
     UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    bundingBtn.frame = CGRectMake(65 , 320, 190, 55);
+    bundingBtn.frame = CGRectMake(65 , 270, 190, 55);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"unbunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"unbunding_f.png"] forState:UIControlStateHighlighted];
     [bundingBtn addTarget:self

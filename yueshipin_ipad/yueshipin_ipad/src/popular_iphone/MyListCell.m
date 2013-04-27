@@ -59,7 +59,9 @@
     }
     [self.contentView addSubview:typeImageView];
     
-    
+    UIView *selectedBg = [[UIView alloc] initWithFrame:self.frame];
+    selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+    self.selectedBackgroundView = selectedBg;
 }
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

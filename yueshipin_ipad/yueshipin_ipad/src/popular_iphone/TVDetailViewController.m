@@ -567,23 +567,28 @@ NSComparator cmptr = ^(id obj1, id obj2){
             }
             case 1:{
                 UIView *view = [self showEpisodes];
-                [cell addSubview:view];
+                if (isloaded_) {
+                     [cell addSubview:view];
+                }
+            
                 break;
             }
                 
             case 2:{
                 UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 32, 13)];
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
-                [cell addSubview:jianjie];
                 
-                [cell addSubview:summaryBg_];
+                
+                
                 if (summary_ != nil) {
                     summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
                 }
-                [cell addSubview:summaryLabel_];
-                //[cell addSubview:moreBtn_];
-
-                
+                if (isloaded_) {
+                    [cell addSubview:jianjie];
+                    [cell addSubview:summaryBg_];
+                    [cell addSubview:summaryLabel_];
+                }
+            
                 break;
             }
             default:

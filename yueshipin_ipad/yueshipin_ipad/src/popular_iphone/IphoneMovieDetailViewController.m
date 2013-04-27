@@ -551,16 +551,16 @@
             case 1:{
                 UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 32, 13)];
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
-                [cell addSubview:jianjie];
-               
-                [cell addSubview:summaryBg_];
-               
                 if (summary_ != nil) {
                     summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
                 }
                 
-                [cell addSubview:summaryLabel_];
-                //[cell addSubview:moreBtn_];
+                if (isLoaded_) {
+                    [cell addSubview:jianjie];
+                    [cell addSubview:summaryBg_];
+                    [cell addSubview:summaryLabel_];
+
+                }
                 
                 break;
             }

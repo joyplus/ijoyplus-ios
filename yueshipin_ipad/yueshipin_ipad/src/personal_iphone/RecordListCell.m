@@ -35,7 +35,7 @@
         date_.backgroundColor = [UIColor clearColor];
         [self addSubview:date_];
         
-        play_ = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        play_ = [UIButton buttonWithType:UIButtonTypeCustom];
         play_.frame = CGRectMake(248,0, 47, 42);
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see.png"] forState:UIControlStateNormal];
         [self addSubview:play_];
@@ -43,6 +43,10 @@
         line_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line_.frame = CGRectMake(0, 41, self.frame.size.width, 1);
         [self addSubview:line_];
+        
+        UIView *selectedBg = [[UIView alloc] initWithFrame:self.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        self.selectedBackgroundView = selectedBg;
     }
     return self;
 }

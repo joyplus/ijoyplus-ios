@@ -75,6 +75,7 @@
 - (void)customView
 {
     _viewSegment = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_shang_bg.png"]];
+    _viewSegment.userInteractionEnabled = YES;
     _viewSegment.frame = SEGMENT_VIEW_FRAME;
     [self addSubview:_viewSegment];
     
@@ -144,9 +145,9 @@
 
 - (void)initTableView
 {
-    _tableHot = [[UITableView alloc] initWithFrame:HOT_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 5.0f))
+    _tableHot = [[UITableView alloc] initWithFrame:HOT_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 10.0f))
                                              style:UITableViewStylePlain];
-    _tableFavAndRec = [[UITableView alloc] initWithFrame:FAV_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 5.0f))
+    _tableFavAndRec = [[UITableView alloc] initWithFrame:FAV_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 10.0f))
                                              style:UITableViewStylePlain];
     
     _tableHot.delegate   = self;

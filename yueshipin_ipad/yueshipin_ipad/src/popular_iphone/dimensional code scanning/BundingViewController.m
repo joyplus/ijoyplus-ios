@@ -43,16 +43,16 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     UIImageView * bgImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_background.png"]];
-    bgImage.frame = CGRectMake(0, 45, 320, 121);
+    bgImage.frame = CGRectMake(0, 35, 320, 121);
     [self.view addSubview:bgImage];
     
     UIImageView * tishi = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"queren_wenzi.png"]];
-    tishi.frame = CGRectMake(0, 235, 320, 42);
+    tishi.frame = CGRectMake(0, 195, 320, 42);
     [self.view addSubview:tishi];
     
 
     UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    bundingBtn.frame = CGRectMake(65 , 320, 190, 55);
+    bundingBtn.frame = CGRectMake(65 , 270, 190, 55);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding_f.png"] forState:UIControlStateHighlighted];
     [bundingBtn addTarget:self
@@ -61,7 +61,7 @@
     [self.view addSubview:bundingBtn];
     
     UIButton * unbundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    unbundingBtn.frame = CGRectMake(65 , 385, 190, 55);
+    unbundingBtn.frame = CGRectMake(65 , 335, 190, 55);
     [unbundingBtn setBackgroundImage:[UIImage imageNamed:@"cancel_bunding.png"] forState:UIControlStateNormal];
     [unbundingBtn setBackgroundImage:[UIImage imageNamed:@"cancel_bunding_f.png"] forState:UIControlStateHighlighted];
     [unbundingBtn addTarget:self
