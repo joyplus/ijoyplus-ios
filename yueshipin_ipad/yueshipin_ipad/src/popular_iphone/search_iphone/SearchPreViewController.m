@@ -166,8 +166,8 @@
     
     for (id view in searchBar_.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {
-//            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
-//            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
+            [(UIButton *)view  setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao.png"] forState:UIControlStateNormal];
+            [(UIButton *)view setBackgroundImage:[UIImage imageNamed:@"sousuo_qu_xiao_s.png"] forState:UIControlStateHighlighted];
             [(UIButton *)view setTitle:nil forState:UIControlStateNormal];
             [(UIButton *)view setTitle:nil forState:UIControlStateHighlighted];        }
     }
