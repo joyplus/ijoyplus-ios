@@ -122,6 +122,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO_YUEDAN introImage:[UIImage imageNamed:@"menu_intro"]];
+    
     if (0 == lunboArray.count)
     {
         [self retrieveLunboData];
