@@ -519,7 +519,16 @@
         self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
         pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-4, 30);
         pageTabScrollView.backgroundColor = [UIColor clearColor];
-        pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/6+1), pageTabScrollView.frame.size.height);
+        int countPage;
+        if (0 == dramaPageNum % 6)
+        {
+            countPage = dramaPageNum / 6;
+        }
+        else
+        {
+            countPage = dramaPageNum / 6 + 1;
+        }
+        pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*countPage, pageTabScrollView.frame.size.height);
         for (UIView *aview in pageTabScrollView.subviews) {
             [aview removeFromSuperview];
         }
