@@ -119,7 +119,7 @@
     [self intHotKeyWords];
     [self initDataArr];
 
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 41, self.view.bounds.size.width, 160) style:UITableViewStylePlain];
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 41, self.view.bounds.size.width, kCurrentWindowHeight-108-44-42-45) style:UITableViewStylePlain];
     tableList_.backgroundColor = [UIColor clearColor];
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableList_.dataSource = self;
@@ -131,7 +131,10 @@
     searchResultList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     searchResultList_.dataSource = self;
     searchResultList_.delegate = self;
-    searchResultList_.tag = RESULT_LIST;  
+    searchResultList_.tag = RESULT_LIST;
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 }
 -(void)initDataArr{
   listArr_ = [NSMutableArray arrayWithArray:[[CacheUtility sharedCache] loadFromCache:SEARCH_HISTORY]];
@@ -275,6 +278,16 @@
     }];
     
     
+}
+
+- (void)keyboardWillShow:(NSNotification *)aNotification
+{
+    //获取键盘的高度
+    NSDictionary *userInfo = [aNotification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    int height = keyboardRect.size.height;
+    tableList_.frame = CGRectMake(0, 41, 320,  kCurrentWindowHeight-height-44-42);
 }
 - (void)showFailureView:(float)closeTime
 {
@@ -494,5 +507,8 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
+-(void)dealloc{
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

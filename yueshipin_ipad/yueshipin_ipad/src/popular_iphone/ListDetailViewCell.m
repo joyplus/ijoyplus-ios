@@ -80,7 +80,7 @@
         logo.frame = CGRectMake(295, 19, 14, 14);
         [self addSubview:logo];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line.frame = CGRectMake(0, 111, 320, 1);
         [self addSubview:line];
         
