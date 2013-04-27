@@ -660,7 +660,7 @@
 //    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
 //    
 //    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, y + 20, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, y + 20, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
     y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
@@ -678,7 +678,7 @@
 {
     int positionY = y;
     if(topics.count > 0){
-        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 80, 20);
+        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 71, 18);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
@@ -687,7 +687,7 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 50, 430, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 46, 430, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     

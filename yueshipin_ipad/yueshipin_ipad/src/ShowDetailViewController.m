@@ -182,7 +182,7 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, 415, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, 415, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 445, 430, 100);
