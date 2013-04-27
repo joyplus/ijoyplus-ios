@@ -1203,12 +1203,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
     [bgView addSubview:titleView];
     
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
-    scrollViewUp_ = [[UIScrollView alloc] initWithFrame:CGRectMake(5, 36, 298, 20)];
+    scrollViewUp_ = [[UIScrollView alloc] initWithFrame:CGRectMake(4, 36, 298, 20)];
     scrollViewUp_.backgroundColor = [UIColor clearColor];
     scrollViewUp_.contentSize = CGSizeMake(298*page_, 20);
   
     scrollViewUp_.pagingEnabled = YES;
-    scrollViewUp_.bounces = NO;
+    //scrollViewUp_.bounces = NO;
     scrollViewUp_.showsHorizontalScrollIndicator = NO;
     [scrollViewUp_ setContentOffset:CGPointMake(298.0f*(currentPage_-1), 0.0f) animated:NO];
     
@@ -1216,7 +1216,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     for (int i = 0; i < pageCount_; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
-        button.frame = CGRectMake(60*i, 0, 55, 23);
+        button.frame = CGRectMake(59.6*i, 0, 55, 23);
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
@@ -1361,18 +1361,18 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     currentPageDownLoad_ = 1;
     page_ = (count%75 == 0 ? (count/75):(count/75)+1);
-    scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(10, 52, 288, 20)];
+    scrollViewUpDL_ = [[UIScrollView alloc] initWithFrame:CGRectMake(14, 52, 277, 20)];
     scrollViewUpDL_.backgroundColor = [UIColor clearColor];
-    scrollViewUpDL_.contentSize = CGSizeMake(288*page_, 20);
+    scrollViewUpDL_.contentSize = CGSizeMake(277*page_, 20);
     scrollViewUpDL_.pagingEnabled = YES;
-    scrollViewUpDL_.bounces = NO;
+    //scrollViewUpDL_.bounces = NO;
     scrollViewUpDL_.showsHorizontalScrollIndicator = NO;
-   [scrollViewUpDL_ setContentOffset:CGPointMake(288*(currentPageDownLoad_-1), 0.0f) animated:NO];
+   [scrollViewUpDL_ setContentOffset:CGPointMake(277*(currentPageDownLoad_-1), 0.0f) animated:NO];
         
     for (int i = 0; i < pageCount_; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.tag = i;
-        button.frame = CGRectMake(58*i, 0, 52, 20);
+        button.frame = CGRectMake(55.4*i, 0, 52, 20);
         button.backgroundColor = [UIColor clearColor];
         [button addTarget:self action:@selector(buttonSelected:) forControlEvents:UIControlEventTouchUpInside];
         NSString *title = [NSString stringWithFormat:@"%d-%d集",i*15+1,(i+1)*15];
@@ -1551,7 +1551,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }
     else{
         currentPageDownLoad_++;
-        [scrollViewUpDL_ setContentOffset:CGPointMake(288*(currentPageDownLoad_-1), 0.0f) animated:YES];
+        [scrollViewUpDL_ setContentOffset:CGPointMake(277*(currentPageDownLoad_-1), 0.0f) animated:YES];
         if (currentPageDownLoad_ == page_ ) {
             nextDL_.enabled = NO;
         }
@@ -1599,7 +1599,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     
         currentPageDownLoad_--;
     
-        [scrollViewUpDL_ setContentOffset:CGPointMake(288*(currentPageDownLoad_-1), 0.0f) animated:YES];
+        [scrollViewUpDL_ setContentOffset:CGPointMake(277*(currentPageDownLoad_-1), 0.0f) animated:YES];
         
         if (currentPageDownLoad_ == page_ ) {
             nextDL_.enabled = NO;
@@ -1660,7 +1660,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         CGPoint offset = scrollView.contentOffset;
         if (offset.x * offset.x> offset.y * offset.y) {
             int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-            [scrollViewUpDL_ setContentOffset:CGPointMake(288*(page/5), 0.0f) animated:YES];
+            [scrollViewUpDL_ setContentOffset:CGPointMake(277*(page/5), 0.0f) animated:YES];
             [self changeButoonStateInView:scrollViewUpDL_ atIndex:page];
             
             if (currentPageDownLoad_ == page_ ) {
@@ -1724,7 +1724,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     else if (scrollView.tag == 999999){
         CGPoint point = scrollViewUpDL_.contentOffset;
         NSLog(@"contentOffset %f  %f",point.x,point.y);
-        currentPageDownLoad_ = point.x/288 +1;
+        currentPageDownLoad_ = point.x/277 +1;
         NSLog(@"currentPage is %d",currentPageDownLoad_);
         NSLog(@"page is %d",page_);
         if (currentPageDownLoad_ == page_ ) {
