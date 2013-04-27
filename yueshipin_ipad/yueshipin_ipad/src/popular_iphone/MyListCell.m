@@ -21,12 +21,11 @@
 
 -(void)initCell:(NSDictionary*)infoDic{
     
-    
     UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
     frame.frame = CGRectMake(10, 7, 43, 64);
     [self.contentView addSubview:frame];
 
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(11, 8, 40, 60)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(8, 4, 46, 66)];
     [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [self.contentView addSubview:imageView];
     
