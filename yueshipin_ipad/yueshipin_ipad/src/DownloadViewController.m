@@ -332,6 +332,11 @@
         view.backgroundColor = [UIColor clearColor];
         cell.contentView = view;
     }
+    
+    for (UIView *view in cell.contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
     item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -387,6 +392,19 @@
             [cell.contentView addSubview:progressView];
         }
     } 
+    else
+    {
+        NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",item.itemId];
+        NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+        UILabel *labeltotal = [[UILabel alloc] initWithFrame:CGRectMake(16, 128, 92, 25)];
+        labeltotal.text = [NSString stringWithFormat:@"共%d集",[arr count]];
+        labeltotal.textColor = [UIColor whiteColor];
+        labeltotal.textAlignment = NSTextAlignmentCenter;
+        labeltotal.backgroundColor = [UIColor blackColor];
+        labeltotal.alpha = 0.6;
+        labeltotal.font = [UIFont systemFontOfSize:15];
+        [cell.contentView addSubview:labeltotal];
+    }
     
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(14, 150, 105, 30)];
     nameLabel.font = [UIFont systemFontOfSize:14];
