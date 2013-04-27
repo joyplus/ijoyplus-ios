@@ -550,7 +550,7 @@
             [pageTabScrollView addSubview:pageBtn];
         }
         
-        episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY + 40, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (36+10) + 5);
+        episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY + 40, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (44+2) + 5);
         self.episodeViewBg.frame = episodeView.frame;
         episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
         if(changed){
@@ -561,7 +561,7 @@
                 UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
                 btn.tag = i+1;
                 int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
-                [btn setFrame:CGRectMake(13 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (65 + 20), 7 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (36 + 10), 65, 36)];
+                [btn setFrame:CGRectMake(10 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (72 + 13), 3 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (44 + 2), 72, 44)];
                 NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
                 [btn setTitle:name forState:UIControlStateNormal];
                 [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
