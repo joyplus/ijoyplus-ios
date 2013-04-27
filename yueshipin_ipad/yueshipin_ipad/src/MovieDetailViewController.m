@@ -115,6 +115,7 @@
     
     self.titleLabel.frame = CGRectMake(268, 78, 210, 55);
     self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    self.titleLabel.numberOfLines = 2;
     self.titleLabel.textColor = CMConstants.textColor;
 
     self.scoreLable.frame = CGRectMake(270, 135, 50, 20);
