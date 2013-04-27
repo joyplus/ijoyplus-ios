@@ -113,32 +113,32 @@
     
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
-    self.titleLabel.frame = CGRectMake(268, 85, 200, 30);
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.titleLabel.frame = CGRectMake(268, 78, 210, 55);
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     self.titleLabel.textColor = CMConstants.textColor;
 
-    self.scoreLable.frame = CGRectMake(270, 120, 50, 20);
+    self.scoreLable.frame = CGRectMake(270, 135, 50, 20);
     self.scoreLable.textColor = CMConstants.grayColor;
-    self.scoreLabel.frame = CGRectMake(315, 120, 50, 20);
-    self.doulanLogo.frame = CGRectMake(365, 123, 15, 15);
+    self.scoreLabel.frame = CGRectMake(315, 135, 50, 20);
+    self.doulanLogo.frame = CGRectMake(365, 138, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.directorLabel.frame = CGRectMake(270, 150, 50, 15);
+    self.directorLabel.frame = CGRectMake(270, 165, 50, 15);
     self.directorLabel.textColor = CMConstants.grayColor;
-    self.directorNameLabel.frame = CGRectMake(315, 150, 170, 15);
+    self.directorNameLabel.frame = CGRectMake(315, 165, 170, 15);
     self.directorNameLabel.textColor = CMConstants.grayColor;
-    self.actorLabel.frame = CGRectMake(270, 180, 50, 15);
+    self.actorLabel.frame = CGRectMake(270, 195, 50, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(315, 180, 170, 15);
+    self.actorName1Label.frame = CGRectMake(315, 195, 170, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
     
-    self.playLabel.frame = CGRectMake(270, 210, 50, 15);
+    self.playLabel.frame = CGRectMake(270, 225, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(315, 210, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(315, 225, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(270, 240, 50, 15);
+    self.regionLabel.frame = CGRectMake(270, 255, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(315, 240, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(315, 255, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);

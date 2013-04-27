@@ -101,7 +101,7 @@
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 30);
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     self.titleLabel.textColor = CMConstants.textColor;
     self.actorLabel.frame = CGRectMake(270, 140, 80, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
