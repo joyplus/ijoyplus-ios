@@ -45,7 +45,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -56,31 +56,33 @@
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(Done:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"top_icon_common_writing_complete_s"] forState:UIControlStateHighlighted];
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
+    [rightButton setImage:[UIImage imageNamed:@"download_done.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"download_done_s.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
-    UIView *whiteBg = [[UIView alloc] initWithFrame:CGRectMake(12, 10, 296, 45)];
-    whiteBg.backgroundColor = [UIColor colorWithRed:251/255.0 green:251/255.0 blue:251/255.0 alpha: 1.0f];
-    whiteBg.layer.borderWidth = 1;
-    whiteBg.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
-    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [moreButton addTarget:self action:@selector(AddMore:) forControlEvents:UIControlEventTouchUpInside];
-    [moreButton setFrame:CGRectMake(5, 7, 284, 30)];
-    [moreButton setBackgroundImage:[UIImage imageNamed:@"icon_add videos.png"] forState:UIControlStateNormal];
-     [moreButton setBackgroundImage:[UIImage imageNamed:@"icon_add videos_s.png"] forState:UIControlStateHighlighted];
-    [whiteBg addSubview:moreButton];
-    [self.view addSubview:whiteBg];
     
-    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(12, 55, 296, kCurrentWindowHeight-101) style:UITableViewStylePlain];
+    
+    tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-98) style:UITableViewStylePlain];
     tableList_.dataSource = self;
     tableList_.delegate = self;
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableList_.backgroundColor = [UIColor clearColor];
     [self.view addSubview:tableList_];
-    
+
+    UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [moreButton addTarget:self action:@selector(AddMore:) forControlEvents:UIControlEventTouchUpInside];
+    [moreButton setFrame:CGRectMake(0, kCurrentWindowHeight-98, 320, 54)];
+    [moreButton setBackgroundImage:[UIImage imageNamed:@"tianjia_bg.png"] forState:UIControlStateNormal];
+    [moreButton setBackgroundImage:[UIImage imageNamed:@"tianjia_bg.png"] forState:UIControlStateHighlighted];
+    [moreButton setImage:[UIImage imageNamed:@"icon_add videos.png"] forState:UIControlStateNormal];
+    [moreButton setImage:[UIImage imageNamed:@"icon_add videos_s.png"] forState:UIControlStateHighlighted];
+    moreButton.imageEdgeInsets = UIEdgeInsetsMake(0, -15, 0, 0);
+    moreButton.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:moreButton];
+
+  
     if (listArr_ == nil) {
          listArr_ = [NSMutableArray arrayWithCapacity:10];
     }

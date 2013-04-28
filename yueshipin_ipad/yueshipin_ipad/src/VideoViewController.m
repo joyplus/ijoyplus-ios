@@ -148,7 +148,7 @@
             _refreshHeaderView = view;
             
         }
-        [_refreshHeaderView refreshLastUpdatedDate];
+        //[_refreshHeaderView refreshLastUpdatedDate];
     }
     return self;
 }
@@ -755,27 +755,72 @@
             if (videoType == MOVIE_TYPE) {
                 nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
                 nameLabel.numberOfLines = 2;
-            } else if (videoType == SHOW_TYPE){
+            }
+            else if (videoType == SHOW_TYPE)
+            {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
-                if (curEpisode == nil || [curEpisode isEqualToString:@"0"]) {
-                    NSDate * nowDate = [NSDate date];
-                    NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
-                    [dateformat setDateFormat:@"yyyy"];
-                    curEpisode = [dateformat stringFromDate:nowDate];
-                } else if (![curEpisode hasPrefix:@"20"]) {
-                    curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
+                //判断UserName是否为数字,字母，下滑线。
+                NSCharacterSet *dateCharacters = [[NSCharacterSet
+                                                   characterSetWithCharactersInString:@"1234567890-/"] invertedSet];
+                NSRange dateRange = [curEpisode rangeOfCharacterFromSet:dateCharacters];
+                
+                if (dateRange.location != NSNotFound
+                    || (curEpisode == nil || [curEpisode isEqualToString:@"0"]))
+                {
+                    titleLabel.hidden = YES;
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
+                    nameLabel.numberOfLines = 2;
                 }
+                else
+                {
+                    if (![curEpisode hasPrefix:@"20"])
+                    {
+                        curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
+                    }
+                    
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 23);
+                    nameLabel.numberOfLines = 1;
+                    titleLabel.hidden = NO;
+                    
+                }
+                
                 titleLabel.text = [NSString stringWithFormat:@"更新至%@", curEpisode];
-            }else {
+            }
+            else
+            {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 int curEpisode = [[item objectForKey:@"cur_episode"] integerValue];
                 int maxEpisode = [[item objectForKey:@"max_episode"] integerValue];
-                if (curEpisode == 0 || maxEpisode == curEpisode) {
-                    titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
-                } else{
-                    titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+                
+                if ((curEpisode == 0 && maxEpisode == 0) || (curEpisode > maxEpisode && maxEpisode != 0))
+                {
+                    titleLabel.text = nil;
                 }
+                else
+                {
+                    if (curEpisode == 0 || maxEpisode == curEpisode)
+                    {
+                        titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
+                    }
+                    else// if (maxEpisode > curEpisode || (maxEpisode == 0 && curEpisode != 0))
+                    {
+                        titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+                    }
+                }
+                
+//                if (curEpisode == 0 || maxEpisode == curEpisode)
+//                {
+//                    titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
+//                }
+//                else if (maxEpisode > curEpisode)
+//                {
+//                    titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+//                }
+//                else
+//                {
+//                    titleLabel.text = nil;
+//                }
             }
             nameLabel.text = [item objectForKey:@"prod_name"];
         }
@@ -785,7 +830,7 @@
         {
             CGFloat length;
             UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
-            length = titleLabel.frame.origin.x - 25;
+            length = titleLabel.frame.origin.x - 25 - 15;
             
             for (int j = i; j < 5; j++) {
                 UIImageView *placeHolderImage = (UIImageView *)[cell viewWithTag:1011 + j];

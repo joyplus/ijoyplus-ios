@@ -105,16 +105,17 @@
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
-    titleText.backgroundColor = [UIColor clearColor];
-    titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"悦单"];
-    self.navigationItem.titleView=titleText;
+//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
+//    titleText.backgroundColor = [UIColor clearColor];
+//    titleText.textColor=[UIColor whiteColor];
+//    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+//    [titleText setText:@"悦单"];
+//    self.navigationItem.titleView=titleText;
+    self.title = @"悦单";
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
@@ -122,29 +123,10 @@
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
     
-//    customNavigationButtonView_ = [[CustomNavigationButtonView alloc] initWithFrame:CGRectMake(0, 0, 40, 30)];
-//    [customNavigationButtonView_ initUI:self.navigationController withText:nil];
-//    customNavigationButtonView_.button.frame = CGRectMake(0, 0, 49, 30);
-//   [customNavigationButtonView_.button addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(setting:)];
-//    tapGesture.numberOfTapsRequired = 1;
-//    tapGesture.numberOfTouchesRequired = 1;
-//    [customNavigationButtonView_ addGestureRecognizer:tapGesture];
-//    NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
-//    int num = 0;
-//    if (numStr != nil) {
-//        num = [numStr intValue];
-//    }
-//    customNavigationButtonView_.badgeView.hidden = NO;
-//        
-//    customNavigationButtonView_.badgeView.badgeTextFont = [UIFont systemFontOfSize:11];
-//    
-//    
-//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:customNavigationButtonView_];
-//    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
@@ -152,11 +134,12 @@
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
+    self.tableList.backgroundColor = [UIColor clearColor];
     self.tableList.dataSource = self;
     self.tableList.delegate = self;
     self.tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableList];
-    [self loadData];
+    
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:tableList_ withClient:self];
     reloads_ = 2;
@@ -166,7 +149,7 @@
         view.delegate = self;
         [tableList_ addSubview:view];
         refreshHeaderView_ = view;
-        [refreshHeaderView_ refreshLastUpdatedDate];
+        //[refreshHeaderView_ refreshLastUpdatedDate];
     }
    
 }
@@ -179,6 +162,11 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    if (0 == self.listArray.count)
+    {
+        [self loadData];
+    }
+    
     return;
     int count = [DownLoadManager downloadTaskCount];
     if (count == 0) {
@@ -257,7 +245,7 @@
         }
     }
    
-    [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
     
     NSString *typeStr = [item objectForKey:@"prod_type"];
     if ([typeStr isEqualToString:@"1"]) {

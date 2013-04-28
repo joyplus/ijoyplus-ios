@@ -1078,7 +1078,7 @@ static const UIViewAnimationOptions kDefaultAnimationOptions = UIViewAnimationOp
         if (index != GMGV_INVALID_POSITION) 
         {
             [weakSelf.dataSource GMGridView:weakSelf deleteItemAtIndex:index];
-            [weakSelf removeObjectAtIndex:index];
+            //[weakSelf removeObjectAtIndex:index];
         }
     };
     

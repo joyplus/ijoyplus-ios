@@ -113,32 +113,33 @@
     
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
-    self.titleLabel.frame = CGRectMake(268, 85, 200, 30);
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.titleLabel.frame = CGRectMake(268, 78, 210, 55);
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    self.titleLabel.numberOfLines = 2;
     self.titleLabel.textColor = CMConstants.textColor;
 
-    self.scoreLable.frame = CGRectMake(270, 120, 50, 20);
+    self.scoreLable.frame = CGRectMake(270, 135, 50, 20);
     self.scoreLable.textColor = CMConstants.grayColor;
-    self.scoreLabel.frame = CGRectMake(315, 120, 50, 20);
-    self.doulanLogo.frame = CGRectMake(365, 123, 15, 15);
+    self.scoreLabel.frame = CGRectMake(315, 135, 50, 20);
+    self.doulanLogo.frame = CGRectMake(365, 138, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.directorLabel.frame = CGRectMake(270, 150, 50, 15);
+    self.directorLabel.frame = CGRectMake(270, 165, 50, 15);
     self.directorLabel.textColor = CMConstants.grayColor;
-    self.directorNameLabel.frame = CGRectMake(315, 150, 170, 15);
+    self.directorNameLabel.frame = CGRectMake(315, 165, 170, 15);
     self.directorNameLabel.textColor = CMConstants.grayColor;
-    self.actorLabel.frame = CGRectMake(270, 180, 50, 15);
+    self.actorLabel.frame = CGRectMake(270, 195, 50, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(315, 180, 170, 15);
+    self.actorName1Label.frame = CGRectMake(315, 195, 170, 15);
     self.actorName1Label.textColor = CMConstants.grayColor;
     
-    self.playLabel.frame = CGRectMake(270, 210, 50, 15);
+    self.playLabel.frame = CGRectMake(270, 225, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(315, 210, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(315, 225, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(270, 240, 50, 15);
+    self.regionLabel.frame = CGRectMake(270, 255, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(315, 240, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(315, 255, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);
@@ -203,7 +204,7 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, 410, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, 410, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
 
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
@@ -371,10 +372,17 @@
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
         
-        //[self.playBtn setEnabled:NO];
+//        [self.playBtn setEnabled:NO];
+//        [self.downloadBtn setEnabled:NO];
+//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+    }
+    
+    if (![self isDownloadURLExit])
+    {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
+    
     
     [self checkIfDownloading];
     [self repositElements:0];
@@ -411,7 +419,7 @@
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 41, 18);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 8, 42, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     if(commentListViewController == nil){
@@ -424,7 +432,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 35, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+ (topics.count > 5 ? 5 : topics.count)*30+commentListViewController.tableHeight + increasePositionY)];
 }

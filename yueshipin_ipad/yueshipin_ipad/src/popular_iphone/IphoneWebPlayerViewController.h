@@ -34,4 +34,7 @@
 @property (nonatomic, strong) NSMutableArray *subnameArray;
 @property (nonatomic, assign) BOOL isPlayFromRecord;
 @property (nonatomic, strong) NSDictionary *continuePlayInfo;
+
+-(void)initWebView;
+
 @end

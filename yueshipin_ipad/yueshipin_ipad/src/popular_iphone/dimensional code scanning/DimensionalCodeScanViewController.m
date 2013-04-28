@@ -43,16 +43,17 @@
     
     self.readerDelegate = self;
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
-    titleText.backgroundColor = [UIColor clearColor];
-    titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"扫一扫"];
-    self.navigationItem.titleView=titleText;
+//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
+//    titleText.backgroundColor = [UIColor clearColor];
+//    titleText.textColor=[UIColor whiteColor];
+//    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+//    [titleText setText:@"扫一扫"];
+//    self.navigationItem.titleView=titleText;
+    self.title = @"扫一扫";
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];

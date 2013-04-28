@@ -187,7 +187,7 @@
             placeHolderImage.image = [UIImage imageNamed:@"video_bg_placeholder"];
             [cell.contentView addSubview:placeHolderImage];
             
-            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, (120-NORMAL_VIDEO_HEIGHT) / 2, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
+            UIImageView *contentImage = [[UIImageView alloc]initWithFrame:CGRectMake(4, (120-NORMAL_VIDEO_HEIGHT) / 2 + 1.5, NORMAL_VIDEO_WIDTH, NORMAL_VIDEO_HEIGHT)];
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
@@ -276,7 +276,7 @@
         }
         NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-        [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]]];
         
         UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
         nameLabel.text = [item objectForKey:@"name"];

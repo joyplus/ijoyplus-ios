@@ -22,7 +22,7 @@
 -(void)initIntroductionView{
     CGSize size = [UIApplication sharedApplication].delegate.window.bounds.size;
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    scrollView.contentSize = CGSizeMake(size.width*4, size.height);
+    scrollView.contentSize = CGSizeMake(size.width*5, size.height);
     scrollView.pagingEnabled = YES;
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.delegate = self;
@@ -42,13 +42,18 @@
         imageView4.frame = CGRectMake((size.width)*3, 20, size.width, size.height-20);
         imageView4.userInteractionEnabled = YES;
         [scrollView addSubview:imageView4];
+        UIImageView *imageView5 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"introduction_iphone5_5@2x.jpg"]];
+        imageView5.frame = CGRectMake((size.width)*4, 20, size.width, size.height-20);
+        imageView5.userInteractionEnabled = YES;
+        [scrollView addSubview:imageView5];
+        
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.alpha = 0.5;
         btn.backgroundColor = [UIColor clearColor];
         btn.frame = CGRectMake(230, 513, 75, 25);
         [btn addTarget:self action:@selector(next) forControlEvents:UIControlEventTouchUpInside];
-        [imageView4 addSubview:btn];
+        [imageView5 addSubview:btn];
         [self addSubview:scrollView];
     }
     else{
@@ -65,12 +70,16 @@
         imageView4.frame = CGRectMake((size.width)*3, 20, size.width, size.height-20);
         imageView4.userInteractionEnabled = YES;
         [scrollView addSubview:imageView4];
+        UIImageView *imageView5 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"introductioniphone4_5@2x.jpg"]];
+        imageView5.frame = CGRectMake((size.width)*4, 20, size.width, size.height-20);
+        imageView5.userInteractionEnabled = YES;
+        [scrollView addSubview:imageView5];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.backgroundColor = [UIColor clearColor];
         btn.frame = CGRectMake(230, 416, 75, 25);
         [btn addTarget:self action:@selector(next) forControlEvents:UIControlEventTouchUpInside];
-        [imageView4 addSubview:btn];
+        [imageView5 addSubview:btn];
         [self addSubview:scrollView];
         [self addSubview:scrollView];
     }
@@ -121,7 +130,7 @@
     CGFloat pageWidth = self.frame.size.width;
      CGPoint offset = scrollView.contentOffset;
     int page = offset.x/pageWidth;
-    if (page == 3 && offset.x > 0) {
+    if (page == 4 && offset.x > 0) {
         [self next];
        
     }

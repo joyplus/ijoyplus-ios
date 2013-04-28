@@ -14,10 +14,13 @@
 #import "AFDownloadRequestOperation.h"
 #import "SegmentUrl.h"
 
-@interface SubdownloadViewController ()<SubdownloadingDelegate, GMGridViewDataSource, GMGridViewActionDelegate>{
+@interface SubdownloadViewController ()<SubdownloadingDelegate, GMGridViewDataSource, GMGridViewActionDelegate,UIAlertViewDelegate>{
     UIButton *closeBtn;
     UILabel *titleLabel;
     int leftWidth;
+    NSInteger delItemIndex;
+    GMGridView * delItem;
+    
     NSArray *subitems;
     
     UIButton *editBtn;
@@ -25,6 +28,9 @@
     BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
 }
+
+- (void)deleteItemWithIndex:(NSInteger)index;
+
 @end
 
 @implementation SubdownloadViewController
@@ -103,6 +109,8 @@
         _gmGridView.actionDelegate = self;
         _gmGridView.dataSource = self;
         _gmGridView.mainSuperView = self.view;
+        
+        delItemIndex = NSNotFound;
     }
     return self;
 }
@@ -343,6 +351,77 @@
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
 {
+    delItemIndex = index;
+    delItem = gridView;
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"是否确认删除所选视频"
+                                                    delegate:self
+                                           cancelButtonTitle:@"取消"
+                                           otherButtonTitles:@"确定", nil];
+    [alert show];
+}
+
+- (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
+{
+    if(position < subitems.count){
+        SubdownloadItem *item = [subitems objectAtIndex:position];
+        item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
+        if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
+            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
+            item.downloadStatus = @"done";
+            item.percentage = 100;
+            [DatabaseManager update:item];
+            NSString *filePath;
+            if ([item.downloadType isEqualToString:@"m3u8"]) {
+                filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
+            } else {
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+                filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
+            }
+    
+            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
+            viewController.videoFormat = item.downloadType;
+            viewController.isDownloaded = YES;
+            viewController.m3u8Duration = item.duration;
+            viewController.closeAll = YES;
+            viewController.videoUrl = filePath;
+            viewController.type = item.type;
+            viewController.name = self.titleContent;
+            if (item.type == SHOW_TYPE) {
+                viewController.subname = item.name;
+            } else {
+                viewController.subname = item.subitemId;
+            }
+            viewController.currentNum = 0;
+            viewController.prodId = itemId;
+            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+        } else {
+            if (![item.downloadStatus hasPrefix:@"error"]) {
+                [self videoImageClicked:position];
+            }
+        }
+    }
+}
+
+- (void)editBtnClicked
+{
+    _gmGridView.editing = YES;
+    [editBtn setHidden:YES];
+    [doneBtn setHidden:NO];
+}
+
+- (void)doneBtnClicked
+{
+    _gmGridView.editing = NO;
+    [editBtn setHidden:NO];
+    [doneBtn setHidden:YES];
+}
+
+- (void)deleteItemWithIndex:(NSInteger)index
+{
     SubdownloadItem *item = [subitems objectAtIndex:index];
     item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
     if ([item.downloadStatus isEqualToString:@"start"]) {
@@ -386,63 +465,19 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
 }
 
-- (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
+#pragma mark -
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(position < subitems.count){
-        SubdownloadItem *item = [subitems objectAtIndex:position];
-        item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
-        if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100){
-            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
-            item.downloadStatus = @"done";
-            item.percentage = 100;
-            [DatabaseManager update:item];
-            NSString *filePath;
-            if ([item.downloadType isEqualToString:@"m3u8"]) {
-                filePath = [LOCAL_HTTP_SERVER_URL stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@/%@/%@_%@.m3u8", item.itemId, item.subitemId, item.itemId, item.subitemId]];
-            } else {
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString *documentsDirectory = [paths objectAtIndex:0];
-                filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
-            }
-    
-            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
-            viewController.videoFormat = item.downloadType;
-            viewController.isDownloaded = YES;
-            viewController.m3u8Duration = item.duration;
-            viewController.closeAll = YES;
-            viewController.videoUrl = filePath;
-            viewController.type = item.type;
-            viewController.name = self.titleContent;
-            if (item.type == SHOW_TYPE) {
-                viewController.subname = item.name;
-            } else {
-                viewController.subname = item.subitemId;
-            }
-            viewController.currentNum = 0;
-            viewController.prodId = itemId;
-            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-        } else {
-            if (![item.downloadStatus hasPrefix:@"error"]) {
-                [self videoImageClicked:position];
-            }
+    if (1 == buttonIndex)
+    {
+        if (NSNotFound == delItemIndex)
+        {
+            return;
         }
+        [delItem removeObjectAtIndex:delItemIndex];
+        [self deleteItemWithIndex:delItemIndex];
     }
 }
-
-- (void)editBtnClicked
-{
-    _gmGridView.editing = YES;
-    [editBtn setHidden:YES];
-    [doneBtn setHidden:NO];
-}
-
-- (void)doneBtnClicked
-{
-    _gmGridView.editing = NO;
-    [editBtn setHidden:NO];
-    [doneBtn setHidden:YES];
-}
-
 
 @end

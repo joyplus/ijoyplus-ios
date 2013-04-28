@@ -12,6 +12,7 @@
 @protocol AvVideoWebViewControllerDelegate <NSObject>
 
 - (void)playNextEpisode:(int)nextEpisodeNum;
+- (void)reshowWebView;
 
 @end
 

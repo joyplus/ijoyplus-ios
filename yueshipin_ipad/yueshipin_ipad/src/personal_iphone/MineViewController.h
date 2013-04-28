@@ -18,7 +18,6 @@
     UITableView *recordTableList_;
     UITableView *favTableList_;
     UITableView *myTableList_;
-    UIView *moreView_;
     UIButton *moreButton_;
     UIImageView *avatarImage_;
     UILabel *nameLabel_;
@@ -30,6 +29,9 @@
     UIImageView *noRecord_;
     UIImageView *noFav_;
     UIImageView *noPersonalList_;
+    UIImageView *typeLabel_;
+    UIButton *clearRecord_;
+    UIScrollView *scrollBg;
 }
 @property (nonatomic, strong)UISegmentedControl *segControl;
 @property (nonatomic, strong)UIView *bgView;
@@ -39,7 +41,6 @@
 @property (nonatomic, strong)NSMutableArray *myListArr;
 @property (nonatomic, strong)UITableView *recordTableList;
 @property (nonatomic, strong)UITableView *favTableList;
-@property (nonatomic, strong)UIView *moreView;
 @property (nonatomic, strong)UIButton *moreButton;
 @property (nonatomic, strong)UIImageView *avatarImage;
 @property (nonatomic, strong)UILabel *nameLabel;
@@ -52,6 +53,7 @@
 @property (nonatomic, strong)UIImageView *noRecord;
 @property (nonatomic, strong)UIImageView *noFav;
 @property (nonatomic, strong)UIImageView *noPersonalList;
-
-
+@property (nonatomic, strong)UIImageView *typeLabel;
+@property (nonatomic, strong)UIButton *clearRecord;
+@property (nonatomic, strong)UIScrollView *scrollBg;
 @end

@@ -118,10 +118,10 @@
         avatarImage = [[UIImageView alloc]initWithFrame:CGRectMake(avatarImageBg.frame.origin.x + 4, avatarImageBg.frame.origin.y + 4, avatarImageBg.frame.size.width - 8, avatarImageBg.frame.size.height - 6)];
         [self.view addSubview:avatarImage];
         
-        nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(155, 130, 260, 22)];
+        nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(130, 140, 260, 22)];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.textColor = CMConstants.textColor;
-        nameLabel.font = [UIFont systemFontOfSize:20];
+        nameLabel.font = [UIFont systemFontOfSize:15];
         [self.view addSubview:nameLabel];
         
         supportBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -169,7 +169,7 @@
         [removeAllBtn addTarget:self action:@selector(removeAllBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:removeAllBtn];
         
-        tableHeight = 370;
+        tableHeight = 0;
         table = [[UITableView alloc] initWithFrame:CGRectMake(50, 325, 400, tableHeight) style:UITableViewStylePlain];
         table.layer.borderWidth = 1;
         table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
@@ -227,7 +227,10 @@
         [myRecordImage setHidden:YES];
         [table setHidden:YES];
     }
+    tableHeight = 0;
     [table reloadData];
+    tableHeight = tableHeight >= 370 ? 370 : tableHeight;
+    table.frame = CGRectMake(50, 325, 400, tableHeight);
     [pullToRefreshManager_ tableViewReloadFinished];
 }
 
@@ -561,6 +564,7 @@
     NSDictionary *item =  [sortedwatchRecordArray objectAtIndex:indexPath.row];
     NSString *content = [self composeContent:item];
     CGSize size = [self calculateContentSize:content width:280];
+    tableHeight += (size.height + 40);
     return size.height + 40;
 }
 
