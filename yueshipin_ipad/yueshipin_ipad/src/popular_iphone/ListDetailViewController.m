@@ -190,7 +190,7 @@
     cell.score.text = [NSString stringWithFormat:@"%@分",[item objectForKey:@"score"]];
     cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"stars"]];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
-    [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] ];
+    [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     [cell.support setTitle:[NSString stringWithFormat:@"%@",[item objectForKey:@"support_num"]] forState:UIControlStateDisabled];
     [cell.addFav setTitle:[NSString stringWithFormat:@"%@",[item objectForKey:@"favority_num"]] forState:UIControlStateDisabled];
     return cell;

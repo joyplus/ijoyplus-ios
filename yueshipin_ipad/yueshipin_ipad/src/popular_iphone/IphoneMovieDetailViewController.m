@@ -323,10 +323,11 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:{
-                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
                 frame.frame = CGRectMake(14, 14, 90, 143);
+                frame.backgroundColor = [UIColor clearColor];
                 [cell addSubview:frame];
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 136)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, 19, 83, 134)];
         
                 NSString *imageUrl = [self.infoDic objectForKey:@"prod_pic_url"];
                 if (imageUrl == nil) {
@@ -335,7 +336,7 @@
                 if (imageUrl == nil) {
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
-                [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                [imageView setImageWithURL:[NSURL URLWithString:imageUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
                 wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 

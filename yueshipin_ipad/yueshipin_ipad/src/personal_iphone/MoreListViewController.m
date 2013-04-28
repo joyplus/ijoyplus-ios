@@ -184,7 +184,7 @@
         [cell.contentView addSubview:date];
         
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line.frame = CGRectMake(0, 59, 320, 1);
         [cell.contentView addSubview:line];
         
@@ -342,7 +342,9 @@
 
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    if (type_ == 2) {
+        return 74;
+    }
     return 60;
 }
 

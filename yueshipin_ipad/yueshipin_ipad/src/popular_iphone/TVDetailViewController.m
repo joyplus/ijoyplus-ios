@@ -382,11 +382,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:{
-                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
                 frame.frame = CGRectMake(14, 14, 90, 143);
+                frame.backgroundColor = [UIColor clearColor];
                 [cell addSubview:frame];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, 19, 83, 134)];
                 
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 136)];
                 NSString *imgUrl =[self.infoDic objectForKey:@"prod_pic_url"];
                 if (imgUrl == nil) {
                     imgUrl = [self.infoDic objectForKey:@"content_pic_url"];
@@ -394,7 +395,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (imgUrl == nil) {
                     imgUrl = [self.infoDic objectForKey:@"poster"];
                 }
-                [imageView setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                [imageView setImageWithURL:[NSURL URLWithString:imgUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
                  wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
                 

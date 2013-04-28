@@ -59,6 +59,10 @@
     }
     [self.contentView addSubview:typeImageView];
     
+    UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
+    line.frame = CGRectMake(0, 73, self.frame.size.width, 1);
+    [self.contentView addSubview:line];
+    
     UIView *selectedBg = [[UIView alloc] initWithFrame:self.frame];
     selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
     self.selectedBackgroundView = selectedBg;

@@ -21,11 +21,12 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
         frame.frame = CGRectMake(13, 4, 62, 90);
+        frame.backgroundColor = [UIColor clearColor];
         [self addSubview:frame];
         
-        self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15, 6, 57, 84)];
+        self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 57, 85)];
         [self addSubview:self.imageview];
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(82, 9, 170, 14)];

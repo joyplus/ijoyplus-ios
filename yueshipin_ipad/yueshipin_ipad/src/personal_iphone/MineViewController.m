@@ -292,7 +292,7 @@
     [createList_ setBackgroundImage:[UIImage imageNamed:@"icon_new wyatt single_s.png"] forState:UIControlStateHighlighted];
     
     userId_ = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-    avatarImage_ = [[UIImageView alloc] initWithFrame:CGRectMake(10, 6, 33, 33)];
+    avatarImage_ = [[UIImageView alloc] initWithFrame:CGRectMake(11, 8, 33, 33)];
     avatarImage_.layer.borderWidth = 1;
     avatarImage_.layer.borderColor = [[UIColor colorWithRed:231/255.0 green:230/255.0 blue:225/255.0 alpha: 1.0f] CGColor];
     NSString *avatarUrl = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserAvatarUrl];

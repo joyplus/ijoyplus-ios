@@ -229,7 +229,7 @@
     cell.label.text = [item objectForKey:@"prod_name"];
     cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"star"]];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
-    [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
     NSString *type = [item objectForKey:@"prod_type" ];
     if ([type isEqualToString:@"1" ]) {
         cell.type.text = @"类型：电影";

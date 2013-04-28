@@ -388,12 +388,12 @@
             infoDic = [_arrSearch objectAtIndex:indexPath.row];
         }
         
-        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
         frame.frame = CGRectMake(19, 11, 60, 90);
         [cell.contentView addSubview:frame];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(21, 13, 56, 84)];
-        [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(21, 14, 56, 85)];
+        [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
         [cell.contentView addSubview:imageView];
         
         
@@ -473,12 +473,12 @@
             }
             NSDictionary *infoDic = [_arrFav objectAtIndex:indexPath.row];
             
-            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
             frame.frame = CGRectMake(13, 5, 38, 53);
             [cell.contentView addSubview:frame];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 48)];
-            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 50)];
+            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             [cell.contentView addSubview:imageView];
             
             UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
@@ -506,6 +506,9 @@
             line.frame = CGRectMake(0, 59, 297, 1);
             [cell.contentView addSubview:line];
             
+            UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+            selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+            cell.selectedBackgroundView = selectedBg;
             return cell;
         }
         else
@@ -524,12 +527,12 @@
             }
             NSDictionary *infoDic = [_arrRec objectAtIndex:indexPath.row];
             
-            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
             frame.frame = CGRectMake(13, 5, 38, 52);
             [cell.contentView addSubview:frame];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 48)];
-            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 49)];
+            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             [cell.contentView addSubview:imageView];
             
             UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
@@ -545,6 +548,10 @@
             actors.textColor = [UIColor grayColor];
             actors.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:actors];
+            
+            UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+            selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+            cell.selectedBackgroundView = selectedBg;
             
             return cell;
         }
