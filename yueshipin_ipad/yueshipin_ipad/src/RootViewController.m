@@ -150,7 +150,8 @@
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight;
+    return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft
+            || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {

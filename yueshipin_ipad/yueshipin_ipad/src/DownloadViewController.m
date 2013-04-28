@@ -18,9 +18,11 @@
 #import "DDProgressView.h"
 #import "SegmentUrl.h"
 
-@interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate>{
+@interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate,UIAlertViewDelegate>{
     UIImageView *topImage;
     int leftWidth;
+    NSInteger delItemIndex;
+    GMGridView * delItem;
     
     UIButton *editBtn;
     UIButton *doneBtn;
@@ -31,7 +33,7 @@
 }
 
 @property (nonatomic, strong)NSArray *allDownloadItems;
-
+- (void)deleteItemWithIndex:(NSInteger)index;
 @end
 
 @implementation DownloadViewController
@@ -151,6 +153,7 @@
         [spaceView addSubview:spaceInfoLabel];
         
         [self updateDiskStorage];
+        delItemIndex = NSNotFound;
     }
     return self;
 }
@@ -161,7 +164,7 @@
     diskUsedProgress_.progress = percent;
     spaceInfoLabel.text = [NSString stringWithFormat:@"剩余: %0.2fGB / 总空间: %0.2fGB",totalFreeSpace_, totalSpace_];
 }
-
+    
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -329,6 +332,11 @@
         view.backgroundColor = [UIColor clearColor];
         cell.contentView = view;
     }
+    
+    for (UIView *view in cell.contentView.subviews) {
+        [view removeFromSuperview];
+    }
+    
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
     item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -384,6 +392,19 @@
             [cell.contentView addSubview:progressView];
         }
     } 
+    else
+    {
+        NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",item.itemId];
+        NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+        UILabel *labeltotal = [[UILabel alloc] initWithFrame:CGRectMake(16, 128, 92, 25)];
+        labeltotal.text = [NSString stringWithFormat:@"共%d集",[arr count]];
+        labeltotal.textColor = [UIColor whiteColor];
+        labeltotal.textAlignment = NSTextAlignmentCenter;
+        labeltotal.backgroundColor = [UIColor blackColor];
+        labeltotal.alpha = 0.6;
+        labeltotal.font = [UIFont systemFontOfSize:15];
+        [cell.contentView addSubview:labeltotal];
+    }
     
     UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(14, 150, 105, 30)];
     nameLabel.font = [UIFont systemFontOfSize:14];
@@ -397,6 +418,92 @@
 }
 
 - (void)GMGridView:(GMGridView *)gridView deleteItemAtIndex:(NSInteger)index
+{
+    delItemIndex = index;
+    delItem = gridView;
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                     message:@"是否确认删除所选视频"
+                                                    delegate:self
+                                           cancelButtonTitle:@"取消"
+                                           otherButtonTitles:@"确定", nil];
+    [alert show];
+}
+
+- (void)removeLastPlaytime:(DownloadItem *)item
+{
+    NSString *key;
+    if (item.type == 1) {
+        key = item.itemId;
+    } else {
+        key = [NSString stringWithFormat:@"%@_%@", item.itemId, ((SubdownloadItem *)item).name];
+    }
+    [[CacheUtility sharedCache] putInCache:key result:[NSNumber numberWithInt:0]];
+}
+
+- (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
+{
+    if(position < allDownloadItems.count){
+        DownloadItem *item = [allDownloadItems objectAtIndex:position];
+        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+        if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
+            NSString *filePath;
+            if ([item.downloadType isEqualToString:@"m3u8"]) {
+                filePath = [NSString stringWithFormat:@"%@/%@/%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.itemId];
+            } else {
+                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                NSString *documentsDirectory = [paths objectAtIndex:0];
+                filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
+            }
+            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
+            viewController.videoFormat = item.downloadType;
+            viewController.isDownloaded = YES;
+            viewController.m3u8Duration = item.duration;
+            viewController.closeAll = YES;
+            viewController.videoUrl = filePath;
+            viewController.type = 1;
+            viewController.name = item.name;
+            viewController.prodId = item.itemId;
+            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+        } else {
+            if(item.type == 1){
+                if (![item.downloadStatus hasPrefix:@"error"]) {
+                    [self movieImageClicked:position];
+                }
+                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
+            } else {
+                SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
+                viewController.parentDelegate = self;
+                viewController.titleContent = item.name;
+                viewController.itemId = item.itemId;
+                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+            }
+        }
+    }
+}
+
+- (void)editBtnClicked
+{
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
+    _gmGridView.editing = YES;
+    [editBtn setHidden:YES];
+    [doneBtn setHidden:NO];
+}
+
+- (void)doneBtnClicked
+{
+    _gmGridView.editing = NO;
+    [editBtn setHidden:NO];
+    [doneBtn setHidden:YES];
+}
+
+- (void)showNoEnoughSpace
+{
+    [UIUtility showNoSpace:self.view];
+}
+
+- (void)deleteItemWithIndex:(NSInteger)index
 {
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
     item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
@@ -446,77 +553,19 @@
     [self updateDiskStorage];
 }
 
-- (void)removeLastPlaytime:(DownloadItem *)item
+#pragma mark -
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    NSString *key;
-    if (item.type == 1) {
-        key = item.itemId;
-    } else {
-        key = [NSString stringWithFormat:@"%@_%@", item.itemId, ((SubdownloadItem *)item).name];
-    }
-    [[CacheUtility sharedCache] putInCache:key result:[NSNumber numberWithInt:0]];
-}
-
-- (void)GMGridView:(GMGridView *)gridView didTapOnItemAtIndex:(NSInteger)position
-{
-    if(position < allDownloadItems.count){
-        DownloadItem *item = [allDownloadItems objectAtIndex:position];
-        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
-        if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
-            NSString *filePath;
-            if ([item.downloadType isEqualToString:@"m3u8"]) {
-                filePath = [NSString stringWithFormat:@"%@/%@/%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.itemId];
-            } else {
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString *documentsDirectory = [paths objectAtIndex:0];
-                filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
-            }
-            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
-            viewController.videoFormat = item.downloadType;
-            viewController.isDownloaded = YES;
-            viewController.m3u8Duration = item.duration;
-            viewController.closeAll = YES;
-            viewController.videoUrl = filePath;
-            viewController.type = 1;
-            viewController.name = item.name;
-            viewController.prodId = item.itemId;
-            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-        } else {
-            if(item.type == 1){
-                if (![item.downloadStatus hasPrefix:@"error"]) {
-                    [self movieImageClicked:position];
-                }
-                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
-            } else {
-                SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
-                viewController.parentDelegate = self;
-                viewController.titleContent = item.name;
-                viewController.itemId = item.itemId;
-                [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
-            }
+    if (1 == buttonIndex)
+    {
+        if (NSNotFound == delItemIndex)
+        {
+            return;
         }
+        [delItem removeObjectAtIndex:delItemIndex];
+        [self deleteItemWithIndex:delItemIndex];
     }
-}
-
-- (void)editBtnClicked
-{
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
-    _gmGridView.editing = YES;
-    [editBtn setHidden:YES];
-    [doneBtn setHidden:NO];
-}
-
-- (void)doneBtnClicked
-{
-    _gmGridView.editing = NO;
-    [editBtn setHidden:NO];
-    [doneBtn setHidden:YES];
-}
-
-- (void)showNoEnoughSpace
-{
-    [UIUtility showNoSpace:self.view];
 }
 
 @end

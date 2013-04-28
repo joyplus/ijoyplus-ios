@@ -118,26 +118,28 @@
     
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
-    self.titleLabel.frame = CGRectMake(268, 85, 210, 30);
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.titleLabel.frame = CGRectMake(268, 78, 210, 55);
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     self.titleLabel.textColor = CMConstants.textColor;
-    self.scoreLable.frame = CGRectMake(270, 120, 50, 20);
+    self.titleLabel.numberOfLines = 2;
+    self.scoreLable.frame = CGRectMake(270, 135, 50, 20);
     self.scoreLable.textColor = CMConstants.grayColor;
-    self.scoreLabel.frame = CGRectMake(315, 120, 50, 20);
-    self.doulanLogo.frame = CGRectMake(365, 123, 15, 15);
+    self.scoreLabel.frame = CGRectMake(315, 135, 50, 20);
+    self.doulanLogo.frame = CGRectMake(365, 138, 15, 15);
     self.doulanLogo.image = [UIImage imageNamed:@"douban"];
     
-    self.actorLabel.frame = CGRectMake(270, 150, 50, 15);
+    self.actorLabel.frame = CGRectMake(270, 165, 50, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
-    self.actorName1Label.frame = CGRectMake(315, 150, 140, 15);
+    self.actorName1Label.frame = CGRectMake(315, 165, 160, 15);
+    self.actorName1Label.numberOfLines = 2;
     self.actorName1Label.textColor = CMConstants.grayColor;
-    self.playLabel.frame = CGRectMake(270, 180, 50, 15);
+    self.playLabel.frame = CGRectMake(270, 195, 50, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(315, 180, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(315, 195, 100, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
-    self.regionLabel.frame = CGRectMake(270, 210, 50, 15);
+    self.regionLabel.frame = CGRectMake(270, 225, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(315, 210, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(315, 225, 100, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);
@@ -397,12 +399,31 @@
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
     self.scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
     NSString *stars = [video objectForKey:@"stars"];
+    CGRect starRect = self.actorName1Label.frame;
+    CGSize starSize = [stars drawInRect:CGRectMake(0, 0, starRect.size.width,CGFLOAT_MAX) withFont:self.actorName1Label.font];
+    if (starSize.height > 20)
+    {
+        starRect.size.height = 35;
+        self.playLabel.frame = CGRectMake(270, 215, 50, 15);
+        self.playTimeLabel.frame = CGRectMake(315, 215, 100, 15);
+        self.regionLabel.frame = CGRectMake(270, 245, 50, 15);
+        self.regionNameLabel.frame = CGRectMake(315, 245, 100, 15);
+    }
+    else
+    {
+        starRect.size.height = 15;
+    }
+    self.actorName1Label.frame = starRect;
     self.actorName1Label.text = stars;
     
     if (!self.canPlayVideo) {
         //[self.playBtn setEnabled:NO];
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
+    }
+    
+    if (![self isDownloadURLExit])
+    {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }
@@ -502,7 +523,16 @@
         self.episodeImage.frame = CGRectMake(LEFT_WIDTH, 410, 70, 19);
         pageTabScrollView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY, 430-4, 30);
         pageTabScrollView.backgroundColor = [UIColor clearColor];
-        pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*(dramaPageNum/6+1), pageTabScrollView.frame.size.height);
+        int countPage;
+        if (0 == dramaPageNum % 6)
+        {
+            countPage = dramaPageNum / 6;
+        }
+        else
+        {
+            countPage = dramaPageNum / 6 + 1;
+        }
+        pageTabScrollView.contentSize = CGSizeMake(pageTabScrollView.frame.size.width*countPage, pageTabScrollView.frame.size.height);
         for (UIView *aview in pageTabScrollView.subviews) {
             [aview removeFromSuperview];
         }
@@ -524,7 +554,7 @@
             [pageTabScrollView addSubview:pageBtn];
         }
         
-        episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY + 40, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (36+10) + 5);
+        episodeView.frame = CGRectMake(LEFT_WIDTH, DEFAULT_POSITION_Y + increasePositionY + 40, 430, fmin(4, ceil(totalEpisodeNumber*1.0/EPISODE_NUMBER_IN_ROW)) * (44+2) + 5);
         self.episodeViewBg.frame = episodeView.frame;
         episodeView.contentSize = CGSizeMake(ceil(totalEpisodeNumber/(EPISODE_NUMBER_IN_ROW*4.0)) * 430, episodeView.frame.size.height);
         if(changed){
@@ -535,7 +565,7 @@
                 UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
                 btn.tag = i+1;
                 int pageNum = floor(i/(EPISODE_NUMBER_IN_ROW*4.0));
-                [btn setFrame:CGRectMake(13 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (65 + 20), 7 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (36 + 10), 65, 36)];
+                [btn setFrame:CGRectMake(10 + pageNum*430 + (i % EPISODE_NUMBER_IN_ROW) * (72 + 13), 3 + floor((i%(EPISODE_NUMBER_IN_ROW*4))*1.0/ EPISODE_NUMBER_IN_ROW) * (44 + 2), 72, 44)];
                 NSString *name = [NSString stringWithFormat:@"%@", [[episodeArray objectAtIndex:i] objectForKey:@"name"]];
                 [btn setTitle:name forState:UIControlStateNormal];
                 [btn.titleLabel setFont:[UIFont systemFontOfSize:18]];
@@ -634,7 +664,7 @@
 //    previousBtn.frame = CGRectMake(LEFT_WIDTH, y, 80, 30);
 //    
 //    y = previousBtn.frame.origin.y + previousBtn.frame.size.height;
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, y + 20, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, y + 20, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
     y = self.introImage.frame.origin.y + self.introImage.frame.size.height + 10;
@@ -652,7 +682,7 @@
 {
     int positionY = y;
     if(topics.count > 0){
-        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 80, 20);
+        self.relatedImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 71, 18);
         self.relatedImage.image = [UIImage imageNamed:@"morelists_title"];
         if(topicListViewController == nil){
             topicListViewController = [[SublistViewController alloc]initWithStyle:UITableViewStylePlain];
@@ -661,7 +691,7 @@
             [self addChildViewController:topicListViewController];
             [self.bgScrollView addSubview:topicListViewController.view];
         }
-        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 50, 430, (topics.count > 5 ? 5 : topics.count)*30);
+        topicListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 46, 430, (topics.count > 5 ? 5 : topics.count)*30);
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     

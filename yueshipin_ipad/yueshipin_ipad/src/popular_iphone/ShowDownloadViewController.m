@@ -46,7 +46,7 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -65,10 +65,10 @@
         [EpisodeIdArr_ addObject:episodeId];
     }
     
-    UIImageView *tableBg = [[UIImageView alloc] initWithFrame:CGRectMake(5, 29, 310,kCurrentWindowHeight-73)];
-    UIImage *bgImg = [UIImage imageNamed:@"list_bg.png"];
-    tableBg.image = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
-    [self.view addSubview:tableBg];
+//    UIImageView *tableBg = [[UIImageView alloc] initWithFrame:CGRectMake(5, 29, 310,kCurrentWindowHeight-73)];
+//    UIImage *bgImg = [UIImage imageNamed:@"list_bg.png"];
+//    tableBg.image = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
+//    [self.view addSubview:tableBg];
     
     tableList_ = [[UITableView alloc] initWithFrame:CGRectMake(0, 34, 320, kCurrentWindowHeight-78) style:UITableViewStylePlain];
     tableList_.dataSource = self;
@@ -105,7 +105,7 @@
     btn.tag = indexPath.row;
     BOOL isDownload = NO;
     for (NSString *str in EpisodeIdArr_) {
-        if ([str intValue] == indexPath.row) {
+        if ([str intValue] == indexPath.row+1) {
             isDownload = YES;
             break;
         }
@@ -119,16 +119,16 @@
     [btn setBackgroundImage:[UIImage imageNamed:@"show_undownload.png"] forState:UIControlStateNormal];
     [btn setBackgroundImage:[UIImage imageNamed:@"show_download_pressed.png"] forState:UIControlStateHighlighted];
     [btn setBackgroundImage:[UIImage imageNamed:@"show_download.png"] forState:UIControlStateSelected];
-    [btn setBackgroundImage:[UIImage imageNamed:@"show_disable.png"] forState:UIControlStateDisabled];
+    [btn setBackgroundImage:[UIImage imageNamed:@"show_undownload.png"] forState:UIControlStateDisabled];
      btn.adjustsImageWhenHighlighted = NO;
     btn.titleLabel.frame = CGRectMake(0, 0, 250, 30);
     btn.titleLabel.center = btn.center;
     btn.titleLabel.backgroundColor = [UIColor clearColor];
     [btn setTitle:cellTitle forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor colorWithRed:110/255.0 green:110/255.0 blue:110/255.0 alpha:1] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateSelected];
-    [btn setTitleColor:[UIColor colorWithRed:196/255.0 green:196/255.0 blue:196/255.0 alpha:1] forState:UIControlStateDisabled];
+    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
+    [btn setTitleColor:[UIColor colorWithRed:190/255.0 green:190/255.0 blue:190/255.0 alpha:1] forState:UIControlStateDisabled];
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];
     btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
