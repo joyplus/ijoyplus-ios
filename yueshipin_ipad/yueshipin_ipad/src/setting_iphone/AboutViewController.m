@@ -28,6 +28,10 @@
     [super viewDidLoad];
     self.title = @"关于我们";
     
+    UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    bg.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    [self.view addSubview:bg];
+    
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
     backButton.frame = CGRectMake(0, 0, 55, 44);

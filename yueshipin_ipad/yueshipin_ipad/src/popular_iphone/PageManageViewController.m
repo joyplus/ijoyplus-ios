@@ -272,6 +272,7 @@ enum
             NSArray *tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [self.showListArr addObjectsFromArray:tempTopsArray];
+                 [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
             }
             else{
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
@@ -819,7 +820,7 @@ enum
             NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
             cell.nameLabel.text = [item objectForKey:@"prod_name"];
             cell.latest.text = [NSString stringWithFormat:@"更新至：%@",[item objectForKey:@"cur_item_name"]];
-           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"picture_bg.png"]*/];
+           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"picture_bg.png"]];
         
             return cell;
         }
@@ -1001,6 +1002,8 @@ enum
         [self loadTVTopsData];
     }
     else if (view == refreshHeaderViewForShowList_){
+        self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
+        showLoadCount_ = 1;
         [self loadMoreShowTopsData];
     
     }
