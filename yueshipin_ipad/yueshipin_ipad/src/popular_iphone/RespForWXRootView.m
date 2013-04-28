@@ -445,9 +445,13 @@
         releaseDate.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:releaseDate];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line.frame = CGRectMake(0, 109, 297, 1);
         [cell.contentView addSubview:line];
+        
+        UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        cell.selectedBackgroundView = selectedBg;
         
         return cell;
     }

@@ -425,6 +425,9 @@
             line.image = [UIImage imageNamed:@"sousuo_bg_fen_ge_xian"];
             [cell.contentView addSubview:line];
         }
+        UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        cell.selectedBackgroundView = selectedBg;
         return cell;
 
     }
