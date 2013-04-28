@@ -830,7 +830,7 @@
         {
             CGFloat length;
             UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
-            length = titleLabel.frame.origin.x - 25;
+            length = titleLabel.frame.origin.x - 25 - 15;
             
             for (int j = i; j < 5; j++) {
                 UIImageView *placeHolderImage = (UIImageView *)[cell viewWithTag:1011 + j];
