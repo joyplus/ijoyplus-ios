@@ -164,6 +164,7 @@
 		2266A216171C1DB30062DB95 /* FayeClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A204171C1DB30062DB95 /* FayeClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2266A217171C1DB30062DB95 /* FayeMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A206171C1DB30062DB95 /* FayeMessage.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2266A218171C1DB30062DB95 /* ZTWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2266A20C171C1DB30062DB95 /* ZTWebSocket.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		2266CFA9172CCA7E0094ED9B /* drama_watched.png in Resources */ = {isa = PBXBuildFile; fileRef = 2266CFA8172CCA7E0094ED9B /* drama_watched.png */; };
 		2270AB8816B24F7D009A3861 /* ShowDownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */; };
 		227A45BE170BF5140002DCDE /* download_edit_f@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BC170BF5140002DCDE /* download_edit_f@2x.png */; };
 		227A45BF170BF5140002DCDE /* download_edit@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227A45BD170BF5140002DCDE /* download_edit@2x.png */; };
@@ -1147,6 +1148,7 @@
 		2266A20A171C1DB30062DB95 /* ZTLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZTLog.h; sourceTree = "<group>"; };
 		2266A20B171C1DB30062DB95 /* ZTWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZTWebSocket.h; sourceTree = "<group>"; };
 		2266A20C171C1DB30062DB95 /* ZTWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZTWebSocket.m; sourceTree = "<group>"; };
+		2266CFA8172CCA7E0094ED9B /* drama_watched.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = drama_watched.png; sourceTree = "<group>"; };
 		2270AB8616B24F7D009A3861 /* ShowDownloadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDownloadViewController.h; sourceTree = "<group>"; };
 		2270AB8716B24F7D009A3861 /* ShowDownloadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDownloadViewController.m; sourceTree = "<group>"; };
 		227A45BC170BF5140002DCDE /* download_edit_f@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "download_edit_f@2x.png"; path = "yueshipin_ipad/Resource_iphone/download_edit_f@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2910,6 +2912,7 @@
 				EBBE2472171518F500091F24 /* drama_top_pressed@2x.png */,
 				EBBE2473171518F500091F24 /* drama_top@2x.png */,
 				EBBE2474171518F500091F24 /* drama_watched@2x.png */,
+				2266CFA8172CCA7E0094ED9B /* drama_watched.png */,
 				EBBE2475171518F500091F24 /* gray_bg@2x.png */,
 				EBBE2476171518F500091F24 /* left_background@2x.jpg */,
 				EBBE2477171518F500091F24 /* left_scroll_btn_disabled@2x.png */,
@@ -4462,6 +4465,7 @@
 				E71A4454172BC88E00416565 /* introduction_iphone5_5@2x.jpg in Resources */,
 				E71A4455172BC88E00416565 /* introductioniphone4_5@2x.jpg in Resources */,
 				E71A4457172BF65000416565 /* menu_intro_yuebang@2x.png in Resources */,
+				2266CFA9172CCA7E0094ED9B /* drama_watched.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
