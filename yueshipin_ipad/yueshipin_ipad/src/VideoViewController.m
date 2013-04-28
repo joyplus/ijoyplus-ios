@@ -792,18 +792,35 @@
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 int curEpisode = [[item objectForKey:@"cur_episode"] integerValue];
                 int maxEpisode = [[item objectForKey:@"max_episode"] integerValue];
-                if (curEpisode == 0 || maxEpisode == curEpisode)
-                {
-                    titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
-                }
-                else if (maxEpisode > curEpisode)
-                {
-                    titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
-                }
-                else
+                
+                if ((curEpisode == 0 && maxEpisode == 0) || (curEpisode > maxEpisode && maxEpisode != 0))
                 {
                     titleLabel.text = nil;
                 }
+                else
+                {
+                    if (curEpisode == 0 || maxEpisode == curEpisode)
+                    {
+                        titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
+                    }
+                    else// if (maxEpisode > curEpisode || (maxEpisode == 0 && curEpisode != 0))
+                    {
+                        titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+                    }
+                }
+                
+//                if (curEpisode == 0 || maxEpisode == curEpisode)
+//                {
+//                    titleLabel.text = [NSString stringWithFormat:@"共%i集（全）", maxEpisode];
+//                }
+//                else if (maxEpisode > curEpisode)
+//                {
+//                    titleLabel.text = [NSString stringWithFormat:@"更新至第%i集", curEpisode];
+//                }
+//                else
+//                {
+//                    titleLabel.text = nil;
+//                }
             }
             nameLabel.text = [item objectForKey:@"prod_name"];
         }
