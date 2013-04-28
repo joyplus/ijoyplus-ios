@@ -257,6 +257,7 @@ enum
         if(self.showListArr == nil){
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
     }];
     
@@ -272,11 +273,11 @@ enum
             NSArray *tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [self.showListArr addObjectsFromArray:tempTopsArray];
-                 [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+
             }
-            else{
+            
+            if(tempTopsArray.count < PAGESIZE){
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-                
             }
         }
         
@@ -1002,15 +1003,15 @@ enum
         [self loadTVTopsData];
     }
     else if (view == refreshHeaderViewForShowList_){
-        self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         showLoadCount_ = 1;
-        [self loadMoreShowTopsData];
-    
+        [self loadShowTopsData];
+        [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     }
     else if (view == refreshHeaderViewForComicList_)
     {
         [self loadComicTopsData];
     }
+    
     
 	reloading_ = YES;
     [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
