@@ -276,7 +276,7 @@
         }
         NSDictionary *item = [videoArray objectAtIndex:indexPath.row];
         UIImageView *contentImage = (UIImageView *)[cell viewWithTag:1001];
-        [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        [contentImage setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]]];
         
         UILabel *nameLabel = (UILabel *)[cell viewWithTag:2001];
         nameLabel.text = [item objectForKey:@"name"];
