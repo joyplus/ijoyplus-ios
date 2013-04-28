@@ -999,6 +999,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (subnameArray.count - 1 == self.currentNum) {
             [self disableNextButton];
         }
+        lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
         [self preparePlayVideo];
         [self recordPlayStatics];
     }
@@ -1732,6 +1733,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self enableNextButton];
     [self disableScrubber];
     [self resetControlVisibilityTimer];
+    lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
     [self preparePlayVideo];
     [self recordPlayStatics];
 }
