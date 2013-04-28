@@ -149,7 +149,7 @@
                           nil];
     
     [[BundingTVManager shareInstance] sendMsg:data];
-    [MobClick event:KEY_IS_BUNDING];
+    [MobClick event:KEY_BINDING];
     
     if (nil == HUDView)
     {

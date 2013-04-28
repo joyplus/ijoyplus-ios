@@ -1135,6 +1135,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
+    if (myHUD.superview)
+    {
+        [myHUD removeFromSuperview];
+    }
 }
 
 - (void)closeSelf
@@ -1286,8 +1290,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)resolutionBtnClicked:(UIButton *)btn
 {
-    [self updateWatchRecord];
     [self resetControlVisibilityTimer];
+    [self updateWatchRecord];
+    [self destoryPlayer];
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
     [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
@@ -1321,6 +1326,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     defaultErrorMessage = @"此分辨率已失效，请选择其他分辨率。";
     
     isChangeQuality = YES;
+    
     [self showPlayCacheView];
     [self sendRequest];
 }
@@ -1797,26 +1803,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)showActivityView
 {
-    if (!playCacheView.superview)
+    if (!playCacheView)
     {
-        //[self.view addSubview:myHUD];
-        
-        myHUD.hidden = NO;
-        [self.view bringSubviewToFront:myHUD];
         [myHUD show:YES];
+        [self.view bringSubviewToFront:myHUD];
         myHUD.labelText = @"正在加载，请稍等";
         myHUD.userInteractionEnabled = NO;
+        [self.view addSubview:myHUD];
     }
 }
 - (void)dismissActivityView
 {
-//    if (playCacheView.superview)
-//    {
-//        myHUD.hidden = YES;
-//        [playCacheView removeFromSuperview];
-//        playCacheView = nil;
-//    }
-      myHUD.hidden = YES;
+    if (!playCacheView)
+    {
+        [myHUD removeFromSuperview];
+    }
 }
 
 #pragma mark -
@@ -2139,6 +2140,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (pItem.playbackBufferEmpty)
             {
                 [self showActivityView];
+                NSLog(@"buffer empty");
             }
             else
             {
@@ -2156,6 +2158,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 {
                     [mPlayer play];
                 }
+                NSLog(@"KeepUp YES");
             }
             else
             {
@@ -2163,6 +2166,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 {
                     [self showActivityView];
                 }
+                NSLog(@"KeepUp NO");
             }
         }
     }
