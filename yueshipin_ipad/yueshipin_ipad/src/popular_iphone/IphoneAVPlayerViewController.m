@@ -837,7 +837,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+110);
     myHUD.backgroundColor = [UIColor clearColor];
     myHUD.userInteractionEnabled = NO;
-    //[myHUD addGestureRecognizer:tapGesture];
     myHUD.labelText = @"正在加载，请稍等";
     myHUD.labelFont = [UIFont systemFontOfSize:12];
     myHUD.opacity = 0;
@@ -886,8 +885,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 -(void)initDataSource:(int)num{
     if (num >= [episodesArr_ count]) {
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-//        [alert show];
         return;
     }
    NSDictionary *episodesInfo = [episodesArr_ objectAtIndex:num];
@@ -1030,23 +1027,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         default:{
              // 播放顺序:高清-超清-标清;
-            if ([plainClearArr count] > 0) {
-                url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
-            }
-            else if ([highClearArr count] > 0) {
+            if ([highClearArr count] > 0) {
                 url = [[highClearArr objectAtIndex:0] objectForKey:@"url"];
             }
             else if ([superClearArr count] > 0) {
                 url = [[superClearArr objectAtIndex:0] objectForKey:@"url"];
             }
+            else if ([plainClearArr count] > 0) {
+                url = [[plainClearArr objectAtIndex:0] objectForKey:@"url"];
+            }
             
-            //url =  @"http://115.238.173.139:80/play/42c906c95416b06db24f609ff70c09ab3fc4a010.mp4";
             if(url != nil){
                 [self sendHttpRequest:url];
             }
             else{
                 NSLog(@"Error:Get Play Url Fail!");
-                
                 [self destoryPlayer];
                 [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:NO];
@@ -1100,15 +1095,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         default:{
             NSMutableArray *playUrlArr = [NSMutableArray arrayWithCapacity:5];
             
-            if ([plainClearArr count]>0) {
-                [playUrlArr addObjectsFromArray:plainClearArr];
-            }
             if ([highClearArr count]>0) {
                 [playUrlArr addObjectsFromArray:highClearArr];
             }
-            
             if ([superClearArr count]>0) {
                 [playUrlArr addObjectsFromArray:superClearArr];
+            }
+            
+            if ([plainClearArr count]>0) {
+                [playUrlArr addObjectsFromArray:plainClearArr];
             }
             
             if (play_url_index < [playUrlArr count ]) {
@@ -1116,14 +1111,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self sendHttpRequest:url];
             }
             else{
-                NSLog(@"没找到可播放的地址！");
-//                [self removePlayerTimeObserver];
-//                [self.player removeObserver:self forKeyPath:@"rate"];
-//                [self.player.currentItem removeObserver:self forKeyPath:@"status"];
-//                [self.player  pause];
-//                mPlayerItem = nil;
-//                mPlayer = nil;
-                
+                NSLog(@"没找到可播放的地址！");                
                 [self destoryPlayer];
                 [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:YES];
