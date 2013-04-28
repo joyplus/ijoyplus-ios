@@ -107,9 +107,8 @@
 #pragma mark Setters
 
 - (void)refreshLastUpdatedDate {
-	
-	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceLastUpdated:)]) {
-		
+	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceLastUpdated:)])
+    {
 		NSDate *date = [_delegate egoRefreshTableHeaderDataSourceLastUpdated:self];
 		
 		[NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehaviorDefault];
@@ -118,15 +117,19 @@
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 
 		_lastUpdatedLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Last Updated: ", nil), [dateFormatter stringFromDate:date]];
-		[[NSUserDefaults standardUserDefaults] setObject:_lastUpdatedLabel.text forKey:@"EGORefreshTableView_LastRefresh"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
 		
-	} else {
-		
-		_lastUpdatedLabel.text = nil;
-		
+        [self performSelectorInBackground:@selector(setLastRefreshData:) withObject:_lastUpdatedLabel.text];
 	}
+    else
+    {
+		_lastUpdatedLabel.text = nil;
+	}
+}
 
+- (void)setLastRefreshData:(NSString *)data
+{
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"EGORefreshTableView_LastRefresh"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)setState:(EGOPullRefreshState)aState{

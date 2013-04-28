@@ -41,10 +41,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+//    [self.view addSubview:backGround];
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
@@ -52,7 +55,9 @@
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundView = backGround;
+    
     listArr_ = [[NSMutableArray alloc]initWithCapacity:10];
     [self initTopicData:self.topicId];
     
@@ -186,8 +191,8 @@
     cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"stars"]];
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
-    [cell.support setTitle:[NSString stringWithFormat:@"%@人顶",[item objectForKey:@"support_num"]] forState:UIControlStateDisabled];
-    [cell.addFav setTitle:[NSString stringWithFormat:@"%@人收藏",[item objectForKey:@"favority_num"]] forState:UIControlStateDisabled];
+    [cell.support setTitle:[NSString stringWithFormat:@"%@",[item objectForKey:@"support_num"]] forState:UIControlStateDisabled];
+    [cell.addFav setTitle:[NSString stringWithFormat:@"%@",[item objectForKey:@"favority_num"]] forState:UIControlStateDisabled];
     return cell;
 }
 

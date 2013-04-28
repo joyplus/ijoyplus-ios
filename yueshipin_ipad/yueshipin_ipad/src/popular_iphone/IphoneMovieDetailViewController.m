@@ -62,22 +62,13 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     self.navigationItem.hidesBackButton = YES;
-    
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [rightButton addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
-    rightButton.backgroundColor = [UIColor clearColor];
-    [rightButton setImage:[UIImage imageNamed:@"iphone_share.png"] forState:UIControlStateNormal];
-    [rightButton setImage:[UIImage imageNamed:@"iphone_share_f.png"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.showsVerticalScrollIndicator = NO;
@@ -88,8 +79,8 @@
     if (titleStr == nil) {
         titleStr = [self.infoDic objectForKey:@"name"];
     }
-    self.title = titleStr;
-    name_ = self.title;
+    self.title = @"电影";
+    name_ = titleStr;
     type_ = 1;
     
     isLoaded_ = NO;
@@ -102,8 +93,8 @@
 //    supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
-    summaryBg_.frame = CGRectMake(14, 20, 292, 90);
-    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 20, 264,90)];
+    summaryBg_.frame = CGRectMake(14, 35, 292, 90);
+    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 35, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
     summaryLabel_.numberOfLines = 0;
@@ -222,8 +213,7 @@
 }
 -(void)notificationData{
     infoDic_ = videoInfo_;
-    self.title = [infoDic_ objectForKey:@"name"];
-    name_ = self.title;
+    name_ = [infoDic_ objectForKey:@"name"];
     [self loadTable];
 }
 -(void)loadComments{
@@ -333,10 +323,11 @@
     if (indexPath.section == 0) {
         switch (indexPath.row) {
             case 0:{
-                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
-                frame.frame = CGRectMake(14, 14, 90, 133);
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
+                frame.frame = CGRectMake(14, 14, 90, 143);
+                frame.backgroundColor = [UIColor clearColor];
                 [cell addSubview:frame];
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 126)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(18, 19, 83, 134)];
         
                 NSString *imageUrl = [self.infoDic objectForKey:@"prod_pic_url"];
                 if (imageUrl == nil) {
@@ -345,9 +336,23 @@
                 if (imageUrl == nil) {
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
-                [imageView setImageWithURL:[NSURL URLWithString:imageUrl] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+                [imageView setImageWithURL:[NSURL URLWithString:imageUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
                 wechatImg_ = imageView.image;
                 [cell addSubview:imageView];
+                
+                NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
+                if (titleStr == nil) {
+                    titleStr = [self.infoDic objectForKey:@"content_name"];
+                }
+                if (titleStr == nil) {
+                        titleStr = [self.infoDic objectForKey:@"name"];
+                }
+                UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 14, 170, 18)];
+                titleLabel.font = [UIFont systemFontOfSize:15];
+                titleLabel.textColor = [UIColor grayColor];
+                titleLabel.backgroundColor = [UIColor clearColor];
+                titleLabel.text = titleStr;
+                [cell addSubview:titleLabel];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
                 if (directors == nil) {
@@ -374,25 +379,25 @@
                     area = @" ";
                 }
                 
-                UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 59, 200, 15)];
+                UILabel *actorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 39, 200, 15)];
                 actorsLabel.font = [UIFont systemFontOfSize:12];
                 actorsLabel.textColor = [UIColor grayColor];
                 actorsLabel.backgroundColor = [UIColor clearColor];
                 actorsLabel.text = [NSString stringWithFormat:@"主演: %@",actors];
                 
-                UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 77, 200, 15)];
+                UILabel *areaLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 57, 200, 15)];
                 areaLabel.font = [UIFont systemFontOfSize:12];
                 areaLabel.textColor = [UIColor grayColor];
                 areaLabel.backgroundColor = [UIColor clearColor];
                 areaLabel.text = [NSString stringWithFormat:@"地区: %@",area];
                 
-                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 95, 200, 15)];
+                UILabel *directorLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 75, 200, 15)];
                 directorLabel.font = [UIFont systemFontOfSize:12];
                 directorLabel.textColor = [UIColor grayColor];
                 directorLabel.backgroundColor = [UIColor clearColor];
                 directorLabel.text = [NSString stringWithFormat:@"导演: %@",directors];
                 
-                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 113, 200, 15)];
+                UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 93, 200, 15)];
                 dateLabel.font = [UIFont systemFontOfSize:12];
                 dateLabel.textColor = [UIColor grayColor];
                 dateLabel.backgroundColor = [UIColor clearColor];
@@ -405,84 +410,86 @@
                 [cell addSubview:dateLabel];;
                 
                 UIButton *play = [UIButton buttonWithType:UIButtonTypeCustom];
-                play.frame = CGRectMake(124, 155, 87, 27);
+                play.frame = CGRectMake(110, 110, 90, 45);
                 play.tag = 10001;
-                [play setImage:[UIImage imageNamed:@"play_video.png"] forState:UIControlStateNormal];
-                [play setImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
-                [play setImage:[UIImage imageNamed:@"no_video_source.png"] forState:UIControlStateDisabled];
+                [play setBackgroundImage:[UIImage imageNamed:@"play_video.png"] forState:UIControlStateNormal];
+                [play setBackgroundImage:[UIImage imageNamed:@"play_video_s.png"] forState:UIControlStateHighlighted];
+                [play setBackgroundImage:[UIImage imageNamed:@"no_video_source.png"] forState:UIControlStateDisabled];
                 [play addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 [cell addSubview:play];
                 
                 UIButton * expectbtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 expectbtn.tag = 100010;
-                expectbtn.frame = CGRectMake(124, 155, 87, 28);
+                expectbtn.frame = CGRectMake(110, 110, 90, 45);
                 [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_.png"] forState:UIControlStateNormal];
-                [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_s.png"] forState:UIControlStateHighlighted];
+                [expectbtn setBackgroundImage:[UIImage imageNamed:@"icon_xiangkan_bg_.png"] forState:UIControlStateHighlighted];
                 [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan.png"] forState:UIControlStateNormal];
                 [expectbtn setImage:[UIImage imageNamed:@"icon_xiangkan_s.png"] forState:UIControlStateHighlighted];
                 [expectbtn setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 30)];
                 expectbtn.titleLabel.textAlignment = UITextAlignmentCenter;
                 [expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 10)];
-                [expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                [expectbtn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
                 [expectbtn setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:11];
+                expectbtn.titleLabel.font = [UIFont boldSystemFontOfSize:9];
                 [expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
              
                 expectbtn.hidden = YES;
                 
                 UIButton *addFav = [UIButton buttonWithType:UIButtonTypeCustom];
-                addFav.frame =  CGRectMake(215, 20, 89, 27);
+                addFav.frame =  CGRectMake(170, 165, 80, 35);
                 addFav.tag = 10002;
-                [addFav setBackgroundImage:[UIImage imageNamed:@"addFav.png"] forState:UIControlStateNormal];
-                [addFav setBackgroundImage:[UIImage imageNamed:@"addFav_pressed.png"] forState:UIControlStateHighlighted];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite.png"]forState:UIControlStateNormal];
-                [addFav setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_favorite_s.png"] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
                 if (favCount_ <1000) {
-                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%d）",favCount_]  forState:UIControlStateNormal];
-                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%d)",favCount_] forState:UIControlStateNormal];
+                    [addFav setTitle:[NSString stringWithFormat:@"(%d)",favCount_]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"(%d)",favCount_] forState:UIControlStateNormal];
                 }
                 else if (favCount_ >= 1000 && favCount_<= 1100) {
                     
-                    [addFav setTitle:[NSString stringWithFormat:@"收藏（1k）"]  forState:UIControlStateNormal];
-                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(1K)"] forState:UIControlStateNormal];
+                    [addFav setTitle:[NSString stringWithFormat:@"(1k)"]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"(1K)"] forState:UIControlStateNormal];
                 }
                 else {
                     float favNum = favCount_*1.0/1000;
-                    [addFav setTitle:[NSString stringWithFormat:@"收藏（%.1fk）",favNum]  forState:UIControlStateNormal];
-                    [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%.1fk)",favNum] forState:UIControlStateNormal];
+                    [addFav setTitle:[NSString stringWithFormat:@"(%.1fk)",favNum]  forState:UIControlStateNormal];
+                    [expectbtn setTitle:[NSString stringWithFormat:@"(%.1fk)",favNum] forState:UIControlStateNormal];
                 }
-                
-                [addFav setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                addFav.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
+                addFav.titleEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
+                addFav.backgroundColor = [UIColor clearColor];
+                [addFav setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                [addFav setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                addFav.titleLabel.font = [UIFont systemFontOfSize:12];
+                addFav.titleLabel.font = [UIFont systemFontOfSize:10];
                 [cell addSubview:addFav];
                 
                 UIButton *support = [UIButton buttonWithType:UIButtonTypeCustom];
-                support.frame = CGRectMake(116, 20, 80, 27);
+                support.frame = CGRectMake(80, 165, 80, 35);
                 support.tag = 10003;
-                [support setBackgroundImage:[UIImage imageNamed:@"collect.png"] forState:UIControlStateNormal];
-                [support setBackgroundImage:[UIImage imageNamed:@"collect_pressed.png"] forState:UIControlStateHighlighted];
-                [support setImage: [UIImage imageNamed:@"tab2_detailed_common_icon_recommend.png"] forState:UIControlStateNormal];
-                [support setImage:[UIImage imageNamed:@"tab2_detailed_common_icon_recommend_s.png"] forState:UIControlStateHighlighted];
-                [support setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [support setImage:[UIImage imageNamed:@"icon_ding.png"] forState:UIControlStateNormal];
+                [support setImage:[UIImage imageNamed:@"icon_ding_s.png"] forState:UIControlStateHighlighted];
+                [support setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+                [support setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
                 if (supportCount_ <1000) {
-                    [support setTitle:[NSString stringWithFormat:@"顶（%d）",supportCount_]  forState:UIControlStateNormal];
+                    [support setTitle:[NSString stringWithFormat:@"(%d)",supportCount_]  forState:UIControlStateNormal];
                 }
                 else if (supportCount_ >= 1000 && supportCount_<= 1100) {
                     
-                    [support setTitle:[NSString stringWithFormat:@"顶（1k）"]  forState:UIControlStateNormal];
+                    [support setTitle:[NSString stringWithFormat:@"(1k)"]  forState:UIControlStateNormal];
                 }
                 else {
                     float suppotNum = supportCount_*1.0/1000;
-                    [support setTitle:[NSString stringWithFormat:@"顶（%.1fk）",suppotNum]  forState:UIControlStateNormal];
+                    [support setTitle:[NSString stringWithFormat:@"(%.1fk)",suppotNum]  forState:UIControlStateNormal];
                 }
+                support.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0);
+                support.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0);
                 [support addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-                support.titleLabel.font = [UIFont systemFontOfSize:12];
+                support.titleLabel.font = [UIFont systemFontOfSize:10];
                 [cell addSubview:support];
                 
                 
                 UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
-                downLoad.frame = CGRectMake(225, 155, 74, 28);
+                downLoad.frame = CGRectMake(205, 110, 90, 45);
                 downLoad.tag = 10004;
                 if ([self getDownloadUrl] == nil) {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
@@ -494,11 +501,11 @@
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                     play.hidden = NO;
                     expectbtn.hidden = YES;
                 }
-                [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateSelected];
+                [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
@@ -516,37 +523,45 @@
                 NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
                 NSArray *tempArr = [DatabaseManager findByCriteria:DownloadItem.class queryString:subquery];
                 if ([tempArr count] >0) {
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                     downLoad.selected = YES;
                     downLoad.adjustsImageWhenHighlighted = NO;
                 }
 
                 
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
-                report.frame = CGRectMake(15, 155, 96, 28);
+                report.frame = CGRectMake(0, 165, 80, 35);
                 report.tag = 10005;
-                [report setBackgroundImage:[UIImage imageNamed:@"report.png"] forState:UIControlStateNormal];
-                [report setBackgroundImage:[UIImage imageNamed:@"report_pressed.png"] forState:UIControlStateHighlighted];
+                [report setImage:[UIImage imageNamed:@"icon_fankui.png"] forState:UIControlStateNormal];
+                [report setImage:[UIImage imageNamed:@"icon_fankui_s.png"] forState:UIControlStateHighlighted];
                 [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 report.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:report];
                 
+                UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
+                share.frame = CGRectMake(240, 165, 80, 35);
+                [share setImage:[UIImage imageNamed:@"icon_fenxiang.png"] forState:UIControlStateNormal];
+                [share setImage:[UIImage imageNamed:@"icon_fenxiang_s.png"] forState:UIControlStateHighlighted];
+                [share addTarget:self action:@selector(share:event:) forControlEvents:UIControlEventTouchUpInside];
+                share.titleLabel.font = [UIFont systemFontOfSize:14];
+                [cell addSubview:share];
+                
                 break;
             }
             case 1:{
-                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 30, 13)];
+                UIImageView *jianjie = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 32, 13)];
                 jianjie.image = [UIImage imageNamed:@"tab2_detailed_common_writing3.png"];
-                [cell addSubview:jianjie];
-               
-                [cell addSubview:summaryBg_];
-               
                 if (summary_ != nil) {
                     summaryLabel_.text = [NSString stringWithFormat:@"    %@",summary_];
                 }
                 
-                [cell addSubview:summaryLabel_];
-                //[cell addSubview:moreBtn_];
+                if (isLoaded_) {
+                    [cell addSubview:jianjie];
+                    [cell addSubview:summaryBg_];
+                    [cell addSubview:summaryLabel_];
+
+                }
                 
                 break;
             }
@@ -559,9 +574,9 @@
         
         int num = [relevantList_ count] > 5 ? 5:[relevantList_ count];
         if (indexPath.row == 0) {
-            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 5, 50, 14)];
+            UIImageView *commentV = [[UIImageView alloc] initWithFrame:CGRectMake(14, 15, 50, 14)];
             commentV.image = [UIImage imageNamed:@"tab2_detailed_common_writing1.png"];
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320,25)];
+            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 5, 320,30)];
             [view addSubview:commentV];
             [cell addSubview:view];
         }
@@ -594,6 +609,7 @@
             UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
             label.font = [UIFont systemFontOfSize:15];
             label.backgroundColor = [UIColor clearColor];
+            label.textColor = [UIColor grayColor];
             label.text = [dic objectForKey:@"t_name"];
             [cell addSubview:label];
             
@@ -602,7 +618,7 @@
             [cell addSubview:push];
             
             if (num != indexPath.row) {
-                 UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_common_writing4_fenge.png"]];
+                 UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
                 line.frame = CGRectMake(25,25, 270, 1);
                 [cell addSubview:line];
             }
@@ -657,12 +673,9 @@
     }
     else if (3 == indexPath.section)
     {
-        UILabel * review =[[UILabel alloc]initWithFrame:CGRectMake(12, 20, 100, 30)];
-        review.text = @"影评";
-        review.backgroundColor = [UIColor clearColor];
-        review.textColor = [UIColor grayColor];
-        review.font = [UIFont systemFontOfSize:13];
-        [cell addSubview:review];
+        UIImageView *yingping = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"yingping.png"]];
+        yingping.frame = CGRectMake(14, 22, 32, 14);
+        [cell addSubview:yingping];
         
         for (int i = 0; i < arrReviewData_.count; i ++)
         {
@@ -672,7 +685,7 @@
             CGRect rect = CGRectMake(12, 44, 296, 133);
             if (nil != preCell)
             {
-                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 20.0f;
+                rect.origin.y = preCell.frame.size.height + preCell.frame.origin.y + 10.0f;
             }
             
             FilmReviewViewCell * reviewCell = [[FilmReviewViewCell alloc] initWithFrame:rect
@@ -714,14 +727,14 @@
     int row = indexPath.row;
     if (indexPath.section == 0) {
         if (row == 0) {
-            return 181;
+            return 195;
         }
         else if(row == 1){
             if (moreBtn_.selected) {
-                 return [self heightForString:summary_ fontSize:13 andWidth:271]+25;
+                 return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
             }
             else{
-                 return 110;
+                 return 125;
             }
            
         }
@@ -730,7 +743,7 @@
     else if (indexPath.section == 1){
         if ([relevantList_ count]>0) {
             if (indexPath.row == 0) {
-                return 25;
+                return 43;
             }
             else{
                 return 26;
@@ -869,8 +882,8 @@
                 return;
             }
             button.selected = YES;
-            [button setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateNormal];
-            [button setBackgroundImage:[UIImage imageNamed:@"cache_done.png"] forState:UIControlStateHighlighted];
+            [button setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateNormal];
+            [button setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
             button.adjustsImageWhenHighlighted = NO;
             
             NSString *url = [self getDownloadUrl];
@@ -962,14 +975,14 @@
    
         moreBtn_.selected = !moreBtn_.selected;
         if (moreBtn_.selected) {
-            summaryBg_.frame = CGRectMake(14, 20, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-            summaryLabel_.frame = CGRectMake(28, 23, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+            summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
+            summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
             
             
         }
         else{
-            summaryBg_.frame = CGRectMake(14, 20, 292, 90);
-            summaryLabel_.frame = CGRectMake(28, 20, 264,90);
+            summaryBg_.frame = CGRectMake(14, 35, 292, 90);
+            summaryLabel_.frame = CGRectMake(28, 35, 264,90);
             
         }
     [self loadTable];

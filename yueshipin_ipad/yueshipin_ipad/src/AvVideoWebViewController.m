@@ -16,6 +16,10 @@
 @property (nonatomic, strong)UIWebView *webView;
 @property (nonatomic)BOOL appeared;
 @property (nonatomic, strong)NSMutableArray *subnameArray;
+
+- (void)addWebView;
+- (void)removeWebView;
+
 @end
 
 @implementation AvVideoWebViewController
@@ -117,20 +121,8 @@
     }else{
         self.title = [NSString stringWithFormat:@"%@", name];
     }
-    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)] forBarMetrics:UIBarMetricsDefault];
-    CGRect bound = [UIScreen mainScreen].bounds;
-	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width)];
-    [webView setBackgroundColor:[UIColor clearColor]];
-    webView.scalesPageToFit = YES;
-    [self hideGradientBackground:webView];
-    if (videoHttpUrlArray.count > 0 && currentNum < videoHttpUrlArray.count) {
-        NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
-        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-        [webView loadRequest:requestObj];
-    }
-    [webView setScalesPageToFit:YES];
-    [self.view addSubview:webView];
-    
+    [self.navigationController.navigationBar setBackgroundImage:[UIImage scaleFromImage:[UIImage imageNamed:@"top_bg_common.png"] toSize:CGSizeMake(kFullWindowHeight, 44)]
+                                                  forBarMetrics:UIBarMetricsDefault];
     if (!hasVideoUrls) {
         subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
         for (NSDictionary *oneEpisode in [video objectForKey:@"episodes"]) {
@@ -156,7 +148,8 @@
     [super viewDidAppear:animated];
     if (!appeared) {
         appeared = YES;
-        if (hasVideoUrls > 0) {
+        if (hasVideoUrls > 0)
+        {
             UIView *blackView = [[UIView alloc]initWithFrame:self.view.frame];
             blackView.backgroundColor = [UIColor blackColor];
             blackView.alpha = 0;
@@ -166,9 +159,14 @@
                 blackView.alpha = 1;
             } completion:^(BOOL finished) {
                 [self showMediaPlayer];
+                [self removeWebView];
                 self.navigationController.navigationBar.alpha = 1;
                 [blackView removeFromSuperview];
             }];
+        }
+        else
+        {
+            [self addWebView];
         }
     }
 }
@@ -243,6 +241,34 @@
         
         [self hideGradientBackground:subview];
     }
+}
+
+- (void)addWebView
+{
+    CGRect bound = [UIScreen mainScreen].bounds;
+	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width)];
+    [webView setBackgroundColor:[UIColor clearColor]];
+    webView.scalesPageToFit = YES;
+    [self hideGradientBackground:webView];
+    if (videoHttpUrlArray.count > 0 && currentNum < videoHttpUrlArray.count) {
+        NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
+        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+        [webView loadRequest:requestObj];
+    }
+    [webView setScalesPageToFit:YES];
+    [self.view addSubview:webView];
+}
+
+- (void)removeWebView
+{
+    [webView stopLoading];
+    [webView removeFromSuperview];
+    webView = nil;
+}
+
+- (void)reshowWebView
+{
+    [self addWebView];
 }
 
 @end

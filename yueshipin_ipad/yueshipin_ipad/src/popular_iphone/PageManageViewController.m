@@ -257,6 +257,7 @@ enum
         if(self.showListArr == nil){
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
+        [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
     }];
     
@@ -272,10 +273,11 @@ enum
             NSArray *tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [self.showListArr addObjectsFromArray:tempTopsArray];
+
             }
-            else{
+            
+            if(tempTopsArray.count < PAGESIZE){
                 [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-                
             }
         }
         
@@ -352,16 +354,17 @@ enum
     
     [self dataBaseChanged];
     
-    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
-    titleText.backgroundColor = [UIColor clearColor];
-    titleText.textColor=[UIColor whiteColor];
-    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [titleText setText:@"悦榜"];
-    self.navigationItem.titleView=titleText;
+//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
+//    titleText.backgroundColor = [UIColor clearColor];
+//    titleText.textColor=[UIColor whiteColor];
+//    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
+//    [titleText setText:@"悦榜"];
+//    self.navigationItem.titleView=titleText;
+    self.title = @"悦榜";
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 49, 30);
+    leftButton.frame = CGRectMake(0, 0, 55, 44);
     leftButton.backgroundColor = [UIColor clearColor];
     [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
     [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
@@ -371,17 +374,22 @@ enum
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-    rightButton.frame = CGRectMake(0, 0, 49, 30);
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
     rightButton.backgroundColor = [UIColor clearColor];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
     [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
     
+    [super viewDidLoad];
+    UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    [self.view addSubview:backGround];
 	// Do any additional setup after loading the view.
     
     self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 30, 320, kCurrentWindowHeight-88-30)];
     self.scrollView.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight-88-30);
+    self.scrollView.backgroundColor = [UIColor clearColor];
     self.scrollView.pagingEnabled = YES;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
@@ -453,10 +461,11 @@ enum
     [scrBg addSubview:comicBtn_];
     //[scrBg addSubview:pageMGIcon_];
     [scrBg addSubview:slider_];
-    scrBg.backgroundColor = [UIColor redColor];
+    scrBg.backgroundColor = [UIColor clearColor];
     [self.view addSubview:scrBg];
     
     self.tvTableList = [[UITableView alloc] initWithFrame:CGRectMake(320, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.tvTableList.backgroundColor = [UIColor clearColor];
     self.tvTableList.dataSource = self;
     self.tvTableList.delegate = self;
     self.tvTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -464,6 +473,7 @@ enum
     [self.scrollView addSubview:self.tvTableList];
     
     self.movieTableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.movieTableList.backgroundColor = [UIColor clearColor];
     self.movieTableList.dataSource = self;
     self.movieTableList.delegate = self;
     self.movieTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -471,6 +481,7 @@ enum
     [self.scrollView addSubview:self.movieTableList];
     
     self.showTableList = [[UITableView alloc] initWithFrame:CGRectMake(960, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.showTableList.backgroundColor = [UIColor clearColor];
     self.showTableList.dataSource = self;
     self.showTableList.delegate = self;
     self.showTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -478,6 +489,7 @@ enum
     [self.scrollView addSubview:self.showTableList];
     
     self.comicTableList = [[UITableView alloc] initWithFrame:CGRectMake(640, 0,320 , kCurrentWindowHeight-122) style:UITableViewStylePlain];
+    self.comicTableList.backgroundColor = [UIColor clearColor];
     self.comicTableList.dataSource = self;
     self.comicTableList.delegate = self;
     self.comicTableList.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -493,7 +505,7 @@ enum
         refreshHeaderViewForMovieList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForMovieList_.delegate = self;
         [movieTableList_ addSubview:refreshHeaderViewForMovieList_];
-        [refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForMovieList_ refreshLastUpdatedDate];
         movieLoadCount_ = 1;
     }
 
@@ -502,7 +514,7 @@ enum
         refreshHeaderViewForTvList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForTvList_.delegate = self;
         [tvTableList_ addSubview:refreshHeaderViewForTvList_];
-        [refreshHeaderViewForTvList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForTvList_ refreshLastUpdatedDate];
         tvLoadCount_ = 1;
     }
 
@@ -511,7 +523,7 @@ enum
         refreshHeaderViewForShowList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForShowList_.delegate = self;
         [showTableList_ addSubview:refreshHeaderViewForShowList_];
-        [refreshHeaderViewForShowList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForShowList_ refreshLastUpdatedDate];
         showLoadCount_ = 1;
     }
     
@@ -521,7 +533,7 @@ enum
         refreshHeaderViewForComicList_.backgroundColor = [UIColor clearColor];
         refreshHeaderViewForComicList_.delegate = self;
         [comicTableList_ addSubview:refreshHeaderViewForComicList_];
-        [refreshHeaderViewForComicList_ refreshLastUpdatedDate];
+        //[refreshHeaderViewForComicList_ refreshLastUpdatedDate];
         comicLoadCount_ = 1;
     }
     
@@ -529,7 +541,7 @@ enum
     
     if (nil == bundingTipsView)
     {
-        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]];
+        bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]highlightedImage:[UIImage imageNamed:@"bunding_tv_s.png"]];
         bundingTipsView.frame = CGRectMake(0, 0, 320, 34);
         [self.view addSubview:bundingTipsView];
         bundingTipsView.backgroundColor = [UIColor clearColor];
@@ -541,11 +553,6 @@ enum
         tapGesture.numberOfTouchesRequired = 1;
         [bundingTipsView addGestureRecognizer:tapGesture];
     }
-    
-    [self loadMovieTopsData];
-    [self loadTVTopsData];
-    [self loadShowTopsData];
-    [self loadComicTopsData];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(managerTVBunding)
@@ -570,6 +577,22 @@ enum
 }
 -(void)viewWillAppear:(BOOL)animated{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
+    if (0 == self.movieListArr.count)
+    {
+        [self loadMovieTopsData];
+    }
+    if (0 == self.tvListArr.count)
+    {
+        [self loadTVTopsData];
+    }
+    if (0 == self.showListArr.count)
+    {
+        [self loadShowTopsData];
+    }
+    if (0 == self.comicListArr.count)
+    {
+        [self loadComicTopsData];
+    }
     
     [self managerTVBunding];
     
@@ -759,7 +782,7 @@ enum
                 }
             }
             cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             return cell;
         }
         case MOVIE_TYPE:{
@@ -786,7 +809,7 @@ enum
             }
 
             cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             return cell;
         }
         case SHOW_TYPE:{
@@ -825,7 +848,7 @@ enum
                 }
             }
             cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             return cell;
         }
         default:
@@ -980,13 +1003,15 @@ enum
         [self loadTVTopsData];
     }
     else if (view == refreshHeaderViewForShowList_){
-        [self loadMoreShowTopsData];
-    
+        showLoadCount_ = 1;
+        [self loadShowTopsData];
+        [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     }
     else if (view == refreshHeaderViewForComicList_)
     {
         [self loadComicTopsData];
     }
+    
     
 	reloading_ = YES;
     [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];

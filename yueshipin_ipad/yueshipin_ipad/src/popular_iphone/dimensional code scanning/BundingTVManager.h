@@ -50,6 +50,7 @@
 - (void)connecteServer;
 - (void)connecteServerWithChannel:(NSString *)channel;
 - (void)sendMsg:(NSDictionary *)data;
+- (void)reconnectToServer;
 
 @end
 

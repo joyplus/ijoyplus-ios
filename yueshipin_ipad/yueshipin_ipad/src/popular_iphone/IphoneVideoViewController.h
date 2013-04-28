@@ -12,7 +12,7 @@
 #define ADDFAV  2
 #define REPORT 3
 #define ADDEXPECT   4
-@interface IphoneVideoViewController : UITableViewController<SinaWeiboDelegate,SinaWeiboRequestDelegate>{
+@interface IphoneVideoViewController : UITableViewController<SinaWeiboDelegate,SinaWeiboRequestDelegate,UIActionSheetDelegate>{
     SinaWeibo *_mySinaWeibo;
     NSDictionary *infoDic_;
     NSArray *episodesArr_;

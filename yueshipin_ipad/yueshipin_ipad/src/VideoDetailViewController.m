@@ -494,4 +494,27 @@
         }
     }
 }
+
+- (BOOL)isDownloadURLExit
+{
+    for (NSDictionary *epi in episodeArray)
+    {
+        NSArray *downUrls = [epi objectForKey:@"down_urls"];
+        for (NSDictionary *downUrl in downUrls)
+        {
+            NSArray *urls = [downUrl objectForKey:@"urls"];
+            for (NSDictionary *url in urls)
+            {
+                NSString *realurl = [url objectForKey:@"url"];
+                NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                if (trimUrl && trimUrl.length > 0)
+                {
+                    return YES;
+                }
+            }
+        }
+    }
+    return NO;
+}
+
 @end

@@ -39,19 +39,15 @@
     {  
         // Initialization code
         
-        _arrFeedBackOption = [[NSArray alloc] initWithObjects:@"影片无法播放",@"影片播放不流畅",@"影片加载比较慢",@"影片不能加载",@"观看影片时出现闪退",@"画质不清晰",@"音画不同步", nil];
-        
         UIView * bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         bgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.25f];
         [self addSubview:bgView];
         
-        UIButton *bgButton =[UIButton buttonWithType:UIButtonTypeCustom];
-        bgButton.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-        [bgButton addTarget:self
-                     action:@selector(backgroundClicked:)
-           forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:bgButton];
-        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundClicked:)];
+        tapGesture.numberOfTapsRequired = 1;
+        tapGesture.numberOfTouchesRequired = 1;
+        [bgView addGestureRecognizer:tapGesture];
+                
         [self customView];
     }
     return self;
@@ -59,7 +55,6 @@
 
 - (void)dealloc
 {
-    _arrFeedBackOption = nil;
     _lastSelected = nil;
 }
 
@@ -76,56 +71,32 @@
 #pragma mark - private
 
 - (void)customView
-{
-//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(backgroundTaped)];
-//    tapGesture.numberOfTapsRequired = 1;
-//    tapGesture.numberOfTouchesRequired = 1;
-//    [self addGestureRecognizer:tapGesture];
-    
-    UIButton * bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bgBtn setFrame:CGRectMake(0, 0, self.frame.size.width,self.frame.size.height)];
-    bgBtn.backgroundColor = [UIColor clearColor];
-    [bgBtn addTarget:self
-              action:@selector(backgroundTaped)
-    forControlEvents:UIControlEventTouchDown];
-    [self addSubview:bgBtn];
-    
-    UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(10, 85, 295, 376)];
+{    
+    UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(28, 85, 264, 430)];
     feedback.backgroundColor = [UIColor clearColor];
     [self addSubview:feedback];
     feedback.tag = FEEDBACK_VEWI_TAG;
     
-    UIImageView * feedbackImage = [[UIImageView alloc] initWithFrame:CGRectMake(-2, -2, 299, 376)];//kFullWindowHeight * 0.685
+    UIImageView * feedbackImage = [[UIImageView alloc] initWithFrame:CGRectMake(-2, -2, 264, 430)];//kFullWindowHeight * 0.685
     feedbackImage.image = [[UIImage imageNamed:@"popview_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
     feedbackImage.backgroundColor = [UIColor clearColor];
     feedbackImage.userInteractionEnabled = YES;
     [feedback addSubview:feedbackImage];
     
     UIButton * closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(251, 6, 38, 38);
+    closeBtn.frame = CGRectMake(220, -2, 40, 40);
     [closeBtn addTarget:self
                  action:@selector(backgroundClicked:)
        forControlEvents:UIControlEventTouchUpInside];
     [feedback addSubview:closeBtn];
-    closeBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 19, 19, 0);
     [closeBtn setImage:[UIImage imageNamed:@"download_shut.png"]
               forState:UIControlStateNormal];
     [closeBtn setImage:[UIImage imageNamed:@"download_shut_pressed.png"]
               forState:UIControlStateHighlighted];
     closeBtn.backgroundColor = [UIColor clearColor];
     
-    UILabel * title = [[UILabel alloc] initWithFrame:CGRectMake(17, 18, 252, 30)];
-    title.numberOfLines = 0;
-    title.font   = [UIFont boldSystemFontOfSize:13];
-    title.text = @"亲，请您告知我们您在看片过程中遇到哪些问题,我们一定尽快改进 : )";
-    title.backgroundColor   = [UIColor clearColor];
-    title.textColor   = [UIColor grayColor];
-    [feedback addSubview:title];
     
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(7, \
-                                                                        title.frame.origin.y + title.frame.size.height + 10.0f,\
-                                                                        280, 210)
-                                                       style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(7, 62,240, 230) style:UITableViewStylePlain];
     _tableView.delegate   = self;
     _tableView.dataSource = self;
     [feedback addSubview:_tableView];
@@ -133,21 +104,8 @@
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.separatorColor = [UIColor clearColor];
     
-    
-    UILabel * other = [[UILabel alloc] initWithFrame:CGRectMake(17, \
-                                                                _tableView.frame.origin.y + _tableView.frame.size.height + 5.0f,\
-                                                                60, 30)];
-    other.numberOfLines = 2;
-    //other.textAlignment = UITextAlignmentCenter;
-    other.font   = [UIFont boldSystemFontOfSize:15];
-    other.text = @"其它";
-    other.backgroundColor   = [UIColor clearColor];
-    other.textColor   = [UIColor grayColor];
-    [feedback addSubview:other];
-    
-    
-    UIImageView * bgImage = [[UIImageView alloc] initWithFrame:CGRectMake(50, other.frame.origin.y + 4, 228.5, 24)];
-    bgImage.image = [UIImage imageNamed:@"otherTextBG.png"];
+    UIImageView * bgImage = [[UIImageView alloc] initWithFrame:CGRectMake(50, 312, 200, 26)];
+    bgImage.image = [[UIImage imageNamed:@"otherTextBG.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 1, 2, 1)];
     [feedback addSubview:bgImage];
     
     _textViewOther = [[UITextField alloc] initWithFrame:bgImage.frame];
@@ -157,9 +115,9 @@
     _textViewOther.returnKeyType = UIReturnKeyDone;
     
     UIButton * commitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    commitBtn.frame = CGRectMake(90, \
-                                 _textViewOther.frame.size.height + _textViewOther.frame.origin.y + 20,\
-                                 104, 39);
+    commitBtn.frame = CGRectMake(110, \
+                                 _textViewOther.frame.size.height + _textViewOther.frame.origin.y,\
+                                 60, 40);
     [commitBtn addTarget:self
                  action:@selector(commitButtonClick:)
        forControlEvents:UIControlEventTouchUpInside];
@@ -175,16 +133,6 @@
 
 - (void)commitButtonClick:(id)sender
 {
-//    NSInteger selectedIndex = NSNotFound;
-//    
-//    if (_lastSelected.selected)
-//    {
-//        selectedIndex = _lastSelected.tag + 1;
-//    }
-//    else
-//    {
-//        selectedIndex = 8;
-//    }
     if (0 == _textViewOther.text.length && [selectArr_ count] == 0)
     {
         UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"提示"
@@ -334,7 +282,7 @@
     [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
     
     CGRect rect = [self viewWithTag:FEEDBACK_VEWI_TAG].frame;
-    rect.origin.y = -75;
+    rect.origin.y = -108;
     [self viewWithTag:FEEDBACK_VEWI_TAG].frame = rect;
     [UIView commitAnimations];
 
@@ -362,7 +310,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return _arrFeedBackOption.count;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -375,8 +323,7 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         
         selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        selectBtn.frame = CGRectMake(217, 0, 58, 29);
-        selectBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 29, 0, 0);
+        selectBtn.frame = CGRectMake(215, 0, 19, 19);
         [cell addSubview:selectBtn];
         [selectBtn addTarget:self
                       action:@selector(selectBtnClicked:)
@@ -390,7 +337,6 @@
      selectBtn.tag = indexPath.row;
     cell.clipsToBounds = YES;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.textLabel.text = [_arrFeedBackOption objectAtIndex:indexPath.row];
     cell.textLabel.font = [UIFont fontWithName:@"ArialMT" size:12];
     
     return cell;
@@ -398,7 +344,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 29.0f;
+    return 34.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

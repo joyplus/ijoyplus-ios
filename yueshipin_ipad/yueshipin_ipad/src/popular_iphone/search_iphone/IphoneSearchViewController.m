@@ -179,9 +179,9 @@
     cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
     [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
     NSString *supportNum = [item objectForKey:@"support_num"];
-    [cell.support setTitle:[NSString stringWithFormat:@"%@人顶",supportNum] forState:UIControlStateDisabled];
+    [cell.support setTitle:[NSString stringWithFormat:@"%@",supportNum] forState:UIControlStateDisabled];
     NSString *addFavNum = [item objectForKey:@"favority_num"];
-    [cell.addFav setTitle:[NSString stringWithFormat:@"%@人收藏",addFavNum] forState:UIControlStateDisabled];
+    [cell.addFav setTitle:[NSString stringWithFormat:@"%@",addFavNum] forState:UIControlStateDisabled];
     cell.score.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"score"]];
     return cell;
 }
