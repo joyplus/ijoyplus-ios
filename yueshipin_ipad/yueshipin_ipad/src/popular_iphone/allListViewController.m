@@ -245,7 +245,7 @@
         }
     }
    
-    [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+    [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
     
     NSString *typeStr = [item objectForKey:@"prod_type"];
     if ([typeStr isEqualToString:@"1"]) {
