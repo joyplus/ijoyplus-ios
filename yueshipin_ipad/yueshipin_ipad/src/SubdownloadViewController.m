@@ -395,7 +395,9 @@
             }
             viewController.currentNum = 0;
             viewController.prodId = itemId;
-            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+            viewController.view.backgroundColor = [UIColor clearColor];
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
         } else {
             if (![item.downloadStatus hasPrefix:@"error"]) {

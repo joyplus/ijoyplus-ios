@@ -235,6 +235,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
         }
         [self setURL:workingUrl];
+        [self showToolview];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
         [self playVideo];
@@ -626,11 +627,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)customizeTopToolbar
 {
-    if (isDownloaded) {
-        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    } else {
-        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    }
+    topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+//    if (isDownloaded) {
+//        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+//    } else {
+//        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+//    }
     [topToolbar setBackgroundImage:[[UIImage imageNamed:@"top_toolbar_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 5, 5, 5)] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:topToolbar];
     
@@ -886,7 +888,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)showPlayVideoView
 {
     mPlayer = nil;
-    mPlaybackView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
+    mPlaybackView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
     mPlaybackView.backgroundColor = [UIColor clearColor];
     if (bottomView) {
         [self.view insertSubview:mPlaybackView aboveSubview:bottomView];
@@ -900,7 +902,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     playCacheView = [self.view viewWithTag:PLAY_CACHE_VIEW];
     if (playCacheView == nil) {
         CGRect bounds = [UIScreen mainScreen].bounds;
-        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width)];
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, bounds.size.height, bounds.size.width)];
         playCacheView.tag = PLAY_CACHE_VIEW;
         playCacheView.backgroundColor = [UIColor clearColor];
         if (topToolbar) {
