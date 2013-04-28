@@ -326,6 +326,12 @@
     if (!self.canPlayVideo) {
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
+//        [self.downloadBtn setEnabled:NO];
+//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+    }
+    
+    if (![self isDownloadURLExit])
+    {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }

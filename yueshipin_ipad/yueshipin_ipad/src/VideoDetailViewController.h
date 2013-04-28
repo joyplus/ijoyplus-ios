@@ -44,6 +44,7 @@
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
 @property (nonatomic)BOOL canPlayVideo;
 - (void)checkCanPlayVideo;
+- (BOOL)isDownloadURLExit;
 - (void)shareBtnClicked;
 - (NSString *)parseVideoUrl:(NSDictionary *)tempVideo;
 - (void)addListBtnClicked;

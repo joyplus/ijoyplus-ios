@@ -420,6 +420,10 @@
         //[self.playBtn setEnabled:NO];
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
+    }
+    
+    if (![self isDownloadURLExit])
+    {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }

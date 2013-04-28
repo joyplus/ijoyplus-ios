@@ -164,7 +164,7 @@
     diskUsedProgress_.progress = percent;
     spaceInfoLabel.text = [NSString stringWithFormat:@"剩余: %0.2fGB / 总空间: %0.2fGB",totalFreeSpace_, totalSpace_];
 }
-
+    
 
 - (void)viewWillAppear:(BOOL)animated
 {

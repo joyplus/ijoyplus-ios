@@ -299,6 +299,28 @@ NSComparator cmptr = ^(id obj1, id obj2){
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)isDownloadURLExit
+{
+    for (NSDictionary *epi in episodesArr_)
+    {
+        NSArray *downUrls = [epi objectForKey:@"down_urls"];
+        for (NSDictionary *downUrl in downUrls)
+        {
+            NSArray *urls = [downUrl objectForKey:@"urls"];
+            for (NSDictionary *url in urls)
+            {
+                NSString *realurl = [url objectForKey:@"url"];
+                NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                if (trimUrl && trimUrl.length > 0)
+                {
+                    return YES;
+                }
+            }
+        }
+    }
+    return NO;
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -524,22 +546,34 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 downLoad.tag = 10004;
                 
                 NSArray * eArr = [videoInfo_ objectForKey:@"episodes"];
-                if (0 == eArr.count) {
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
+                if (0 == eArr.count) 
+                {
+
                     downLoad.enabled = NO;
                     play.hidden = YES;
                     expectbtn.hidden = NO;
                 }
-                else{
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
-                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
+                else
+                {
+
                     play.hidden = NO;
                     expectbtn.hidden = YES;
                 }
-                [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
-                [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
+                    
+                if (![self isDownloadURLExit])
+                {
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
+                    downLoad.enabled = NO;
+                }
+                else
+                {
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
+                    [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateHighlighted];
+                    downLoad.enabled = YES;
+                }
+                
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isloaded_) {
