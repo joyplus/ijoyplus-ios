@@ -780,7 +780,7 @@ enum
                 }
             }
             cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             return cell;
         }
         case MOVIE_TYPE:{
@@ -807,7 +807,7 @@ enum
             }
 
             cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             return cell;
         }
         case SHOW_TYPE:{
@@ -819,7 +819,7 @@ enum
             NSDictionary *item = [self.showListArr objectAtIndex:indexPath.row];
             cell.nameLabel.text = [item objectForKey:@"prod_name"];
             cell.latest.text = [NSString stringWithFormat:@"更新至：%@",[item objectForKey:@"cur_item_name"]];
-           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"picture_bg.png"]];
+           [cell.imageView setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"picture_bg.png"]*/];
         
             return cell;
         }
@@ -846,7 +846,7 @@ enum
                 }
             }
             cell.title.text = [item objectForKey:@"name"];
-            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             return cell;
         }
         default:
