@@ -1093,6 +1093,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
     }
     float lastPlaytimeNum = CMTimeGetSeconds(mPlayer.currentTime);
+    lastPlayTime = mPlayer.currentTime;
     double duration = 0;
     CMTime playerDuration = [self playerItemDuration];
     if (CMTIME_IS_VALID(playerDuration)) {
@@ -1291,7 +1292,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)resolutionBtnClicked:(UIButton *)btn
 {
     [self resetControlVisibilityTimer];
-    [self updateWatchRecord];
     [self destoryPlayer];
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
@@ -1328,7 +1328,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     isChangeQuality = YES;
     
     [self showPlayCacheView];
+    [self loadLastPlaytime];
     [self sendRequest];
+    
 }
 
 - (void)volumeBtnClicked:(UIButton *)btn
