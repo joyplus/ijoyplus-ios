@@ -11,9 +11,9 @@
 #import "RecordListCell.h"
 
 #define SEGMENT_VIEW_FRAME      CGRectMake(12, 10, 297, 52)
-#define HOT_BUTTON_FRAME        CGRectMake(0, 0, 99, 51)
-#define FAV_BUTTON_FRAME        CGRectMake(99, 0, 99, 51)
-#define REC_BUTTON_FRAME        CGRectMake(198, 0, 99, 51)
+#define HOT_BUTTON_FRAME        CGRectMake(0, 10, 99, 51)
+#define FAV_BUTTON_FRAME        CGRectMake(99, 10, 99, 51)
+#define REC_BUTTON_FRAME        CGRectMake(198, 10, 99, 51)
 
 #define HOT_TABLEVIEW_FRAME(Y,Height)     CGRectMake(12, Y, 297, Height)
 #define FAV_TABLEVIEW_FRAME(Y,Height)     CGRectMake(12, Y, 297, Height)
@@ -74,8 +74,9 @@
 #pragma mark - private
 - (void)customView
 {
-    _viewSegment = [[UIView alloc] initWithFrame:SEGMENT_VIEW_FRAME];
-    _viewSegment.backgroundColor = [UIColor clearColor];
+    _viewSegment = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_shang_bg.png"]];
+    _viewSegment.userInteractionEnabled = YES;
+    _viewSegment.frame = SEGMENT_VIEW_FRAME;
     [self addSubview:_viewSegment];
     
     _labNoData = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 170, 20)];
@@ -100,11 +101,11 @@
     [hotBtn addTarget:self
                action:@selector(buttonClicked:)
      forControlEvents:UIControlEventTouchUpInside];
-    [hotBtn setBackgroundImage:[UIImage imageNamed:@"re_bo.png"]
+    [hotBtn setImage:[UIImage imageNamed:@"re_bo.png"]
                       forState:UIControlStateNormal];
-    [hotBtn setBackgroundImage:[UIImage imageNamed:@"re_bo_s.png"]
+    [hotBtn setImage:[UIImage imageNamed:@"re_bo_s.png"]
                       forState:UIControlStateHighlighted];
-    [hotBtn setBackgroundImage:[UIImage imageNamed:@"re_bo_s.png"]
+    [hotBtn setImage:[UIImage imageNamed:@"re_bo_s.png"]
                       forState:UIControlStateDisabled];
     hotBtn.enabled = NO;
     hotBtn.adjustsImageWhenDisabled = NO;
@@ -113,11 +114,11 @@
     [favBtn addTarget:self
                action:@selector(buttonClicked:)
      forControlEvents:UIControlEventTouchUpInside];
-    [favBtn setBackgroundImage:[UIImage imageNamed:@"shou_cang.png"]
+    [favBtn setImage:[UIImage imageNamed:@"shou_cang.png"]
                       forState:UIControlStateNormal];
-    [favBtn setBackgroundImage:[UIImage imageNamed:@"shou_cang_s.png"]
+    [favBtn setImage:[UIImage imageNamed:@"shou_cang_s.png"]
                       forState:UIControlStateHighlighted];
-    [favBtn setBackgroundImage:[UIImage imageNamed:@"shou_cang_s.png"]
+    [favBtn setImage:[UIImage imageNamed:@"shou_cang_s.png"]
                       forState:UIControlStateDisabled];
     favBtn.frame = FAV_BUTTON_FRAME;
     favBtn.tag = FAV_BUTTON_TAG;
@@ -127,11 +128,11 @@
     [recBtn addTarget:self
                action:@selector(buttonClicked:)
      forControlEvents:UIControlEventTouchUpInside];
-    [recBtn setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon.png"]
+    [recBtn setImage:[UIImage imageNamed:@"icon_jilu.png"]
                       forState:UIControlStateNormal];
-    [recBtn setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]
+    [recBtn setImage:[UIImage imageNamed:@"icon_jilu_s.png"]
                       forState:UIControlStateHighlighted];
-    [recBtn setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_s.png"]
+    [recBtn setImage:[UIImage imageNamed:@"icon_jilu_s.png"]
                       forState:UIControlStateDisabled];
     recBtn.frame = REC_BUTTON_FRAME;
     recBtn.tag = REC_BUTTON_TAG;
@@ -144,9 +145,9 @@
 
 - (void)initTableView
 {
-    _tableHot = [[UITableView alloc] initWithFrame:HOT_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 5.0f))
+    _tableHot = [[UITableView alloc] initWithFrame:HOT_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 10.0f))
                                              style:UITableViewStylePlain];
-    _tableFavAndRec = [[UITableView alloc] initWithFrame:FAV_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 5.0f))
+    _tableFavAndRec = [[UITableView alloc] initWithFrame:FAV_TABLEVIEW_FRAME(72,(self.frame.size.height - _viewSegment.frame.size.height - _viewSegment.frame.origin.y - 10.0f))
                                              style:UITableViewStylePlain];
     
     _tableHot.delegate   = self;
@@ -387,18 +388,19 @@
             infoDic = [_arrSearch objectAtIndex:indexPath.row];
         }
         
-        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
         frame.frame = CGRectMake(19, 11, 60, 90);
         [cell.contentView addSubview:frame];
         
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(21, 13, 56, 84)];
-        [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(21, 14, 56, 85)];
+        [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
         [cell.contentView addSubview:imageView];
         
         
         UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(88, 12, 170, 20)];
         titleLab.font = [UIFont systemFontOfSize:14];
         titleLab.text = [infoDic objectForKey:@"prod_name"];
+        titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];
         
@@ -443,9 +445,13 @@
         releaseDate.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:releaseDate];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line.frame = CGRectMake(0, 109, 297, 1);
         [cell.contentView addSubview:line];
+        
+        UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        cell.selectedBackgroundView = selectedBg;
         
         return cell;
     }
@@ -467,17 +473,18 @@
             }
             NSDictionary *infoDic = [_arrFav objectAtIndex:indexPath.row];
             
-            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
             frame.frame = CGRectMake(13, 5, 38, 53);
             [cell.contentView addSubview:frame];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 48)];
-            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 50)];
+            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             [cell.contentView addSubview:imageView];
             
             UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
             titleLab.font = [UIFont systemFontOfSize:14];
             titleLab.text = [infoDic objectForKey:@"content_name"];
+            titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
             titleLab.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:titleLab];
             
@@ -499,6 +506,9 @@
             line.frame = CGRectMake(0, 59, 297, 1);
             [cell.contentView addSubview:line];
             
+            UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+            selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+            cell.selectedBackgroundView = selectedBg;
             return cell;
         }
         else
@@ -517,17 +527,18 @@
             }
             NSDictionary *infoDic = [_arrRec objectAtIndex:indexPath.row];
             
-            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+            UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
             frame.frame = CGRectMake(13, 5, 38, 52);
             [cell.contentView addSubview:frame];
             
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 48)];
-            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 7, 34, 49)];
+            [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
             [cell.contentView addSubview:imageView];
             
             UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(65, 8, 170, 15)];
             titleLab.font = [UIFont systemFontOfSize:14];
             titleLab.text = [infoDic objectForKey:@"prod_name"];
+            titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
             titleLab.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:titleLab];
             
@@ -537,6 +548,10 @@
             actors.textColor = [UIColor grayColor];
             actors.backgroundColor = [UIColor clearColor];
             [cell.contentView addSubview:actors];
+            
+            UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+            selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+            cell.selectedBackgroundView = selectedBg;
             
             return cell;
         }

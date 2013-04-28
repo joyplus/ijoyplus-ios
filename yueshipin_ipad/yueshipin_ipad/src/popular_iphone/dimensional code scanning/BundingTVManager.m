@@ -11,6 +11,7 @@
 #import "ContainerUtility.h"
 #import "ServiceConstants.h"
 #import "CMConstants.h"
+#import "CommonMotheds.h"
 #import "EnvConstant.h"
 
 #define SERVER_URL  (FAYE_SERVER_URL)
@@ -136,6 +137,18 @@ static BundingTVManager * manager = nil;
     [self.sendClient sendMessage:data];
 }
 
+- (void)reconnectToServer
+{
+    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
+    if (nil != dic
+        && [dic objectForKey:KEY_IS_BUNDING]
+        && [CommonMotheds isNetworkEnbled])
+    {
+        self.sendClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:[NSString stringWithFormat:@"CHANNEL_TV_%@",[dic objectForKey:KEY_MACADDRESS]]];;
+        [self.sendClient connectToServer];
+    }
+}
+
 #pragma mark -
 #pragma mark FayeObjc delegate
 - (void) messageReceived:(NSDictionary *)messageDict
@@ -164,15 +177,7 @@ static BundingTVManager * manager = nil;
 {
     NSLog(@"disconnect to server");
     
-//    NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
-//    if (nil != dic && [dic objectForKey:KEY_IS_BUNDING])
-//    {
-//        [MobClick event:KEY_UNBINDED];
-//        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
-//                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",_userId]];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
-//        [self showMsg:@"已断开与电视端的绑定"];
-//    }
+    [self reconnectToServer];
     
 }
 

@@ -65,7 +65,7 @@
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:XIAZAI];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        self.tabBar.selectedImageTintColor = [UIColor whiteColor];
+        self.tabBar.selectedImageTintColor = [UIColor orangeColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];
         

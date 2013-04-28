@@ -70,7 +70,7 @@
     //[self.button setImage:[UIImage imageNamed:@"download_icon_s.png"] forState:UIControlStateHighlighted];
     UIFont* font = [UIFont systemFontOfSize:13];
     
-    self.button.frame =  CGRectMake(0,0,49,30);
+    self.button.frame =  CGRectMake(0,0,55,44);
     self.frame =  CGRectMake(0,0,49,30);
     UILabel* label= [[UILabel alloc] initWithFrame:CGRectMake(8, 0, 20, 28)];
     label.contentMode=UIControlContentHorizontalAlignmentCenter;

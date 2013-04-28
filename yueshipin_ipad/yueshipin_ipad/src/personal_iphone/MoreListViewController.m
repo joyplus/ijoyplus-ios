@@ -23,6 +23,7 @@
 #import "IphoneShowDetailViewController.h"
 #import "TVDetailViewController.h"
 #import "CommonMotheds.h"
+#import "MyListCell.h"
 @interface MoreListViewController ()
 
 @end
@@ -43,6 +44,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     if(type_ == 0){
        self.title = @"播放纪录";
     }
@@ -57,27 +59,29 @@
     
     UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [backButton addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    backButton.frame = CGRectMake(0, 0, 49, 30);
+    backButton.frame = CGRectMake(0, 0, 55, 44);
     backButton.backgroundColor = [UIColor clearColor];
     [backButton setImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
     [backButton setImage:[UIImage imageNamed:@"back_f.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButton];
     self.navigationItem.leftBarButtonItem = backButtonItem;
     
-    if (type_ == 0) {
-        UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [clearButton addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
-        clearButton.frame = CGRectMake(0, 0, 54, 31);
-        clearButton.backgroundColor = [UIColor clearColor];
-        [clearButton setImage:[UIImage imageNamed:@"clear_bt.png"]forState:UIControlStateNormal];
-        [clearButton setImage:[UIImage imageNamed:@"clear_bt_pressed.png"]forState:UIControlStateHighlighted];
-        //[clearButton setTitle:@"clear" forState:UIControlStateNormal];
-        UIBarButtonItem *clearButtonItem = [[UIBarButtonItem alloc] initWithCustomView:clearButton];
-        self.navigationItem.rightBarButtonItem = clearButtonItem;
-    }
-    
+//    if (type_ == 0) {
+//        UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [clearButton addTarget:self action:@selector(clear) forControlEvents:UIControlEventTouchUpInside];
+//        clearButton.frame = CGRectMake(0, 0, 54, 31);
+//        clearButton.backgroundColor = [UIColor clearColor];
+//        [clearButton setImage:[UIImage imageNamed:@"clear_bt.png"]forState:UIControlStateNormal];
+//        [clearButton setImage:[UIImage imageNamed:@"clear_bt_pressed.png"]forState:UIControlStateHighlighted];
+//        //[clearButton setTitle:@"clear" forState:UIControlStateNormal];
+//        UIBarButtonItem *clearButtonItem = [[UIBarButtonItem alloc] initWithCustomView:clearButton];
+//        self.navigationItem.rightBarButtonItem = clearButtonItem;
+//    }
+    UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
+    backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+    self.tableView.backgroundView = backGround;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
+    self.tableView.backgroundColor = [UIColor clearColor];
     if (type_ == 1) {
         favLoadCount_ = 1;
         pullToRefreshManagerFAV_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:600 tableView:self.tableView withClient:self];
@@ -133,10 +137,11 @@
          cell.actors.text  = [self composeContent:infoDic];
         [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
         [cell.date removeFromSuperview];
+        cell.play.frame =  CGRectMake(248,8, 47, 42);
         cell.play.tag = indexPath.row;
         cell.play.hidden = NO;
         [cell.play addTarget:self action:@selector(continuePlay:) forControlEvents:UIControlEventTouchUpInside];
-       
+        cell.line.frame = CGRectMake(0,59,320, 1);
         return cell;
     }
     else if (type_ == 1) {
@@ -160,6 +165,7 @@
         UILabel *titleLab = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 170, 15)];
         titleLab.font = [UIFont systemFontOfSize:14];
         titleLab.text = [infoDic objectForKey:@"content_name"];
+        titleLab.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         titleLab.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:titleLab];
         
@@ -170,7 +176,7 @@
         actors.backgroundColor = [UIColor clearColor];
         [cell.contentView addSubview:actors];
         
-        UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(70, 38, 200, 15)];
+        UILabel *date = [[UILabel alloc] initWithFrame:CGRectMake(70, 40, 200, 15)];
         date.text = [NSString stringWithFormat:@"年代：%@",[infoDic objectForKey:@"publish_date"]];
         date.font = [UIFont systemFontOfSize:12];
         date.textColor = [UIColor grayColor];
@@ -178,29 +184,20 @@
         [cell.contentView addSubview:date];
         
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line.frame = CGRectMake(0, 59, 320, 1);
         [cell.contentView addSubview:line];
+        
+        UIView *selectedBg = [[UIView alloc] initWithFrame:cell.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        cell.selectedBackgroundView = selectedBg;
+        
         return cell;
 
     }
     else if (type_ == 2){
-        RecordListCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier ];
-        if (cell == nil) {
-            cell = [[RecordListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        }
-        cell.titleLab.text = [infoDic objectForKey:@"name"];
-         NSMutableArray *items = (NSMutableArray *)[infoDic objectForKey:@"items"];
-        if (items != nil && [items count] != 0) {
-         NSDictionary *item = [items objectAtIndex:0];
-         cell.actors.text = [item objectForKey:@"prod_name"];
-         [cell.actors setFrame:CGRectMake(12, 33, 200, 15)];
-         cell.date.text = @"...";
-         [cell.date setFrame:CGRectMake(14, 42, 200, 15)];
-        }
-
-        [cell.play removeFromSuperview];
-        
+        MyListCell *cell = [[MyListCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        [cell initCell:infoDic];
         return cell;
 
     }
@@ -306,43 +303,7 @@
 }
 
 
--(void)clear{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"确定清除播放记录？" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
-    [alert show];
-    
-    
-}
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 0) {
-        if (![CommonMotheds isNetworkEnbled]) {
-            [UIUtility showNetWorkError:self.view];
-            return;
-        }
-        for (NSDictionary *dic in listArr_) {
-            NSString *type = [dic objectForKey:@"prod_type"];
-            NSString *prodId = [dic objectForKey:@"prod_id"];
-            NSString *subName = [dic objectForKey:@"prod_subname"];
-            if ([type isEqualToString:@"1"]) {
-                [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%d",prodId,0]];
-            }
-            else if([type isEqualToString:@"2"]|| [type isEqualToString:@"3"]){
-                [[CacheUtility sharedCache] removeObjectForKey:[NSString stringWithFormat:@"%@_%@",prodId,subName]];
-            }
-            
-        }
-        NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"user_id", nil];
-        [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
-            [self dismissViewControllerAnimated:YES completion:nil];
-            
-        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        }];
-
-    }
-
-}
 
 - (NSString *)composeContent:(NSDictionary *)item
 {
@@ -381,7 +342,9 @@
 
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
+    if (type_ == 2) {
+        return 74;
+    }
     return 60;
 }
 

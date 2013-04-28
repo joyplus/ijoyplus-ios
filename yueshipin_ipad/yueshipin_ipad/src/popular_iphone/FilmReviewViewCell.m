@@ -8,9 +8,9 @@
 
 #import "FilmReviewViewCell.h"
 
-#define FILMREVIEW_TITLE_LABEL_FRAME                CGRectMake(0, 0, 200, 25)
-#define FILMREVIEW_CONTENT_LABEL_FRAME(height)      CGRectMake(8, 38, 280, height)
-#define FILMREVIEW_MORE_REVIEW_BUTTON(x)            CGRectMake(x, 128, 60, 15)
+#define FILMREVIEW_TITLE_LABEL_FRAME                CGRectMake(10, 0, 110, 25)
+#define FILMREVIEW_CONTENT_LABEL_FRAME(height)      CGRectMake(8, 32, 280, height)
+#define FILMREVIEW_MORE_REVIEW_BUTTON(x)            CGRectMake(x, 115, 60, 15)
 
 @interface FilmReviewViewCell (private)
 
@@ -32,6 +32,9 @@
         
         UIButton * bgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [bgBtn setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+        UIImage *bgimage = [[UIImage imageNamed:@"yingping_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(50, 10, 20, 10)];
+        [bgBtn setBackgroundImage:bgimage forState:UIControlStateNormal];
+        [bgBtn setBackgroundImage:bgimage forState:UIControlStateHighlighted];
         [bgBtn addTarget:self
                   action:@selector(backgroundButtonClick:)
         forControlEvents:UIControlEventTouchUpInside];
@@ -67,7 +70,7 @@
         [self addSubview:_labTitle];
         
         UIButton *moreReview = [UIButton buttonWithType:UIButtonTypeCustom];
-        moreReview.frame = FILMREVIEW_MORE_REVIEW_BUTTON(220.0f);
+        moreReview.frame = FILMREVIEW_MORE_REVIEW_BUTTON(230.0f);
         [moreReview setTitle:@"全部 >"
                     forState:UIControlStateNormal];
         [moreReview setTitleColor:[UIColor orangeColor]

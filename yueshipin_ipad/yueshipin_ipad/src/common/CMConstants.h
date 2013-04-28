@@ -101,6 +101,7 @@
 
 #define SHOW_MENU_INTRO @"show_menu_intro"
 #define WEIBO_INTRO @"weibbo_intro"
+#define SHOW_MENU_INTRO_YUEDAN @"show_menu_intro_yuedan"
 #define SHOW_PLAY_INTRO_WITH_DOWNLOAD @"show_play_intro_with_download"
 #define WIFI_IS_NOT_AVAILABLE @"wifi_is_not_available"
 #define KEY_NETWORK_BECOME_AVAILABLE    (@"network_available")

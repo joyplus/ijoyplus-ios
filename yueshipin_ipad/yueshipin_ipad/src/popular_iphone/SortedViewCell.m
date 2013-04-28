@@ -19,6 +19,8 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        self.backgroundColor = [UIColor clearColor];
+        
         UIImageView *iconBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_list_moviecard.png"]];
         iconBgView.frame = CGRectMake(2, 12, 82, 111);
         [self addSubview:iconBgView];
@@ -27,10 +29,13 @@
         [self addSubview:self.imageview];
         
         self.title = [[UILabel alloc] initWithFrame:CGRectMake(106, 18, 160, 14)];
+        self.title.backgroundColor = [UIColor clearColor];
+        self.title.textColor = [UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0];
         self.title.font = [UIFont systemFontOfSize:15];
         [self addSubview:self.title];
         
         self.labelOne = [[UILabel alloc] initWithFrame:CGRectMake(146, 42, 160, 14)];
+        self.labelOne.backgroundColor = [UIColor clearColor];
         self.labelOne.font = [UIFont systemFontOfSize:12];
         self.labelOne.textColor = [UIColor grayColor];
         [self addSubview:self.labelOne];
@@ -40,6 +45,7 @@
         [self addSubview:img1];
         
         self.labelTwo = [[UILabel alloc] initWithFrame:CGRectMake(146, 65, 160, 14)];
+        self.labelTwo.backgroundColor = [UIColor clearColor];
         self.labelTwo.font = [UIFont systemFontOfSize:12];
         self.labelTwo.textColor = [UIColor grayColor];
         [self addSubview:self.labelTwo];
@@ -49,6 +55,7 @@
         [self addSubview:img2];
         
         self.labelThree = [[UILabel alloc] initWithFrame:CGRectMake(146, 86, 160, 14)];
+        self.labelThree.backgroundColor = [UIColor clearColor];
         self.labelThree.font = [UIFont systemFontOfSize:12];
         self.labelThree.textColor = [UIColor grayColor];
         [self addSubview:self.labelThree];
@@ -58,13 +65,18 @@
         [self addSubview:img3];
         
         UILabel *labelFour = [[UILabel alloc] initWithFrame:CGRectMake(150, 100,160, 14)];
+        labelFour.backgroundColor = [UIColor clearColor];
         labelFour.text = @"...";
         labelFour.textColor = [UIColor grayColor];
         [self addSubview:labelFour];
         
-        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"list_fen_ge_xian.png"]];
+        UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];
         line.frame = CGRectMake(0, 129, 320, 1);
         [self addSubview:line];
+        
+        UIView *selectedBg = [[UIView alloc] initWithFrame:self.frame];
+        selectedBg.backgroundColor = [UIColor colorWithRed:185.0/255 green:185.0/255 blue:174.0/255 alpha:0.4];
+        self.selectedBackgroundView = selectedBg;
     }
     return self;
 }

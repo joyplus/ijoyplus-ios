@@ -101,7 +101,7 @@
     self.filmImage.frame = CGRectMake(self.placeholderImage.frame.origin.x + 6, self.placeholderImage.frame.origin.y + 8, self.placeholderImage.frame.size.width - 12, self.placeholderImage.frame.size.height - 8);
     
     self.titleLabel.frame = CGRectMake(268, 85, 200, 30);
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:22];
+    self.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     self.titleLabel.textColor = CMConstants.textColor;
     self.actorLabel.frame = CGRectMake(270, 140, 80, 15);
     self.actorLabel.textColor = CMConstants.grayColor;
@@ -182,7 +182,7 @@
     self.shareLabel.center = CGPointMake(self.shareBtn.center.x, self.reportLabel.center.y);
     self.shareLabel.textColor = CMConstants.grayColor;
     
-    self.introImage.frame = CGRectMake(LEFT_WIDTH, 415, 45, 20);
+    self.introImage.frame = CGRectMake(LEFT_WIDTH, 415, 42, 18);
     self.introImage.image = [UIImage imageNamed:@"brief_title"];
     
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 445, 430, 100);
@@ -326,6 +326,12 @@
     if (!self.canPlayVideo) {
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
+//        [self.downloadBtn setEnabled:NO];
+//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+    }
+    
+    if (![self isDownloadURLExit])
+    {
         [self.downloadBtn setEnabled:NO];
         [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
     }

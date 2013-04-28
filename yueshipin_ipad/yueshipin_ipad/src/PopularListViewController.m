@@ -108,7 +108,7 @@
             _refreshHeaderView = view;
             
         }
-        [_refreshHeaderView refreshLastUpdatedDate];
+        //[_refreshHeaderView refreshLastUpdatedDate];
 	}
     return self;
 }
@@ -117,6 +117,21 @@
     [table reloadData];
     [pullToRefreshManager_ tableViewReloadFinished];
     [dramaPullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[AppDelegate instance].rootViewController showIntroModalView:SHOW_MENU_INTRO_YUEDAN introImage:[UIImage imageNamed:@"menu_intro"]];
+    
+    if (0 == lunboArray.count)
+    {
+        [self retrieveLunboData];
+    }
+    if (0 == movieTopsArray.count || 0 == tvTopsArray.count)
+    {
+        [self retrieveTopsListData];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -136,14 +151,14 @@
 {
     [super viewDidLoad];
     umengPageName = POPULAR_MOVIE_LIST;
-    [self retrieveLunboData];
+    //[self retrieveLunboData];
     timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateScrollView) userInfo:nil repeats:YES];
     
     pageSize = 20;
     topicType = MOVIE_TOPIC;
     movieTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
     tvTopsArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
-    [self retrieveTopsListData];
+    //[self retrieveTopsListData];
 }
 
 - (void)retrieveLunboData

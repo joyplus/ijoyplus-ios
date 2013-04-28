@@ -77,6 +77,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) NSString *umengPageName;
 @property (nonatomic) BOOL isFromSelectBtn;
 @property (nonatomic) BOOL isAppEnterBackground;
+@property BOOL isChangeQuality;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -111,7 +112,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize combinedArr, combinedIndex, videoUrl, defaultErrorMessage;
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
-@synthesize m3u8Duration;
+@synthesize m3u8Duration,isChangeQuality;
 
 #pragma mark
 #pragma mark View Controller
@@ -234,6 +235,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
         }
         [self setURL:workingUrl];
+        [self showToolview];
     } else {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
         [self playVideo];
@@ -553,6 +555,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (closeAll) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
+        [videoWebViewControllerDelegate reshowWebView];
         [self.navigationController popViewControllerAnimated:NO];
     }
     
@@ -624,11 +627,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)customizeTopToolbar
 {
-    if (isDownloaded) {
-        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    } else {
-        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-    }
+    topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+//    if (isDownloaded) {
+//        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+//    } else {
+//        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
+//    }
     [topToolbar setBackgroundImage:[[UIImage imageNamed:@"top_toolbar_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 5, 5, 5)] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:topToolbar];
     
@@ -884,7 +888,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)showPlayVideoView
 {
     mPlayer = nil;
-    mPlaybackView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0, 24, self.view.frame.size.height, self.view.frame.size.width - 24)];
+    mPlaybackView = [[AVPlayerView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, self.view.frame.size.width)];
     mPlaybackView.backgroundColor = [UIColor clearColor];
     if (bottomView) {
         [self.view insertSubview:mPlaybackView aboveSubview:bottomView];
@@ -898,7 +902,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     playCacheView = [self.view viewWithTag:PLAY_CACHE_VIEW];
     if (playCacheView == nil) {
         CGRect bounds = [UIScreen mainScreen].bounds;
-        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 24, bounds.size.height, bounds.size.width)];
+        playCacheView = [[UIView alloc]initWithFrame:CGRectMake(0, 20, bounds.size.height, bounds.size.width)];
         playCacheView.tag = PLAY_CACHE_VIEW;
         playCacheView.backgroundColor = [UIColor clearColor];
         if (topToolbar) {
@@ -945,7 +949,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             lastLabel.textColor = [UIColor lightGrayColor];
             lastLabel.text = [NSString stringWithFormat:@"上次播放到 %@", [TimeUtility formatTimeInSecond:CMTimeGetSeconds(lastPlayTime)]];
             lastLabel.font = [UIFont systemFontOfSize:15];
-            [playCacheView addSubview:lastLabel];
+            if (!isChangeQuality)
+            {
+                [playCacheView addSubview:lastLabel];
+                isChangeQuality = NO;
+            }
         }
         
         tipLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 500, 40)];
@@ -967,19 +975,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         lastLabel = nil;
         lastPlayTime = kCMTimeZero;
     }
-    tipLabel.text = @"正在加载，请稍等";
+    tipLabel.text = nil;
     [myHUD show:YES];
+    myHUD.labelText = @"正在加载，请稍等";
+    myHUD.userInteractionEnabled = NO;
 }
 
 
 - (void)nextBtnClicked
 {
+    [self destoryPlayer];
     isFromSelectBtn = YES;
     [self resetControlVisibilityTimer];
     currentNum++;
     currentPlaybackTimeLabel.text = @"00:00:00";
     mScrubber.value = 0;
-    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum) {
+    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum)
+    {
         episodeListviewController.currentNum = currentNum;
         [episodeListviewController.table reloadData];
         [self disablePlayerButtons];
@@ -987,9 +999,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (subnameArray.count - 1 == self.currentNum) {
             [self disableNextButton];
         }
+        lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
         [self preparePlayVideo];
         [self recordPlayStatics];
-    } else {
+    }
+    else
+    {
         currentNum--;
         [self closeSelf];
     }
@@ -1079,6 +1094,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         lastPlaytimeCacheKey = [NSString stringWithFormat:@"%@_%@", self.prodId, subname];
     }
     float lastPlaytimeNum = CMTimeGetSeconds(mPlayer.currentTime);
+    lastPlayTime = mPlayer.currentTime;
     double duration = 0;
     CMTime playerDuration = [self playerItemDuration];
     if (CMTIME_IS_VALID(playerDuration)) {
@@ -1091,8 +1107,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
-
-- (void)closeSelf
+- (void)destoryPlayer
 {
     [self.mPlayer removeObserver:self forKeyPath:kRateKey];
 	[self.mPlayerItem removeObserver:self forKeyPath:kStatusKey];
@@ -1122,6 +1137,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (type == 2 || type == 3 || type == 131) {
         [videoWebViewControllerDelegate playNextEpisode:currentNum];
     }
+    if (myHUD.superview)
+    {
+        [myHUD removeFromSuperview];
+    }
+}
+
+- (void)closeSelf
+{
+    [self destoryPlayer];
     if ([@"0" isEqualToString:[AppDelegate instance].closeVideoMode]){
         [self dismissViewControllerAnimated:YES completion:^{
             [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -1269,6 +1293,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)resolutionBtnClicked:(UIButton *)btn
 {
     [self resetControlVisibilityTimer];
+    [self destoryPlayer];
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
     [chaoqingBtn setBackgroundImage:[UIImage imageNamed:@"chaoqing_bt"] forState:UIControlStateNormal];
@@ -1300,8 +1325,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [mPlayer pause];
     mPlayer = nil;
     defaultErrorMessage = @"此分辨率已失效，请选择其他分辨率。";
+    
+    isChangeQuality = YES;
+    
     [self showPlayCacheView];
+    [self loadLastPlaytime];
     [self sendRequest];
+    
 }
 
 - (void)volumeBtnClicked:(UIButton *)btn
@@ -1567,8 +1597,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
     if (nil != mTimeObserver)
     {
-        [mTimeObserver invalidate];
-        mTimeObserver = nil;
+        [self removePlayerTimeObserver];
     }
 	/* Update the scrubber during normal playback. */
     if (isnan(interval) || interval < 0.1f) {
@@ -1695,6 +1724,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 - (void)playOneEpisode:(int)num
 {
+    [self destoryPlayer];
     isFromSelectBtn = YES;
     currentNum = num;
     currentPlaybackTimeLabel.text = @"00:00:00";
@@ -1703,6 +1733,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self enableNextButton];
     [self disableScrubber];
     [self resetControlVisibilityTimer];
+    lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
     [self preparePlayVideo];
     [self recordPlayStatics];
 }
@@ -1776,25 +1807,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)showActivityView
 {
-    if (!playCacheView.superview)
+    if (!playCacheView)
     {
-        [self.view addSubview:myHUD];
-        
-        myHUD.hidden = NO;
-        [self.view bringSubviewToFront:myHUD];
         [myHUD show:YES];
+        [self.view bringSubviewToFront:myHUD];
         myHUD.labelText = @"正在加载，请稍等";
+        myHUD.userInteractionEnabled = NO;
+        [self.view addSubview:myHUD];
     }
 }
 - (void)dismissActivityView
 {
-//    if (playCacheView.superview)
-//    {
-//        myHUD.hidden = YES;
-//        [playCacheView removeFromSuperview];
-//        playCacheView = nil;
-//    }
-      myHUD.hidden = YES;
+    if (!playCacheView)
+    {
+        [myHUD removeFromSuperview];
+    }
 }
 
 #pragma mark -
@@ -2117,6 +2144,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             if (pItem.playbackBufferEmpty)
             {
                 [self showActivityView];
+                NSLog(@"buffer empty");
             }
             else
             {
@@ -2134,6 +2162,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 {
                     [mPlayer play];
                 }
+                NSLog(@"KeepUp YES");
             }
             else
             {
@@ -2141,6 +2170,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 {
                     [self showActivityView];
                 }
+                NSLog(@"KeepUp NO");
             }
         }
     }
