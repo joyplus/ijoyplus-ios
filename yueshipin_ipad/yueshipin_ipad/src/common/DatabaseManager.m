@@ -359,8 +359,9 @@
        [db executeUpdate:sqlString];
     }
    else if (dbObject.class == [SubdownloadItem class]) {
+        NSString *itemId = ((SubdownloadItem *)dbObject).itemId;
         NSString *subitemId = ((SubdownloadItem *)dbObject).subitemId;
-        NSString *sqlString = [NSString stringWithFormat:@"delete from SubdownloadItem where subitemId = '%@'",subitemId];
+        NSString *sqlString = [NSString stringWithFormat:@"delete from SubdownloadItem where itemId = '%@' and subitemId = '%@'",itemId, subitemId];
         [db executeUpdate:sqlString];
     }
    else if (dbObject.class == [SegmentUrl class]) {
