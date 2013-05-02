@@ -26,10 +26,10 @@
     }
 }
 
-+(void)showInternetError:(NSError *)error{
-
-
-
++(void)showInternetError:(NSError *)error inView:(UIView *)view{
+    if (error.code == -1001) {
+         [UIUtility showNetWorkError:view];
+    }
 }
 
 +(BOOL)isFirstTimeRun{
