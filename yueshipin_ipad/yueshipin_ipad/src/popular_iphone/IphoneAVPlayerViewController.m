@@ -732,7 +732,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [self playEnd];
         return;
     }
-    if (videoType_ == 1 || videoType_ == 3) {
+    if (videoType_ == 1) {
+        [self playEnd];
         return;
     }
     [self playNext];
