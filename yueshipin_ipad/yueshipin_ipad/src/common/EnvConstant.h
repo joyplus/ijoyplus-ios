@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
  //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 1
+#define ENVIRONMENT 0
 
-#define VERSION @"1.0.1"
+#define VERSION @"1.0.2alpha"
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
