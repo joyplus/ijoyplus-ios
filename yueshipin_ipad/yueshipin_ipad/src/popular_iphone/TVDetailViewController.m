@@ -331,6 +331,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if ([commentArray_ count] > 0) {
         count++;
     }
+    if ([arrReviewData_ count]>0) {
+        count++;
+    }
     return count;
 }
 

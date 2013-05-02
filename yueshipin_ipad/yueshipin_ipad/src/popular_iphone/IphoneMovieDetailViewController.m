@@ -202,7 +202,7 @@
      {
         [[CacheUtility sharedCache] putInCache:reviews_key result:result];
          arrReviewData_ = [result objectForKey:@"reviews"];
-         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+         [self.tableView reloadData];
          
      }
                                        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
@@ -273,6 +273,9 @@
 {   int count = 3;
     
     if ([commentArray_ count] > 0) {
+        count++;
+    }
+    if ([arrReviewData_ count]>0) {
         count++;
     }
     return count;
