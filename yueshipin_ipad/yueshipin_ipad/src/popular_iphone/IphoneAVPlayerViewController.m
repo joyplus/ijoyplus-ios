@@ -1339,11 +1339,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     
     mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, 354 , 8)];
+    //mScrubber.transform = CGAffineTransformMakeScale(1.0,1.2);
     mScrubber.backgroundColor = [UIColor clearColor];
     mScrubber.center = CGPointMake(kFullWindowHeight/2, 13);
     [mScrubber setThumbImage: [UIImage imageNamed:@"iphone_progress_thumb"] forState:UIControlStateNormal];
-    [mScrubber setMinimumTrackImage:[UIImage imageNamed:@"iphone_time_jindu_x"] forState:UIControlStateNormal];
-    [mScrubber setMaximumTrackImage:[UIImage imageNamed:@"iphone_time_jindu"] forState:UIControlStateNormal];
+    [mScrubber setMinimumTrackImage:[[UIImage imageNamed:@"iphone_time_jindu_x"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)] forState:UIControlStateNormal];
+    [mScrubber setMaximumTrackImage:[[UIImage imageNamed:@"iphone_time_jindu"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)] forState:UIControlStateNormal];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchCancel];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpInside];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpOutside];
