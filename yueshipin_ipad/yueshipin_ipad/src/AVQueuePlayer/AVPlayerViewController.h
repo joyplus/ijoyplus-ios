@@ -71,6 +71,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
     BOOL isClosed;
 	id mTimeObserver;
     NSURL* mURL;
+    AVMutableAudioMix *audioMix_;
 }
 @property (nonatomic) int type;
 @property (nonatomic) double m3u8Duration;

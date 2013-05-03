@@ -129,8 +129,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
         
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
+        NSMutableArray *allAudioParams = [NSMutableArray array];
+        NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+        if ([audioTracks count]>1) {
+            for (int i = 0; i < [audioTracks count]; i++) {
+                AVMutableAudioMixInputParameters *audioInputParams =
+                [AVMutableAudioMixInputParameters audioMixInputParameters];
+                if (i > 0) {
+                    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+                }
+                AVAssetTrack *track = [audioTracks objectAtIndex:i];
+                [audioInputParams setTrackID:[track trackID]];
+                [allAudioParams addObject:audioInputParams];
+            }
+            audioMix_ = [AVMutableAudioMix audioMix];
+            [audioMix_ setInputParameters:allAudioParams];
+        }
         [self prepareToPlayAsset:asset ];
 	}
 }
@@ -139,6 +155,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 -(void)setPath:(NSString *)path{
 
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
+
+    NSMutableArray *allAudioParams = [NSMutableArray array];
+    NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+    if ([audioTracks count]>1) {
+        for (int i = 0; i < [audioTracks count]; i++) {
+            AVMutableAudioMixInputParameters *audioInputParams =
+            [AVMutableAudioMixInputParameters audioMixInputParameters];
+            if (i > 0) {
+                [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+            }
+            AVAssetTrack *track = [audioTracks objectAtIndex:i];
+            [audioInputParams setTrackID:[track trackID]];
+            [allAudioParams addObject:audioInputParams];
+        }
+        audioMix_ = [AVMutableAudioMix audioMix];
+        [audioMix_ setInputParameters:allAudioParams];
+    }
     
     [self prepareToPlayAsset:asset ];
 
@@ -177,6 +210,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     self.mPlayerItem = [AVPlayerItem playerItemWithAsset:asset];
     
+    if (audioMix_) {
+        [self.mPlayerItem setAudioMix:audioMix_];
+    }
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.mPlayerItem addObserver:self
                        forKeyPath:k_StatusKey
