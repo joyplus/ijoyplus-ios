@@ -2169,6 +2169,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
+#pragma mark -
+#pragma mark - TableViewDelegate & dataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
@@ -2245,12 +2247,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     selectButton_.selected = YES;
     [self showToolBar];
     
-//    if (isPlayOnTV)
-//    {
-//        [self pushWebURLToCloudTV:@"411"];
-//    }
-    
 }
+
+#pragma mark -
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    [self stopMyTimer];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self resetMyTimer];
+}
+
+#pragma mark -
+#pragma mark - 
+
 - (void)recordPlayStatics
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", nil];

@@ -57,6 +57,8 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @protocol AVPlayerViewControllerDelegate <NSObject>
 
 - (void)playOneEpisode:(int)num;
+- (void)scrollViewBeginDragging:(UIScrollView *)scrollView;
+- (void)scrollViewEndDecelerating:(UIScrollView *)scrollView;
 
 @end
 

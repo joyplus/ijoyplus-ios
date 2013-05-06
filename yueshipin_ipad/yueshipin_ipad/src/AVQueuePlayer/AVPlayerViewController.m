@@ -1755,6 +1755,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self recordPlayStatics];
 }
 
+- (void)scrollViewBeginDragging:(UIScrollView *)scrollView
+{
+    if (nil != controlVisibilityTimer)
+    {
+        [controlVisibilityTimer invalidate];
+        controlVisibilityTimer = nil;
+    }
+}
+- (void)scrollViewEndDecelerating:(UIScrollView *)scrollView
+{
+    [self resetControlVisibilityTimer];
+}
+
 - (void)recordPlayStatics
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
