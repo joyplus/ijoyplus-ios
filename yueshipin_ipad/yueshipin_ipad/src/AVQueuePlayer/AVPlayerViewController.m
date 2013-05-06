@@ -1837,7 +1837,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)showActivityView
 {
-    if (!playCacheView)
+    if (!playCacheView && !(self.view == myHUD.superview))
     {
         [myHUD show:YES];
         [self.view bringSubviewToFront:myHUD];
@@ -1848,7 +1848,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 - (void)dismissActivityView
 {
-    if (!playCacheView)
+    if (!playCacheView && (self.view == myHUD.superview))
     {
         [myHUD removeFromSuperview];
     }
