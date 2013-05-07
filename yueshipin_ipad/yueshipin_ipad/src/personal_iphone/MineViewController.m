@@ -101,6 +101,7 @@
             self.favArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [tempHUD hide:YES];
+        [CommonMotheds showInternetError:error inView:self.view];
     }];
     
 }
@@ -132,6 +133,7 @@
         NSLog(@"%@", error);
        
       [tempHUD hide:YES];
+      [CommonMotheds showInternetError:error inView:self.view];
     }];
 
 
@@ -391,7 +393,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
         NSLog(@"%@", error);
-       
+       [CommonMotheds showInternetError:error inView:self.view];
     }];
     
 }

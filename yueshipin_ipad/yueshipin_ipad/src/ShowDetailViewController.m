@@ -323,11 +323,17 @@
     NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     self.actorName1Label.text = stars;
     
-    if (!self.canPlayVideo) {
+    if (self.canPlayVideo)
+    {
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
-//        [self.downloadBtn setEnabled:NO];
-//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+        self.addListBtn.enabled = YES;
+    }
+    else
+    {
+        self.playBtn.hidden = YES;
+        self.expectbtn.hidden = NO;
+        self.addListBtn.enabled = NO;
     }
     
     if (![self isDownloadURLExit])

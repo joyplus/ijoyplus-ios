@@ -1462,7 +1462,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
          Load the values for the asset keys "tracks", "playable".
          */
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
-        
+
+        NSMutableArray *allAudioParams = [NSMutableArray array];
+        NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+        if ([audioTracks count]>1) {
+            for (int i = 0; i < [audioTracks count]; i++) {
+                AVMutableAudioMixInputParameters *audioInputParams =
+                [AVMutableAudioMixInputParameters audioMixInputParameters];
+                if (i > 0) {
+                    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+                }
+                AVAssetTrack *track = [audioTracks objectAtIndex:i];
+                [audioInputParams setTrackID:[track trackID]];
+                [allAudioParams addObject:audioInputParams];
+            }
+            audioMix_ = [AVMutableAudioMix audioMix];
+            [audioMix_ setInputParameters:allAudioParams];
+        }
+
         NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
         
         /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
@@ -1738,6 +1755,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self recordPlayStatics];
 }
 
+- (void)scrollViewBeginDragging:(UIScrollView *)scrollView
+{
+    if (nil != controlVisibilityTimer)
+    {
+        [controlVisibilityTimer invalidate];
+        controlVisibilityTimer = nil;
+    }
+}
+- (void)scrollViewEndDecelerating:(UIScrollView *)scrollView
+{
+    [self resetControlVisibilityTimer];
+}
+
 - (void)recordPlayStatics
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
@@ -1807,7 +1837,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)showActivityView
 {
-    if (!playCacheView)
+    if (!playCacheView && !(self.view == myHUD.superview))
     {
         [myHUD show:YES];
         [self.view bringSubviewToFront:myHUD];
@@ -1818,7 +1848,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 - (void)dismissActivityView
 {
-    if (!playCacheView)
+    if (!playCacheView && (self.view == myHUD.superview))
     {
         [myHUD removeFromSuperview];
     }
@@ -1886,6 +1916,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 	
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     self.mPlayerItem = [AVPlayerItem playerItemWithAsset:asset];
+    
+    if (audioMix_) {
+        [self.mPlayerItem setAudioMix:audioMix_];
+    }
     
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.mPlayerItem addObserver:self 

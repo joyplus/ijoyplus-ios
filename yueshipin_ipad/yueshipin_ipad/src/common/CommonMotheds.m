@@ -26,6 +26,12 @@
     }
 }
 
++(void)showInternetError:(NSError *)error inView:(UIView *)view{
+    if (error.code == -1001) {
+         [UIUtility showNetWorkError:view];
+    }
+}
+
 +(BOOL)isFirstTimeRun{
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if([defaults objectForKey:@"App_version"]==nil){
@@ -47,9 +53,7 @@
             return YES;
         }
     }
-    else{
 
-    }
     return NO;
 }
 +(void)setVersion{
@@ -57,5 +61,6 @@
      NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
      NSLog(@" %@is app version", bundleVersion);
      [defaults setObject:bundleVersion forKey:@"App_version"];
+     [defaults synchronize];
 }
 @end

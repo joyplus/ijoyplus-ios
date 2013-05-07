@@ -442,10 +442,32 @@
         cell.actors.text = [NSString stringWithFormat:@"主演：%@",[item objectForKey:@"star"]];
         cell.area.text = [NSString stringWithFormat:@"地区：%@",[item objectForKey:@"area"]];
         [cell.imageview setImageWithURL:[NSURL URLWithString:[item objectForKey:@"prod_pic_url"]] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
-        NSString *supportNum = [item objectForKey:@"support_num"];
-        [cell.support setTitle:[NSString stringWithFormat:@"%@",supportNum] forState:UIControlStateDisabled];
-        NSString *addFavNum = [item objectForKey:@"favority_num"];
-        [cell.addFav setTitle:[NSString stringWithFormat:@"%@",addFavNum] forState:UIControlStateDisabled];
+    
+        int supportNum = [[item objectForKey:@"support_num"] intValue];
+        if (supportNum < 1000) {
+             [cell.support setTitle:[NSString stringWithFormat:@"%d",supportNum] forState:UIControlStateDisabled];
+        }
+        else if (supportNum >= 1000 && supportNum<= 1100){
+             [cell.support setTitle:[NSString stringWithFormat:@"1k"] forState:UIControlStateDisabled];
+        }
+        else{
+            float supportNumFloat = supportNum/1000.0;
+             [cell.support setTitle:[NSString stringWithFormat:@"%.1fk",supportNumFloat] forState:UIControlStateDisabled];
+        }
+       
+        int addFavNum = [[item objectForKey:@"favority_num"] intValue];
+        if (addFavNum <1000) {
+            [cell.addFav setTitle:[NSString stringWithFormat:@"%d",addFavNum] forState:UIControlStateDisabled];
+        }
+        else if (addFavNum >= 1000 && addFavNum <= 1100){
+            [cell.addFav setTitle:[NSString stringWithFormat:@"1k"] forState:UIControlStateDisabled];
+        }
+        else{
+        
+            float addFavNumFloat = addFavNum/1000.0;
+            [cell.addFav setTitle:[NSString stringWithFormat:@"%.1fk",addFavNumFloat] forState:UIControlStateDisabled];
+        }
+       
         cell.score.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"score"]];
         return cell;
 

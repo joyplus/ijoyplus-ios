@@ -353,6 +353,7 @@ void transferDataFromOldDbWithCatch()
     }  else {
         [myHUD showProgressBar:self.view];
     }
+    showReloads = 2;
     if([hostReach currentReachabilityStatus] == NotReachable) {
         [myHUD hide];
     } else {
