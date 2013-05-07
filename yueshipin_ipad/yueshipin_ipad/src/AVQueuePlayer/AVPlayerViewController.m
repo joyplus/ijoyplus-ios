@@ -966,7 +966,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         
         myHUD = [[MBProgressHUD alloc] initWithView:playCacheView];
         myHUD.frame = CGRectMake(myHUD.frame.origin.x, myHUD.frame.origin.y + 130, myHUD.frame.size.width, myHUD.frame.size.height);
-        [playCacheView addSubview:myHUD];
         myHUD.opacity = 0;
     }
     UILabel *lastLabel = (UILabel *)[playCacheView viewWithTag:3232947504];
@@ -978,7 +977,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     tipLabel.text = nil;
     [myHUD show:YES];
     myHUD.labelText = @"正在加载，请稍等";
+    [playCacheView bringSubviewToFront:myHUD];
     myHUD.userInteractionEnabled = NO;
+    if (!myHUD.superview)
+    {
+        [playCacheView addSubview:myHUD];
+    }
 }
 
 
@@ -1293,6 +1297,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)resolutionBtnClicked:(UIButton *)btn
 {
     [self resetControlVisibilityTimer];
+    if (!resolutionInvalid){ //如果分辨率已失效，不记录播放时间
+        resolutionLastPlaytime = [mPlayer currentTime];
+    }
     [self destoryPlayer];
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
@@ -1318,9 +1325,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [resolutionPopTipView dismissAnimated:YES];
     resolutionPopTipView = nil;
-    if (!resolutionInvalid) { //如果分辨率已失效，不记录播放时间
-        resolutionLastPlaytime = [mPlayer currentTime];
-    }
+    
     workingUrl = nil;
     [mPlayer pause];
     mPlayer = nil;
