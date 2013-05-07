@@ -982,9 +982,9 @@
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
     item.subtype = CATEGORY_TYPE;
-    item.label = @"动作";
-    item.key = @"action";
-    item.value = @"动作";
+    item.label = @"历史";
+    item.key = @"history";
+    item.value = @"历史";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -1011,13 +1011,7 @@
     item.value = @"商战";
     [categoryArray addObject:item];
     
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = CATEGORY_TYPE;
-    item.label = @"历史";
-    item.key = @"history";
-    item.value = @"历史";
-    [categoryArray addObject:item];
+
     
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
