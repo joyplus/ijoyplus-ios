@@ -132,5 +132,17 @@
     }    
 }
 
+#pragma mark -
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    [delegate scrollViewBeginDragging:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [delegate scrollViewEndDecelerating:scrollView];
+}
 
 @end

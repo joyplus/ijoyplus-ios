@@ -202,7 +202,7 @@
      {
         [[CacheUtility sharedCache] putInCache:reviews_key result:result];
          arrReviewData_ = [result objectForKey:@"reviews"];
-         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+         [self.tableView reloadData];
          
      }
                                        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
@@ -273,6 +273,9 @@
 {   int count = 3;
     
     if ([commentArray_ count] > 0) {
+        count++;
+    }
+    if ([arrReviewData_ count]>0) {
         count++;
     }
     return count;
@@ -491,6 +494,8 @@
                 UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
                 downLoad.frame = CGRectMake(205, 110, 90, 45);
                 downLoad.tag = 10004;
+                
+                BOOL isEnableReportBtn = YES;
                 if ([self getDownloadUrl] == nil) {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
@@ -498,6 +503,7 @@
                     downLoad.enabled = NO;
                     play.hidden = YES;
                     expectbtn.hidden = NO;
+                    isEnableReportBtn = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
@@ -538,6 +544,12 @@
                 [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 report.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:report];
+                if (isEnableReportBtn) {
+                    report.enabled = YES;
+                }
+                else{
+                    report.enabled = NO;
+                }
                 
                 UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
                 share.frame = CGRectMake(240, 165, 80, 35);

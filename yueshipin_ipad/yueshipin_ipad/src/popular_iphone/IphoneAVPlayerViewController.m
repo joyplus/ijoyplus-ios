@@ -129,8 +129,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
         
+        AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
+        NSMutableArray *allAudioParams = [NSMutableArray array];
+        NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+        if ([audioTracks count]>1) {
+            for (int i = 0; i < [audioTracks count]; i++) {
+                AVMutableAudioMixInputParameters *audioInputParams =
+                [AVMutableAudioMixInputParameters audioMixInputParameters];
+                if (i > 0) {
+                    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+                }
+                AVAssetTrack *track = [audioTracks objectAtIndex:i];
+                [audioInputParams setTrackID:[track trackID]];
+                [allAudioParams addObject:audioInputParams];
+            }
+            audioMix_ = [AVMutableAudioMix audioMix];
+            [audioMix_ setInputParameters:allAudioParams];
+        }
         [self prepareToPlayAsset:asset ];
 	}
 }
@@ -139,6 +155,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 -(void)setPath:(NSString *)path{
 
     AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:path] options:nil];
+
+    NSMutableArray *allAudioParams = [NSMutableArray array];
+    NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+    if ([audioTracks count]>1) {
+        for (int i = 0; i < [audioTracks count]; i++) {
+            AVMutableAudioMixInputParameters *audioInputParams =
+            [AVMutableAudioMixInputParameters audioMixInputParameters];
+            if (i > 0) {
+                [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+            }
+            AVAssetTrack *track = [audioTracks objectAtIndex:i];
+            [audioInputParams setTrackID:[track trackID]];
+            [allAudioParams addObject:audioInputParams];
+        }
+        audioMix_ = [AVMutableAudioMix audioMix];
+        [audioMix_ setInputParameters:allAudioParams];
+    }
     
     [self prepareToPlayAsset:asset ];
 
@@ -177,6 +210,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     /* Create a new instance of AVPlayerItem from the now successfully loaded AVAsset. */
     self.mPlayerItem = [AVPlayerItem playerItemWithAsset:asset];
     
+    if (audioMix_) {
+        [self.mPlayerItem setAudioMix:audioMix_];
+    }
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.mPlayerItem addObserver:self
                        forKeyPath:k_StatusKey
@@ -732,7 +768,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [self playEnd];
         return;
     }
-    if (videoType_ == 1 || videoType_ == 3) {
+    if (videoType_ == 1) {
+        [self playEnd];
         return;
     }
     [self playNext];
@@ -1302,11 +1339,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     
     mScrubber = [[UISlider alloc]initWithFrame:CGRectMake(0, 0, 354 , 8)];
+    //mScrubber.transform = CGAffineTransformMakeScale(1.0,1.2);
     mScrubber.backgroundColor = [UIColor clearColor];
     mScrubber.center = CGPointMake(kFullWindowHeight/2, 13);
     [mScrubber setThumbImage: [UIImage imageNamed:@"iphone_progress_thumb"] forState:UIControlStateNormal];
-    [mScrubber setMinimumTrackImage:[UIImage imageNamed:@"iphone_time_jindu_x"] forState:UIControlStateNormal];
-    [mScrubber setMaximumTrackImage:[UIImage imageNamed:@"iphone_time_jindu"] forState:UIControlStateNormal];
+    [mScrubber setMinimumTrackImage:[[UIImage imageNamed:@"iphone_time_jindu_x"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)] forState:UIControlStateNormal];
+    [mScrubber setMaximumTrackImage:[[UIImage imageNamed:@"iphone_time_jindu"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 0)] forState:UIControlStateNormal];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchCancel];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpInside];
     [mScrubber addTarget:self action:@selector(endScrubbing:) forControlEvents:UIControlEventTouchUpOutside];
@@ -2131,6 +2169,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
+#pragma mark -
+#pragma mark - TableViewDelegate & dataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
@@ -2207,12 +2247,24 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     selectButton_.selected = YES;
     [self showToolBar];
     
-//    if (isPlayOnTV)
-//    {
-//        [self pushWebURLToCloudTV:@"411"];
-//    }
-    
 }
+
+#pragma mark -
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    [self stopMyTimer];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self resetMyTimer];
+}
+
+#pragma mark -
+#pragma mark - 
+
 - (void)recordPlayStatics
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nameStr_, @"prod_name", [NSString stringWithFormat:@"%d",playNum], @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", nil];

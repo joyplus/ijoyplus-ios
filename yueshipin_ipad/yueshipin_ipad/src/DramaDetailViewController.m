@@ -420,6 +420,13 @@
         //[self.playBtn setEnabled:NO];
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
+        self.addListBtn.enabled = NO;
+    }
+    else
+    {
+        self.playBtn.hidden = NO;
+        self.expectbtn.hidden = YES;
+        self.addListBtn.enabled = YES;
     }
     
     if (![self isDownloadURLExit])

@@ -359,6 +359,7 @@
     if (self.canPlayVideo) {
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
+        self.addListBtn.enabled = YES;
         if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
             // do nothing
             //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
@@ -371,7 +372,7 @@
         
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
-        
+        self.addListBtn.enabled = NO;
 //        [self.playBtn setEnabled:NO];
 //        [self.downloadBtn setEnabled:NO];
 //        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];

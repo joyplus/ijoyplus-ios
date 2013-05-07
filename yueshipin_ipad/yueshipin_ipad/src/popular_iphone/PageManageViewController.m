@@ -145,6 +145,7 @@ enum
             self.tvListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [tempHUD hide:YES];
+        [CommonMotheds showInternetError:error inView:self.view];
     }];
     
     }
@@ -200,6 +201,7 @@ enum
             self.movieListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
          [tempHUD hide:YES];
+        [CommonMotheds showInternetError:error inView:self.view];
     }];
         
 }
@@ -259,6 +261,7 @@ enum
         }
         [self loadTable:SHOW_TYPE];
         [tempHUD hide:YES];
+        [CommonMotheds showInternetError:error inView:self.view];
     }];
     
     

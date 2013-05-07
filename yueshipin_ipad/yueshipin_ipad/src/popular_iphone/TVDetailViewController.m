@@ -331,6 +331,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     if ([commentArray_ count] > 0) {
         count++;
     }
+    if ([arrReviewData_ count]>0) {
+        count++;
+    }
     return count;
 }
 
@@ -547,12 +550,14 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 downLoad.tag = 10004;
                 
                 NSArray * eArr = [videoInfo_ objectForKey:@"episodes"];
+                BOOL isEnableReportBtn = YES;
                 if (0 == eArr.count) 
                 {
 
                     downLoad.enabled = NO;
                     play.hidden = YES;
                     expectbtn.hidden = NO;
+                    isEnableReportBtn = NO;
                 }
                 else
                 {
@@ -589,6 +594,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 report.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:report];
+                if (isEnableReportBtn) {
+                    report.enabled = YES;
+                }
+                else{
+                    report.enabled = NO;
+                
+                }
                 
                 UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
                 share.frame = CGRectMake(240, 165, 80, 35);
