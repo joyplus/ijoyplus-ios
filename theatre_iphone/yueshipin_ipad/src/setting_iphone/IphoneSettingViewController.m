@@ -83,7 +83,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     sinaImg.userInteractionEnabled = YES;
     weiboName_ = [[UILabel alloc] initWithFrame:CGRectMake(74, 4, 120, 22)];
     weiboName_.backgroundColor = [UIColor clearColor];
-    weiboName_.textColor =  [UIColor orangeColor];
+    weiboName_.textColor =  [UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1];;
     weiboName_.font = [UIFont boldSystemFontOfSize:13];
     [sinaImg addSubview:weiboName_];
     sinaSwith_ = [[UISwitch alloc] initWithFrame:CGRectMake(220, 6, 40, 22)];
