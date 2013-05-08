@@ -113,6 +113,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 @synthesize m3u8Duration,isChangeQuality;
+@synthesize localPlaylists;
 
 #pragma mark
 #pragma mark View Controller
@@ -988,30 +989,68 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)nextBtnClicked
 {
-    [self destoryPlayer];
-    isFromSelectBtn = YES;
-    [self resetControlVisibilityTimer];
-    currentNum++;
-    currentPlaybackTimeLabel.text = @"00:00:00";
-    mScrubber.value = 0;
-    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum)
+    if (isDownloaded)
     {
-        episodeListviewController.currentNum = currentNum;
-        [episodeListviewController.table reloadData];
-        [self disablePlayerButtons];
-        [self disableScrubber];
-        if (subnameArray.count - 1 == self.currentNum) {
-            [self disableNextButton];
+        currentNum ++;
+        //设置Button'enable
+        [self enableNextButton];
+        //管理playlists数据
+        if (currentNum >= localPlaylists.count)
+        {
+            [self closeSelf];
+            return;
         }
-        lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
-        [self preparePlayVideo];
-        [self recordPlayStatics];
+            
+        NSDictionary * dic = [self.localPlaylists objectAtIndex:currentNum];
+        
+        self.videoFormat = [dic objectForKey:@"downloadType"];
+        self.m3u8Duration = [[dic objectForKey:@"duration"] doubleValue];
+        self.videoUrl = [dic objectForKey:@"videoUrl"];
+        self.type = [[dic objectForKey:@"type"] intValue];
+        self.name = [dic objectForKey:@"name"];
+        
+        [self loadLastPlaytime];
+        if ([videoFormat isEqualToString:@"m3u8"])
+        {
+            [[AppDelegate instance] startHttpServer];
+            workingUrl = [NSURL URLWithString: videoUrl];
+        } else {
+            workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
+        }
+        [self setURL:workingUrl];
+        
+        //刷新视图
+        vidoeTitle.text = name;
     }
     else
     {
-        currentNum--;
-        [self closeSelf];
+        
+        [self destoryPlayer];
+        isFromSelectBtn = YES;
+        [self resetControlVisibilityTimer];
+        currentNum++;
+        currentPlaybackTimeLabel.text = @"00:00:00";
+        mScrubber.value = 0;
+        if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum)
+        {
+            episodeListviewController.currentNum = currentNum;
+            [episodeListviewController.table reloadData];
+            [self disablePlayerButtons];
+            [self disableScrubber];
+            if (subnameArray.count - 1 == self.currentNum) {
+                [self disableNextButton];
+            }
+            lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
+            [self preparePlayVideo];
+            [self recordPlayStatics];
+        }
+        else
+        {
+            currentNum--;
+            [self closeSelf];
+        }
     }
+    
 }
 
 - (void)prevBtnClicked
@@ -1565,17 +1604,31 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)enableNextButton
 {
-    if (subnameArray.count > 0 && type != 1){
-        if (currentNum == 0) {
-            [mNextButton setEnabled:YES];
-        } else if(currentNum == subnameArray.count - 1) {
+    if (!isDownloaded)
+    {
+        if (subnameArray.count > 0 && type != 1){
+            if (currentNum == 0) {
+                [mNextButton setEnabled:YES];
+            } else if(currentNum == subnameArray.count - 1) {
+                [mNextButton setEnabled:NO];
+            } else if(currentNum > 0 && currentNum < subnameArray.count){
+                [mNextButton setEnabled:YES];
+            }
+        } else {
             [mNextButton setEnabled:NO];
-        } else if(currentNum > 0 && currentNum < subnameArray.count){
+        }
+    }
+    else
+    {
+        if (localPlaylists.count > 1 && ((currentNum + 1) < localPlaylists.count))
+        {
             [mNextButton setEnabled:YES];
         }
-    } else {
-        [mNextButton setEnabled:NO];
-    }    
+        else
+        {
+            [mNextButton setEnabled:NO];
+        }
+    }
 }
 
 - (void)disableNextButton
