@@ -1331,6 +1331,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [button addTarget:self action:@selector(episodesPlay:) forControlEvents:UIControlEventTouchUpInside];
         if (lastNum == i) {
             [button setTitle:nil forState:UIControlStateNormal];
+            [button setTitle:[NSString stringWithFormat:@"%d",i+1] forState:UIControlStateHighlighted];
             [button setBackgroundImage:[UIImage imageNamed:@"tab2_detailed_tv_number_bg_seen.png"] forState:UIControlStateNormal];
         }
         else{

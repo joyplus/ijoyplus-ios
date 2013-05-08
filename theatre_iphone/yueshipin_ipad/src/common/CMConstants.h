@@ -36,8 +36,8 @@
 #define kSinaUID @"kSinaUID"
 
 //WeChat
-#define KWeChatAppID @"wxc8ea1cbc355fe2d0"
-#define KWeChatAppKey @"5843781cb092af97588a827e3f2e6eac"
+#define KWeChatAppID @"wx69b5a1b792f39532"
+#define KWeChatAppKey @"a0a96148d869831a1e135b7f82a1b849"
 
 #define kUserLoginService @"joypluslogin"
 #define kUserId @"kUserId"
@@ -52,7 +52,7 @@
 
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1
-#define umengAppKey @"50c069e25270154e81000056"
+#define umengAppKey @"5188664c56240b42b7010a45"
 
 #define YOU_KU @"youku"
 #define TU_DOU @"tudou"
