@@ -38,6 +38,7 @@
         play_ = [UIButton buttonWithType:UIButtonTypeCustom];
         play_.frame = CGRectMake(248,0, 47, 42);
         [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see.png"] forState:UIControlStateNormal];
+        [play_ setBackgroundImage:[UIImage imageNamed:@"tab3_page1_icon_see_s.png"] forState:UIControlStateHighlighted];
         [self addSubview:play_];
         
         line_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian.png"]];

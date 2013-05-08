@@ -127,7 +127,7 @@
     [btn setTitle:cellTitle forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor colorWithRed:110/255.0 green:110/255.0 blue:110/255.0 alpha:1] forState:UIControlStateNormal];
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
+    [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateSelected];
     [btn setTitleColor:[UIColor colorWithRed:190/255.0 green:190/255.0 blue:190/255.0 alpha:1] forState:UIControlStateDisabled];
     [btn setTitleEdgeInsets:UIEdgeInsetsMake(5, 20, 5, 70)];
     btn.titleLabel.font = [UIFont systemFontOfSize:14];
