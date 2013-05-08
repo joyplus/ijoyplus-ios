@@ -24,7 +24,7 @@
         [self addSubview:self.titleLab];
         
         self.actors = [[UILabel alloc] initWithFrame:CGRectMake(12, 31, 200, 15)];
-        self.actors.font = [UIFont systemFontOfSize:12];
+        self.actors.font = [UIFont systemFontOfSize:10];
         self.actors.textColor = [UIColor grayColor];
         actors_.backgroundColor = [UIColor clearColor];
         [self addSubview:self.actors];
