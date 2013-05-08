@@ -768,7 +768,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [self playEnd];
         return;
     }
-    if (videoType_ == 1) {
+    if (videoType_ == 1)
+    {
         [self playEnd];
         return;
     }
@@ -777,7 +778,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 -(void)playNext{
     
-    if (playNum == [episodesArr_ count]-1) {
+    if (playNum == [episodesArr_ count]-1)
+    {
+        [self playEnd];
         return;
     }
     
