@@ -663,7 +663,9 @@
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    
     item.urlArray = tempArray;
+    item.downloadURLSource = self.downloadSource;
     [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];

@@ -25,4 +25,6 @@
 @property (nonatomic) int isDownloadingNum;
 @property (nonatomic, strong) NSString *downloadType;
 @property (nonatomic) double duration;
+@property (nonatomic, strong)NSString *downloadURLSource;
+
 @end

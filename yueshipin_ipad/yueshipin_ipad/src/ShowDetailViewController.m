@@ -765,9 +765,11 @@
     [self getDownloadUrls:num];
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     subitem.urlArray = tempArray;
+    subitem.downloadURLSource = self.downloadSource;
     
     if(subitem.urlArray.count > 0){
         if (self.mp4DownloadUrls.count > 0) {
