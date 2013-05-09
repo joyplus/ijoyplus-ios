@@ -884,7 +884,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 
     willPlayLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 40)];
-    willPlayLabel_.center = CGPointMake(playCacheView_.center.x, 160);
+    willPlayLabel_.center = CGPointMake(playCacheView_.center.x, 180);
     willPlayLabel_.font = [UIFont systemFontOfSize:12];
     willPlayLabel_.backgroundColor = [UIColor clearColor];
     willPlayLabel_.textColor = [UIColor grayColor];
