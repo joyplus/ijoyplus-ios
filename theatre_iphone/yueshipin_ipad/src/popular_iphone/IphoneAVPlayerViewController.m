@@ -780,6 +780,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 -(void)playNext{
     
     if (playNum == [episodesArr_ count]-1) {
+        [self playEnd];
         return;
     }
     
