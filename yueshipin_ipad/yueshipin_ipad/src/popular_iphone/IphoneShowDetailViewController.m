@@ -920,7 +920,7 @@
 -(void)episodesPlay:(id)sender{
     int playNum = ((UIButton *)sender).tag;
     //[self Play:playNum-1];
-    name_ = ((UIButton *)sender).titleLabel.text;
+    //name_ = ((UIButton *)sender).titleLabel.text;
     [self playVideo:playNum-1];
 }
 
