@@ -135,7 +135,7 @@
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [delegate scrollViewBeginDragging:scrollView];
 }
@@ -143,6 +143,14 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     [delegate scrollViewEndDecelerating:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (!decelerate)
+    {
+        [delegate scrollViewEndDecelerating:scrollView];
+    }
 }
 
 @end
