@@ -76,7 +76,7 @@
 	//set the app and bundle ID. normally you wouldn't need to do this
     //but we need to test with an app that's actually on the store
 	[iRate sharedInstance].appStoreID = APPIRATER_APP_ID;
-    [iRate sharedInstance].applicationBundleID = @"com.joyplus.yueshipin";
+    [iRate sharedInstance].applicationBundleID = @"com.joyplus.theatreipad";
     [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
     [iRate sharedInstance].usesUntilPrompt = 3;
     [iRate sharedInstance].daysUntilPrompt = 2; //第一次提醒
