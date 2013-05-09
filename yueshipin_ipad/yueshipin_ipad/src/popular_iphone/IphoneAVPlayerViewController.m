@@ -783,17 +783,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     [self destoryPlayer];
     
-    playNum++;
-    [tableList_ reloadData];
+    if (!islocalFile_) {
+        playNum++;
+        [tableList_ reloadData];
+        
+        lastPlayTime_ = kCMTimeZero;
+        [self addCacheview];
+        
+        [self initDataSource:playNum];
+        
+        [self beginToPlay];
+        
+        [self recordPlayStatics];
+    }
+    else{
+        [self playNextLocalFile];
+    }
 
-    lastPlayTime_ = kCMTimeZero;
-    [self addCacheview];
-
-    [self initDataSource:playNum];
-    
-    [self beginToPlay];
-    
-    [self recordPlayStatics];
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -1164,6 +1170,30 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
    
 }
 
+-(void)showNOThisClearityUrl:(BOOL)bol{
+    if (bol) {
+        UILabel  *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250,40)];
+        label.text = @"此分辨率已失效，请选择其它分辨率";
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.backgroundColor = [UIColor clearColor];
+        label.font = [UIFont systemFontOfSize:14];
+        label.tag = 99999;
+        label.center = CGPointMake( playCacheView_.center.x,  playCacheView_.center.y+50);
+        [playCacheView_ addSubview:label];
+        
+        myHUD.hidden = YES;
+    }
+    else{
+        UIView *view = [playCacheView_ viewWithTag:99999];
+        if (view) {
+             [view removeFromSuperview];
+        }
+    }
+    
+
+}
+
 -(void)playNextLocalFile{
     NSString *queryString = [NSString stringWithFormat:@"where itemId = '%@' AND downloadStatus = 'finish'",prodId_];
     NSArray *items = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:queryString];
@@ -1217,36 +1247,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             return;
         }
         else{
-        //tuichu
-        
-        
+            //tuichu
+            
+            
         }
         
-    }
-
-}
--(void)showNOThisClearityUrl:(BOOL)bol{
-    if (bol) {
-        UILabel  *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250,40)];
-        label.text = @"此分辨率已失效，请选择其它分辨率";
-        label.textColor = [UIColor whiteColor];
-        label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = [UIColor clearColor];
-        label.font = [UIFont systemFontOfSize:14];
-        label.tag = 99999;
-        label.center = CGPointMake( playCacheView_.center.x,  playCacheView_.center.y+50);
-        [playCacheView_ addSubview:label];
-        
-        myHUD.hidden = YES;
-    }
-    else{
-        UIView *view = [playCacheView_ viewWithTag:99999];
-        if (view) {
-             [view removeFromSuperview];
-        }
     }
     
-
 }
 
 
