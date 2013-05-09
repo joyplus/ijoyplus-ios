@@ -122,6 +122,14 @@
         iphoneAVPlayerViewController.nameStr = nameStr_;
         iphoneAVPlayerViewController.episodesArr = episodesArr_;
         iphoneAVPlayerViewController.playNum = playNum;
+        
+        if (nil == subnameArray)
+         {
+            subnameArray = [[NSMutableArray alloc] init];
+         }
+        for (NSDictionary * dic in  episodesArr_){
+            [subnameArray addObject:[dic objectForKey:@"name"]];
+        }
         iphoneAVPlayerViewController.subnameArray = subnameArray;
         
         iphoneAVPlayerViewController.lastPlayTime =  CMTimeMakeWithSeconds(playBackTime_.doubleValue, NSEC_PER_SEC);

@@ -135,6 +135,7 @@
         cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
         cell.titleLab.frame = CGRectMake(10, 20, 220, 15);
          cell.actors.text  = [self composeContent:infoDic];
+        cell.actors.lineBreakMode = NSLineBreakByTruncatingMiddle;
         [cell.actors setFrame:CGRectMake(12, 36, 200, 15)];
         [cell.date removeFromSuperview];
         cell.play.frame =  CGRectMake(248,8, 47, 42);
@@ -315,7 +316,7 @@
         int subNum = [[item objectForKey:@"prod_subname"] intValue];
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
-        content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+        content = [NSString stringWithFormat:@"已观看 《%@》 %@",[item objectForKey:@"prod_subname"],[TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }

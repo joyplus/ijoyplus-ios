@@ -691,6 +691,7 @@
         cell.titleLab.frame = CGRectMake(10, 5, 220, 15);
 
         cell.actors.text  = [self composeContent:infoDic];
+        cell.actors.lineBreakMode = NSLineBreakByTruncatingMiddle;
         [cell.actors setFrame:CGRectMake(12, 20, 200, 15)];
      
         [cell.date removeFromSuperview];
@@ -954,7 +955,7 @@
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
         //int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
-        content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+        content = [NSString stringWithFormat:@"已观看 《%@》 %@",[item objectForKey:@"prod_subname"],[TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }
