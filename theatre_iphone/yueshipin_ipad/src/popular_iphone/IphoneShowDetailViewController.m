@@ -754,6 +754,10 @@
             videoUrl = [url objectForKey:@"url"];
             break;
         }
+        if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+            videoUrl = [url objectForKey:@"url"];
+            break;
+        }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
@@ -761,11 +765,20 @@
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
+            if([BIAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+
         }
     }
     if(videoUrl == nil){
         for(NSDictionary *url in urlArray){
             if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
+            if([LIU_CHANG isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
@@ -777,6 +790,10 @@
                 videoUrl = [url objectForKey:@"url"];
                 break;
             }
+            if([CHAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+                videoUrl = [url objectForKey:@"url"];
+                break;
+            }
         }
     }
     
@@ -785,6 +802,9 @@
         if(urlArray.count > 0){
             for(NSDictionary *url in urlArray){
                 if ([[url objectForKey:@"file"] isEqualToString:@"mp4"]) {
+                    videoUrl = [url objectForKey:@"url"];
+                }
+                if ([[url objectForKey:@"file"] isEqualToString:@"m3u8"]) {
                     videoUrl = [url objectForKey:@"url"];
                 }
                 
