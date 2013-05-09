@@ -61,7 +61,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>joyplus</string>
+			<string>nightTheatre</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>ums.bz.GGISox</string>
