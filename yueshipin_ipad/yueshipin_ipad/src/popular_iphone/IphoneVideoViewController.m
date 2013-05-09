@@ -259,7 +259,7 @@
 
 -(void)wechatShare:(int)sence{
         WXMediaMessage *message = [WXMediaMessage message];
-        NSString *name = self.title;
+        NSString *name = name_;
         if (sence == 0) {
             message.title = @"分享部影片给你 ";
             message.description = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];

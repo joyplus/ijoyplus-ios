@@ -765,12 +765,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 
 -(void)playerItemDidReachEnd:(id)sender{
-    if (islocalFile_) {
-        [self playNextLocalFile];
-        return;
-    }
     if (videoType_ == 1) {
         [self playEnd];
+        return;
+    }
+    if (islocalFile_) {
+        
+        [self playNextLocalFile];
         return;
     }
     [self playNext];
@@ -1247,20 +1248,23 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                     nameStr_ =  [[sub.name componentsSeparatedByString:@"_"] lastObject];
                 }
                 prodId_ = sub.itemId;
-                [self setPath:playPath];
-            }
+                videoType_ = sub.type;
+                lastPlayTime_ = kCMTimeZero;
+                [self addCacheview];
+                if (!isM3u8_) {
+                    [self setPath:playPath];
+                }
+                else{
+                    [self setURL:[NSURL URLWithString:playPath]];
+                
+                }
             
+            }
             
             return;
         }
-        else{
-            //tuichu
-            
-            
-        }
-        
     }
-    
+     [self playEnd];
 }
 
 
@@ -1876,8 +1880,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 return;
             }
 
-            [self showNOThisClearityUrl:NO];
-            [self playNext];
+            if (!islocalFile_) {
+                [self showNOThisClearityUrl:NO];
+                [self playNext];
+            }
+            else{
+                [self playNextLocalFile];
+            }
+            
             
 //            if (isPlayOnTV)
 //            {
