@@ -20,7 +20,6 @@
 #import <Parse/Parse.h>
 #import "CustomNavigationViewControllerPortrait.h"
 #import "CommonMotheds.h"
-#import "SubdownloadItem.h"
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";

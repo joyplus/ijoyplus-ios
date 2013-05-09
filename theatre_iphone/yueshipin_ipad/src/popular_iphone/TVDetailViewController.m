@@ -516,7 +516,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 addFav.imageEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
                 addFav.titleEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0);
                 [addFav setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-                [addFav setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
+                [addFav setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
                 [addFav addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 addFav.titleLabel.font = [UIFont systemFontOfSize:10];
                 [cell addSubview:addFav];
@@ -527,7 +527,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [support setImage:[UIImage imageNamed:@"icon_ding.png"] forState:UIControlStateNormal];
                 [support setImage:[UIImage imageNamed:@"icon_ding_s.png"] forState:UIControlStateHighlighted];
                 [support setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-                [support setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
+                [support setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
                 if (supportCount_ <1000) {
                     [support setTitle:[NSString stringWithFormat:@"(%d)",supportCount_]  forState:UIControlStateNormal];
                 }
@@ -1476,7 +1476,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         [button setTitleColor:[UIColor colorWithRed:110.0/255 green:110.0/255 blue:110.0/255 alpha:1.0] forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [button setTitleColor:[UIColor colorWithRed:190.0/255 green:190.0/255 blue:190.0/255 alpha:1.0] forState:UIControlStateDisabled];
-        [button setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
+        [button setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateSelected];
         button.titleLabel.font = [UIFont systemFontOfSize:12];
         [button addTarget:self action:@selector(download:) forControlEvents:UIControlEventTouchUpInside];
         [button setBackgroundImage:[UIImage imageNamed:@"icon_xuanji.png"] forState:UIControlStateNormal];
