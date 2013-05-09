@@ -148,18 +148,18 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:update];
     
-    UIButton *xinshouyindao = [UIButton buttonWithType:UIButtonTypeCustom];
-    xinshouyindao.frame = CGRectMake(10, 380, 300, 35);
-    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao.png"] forState:UIControlStateNormal];
-    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
-    [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
-    [scrollView addSubview:xinshouyindao];
+//    UIButton *xinshouyindao = [UIButton buttonWithType:UIButtonTypeCustom];
+//    xinshouyindao.frame = CGRectMake(10, 380, 300, 35);
+//    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao.png"] forState:UIControlStateNormal];
+//    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
+//    [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
+//    [scrollView addSubview:xinshouyindao];
 	
-    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 435, 55, 13)];
+    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 390, 55, 13)];
     jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
     [scrollView addSubview:jinpin];
     
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 455,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 410,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
     [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
     _mGridView.datasource = self;
     _mGridView.delegate = self;

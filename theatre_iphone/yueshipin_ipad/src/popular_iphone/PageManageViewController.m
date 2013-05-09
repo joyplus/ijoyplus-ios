@@ -564,12 +564,12 @@ enum
     
     
     //新手引导
-    if ([CommonMotheds isFirstTimeRun]) {
-        [self showIntroductionView];
-    }
-    if ([CommonMotheds isVersionUpdate]) {
-        [self showIntroductionView];
-    }
+//    if ([CommonMotheds isFirstTimeRun]) {
+//        [self showIntroductionView];
+//    }
+//    if ([CommonMotheds isVersionUpdate]) {
+//        [self showIntroductionView];
+//    }
 }
 
 
