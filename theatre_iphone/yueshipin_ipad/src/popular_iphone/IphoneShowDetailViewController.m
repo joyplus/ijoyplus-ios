@@ -277,11 +277,11 @@
         switch (indexPath.row) {
             case 0:{
                 
-                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_detailed_picture_bg"]];
+                UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
                 frame.frame = CGRectMake(14, 14, 90, 143);
                 [cell addSubview:frame];
                 
-                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 136)];
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 138)];
                 
                 NSString *url = [videoInfo_ objectForKey:@"ipad_poster"];
                 if(url == nil){

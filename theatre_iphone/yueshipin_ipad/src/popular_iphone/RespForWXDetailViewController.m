@@ -46,7 +46,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.title = @"悅视频";
+    self.title = @"今晚剧场";
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight-64);
@@ -64,8 +64,8 @@
     self.navigationItem.hidesBackButton = YES;
     
     
-    UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detailFrame.png"]];
-    frame.frame = CGRectMake(14, 14, 90, 133);
+    UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
+    frame.frame = CGRectMake(14, 14, 90, 131);
     [self.view addSubview:frame];
     
     _imgViewPoster = [[UIImageView alloc] initWithFrame:CGRectMake(16, 16, 85, 126)];

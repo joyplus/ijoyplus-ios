@@ -709,9 +709,9 @@
         }
         NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
         
-        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
-        frame.frame = CGRectMake(10, 7, 43, 64);
-        [cell.contentView addSubview:frame];
+//        UIImageView *frame = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"listFrame.png"]];
+//        frame.frame = CGRectMake(10, 7, 43, 64);
+//        [cell.contentView addSubview:frame];
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(11, 8, 40, 60)];
         [imageView setImageWithURL:[NSURL URLWithString:[infoDic objectForKey:@"content_pic_url"]] placeholderImage:[UIImage imageNamed:@"video_placeholder"]];

@@ -21,11 +21,11 @@
         // Initialization code
         self.backgroundColor = [UIColor clearColor];
         
-        UIImageView *iconBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab_list_moviecard.png"]];
+        UIImageView *iconBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
         iconBgView.frame = CGRectMake(2, 12, 82, 111);
         [self addSubview:iconBgView];
         
-        self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(7.5, 15, 68, 100)];
+        self.imageview = [[UIImageView alloc] initWithFrame:CGRectMake(7, 18, 72, 102)];
         [self addSubview:self.imageview];
         
         self.title = [[UILabel alloc] initWithFrame:CGRectMake(106, 18, 160, 14)];
