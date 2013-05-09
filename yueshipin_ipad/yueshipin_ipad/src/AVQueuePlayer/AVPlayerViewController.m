@@ -991,12 +991,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
     if (isDownloaded)
     {
+        [self destoryPlayer];
         currentNum ++;
         //设置Button'enable
         [self enableNextButton];
         //管理playlists数据
         if (currentNum >= localPlaylists.count)
         {
+            NSLog(@"current play num:%d,playlists %@ error ,close player",currentNum,localPlaylists);
             [self closeSelf];
             return;
         }
