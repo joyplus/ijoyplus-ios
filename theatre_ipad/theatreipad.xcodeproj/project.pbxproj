@@ -129,7 +129,6 @@
 		22B262B41697F86400B7732C /* SearchResultsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262B31697F86400B7732C /* SearchResultsViewCell.m */; };
 		22CE9F32169A729300D4FC76 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F31169A729300D4FC76 /* UIImage+Scale.m */; };
 		22CE9F5C169AA7FD00D4FC76 /* SendWeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */; };
-		22D11DB416A641D900B49FFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D11DB316A641D900B49FFD /* Default-568h@2x.png */; };
 		22D36916171CF2C400D2C6F8 /* xiangkan_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36913171CF2C400D2C6F8 /* xiangkan_bg.png */; };
 		22D36917171CF2C400D2C6F8 /* xiangkan_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36914171CF2C400D2C6F8 /* xiangkan_pressed.png */; };
 		22D36918171CF2C400D2C6F8 /* xiangkan.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D36915171CF2C400D2C6F8 /* xiangkan.png */; };
@@ -154,8 +153,6 @@
 		22EF023616B7682B0001F743 /* title_recommond@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EF014716B7682B0001F743 /* title_recommond@2x.png */; };
 		22EF023916B772460001F743 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF023816B772460001F743 /* CoreLocation.framework */; };
 		22F08FC016AEA6E800C16AD2 /* DDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22F08FBE16AEA6E800C16AD2 /* DDProgressView.m */; };
-		22F3E98B169D1806002723AF /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F3E98A169D1806002723AF /* Default.png */; };
-		22F3E98D169D1815002723AF /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22F3E98C169D1815002723AF /* Default@2x.png */; };
 		22FEC4F7171433B700AEA9CD /* DimensionalCodeScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEC4F6171433B700AEA9CD /* DimensionalCodeScanViewController.m */; };
 		22FEC4FA171433DB00AEA9CD /* BundingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEC4F9171433DB00AEA9CD /* BundingViewController.m */; };
 		22FEC4FD171433EF00AEA9CD /* UnbundingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEC4FC171433EF00AEA9CD /* UnbundingViewController.m */; };
@@ -869,7 +866,6 @@
 		22CE9F31169A729300D4FC76 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
 		22CE9F5A169AA7FD00D4FC76 /* SendWeiboViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendWeiboViewController.h; sourceTree = "<group>"; };
 		22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendWeiboViewController.m; sourceTree = "<group>"; };
-		22D11DB316A641D900B49FFD /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		22D36913171CF2C400D2C6F8 /* xiangkan_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan_bg.png; sourceTree = "<group>"; };
 		22D36914171CF2C400D2C6F8 /* xiangkan_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan_pressed.png; sourceTree = "<group>"; };
 		22D36915171CF2C400D2C6F8 /* xiangkan.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiangkan.png; sourceTree = "<group>"; };
@@ -908,8 +904,6 @@
 		22EF023816B772460001F743 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		22F08FBD16AEA6E800C16AD2 /* DDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDProgressView.h; sourceTree = "<group>"; };
 		22F08FBE16AEA6E800C16AD2 /* DDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDProgressView.m; sourceTree = "<group>"; };
-		22F3E98A169D1806002723AF /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		22F3E98C169D1815002723AF /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		22FEC4F5171433B700AEA9CD /* DimensionalCodeScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DimensionalCodeScanViewController.h; sourceTree = "<group>"; };
 		22FEC4F6171433B700AEA9CD /* DimensionalCodeScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DimensionalCodeScanViewController.m; sourceTree = "<group>"; };
 		22FEC4F8171433DB00AEA9CD /* BundingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BundingViewController.h; sourceTree = "<group>"; };
@@ -2414,9 +2408,6 @@
 		EB6DEA5D165A2F1A00AF8003 = {
 			isa = PBXGroup;
 			children = (
-				22D11DB316A641D900B49FFD /* Default-568h@2x.png */,
-				22F3E98C169D1815002723AF /* Default@2x.png */,
-				22F3E98A169D1806002723AF /* Default.png */,
 				EBB9E0DA167090F4006ECEE8 /* Icon-72.png */,
 				EB63D4CE16D07EA700B642C7 /* Icon-72@2x.png */,
 				EB63D2EC16D079D400B642C7 /* Icon-54.png */,
@@ -3145,9 +3136,6 @@
 				220E4882169BECB400A29756 /* RadioButton-Unselected.png in Resources */,
 				220E48E9169BECB400A29756 /* right@2x.png in Resources */,
 				220E48EA169BECB400A29756 /* tab_show_choose@2x.png in Resources */,
-				22F3E98B169D1806002723AF /* Default.png in Resources */,
-				22F3E98D169D1815002723AF /* Default@2x.png in Resources */,
-				22D11DB416A641D900B49FFD /* Default-568h@2x.png in Resources */,
 				22EF004816B767410001F743 /* UMUFP.bundle in Resources */,
 				22EF005616B767EC0001F743 /* ChatCustomCell.xib in Resources */,
 				22EF005816B767EC0001F743 /* ChatViewController.xib in Resources */,
@@ -3746,7 +3734,7 @@
 				PRODUCT_NAME = theatreipad;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3775,7 +3763,7 @@
 				PRODUCT_NAME = theatreipad;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
