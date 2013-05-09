@@ -65,9 +65,9 @@
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         [[UIApplication sharedApplication] openURL:webUrl_];
         return;
+    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
+        [self initPlayerView];
     }
-
-   [self initPlayerView];
     [AppDelegate instance].isInPlayView = YES;
   
     
