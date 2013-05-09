@@ -96,7 +96,7 @@
 
 -(void)initWebView{
     CGRect bounds = [UIScreen mainScreen].bounds;
-    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-64)];
+    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-58)];
     webView_.scalesPageToFit = YES;
     webView_.delegate = self;
     [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
