@@ -39,7 +39,8 @@
 
 //正式环境
 #if ENVIRONMENT   
-    #define kDefaultAppKey @"ijoyplus_android_0001bj"
+    #define kDefaultAppKey @"ijoyplus_ios_001"
+    #define kDefaultCheckBindAppKey @"ijoyplus_android_0001bj"
     #define PARSE_APP_ID @"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P"
     #define PARSE_CLIENT_KEY @"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"
     #define kABaseURLString @"http://api.joyplus.tv/"
@@ -47,7 +48,8 @@
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
 //测试环境
 #else
-    #define kDefaultAppKey @"ijoyplus_android_0001bj"
+    #define kDefaultAppKey @"ijoyplus_ios_001bj"
+    #define kDefaultCheckBindAppKey @"ijoyplus_android_0001bj"
     #define PARSE_APP_ID @"5FNbLx7dnRAx3knxV4rOdaLMRJMByqfKjWQRQakT"
     #define PARSE_CLIENT_KEY @"RZHrZVn6MK8VGZxfpeshrC2tpxpzzMOZjU0rSS6X"
     #define kABaseURLString @"http://apitest.yue001.com/"
