@@ -2255,13 +2255,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-    [self stopMyTimer];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [self resetMyTimer];
 }
 
