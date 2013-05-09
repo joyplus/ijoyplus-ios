@@ -2338,16 +2338,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-    [self stopMyTimer];
-}
+//- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+//{
+//    [self stopMyTimer];
+//}
 
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    [self resetMyTimer];
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+   [self resetMyTimer];
 }
-
 #pragma mark -
 #pragma mark - 
 
