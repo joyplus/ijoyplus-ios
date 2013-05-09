@@ -270,7 +270,7 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:deviceToken];
-    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IPHONE", nil];
+    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", nil];
     [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
