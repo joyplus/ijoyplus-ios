@@ -254,6 +254,11 @@
 		E7897920172AAB8500F359C2 /* rebo_sousuo_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E789791F172AAB8300F359C2 /* rebo_sousuo_bg@2x.png */; };
 		E7950000173B390800660E35 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E795FFFF173B390800660E35 /* Default.png */; };
 		E7950002173B5C0A00660E35 /* video_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7950001173B5C0A00660E35 /* video_placeholder@2x.png */; };
+		E7950004173B7D8900660E35 /* close_x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7950003173B7D8800660E35 /* close_x.png */; };
+		E795001C173B7E7400660E35 /* share_btn_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = E7950009173B7E7100660E35 /* share_btn_pressed.png */; };
+		E795001D173B7E7400660E35 /* share_btn_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E795000A173B7E7100660E35 /* share_btn_pressed@2x.png */; };
+		E795001E173B7E7400660E35 /* share_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = E795000B173B7E7100660E35 /* share_btn.png */; };
+		E795001F173B7E7400660E35 /* share_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E795000C173B7E7200660E35 /* share_btn@2x.png */; };
 		E795FFFE173B37C900660E35 /* custom-dialog-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E795FFFD173B37C900660E35 /* custom-dialog-background@2x.png */; };
 		E7985D67173A0F6B00209430 /* custom-cancel-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7985D66173A0F6A00209430 /* custom-cancel-normal@2x.png */; };
 		E79FB54316F868AC0055AA4D /* bg_sou_suo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53D16F868AC0055AA4D /* bg_sou_suo@2x.png */; };
@@ -890,6 +895,11 @@
 		E789791D172A514D00F359C2 /* jingpintuijian@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "jingpintuijian@2x.png"; path = "yueshipin_ipad/Resource_iphone/jingpintuijian@2x.png"; sourceTree = SOURCE_ROOT; };
 		E789791F172AAB8300F359C2 /* rebo_sousuo_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "rebo_sousuo_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/rebo_sousuo_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		E7950001173B5C0A00660E35 /* video_placeholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "video_placeholder@2x.png"; path = "yueshipin_ipad/Resource_iphone/video_placeholder@2x.png"; sourceTree = SOURCE_ROOT; };
+		E7950003173B7D8800660E35 /* close_x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = close_x.png; path = yueshipin_ipad/Resource_iphone/close_x.png; sourceTree = SOURCE_ROOT; };
+		E7950009173B7E7100660E35 /* share_btn_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share_btn_pressed.png; path = yueshipin_ipad/Resource_iphone/share_btn_pressed.png; sourceTree = SOURCE_ROOT; };
+		E795000A173B7E7100660E35 /* share_btn_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "share_btn_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/share_btn_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
+		E795000B173B7E7100660E35 /* share_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = share_btn.png; path = yueshipin_ipad/Resource_iphone/share_btn.png; sourceTree = SOURCE_ROOT; };
+		E795000C173B7E7200660E35 /* share_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "share_btn@2x.png"; path = "yueshipin_ipad/Resource_iphone/share_btn@2x.png"; sourceTree = SOURCE_ROOT; };
 		E795FFFD173B37C900660E35 /* custom-dialog-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "custom-dialog-background@2x.png"; path = "yueshipin_ipad/Resource_iphone/custom-dialog-background@2x.png"; sourceTree = SOURCE_ROOT; };
 		E795FFFF173B390800660E35 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E7985D66173A0F6A00209430 /* custom-cancel-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "custom-cancel-normal@2x.png"; path = "yueshipin_ipad/Resource_iphone/custom-cancel-normal@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1658,6 +1668,11 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E7950009173B7E7100660E35 /* share_btn_pressed.png */,
+				E795000A173B7E7100660E35 /* share_btn_pressed@2x.png */,
+				E795000B173B7E7100660E35 /* share_btn.png */,
+				E795000C173B7E7200660E35 /* share_btn@2x.png */,
+				E7950003173B7D8800660E35 /* close_x.png */,
 				E7950001173B5C0A00660E35 /* video_placeholder@2x.png */,
 				E795FFFD173B37C900660E35 /* custom-dialog-background@2x.png */,
 				E7C94F5B173A6335006128E6 /* self_icon@2x.png */,
@@ -2834,6 +2849,11 @@
 				E795FFFE173B37C900660E35 /* custom-dialog-background@2x.png in Resources */,
 				E7950000173B390800660E35 /* Default.png in Resources */,
 				E7950002173B5C0A00660E35 /* video_placeholder@2x.png in Resources */,
+				E7950004173B7D8900660E35 /* close_x.png in Resources */,
+				E795001C173B7E7400660E35 /* share_btn_pressed.png in Resources */,
+				E795001D173B7E7400660E35 /* share_btn_pressed@2x.png in Resources */,
+				E795001E173B7E7400660E35 /* share_btn.png in Resources */,
+				E795001F173B7E7400660E35 /* share_btn@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

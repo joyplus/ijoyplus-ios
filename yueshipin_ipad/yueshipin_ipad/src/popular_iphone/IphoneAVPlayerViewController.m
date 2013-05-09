@@ -20,7 +20,7 @@
 #import <Parse/Parse.h>
 #import "CustomNavigationViewControllerPortrait.h"
 #import "CommonMotheds.h"
-
+#import "SubdownloadItem.h"
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -1162,6 +1162,68 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
     
    
+}
+
+-(void)playNextLocalFile{
+    NSString *queryString = [NSString stringWithFormat:@"where itemId = '%@' AND downloadStatus = 'finish'",prodId_];
+    NSArray *items = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:queryString];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES comparator:cmptr1];
+    NSMutableArray *sortedItems = [NSMutableArray arrayWithArray: [items sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]]];
+    for (SubdownloadItem *sub in sortedItems) {
+        NSString *sub_name = [[sub.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
+        int num = [sub_name intValue];
+        if (num > playNum) {
+            
+            NSString *fileName = [downloadItem.subitemId stringByAppendingString:@".mp4"];
+            NSError *error;
+            // 创建文件管理器
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            //指向文件目录
+            NSString *documentsDirectory= [NSHomeDirectory()
+                                           stringByAppendingPathComponent:@"Documents"];
+            NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+            
+            NSString *playPath = nil;
+            if (![sub.downloadType isEqualToString:@"m3u8"]) {
+                for (NSString *str in fileList) {
+                    if ([str isEqualToString:fileName]) {
+                        playPath = [documentsDirectory stringByAppendingPathComponent:str];
+                        break;
+                    }
+                }
+            }
+            else{
+                [[AppDelegate instance] startHttpServer];
+                playPath =[NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",LOCAL_HTTP_SERVER_URL,sub.itemId,sub.subitemId ,num];
+                isM3u8_ = YES;
+                self.playDuration = sub.duration;
+            }
+            if (playPath) {
+                local_file_path_ = playPath;
+                islocalFile = YES;
+                if (sub.type == 2) {
+                    NSString *name = [[sub.name componentsSeparatedByString:@"_"] objectAtIndex:0];
+                    nameStr_ = [NSString stringWithFormat:@"%@ 第%d集",name,num];
+                    playNum = num;
+                }
+                else if (sub.type == 3){
+                    nameStr_ =  [[sub.name componentsSeparatedByString:@"_"] lastObject];
+                }
+                prodId_ = sub.itemId;
+                [self setPath:playPath];
+            }
+            
+            
+            return;
+        }
+        else{
+        //tuichu
+        
+        
+        }
+        
+    }
+
 }
 -(void)showNOThisClearityUrl:(BOOL)bol{
     if (bol) {
