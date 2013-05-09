@@ -1011,7 +1011,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         self.type = [[dic objectForKey:@"type"] intValue];
         self.name = [dic objectForKey:@"name"];
         
-        [self loadLastPlaytime];
+        //[self loadLastPlaytime];
+        lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
         if ([videoFormat isEqualToString:@"m3u8"])
         {
             [[AppDelegate instance] startHttpServer];
