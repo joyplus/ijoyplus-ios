@@ -28,6 +28,7 @@
         self.actors.textColor = [UIColor grayColor];
         actors_.backgroundColor = [UIColor clearColor];
         [self addSubview:self.actors];
+        self.actors.lineBreakMode = NSLineBreakByTruncatingMiddle;
         
         date_ = [[UILabel alloc] initWithFrame:CGRectMake(12, 45, 200, 15)];
         date_.font = [UIFont systemFontOfSize:12];
