@@ -200,7 +200,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 446, 174);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -213,7 +213,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"failure_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 446, 174);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -226,7 +226,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"top_error"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 446, 174);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -253,7 +253,7 @@
     [frame addSubview:tempMovieImage];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(735, 80, 50, 50);
+    closeBtn.frame = CGRectMake(730, 78, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -453,7 +453,7 @@
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(696, 230, 50, 50);
+    closeBtn.frame = CGRectMake(699, 226, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -646,7 +646,7 @@
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(701, 259 - 70, 50, 50);
+    closeBtn.frame = CGRectMake(702, 255 - 70, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
