@@ -289,7 +289,7 @@
                 }
 
                 [imageView setImageWithURL:[NSURL URLWithString:url]];
-                 wechatImg_ = imageView.image;
+                 wechatImgStr_ = url;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];
