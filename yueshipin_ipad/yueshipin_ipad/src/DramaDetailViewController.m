@@ -284,9 +284,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-        [self.downloadBtn setHidden:YES];
-    }
+//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//        [self.downloadBtn setHidden:YES];
+//    }
     if(video == nil){
         [self retrieveData];
     }
