@@ -54,11 +54,11 @@
     nextBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [nextBtn_ addTarget:self action:@selector(nextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     nextBtn_.frame = CGRectMake(0, 0, 55, 44);
-    nextBtn_.enabled = NO;
     [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next.png"] forState:UIControlStateNormal];
     [nextBtn_ setImage:[UIImage imageNamed:@"top_icon_writing_next_s.png"] forState:UIControlStateHighlighted];
     UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:nextBtn_];
     self.navigationItem.rightBarButtonItem = rightButtonItem;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
     
     RadioButton *rb1 = [[RadioButton alloc] initWithGroupId:@"first group" index:0];
     RadioButton *rb2 = [[RadioButton alloc] initWithGroupId:@"first group" index:1];
@@ -104,27 +104,21 @@
     [self.view addSubview:titleTextField_];
     [self.view addSubview:detailTextView_];
     
-    
-   
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeNextBtnImage:) name:UITextFieldTextDidChangeNotification object:titleTextField_];
     
 }
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    NSString *newString = nil;
-	if (range.length == 0) {
-		newString = [textField.text stringByAppendingString:string];
-	} else {
-		NSString *headPart = [textField.text substringToIndex:range.location];
-		NSString *tailPart = [textField.text substringFromIndex:range.location+range.length];
-		newString = [NSString stringWithFormat:@"%@%@",headPart,tailPart];
-	}
-    if ([newString isEqualToString:@""] && [string isEqualToString:@""]) {
-        nextBtn_.enabled = NO;
+-(void)viewDidUnload{
+   [super viewDidUnload];
+   [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:titleTextField_];
+}
+- (void)changeNextBtnImage:(NSNotification *)notificaiton
+{
+    NSString *titleContent = [titleTextField_.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if(titleContent.length > 0){
+         self.navigationItem.rightBarButtonItem.enabled = YES;
+    } else {
+         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
-    else{
-    
-        nextBtn_.enabled = YES;
-    }
-    return YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView{
