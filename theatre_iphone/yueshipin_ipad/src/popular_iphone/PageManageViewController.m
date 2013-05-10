@@ -405,48 +405,53 @@ enum
     scrBg.tag = TOP_SEGMENT_VIEW_TAG;
     movieBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateNormal];
-    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateHighlighted];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateSelected];
     movieBtn_.frame = CGRectMake(0, 7, 80, 30);
     movieBtn_.tag = 0;
     [movieBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
      movieBtn_.backgroundColor = [UIColor clearColor];
      movieBtn_.adjustsImageWhenDisabled = NO;
-    movieBtn_.adjustsImageWhenHighlighted = NO;
+    movieBtn_.showsTouchWhenHighlighted = NO;
     movieBtn_.selected = YES;
     [movieBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     tvBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
+    tvBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [tvBtn_ setImage:[UIImage imageNamed:@"List_series.png"] forState:UIControlStateNormal];
-    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateHighlighted];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series.png"] forState:UIControlStateHighlighted];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateSelected];
     tvBtn_.frame = CGRectMake(80, 7, 80, 30);
     tvBtn_.tag = 1;
     [tvBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
     tvBtn_.backgroundColor = [UIColor clearColor];
-    tvBtn_.adjustsImageWhenDisabled = NO;
+    tvBtn_.showsTouchWhenHighlighted = NO;
     [tvBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     comicBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [comicBtn_ setImage:[UIImage imageNamed:@"List_comic.png"] forState:UIControlStateNormal];
-    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateHighlighted ];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic.png"] forState:UIControlStateHighlighted];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateSelected];
     comicBtn_.frame = CGRectMake(160, 7, 80, 30);
     comicBtn_.tag = 2;
     [comicBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
     comicBtn_.backgroundColor = [UIColor clearColor];
-    comicBtn_.adjustsImageWhenDisabled = NO;
+    comicBtn_.showsTouchWhenHighlighted = NO;
     [comicBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     showBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [showBtn_ setImage:[UIImage imageNamed:@"List_show.png"] forState:UIControlStateNormal];
-    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateHighlighted ];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show.png"] forState:UIControlStateHighlighted];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateHighlighted | UIControlStateSelected];
     [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateSelected];
     showBtn_.frame = CGRectMake(240, 7, 80, 30);
     showBtn_.tag = 3;
     [showBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
     showBtn_.backgroundColor = [UIColor clearColor];
-    showBtn_.adjustsImageWhenDisabled = NO;
+    showBtn_.showsTouchWhenHighlighted = NO;
     [showBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     //
