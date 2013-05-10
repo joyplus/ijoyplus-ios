@@ -1229,7 +1229,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 prodId_ = sub.itemId;
                 videoType_ = sub.type;
                 lastPlayTime_ = kCMTimeZero;
-                [self addCacheview];
+               
+                if (videoType_ == 1 || videoType_ == 3) {
+                    titleLabel_.text = [NSString stringWithFormat:@"%@",nameStr_];
+                }
+                else if (videoType_ == 2){
+                    titleLabel_.text = [NSString stringWithFormat:@"%@ 第%d集", nameStr_, (playNum+1)];
+                }
+                            
                 if (!isM3u8_) {
                     [self setPath:playPath];
                 }
