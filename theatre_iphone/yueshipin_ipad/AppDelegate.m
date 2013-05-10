@@ -540,7 +540,9 @@
     }
 }
 -(void) onResp:(BaseResp*)resp{
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
+    if (resp.errCode == 0) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
+    }
     
 }
 
