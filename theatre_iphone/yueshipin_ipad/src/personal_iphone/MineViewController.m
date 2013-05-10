@@ -868,8 +868,8 @@
             case RECORD_TYPE:
             {
                 NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-                NSString *topicId = [infoDic objectForKey:@"prod_id"];
-                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                NSString *topicId = [infoDic objectForKey:@"id"];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"history_id", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [sortedwatchRecordArray_ removeObjectAtIndex:indexPath.row];
                     [tableView reloadData];
