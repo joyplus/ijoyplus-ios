@@ -52,7 +52,7 @@
 @synthesize httpUrlArray = httpUrlArray_;
 @synthesize isNotification = isNotification_;
 @synthesize segmentedControl = segmentedControl_;
-@synthesize wechatImg = wechatImg_;
+@synthesize wechatImgStr = wechatImgStr_;
 @synthesize willPlayIndex;
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -266,9 +266,11 @@
             message.description = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];
         }
         else if (sence == 1){
-            message.title = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];;
+            message.title = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];
         }
-        UIImage *newImage = [wechatImg_ resizedImage:CGSizeMake(60, 100) interpolationQuality:kCGInterpolationLow];
+    
+        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:wechatImgStr_]]];
+        UIImage *newImage = [image resizedImage:CGSizeMake(image.size.width*0.5, image.size.height*0.5) interpolationQuality:kCGInterpolationLow];
         [message setThumbImage:newImage];
     
         WXWebpageObject *ext = [WXWebpageObject object];

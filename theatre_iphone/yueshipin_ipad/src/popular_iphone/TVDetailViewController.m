@@ -399,7 +399,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                     imgUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imgUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
-                 wechatImg_ = imageView.image;
+                 wechatImgStr_ = imgUrl;
                 [cell addSubview:imageView];
                 
                 NSString *directors = [self.infoDic objectForKey:@"directors"];

@@ -340,7 +340,7 @@
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imageUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
-                wechatImg_ = imageView.image;
+                wechatImgStr_ = imageUrl;
                 [cell addSubview:imageView];
                 
                 NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
