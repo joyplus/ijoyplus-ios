@@ -397,6 +397,7 @@ enum
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
     self.scrollView.bounces = NO;
+    self.scrollView.tag = 1127;
 
     UIImageView *scrBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_bg.png"]];
     scrBg.userInteractionEnabled = YES;
@@ -405,20 +406,20 @@ enum
     movieBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie.png"] forState:UIControlStateNormal];
     [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateHighlighted];
-    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateDisabled];
+    [movieBtn_ setImage:[UIImage imageNamed:@"List_movie_pressed.png"] forState:UIControlStateSelected];
     movieBtn_.frame = CGRectMake(0, 7, 80, 30);
     movieBtn_.tag = 0;
     [movieBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
      movieBtn_.backgroundColor = [UIColor clearColor];
      movieBtn_.adjustsImageWhenDisabled = NO;
     movieBtn_.adjustsImageWhenHighlighted = NO;
-    movieBtn_.enabled = NO;
+    movieBtn_.selected = YES;
     [movieBtn_ setImageEdgeInsets:UIEdgeInsetsMake(5, 10, 5, 10)];
     
     tvBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [tvBtn_ setImage:[UIImage imageNamed:@"List_series.png"] forState:UIControlStateNormal];
     [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateHighlighted];
-    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateDisabled];
+    [tvBtn_ setImage:[UIImage imageNamed:@"List_series_pressed.png"] forState:UIControlStateSelected];
     tvBtn_.frame = CGRectMake(80, 7, 80, 30);
     tvBtn_.tag = 1;
     [tvBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
@@ -429,7 +430,7 @@ enum
     comicBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [comicBtn_ setImage:[UIImage imageNamed:@"List_comic.png"] forState:UIControlStateNormal];
     [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateHighlighted ];
-    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateDisabled];
+    [comicBtn_ setImage:[UIImage imageNamed:@"List_comic_pressed.png"] forState:UIControlStateSelected];
     comicBtn_.frame = CGRectMake(160, 7, 80, 30);
     comicBtn_.tag = 2;
     [comicBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
@@ -440,7 +441,7 @@ enum
     showBtn_ = [UIButton buttonWithType:UIButtonTypeCustom];
     [showBtn_ setImage:[UIImage imageNamed:@"List_show.png"] forState:UIControlStateNormal];
     [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateHighlighted ];
-    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateDisabled];
+    [showBtn_ setImage:[UIImage imageNamed:@"List_show_pressed.png"] forState:UIControlStateSelected];
     showBtn_.frame = CGRectMake(240, 7, 80, 30);
     showBtn_.tag = 3;
     [showBtn_ addTarget:self action:@selector(buttonChange:) forControlEvents:UIControlEventTouchUpInside];
@@ -615,26 +616,21 @@ enum
 -(void)buttonChange:(UIButton *)btn{
     int page = btn.tag;
     
-//    if (btn.selected)
-//    {
-//        return;
-//    }
-//    
-//    movieBtn_ == btn ? (movieBtn_.selected = YES) : (movieBtn_.selected = NO);
-//    tvBtn_ == btn ? (tvBtn_.selected = YES) : (tvBtn_.selected = NO);
-//    showBtn_ == btn ? (movieBtn_.selected = YES) : (showBtn_.selected = NO);
-//    comicBtn_ == btn ? (comicBtn_.selected = YES) : (comicBtn_.selected = NO);
-    movieBtn_.enabled = YES;
-    tvBtn_.enabled = YES;
-    showBtn_.enabled = YES;
-    comicBtn_.enabled = YES;
-    btn.enabled = NO;
+    if (btn.selected)
+    {
+        return;
+    }
     
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.3f];
-//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-//    [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
-//    [UIView commitAnimations];
+    movieBtn_ == btn ? (movieBtn_.selected = YES) : (movieBtn_.selected = NO);
+    tvBtn_ == btn ? (tvBtn_.selected = YES) : (tvBtn_.selected = NO);
+    showBtn_ == btn ? (showBtn_.selected = YES) : (showBtn_.selected = NO);
+    comicBtn_ == btn ? (comicBtn_.selected = YES) : (comicBtn_.selected = NO);
+    
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.1f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    slider_.frame = CGRectMake(page*80 + 10, 35, 60, 2);
+    [UIView commitAnimations];
     [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
 
 }
@@ -921,51 +917,67 @@ enum
 
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
-//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    CGFloat pageWidth = self.view.frame.size.width;
-    CGPoint offset = scrollView.contentOffset;
-    if (offset.x * offset.x> offset.y * offset.y) {
-        int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-        
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.2f];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        slider_.frame = CGRectMake(page*80 + 10, 35, 60, 2);
-        [UIView commitAnimations];
-        
-        movieBtn_.enabled = YES;
-        tvBtn_.enabled = YES;
-        showBtn_.enabled = YES;
-        comicBtn_.enabled = YES;
-        switch (page) {
-            case 0:{
-                movieBtn_.enabled = NO;
-                pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
-                break;
+    switch (scrollView.tag){
+        case 1127:{
+            CGFloat pageWidth = self.view.frame.size.width;
+            CGPoint offset = scrollView.contentOffset;
+            
+            int page = ceil(offset.x / pageWidth);
+            if (page > 3) {
+                page = 3;
             }
-            case 1:{
-                tvBtn_.enabled = NO;
-                 pageMGIcon_.frame = CGRectMake(88, 3, 15, 24);
-                break;
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.1f];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            slider_.frame = CGRectMake(page*80 + 10, 35, 60, 2);
+            [UIView commitAnimations];
+            
+            switch (page) {
+                case 0:{
+                    movieBtn_.selected = YES;
+                    tvBtn_.selected = NO;
+                    showBtn_.selected = NO;
+                    comicBtn_.selected = NO;
+                    
+                    pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
+                    break;
+                }
+                case 1:{
+                    tvBtn_.selected = YES;
+                    movieBtn_.selected = NO;
+                    showBtn_.selected = NO;
+                    comicBtn_.selected = NO;
+                    
+                    pageMGIcon_.frame = CGRectMake(88, 3, 15, 24);
+                    break;
+                }
+                case 2:{
+                    comicBtn_.selected = YES;
+                    movieBtn_.selected = NO;
+                    tvBtn_.selected = NO;
+                    showBtn_.selected = NO;
+                    
+                    pageMGIcon_.frame = CGRectMake(168, 3, 15, 24);
+                    break;
+                }
+                case 3:
+                {
+                    showBtn_.selected = YES;
+                    movieBtn_.selected = NO;
+                    tvBtn_.selected = NO;
+                    comicBtn_.selected = NO;
+                    
+                    pageMGIcon_.frame = CGRectMake(248, 3, 15, 24);
+                    break;
+                }
+                default:
+                    break;
+                    
             }
-            case 2:{
-                comicBtn_.enabled = NO;
-                 pageMGIcon_.frame = CGRectMake(168, 3, 15, 24);
-                break;
-            }
-            case 3:
-            {
-                showBtn_.enabled = NO;
-                pageMGIcon_.frame = CGRectMake(248, 3, 15, 24);
-                break;
-            }
-            default:
-                break;
         }
     }
-    
 }
 
 
