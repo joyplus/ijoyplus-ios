@@ -397,6 +397,7 @@ enum
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
     self.scrollView.bounces = NO;
+    self.scrollView.tag = 1127;
 
     UIImageView *scrBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tab2_10_bg.png"]];
     scrBg.userInteractionEnabled = YES;
@@ -625,14 +626,13 @@ enum
     
     movieBtn_ == btn ? (movieBtn_.selected = YES) : (movieBtn_.selected = NO);
     tvBtn_ == btn ? (tvBtn_.selected = YES) : (tvBtn_.selected = NO);
-    showBtn_ == btn ? (movieBtn_.selected = YES) : (showBtn_.selected = NO);
+    showBtn_ == btn ? (showBtn_.selected = YES) : (showBtn_.selected = NO);
     comicBtn_ == btn ? (comicBtn_.selected = YES) : (comicBtn_.selected = NO);
-        
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.3f];
-//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-//    [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
-//    [UIView commitAnimations];
+    [UIView beginAnimations:nil context:NULL];
+    [UIView setAnimationDuration:0.1f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    slider_.frame = CGRectMake(page*80 + 10, 35, 60, 2);
+    [UIView commitAnimations];
     [self.scrollView setContentOffset:CGPointMake(320.0f * page, 0.0f) animated:YES];
 
 }
@@ -920,50 +920,55 @@ enum
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
 //- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    CGFloat pageWidth = self.view.frame.size.width;
-    CGPoint offset = scrollView.contentOffset;
-    if (offset.x * offset.x> offset.y * offset.y) {
-        int page = floor((scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-        
-        [UIView beginAnimations:nil context:NULL];
-        [UIView setAnimationDuration:0.2f];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-        slider_.frame = CGRectMake(page*80 + 10, 35, 60, 2);
-        [UIView commitAnimations];
-        
-        movieBtn_.selected = NO;
-        tvBtn_.selected = NO;
-        showBtn_.selected = NO;
-        comicBtn_.selected = NO;
-        switch (page) {
-            case 0:{
-                movieBtn_.selected = YES;
-                pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
-                break;
+    switch (scrollView.tag){
+        case 1127:{
+            CGFloat pageWidth = self.view.frame.size.width;
+            CGPoint offset = scrollView.contentOffset;
+            
+            int page = ceil(offset.x / pageWidth);
+            if (page > 3) {
+                page = 3;
             }
-            case 1:{
-                tvBtn_.selected = YES;
-                 pageMGIcon_.frame = CGRectMake(88, 3, 15, 24);
-                break;
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.1f];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            slider_.frame = CGRectMake(page*80 + 10, 35, 60, 2);
+            [UIView commitAnimations];
+            
+            movieBtn_.selected = NO;
+            tvBtn_.selected = NO;
+            showBtn_.selected = NO;
+            comicBtn_.selected = NO;
+            switch (page) {
+                case 0:{
+                    movieBtn_.selected = YES;
+                    pageMGIcon_.frame = CGRectMake(8, 3, 15, 24);
+                    break;
+                }
+                case 1:{
+                    tvBtn_.selected = YES;
+                    pageMGIcon_.frame = CGRectMake(88, 3, 15, 24);
+                    break;
+                }
+                case 2:{
+                    comicBtn_.selected = YES;
+                    pageMGIcon_.frame = CGRectMake(168, 3, 15, 24);
+                    break;
+                }
+                case 3:
+                {
+                    showBtn_.selected = YES;
+                    pageMGIcon_.frame = CGRectMake(248, 3, 15, 24);
+                    break;
+                }
+                default:
+                    break;
+                    
             }
-            case 2:{
-                comicBtn_.selected = YES;
-                 pageMGIcon_.frame = CGRectMake(168, 3, 15, 24);
-                break;
-            }
-            case 3:
-            {
-                showBtn_.selected = YES;
-                pageMGIcon_.frame = CGRectMake(248, 3, 15, 24);
-                break;
-            }
-            default:
-                break;
         }
     }
-    
 }
 
 
@@ -986,6 +991,7 @@ enum
             [refreshHeaderViewForComicList_ egoRefreshScrollViewDidEndDragging:aScrollView];
             break;
         }
+        
         default:
             break;
     }
