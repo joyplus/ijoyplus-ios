@@ -96,7 +96,7 @@ static BundingTVManager * manager = nil;
                                            NSNumber * bind = nil;
                                             if ([[result objectForKey:@"status"] isEqualToString:@"1"])
                                             {
-                                                NSString * channel = [NSString stringWithFormat:@"/screencast/%@",sendChannel];
+                                                NSString * channel = [NSString stringWithFormat:@"/screencast/CHANNEL_TV_%@",sendChannel];
                                                 FayeClient * fClient = [[FayeClient alloc] initWithURLString:SERVER_URL channel:channel];
                                                 self.sendClient = fClient;
                                                 [self.sendClient connectToServer];
