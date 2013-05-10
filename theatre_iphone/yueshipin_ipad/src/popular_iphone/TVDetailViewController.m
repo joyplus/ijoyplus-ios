@@ -761,6 +761,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                                                                                   title:[data objectForKey:@"title"]
                                                                                 content:[data objectForKey:@"comments"]];
             reviewCell.tag = REVIEW_VIEW_TAG + i;
+            [reviewCell setDelegate:self];
             [cell addSubview:reviewCell];
             if (i == arrReviewData_.count - 1 && 3 == arrReviewData_.count)
             {
