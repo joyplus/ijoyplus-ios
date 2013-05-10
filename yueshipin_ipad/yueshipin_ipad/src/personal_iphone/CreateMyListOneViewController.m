@@ -146,7 +146,8 @@
         [UIUtility showNetWorkError:self.view];
         return;
     }
-     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: titleTextField_.text, @"name", detailTextView_.text, @"content",[NSNumber numberWithInt:type_], @"type", nil];
+    NSString *titleContent = [titleTextField_.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:titleContent, @"name", detailTextView_.text, @"content",[NSNumber numberWithInt:type_], @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathNew parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         topicId_ = [result objectForKey:@"topic_id"];
         NSString *responseCode = [result objectForKey:@"res_code"];
