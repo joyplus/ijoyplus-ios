@@ -16,6 +16,8 @@
 #import "TVDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
 #import "CommonMotheds.h"
+#import "AFServiceAPIClient.h"
+#import "ServiceConstants.h"
 @interface CreateMyListTwoViewController ()
 
 @end
@@ -164,9 +166,25 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (editingStyle == UITableViewCellEditingStyleDelete){
-        [listArr_ removeObjectAtIndex:indexPath.row];
-         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        if (indexPath.row < listArr_.count) {
+            NSString *itemId = [NSString stringWithFormat:@"%@", [[listArr_ objectAtIndex:indexPath.row] objectForKey:@"id"]];
+            [self deleteVideo:itemId];
+            [listArr_ removeObjectAtIndex:indexPath.row];
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }
     }
+}
+
+- (void)deleteVideo:(NSString *)itemId
+{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"item_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathRemoveItem parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if ([responseCode isEqualToString:kSuccessResCode]) {
+
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
 
 -(void)Done:(id)sender{

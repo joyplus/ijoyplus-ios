@@ -233,8 +233,8 @@
             case 0:
             {
                 NSDictionary *infoDic = [listArr_ objectAtIndex:indexPath.row];
-                NSString *topicId = [infoDic objectForKey:@"prod_id"];
-                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                NSString *topicId = [infoDic objectForKey:@"id"];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"history_id", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [listArr_ removeObjectAtIndex:indexPath.row];
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -315,7 +315,7 @@
         int subNum = [[item objectForKey:@"prod_subname"] intValue];
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
     } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
-        content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+        content = [NSString stringWithFormat:@"已观看 《%@》 %@", [item objectForKey:@"prod_subname"],[TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }

@@ -13,4 +13,6 @@
 @interface SettingsViewController : GenericBaseViewController <SinaWeiboDelegate, SinaWeiboRequestDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 
 - (id)initWithFrame:(CGRect)frame;
+- (void)gotoFeedBackView;
+
 @end

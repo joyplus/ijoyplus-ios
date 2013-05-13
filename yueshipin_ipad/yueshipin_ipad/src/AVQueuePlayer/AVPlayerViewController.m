@@ -113,6 +113,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize sourceImage, sourceLabel, resolutionInvalid, isFromSelectBtn;
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 @synthesize m3u8Duration,isChangeQuality;
+@synthesize localPlaylists;
 
 #pragma mark
 #pragma mark View Controller
@@ -966,7 +967,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         
         myHUD = [[MBProgressHUD alloc] initWithView:playCacheView];
         myHUD.frame = CGRectMake(myHUD.frame.origin.x, myHUD.frame.origin.y + 130, myHUD.frame.size.width, myHUD.frame.size.height);
-        [playCacheView addSubview:myHUD];
         myHUD.opacity = 0;
     }
     UILabel *lastLabel = (UILabel *)[playCacheView viewWithTag:3232947504];
@@ -978,36 +978,82 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     tipLabel.text = nil;
     [myHUD show:YES];
     myHUD.labelText = @"正在加载，请稍等";
+    [playCacheView bringSubviewToFront:myHUD];
     myHUD.userInteractionEnabled = NO;
+    if (!myHUD.superview)
+    {
+        [playCacheView addSubview:myHUD];
+    }
 }
 
 
 - (void)nextBtnClicked
 {
-    [self destoryPlayer];
-    isFromSelectBtn = YES;
-    [self resetControlVisibilityTimer];
-    currentNum++;
-    currentPlaybackTimeLabel.text = @"00:00:00";
-    mScrubber.value = 0;
-    if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum)
+    if (isDownloaded)
     {
-        episodeListviewController.currentNum = currentNum;
-        [episodeListviewController.table reloadData];
-        [self disablePlayerButtons];
-        [self disableScrubber];
-        if (subnameArray.count - 1 == self.currentNum) {
-            [self disableNextButton];
+        [self destoryPlayer];
+        currentNum ++;
+        //设置Button'enable
+        [self enableNextButton];
+        //管理playlists数据
+        if (currentNum >= localPlaylists.count)
+        {
+            NSLog(@"current play num:%d,playlists %@ error ,close player",currentNum,localPlaylists);
+            [self closeSelf];
+            return;
         }
+            
+        NSDictionary * dic = [self.localPlaylists objectAtIndex:currentNum];
+        
+        self.videoFormat = [dic objectForKey:@"downloadType"];
+        self.m3u8Duration = [[dic objectForKey:@"duration"] doubleValue];
+        self.videoUrl = [dic objectForKey:@"videoUrl"];
+        self.type = [[dic objectForKey:@"type"] intValue];
+        self.name = [dic objectForKey:@"name"];
+        
+        //[self loadLastPlaytime];
         lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
-        [self preparePlayVideo];
-        [self recordPlayStatics];
+        if ([videoFormat isEqualToString:@"m3u8"])
+        {
+            [[AppDelegate instance] startHttpServer];
+            workingUrl = [NSURL URLWithString: videoUrl];
+        } else {
+            workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
+        }
+        [self setURL:workingUrl];
+        
+        //刷新视图
+        vidoeTitle.text = name;
     }
     else
     {
-        currentNum--;
-        [self closeSelf];
+        
+        [self destoryPlayer];
+        isFromSelectBtn = YES;
+        [self resetControlVisibilityTimer];
+        currentNum++;
+        currentPlaybackTimeLabel.text = @"00:00:00";
+        mScrubber.value = 0;
+        if ((type == 2 || type == 3 || type == 131) && subnameArray.count > self.currentNum)
+        {
+            episodeListviewController.currentNum = currentNum;
+            [episodeListviewController.table reloadData];
+            [self disablePlayerButtons];
+            [self disableScrubber];
+            if (subnameArray.count - 1 == self.currentNum) {
+                [self disableNextButton];
+            }
+            lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
+            [self preparePlayVideo];
+            [self recordPlayStatics];
+        }
+        else
+        {
+            currentNum--;
+            [self closeSelf];
+        }
     }
+    
 }
 
 - (void)prevBtnClicked
@@ -1293,6 +1339,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)resolutionBtnClicked:(UIButton *)btn
 {
     [self resetControlVisibilityTimer];
+    if (!resolutionInvalid){ //如果分辨率已失效，不记录播放时间
+        resolutionLastPlaytime = [mPlayer currentTime];
+    }
     [self destoryPlayer];
     [biaoqingBtn setBackgroundImage:[UIImage imageNamed:@"biaoqing_bt"] forState:UIControlStateNormal];
     [gaoqingBtn setBackgroundImage:[UIImage imageNamed:@"gaoqing_bt"] forState:UIControlStateNormal];
@@ -1318,9 +1367,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
     [resolutionPopTipView dismissAnimated:YES];
     resolutionPopTipView = nil;
-    if (!resolutionInvalid) { //如果分辨率已失效，不记录播放时间
-        resolutionLastPlaytime = [mPlayer currentTime];
-    }
+    
     workingUrl = nil;
     [mPlayer pause];
     mPlayer = nil;
@@ -1560,17 +1607,31 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)enableNextButton
 {
-    if (subnameArray.count > 0 && type != 1){
-        if (currentNum == 0) {
-            [mNextButton setEnabled:YES];
-        } else if(currentNum == subnameArray.count - 1) {
+    if (!isDownloaded)
+    {
+        if (subnameArray.count > 0 && type != 1){
+            if (currentNum == 0) {
+                [mNextButton setEnabled:YES];
+            } else if(currentNum == subnameArray.count - 1) {
+                [mNextButton setEnabled:NO];
+            } else if(currentNum > 0 && currentNum < subnameArray.count){
+                [mNextButton setEnabled:YES];
+            }
+        } else {
             [mNextButton setEnabled:NO];
-        } else if(currentNum > 0 && currentNum < subnameArray.count){
+        }
+    }
+    else
+    {
+        if (localPlaylists.count > 1 && ((currentNum + 1) < localPlaylists.count))
+        {
             [mNextButton setEnabled:YES];
         }
-    } else {
-        [mNextButton setEnabled:NO];
-    }    
+        else
+        {
+            [mNextButton setEnabled:NO];
+        }
+    }
 }
 
 - (void)disableNextButton

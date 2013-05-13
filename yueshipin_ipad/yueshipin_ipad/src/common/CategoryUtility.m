@@ -762,7 +762,7 @@
     item.subtype = REGION_TYPE;
     item.label = @"东南亚";
     item.key = @"asia";
-    item.value = @"东南亚地区";
+    item.value = @"东南亚";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -770,7 +770,7 @@
     item.subtype = REGION_TYPE;
     item.label = @"欧洲";
     item.key = @"europe";
-    item.value = @"欧洲地区";
+    item.value = @"欧洲";
     [categoryArray addObject:item];
     
     item = [[CategoryItem alloc]init];
@@ -778,7 +778,7 @@
     item.subtype = REGION_TYPE;
     item.label = @"其他";
     item.key = @"other";
-    item.value = @"其他地区";
+    item.value = @"其他";
     [categoryArray addObject:item];
     
     return categoryArray;
@@ -1104,7 +1104,7 @@
     item.subtype = REGION_TYPE;
     item.label = @"其他";
     item.key = @"other";
-    item.value = @"其他地区";
+    item.value = @"其他";
     [categoryArray addObject:item];
     
     return categoryArray;

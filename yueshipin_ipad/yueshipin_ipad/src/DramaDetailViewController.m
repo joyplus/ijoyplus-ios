@@ -284,9 +284,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-        [self.downloadBtn setHidden:YES];
-    }
+//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//        [self.downloadBtn setHidden:YES];
+//    }
     if(video == nil){
         [self retrieveData];
     }
@@ -980,10 +980,11 @@
     [self getDownloadUrls:num-1];
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     subitem.urlArray = tempArray;
-    
+    subitem.downloadURLSource = self.downloadSource;
     if(subitem.urlArray.count > 0){
         if (self.mp4DownloadUrls.count > 0) {
             subitem.downloadType = @"mp4";

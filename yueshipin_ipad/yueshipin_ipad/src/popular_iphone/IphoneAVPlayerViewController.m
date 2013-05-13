@@ -20,7 +20,8 @@
 #import <Parse/Parse.h>
 #import "CustomNavigationViewControllerPortrait.h"
 #import "CommonMotheds.h"
-
+#import "SubdownloadItem.h"
+#import "DatabaseManager.h"
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -764,12 +765,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 
 -(void)playerItemDidReachEnd:(id)sender{
-    if (islocalFile_) {
+    
+    if (videoType_ == 1)
+    {
         [self playEnd];
         return;
     }
-    if (videoType_ == 1) {
-        [self playEnd];
+    if (islocalFile_) {
+        [self playNextLocalFile];
         return;
     }
     [self playNext];
@@ -777,7 +780,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 -(void)playNext{
     
-    if (playNum == [episodesArr_ count]-1) {
+    if (playNum == [episodesArr_ count]-1)
+    {
+        [self playEnd];
         return;
     }
     
@@ -1163,6 +1168,91 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
    
 }
+NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
+    NSString *str1 = [[obj1 componentsSeparatedByString:@"_"]objectAtIndex:1];
+    NSString *str2 = [[obj2 componentsSeparatedByString:@"_"]objectAtIndex:1];
+    
+    if ([str1 integerValue] > [str2 integerValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([str1 integerValue] < [str2 integerValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
+-(void)playNextLocalFile{
+    NSString *queryString = [NSString stringWithFormat:@"where itemId = '%@' AND downloadStatus = 'finish'",prodId_];
+    NSArray *items = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:queryString];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES comparator:cmptr2];
+    NSMutableArray *sortedItems = [NSMutableArray arrayWithArray: [items sortedArrayUsingDescriptors:[NSArray arrayWithObjects:sortDescriptor, nil]]];
+    for (SubdownloadItem *sub in sortedItems) {
+        NSString *sub_name = [[sub.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
+        int num = [sub_name intValue];
+        if (num > playNum) {
+            
+            NSString *fileName = [sub.subitemId stringByAppendingString:@".mp4"];
+            NSError *error;
+            // 创建文件管理器
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            //指向文件目录
+            NSString *documentsDirectory= [NSHomeDirectory()
+                                           stringByAppendingPathComponent:@"Documents"];
+            NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+            
+            NSString *playPath = nil;
+            if (![sub.downloadType isEqualToString:@"m3u8"]) {
+                for (NSString *str in fileList) {
+                    if ([str isEqualToString:fileName]) {
+                        playPath = [documentsDirectory stringByAppendingPathComponent:str];
+                        break;
+                    }
+                }
+            }
+            else{
+                [[AppDelegate instance] startHttpServer];
+                playPath =[NSString stringWithFormat:@"%@/%@/%@/%d.m3u8",LOCAL_HTTP_SERVER_URL,sub.itemId,sub.subitemId ,num];
+                isM3u8_ = YES;
+                self.playDuration = sub.duration;
+            }
+            if (playPath) {
+                local_file_path_ = playPath;
+                islocalFile_ = YES;
+                if (sub.type == 2) {
+                    NSString *name = [[sub.name componentsSeparatedByString:@"_"] objectAtIndex:0];
+                    nameStr_ = [NSString stringWithFormat:@"%@ 第%d集",name,num];
+                    playNum = num;
+                }
+                else if (sub.type == 3){
+                    nameStr_ =  [[sub.name componentsSeparatedByString:@"_"] lastObject];
+                }
+                prodId_ = sub.itemId;
+                videoType_ = sub.type;
+                lastPlayTime_ = kCMTimeZero;
+               
+                if (videoType_ == 1 || videoType_ == 3) {
+                    titleLabel_.text = [NSString stringWithFormat:@"%@",nameStr_];
+                }
+                else if (videoType_ == 2){
+                    titleLabel_.text = [NSString stringWithFormat:@"%@ 第%d集", nameStr_, (playNum+1)];
+                }
+                            
+                if (!isM3u8_) {
+                    [self setPath:playPath];
+                }
+                else{
+                    [self setURL:[NSURL URLWithString:playPath]];
+                    
+                }
+                
+            }
+            
+            return;
+        }
+    }
+    [self playEnd];
+}
+
 -(void)showNOThisClearityUrl:(BOOL)bol{
     if (bol) {
         UILabel  *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 250,40)];
@@ -1800,8 +1890,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 return;
             }
 
-            [self showNOThisClearityUrl:NO];
-            [self playNext];
+            if (!islocalFile_) {
+                [self showNOThisClearityUrl:NO];
+                [self playNext];
+            }
+            else{
+                [self playNextLocalFile];
+            }
             
 //            if (isPlayOnTV)
 //            {
@@ -2151,7 +2246,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //        if (videoType_ != 1 && playNum < subnameArray.count) {
 //            subname = [subnameArray objectAtIndex:playNum];
 //        }
-        NSString *subname = [NSString stringWithFormat:@"%d",(playNum + 1)];
+        NSString *subname = [subnameArray objectAtIndex:playNum];
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
@@ -2252,13 +2347,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 #pragma mark -
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
-{
-    [self stopMyTimer];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [self resetMyTimer];
 }
 

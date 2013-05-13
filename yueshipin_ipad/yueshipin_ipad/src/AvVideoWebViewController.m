@@ -148,7 +148,7 @@
     [super viewDidAppear:animated];
     if (!appeared) {
         appeared = YES;
-        if (hasVideoUrls > 0)
+        if (hasVideoUrls > 0 && [[AppDelegate instance].showVideoSwitch isEqualToString:@"0"])
         {
             UIView *blackView = [[UIView alloc]initWithFrame:self.view.frame];
             blackView.backgroundColor = [UIColor blackColor];

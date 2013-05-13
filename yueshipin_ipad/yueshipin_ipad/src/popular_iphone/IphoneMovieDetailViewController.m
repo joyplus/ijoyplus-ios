@@ -340,7 +340,7 @@
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imageUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
-                wechatImg_ = imageView.image;
+                wechatImgStr_ = imageUrl;
                 [cell addSubview:imageView];
                 
                 NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
@@ -612,18 +612,15 @@
                 }
                 
             }
-            [bgBtn setBackgroundImage:[UIImage imageNamed:@"selectBg.png"] forState:UIControlStateHighlighted];
+            [bgBtn setBackgroundImage:[UIImage imageNamed:@"more_bg_2.png"] forState:UIControlStateHighlighted];
             [bgBtn addTarget:self action:@selector(didSelect:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:bgBtn];
-
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
-            label.font = [UIFont systemFontOfSize:15];
-            label.backgroundColor = [UIColor clearColor];
-            label.textColor = [UIColor grayColor];
-            label.text = [dic objectForKey:@"t_name"];
-            [cell addSubview:label];
+            bgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
+            [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+            [bgBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
             
             UIImageView *push = [[UIImageView alloc] initWithFrame:CGRectMake(288, 8, 6, 10)];
             push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];
