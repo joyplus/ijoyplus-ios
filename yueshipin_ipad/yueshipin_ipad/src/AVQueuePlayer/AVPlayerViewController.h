@@ -57,6 +57,8 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @protocol AVPlayerViewControllerDelegate <NSObject>
 
 - (void)playOneEpisode:(int)num;
+- (void)scrollViewBeginDragging:(UIScrollView *)scrollView;
+- (void)scrollViewEndDecelerating:(UIScrollView *)scrollView;
 
 @end
 
@@ -71,6 +73,7 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
     BOOL isClosed;
 	id mTimeObserver;
     NSURL* mURL;
+    AVMutableAudioMix *audioMix_;
 }
 @property (nonatomic) int type;
 @property (nonatomic) double m3u8Duration;
@@ -97,5 +100,6 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, strong) UISlider *mScrubber;
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic, weak)id <AvVideoWebViewControllerDelegate>videoWebViewControllerDelegate;
+@property (nonatomic, strong) NSArray * localPlaylists;
 
 @end

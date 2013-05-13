@@ -93,6 +93,7 @@
         }
          [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         [tempHUD hide:YES];
+        [CommonMotheds showInternetError:error inView:self.view];
     }];
 
 
@@ -166,16 +167,8 @@
     {
         [self loadData];
     }
-    
     return;
-    int count = [DownLoadManager downloadTaskCount];
-    if (count == 0) {
-        customNavigationButtonView_.badgeView.badgeText = nil;
-    }
-    else{
-        customNavigationButtonView_.badgeView.badgeText = [NSString stringWithFormat:@"%d",count];
-    }
-    [customNavigationButtonView_.badgeView setNeedsLayout];
+    
 }
 
 -(void)search:(id)sender{

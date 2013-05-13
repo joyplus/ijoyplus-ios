@@ -229,9 +229,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-        [self.downloadBtn setHidden:YES];
-    }
+//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//        [self.downloadBtn setHidden:YES];
+//    }
     if(video == nil){
         [self retrieveData];
     }
@@ -359,6 +359,7 @@
     if (self.canPlayVideo) {
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
+        self.addListBtn.enabled = YES;
         if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
             // do nothing
             //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
@@ -371,7 +372,7 @@
         
         self.playBtn.hidden = YES;
         self.expectbtn.hidden = NO;
-        
+        self.addListBtn.enabled = NO;
 //        [self.playBtn setEnabled:NO];
 //        [self.downloadBtn setEnabled:NO];
 //        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
@@ -662,7 +663,9 @@
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    
     item.urlArray = tempArray;
+    item.downloadURLSource = self.downloadSource;
     [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];

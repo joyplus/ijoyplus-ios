@@ -7,7 +7,8 @@
 //
 
 #import "FeedBackView.h"
-
+#import "FeedbackViewController.h"
+#import "CustomNavigationViewControllerPortrait.h"
 #define FEEDBACK_REASON_OTHER   (6)
 #define SPACE                   (@" ")
 #define FEEDBACK_VEWI_TAG       (11123)
@@ -72,12 +73,12 @@
 
 - (void)customView
 {    
-    UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(28, 85, 264, 430)];
+    UIView * feedback = [[UIView alloc] initWithFrame:CGRectMake(28, 85, 264, 390)];
     feedback.backgroundColor = [UIColor clearColor];
     [self addSubview:feedback];
     feedback.tag = FEEDBACK_VEWI_TAG;
     
-    UIImageView * feedbackImage = [[UIImageView alloc] initWithFrame:CGRectMake(-2, -2, 264, 430)];//kFullWindowHeight * 0.685
+    UIImageView * feedbackImage = [[UIImageView alloc] initWithFrame:CGRectMake(-2, -2, 264, 390)];//kFullWindowHeight * 0.685
     feedbackImage.image = [[UIImage imageNamed:@"popview_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)];
     feedbackImage.backgroundColor = [UIColor clearColor];
     feedbackImage.userInteractionEnabled = YES;
@@ -104,20 +105,18 @@
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.separatorColor = [UIColor clearColor];
     
-    UIImageView * bgImage = [[UIImageView alloc] initWithFrame:CGRectMake(50, 312, 200, 26)];
-    bgImage.image = [[UIImage imageNamed:@"otherTextBG.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 1, 2, 1)];
-    [feedback addSubview:bgImage];
+//    UIImageView * bgImage = [[UIImageView alloc] initWithFrame:CGRectMake(50, 312, 200, 26)];
+//    bgImage.image = [[UIImage imageNamed:@"otherTextBG.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 1, 2, 1)];
+//    [feedback addSubview:bgImage];
     
-    _textViewOther = [[UITextField alloc] initWithFrame:bgImage.frame];
-    _textViewOther.backgroundColor = [UIColor clearColor];
-    [feedback addSubview:_textViewOther];
-    _textViewOther.delegate = self;
-    _textViewOther.returnKeyType = UIReturnKeyDone;
+//    _textViewOther = [[UITextField alloc] initWithFrame:bgImage.frame];
+//    _textViewOther.backgroundColor = [UIColor clearColor];
+//    [feedback addSubview:_textViewOther];
+//    _textViewOther.delegate = self;
+//    _textViewOther.returnKeyType = UIReturnKeyDone;
     
     UIButton * commitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    commitBtn.frame = CGRectMake(110, \
-                                 _textViewOther.frame.size.height + _textViewOther.frame.origin.y,\
-                                 60, 40);
+    commitBtn.frame = CGRectMake(102,290 ,60, 40);
     [commitBtn addTarget:self
                  action:@selector(commitButtonClick:)
        forControlEvents:UIControlEventTouchUpInside];
@@ -127,6 +126,13 @@
     [commitBtn setImage:[UIImage imageNamed:@"ti_jiao.png"]
                forState:UIControlStateNormal];
     [feedback addSubview:commitBtn];
+    
+    UIButton *onlineFeedBack = [UIButton buttonWithType:UIButtonTypeCustom];
+    onlineFeedBack.frame = CGRectMake(27, 340, 210, 30);
+    [onlineFeedBack setBackgroundImage:[UIImage imageNamed:@"zaixianfankui.png"] forState:UIControlStateNormal];
+    [onlineFeedBack setBackgroundImage:[UIImage imageNamed:@"zaixianfankui_s.png"] forState:UIControlStateHighlighted];
+    [onlineFeedBack addTarget:self action:@selector(onlineFeedBack) forControlEvents:UIControlEventTouchUpInside];
+    [feedback addSubview:onlineFeedBack];
     
     selectArr_ = [NSMutableArray arrayWithCapacity:5];
 }
@@ -169,6 +175,17 @@
                                           otherButtonTitles:nil, nil];
     [alert show];
     
+}
+
+-(void)onlineFeedBack{
+    if (delegate) {
+    UIViewController *vcl = (UIViewController *)self.delegate;
+    FeedbackViewController *feedbackViewController = [[FeedbackViewController alloc] init];
+        [vcl.navigationController pushViewController:feedbackViewController animated:YES];
+        [self removeFromSuperview];
+    }
+   
+
 }
 
 - (void)selectBtnClicked:(id)sender

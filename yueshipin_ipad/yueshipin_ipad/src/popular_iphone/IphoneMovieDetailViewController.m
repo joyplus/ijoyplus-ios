@@ -202,7 +202,7 @@
      {
         [[CacheUtility sharedCache] putInCache:reviews_key result:result];
          arrReviewData_ = [result objectForKey:@"reviews"];
-         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+         [self.tableView reloadData];
          
      }
                                        failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
@@ -275,6 +275,9 @@
     if ([commentArray_ count] > 0) {
         count++;
     }
+    if ([arrReviewData_ count]>0) {
+        count++;
+    }
     return count;
 }
 
@@ -337,7 +340,7 @@
                     imageUrl = [self.infoDic objectForKey:@"poster"];
                 }
                 [imageView setImageWithURL:[NSURL URLWithString:imageUrl] /*placeholderImage:[UIImage imageNamed:@"video_placeholder"]*/];
-                wechatImg_ = imageView.image;
+                wechatImgStr_ = imageUrl;
                 [cell addSubview:imageView];
                 
                 NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
@@ -491,6 +494,8 @@
                 UIButton *downLoad = [UIButton buttonWithType:UIButtonTypeCustom];
                 downLoad.frame = CGRectMake(205, 110, 90, 45);
                 downLoad.tag = 10004;
+                
+                BOOL isEnableReportBtn = YES;
                 if ([self getDownloadUrl] == nil) {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
@@ -498,6 +503,7 @@
                     downLoad.enabled = NO;
                     play.hidden = YES;
                     expectbtn.hidden = NO;
+                    isEnableReportBtn = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
@@ -538,6 +544,12 @@
                 [report addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 report.titleLabel.font = [UIFont systemFontOfSize:14];
                 [cell addSubview:report];
+                if (isEnableReportBtn) {
+                    report.enabled = YES;
+                }
+                else{
+                    report.enabled = NO;
+                }
                 
                 UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];
                 share.frame = CGRectMake(240, 165, 80, 35);
@@ -600,18 +612,15 @@
                 }
                 
             }
-            [bgBtn setBackgroundImage:[UIImage imageNamed:@"selectBg.png"] forState:UIControlStateHighlighted];
+            [bgBtn setBackgroundImage:[UIImage imageNamed:@"more_bg_2.png"] forState:UIControlStateHighlighted];
             [bgBtn addTarget:self action:@selector(didSelect:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:bgBtn];
-
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45, 2, 200, 20)];
-            label.font = [UIFont systemFontOfSize:15];
-            label.backgroundColor = [UIColor clearColor];
-            label.textColor = [UIColor grayColor];
-            label.text = [dic objectForKey:@"t_name"];
-            [cell addSubview:label];
+            bgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
+            [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+            [bgBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
             
             UIImageView *push = [[UIImageView alloc] initWithFrame:CGRectMake(288, 8, 6, 10)];
             push.image = [UIImage imageNamed:@"tab2_detailed_common_jian_tou.png"];

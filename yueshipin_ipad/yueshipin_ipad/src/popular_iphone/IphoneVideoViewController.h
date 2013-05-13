@@ -24,7 +24,7 @@
     NSMutableArray *httpUrlArray_;
     BOOL isNotification_;
     UISegmentedControl *segmentedControl_;
-    UIImage *wechatImg_;
+    NSString *wechatImgStr_;
 
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
@@ -37,7 +37,7 @@
 @property (nonatomic, strong) NSMutableArray *httpUrlArray;
 @property (nonatomic, assign) BOOL isNotification;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
-@property (nonatomic, strong) UIImage *wechatImg;
+@property (nonatomic, strong) NSString *wechatImgStr;
 
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;

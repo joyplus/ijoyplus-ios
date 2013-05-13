@@ -65,13 +65,29 @@
             NSString *contentLength = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Length"]];
             NSString *contentType = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
             int status_Code = HTTPResponse.statusCode;
-            if (status_Code >= 200 && status_Code <= 299 && ![contentType hasPrefix:@"text/html"] && contentLength.intValue > 100) {
-                workingUrl = aconnection.originalRequest.URL.absoluteString;
-                NSLog(@"working url = %@", workingUrl);
-                item.url = workingUrl;
-                [DatabaseManager update:item];
-                [[AppDelegate instance].padDownloadManager startDownloadingThreads];
-            } else {
+            
+            if (status_Code >= 200
+                && status_Code <= 299)
+            {
+                NSString * source = self.item.downloadURLSource;
+                NSString * fileType = self.item.downloadType;
+                if (([source isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"]))
+                    || (![contentType hasPrefix:@"text/html"]&& contentLength.intValue > 100))
+                {
+                    workingUrl = aconnection.originalRequest.URL.absoluteString;
+                    NSLog(@"working url = %@", workingUrl);
+                    item.url = workingUrl;
+                    [DatabaseManager update:item];
+                    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+                }
+                else
+                {
+                    urlIndex++;
+                    [self setupWorkingUrl];
+                }
+            }
+            else
+            {
                 urlIndex++;
                 [self setupWorkingUrl];
             }
