@@ -90,7 +90,7 @@
         hideSubcategoryViewGesture.delegate = self;
         [self.view addGestureRecognizer:hideSubcategoryViewGesture];
         
-        sloganImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 36, 261, 42)];
+        sloganImageView = [[UIImageView alloc]initWithFrame:CGRectMake(15, 36, 316, 42)];
         [self initSolganImage];
         [self.view addSubview:sloganImageView];
         

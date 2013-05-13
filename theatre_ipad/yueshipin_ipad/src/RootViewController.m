@@ -46,6 +46,7 @@
 
 #define EPISODE_NUMBER_IN_ROW   5
 #define TOP_VIEW_TAG            (54321)
+#define PINK_COLOR              ([UIColor colorWithRed:1 green:159.0/255.0 blue:204.0/255.0 alpha:1])
 
 @interface UIViewExt : UIView {
 }
@@ -545,13 +546,13 @@
                 [btn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
                 if (subitem.percentage == 100)
                 {
-                    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                    [btn setTitleColor:PINK_COLOR forState:UIControlStateNormal];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 12, 0)];
                     [btn setBackgroundImage:[UIImage imageNamed:@"drama_download_choose"] forState:UIControlStateDisabled];
                 }
                 else
                 {
-                    [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+                    [btn setTitleColor:PINK_COLOR forState:UIControlStateNormal];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
                     [btn setBackgroundImage:[UIImage imageNamed:@"drama_downloading_icon"] forState:UIControlStateDisabled];
                 }
@@ -586,7 +587,7 @@
    BOOL success = [self.videoDetailDelegate downloadDrama:btn.tag];
     if (success) {
         [btn setEnabled:NO];
-        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        [btn setTitleColor:PINK_COLOR forState:UIControlStateNormal];
         [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
         [btn setBackgroundImage:[UIImage imageNamed:@"drama_downloading_icon"] forState:UIControlStateDisabled];
     }
@@ -707,7 +708,7 @@
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
                 nameBtn.titleLabel.lineBreakMode = NSLineBreakByWordWrapping;
                 nameBtn.titleLabel.numberOfLines = 2;
-                [nameBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateDisabled];
+                [nameBtn setTitleColor:PINK_COLOR forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -757,7 +758,7 @@
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show"] forState:UIControlStateNormal];
                 [nameBtn setBackgroundImage:[UIImage imageNamed:@"tab_show_pressed"] forState:UIControlStateHighlighted];
                 nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
-                [nameBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateDisabled];
+                [nameBtn setTitleColor:PINK_COLOR forState:UIControlStateDisabled];
                 [nameBtn setTitleColor:[UIColor colorWithRed:138.0/255.0 green:138.0/255.0 blue:138.0/255.0 alpha:1] forState:UIControlStateNormal];
                 [nameBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
                 [nameBtn addTarget:self action:@selector(showBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -815,7 +816,7 @@
     btn.enabled = NO;
     BOOL success = [self.videoDetailDelegate downloadShow:btn.tag - 1];
     if(success){
-        //[btn setTitleColor:[UIColor orangeColor] forState:UIControlStateNormal];
+        //[btn setTitleColor:PINK_COLOR forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"show_downlioading_icon"] forState:UIControlStateDisabled];
     } else {
         [UIUtility showDownloadFailure:self.view];

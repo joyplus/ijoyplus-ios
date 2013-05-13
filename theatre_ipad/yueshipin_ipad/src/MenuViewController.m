@@ -252,6 +252,7 @@
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellEditingStyleNone;
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(3, 0, 74, 62)];
         imageView.tag = 1001;

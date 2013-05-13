@@ -82,7 +82,7 @@ static int NUMBER_OF_APPS_PERPAGE = 24;
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
 
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 40, 260, 42)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 40, 316, 42)];
         topImage.image = [UIImage imageNamed:@"title_recommond"];
         [self.view addSubview:topImage];
         self.view.autoresizesSubviews = YES;

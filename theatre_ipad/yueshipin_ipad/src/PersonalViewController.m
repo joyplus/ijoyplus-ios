@@ -103,7 +103,7 @@
         [backgroundView setBackgroundColor:[UIColor clearColor]];
         [self.view addSubview:backgroundView];
 
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 40, 260, 42)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 40, 316, 42)];
         topImage.image = [UIImage imageNamed:@"my_title"];
         [self.view addSubview:topImage];
         

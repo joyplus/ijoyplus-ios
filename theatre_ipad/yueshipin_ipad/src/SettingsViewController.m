@@ -80,7 +80,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [self.view setBackgroundColor:[UIColor clearColor]];
         
         int leftWidth = 28;
-        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 260, 42)];
+        topImage = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 40, 316, 42)];
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         

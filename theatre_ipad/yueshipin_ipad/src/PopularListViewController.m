@@ -83,7 +83,7 @@
         [self.view setBackgroundColor:[UIColor clearColor]];
         
         sloganImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"slogan"]];
-        sloganImageView.frame = CGRectMake(15, 36, 261, 42);
+        sloganImageView.frame = CGRectMake(15, 36, 316, 42);
         [self.view addSubview:sloganImageView];
         
         table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT) style:UITableViewStylePlain];
