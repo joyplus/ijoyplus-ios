@@ -41,6 +41,7 @@
 @interface MenuViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 - (id)initWithFrame:(CGRect)frame;
+- (void)tableViewSelectIndexPath:(NSIndexPath *)index;
 
 @property(nonatomic, strong)UITableView* tableView;
 

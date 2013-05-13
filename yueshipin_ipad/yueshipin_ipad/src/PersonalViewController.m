@@ -695,8 +695,8 @@
 
 -(void)removeRow:(int)index{
     NSDictionary *infoDic = [sortedwatchRecordArray objectAtIndex:index];
-    NSString *topicId = [infoDic objectForKey:@"prod_id"];
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+    NSString *topicId = [infoDic objectForKey:@"id"];
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"history_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
 
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

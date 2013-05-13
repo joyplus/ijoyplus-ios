@@ -32,6 +32,7 @@
 #import "MobClick.h"
 #import "CustomNavigationViewControllerPortrait.h"
 #import "UIUtility.h"
+#import "UIImage+ResizeAdditions.h"
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -51,7 +52,7 @@
 @synthesize httpUrlArray = httpUrlArray_;
 @synthesize isNotification = isNotification_;
 @synthesize segmentedControl = segmentedControl_;
-@synthesize wechatImg = wechatImg_;
+@synthesize wechatImgStr = wechatImgStr_;
 @synthesize willPlayIndex;
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -267,7 +268,9 @@
         else if (sence == 1){
             message.title = [NSString stringWithFormat:@"我正在看《%@》，不错哦，推荐给你~",name];;
         }
-        [message setThumbImage:wechatImg_];
+        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:wechatImgStr_]]];
+        UIImage *newImage = [image resizedImage:CGSizeMake(image.size.width*0.5, image.size.height*0.5) interpolationQuality:kCGInterpolationLow];
+        [message setThumbImage:newImage];
     
         WXWebpageObject *ext = [WXWebpageObject object];
         ext.webpageUrl = [NSString stringWithFormat:@"http://weixin.joyplus.tv/info.php?prod_id=%@",prodId_];
