@@ -41,8 +41,8 @@
 #if ENVIRONMENT
     #define kDefaultAppKey @"ijoyplus_ios_001"
     #define kDefaultCheckBindAppKey @"ijoyplus_android_0001bj"
-    #define PARSE_APP_ID @"UBgv7IjGR8i6AN0nS4diS48oQTk6YErFi3LrjK4P"
-    #define PARSE_CLIENT_KEY @"Y2lKxqco7mN3qBmZ05S8jxSP8nhN92hSN4OHDZR8"
+    #define PARSE_APP_ID @"7HBtATmC6bXLoghbMcRkyPanB83XJwwqSmqsoGX8"
+    #define PARSE_CLIENT_KEY @"eLUjCZRbuh1i7BGRrVeRZxSrUVYhP9ytZe0TMd1T"
     #define kABaseURLString @"http://api.joyplus.tv/"
     #define CHECKBINDURLSTRING  @"http://comet.joyplus.tv:8080/"
     #define FAYE_SERVER_URL @"ws://comet.joyplus.tv:8080/bindtv"
@@ -50,8 +50,8 @@
 #else
     #define kDefaultAppKey @"ijoyplus_ios_001bj"
     #define kDefaultCheckBindAppKey @"ijoyplus_android_0001bj"
-    #define PARSE_APP_ID @"5FNbLx7dnRAx3knxV4rOdaLMRJMByqfKjWQRQakT"
-    #define PARSE_CLIENT_KEY @"RZHrZVn6MK8VGZxfpeshrC2tpxpzzMOZjU0rSS6X"
+    #define PARSE_APP_ID @"ogHl2PzmqLRcT5g1gKPSktVsZZertTEMeMs2Majg"
+    #define PARSE_CLIENT_KEY @"i3AYeFb8URtzW7gnL5twCBIrJRgwpopVBX8kPyqK"
     #define kABaseURLString @"http://apitest.yue001.com/"
     #define CHECKBINDURLSTRING  @"http://comettest.joyplus.tv:8000/"
     #define FAYE_SERVER_URL @"ws://comettest.joyplus.tv:8000/bindtv"
