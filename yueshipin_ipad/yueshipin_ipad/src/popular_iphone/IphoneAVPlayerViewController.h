@@ -91,6 +91,8 @@
     
     BOOL    isPlayOnTV;
     BOOL    isTVReady;
+    
+    AVMutableAudioMix *audioMix_;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;

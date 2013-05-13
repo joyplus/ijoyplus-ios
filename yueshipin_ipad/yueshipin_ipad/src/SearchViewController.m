@@ -11,18 +11,23 @@
 #import "AddSearchListViewController.h"
 #import "SearchListViewController.h"
 #import "SearchHistoryListViewController.h"
+#import "ContainerUtility.h"
 
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
 #define MAX_BUTTON_WIDTH 355
 #define BUTTON_HEIGHT 44
 #define BUTTON_TITLE_GAP 13
+#define KEY_HOT_SEARCH_HISTORY  (@"TopHotSearchItem")
 
-@interface SearchViewController (){
+@interface SearchViewController ()
+{
     BOOL accessed;
 }
 
 @property (nonatomic, strong)SearchHistoryListViewController *historyViewController;
+
+- (void)addTopHotKeyView:(NSArray *)data;
 
 @end
 
@@ -77,20 +82,27 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if (!accessed) {
-        accessed = YES;
-        [self performSelectorInBackground:@selector(getHotKeys) withObject:nil];
-    } 
+    
+    NSArray * topHotKey = (NSArray *)[[ContainerUtility sharedInstance] attributeForKey:KEY_HOT_SEARCH_HISTORY];
+    
+    if (nil != topHotKey)
+    {
+        [self addTopHotKeyView:topHotKey];
+    }
+    [self getHotKeys];
+    
     [MobClick beginLogPageView:SEARCH];
 }
 
 - (void)getHotKeys
 {
-    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)])
+    {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:10], @"num", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathSearchTopKeywords parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             NSString *responseCode = [result objectForKey:@"res_code"];
             if(responseCode == nil){
+                [[ContainerUtility sharedInstance] setAttribute:[result objectForKey:@"topKeywords"] forKey:KEY_HOT_SEARCH_HISTORY];
                 [self parseData:result];
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -104,28 +116,43 @@
     [MobClick endLogPageView:SEARCH];
 }
 
-- (void)parseData:(id)result{
-    NSArray *keyArray = (NSArray *)[result objectForKey:@"topKeywords"];
-//    [[CacheUtility sharedCache] putInCache:@"hotkeys_list" result:result];
-    if(keyArray != nil && keyArray.count > 0){
+- (void)addTopHotKeyView:(NSArray *)data
+{
+    if (0 != data.count)
+    {
         [hotKeyArray removeAllObjects];
-        [hotKeyArray addObjectsFromArray:keyArray];
-        for (int i = 0; i < hotKeyArray.count; i++){
+        [hotKeyArray addObjectsFromArray:data];
+        for (int i = 0; i < hotKeyArray.count; i++)
+        {
             NSDictionary *hotKey = [hotKeyArray objectAtIndex:i];
-            NSString *content = [hotKey valueForKey:@"content"];            
-            UIButton *hotKeyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            hotKeyBtn.frame = CGRectMake(50 + (i%2) * (180 + 20) , 245 + floor(i/2) * (BUTTON_HEIGHT), 180, BUTTON_HEIGHT);
+            NSString *content = [hotKey valueForKey:@"content"];
+            
+            UIButton *hotKeyBtn = nil;
+            if (![self.view viewWithTag:(2001 + i)])
+            {
+                hotKeyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [hotKeyBtn setTag:2001 + i];
+                hotKeyBtn.frame = CGRectMake(50 + (i%2) * (180 + 20) , 245 + floor(i/2) * (BUTTON_HEIGHT), 180, BUTTON_HEIGHT);
+                [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:16]];
+                [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
+                [hotKeyBtn setTitleColor:[CMConstants yellowColor] forState:UIControlStateHighlighted];
+                hotKeyBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+                [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
+                [self.view addSubview:hotKeyBtn];
+                [self.view addSubview:historyViewController.view];
+            }
+            else
+            {
+                hotKeyBtn = (UIButton *)[self.view viewWithTag:(2001 + i)];
+            }
             [hotKeyBtn setTitle:content forState:UIControlStateNormal];
-            [hotKeyBtn setTag:2001 + i];
-            [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:16]];
-            [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
-            [hotKeyBtn setTitleColor:[CMConstants yellowColor] forState:UIControlStateHighlighted];
-            hotKeyBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-            [hotKeyBtn addTarget:self action:@selector(hotKeyBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
-            [self.view addSubview:hotKeyBtn];
-            [self.view addSubview:historyViewController.view];
         }
     }
+}
+
+- (void)parseData:(id)result{
+    NSArray *keyArray = (NSArray *)[result objectForKey:@"topKeywords"];
+    [self addTopHotKeyView:keyArray];
 }
 
 //- (int)calculateBtnWidth:(NSString *)btnTitle

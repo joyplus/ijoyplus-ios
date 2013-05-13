@@ -212,9 +212,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-        [self.downloadBtn setHidden:YES];
-    }
+//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+//        [self.downloadBtn setHidden:YES];
+//    }
     if(video == nil){
         [self retrieveData];
     }
@@ -323,11 +323,17 @@
     NSString *stars = [[video objectForKey:@"stars"] stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
     self.actorName1Label.text = stars;
     
-    if (!self.canPlayVideo) {
+    if (self.canPlayVideo)
+    {
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
-//        [self.downloadBtn setEnabled:NO];
-//        [self.downloadBtn setBackgroundImage:[UIImage imageNamed:@"no_download"] forState:UIControlStateDisabled];
+        self.addListBtn.enabled = YES;
+    }
+    else
+    {
+        self.playBtn.hidden = YES;
+        self.expectbtn.hidden = NO;
+        self.addListBtn.enabled = NO;
     }
     
     if (![self isDownloadURLExit])
@@ -759,9 +765,11 @@
     [self getDownloadUrls:num];
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
+    
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     subitem.urlArray = tempArray;
+    subitem.downloadURLSource = self.downloadSource;
     
     if(subitem.urlArray.count > 0){
         if (self.mp4DownloadUrls.count > 0) {
