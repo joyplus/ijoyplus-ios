@@ -396,6 +396,9 @@
             }
             else if (downloadItem.type == 3){
                 iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
+                NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
+                int num = [sub_name intValue];
+                iphoneAVPlayerViewController.playNum = num;
             }
             NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];
             NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];

@@ -24,6 +24,7 @@
 @synthesize subname;
 @synthesize mp4DownloadUrls;
 @synthesize m3u8DownloadUrls;
+@synthesize downloadSource;
 @synthesize canPlayVideo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -48,6 +49,7 @@
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
     m3u8DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -314,12 +316,16 @@
     }
     [mp4DownloadUrls removeAllObjects];
     [m3u8DownloadUrls removeAllObjects];
+    
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0){
-        for(NSDictionary *tempVideo in videoUrlArray){
-//            NSString *source =  [tempVideo objectForKey:@"source"];
+    if(videoUrlArray.count > 0)
+    {
+        for(NSDictionary *tempVideo in videoUrlArray)
+        {
+            self.downloadSource = [tempVideo objectForKey:@"source"];
             NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
-            for(NSDictionary *url in urlArray){
+            for(NSDictionary *url in urlArray)
+            {
                 if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
                     NSString *videoUrl = [url objectForKey:@"url"];
                     [mp4DownloadUrls addObject:videoUrl];

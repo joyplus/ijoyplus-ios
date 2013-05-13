@@ -22,6 +22,7 @@
 @synthesize isDownloadingNum;
 @synthesize downloadType;
 @synthesize duration;
+@synthesize downloadURLSource;
 
 - (id)init
 {

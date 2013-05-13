@@ -334,6 +334,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
+- (void)gotoFeedBackView
+{
+    [suggestionBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+}
+
 #pragma mark - SinaWeibo Delegate
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo

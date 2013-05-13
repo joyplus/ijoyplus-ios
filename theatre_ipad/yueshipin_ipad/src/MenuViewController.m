@@ -277,6 +277,14 @@
     return cell;
 }
 
+- (void)tableViewSelectIndexPath:(NSIndexPath *)index
+{
+    [self tableView:self.tableView didSelectRowAtIndexPath:index];
+    if (11 == index.row)
+    {
+        [settingsViewController gotoFeedBackView];
+    }
+}
 
 #pragma mark -
 #pragma mark Table view delegate
