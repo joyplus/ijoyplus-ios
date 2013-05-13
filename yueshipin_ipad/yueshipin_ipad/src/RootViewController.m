@@ -200,7 +200,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"success_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 446, 174);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -213,7 +213,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"failure_img"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 446, 174);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -226,7 +226,7 @@
     view.tag = 3268142;
     [view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
     UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"top_error"]];
-    temp.frame = CGRectMake(0, 0, 324, 191);
+    temp.frame = CGRectMake(0, 0, 446, 174);
     temp.center = view.center;
     [view addSubview:temp];
     [self.view addSubview:view];
@@ -253,7 +253,7 @@
     [frame addSubview:tempMovieImage];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(735, 80, 50, 50);
+    closeBtn.frame = CGRectMake(730, 78, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -453,7 +453,7 @@
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(696, 230, 50, 50);
+    closeBtn.frame = CGRectMake(699, 226, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -646,7 +646,7 @@
     [frame addSubview:nameLabel];
     
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    closeBtn.frame = CGRectMake(701, 259 - 70, 50, 50);
+    closeBtn.frame = CGRectMake(702, 255 - 70, 50, 50);
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel"] forState:UIControlStateNormal];
     [closeBtn setBackgroundImage:[UIImage imageNamed:@"cancel_pressed"] forState:UIControlStateHighlighted];
     [closeBtn addTarget:self action:@selector(removeOverlay) forControlEvents:UIControlEventTouchUpInside];
@@ -900,7 +900,7 @@
     [self.view addSubview:view];
     
     UIImageView *frame = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"report_frame"]];
-    frame.frame = CGRectMake(0, 0, 480, 480);
+    frame.frame = CGRectMake(0, 0, 481, 481);
     frame.center = CGPointMake(view.center.x + 20, view.center.y - 80);
     [view addSubview:frame];
     
@@ -923,20 +923,36 @@
     UIButton *submitBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     submitBtn.tag = 90847223;
     submitBtn.frame = CGRectMake(0, 0, 118, 70);
-    submitBtn.center = CGPointMake(view.center.x + 10, view.center.y + 120);
+    submitBtn.center = CGPointMake(view.center.x + 20, view.center.y + 60);
     [submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn"] forState:UIControlStateNormal];
     [submitBtn setBackgroundImage:[UIImage imageNamed:@"submit_btn_pressed"] forState:UIControlStateHighlighted];
     [submitBtn addTarget:self action:@selector(reportIssues) forControlEvents:UIControlEventTouchUpInside];
     [submitBtn setEnabled:NO];
     [view addSubview:submitBtn];
     
-    CustomTextField *textField = [[CustomTextField alloc] initWithFrame:CGRectMake(0, 0, 345, 26)];
-    textField.tag = 3234757301;
-    textField.delegate = self;
-    textField.center = CGPointMake(view.center.x + 40, view.center.y + 58);
-    textField.font = [UIFont systemFontOfSize:14];
-    textField.placeholder = @"请输入您对本部影片的意见和建议...";
-    [view addSubview:textField];
+//    CustomTextField *textField = [[CustomTextField alloc] initWithFrame:CGRectMake(0, 0, 345, 26)];
+//    textField.tag = 3234757301;
+//    textField.delegate = self;
+//    textField.center = CGPointMake(view.center.x + 40, view.center.y + 58);
+//    textField.font = [UIFont systemFontOfSize:14];
+//    textField.placeholder = @"请输入您对本部影片的意见和建议...";
+//    [view addSubview:textField];
+    
+    UIButton * other = [UIButton buttonWithType:UIButtonTypeCustom];
+    other.tag = 90847223;
+    other.frame = CGRectMake(0, 0, 395, 47);
+    other.center = CGPointMake(view.center.x + 20, view.center.y + 120);
+    [other setBackgroundImage:[UIImage imageNamed:@"other_question"] forState:UIControlStateNormal];
+    [other setBackgroundImage:[UIImage imageNamed:@"other_question_s"] forState:UIControlStateHighlighted];
+    [other addTarget:self action:@selector(jumpToFeedbackOnline) forControlEvents:UIControlEventTouchUpInside];
+    [view addSubview:other];
+}
+
+- (void)jumpToFeedbackOnline
+{
+    [self removeOverlay];
+    
+    [menuViewController tableViewSelectIndexPath:[NSIndexPath indexPathForRow:11 inSection:0]];
 }
 
 - (void)reportIssues

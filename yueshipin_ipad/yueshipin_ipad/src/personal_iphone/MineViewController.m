@@ -687,7 +687,7 @@
         }
 
         NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-        cell.titleLab.text = [infoDic objectForKey:@"prod_name"];
+        cell.titleLab.text = [NSString stringWithFormat:@"%@",[infoDic objectForKey:@"prod_name"]];
         cell.titleLab.frame = CGRectMake(10, 5, 220, 15);
 
         cell.actors.text  = [self composeContent:infoDic];
@@ -867,8 +867,8 @@
             case RECORD_TYPE:
             {
                 NSDictionary *infoDic = [sortedwatchRecordArray_ objectAtIndex:indexPath.row];
-                NSString *topicId = [infoDic objectForKey:@"prod_id"];
-                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
+                NSString *topicId = [infoDic objectForKey:@"id"];
+                NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"history_id", nil];
                 [[AFServiceAPIClient sharedClient] postPath:kPathHiddenPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [sortedwatchRecordArray_ removeObjectAtIndex:indexPath.row];
                     [tableView reloadData];
@@ -947,14 +947,19 @@
     NSString *content;
    
     NSNumber *number = (NSNumber *)[item objectForKey:@"playback_time"];
-    if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"]) {
+    if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"1"])
+    {
         content = [NSString stringWithFormat:@"已观看到 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
-    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"]) {
+    }
+    else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"2"])
+    {
         int subNum = [[item objectForKey:@"prod_subname"] intValue];
         content = [NSString stringWithFormat:@"已观看到第%d集 %@", subNum, [TimeUtility formatTimeInSecond:number.doubleValue]];
-    } else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"]) {
+    }
+    else if ([[NSString stringWithFormat:@"%@", [item objectForKey:@"prod_type"]] isEqualToString:@"3"])
+    {
         //int subNum = [[item objectForKey:@"prod_subname"] intValue]+1;
-        content = [NSString stringWithFormat:@"已观看 %@", [TimeUtility formatTimeInSecond:number.doubleValue]];
+        content = [NSString stringWithFormat:@"已观看 《%@》 %@", [item objectForKey:@"prod_subname"],[TimeUtility formatTimeInSecond:number.doubleValue]];
     }
     return content;
 }

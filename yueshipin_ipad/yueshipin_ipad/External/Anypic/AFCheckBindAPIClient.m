@@ -20,8 +20,8 @@ static AFCheckBindAPIClient *_sharedClient = nil;
     static dispatch_once_t oncePredicate;
     dispatch_once(&oncePredicate, ^{
         _sharedClient = [[self alloc] initWithBaseURL:[NSURL URLWithString:CHECKBINDURLSTRING]];
-        NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
-        [_sharedClient setDefaultHeader:@"app_key" value:appKey];
+        //NSString *appKey = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kIpadAppKey];
+        [_sharedClient setDefaultHeader:@"app_key" value:kDefaultCheckBindAppKey];
     });
     
     return _sharedClient;

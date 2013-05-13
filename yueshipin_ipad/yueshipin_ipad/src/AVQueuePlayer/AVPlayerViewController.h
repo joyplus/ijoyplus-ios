@@ -100,5 +100,6 @@ Copyright (C) 2010-2011 Apple Inc. All Rights Reserved.
 @property (nonatomic, strong) UISlider *mScrubber;
 @property (nonatomic) CMTime lastPlayTime;
 @property (nonatomic, weak)id <AvVideoWebViewControllerDelegate>videoWebViewControllerDelegate;
+@property (nonatomic, strong) NSArray * localPlaylists;
 
 @end

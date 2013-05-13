@@ -42,6 +42,7 @@
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
 @property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
+@property (strong, nonatomic)NSString *downloadSource;
 @property (nonatomic)BOOL canPlayVideo;
 - (void)checkCanPlayVideo;
 - (BOOL)isDownloadURLExit;
