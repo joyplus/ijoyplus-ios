@@ -3,10 +3,17 @@
 //  UFP
 //
 //  Created by liu yu on 1/9/12.
-//  Copyright 2010-2012 Umeng.com. All rights reserved.
-//  Version 3.5.2
+//  Updated by liu yu on 04/02/13.
+//  Copyright 2010-2013 Umeng.com. All rights reserved.
+//  Version 3.5.4
 
 #import <UIKit/UIKit.h>
+
+/**
+ 
+ UMUFPWebView is a subclass of UIWebView that supports Ads impression in webview.
+ 
+ */
 
 @interface UMUFPWebView : UIWebView {
 @private
@@ -17,7 +24,7 @@
     BOOL _mAutoFill;
 }
 
-@property (nonatomic) BOOL  mAutoFill;
+@property (nonatomic) BOOL  mAutoFill; //shows whether automatic add other promoters when data of this position is not enough
 @property (nonatomic, copy) NSString *mKeywords; //keywords for the promoters data, promoter list will return according to this property, default is @""
 
 /** 
@@ -44,6 +51,8 @@
 /** 
  
  This method set channel for this app, the default channel is App Store, call this method if you want to set channel for another value, don't need to call this method among different views, only once is enough
+ 
+ @param  channel channel name for the app
  
  */
 

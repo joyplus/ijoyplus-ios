@@ -3,15 +3,21 @@
 //  UFP
 //
 //  Created by liu yu on 11/7/11.
-//  Updated by liu yu on 12/04/12.
-//  Copyright 2010-2012 Umeng.com. All rights reserved.
-//  Version 3.5.2
+//  Updated by liu yu on 04/02/13.
+//  Copyright 2010-2013 Umeng.com. All rights reserved.
+//  Version 3.5.4
 
 #import <UIKit/UIKit.h>
 
 @class UMUFPBannerViewInternal;
 
 @protocol UMUFPBannerViewDelegate;
+
+/**
+ 
+ The UMUFPBannerView class defines a banner view that can show different kind of Ads and response for releated click actions.
+ 
+ */
 
 @interface UMUFPBannerView : UIView {
 @private
@@ -39,14 +45,14 @@
 
  /** 
  
- This method return a UMANBannerView object
+ This method return a UMUFPBannerView object
  
  @param  frame frame for the banner view
  @param  appkey appkey get from www.umeng.com, if you want use ufp service only, set this parameter empty
  @param  slotId slotId get from ufp.umeng.com
  @param  controller view controller releated to the view that the banner view added into
  
- @return a UMANBannerView object
+ @return a UMUFPBannerView object
  */
 
 - (id)initWithFrame:(CGRect)frame appKey:(NSString *)appkey slotId:(NSString *)slotId currentViewController:(UIViewController *)controller;
@@ -63,6 +69,8 @@
  
  This method set background image for banner view
  
+ @param  image image for the background
+ 
  */
 
 - (void)setBackgroundImage:(UIImage *)image;
@@ -71,11 +79,20 @@
  
  This method set channel for this app, the default channel is App Store, call this method if you want to set channel for another value, don't need to call this method among different views, only once is enough
  
+ @param  channel channel name for the app
+ 
  */
 
 + (void)setAppChannel:(NSString *)channel;
 
 @end
+
+/**
+ 
+ UMUFPBannerViewDelegate is a protocol for UMUFPBannerView.
+ Optional methods of the protocol allow the delegate to capture UMUFPBannerView releated events, and perform other actions.
+ 
+ */
 
 @protocol UMUFPBannerViewDelegate <NSObject>
 
