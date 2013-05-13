@@ -918,7 +918,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [playCacheView addSubview:imageView];
         
         nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 400, 40)];
-        nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.90);
+        nameLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y * 0.90 + 50);
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.font = [UIFont systemFontOfSize:18];
         if (video != nil) {
@@ -944,7 +944,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if (CMTIME_IS_VALID(lastPlayTime) && CMTimeGetSeconds(lastPlayTime) > 1) {
             UILabel *lastLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 300, 40)];
             lastLabel.tag = 3232947504;
-            lastLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y);
+            lastLabel.center = CGPointMake(playCacheView.center.x, playCacheView.center.y*0.9 + 80);
             lastLabel.backgroundColor = [UIColor clearColor];
             lastLabel.textAlignment = NSTextAlignmentCenter;
             lastLabel.textColor = [UIColor lightGrayColor];
