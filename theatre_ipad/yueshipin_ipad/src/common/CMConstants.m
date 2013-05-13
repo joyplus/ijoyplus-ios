@@ -16,7 +16,7 @@
 
 + (UIColor *)yellowColor
 {
-    return [UIColor colorWithRed:255/255.0 green:164/255.0 blue:5/255.0 alpha:1.0];
+    return [UIColor colorWithRed:1 green:159.0/255.0 blue:204.0/255.0 alpha:1];
 }
 
 

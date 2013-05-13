@@ -136,7 +136,7 @@
     [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
     self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+    [self.expectbtn setTitleColor:CMConstants.yellowColor forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;

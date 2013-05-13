@@ -96,6 +96,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         
         sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
+        sinaSwitch.onTintColor = [UIColor colorWithRed:1 green:159.0/255.0 blue:204.0/255.0 alpha:1];
         [self.view addSubview:sinaSwitch];                       
        
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];

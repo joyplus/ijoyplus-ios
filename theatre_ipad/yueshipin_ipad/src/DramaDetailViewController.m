@@ -158,7 +158,7 @@
     [self.expectbtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 0, 5)];
     self.expectbtn.titleLabel.font = [UIFont systemFontOfSize:12];
     [self.expectbtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.expectbtn setTitleColor:[UIColor colorWithRed:1 green:119.0f/255.0f blue:0 alpha:1] forState:UIControlStateNormal];
+    [self.expectbtn setTitleColor:CMConstants.yellowColor forState:UIControlStateNormal];
     [self.expectbtn addTarget:self action:@selector(expectVideo) forControlEvents:UIControlEventTouchUpInside];
     [self.bgScrollView addSubview:self.expectbtn];
     self.expectbtn.hidden = YES;
@@ -397,7 +397,7 @@
     
     self.titleLabel.text = [video objectForKey:@"name"];
     self.scoreLabel.text = [NSString stringWithFormat:@"%@ 分", [video objectForKey:@"score"]];
-    self.scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
+    self.scoreLabel.textColor = CMConstants.yellowColor;//[UIColor colorWithRed:1 green:167.0/255.0 blue:41.0/255.0 alpha:1];
     NSString *stars = [video objectForKey:@"stars"];
     CGRect starRect = self.actorName1Label.frame;
     CGSize starSize = [stars drawInRect:CGRectMake(0, 0, starRect.size.width,CGFLOAT_MAX) withFont:self.actorName1Label.font];

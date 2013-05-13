@@ -9,7 +9,7 @@
 #import "GenericBaseViewController.h"
 #import "SinaWeibo.h"
 #import "SlideBaseViewController.h"
-
+#import "CMConstants.h"
 @protocol VideoDetailViewControllerDelegate <NSObject>
 
 - (void)refreshCommentListView:(int)tableHeight;
