@@ -7,10 +7,4 @@
    <FileRef
       location = "group:yueshipin.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:../theatre_iphone/theatreiphone.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../theatre_ipad/theatreipad.xcodeproj">
-   </FileRef>
 </Workspace>
