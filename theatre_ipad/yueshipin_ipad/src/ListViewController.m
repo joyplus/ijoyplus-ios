@@ -215,7 +215,7 @@
         scoreLabel.text = @"0 分";
         scoreLabel.backgroundColor = [UIColor clearColor];
         scoreLabel.font = [UIFont boldSystemFontOfSize:15];
-        scoreLabel.textColor = [UIColor colorWithRed:1 green:167.0/255.0 blue:47.0/255.0 alpha:1];
+        scoreLabel.textColor = CMConstants.yellowColor;
         scoreLabel.textAlignment = NSTextAlignmentRight;
         [cell.contentView addSubview:scoreLabel];
         UIImageView *doubanLogo = [[UIImageView alloc]initWithFrame:CGRectMake(scoreLabel.frame.origin.x + scoreLabel.frame.size.width, scoreLabel.frame.origin.y + 8, 15, 15)];
