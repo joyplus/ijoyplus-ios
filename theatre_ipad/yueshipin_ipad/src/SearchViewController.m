@@ -132,7 +132,7 @@
             {
                 hotKeyBtn = [UIButton buttonWithType:UIButtonTypeCustom];
                 [hotKeyBtn setTag:2001 + i];
-                hotKeyBtn.frame = CGRectMake(50 + (i%2) * (180 + 20) , 245 + floor(i/2) * (BUTTON_HEIGHT), 180, BUTTON_HEIGHT);
+                hotKeyBtn.frame = CGRectMake(50 + (i%2) * (180 + 20) , 232 + floor(i/2) * (BUTTON_HEIGHT), 180, BUTTON_HEIGHT);
                 [hotKeyBtn.titleLabel setFont:[UIFont systemFontOfSize:16]];
                 [hotKeyBtn setTitleColor:[CMConstants grayColor] forState:UIControlStateNormal];
                 [hotKeyBtn setTitleColor:[CMConstants yellowColor] forState:UIControlStateHighlighted];
