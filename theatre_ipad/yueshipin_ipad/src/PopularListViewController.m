@@ -565,10 +565,10 @@
         
         UIImageView *placeHolderImage1 = [[UIImageView alloc]init];
         placeHolderImage1.image = [UIImage imageNamed:@"video_bg_placeholder"];
-        placeHolderImage1.frame = CGRectMake(36, 16, 95, 128);
+        placeHolderImage1.frame = CGRectMake(36, 16, 96, 128);
         [cell.contentView addSubview:placeHolderImage1];
         
-        UIImageView *contentImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(40, 20, 87, 120)];
+        UIImageView *contentImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(40, 21, 87, 120)];
         contentImage1.tag = 2001;
         [cell.contentView addSubview:contentImage1];
         
@@ -603,7 +603,7 @@
         placeHolderImage2.frame = CGRectMake(18 + LIST_LOGO_WIDTH + 35, 16, 95, 128);
         [cell.contentView addSubview:placeHolderImage2];
         
-        UIImageView *contentImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(22 + LIST_LOGO_WIDTH + 35, 20, 87, 120)];
+        UIImageView *contentImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(22 + LIST_LOGO_WIDTH + 35, 21, 87, 120)];
         contentImage2.tag = 2002;
         [cell.contentView addSubview:contentImage2];
         
