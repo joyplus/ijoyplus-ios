@@ -52,7 +52,7 @@
 
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1
-#define umengAppKey @"50c069e25270154e81000056"
+#define umengAppKey @"5188669c5270154d61000005"
 
 #define YOU_KU @"youku"
 #define TU_DOU @"tudou"
