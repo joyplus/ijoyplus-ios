@@ -420,7 +420,7 @@
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 8, 42, 18);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 42, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     if(commentListViewController == nil){
@@ -433,7 +433,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 35, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+ (topics.count > 5 ? 5 : topics.count)*30+commentListViewController.tableHeight + increasePositionY)];
 }

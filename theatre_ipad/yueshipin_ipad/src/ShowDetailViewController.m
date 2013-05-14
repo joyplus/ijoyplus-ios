@@ -456,7 +456,7 @@
             }
         }
         positionY = showListView.frame.origin.y + showListView.frame.size.height;
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 30, 41, 18);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 41, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
    
     if(commentListViewController == nil){
@@ -469,7 +469,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 60, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+commentListViewController.tableHeight+5 * 30 + increasePositionY)];
     //    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 70, 425, commentListViewController.tableHeight);
