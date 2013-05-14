@@ -25,8 +25,8 @@
 #define kTencentAppKey @"100666407"
 #define kTencentAppSecret @"2a35faffc945dc9f5e432167cc4a1b5a"
 
-#define kSinaWeiboAppKey  @"1490285522"
-#define kSinaWeiboAppSecret  @"f9ebc3ca95991b6dfce2c1608687e92b"
+#define kSinaWeiboAppKey  @"296868884"
+#define kSinaWeiboAppSecret  @"a5f9aeeee887d722900566b8f3fbef43"
 #define kSinaWeiboRedirectURL @"https://api.weibo.com/oauth2/default.html"
 #define kPAPUserDefaultsCacheSinaFriendsKey @"sinaFriendKey"
 #define kSinaWeiboAccessToken @"sinaAccessToken"
