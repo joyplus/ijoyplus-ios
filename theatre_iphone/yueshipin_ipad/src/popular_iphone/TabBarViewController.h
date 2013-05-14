@@ -11,6 +11,6 @@
 #define YUEDAN      @"悦单"
 #define XIAZAI      @"下载"
 #define MINE        @"我的"
-
+#define PINDAO      @"频道"
 @interface TabBarViewController : UITabBarController
 @end

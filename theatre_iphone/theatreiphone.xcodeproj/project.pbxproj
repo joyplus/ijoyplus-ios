@@ -246,6 +246,9 @@
 		E766D18B173389D6006F9940 /* zaixianfankui@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D189173389D5006F9940 /* zaixianfankui@2x.png */; };
 		E766D18E17338F68006F9940 /* ti_jiao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D18C17338F68006F9940 /* ti_jiao_s@2x.png */; };
 		E766D18F17338F68006F9940 /* ti_jiao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D18D17338F68006F9940 /* ti_jiao@2x.png */; };
+		E77320391741D5D9009BA2D2 /* VideoTypeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */; };
+		E77349741740F75000176BA4 /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349731740F75000176BA4 /* ChannelViewController.m */; };
+		E77349781741026500176BA4 /* SegmentControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349771741026400176BA4 /* SegmentControlView.m */; };
 		E77DC12A17165E49002B6536 /* feedBackhead@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */; };
 		E77DC12B17165E49002B6536 /* iphoneCheckUpdate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12817165E49002B6536 /* iphoneCheckUpdate@2x.png */; };
 		E77DC12C17165E49002B6536 /* iphoneCheckUpdatePress@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12917165E49002B6536 /* iphoneCheckUpdatePress@2x.png */; };
@@ -884,6 +887,12 @@
 		E766D189173389D5006F9940 /* zaixianfankui@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "zaixianfankui@2x.png"; path = "yueshipin_ipad/Resource_iphone/zaixianfankui@2x.png"; sourceTree = SOURCE_ROOT; };
 		E766D18C17338F68006F9940 /* ti_jiao_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ti_jiao_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/ti_jiao_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		E766D18D17338F68006F9940 /* ti_jiao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ti_jiao@2x.png"; path = "yueshipin_ipad/Resource_iphone/ti_jiao@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77320371741D5D9009BA2D2 /* VideoTypeSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTypeSegment.h; sourceTree = "<group>"; };
+		E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTypeSegment.m; sourceTree = "<group>"; };
+		E77349721740F75000176BA4 /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ../popular_iphone/ChannelViewController.h; sourceTree = "<group>"; };
+		E77349731740F75000176BA4 /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ../popular_iphone/ChannelViewController.m; sourceTree = "<group>"; };
+		E77349761741026400176BA4 /* SegmentControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentControlView.h; sourceTree = "<group>"; };
+		E77349771741026400176BA4 /* SegmentControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentControlView.m; sourceTree = "<group>"; };
 		E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "feedBackhead@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/feedBackhead@2x.jpg"; sourceTree = SOURCE_ROOT; };
 		E77DC12817165E49002B6536 /* iphoneCheckUpdate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneCheckUpdate@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneCheckUpdate@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77DC12917165E49002B6536 /* iphoneCheckUpdatePress@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneCheckUpdatePress@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneCheckUpdatePress@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1551,6 +1560,7 @@
 		22FEEE4316899AE000A71EF4 /* popular_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E77349751740FA7D00176BA4 /* Channel_iphone */,
 				2215079C172A5BF400A90A60 /* DownLoad_iphone */,
 				22FEC4F41714337800AEA9CD /* dimensional code scanning */,
 				227C09C7170A7D0800BEC1E5 /* WechatShare */,
@@ -1937,6 +1947,20 @@
 			name = Resource_iphone;
 			path = Resource/Resource_iphone;
 			sourceTree = "<group>";
+		};
+		E77349751740FA7D00176BA4 /* Channel_iphone */ = {
+			isa = PBXGroup;
+			children = (
+				E77349721740F75000176BA4 /* ChannelViewController.h */,
+				E77349731740F75000176BA4 /* ChannelViewController.m */,
+				E77349761741026400176BA4 /* SegmentControlView.h */,
+				E77349771741026400176BA4 /* SegmentControlView.m */,
+				E77320371741D5D9009BA2D2 /* VideoTypeSegment.h */,
+				E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */,
+			);
+			name = Channel_iphone;
+			path = yueshipin_ipad/src/Channel_iphone;
+			sourceTree = SOURCE_ROOT;
 		};
 		EB02F64916DAFFF0001C2E3A /* AVQueuePlayer */ = {
 			isa = PBXGroup;
@@ -3058,6 +3082,9 @@
 				221507A6172A5BF400A90A60 /* DownLoadManager.m in Sources */,
 				221507A7172A5BF400A90A60 /* IphoneDownloadViewController.m in Sources */,
 				221507A8172A5BF400A90A60 /* IphoneSubdownloadViewController.m in Sources */,
+				E77349741740F75000176BA4 /* ChannelViewController.m in Sources */,
+				E77349781741026500176BA4 /* SegmentControlView.m in Sources */,
+				E77320391741D5D9009BA2D2 /* VideoTypeSegment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
