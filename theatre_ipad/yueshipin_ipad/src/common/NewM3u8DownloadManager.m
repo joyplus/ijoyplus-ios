@@ -142,9 +142,11 @@
                 [videoArray addObject:stringContent];
             } else {
                 // sample url: @"http://218.76.97.35:80/AB87334821B851A8A97C084D061D038FBC1057C3/playlist.m3u8"
-                NSRange endRange = [item.url rangeOfString:@"/" options:NSBackwardsSearch];
-                stringContent = [NSString stringWithFormat:@"%@/%@", [item.url substringToIndex:endRange.location], stringContent];
-                [videoArray addObject:stringContent];
+                if (item.url) {
+                    NSRange endRange = [item.url rangeOfString:@"/" options:NSBackwardsSearch];
+                    stringContent = [NSString stringWithFormat:@"%@/%@", [item.url substringToIndex:endRange.location], stringContent];
+                    [videoArray addObject:stringContent];
+                }
             }
             NSURL *tempUrl = [NSURL URLWithString:stringContent];
             NSString *segmentName = [tempUrl lastPathComponent];
