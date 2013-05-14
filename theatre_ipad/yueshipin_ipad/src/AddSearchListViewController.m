@@ -68,7 +68,7 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     [self.view addSubview:self.bgImage];
 
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45, 132, 42)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 25, 132, 42)];
     titleImage.image = [UIImage imageNamed:@"add_video_title"];
     [self.view addSubview:titleImage];
     
@@ -213,7 +213,7 @@
             contentImage.tag = 1001;
             [cell.contentView addSubview:contentImage];
             
-            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x + contentImage.frame.size.width + 20, contentImage.frame.origin.y, 250, 30)];
+            UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(contentImage.frame.origin.x + contentImage.frame.size.width + 20, contentImage.frame.origin.y, 220, 30)];
             nameLabel.text = @"";
             nameLabel.backgroundColor = [UIColor clearColor];
             nameLabel.tag = 2001;
