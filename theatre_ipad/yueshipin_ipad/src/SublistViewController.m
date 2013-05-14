@@ -68,25 +68,49 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor blackColor]];
         accessory.highlightedColor = [UIColor whiteColor];
         cell.accessoryView = accessory;
         
-        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, cell.bounds.size.width+100, 20)];
-        nameLabel.backgroundColor = [UIColor clearColor];
-        nameLabel.textColor = CMConstants.grayColor;
-        nameLabel.tag = 1001;
-        nameLabel.font = [UIFont systemFontOfSize:14];
-        [cell.contentView addSubview:nameLabel];
+//        UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, cell.bounds.size.width+100, 30)];
+//        nameLabel.backgroundColor = [UIColor redColor];
+//        nameLabel.textColor = CMConstants.grayColor;
+//        nameLabel.tag = 1001;
+//        nameLabel.font = [UIFont systemFontOfSize:14];
+//        [cell.contentView addSubview:nameLabel];
         
         UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 28, self.tableView.frame.size.width, 2)];
         devidingLine.image = [UIImage imageNamed:@"dividing"];
         [cell.contentView addSubview:devidingLine];
     }
+    
+    for (UIView *view in cell.contentView.subviews)
+    {
+        [view removeFromSuperview];
+    }
+    
+    UIButton * nameBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width - 50, 30)];
+    nameBtn.backgroundColor = [UIColor clearColor];
+    [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+    [nameBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
+    nameBtn.tag = indexPath.row;
+    nameBtn.titleLabel.textAlignment = UITextAlignmentLeft;
+    
+    nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
+    [cell.contentView addSubview:nameBtn];
+    [nameBtn addTarget:self
+                action:@selector(buttonClicked:)
+      forControlEvents:UIControlEventTouchUpInside];
+    
     NSDictionary *item =  [listData objectAtIndex:indexPath.row];
-    UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
-    nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"t_name"]];
+    NSString * title = [item objectForKey:@"t_name"];
+    [nameBtn setTitle:[NSString stringWithFormat:@"%@",title]
+               forState:UIControlStateNormal];
+    CGSize tSize = [title sizeWithFont:[UIFont systemFontOfSize:14]];
+    [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(5, 10, 5, nameBtn.frame.size.width - 10 - tSize.width)];
+    
+    
     return cell;
 }
 
@@ -137,8 +161,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [videoDelegate showSublistView:indexPath.row];
+//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [videoDelegate showSublistView:indexPath.row];
+}
+
+- (void)buttonClicked:(UIButton *)btn
+{
+    [videoDelegate showSublistView:btn.tag];
 }
 
 @end
