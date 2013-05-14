@@ -861,7 +861,7 @@
         [customHeaderView addSubview:bgImageView];
         
         movieListBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        movieListBtn.frame = CGRectMake(20, 6, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
+        movieListBtn.frame = CGRectMake(5, 6, VIDEO_BUTTON_WIDTH, VIDEO_BUTTON_HEIGHT);
         movieListBtn.tag = 1001;
         [movieListBtn addTarget:self action:@selector(movieListBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
         [customHeaderView addSubview:movieListBtn];

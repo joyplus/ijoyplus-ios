@@ -25,9 +25,9 @@
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
-#define SETTING_OPTION_WIDTH            (457.5)
+#define SETTING_OPTION_WIDTH            (459)
 #define SETTING_OPTION_SINA_HEIGHT      (69.5)
-#define SETTING_OPTION_OTHER_HEIGHT     (50.5)
+#define SETTING_OPTION_OTHER_HEIGHT     (52)
 
 NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=APP_ID";
 
@@ -128,7 +128,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [self.view addSubview:followBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 10, 467, 50);
+        aboutBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];

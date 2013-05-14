@@ -123,6 +123,7 @@
             }
             [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             tempBtn.tag = 1101 + i;
+            tempBtn.titleLabel.font = [UIFont systemFontOfSize:15];
             [tempBtn addTarget:self action:@selector(categoryBtnClicked:) forControlEvents:UIControlEventTouchDown];
             [topCategoryView addSubview:tempBtn];
         }
