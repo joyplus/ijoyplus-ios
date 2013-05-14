@@ -272,7 +272,7 @@
     contentTextView = [[UITextView alloc]initWithFrame:CGRectMake(270, 150, 360, 110)];
     contentTextView.font = [UIFont systemFontOfSize:14];
     contentTextView.delegate = self;
-    contentTextView.text = [NSString stringWithFormat:@"我在用#今晚剧场#ipad版观看#%@#，推荐给大家哦！更多精彩尽在今晚剧场，欢迎下载：http://ums.bz/REGLDb/", self.prodName];
+    contentTextView.text = [NSString stringWithFormat:@"我在用#今晚剧场#ipad版观看#%@#，推荐给大家哦！更多精彩尽在今晚剧场，欢迎下载：http://ums.bz/OK3GNK/", self.prodName];
     [contentTextView becomeFirstResponder];
     [view addSubview:contentTextView];
     

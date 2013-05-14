@@ -37,7 +37,7 @@
 {
     [super viewDidLoad];
     self.tableView.scrollEnabled = NO;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.layer.borderWidth = 1;
     self.tableView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
     [self.view setBackgroundColor:[UIColor whiteColor]];
@@ -90,13 +90,13 @@
         [view removeFromSuperview];
     }
     
-    UIButton * nameBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width - 50, 30)];
+    UIButton * nameBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width - 50, 28)];
     nameBtn.backgroundColor = [UIColor clearColor];
     [nameBtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
     [nameBtn setTitleColor:CMConstants.yellowColor forState:UIControlStateHighlighted];
     nameBtn.tag = indexPath.row;
     nameBtn.titleLabel.textAlignment = UITextAlignmentLeft;
-    
+    nameBtn.backgroundColor = [UIColor clearColor];
     nameBtn.titleLabel.font = [UIFont systemFontOfSize:14];
     [cell.contentView addSubview:nameBtn];
     [nameBtn addTarget:self
@@ -108,7 +108,7 @@
     [nameBtn setTitle:[NSString stringWithFormat:@"%@",title]
                forState:UIControlStateNormal];
     CGSize tSize = [title sizeWithFont:[UIFont systemFontOfSize:14]];
-    [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(5, 10, 5, nameBtn.frame.size.width - 10 - tSize.width)];
+    [nameBtn setTitleEdgeInsets:UIEdgeInsetsMake(4, 10, 4, nameBtn.frame.size.width - 10 - tSize.width)];
     
     
     return cell;
