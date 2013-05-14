@@ -940,12 +940,14 @@
 //    [view addSubview:textField];
     
     UIButton * other = [UIButton buttonWithType:UIButtonTypeCustom];
-    other.tag = 90847223;
-    other.frame = CGRectMake(0, 0, 395, 47);
+    other.frame = CGRectMake(0, 0, 394, 46);
     other.center = CGPointMake(view.center.x + 20, view.center.y + 120);
-    [other setBackgroundImage:[UIImage imageNamed:@"other_question"] forState:UIControlStateNormal];
-    [other setBackgroundImage:[UIImage imageNamed:@"other_question_s"] forState:UIControlStateHighlighted];
-    [other addTarget:self action:@selector(jumpToFeedbackOnline) forControlEvents:UIControlEventTouchUpInside];
+    [other setBackgroundImage:[UIImage imageNamed:@"other_question.png"] forState:UIControlStateNormal];
+    [other setBackgroundImage:[UIImage imageNamed:@"other_question_s.png"] forState:UIControlStateHighlighted];
+    [other addTarget:self
+              action:@selector(jumpToFeedbackOnline)
+    forControlEvents:UIControlEventTouchUpInside];
+    other.backgroundColor = [UIColor clearColor];
     [view addSubview:other];
 }
 
