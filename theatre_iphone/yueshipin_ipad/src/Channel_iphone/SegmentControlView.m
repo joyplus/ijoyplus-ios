@@ -7,6 +7,21 @@
 //
 
 #import "SegmentControlView.h"
+
+#define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"恐怖",@"惊悚",@"悬疑",@"伦理",@"爱情",@"剧情",@"喜剧",@"科幻",@"动作",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
+#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"美国",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
+
+#define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"青春偶像",@"家庭伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
+#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"韩国",@"美国",@"日本",@"其他",nil]
+
+#define  COMIC_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil]
+#define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
+
+#define  SHOW_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"播报",@"旅游",@"音乐",@"美食",@"纪实",@"曲艺",@"生活",@"游戏",@"互动",@"财经",@"求职",@"其他", nil]
+#define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
+
+#define  MOVIE_YEAR  [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",nil]
+
 @implementation SegmentControlView
 @synthesize seg = _seg;
 @synthesize movieLabelArr = _movieLabelArr;
@@ -29,12 +44,6 @@
         segmentBg.backgroundColor = [UIColor grayColor];
         [self addSubview:segmentBg];
         
-        _seg = [[UISegmentedControl alloc] initWithItems:_movieLabelArr];
-        _seg.frame = CGRectMake(0, 0, 306, 30);
-        _seg.center = segmentBg.center;
-        _seg.selectedSegmentIndex = 0;
-        [self addSubview:_seg];
-
         [self setSegmentControl:TYPE_MOVIE];
 
     }
@@ -151,19 +160,6 @@
 }
 
 -(void)setViewWithType:(int)type{
-    NSArray * const MOVIE_ALL_TYPE = [NSArray arrayWithObjects:@"全部",@"恐怖",@"惊悚",@"悬疑",@"伦理",@"爱情",@"剧情",@"喜剧",@"科幻",@"动作",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil];
-    NSArray * const MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"美国",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
-    
-    NSArray * const TV_ALL_TYPE = [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"青春偶像",@"家庭伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil];
-    NSArray * const TV_ALL_AREA  = [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"韩国",@"美国",@"日本",@"其他",nil];
-    
-    NSArray * const COMIC_ALL_TYPE = [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil];
-    NSArray * const COMIC_ALL_AREA  = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil];
-    
-    NSArray * const SHOW_ALL_TYPE = [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"播报",@"旅游",@"音乐",@"美食",@"纪实",@"曲艺",@"生活",@"游戏",@"互动",@"财经",@"求职",@"其他", nil];
-    NSArray * const SHOW_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil];
-    
-    NSArray * const MOVIE_YEAR = [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",nil];
     _videoType = type;
     switch (type) {
         case TYPE_MOVIE:{
