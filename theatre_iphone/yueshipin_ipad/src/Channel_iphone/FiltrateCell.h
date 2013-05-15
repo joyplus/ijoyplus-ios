@@ -21,6 +21,5 @@
 @property (nonatomic, strong)UILabel *firstLabel;
 @property (nonatomic, strong)UILabel *secondLabel;
 @property (nonatomic, strong)UILabel *thirdLabel;
-@property (nonatomic, assign)int selectIndex;
 @property (nonatomic, weak) id <FiltrateCellDelegate> delagate;
 @end

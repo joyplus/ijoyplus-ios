@@ -212,25 +212,6 @@
     return 145;
 }
 
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    int row = indexPath.row;
-//    int location = 3*row;
-//    int count = [_dataArr count];
-//    int length = 0;
-//    if (location+2 >= [_dataArr count]) {
-//        length = count%3;
-//    }
-//    else{
-//        length = 3;
-//    }
-//    NSRange range = NSMakeRange(location, length);
-//    NSArray *oneRowItems = [_dataArr subarrayWithRange:range];
-//    FiltrateCell *cell = (FiltrateCell *)[_tableList cellForRowAtIndexPath:indexPath];
-//    NSDictionary *item = [oneRowItems objectAtIndex:cell.selectIndex];
-//    
-//}
-
-
 #pragma mark -
 #pragma mark - FiltrateCellDelegate
 
@@ -249,8 +230,12 @@
         detailViewController.infoDic = item;
         [self.navigationController pushViewController:detailViewController animated:YES];
     }
+    else if ([type isEqualToString:@"3"]){
+        IphoneShowDetailViewController *detailViewController = [[IphoneShowDetailViewController alloc] init];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
     
-
 }
 
 -(void)sendHttpRequest:(NSDictionary *)parameters{

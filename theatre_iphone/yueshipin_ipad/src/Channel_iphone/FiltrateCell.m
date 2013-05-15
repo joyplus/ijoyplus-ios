@@ -15,7 +15,6 @@
 @synthesize firstLabel = _firstLabel;
 @synthesize secondLabel = _secondLabel;
 @synthesize thirdLabel = _thirdLabel;
-@synthesize selectIndex = _selectIndex;
 @synthesize delagate = _delagate;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -70,7 +69,6 @@
         _thirdLabel.backgroundColor = [UIColor clearColor];
         [self addSubview:_thirdLabel];
         
-        _selectIndex = -1;
     }
     return self;
 }
