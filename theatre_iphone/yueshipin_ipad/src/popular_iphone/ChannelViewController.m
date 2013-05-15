@@ -22,6 +22,7 @@
 @synthesize filtrateView = _filtrateView;
 @synthesize tableList = _tableList;
 @synthesize dataArr = _dataArr;
+@synthesize parameters = _parameters;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -82,8 +83,21 @@
     _tableList.backgroundColor = [UIColor clearColor];
     _tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableList];
+    
+    [self initDefaultParameters];
 }
 
+-(void)initDefaultParameters{
+    videoType_ = TYPE_MOVIE;
+    _parameters = [NSMutableDictionary dictionaryWithCapacity:5];
+    [_parameters setObject:@"1" forKey:@"page_num"];
+    [_parameters setObject:[NSNumber numberWithInt:videoType_] forKey:@"type"];
+    [_parameters setObject:[NSNumber numberWithInt:12] forKey:@"page_size"];
+    [_parameters setObject:@"" forKey:@"sub_type"];
+    [_parameters setObject:@"" forKey:@"area"];
+    [_parameters setObject:@"" forKey:@"year"];
+    [self sendHttpRequest:_parameters];
+}
 -(void)search:(id)sender{
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
