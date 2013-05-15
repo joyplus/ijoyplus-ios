@@ -1,0 +1,51 @@
+
+"Pull down to refresh..." = "下拉可以刷新...";
+"Loading..." = "努力加载中...";
+"Release to refresh..." = "松开可以刷新...";
+"Pull to load more" = "上拉加载更多...";
+"Last Updated: " = "更新于：%@";
+
+"MNM_BOTTOM_PTR_PULL_TEXT" = "上拉加载更多...";
+"MNM_BOTTOM_PTR_RELEASE_TEXT" = "松开加载!";
+"MNM_BOTTOM_PTR_LOADING_TEXT" = "努力加载中...";
+
+app_name = "今晚剧场";
+
+previous = "前一项";
+next = "下一项";
+done = "完成";
+follow_success = "关注成功";
+Done = "返回";
+
+
+msg_10021 = "网络错误，请重试一次。";
+msg_20001 = "邮箱地址不存在。";
+msg_20002 = "邮箱地址或密码不正确。";
+msg_20006 = "该邮箱地址已被使用。";
+msg_20008 = "会话已过期，请重新登陆";
+msg_20019 = "该昵称已被使用。";
+
+"message.networkError"="网络连接错误！";
+"message.systemError"="系统服务正忙，请稍后再试！";
+
+//FormatterKit
+"year" = "年";
+"month" = "月";
+"week" = "周";
+"day" = "天";
+"hour" = "小时";
+"minute" = "分钟";
+"second" = "秒";
+
+"years" = "年";
+"months" = "月";
+"weeks" = "周";
+"days" = "天";
+"hours" = "小时";
+"minutes" = "分钟";
+"seconds" = "秒";
+"ago" = "前";
+"just now" = "刚才";
+"from now" = "后";
+"%@ %@" = "%@%@";
+"about %@" = "大概%@";
