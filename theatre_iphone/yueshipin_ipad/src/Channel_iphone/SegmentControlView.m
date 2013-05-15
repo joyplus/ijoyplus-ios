@@ -29,7 +29,7 @@
 @synthesize comicLabelArr = _comicLabelArr;
 @synthesize showLabelArr = _showLabelArr;
 @synthesize delegate = _delegate;
-
+@synthesize segControlBg = _segControlBg;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -57,32 +57,62 @@
     switch (type) {
         case TYPE_MOVIE:
             videoType_ = TYPE_MOVIE;
-            _seg = [[UISegmentedControl alloc] initWithItems:_movieLabelArr];
+            [self setSegmentViewWithItems:_movieLabelArr];
             break;
         case TYPE_TV:
             videoType_ = TYPE_TV;
-            _seg = [[UISegmentedControl alloc] initWithItems:_tvLabelArr];
+            [self setSegmentViewWithItems:_tvLabelArr];
             break;
         case TYPE_COMIC:
             videoType_ = TYPE_COMIC;
-            _seg = [[UISegmentedControl alloc] initWithItems:_comicLabelArr];
+            [self setSegmentViewWithItems:_comicLabelArr];
             break;
         case TYPE_SHOW:
             videoType_ = TYPE_SHOW;
-            _seg = [[UISegmentedControl alloc] initWithItems:_showLabelArr];
+            [self setSegmentViewWithItems:_showLabelArr];
             break;
         default:
             break;
     }
-    _seg.frame = CGRectMake(0, 0, 306, 30);
-    _seg.center = CGPointMake(160, 21);
-    _seg.selectedSegmentIndex = 0;
-    [_seg addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventValueChanged];
-    [self addSubview:_seg];
-
 }
+-(void)setSegmentViewWithItems:(NSArray *)arr{
+    if (_segControlBg  != nil) {
+        _segControlBg = nil;
+    }
+    _segControlBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 306, 30)];
+    _segControlBg.center = CGPointMake(160, 21);
+    _segControlBg.backgroundColor = [UIColor redColor];
+    
+    for (int i = 0; i < [arr count]; i++) {
+        NSString *str = arr[i];
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        if (i == 0) {
+            btn.enabled = NO;
+        }
+        btn.frame = CGRectMake(51*i, 0, 51, 30);
+        btn.tag = 100+i;
+        [btn setTitle:str forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+        btn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
+        [_segControlBg addSubview:btn];
+    }
+    [self addSubview:_segControlBg];
+}
+-(void)selectButton:(UIButton *)btn{
+    for (int i = 0; i < 6; i++) {
+        NSLog(@"i: %d -------------tag: %d",i,btn.tag);
+        UIButton *oneBtn = (UIButton *)[_segControlBg viewWithTag:100+i];
+        if (100+i == btn.tag) {
+            oneBtn.enabled = NO;
+        }
+        else{
+            oneBtn.enabled = YES;
+        
+        }
+    }
 
--(void)selectButton:(UISegmentedControl *)seg{
     NSArray *arr = nil;
     switch (videoType_) {
         case TYPE_MOVIE:
@@ -101,9 +131,9 @@
         default:
             break;
     }
-    if (seg.selectedSegmentIndex < 5) {
-        NSString *selectedStr = [arr objectAtIndex:seg.selectedSegmentIndex];
-       NSString *key = [self getKeyByString:selectedStr];
+    if (btn.tag < 105) {
+        NSString *selectedStr = [arr objectAtIndex:(btn.tag-100)];
+        NSString *key = [self getKeyByString:selectedStr];
         if ([selectedStr isEqualToString:@"全部"]) {
             selectedStr = @"";
         }

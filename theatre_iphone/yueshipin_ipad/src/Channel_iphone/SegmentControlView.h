@@ -31,7 +31,7 @@ enum{
 @property (nonatomic, strong) NSArray *tvLabelArr;
 @property (nonatomic, strong) NSArray *comicLabelArr;
 @property (nonatomic, strong) NSArray *showLabelArr;
-
+@property (nonatomic, strong) UIView *segControlBg;
 -(void)setSegmentControl:(int)type;
 @end
 
