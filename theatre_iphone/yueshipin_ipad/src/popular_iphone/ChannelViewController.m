@@ -66,11 +66,6 @@
     
     _segV = [[SegmentControlView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
     _segV.delegate = self;
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeFiltrateView)];
-    tapRecognizer.numberOfTapsRequired = 1;
-    tapRecognizer.delegate = self;
-    tapRecognizer.cancelsTouchesInView = NO;
-    [_segV.segControlBg addGestureRecognizer:tapRecognizer];
     [self.view addSubview:_segV];
     
     _videoTypeSeg = [[VideoTypeSegment alloc] initWithFrame:CGRectMake(0, 0, 320, 65)];
@@ -188,7 +183,9 @@
     [self.view bringSubviewToFront:_filtrateView];
 }
 
-
+-(void)didTapOnSegmentView{
+    [self closeFiltrateView];
+}
 #pragma mark -
 #pragma mark - FiltrateDelegate
 -(void)filtrateWithVideoType:(int)type parameters:(NSMutableDictionary *)parameters{

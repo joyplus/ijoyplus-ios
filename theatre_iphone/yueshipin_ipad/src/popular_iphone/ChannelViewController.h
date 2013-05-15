@@ -10,7 +10,7 @@
 #import "SegmentControlView.h"
 #import "VideoTypeSegment.h"
 #import "FiltrateCell.h"
-@interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate,UIGestureRecognizerDelegate>{
+@interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate>{
     UIButton *titleButton_;
     int typeSelectIndex_;
     int videoType_;

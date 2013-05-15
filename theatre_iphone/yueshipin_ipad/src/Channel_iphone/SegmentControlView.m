@@ -82,6 +82,11 @@
     _segControlBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 306, 30)];
     _segControlBg.center = CGPointMake(160, 21);
     _segControlBg.backgroundColor = [UIColor redColor];
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnSelf)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    tapRecognizer.delegate = self;
+    tapRecognizer.cancelsTouchesInView = NO;
+    [_segControlBg addGestureRecognizer:tapRecognizer];
     
     for (int i = 0; i < [arr count]; i++) {
         NSString *str = arr[i];
@@ -142,6 +147,10 @@
         [_delegate moreSelectWithType:videoType_];
     }
     
+}
+
+-(void)tapOnSelf{
+    [_delegate didTapOnSegmentView];
 }
 
 -(NSString *)getKeyByString:(NSString *)str{

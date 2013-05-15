@@ -17,10 +17,11 @@ enum{
 @protocol SegmentDelegate <NSObject>
 -(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key;
 -(void)moreSelectWithType:(int)type;
+-(void)didTapOnSegmentView;
 @end
 
 
-@interface SegmentControlView : UIView{
+@interface SegmentControlView : UIView<UIGestureRecognizerDelegate>{
     int videoType_;
 
 }
