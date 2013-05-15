@@ -102,7 +102,6 @@
 }
 -(void)selectButton:(UIButton *)btn{
     for (int i = 0; i < 6; i++) {
-        NSLog(@"i: %d -------------tag: %d",i,btn.tag);
         UIButton *oneBtn = (UIButton *)[_segControlBg viewWithTag:100+i];
         if (100+i == btn.tag) {
             oneBtn.enabled = NO;
@@ -112,7 +111,7 @@
         
         }
     }
-
+    
     NSArray *arr = nil;
     switch (videoType_) {
         case TYPE_MOVIE:

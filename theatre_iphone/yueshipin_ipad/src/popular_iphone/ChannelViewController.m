@@ -66,6 +66,11 @@
     
     _segV = [[SegmentControlView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
     _segV.delegate = self;
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(closeFiltrateView)];
+    tapRecognizer.numberOfTapsRequired = 1;
+    tapRecognizer.delegate = self;
+    tapRecognizer.cancelsTouchesInView = NO;
+    [_segV.segControlBg addGestureRecognizer:tapRecognizer];
     [self.view addSubview:_segV];
     
     _videoTypeSeg = [[VideoTypeSegment alloc] initWithFrame:CGRectMake(0, 0, 320, 65)];
@@ -103,14 +108,30 @@
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
-    
 }
 
+-(void)closeFiltrateView{
+   _filtrateView.hidden = YES;
+}
+
+-(void)showSegmentControl:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        _videoTypeSeg.hidden = NO;
+        [self.view bringSubviewToFront:_videoTypeSeg];
+    }
+    else{
+        _videoTypeSeg.hidden = YES;
+    }
+    [_videoTypeSeg setSelectAtIndex:typeSelectIndex_];
+    
+}
 #pragma mark -
 #pragma mark - videoTypeSegmentDelegate
 -(void)videoTypeSegmentDidSelectedAtIndex:(int)index{
     typeSelectIndex_ = index;
     _videoTypeSeg.hidden = YES;
+    _filtrateView.hidden = YES;
     switch (index) {
         case 0:
             [_segV setSegmentControl:TYPE_MOVIE];
@@ -159,7 +180,6 @@
     }
     [_parameters setObject:@"" forKey:@"year"];
     [self sendHttpRequest:_parameters];
-   _filtrateView.hidden = YES;
 }
 
 -(void)moreSelectWithType:(int)type{;
@@ -267,6 +287,9 @@
     
 }
 
+
+#pragma mark -
+#pragma mark - SendHttpRequest
 -(void)sendHttpRequest:(NSDictionary *)parameters{
     
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -289,21 +312,6 @@
     [_dataArr addObjectsFromArray:itemsArr];
     
     [_tableList reloadData];
-}
-
-
-
--(void)showSegmentControl:(UIButton *)btn{
-    btn.selected = !btn.selected;
-    if (btn.selected) {
-        _videoTypeSeg.hidden = NO;
-        [self.view bringSubviewToFront:_videoTypeSeg];
-    }
-    else{
-        _videoTypeSeg.hidden = YES;
-    }
-    [_videoTypeSeg setSelectAtIndex:typeSelectIndex_];
-
 }
 
 - (void)didReceiveMemoryWarning
