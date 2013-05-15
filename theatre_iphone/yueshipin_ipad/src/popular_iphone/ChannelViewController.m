@@ -60,7 +60,8 @@
     titleButton_.titleLabel.shadowOffset = CGSizeMake(0, 1);
     [titleButton_ setTitleShadowColor:[UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1]forState:UIControlStateNormal];
     [titleButton_ setTitleShadowColor:[UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1]forState:UIControlStateHighlighted];
-    [titleButton_ addTarget:self action:@selector(setSegmentControl) forControlEvents:UIControlEventTouchUpInside];
+    [titleButton_ setTitleShadowColor:[UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1]forState:UIControlStateSelected];
+    [titleButton_ addTarget:self action:@selector(showSegmentControl:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.titleView = titleButton_;
     
     _segV = [[SegmentControlView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
@@ -292,10 +293,17 @@
 
 
 
--(void)setSegmentControl{
+-(void)showSegmentControl:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        _videoTypeSeg.hidden = NO;
+        [self.view bringSubviewToFront:_videoTypeSeg];
+    }
+    else{
+        _videoTypeSeg.hidden = YES;
+    }
     [_videoTypeSeg setSelectAtIndex:typeSelectIndex_];
-    _videoTypeSeg.hidden = NO;
-    [self.view bringSubviewToFront:_videoTypeSeg];
+
 }
 
 - (void)didReceiveMemoryWarning
