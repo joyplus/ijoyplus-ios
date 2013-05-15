@@ -138,6 +138,11 @@
         default:
             break;
     }
+    [_parameters setObject:[NSNumber numberWithInt:videoType_] forKey:@"type"];
+    [_parameters setObject:@"" forKey:@"sub_type"];
+    [_parameters setObject:@"" forKey:@"area"];
+    [_parameters setObject:@"" forKey:@"year"];
+    [self sendHttpRequest:_parameters];
 }
 
 #pragma mark -
@@ -152,7 +157,6 @@
         [_parameters setObject:@"" forKey:@"sub_type"];
     }
     [_parameters setObject:@"" forKey:@"year"];
-    [_parameters setObject:[NSNumber numberWithInt:videoType_] forKey:@"type"];
     [self sendHttpRequest:_parameters];
    _filtrateView.hidden = YES;
 }
