@@ -113,25 +113,25 @@
     switch (index) {
         case 0:
             [_segV setSegmentControl:TYPE_MOVIE];
-            
+            videoType_ = TYPE_MOVIE;
             [titleButton_ setTitle:@"电影" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"电影" forState:UIControlStateHighlighted];
             break;
         case 1:
             [_segV setSegmentControl:TYPE_TV];
-            
+            videoType_ = TYPE_TV;
             [titleButton_ setTitle:@"电视剧" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"电视剧" forState:UIControlStateHighlighted];
             break;
         case 2:
             [_segV setSegmentControl:TYPE_COMIC];
-            
+            videoType_ = TYPE_COMIC;
             [titleButton_ setTitle:@"动漫" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"动漫" forState:UIControlStateHighlighted];
             break;
         case 3:
             [_segV setSegmentControl:TYPE_SHOW];
-            
+            videoType_ = TYPE_SHOW;
             [titleButton_ setTitle:@"综艺" forState:UIControlStateNormal];
             [titleButton_ setTitle:@"综艺" forState:UIControlStateHighlighted];
             break;
@@ -152,6 +152,7 @@
         [_parameters setObject:@"" forKey:@"sub_type"];
     }
     [_parameters setObject:@"" forKey:@"year"];
+    [_parameters setObject:[NSNumber numberWithInt:videoType_] forKey:@"type"];
     [self sendHttpRequest:_parameters];
    _filtrateView.hidden = YES;
 }
