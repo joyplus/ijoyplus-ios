@@ -59,19 +59,6 @@
             videoType_ = TYPE_MOVIE;
             _seg = [[UISegmentedControl alloc] initWithItems:_movieLabelArr];
             break;
-        case TYPE_TV:
-             videoType_ = TYPE_TV;
-            _seg = [[UISegmentedControl alloc] initWithItems:_tvLabelArr];
-            break;
-        case TYPE_COMIC:
-            videoType_ = TYPE_COMIC;
-            _seg = [[UISegmentedControl alloc] initWithItems:_comicLabelArr];
-            break;
-        case TYPE_SHOW:
-            videoType_ = TYPE_SHOW;
-            _seg = [[UISegmentedControl alloc] initWithItems:_showLabelArr];
-            break;
-            
         default:
             break;
     }

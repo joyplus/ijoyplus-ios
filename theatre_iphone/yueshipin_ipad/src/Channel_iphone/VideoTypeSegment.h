@@ -9,11 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol VideoTypeSegmentDelegate <NSObject>
-<<<<<<< HEAD
--(void)segmentDidSelectedAtIndex:(int)index;
-=======
 -(void)videoTypeSegmentDidSelectedAtIndex:(int)index;
->>>>>>> iphone code commit
 @end
 
 

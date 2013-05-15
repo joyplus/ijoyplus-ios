@@ -67,16 +67,7 @@
     _videoTypeSeg.delegate = self;
     _videoTypeSeg.hidden = YES;
     [self.view addSubview: _videoTypeSeg];
-}
-
-//VideoTypeSegmentDelegate
--(void)segmentDidSelectedAtIndex:(int)index{
-    typeSelectIndex_ = index;
-}
-
-
--(void)setSegmentControl{
-
+    
     _filtrateView = [[FiltrateView alloc] initWithFrame:CGRectMake(0, 42, 320, 108)];
     _filtrateView.delegate = self;
     _filtrateView.hidden = YES;

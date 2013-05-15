@@ -14,7 +14,6 @@ enum{
     TYPE_SHOW = 3
 };
 
-@interface SegmentControlView : UIView
 @protocol SegmentDelegate <NSObject>
 -(void)segmentDidSelectedLabelStr:(NSString *)str;
 -(void)moreSelectWithType:(int)type;
@@ -43,6 +42,7 @@ enum{
 -(void)filtrateWithVideoType:(int)type parameters:(NSMutableDictionary *)parameters;
 
 @end
+
 
 @interface FiltrateView : UIView{
     int _videoType;

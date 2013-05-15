@@ -27,36 +27,7 @@ enum{
 -(void)initSelectButton{
     UIButton *movieBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     movieBtn.frame = CGRectMake(0, 0, 80, 65);
-    movieBtn.tag = 100+TYPE_MOVIE;
-    [movieBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
-    movieBtn.enabled = NO;
-    movieBtn.adjustsImageWhenDisabled = NO;
-    [self addSubview:movieBtn];
-    
-    UIButton *tvBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    tvBtn.frame = CGRectMake(0, 80, 80, 65);
-    tvBtn.tag = 100+TYPE_TV;
-    [tvBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
-    tvBtn.enabled = NO;
-    tvBtn.adjustsImageWhenDisabled = NO;
-    [self addSubview:tvBtn];
-    
-    UIButton *comicBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    comicBtn.frame = CGRectMake(0, 160, 80, 65);
-    comicBtn.tag = 100+TYPE_COMIC;
-    [comicBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
-    comicBtn.enabled = NO;
-    comicBtn.adjustsImageWhenDisabled = NO;
-    [self addSubview:comicBtn];
-    
-    UIButton *showBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    showBtn.frame = CGRectMake(0, 240, 80, 65);
-    showBtn.tag = 100+TYPE_SHOW;
-    [showBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
-    showBtn.enabled = NO;
-    showBtn.adjustsImageWhenDisabled = NO;
-    [self addSubview:showBtn];
-    
+    movieBtn.tag = 100+TYPE_MOVIE;    
     [movieBtn setTitle:@"movie" forState:UIControlStateNormal];
     [movieBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
     movieBtn.enabled = NO;
@@ -106,7 +77,6 @@ enum{
 -(void)buttonSelect:(UIButton *)btn{
     int index = btn.tag - 100;
     [self setSelectAtIndex:index];
-    [_delegate segmentDidSelectedAtIndex:index];
     [_delegate videoTypeSegmentDidSelectedAtIndex:index];
 }
 /*

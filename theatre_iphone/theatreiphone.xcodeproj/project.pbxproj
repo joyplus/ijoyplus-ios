@@ -247,10 +247,6 @@
 		E766D18E17338F68006F9940 /* ti_jiao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D18C17338F68006F9940 /* ti_jiao_s@2x.png */; };
 		E766D18F17338F68006F9940 /* ti_jiao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D18D17338F68006F9940 /* ti_jiao@2x.png */; };
 		E77320391741D5D9009BA2D2 /* VideoTypeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */; };
-<<<<<<< HEAD
-=======
-		E773203C174237DD009BA2D2 /* FiltrateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E773203B174237DD009BA2D2 /* FiltrateCell.m */; };
->>>>>>> iphone code commit
 		E77349741740F75000176BA4 /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349731740F75000176BA4 /* ChannelViewController.m */; };
 		E77349781741026500176BA4 /* SegmentControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349771741026400176BA4 /* SegmentControlView.m */; };
 		E77DC12A17165E49002B6536 /* feedBackhead@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */; };
@@ -270,6 +266,7 @@
 		E795001F173B7E7400660E35 /* share_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E795000C173B7E7200660E35 /* share_btn@2x.png */; };
 		E795FFFE173B37C900660E35 /* custom-dialog-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E795FFFD173B37C900660E35 /* custom-dialog-background@2x.png */; };
 		E7985D67173A0F6B00209430 /* custom-cancel-normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7985D66173A0F6A00209430 /* custom-cancel-normal@2x.png */; };
+		E79C3E5517432DC40076AEBF /* FiltrateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E79C3E5417432DC40076AEBF /* FiltrateCell.m */; };
 		E79FB54316F868AC0055AA4D /* bg_sou_suo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53D16F868AC0055AA4D /* bg_sou_suo@2x.png */; };
 		E79FB54416F868AC0055AA4D /* sou_suo_hot@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53E16F868AC0055AA4D /* sou_suo_hot@2x.png */; };
 		E79FB54516F868AC0055AA4D /* sousuo_qing_chu_@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E79FB53F16F868AC0055AA4D /* sousuo_qing_chu_@2x.png */; };
@@ -893,11 +890,6 @@
 		E766D18D17338F68006F9940 /* ti_jiao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ti_jiao@2x.png"; path = "yueshipin_ipad/Resource_iphone/ti_jiao@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77320371741D5D9009BA2D2 /* VideoTypeSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTypeSegment.h; sourceTree = "<group>"; };
 		E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoTypeSegment.m; sourceTree = "<group>"; };
-<<<<<<< HEAD
-=======
-		E773203A174237DD009BA2D2 /* FiltrateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiltrateCell.h; sourceTree = "<group>"; };
-		E773203B174237DD009BA2D2 /* FiltrateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiltrateCell.m; sourceTree = "<group>"; };
->>>>>>> iphone code commit
 		E77349721740F75000176BA4 /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ../popular_iphone/ChannelViewController.h; sourceTree = "<group>"; };
 		E77349731740F75000176BA4 /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ../popular_iphone/ChannelViewController.m; sourceTree = "<group>"; };
 		E77349761741026400176BA4 /* SegmentControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentControlView.h; sourceTree = "<group>"; };
@@ -920,6 +912,8 @@
 		E795FFFD173B37C900660E35 /* custom-dialog-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "custom-dialog-background@2x.png"; path = "yueshipin_ipad/Resource_iphone/custom-dialog-background@2x.png"; sourceTree = SOURCE_ROOT; };
 		E795FFFF173B390800660E35 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E7985D66173A0F6A00209430 /* custom-cancel-normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "custom-cancel-normal@2x.png"; path = "yueshipin_ipad/Resource_iphone/custom-cancel-normal@2x.png"; sourceTree = SOURCE_ROOT; };
+		E79C3E5317432DC40076AEBF /* FiltrateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FiltrateCell.h; sourceTree = "<group>"; };
+		E79C3E5417432DC40076AEBF /* FiltrateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FiltrateCell.m; sourceTree = "<group>"; };
 		E79FB53D16F868AC0055AA4D /* bg_sou_suo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg_sou_suo@2x.png"; path = "yueshipin_ipad/Resource_iphone/bg_sou_suo@2x.png"; sourceTree = SOURCE_ROOT; };
 		E79FB53E16F868AC0055AA4D /* sou_suo_hot@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sou_suo_hot@2x.png"; path = "yueshipin_ipad/Resource_iphone/sou_suo_hot@2x.png"; sourceTree = SOURCE_ROOT; };
 		E79FB53F16F868AC0055AA4D /* sousuo_qing_chu_@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sousuo_qing_chu_@2x.png"; path = "yueshipin_ipad/Resource_iphone/sousuo_qing_chu_@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1966,11 +1960,8 @@
 				E77349771741026400176BA4 /* SegmentControlView.m */,
 				E77320371741D5D9009BA2D2 /* VideoTypeSegment.h */,
 				E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */,
-<<<<<<< HEAD
-=======
-				E773203A174237DD009BA2D2 /* FiltrateCell.h */,
-				E773203B174237DD009BA2D2 /* FiltrateCell.m */,
->>>>>>> iphone code commit
+				E79C3E5317432DC40076AEBF /* FiltrateCell.h */,
+				E79C3E5417432DC40076AEBF /* FiltrateCell.m */,
 			);
 			name = Channel_iphone;
 			path = yueshipin_ipad/src/Channel_iphone;
@@ -3099,10 +3090,7 @@
 				E77349741740F75000176BA4 /* ChannelViewController.m in Sources */,
 				E77349781741026500176BA4 /* SegmentControlView.m in Sources */,
 				E77320391741D5D9009BA2D2 /* VideoTypeSegment.m in Sources */,
-<<<<<<< HEAD
-=======
-				E773203C174237DD009BA2D2 /* FiltrateCell.m in Sources */,
->>>>>>> iphone code commit
+				E79C3E5517432DC40076AEBF /* FiltrateCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
