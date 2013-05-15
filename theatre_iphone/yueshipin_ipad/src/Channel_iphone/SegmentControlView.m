@@ -172,6 +172,12 @@
 
 -(void)setViewWithType:(int)type{
     _videoType = type;
+    
+    for (UIView *view in [self subviews]) {
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            [view removeFromSuperview];
+        }
+    }
     switch (type) {
         case TYPE_MOVIE:{
             [self setScrollViewWithItems:MOVIE_ALL_TYPE atPosition:0];
