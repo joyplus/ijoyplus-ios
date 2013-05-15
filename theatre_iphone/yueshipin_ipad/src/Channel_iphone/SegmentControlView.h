@@ -15,7 +15,7 @@ enum{
 };
 
 @protocol SegmentDelegate <NSObject>
--(void)segmentDidSelectedLabelStr:(NSString *)str;
+-(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key;
 -(void)moreSelectWithType:(int)type;
 @end
 

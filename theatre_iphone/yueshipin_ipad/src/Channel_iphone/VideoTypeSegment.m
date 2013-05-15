@@ -75,7 +75,24 @@ enum{
 }
 
 -(void)buttonSelect:(UIButton *)btn{
-    int index = btn.tag - 100;
+    int index = 0;
+    switch (btn.tag) {
+        case 101:
+            index = 0;
+            break;
+        case 102:
+            index= 1;
+            break;
+        case 231:
+            index = 2;
+            break;
+        case 103:
+            index = 3;
+            break;
+            
+        default:
+            break;
+    }
     [self setSelectAtIndex:index];
     [_delegate videoTypeSegmentDidSelectedAtIndex:index];
 }

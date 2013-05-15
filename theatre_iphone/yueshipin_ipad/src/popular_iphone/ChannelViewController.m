@@ -142,8 +142,17 @@
 
 #pragma mark -
 #pragma mark - SegmentDelegate
--(void)segmentDidSelectedLabelStr:(NSString *)str{
-    NSLog(@"%@",str);
+-(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key{
+    if ([key isEqualToString:@"sub_type"]) {
+        [_parameters setObject:str forKey:@"sub_type"];
+        [_parameters setObject:@"" forKey:@"area"];
+    }
+    else if([key  isEqualToString:@"area"]){
+        [_parameters setObject:str forKey:@"area"];
+        [_parameters setObject:@"" forKey:@"sub_type"];
+    }
+    [_parameters setObject:@"" forKey:@"year"];
+    [self sendHttpRequest:_parameters];
    _filtrateView.hidden = YES;
 }
 

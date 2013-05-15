@@ -103,7 +103,11 @@
     }
     if (seg.selectedSegmentIndex < 5) {
         NSString *selectedStr = [arr objectAtIndex:seg.selectedSegmentIndex];
-        [_delegate segmentDidSelectedLabelStr:selectedStr];
+       NSString *key = [self getKeyByString:selectedStr];
+        if ([selectedStr isEqualToString:@"全部"]) {
+            selectedStr = @"";
+        }
+        [_delegate segmentDidSelectedLabelStr:selectedStr withKey:key];
     }
     else{
         [_delegate moreSelectWithType:videoType_];
@@ -111,14 +115,21 @@
     
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+-(NSString *)getKeyByString:(NSString *)str{
+    NSMutableArray *typeArr = [NSMutableArray arrayWithCapacity:5];
+    [typeArr addObjectsFromArray:MOVIE_ALL_TYPE];
+    [typeArr addObjectsFromArray:TV_ALL_TYPE];
+    [typeArr addObjectsFromArray:COMIC_ALL_TYPE];
+    [typeArr addObjectsFromArray:SHOW_ALL_TYPE];
+    int index = [typeArr indexOfObject:str];
+    if (index != NSNotFound) {
+        return @"sub_type";
+    }
+    else{
+        return @"area";
+    
+    }
 }
-*/
 @end
 
 
