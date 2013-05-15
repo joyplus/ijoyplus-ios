@@ -69,7 +69,7 @@
             break;
         case TYPE_SHOW:
             videoType_ = TYPE_SHOW;
-            _seg = [[UISegmentedControl alloc] initWithItems:_movieLabelArr];
+            _seg = [[UISegmentedControl alloc] initWithItems:_showLabelArr];
             break;
         default:
             break;
