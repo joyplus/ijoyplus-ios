@@ -47,16 +47,19 @@
     }
     switch (type) {
         case TYPE_MOVIE:
+            videoType_ = TYPE_MOVIE;
             _seg = [[UISegmentedControl alloc] initWithItems:_movieLabelArr];
             break;
         case TYPE_TV:
+            videoType_ = TYPE_TV;
             _seg = [[UISegmentedControl alloc] initWithItems:_tvLabelArr];
             break;
         case TYPE_COMIC:
+            videoType_ = TYPE_COMIC;
             _seg = [[UISegmentedControl alloc] initWithItems:_comicLabelArr];
             break;
         case TYPE_SHOW:
-            videoType_ = TYPE_MOVIE;
+            videoType_ = TYPE_SHOW;
             _seg = [[UISegmentedControl alloc] initWithItems:_movieLabelArr];
             break;
         default:
@@ -161,8 +164,7 @@
     NSArray * const SHOW_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil];
     
     NSArray * const MOVIE_YEAR = [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",nil];
-    
-    _videoType  = type;
+    _videoType = type;
     switch (type) {
         case TYPE_MOVIE:{
             [self setScrollViewWithItems:MOVIE_ALL_TYPE atPosition:0];

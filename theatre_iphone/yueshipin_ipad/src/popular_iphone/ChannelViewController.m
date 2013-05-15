@@ -12,6 +12,9 @@
 #import "ServiceConstants.h"
 #import "FiltrateCell.h"
 #import "UIImageView+WebCache.h"
+#import "TVDetailViewController.h"
+#import "IphoneMovieDetailViewController.h"
+#import "IphoneShowDetailViewController.h"
 @implementation ChannelViewController
 @synthesize titleButton = titleButton_;
 @synthesize segV = _segV;
@@ -235,6 +238,18 @@
     NSIndexPath *indexPath = [_tableList indexPathForCell:cell];
     int row = indexPath.row;
     NSDictionary *item = [_dataArr objectAtIndex:row*3+position];
+    NSString *type = [item objectForKey:@"prod_type"];
+    if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]) {
+        TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    else if ([type isEqualToString:@"1"]){
+        IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];
+        detailViewController.infoDic = item;
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    }
+    
 
 }
 
