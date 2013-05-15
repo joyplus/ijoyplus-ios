@@ -4085,7 +4085,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F213582443349C3B05019CB /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4103,8 +4103,8 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 				);
 				PRODUCT_NAME = theatreipad;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FE3876D7-5A14-43FB-A31E-6C416FC7FCD6";
+				PROVISIONING_PROFILE = "33862E15-F2BD-470C-9FED-97AAF52AD690";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "33862E15-F2BD-470C-9FED-97AAF52AD690";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
@@ -4114,7 +4114,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F213582443349C3B05019CB /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4132,8 +4132,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 				);
 				PRODUCT_NAME = theatreipad;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "26F92A3B-CA7A-4541-B39E-C83A34111B67";
+				PROVISIONING_PROFILE = "ADC664A0-6A4F-42F8-811B-7BD87BD43A68";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
