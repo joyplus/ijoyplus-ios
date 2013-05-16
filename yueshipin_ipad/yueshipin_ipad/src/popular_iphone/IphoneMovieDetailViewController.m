@@ -805,27 +805,9 @@
 
 - (void)expectVideo
 {
-    [self SubscribingToChannels];
+    //电影不需要注册消息推送
+//    [self SubscribingToChannels];
     [self addVideotoFav:ADDEXPECT];
-}
-
-- (void)SubscribingToChannels
-{
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
-    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
-        if (succeeded)
-        {
-            NSLog(@"Successfully subscribed to channel!");
-        }
-        else
-        {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-        }
-    }];
 }
 
 - (void)addVideotoFav:(NSInteger)type
@@ -861,8 +843,8 @@
             break;
         }
         case 10002:{
-            
-            [self SubscribingToChannels];
+            //电影不需要注册消息推送
+//            [self SubscribingToChannels];
             [self addVideotoFav:ADDFAV];
             
             break;
