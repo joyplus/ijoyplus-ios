@@ -148,6 +148,7 @@
         isLoaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"movie"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
         favCount_ = [[videoInfo_ objectForKey:@"favority_num"] integerValue];
@@ -179,6 +180,7 @@
 
         }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
@@ -513,7 +515,7 @@
                     expectbtn.hidden = YES;
                 } else {
                     expectbtn.hidden = NO;
-                }
+                }                
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];

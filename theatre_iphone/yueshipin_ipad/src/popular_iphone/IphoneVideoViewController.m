@@ -476,7 +476,11 @@
             NSString *url = [videoUrl objectForKey:@"url"];
             NSString *source = [videoUrl objectForKey:@"source"];
             NSString *trimUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            if (trimUrl && trimUrl.length > 0 && ![source isEqualToString:@"yuanxian"]) {
+            if ([source isEqualToString:@"yuanxian"]) {
+                canPlayVideo = NO;
+                return;
+            }
+            if (trimUrl && trimUrl.length > 0) {
                 canPlayVideo = YES;
                 break;
             }

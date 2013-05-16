@@ -154,7 +154,7 @@
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
         
-         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
@@ -191,6 +191,7 @@
             infoDic_ = videoInfo_;
         }
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
