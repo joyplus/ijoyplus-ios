@@ -10,10 +10,13 @@
 #import "SegmentControlView.h"
 #import "VideoTypeSegment.h"
 #import "FiltrateCell.h"
-@interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate>{
+#import "EGORefreshTableHeaderView.h"
+#import "MNMBottomPullToRefreshManager.h"
+@interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>{
     UIButton *titleButton_;
     int typeSelectIndex_;
     int videoType_;
+    BOOL isLoading_;
 }
 @property(nonatomic, strong)UIButton *titleButton;
 @property(nonatomic, strong)SegmentControlView *segV;
@@ -22,4 +25,6 @@
 @property(nonatomic, strong)UITableView *tableList;
 @property(nonatomic, strong)NSMutableArray *dataArr;
 @property(nonatomic, strong)NSMutableDictionary *parameters;
+@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
+@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
 @end

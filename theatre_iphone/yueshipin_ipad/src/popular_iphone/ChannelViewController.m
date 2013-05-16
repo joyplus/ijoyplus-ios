@@ -23,6 +23,8 @@
 @synthesize tableList = _tableList;
 @synthesize dataArr = _dataArr;
 @synthesize parameters = _parameters;
+@synthesize pullToRefreshManager = _pullToRefreshManager;
+@synthesize refreshHeaderView = _refreshHeaderView;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -84,6 +86,16 @@
     _tableList.backgroundColor = [UIColor clearColor];
     _tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableList];
+    
+    
+    _pullToRefreshManager = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableList withClient:self];
+    if (_refreshHeaderView == nil) {
+        EGORefreshTableHeaderView *egoRefreshTableHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - _tableList.bounds.size.height, self.view.frame.size.width, _tableList.bounds.size.height)];
+        egoRefreshTableHeaderView.backgroundColor = [UIColor clearColor];
+        egoRefreshTableHeaderView.delegate = self;
+        [_tableList addSubview:egoRefreshTableHeaderView];
+        _refreshHeaderView = egoRefreshTableHeaderView;
+    }
     
     [self initDefaultParameters];
 }
@@ -284,7 +296,54 @@
     
 }
 
+#pragma mark -
+#pragma mark - UIScrollviewDelegate
 
+- (void)scrollViewDidScroll:(UIScrollView *)aScrollView{
+   [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
+    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
+
+}
+
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	isLoading_ = YES;
+    [self sendHttpRequest:_parameters];
+    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	
+	return isLoading_;
+	
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	
+	return [NSDate date]; 
+	
+}
+
+#pragma mark -
+#pragma mark MNMBottomPullToRefreshManager Methods
+- (void)MNMBottomPullToRefreshManagerClientReloadTable{
+    
+
+}
+
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	isLoading_ = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_tableList];
+	
+}
 #pragma mark -
 #pragma mark - SendHttpRequest
 -(void)sendHttpRequest:(NSDictionary *)parameters{

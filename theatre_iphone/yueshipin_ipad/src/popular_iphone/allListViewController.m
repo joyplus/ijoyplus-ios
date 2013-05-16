@@ -280,7 +280,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView{
 
-
+    [refreshHeaderView_ egoRefreshScrollViewDidScroll:aScrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {

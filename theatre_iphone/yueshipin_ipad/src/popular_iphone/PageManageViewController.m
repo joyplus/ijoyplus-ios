@@ -916,6 +916,29 @@ enum
 
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    switch (scrollView.tag) {
+        case MOVIE_TYPE:{
+            [refreshHeaderViewForMovieList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        case TV_TYPE:{
+            [refreshHeaderViewForTvList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        case SHOW_TYPE:{
+            [refreshHeaderViewForShowList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        case COMIC_TYPE:{
+            [refreshHeaderViewForComicList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        default:
+            break;
+    }
+
+}
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     switch (scrollView.tag){
