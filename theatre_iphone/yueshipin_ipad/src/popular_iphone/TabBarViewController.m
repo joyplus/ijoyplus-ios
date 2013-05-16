@@ -88,11 +88,11 @@
 -(void)setBadgeValue{
     int count = [DownLoadManager downloadTaskCount];
     if (count > 0) {
-         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
         
     }
     else{
-         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:nil];
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setBadgeValue:nil];
     }
 
     
