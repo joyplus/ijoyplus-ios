@@ -204,6 +204,9 @@
         self.backgroundColor = [UIColor grayColor];
         
         _parametersDic = [NSMutableDictionary dictionaryWithCapacity:5];
+        [_parametersDic setObject:@"" forKey:@"sub_type"];
+        [_parametersDic setObject:@"" forKey:@"area"];
+        [_parametersDic setObject:@"" forKey:@"year"];
     }
     return self;
 }

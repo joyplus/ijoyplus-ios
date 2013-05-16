@@ -177,6 +177,11 @@
 #pragma mark -
 #pragma mark - SegmentDelegate
 -(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key{
+    NSString *area = [_parameters objectForKey:@"area"];
+    NSString *subType = [_parameters objectForKey:@"sub_type"];
+    NSString *year = [_parameters objectForKey:@"year"];
+    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
+    
     if ([key isEqualToString:@"sub_type"]) {
         [_parameters setObject:str forKey:@"sub_type"];
         [_parameters setObject:@"" forKey:@"area"];
@@ -201,10 +206,13 @@
 #pragma mark -
 #pragma mark - FiltrateDelegate
 -(void)filtrateWithVideoType:(int)type parameters:(NSMutableDictionary *)parameters{
-    [parameters setObject:@"1" forKey:@"page_num"];
-    [parameters setObject:[NSNumber numberWithInt:type] forKey:@"type"];
-    [parameters setObject:[NSNumber numberWithInt:12] forKey:@"page_size"];
-    [self sendHttpRequest:parameters];
+    [_parameters setObject:[parameters objectForKey:@"sub_type"] forKey:@"sub_type"];
+    [_parameters setObject:[parameters objectForKey:@"area"] forKey:@"area"];
+    [_parameters setObject:[parameters objectForKey:@"year"] forKey:@"year"];
+    [_parameters setObject:@"1" forKey:@"page_num"];
+    [_parameters setObject:[NSNumber numberWithInt:type] forKey:@"type"];
+    [_parameters setObject:[NSNumber numberWithInt:12] forKey:@"page_size"];
+    [self sendHttpRequest:_parameters];
 }
 
 
@@ -305,7 +313,7 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
     [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
-
+    [_pullToRefreshManager tableViewReleased];
 }
 
 #pragma mark -
@@ -313,6 +321,7 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
 	isLoading_ = YES;
+    [_parameters setObject:@"1" forKey:@"page_num"];
     [self sendHttpRequest:_parameters];
     [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
 }
@@ -332,10 +341,26 @@
 #pragma mark -
 #pragma mark MNMBottomPullToRefreshManager Methods
 - (void)MNMBottomPullToRefreshManagerClientReloadTable{
-    
+    int loadCount = [[_parameters objectForKey:@"page_num"] intValue];
+    loadCount++;
+    [_parameters setObject:[NSString stringWithFormat:@"%d",loadCount] forKey:@"page_num"];
+    [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:_parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSArray *itemsArr = [result objectForKey:@"results"];
+        [_dataArr addObjectsFromArray:itemsArr];
+        [self reloadTableList];
+        if ([itemsArr count]<12) {
+            [_pullToRefreshManager setPullToRefreshViewVisible:NO];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@",error);
+    }];
 
 }
 
+-(void)reloadTableList{
+    [_tableList reloadData];
+    [_pullToRefreshManager tableViewReloadFinished];
+}
 
 - (void)doneLoadingTableViewData{
 	
@@ -347,10 +372,14 @@
 #pragma mark -
 #pragma mark - SendHttpRequest
 -(void)sendHttpRequest:(NSDictionary *)parameters{
-    
+    NSString *area = [parameters objectForKey:@"area"];
+    NSString *subType = [parameters objectForKey:@"sub_type"];
+    NSString *year = [parameters objectForKey:@"year"];
+    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSLog(@"success");
         [self analyzeData:result];
+        [self reloadTableList];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@",error);
     }];
@@ -366,8 +395,6 @@
     
     NSArray *itemsArr = [result objectForKey:@"results"];
     [_dataArr addObjectsFromArray:itemsArr];
-    
-    [_tableList reloadData];
 }
 
 - (void)didReceiveMemoryWarning
