@@ -64,6 +64,7 @@
 @synthesize typeLabel = typeLabel_;
 @synthesize clearRecord = clearRecord_;
 @synthesize scrollBg;
+@synthesize progressHUD = progressHUD_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -74,16 +75,12 @@
 }
 
 -(void)loadMyFavsData{
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
+    [progressHUD_ show:YES];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"favorities"];
             if(tempTopsArray.count > 0){
@@ -100,22 +97,18 @@
         if(self.favArr == nil){
             self.favArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         [CommonMotheds showInternetError:error inView:self.view];
     }];
     
 }
 
 -(void)loadPersonalData{
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
+    [progressHUD_ show:YES];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         myListArr_  = [NSMutableArray arrayWithCapacity:10];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *tempArr = [result objectForKey:@"tops"];
@@ -132,7 +125,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
        
-      [tempHUD hide:YES];
+      [progressHUD_ hide:YES];
       [CommonMotheds showInternetError:error inView:self.view];
     }];
 
@@ -307,6 +300,11 @@
     nameLabel_.backgroundColor = [UIColor clearColor];
     [scrollBg addSubview:nameLabel_];
     
+    progressHUD_ = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:progressHUD_];
+    progressHUD_.labelText = @"加载中...";
+    progressHUD_.opacity = 0.5;
+    
     //加载数据
     if ([sortedwatchRecordArray_ count]>0) {
         [self.bgView addSubview:recordTableList_];
@@ -369,11 +367,6 @@
 }
 - (void)loadRecordData
 {
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
     
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
     if(cacheResult != nil){
@@ -385,13 +378,17 @@
         }
         
     }
+    else{
+    
+       [progressHUD_ show:YES];
+    }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         [self parseWatchResultData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         NSLog(@"%@", error);
        [CommonMotheds showInternetError:error inView:self.view];
     }];
