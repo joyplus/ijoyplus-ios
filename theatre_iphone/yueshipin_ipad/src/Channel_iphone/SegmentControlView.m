@@ -41,7 +41,7 @@
         _showLabelArr = [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"更多",nil];
         
         UIView *segmentBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
-        segmentBg.backgroundColor = [UIColor grayColor];
+        segmentBg.backgroundColor = [UIColor colorWithRed:43/255.0 green:43/255.0 blue:43/255.0 alpha:1];
         [self addSubview:segmentBg];
         
         [self setSegmentControl:TYPE_MOVIE];

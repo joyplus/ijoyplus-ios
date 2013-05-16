@@ -12,6 +12,7 @@
 #import "FiltrateCell.h"
 #import "EGORefreshTableHeaderView.h"
 #import "MNMBottomPullToRefreshManager.h"
+#import "MBProgressHUD.h"
 @interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>{
     UIButton *titleButton_;
     int typeSelectIndex_;
@@ -27,4 +28,5 @@
 @property(nonatomic, strong)NSMutableDictionary *parameters;
 @property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
 @property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
+@property (strong, nonatomic) MBProgressHUD *progressHUD;
 @end

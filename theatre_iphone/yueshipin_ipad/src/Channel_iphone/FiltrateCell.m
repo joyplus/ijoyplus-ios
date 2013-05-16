@@ -20,8 +20,12 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        // Initialization code
-        _firstImageView = [[UIImageView alloc] initWithFrame:CGRectMake(14, 2, 87, 118)];
+        // Initialization code        
+        UIImageView *imageFrame1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
+        imageFrame1.frame = CGRectMake(14, 2, 87, 118);
+        [self addSubview:imageFrame1];
+        
+        _firstImageView = [[UIImageView alloc] initWithFrame:CGRectMake(17, 5, 81, 112)];
         _firstImageView.userInteractionEnabled = YES;
         UIButton *firstBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         firstBtn.backgroundColor = [UIColor clearColor];
@@ -31,7 +35,10 @@
         [_firstImageView addSubview:firstBtn];
         [self addSubview:_firstImageView];
         
-        _secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(116, 2, 87, 118)];
+        UIImageView *imageFrame2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
+        imageFrame2.frame = CGRectMake(116, 2, 87, 118);
+        [self addSubview:imageFrame2];
+        _secondImageView = [[UIImageView alloc] initWithFrame:CGRectMake(119, 5, 81, 112)];
         _secondImageView.userInteractionEnabled = YES;
         UIButton *secondBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         secondBtn.backgroundColor = [UIColor clearColor];
@@ -41,7 +48,11 @@
         [_secondImageView addSubview:secondBtn];
         [self addSubview:_secondImageView];
         
-        _thirdImageView = [[UIImageView alloc] initWithFrame:CGRectMake(218, 2, 87, 118)];
+        
+        UIImageView *imageFrame3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
+        imageFrame3.frame = CGRectMake(218, 2, 87, 118);
+        [self addSubview:imageFrame3];
+        _thirdImageView = [[UIImageView alloc] initWithFrame:CGRectMake(221, 5, 81, 112)];
         _thirdImageView.userInteractionEnabled = YES;
         UIButton *thirdBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         thirdBtn.backgroundColor = [UIColor clearColor];
@@ -51,22 +62,25 @@
         [_thirdImageView addSubview:thirdBtn];
         [self addSubview:_thirdImageView];
         
-        _firstLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 125, 87, 15)];
+        _firstLabel = [[UILabel alloc] initWithFrame:CGRectMake(14, 123, 87, 15)];
         _firstLabel.font = [UIFont systemFontOfSize:12];
         _firstLabel.textAlignment = NSTextAlignmentCenter;
         _firstLabel.backgroundColor = [UIColor clearColor];
+        _firstLabel.textColor = [UIColor colorWithRed:88.0/255 green:88.0/255 blue:88.0/255 alpha:1];
         [self addSubview:_firstLabel];
         
-        _secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 125, 87, 15)];
+        _secondLabel = [[UILabel alloc] initWithFrame:CGRectMake(116, 123, 87, 15)];
         _secondLabel.font = [UIFont systemFontOfSize:12];
         _secondLabel.textAlignment = NSTextAlignmentCenter;
         _secondLabel.backgroundColor = [UIColor clearColor];
+        _secondLabel.textColor = [UIColor colorWithRed:88.0/255 green:88.0/255 blue:88.0/255 alpha:1];
         [self addSubview:_secondLabel];
         
-        _thirdLabel = [[UILabel alloc] initWithFrame:CGRectMake(218, 125, 87, 15)];
+        _thirdLabel = [[UILabel alloc] initWithFrame:CGRectMake(218, 123, 87, 15)];
         _thirdLabel.font = [UIFont systemFontOfSize:12];
         _thirdLabel.textAlignment = NSTextAlignmentCenter;
         _thirdLabel.backgroundColor = [UIColor clearColor];
+        _thirdLabel.textColor = [UIColor colorWithRed:88.0/255 green:88.0/255 blue:88.0/255 alpha:1];
         [self addSubview:_thirdLabel];
         
     }

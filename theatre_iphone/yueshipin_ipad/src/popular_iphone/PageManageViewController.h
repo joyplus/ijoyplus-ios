@@ -12,7 +12,7 @@
 #import "MNMBottomPullToRefreshManager.h"
 #import "DimensionalCodeScanViewController.h"
 #import "BundingTVManager.h"
-
+#import "MBProgressHUD.h"
 @interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient,EGORefreshTableHeaderDelegate>{
 
     UIScrollView *scrollView_;
@@ -69,7 +69,7 @@
 @property (strong, nonatomic)UIImageView *slider;
 @property (strong, nonatomic)UIImageView *pageMGIcon;
 @property (strong, nonatomic) NSString *showTopId;
-
+@property (strong, nonatomic) MBProgressHUD *progressHUD;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForComicList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForMovieList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForTvList;

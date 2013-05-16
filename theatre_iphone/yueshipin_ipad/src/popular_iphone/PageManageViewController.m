@@ -65,7 +65,7 @@ enum
 @synthesize comicTableList = comicTableList_;
 @synthesize comicListArr = comicListArr_;
 @synthesize comicBtn = comicBtn_;
-
+@synthesize progressHUD = progressHUD_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -92,8 +92,6 @@ enum
 }
 
 -(void)loadTVTopsData{
-
-    MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
     if(cacheResult != nil){
         self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -109,16 +107,9 @@ enum
         [self.tvTableList reloadData];
     }
     else {
-        if(tempHUD == nil){
-            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.tvTableList reloadData];
-            [self.view addSubview:tempHUD];
-            tempHUD.labelText = @"加载中...";
-            tempHUD.opacity = 0.5;
-            [tempHUD show:YES];
-        }
-        
-        
+    
+        [self.tvTableList reloadData];
+        [progressHUD_ show:YES];
     }
 
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%d",tvLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
@@ -137,22 +128,20 @@ enum
         }
         
        [self loadTable:TV_TYPE];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.tvListArr == nil){
             self.tvListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         [CommonMotheds showInternetError:error inView:self.view];
     }];
     
     }
 
 -(void)loadMovieTopsData{
-     
-    MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
     if(cacheResult != nil){
         self.movieListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -168,16 +157,10 @@ enum
         [self.movieTableList reloadData];
     }
     else {
-        if(tempHUD == nil){
-            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.movieTableList reloadData];
-            [self.view addSubview:tempHUD];
-            tempHUD.labelText = @"加载中...";
-            tempHUD.opacity = 0.5;
-            [tempHUD show:YES];
-        } 
+        
+        [self.movieTableList reloadData];
+        [progressHUD_ show:YES];
     }
-
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSString stringWithFormat:@"%d",movieLoadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.movieListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -193,21 +176,20 @@ enum
             
         }
         [self loadTable:MOVIE_TYPE];
-         [tempHUD hide:YES];
+         [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.movieListArr == nil){
             self.movieListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-         [tempHUD hide:YES];
+         [progressHUD_ hide:YES];
         [CommonMotheds showInternetError:error inView:self.view];
     }];
         
 }
 
 -(void)loadShowTopsData{
-    MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
     if(cacheResult != nil){
         self.showListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -223,13 +205,8 @@ enum
         [showTableList_ reloadData];
     }
     else {
-        if(tempHUD == nil){
-            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:tempHUD];
-            tempHUD.labelText = @"加载中...";
-            tempHUD.opacity = 0.5;
-            [tempHUD show:YES];
-        }
+
+        [progressHUD_ show:YES];
     }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", nil];
@@ -252,7 +229,7 @@ enum
         }
         
         [self loadTable:SHOW_TYPE];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
@@ -260,7 +237,7 @@ enum
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [self loadTable:SHOW_TYPE];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         [CommonMotheds showInternetError:error inView:self.view];
     }];
     
@@ -296,7 +273,6 @@ enum
 
 -(void)loadComicTopsData
 {
-    MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"comic_top_list"];
     if(cacheResult != nil){
         self.comicListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
@@ -311,14 +287,10 @@ enum
         [self.comicTableList reloadData];
     }
     else {
-        if(tempHUD == nil){
-            tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.comicTableList reloadData];
-            [self.view addSubview:tempHUD];
-            tempHUD.labelText = @"加载中...";
-            tempHUD.opacity = 0.5;
-            [tempHUD show:YES];
-        }
+        
+        [self.comicTableList reloadData];
+        [progressHUD_ show:YES];
+    
         
         
     }
@@ -339,14 +311,14 @@ enum
         }
         
         [self loadTable:COMIC_TYPE];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.comicListArr == nil){
             self.comicListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
     }];
 }
 
@@ -558,6 +530,12 @@ enum
                                              selector:@selector(managerTVBunding)
                                                  name:@"bundingTVSucceeded"
                                                object:nil];
+    
+    
+    progressHUD_ = [[MBProgressHUD alloc] initWithView:self.view];
+    progressHUD_.labelText = @"加载中...";
+    progressHUD_.opacity = 0.5;
+    [self.view addSubview:progressHUD_];
     
     
     //新手引导

@@ -189,6 +189,8 @@
 		22FEEEDD168D474D00A71EF4 /* IphoneMovieDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */; };
 		22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
+		E70A6D411744C0B300CFF5E7 /* title_xiala@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E70A6D401744C0B200CFF5E7 /* title_xiala@2x.png */; };
+		E70A6D451744C81E00CFF5E7 /* icon_tab5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E70A6D441744C81E00CFF5E7 /* icon_tab5@2x.png */; };
 		E71A4450172B6F0000416565 /* xinshouyindao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */; };
 		E71A4451172B6F0000416565 /* xinshouyindao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444F172B6F0000416565 /* xinshouyindao@2x.png */; };
 		E71A4454172BC88E00416565 /* introduction_iphone5_5@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E71A4452172BC88E00416565 /* introduction_iphone5_5@2x.jpg */; };
@@ -754,6 +756,8 @@
 		22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneShowDetailViewController.m; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E70A6D401744C0B200CFF5E7 /* title_xiala@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "title_xiala@2x.png"; path = "yueshipin_ipad/Resource_iphone/title_xiala@2x.png"; sourceTree = SOURCE_ROOT; };
+		E70A6D441744C81E00CFF5E7 /* icon_tab5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_tab5@2x.png"; path = "yueshipin_ipad/Resource_iphone/icon_tab5@2x.png"; sourceTree = SOURCE_ROOT; };
 		E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xinshouyindao_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/xinshouyindao_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		E71A444F172B6F0000416565 /* xinshouyindao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xinshouyindao@2x.png"; path = "yueshipin_ipad/Resource_iphone/xinshouyindao@2x.png"; sourceTree = SOURCE_ROOT; };
 		E71A4452172BC88E00416565 /* introduction_iphone5_5@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "introduction_iphone5_5@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/introduction_iphone5_5@2x.jpg"; sourceTree = SOURCE_ROOT; };
@@ -1481,6 +1485,8 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E70A6D441744C81E00CFF5E7 /* icon_tab5@2x.png */,
+				E70A6D401744C0B200CFF5E7 /* title_xiala@2x.png */,
 				E78BC3B6173CD9250032025D /* RadioButton-Selected.png */,
 				E78BC3B7173CD9250032025D /* RadioButton-Unselected.png */,
 				EB6D2A4C173BC27B005499CC /* failure_img@2x.png */,
@@ -2518,6 +2524,8 @@
 				EB6D2A4D173BC27B005499CC /* failure_img@2x.png in Resources */,
 				E78BC3B8173CD9250032025D /* RadioButton-Selected.png in Resources */,
 				E78BC3B9173CD9250032025D /* RadioButton-Unselected.png in Resources */,
+				E70A6D411744C0B300CFF5E7 /* title_xiala@2x.png in Resources */,
+				E70A6D451744C81E00CFF5E7 /* icon_tab5@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -57,7 +57,7 @@
         [[UITabBar appearance] setBackgroundImage:tabBackground];
         //[[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tab_bg_zhong_212.png"]];
         self.viewControllers = [NSArray arrayWithObjects:channelNav,sortNav,allListNav,downLoadNavCtrl,mineNav, nil];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab5.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:PINDAO];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];

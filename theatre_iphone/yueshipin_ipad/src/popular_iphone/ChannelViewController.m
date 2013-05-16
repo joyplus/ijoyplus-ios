@@ -25,6 +25,7 @@
 @synthesize parameters = _parameters;
 @synthesize pullToRefreshManager = _pullToRefreshManager;
 @synthesize refreshHeaderView = _refreshHeaderView;
+@synthesize progressHUD = _progressHUD;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -53,12 +54,18 @@
     self.navigationItem.hidesBackButton = YES;
     
     titleButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
-    titleButton_.frame = CGRectMake(0, 0, 90, 60);
+    titleButton_.frame = CGRectMake(0, 0, 100, 60);
     titleButton_.titleLabel.font = [UIFont boldSystemFontOfSize:20];
     [titleButton_ setTitle:@"电影" forState:UIControlStateNormal];
     [titleButton_ setTitle:@"电影" forState:UIControlStateHighlighted];
     [titleButton_ setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [titleButton_ setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [titleButton_ setImage:[UIImage imageNamed:@"title_xiala"] forState:UIControlStateNormal];
+    [titleButton_ setImage:[UIImage imageNamed:@"title_xiala"] forState:UIControlStateHighlighted];
+    [titleButton_ setImage:[UIImage imageNamed:@"title_xiala"] forState:UIControlStateSelected];
+    titleButton_.adjustsImageWhenHighlighted = NO;
+    [titleButton_ setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 20)];
+    [titleButton_ setImageEdgeInsets:UIEdgeInsetsMake(0, 65, 0, 0)];
     titleButton_.titleLabel.shadowOffset = CGSizeMake(0, 1);
     [titleButton_ setTitleShadowColor:[UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1]forState:UIControlStateNormal];
     [titleButton_ setTitleShadowColor:[UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1]forState:UIControlStateHighlighted];
@@ -97,6 +104,12 @@
         _refreshHeaderView = egoRefreshTableHeaderView;
     }
     
+    _progressHUD  = [[MBProgressHUD alloc] initWithView:self.view];
+    _progressHUD.labelText = @"加载中...";
+    _progressHUD.opacity = 0.5;
+    //[_progressHUD show:YES];
+    [self.view addSubview:_progressHUD];
+     
     [self initDefaultParameters];
 }
 
@@ -376,12 +389,15 @@
     NSString *subType = [parameters objectForKey:@"sub_type"];
     NSString *year = [parameters objectForKey:@"year"];
     NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
+    [_progressHUD show:YES];
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSLog(@"success");
+        [_progressHUD setHidden:YES];
         [self analyzeData:result];
         [self reloadTableList];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@",error);
+        [_progressHUD setHidden:YES];
     }];
 }
 
