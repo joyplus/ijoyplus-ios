@@ -3,9 +3,9 @@
 //  UFP
 //
 //  Created by liu yu on 7/23/12.
-//  Updated by liu yu on 12/04/12.
-//  Copyright 2010-2012 Umeng.com. All rights reserved.
-//  Version 3.5.2
+//  Updated by liu yu on 04/02/13.
+//  Copyright 2010-2013 Umeng.com. All rights reserved.
+//  Version 3.5.4
 
 #import <UIKit/UIKit.h>
 #import "UMUFPGridCell.h"
@@ -18,6 +18,12 @@
 @protocol GridViewDataSource;
 @protocol GridViewDataLoadDelegate;
 
+/**
+ 
+ The UMUFPGridView class defines a container that can show multi columns of cells in a single view.
+ 
+ */
+
 @interface UMUFPGridView : UIView <UITableViewDelegate,UITableViewDataSource> {
 @private
     NSInteger _mColumnCountPerPage; 
@@ -27,10 +33,13 @@
     id<GridViewDataLoadDelegate> _dataLoadDelegate;
 }
 
+@property (nonatomic, copy) NSString *mKeywords;  //keywords for the promoters data, promoter list will return according to this property, default is @""
+@property (nonatomic)           BOOL mAutoFill;   //shows whether automatic add other promoters when data of this position is not enough
+
 @property (nonatomic, readonly) NSInteger mAppsCountPerPage;                 //maximum number of apps per page, default is 15
 @property (nonatomic, readonly) NSInteger mColumnCountPerPage;               //number of columns per page
-@property (nonatomic, assign) id<GridViewDelegate>   delegate;
-@property (nonatomic, assign) id<GridViewDataSource> datasource;
+@property (nonatomic, assign) id<GridViewDelegate>   delegate;               //delegate for view
+@property (nonatomic, assign) id<GridViewDataSource> datasource;             //delegate for data
 @property (nonatomic, assign) id<GridViewDataLoadDelegate> dataLoadDelegate; //dataLoadDelegate for gridview
 
 @property (nonatomic, retain) UMUFPDataLoader  *mDataLoder;
@@ -79,11 +88,22 @@
  
  This method return index of promoter data in the promoters array
  
+ @param  indexPath indexpath of the promoter to be checked
+ 
+ @return a NSInteger value
+ 
  */
 
 - (NSInteger)arrayIndexForIndexPath:(IndexPath*)indexPath;
 
 @end
+
+/**
+ 
+ GridViewDelegate is a protocol that defines display releated methods for UMUFPGridView
+ Optional methods of the protocol allow the delegate to manage selections, configure cell height, and perform other actions.
+ 
+ */
 
 @protocol GridViewDelegate <NSObject>
 
@@ -93,6 +113,12 @@
 - (CGFloat)gridView:(UMUFPGridView *)gridView heightForRowAtIndexPath:(IndexPath *)indexPath; //default is 80.0f
 
 @end
+
+/**
+ 
+ The GridViewDataSource protocol is adopted by an object that mediates the application's data model for a UMUFPGridView object. The data source provides the grid-view object with the information it needs to construct and modify a grid view.
+ 
+ */
 
 @protocol GridViewDataSource <NSObject>
 
@@ -107,6 +133,13 @@
 - (NSInteger)numberOfAppsPerPage:(UMUFPGridView *)gridView;
 
 @end
+
+/**
+ 
+ GridViewDataLoadDelegate is a protocol that defines data loading releated methods for UMUFPGridView
+ Optional methods of the protocol allow the delegate to capture data loading releated events, and perform other actions.
+ 
+ */
 
 @protocol GridViewDataLoadDelegate <NSObject>
 
