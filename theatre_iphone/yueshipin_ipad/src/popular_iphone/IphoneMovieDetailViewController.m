@@ -502,14 +502,17 @@
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                     downLoad.enabled = NO;
                     play.hidden = YES;
-                    expectbtn.hidden = NO;
                     isEnableReportBtn = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
                     play.hidden = NO;
+                }
+                if (self.canPlayVideo) {
                     expectbtn.hidden = YES;
+                } else {
+                    expectbtn.hidden = NO;
                 }
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];

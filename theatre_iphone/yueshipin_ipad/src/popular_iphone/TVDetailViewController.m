@@ -553,19 +553,20 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 BOOL isEnableReportBtn = YES;
                 if (0 == eArr.count) 
                 {
-
                     downLoad.enabled = NO;
                     play.hidden = YES;
-                    expectbtn.hidden = NO;
                     isEnableReportBtn = NO;
                 }
                 else
                 {
-
                     play.hidden = NO;
-                    expectbtn.hidden = YES;
                 }
-                    
+                if (self.canPlayVideo) {
+                    expectbtn.hidden = YES;
+                } else {
+                    expectbtn.hidden = NO;
+                }
+                
                 if (![self isDownloadURLExit])
                 {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
