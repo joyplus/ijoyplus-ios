@@ -24,8 +24,8 @@ body {
     width: 100%;
     height: 45px;
     line-height: 45px;
-    background: url('../img/NavBar.png') no-repeat left top;
-    /*background-color: #272a32;*/
+    /*background: url('../img/titleBar.png') no-repeat left top;*/
+    background-color: #272a32;
     background-size: 100% 45px;
     /*background-image:-webkit-gradient(linear, 0 0, 0 100%, color-stop(0, #999), color-stop(0.02, #666), color-stop(1, #222));
 background-image:-moz-linear-gradient(top, #999, #666 2%, #222);
@@ -49,7 +49,7 @@ background-image:-o-linear-gradient(top, #999, #666 2%, #222);*/
     left: 0;
     width: 100%;
     height: 43px;
-    background: url('../img/bar.png') no-repeat left top;
+    /*background: url('../img/bar.png') no-repeat left top;*/
 
     background-color: #f1f1f1;
     background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(241, 241, 241)),to(rgb(194, 198, 207)));
@@ -155,8 +155,8 @@ background-image:-o-linear-gradient(top, #999, #666 2%, #222);*/
 
 .messageSend {
     float: right;
-    border-width: 17px 32px 17px 15px;
-    -webkit-border-image: url("../img/Balloon_1@2x.png") 29 58 34 26 stretch stretch;
+    border-width: 17px 27px 18px 13px;
+    -webkit-border-image: url("../img/Balloon_1@2x.png") 32 41 24 26 stretch stretch;
     /*border-image: url("../img/Balloon_1@2x.png") 31/2 70/2 46/2 33/2 stretch stretch;*/
     background: #a3cde6;
     -webkit-background-clip: padding-box;
@@ -170,8 +170,8 @@ background-image:-o-linear-gradient(top, #999, #666 2%, #222);*/
 
 .messageReceive {
     float: left;
-    border-width: 13px 12px 16px 30px;
-    -webkit-border-image: url("../img/Balloon_2@2x.png") 29 26 34 58 stretch stretch;
+    border-width: 12px 14px 18px 27px;
+    -webkit-border-image: url("../img/Balloon_2@2x.png") 33 20 23 47 stretch stretch;
     /*border-image: url("../img/Balloon_2@2x.png") 32 37 30 53 stretch stretch;*/
     background: rgb(213, 213, 213);
     /*background-clip: padding-box, border-box, border-box;*/
@@ -199,10 +199,10 @@ line-height: 20px;
 .button {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background: rgba(255, 255, 255, 0.0) url('../img/back.png') no-repeat 0 0;
-    background-size: 20px 17px;
+    background-size: 52px 32px;
     background-position: center center;
-    width: 40px;
-    height: 30px;
+    width: 53px;
+    height: 33px;
 }
 
 .button:active, .button.active {
@@ -212,10 +212,10 @@ line-height: 20px;
 .button_en {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background: rgba(255, 255, 255, 0.0) url('../img/back_en.png') no-repeat 0 0;
-    background-size: 20px 17px;
+    background-size: 52px 32px;
     background-position: center center;
-    width: 40px;
-    height: 30px;
+    width: 53px;
+    height: 33px;
 }
 
 .button_en:active, .button_en.active {
