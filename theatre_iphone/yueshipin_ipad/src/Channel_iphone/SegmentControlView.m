@@ -180,6 +180,10 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -5, 320, self.frame.size.height+5)];
+        bgView.image = [[UIImage imageNamed:@"gengduo_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 40)];
+        [self addSubview:bgView];
+        
         UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 8, 50, 20)];
         typelabel.text = @"类型:";
         typelabel.font = [UIFont systemFontOfSize:15];
@@ -200,9 +204,15 @@
         yearlabel.textColor = [UIColor whiteColor];
         yearlabel.backgroundColor = [UIColor clearColor];
         [self addSubview:yearlabel];
-        
-        self.backgroundColor = [UIColor grayColor];
-        
+
+        for ( int i = 0; i < 3; i++) {
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn.frame = CGRectMake(300, 12+36*i, 9, 14);
+            [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateHighlighted];
+            [self addSubview:btn];
+        }
+    
         _parametersDic = [NSMutableDictionary dictionaryWithCapacity:5];
         [_parametersDic setObject:@"" forKey:@"sub_type"];
         [_parametersDic setObject:@"" forKey:@"area"];
@@ -260,7 +270,6 @@
     scrollView.pagingEnabled = YES;
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
-    
     for (int i = 0; i < all; i++) {
         NSString *str = [items objectAtIndex:i];
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -274,7 +283,12 @@
         [scrollView addSubview:btn];
     }
     [self addSubview:scrollView];
-  
+   
+    if (position == 0 || position == 1) {
+        UIImageView *fengexian = [[UIImageView alloc] initWithFrame:CGRectMake(0, 36*position+35, 320, 1)];
+        fengexian.image = [[UIImage imageNamed:@"fengexian_gengduo.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 5)];
+        [self addSubview:fengexian];
+    }
 }
 
 -(void)didSelect:(UIButton *)btn{
