@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "CommonHeader.h"
 #import "OpenUDID.h"
-#import "RootViewController.h"
 #import "MobClick.h"
 #import <Parse/Parse.h>
 #import "ActionUtility.h"
@@ -51,7 +50,6 @@
 
 @implementation AppDelegate
 @synthesize playWithDownload;
-@synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
 @synthesize tabBarView;
@@ -208,12 +206,6 @@
     return macString;
 }
 
-
-- (void)initDownloadManager
-{
-    padDownloadManager = [[NewDownloadManager alloc]init];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
@@ -254,10 +246,10 @@
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
     {
-        [self customizeAppearance];
-        [self initDownloadManager];
-        self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-        self.window.rootViewController = self.rootViewController;
+//        [self customizeAppearance];
+//        [self initDownloadManager];
+//        self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
+//        self.window.rootViewController = self.rootViewController;
     }
     else
     {
@@ -423,7 +415,7 @@
 - (void)triggerDownload
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        [padDownloadManager startDownloadingThreads];
+//        [padDownloadManager startDownloadingThreads];
     }
     else{
     
