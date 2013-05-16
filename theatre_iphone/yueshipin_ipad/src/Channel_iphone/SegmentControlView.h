@@ -16,14 +16,15 @@ enum{
 
 @protocol SegmentDelegate <NSObject>
 -(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key;
--(void)moreSelectWithType:(int)type;
+-(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey;
 -(void)didTapOnSegmentView;
 @end
 
 
 @interface SegmentControlView : UIView<UIGestureRecognizerDelegate>{
     int videoType_;
-
+@private
+    NSString *PreKey_;
 }
 @property (nonatomic, weak) id <SegmentDelegate> delegate;
 @property (nonatomic , assign) int type;
@@ -50,5 +51,7 @@ enum{
 }
 @property (nonatomic, weak) id <FiltrateViewDelegate> delegate;
 @property (nonatomic, strong)NSMutableDictionary *parametersDic;
+@property (nonatomic, strong)NSString *currentKey;
 -(void)setViewWithType:(int)type;
+-(void)setFiltrateViewCurrentKey:(NSString *)currentKey;
 @end

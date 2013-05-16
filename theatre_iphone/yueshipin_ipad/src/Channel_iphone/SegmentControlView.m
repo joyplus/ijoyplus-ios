@@ -39,7 +39,7 @@
         _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"韩国",@"日本",@"香港",@"更多",nil];
         _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"热血",@"更多",nil];
         _showLabelArr = [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"更多",nil];
-        
+        PreKey_ = @"全部";
         UIView *segmentBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
         segmentBg.backgroundColor = [UIColor colorWithRed:43/255.0 green:43/255.0 blue:43/255.0 alpha:1];
         [self addSubview:segmentBg];
@@ -135,16 +135,19 @@
         default:
             break;
     }
+    
     if (btn.tag < 105) {
         NSString *selectedStr = [arr objectAtIndex:(btn.tag-100)];
         NSString *key = [self getKeyByString:selectedStr];
+        PreKey_ = selectedStr;
         if ([selectedStr isEqualToString:@"全部"]) {
             selectedStr = @"";
         }
         [_delegate segmentDidSelectedLabelStr:selectedStr withKey:key];
     }
     else{
-        [_delegate moreSelectWithType:videoType_];
+        
+        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_];
     }
     
 }
@@ -171,10 +174,13 @@
 @end
 
 
+
+
 @implementation FiltrateView
 
 @synthesize parametersDic = _parametersDic;
 @synthesize delegate = _delegate;
+@synthesize currentKey = _currentKey;
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -262,6 +268,26 @@
     [self setScrollViewWithItems:MOVIE_YEAR atPosition:2];
 
 }
+-(void)setFiltrateViewCurrentKey:(NSString *)currentKey{
+    //_currentKey = currentKey;
+    if ([currentKey isEqualToString:@"全部"]) {
+        return;
+    }
+    for (UIView *view in [self subviews]) {
+        if ([view isKindOfClass:[UIScrollView class]]) {
+            UIScrollView *scrollview = (UIScrollView *)view;
+            for (UIView *view in [scrollview subviews]) {
+                if ([view isKindOfClass:[UIButton class]]) {
+                    UIButton *btn = (UIButton *)view;
+                    if ([btn.titleLabel.text isEqualToString:currentKey]) {
+                        btn.selected = YES;
+                        return;
+                    }
+                }
+            }
+        }
+    }
+}
 -(void)setScrollViewWithItems:(NSArray *)items atPosition:(int)position{
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 36*position, 240, 36)];
     int all = [items count];
@@ -273,12 +299,16 @@
     for (int i = 0; i < all; i++) {
         NSString *str = [items objectAtIndex:i];
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        if (i == 0) {
+            btn.selected = YES;
+        }
         btn.tag = position*100+i;
         btn.frame = CGRectMake(48*i, 0, 48, 36);
         [btn setTitle:str forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:14];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
+        [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateSelected];
         [btn addTarget:self action:@selector(didSelect:) forControlEvents:UIControlEventTouchUpInside];
         [scrollView addSubview:btn];
     }

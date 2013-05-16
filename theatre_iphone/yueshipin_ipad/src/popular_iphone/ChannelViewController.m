@@ -208,9 +208,10 @@
     [self sendHttpRequest:_parameters];
 }
 
--(void)moreSelectWithType:(int)type{;
+-(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey{;
     _filtrateView.hidden = NO;
     [_filtrateView setViewWithType:type];
+    [_filtrateView setFiltrateViewCurrentKey:currentKey];
     [self.view bringSubviewToFront:_filtrateView];
 }
 
