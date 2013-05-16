@@ -4,6 +4,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "EpisodeListViewController.h"
 #import "CommonHeader.h"
+#import "CommonMotheds.h"
 #import "CMPopTipView.h"
 #import "ActionUtility.h"
 
@@ -88,6 +89,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 - (void)observeValueForKeyPath:(NSString*) path ofObject:(id)object change:(NSDictionary*)change context:(void*)context;
 - (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys;
 - (void)closeAllTimer;
+- (void)getVideoInfo;
 
 @end
 
@@ -228,6 +230,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     resolution = GAO_QING;
     [self showPlayVideoView];
     if (isDownloaded) {
+        [self getVideoInfo];
         [self loadLastPlaytime];
         if ([videoFormat isEqualToString:@"m3u8"]) {
             [[AppDelegate instance] startHttpServer];
@@ -989,27 +992,34 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)nextBtnClicked
 {
+    isDownloaded = NO;
+    NSArray * playlists = [CommonMotheds localPlaylists:self.prodId];
+    NSInteger nextNum = currentNum + 1;
+    NSDictionary * playInfo = [[video objectForKey:@"episodes"] objectAtIndex:nextNum];
+    
+    NSDictionary * curPlayInfo = nil;
+    for (NSDictionary * dic in playlists)
+    {
+        if ([[dic objectForKey:@"name"] isEqualToString:[playInfo objectForKey:@"name"]])
+        {
+            isDownloaded = YES;
+            curPlayInfo = dic;
+            break;
+        }
+    }
+    
     if (isDownloaded)
     {
         [self destoryPlayer];
         currentNum ++;
         //设置Button'enable
         [self enableNextButton];
-        //管理playlists数据
-        if (currentNum >= localPlaylists.count)
-        {
-            NSLog(@"current play num:%d,playlists %@ error ,close player",currentNum,localPlaylists);
-            [self closeSelf];
-            return;
-        }
-            
-        NSDictionary * dic = [self.localPlaylists objectAtIndex:currentNum];
         
-        self.videoFormat = [dic objectForKey:@"downloadType"];
-        self.m3u8Duration = [[dic objectForKey:@"duration"] doubleValue];
-        self.videoUrl = [dic objectForKey:@"videoUrl"];
-        self.type = [[dic objectForKey:@"type"] intValue];
-        self.name = [dic objectForKey:@"name"];
+        self.videoFormat = [curPlayInfo objectForKey:@"downloadType"];
+        self.m3u8Duration = [[curPlayInfo objectForKey:@"duration"] doubleValue];
+        self.videoUrl = [curPlayInfo objectForKey:@"videoUrl"];
+        self.type = [[curPlayInfo objectForKey:@"type"] intValue];
+        //self.name = [subnameArray objectAtIndex:currentNum];//[curPlayInfo objectForKey:@"name"];
         
         //[self loadLastPlaytime];
         lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
@@ -1023,11 +1033,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [self setURL:workingUrl];
         
         //刷新视图
-        vidoeTitle.text = name;
+        if (type == DRAMA_TYPE || type == COMIC_TYPE) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
+        } else if(type == SHOW_TYPE){
+            subname = [subnameArray objectAtIndex:self.currentNum];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
+        }
     }
     else
     {
-        
         [self destoryPlayer];
         isFromSelectBtn = YES;
         [self resetControlVisibilityTimer];
@@ -1087,6 +1102,88 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
     }
     [self playVideo];
+}
+
+- (void)getVideoInfo
+{
+    BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
+    if(!isReachable) {
+        [UIUtility showNetWorkError:self.view];
+        return;
+    }
+    NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+    if(cacheResult != nil)
+    {
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil)
+        {
+            if (type == SHOW_TYPE)
+            {
+                video = (NSDictionary *)[cacheResult objectForKey:@"show"];
+            }
+            else if (type == DRAMA_TYPE || type == COMIC_TYPE)
+            {
+                video = (NSDictionary *)[cacheResult objectForKey:@"tv"];
+            }
+            
+            NSArray * episodes = [video objectForKey:@"episodes"];
+            [self prepareOnlinePlay:episodes];
+        }
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil)
+        {
+            NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
+            [[CacheUtility sharedCache] putInCache:key result:result];
+            if (type == SHOW_TYPE)
+            {
+                video = (NSDictionary *)[result objectForKey:@"show"];
+            }
+            else if (type == DRAMA_TYPE || type == COMIC_TYPE)
+            {
+                video = (NSDictionary *)[result objectForKey:@"tv"];
+            }
+            NSArray * episodes = [video objectForKey:@"episodes"];
+            [self prepareOnlinePlay:episodes];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showSystemError:self.view];
+    }];
+}
+
+- (void)prepareOnlinePlay:(NSArray *)episodes
+{
+    if (type == SHOW_TYPE)
+    {
+        for (int i =0;i < episodes.count; i ++)
+        {
+            NSDictionary * dic = [episodes objectAtIndex:i];
+            if ([[dic objectForKey:@"name"] isEqualToString:subname])
+            {
+                currentNum = i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        currentNum = [subname intValue] - 1;
+    }
+    
+    if (subnameArray == nil) {
+        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+        for (NSDictionary *oneEpisode in episodes)
+        {
+            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+            [subnameArray addObject:tempName];
+        }
+    }
+    
+    [self enableNextButton];
 }
 
 #pragma mark
@@ -1623,12 +1720,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
     else
     {
-        if (localPlaylists.count > 1 && ((currentNum + 1) < localPlaylists.count))
-        {
-            [mNextButton setEnabled:YES];
-        }
-        else
-        {
+        NSArray * playlist = [video objectForKey:@"episodes"];
+        if (playlist.count > 0 && type != 1){
+            if (currentNum == 0) {
+                [mNextButton setEnabled:YES];
+            } else if(currentNum == playlist.count - 1) {
+                [mNextButton setEnabled:NO];
+            } else if(currentNum > 0 && currentNum < playlist.count){
+                [mNextButton setEnabled:YES];
+            }
+        } else {
             [mNextButton setEnabled:NO];
         }
     }
