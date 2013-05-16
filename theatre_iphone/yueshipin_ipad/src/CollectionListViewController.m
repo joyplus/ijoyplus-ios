@@ -357,7 +357,7 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         NSDictionary *tempItem = [videoArray objectAtIndex:indexPath.row];
         NSString *itemId = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"content_id"]];
-        int contentType = [[infoDic objectForKey:@"content_type"] integerValue];
+        int contentType = [[tempItem objectForKey:@"content_type"] integerValue];
         if (contentType == DRAMA_TYPE || contentType == COMIC_TYPE) {
             [self unSubscribingToChannels:itemId];
         }
