@@ -132,7 +132,7 @@
 }
 
 -(void)loadData{
-     MBProgressHUD *tempHUD;
+    MBProgressHUD *tempHUD;
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
@@ -148,6 +148,7 @@
         isLoaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"movie"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
         favCount_ = [[videoInfo_ objectForKey:@"favority_num"] integerValue];
