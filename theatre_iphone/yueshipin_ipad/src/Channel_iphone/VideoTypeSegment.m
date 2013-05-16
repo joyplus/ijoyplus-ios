@@ -27,28 +27,27 @@ enum{
 -(void)initSelectButton{
     UIButton *movieBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     movieBtn.frame = CGRectMake(0, 0, 80, 65);
-    movieBtn.tag = 100+TYPE_MOVIE;    
+    movieBtn.tag = 100000;
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"dianying.png"] forState:UIControlStateNormal];
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"dianying_s.png"] forState:UIControlStateHighlighted];
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"dianying_s.png"] forState:UIControlStateDisabled];
     [movieBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
-    movieBtn.enabled = NO;
     movieBtn.adjustsImageWhenDisabled = NO;
     [self addSubview:movieBtn];
     
     UIButton *tvBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     tvBtn.frame = CGRectMake(80, 0, 80, 65);
-    tvBtn.tag = 100+TYPE_TV;
+    tvBtn.tag = 100001;
     [tvBtn setBackgroundImage:[UIImage imageNamed:@"dianshiju.png"] forState:UIControlStateNormal];
     [tvBtn setBackgroundImage:[UIImage imageNamed:@"dianshiju_s.png"] forState:UIControlStateHighlighted];
-    [tvBtn setBackgroundImage:[UIImage imageNamed:@"dianying_s.png"] forState:UIControlStateDisabled];
+    [tvBtn setBackgroundImage:[UIImage imageNamed:@"dianshiju_s.png"] forState:UIControlStateDisabled];
     [tvBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
     tvBtn.adjustsImageWhenDisabled = NO;
     [self addSubview:tvBtn];
     
     UIButton *comicBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     comicBtn.frame = CGRectMake(160, 0, 80, 65);
-    comicBtn.tag = 100+TYPE_COMIC;
+    comicBtn.tag = 100002;
     [comicBtn setBackgroundImage:[UIImage imageNamed:@"dongman.png"] forState:UIControlStateNormal];
     [comicBtn setBackgroundImage:[UIImage imageNamed:@"dongman_s.png"] forState:UIControlStateHighlighted];
     [comicBtn setBackgroundImage:[UIImage imageNamed:@"dongman_s.png"] forState:UIControlStateDisabled];
@@ -58,7 +57,7 @@ enum{
     
     UIButton *showBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     showBtn.frame = CGRectMake(240, 0, 80, 65);
-    showBtn.tag = 100+TYPE_SHOW;
+    showBtn.tag = 100003;
     [showBtn setBackgroundImage:[UIImage imageNamed:@"zongyi.png"] forState:UIControlStateNormal];
     [showBtn setBackgroundImage:[UIImage imageNamed:@"zongyi_s.png"] forState:UIControlStateHighlighted];
     [showBtn setBackgroundImage:[UIImage imageNamed:@"zongyi_s.png"] forState:UIControlStateDisabled];
@@ -69,26 +68,26 @@ enum{
 
 -(void)setSelectAtIndex:(int)index{
     for (int i = 0; i < 4; i++) {
-        UIButton *btn = (UIButton *)[self viewWithTag:100+i];
+        UIButton *btn = (UIButton *)[self viewWithTag:100000+i];
         btn.enabled = YES;
     }
-    UIButton *button = (UIButton *)[self viewWithTag:100+index];
+    UIButton *button = (UIButton *)[self viewWithTag:100000+index];
     button.enabled = NO;
 }
 
 -(void)buttonSelect:(UIButton *)btn{
     int index = 0;
     switch (btn.tag) {
-        case 101:
+        case 100000:
             index = 0;
             break;
-        case 102:
+        case 100001:
             index= 1;
             break;
-        case 231:
+        case 100002:
             index = 2;
             break;
-        case 103:
+        case 100003:
             index = 3;
             break;
             

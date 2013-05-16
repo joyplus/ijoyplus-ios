@@ -152,6 +152,7 @@
     typeSelectIndex_ = index;
     _videoTypeSeg.hidden = YES;
     _filtrateView.hidden = YES;
+    titleButton_.selected = NO;
     switch (index) {
         case 0:
             [_segV setSegmentControl:TYPE_MOVIE];
