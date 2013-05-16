@@ -208,7 +208,7 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_MOVIE_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
     if(cacheResult != nil){
         [self parseMovieTopsData:cacheResult];
@@ -255,7 +255,7 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_TV_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
     if(cacheResult != nil){
         [self parseTvTopsData:cacheResult];
@@ -301,7 +301,7 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_COMIC_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"comic_top_list"];
     if(cacheResult != nil){
         [self parseComicTopsData:cacheResult];
@@ -349,7 +349,7 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_SHOW_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
     if(cacheResult != nil){
         [self parseShowTopsData:cacheResult];

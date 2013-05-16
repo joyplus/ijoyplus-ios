@@ -843,7 +843,7 @@
         }
         case 10002:{
             
-            [self SubscribingToChannels];
+            //[self SubscribingToChannels];
             [self addVideotoFav:ADDFAV];
             
             break;
