@@ -180,6 +180,7 @@
 
 
 -(void)Done:(id)sender{
+    [self addBtnClicked];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Update CreateMyListTwoViewController" object:selectedArr_];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -252,6 +253,9 @@
     if (![selectedArr_ containsObject:item]) {
         [selectedArr_ addObject:item];
     }
+    else{
+        [selectedArr_ removeObject:item];
+    }
     if ([selectedArr_ count] == 0) {
         self.navigationItem.rightBarButtonItem = nil;
     }
@@ -260,7 +264,7 @@
         self.navigationItem.rightBarButtonItem = rightButtonItem_;
     }
     [self.tableList reloadData];
-    [self addBtnClicked];
+    //[self addBtnClicked];
 }
 
 - (void)addBtnClicked
