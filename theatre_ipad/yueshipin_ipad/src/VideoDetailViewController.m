@@ -473,8 +473,9 @@
         NSArray *videoUrls = [epi objectForKey:@"video_urls"];
         for (NSDictionary *videoUrl in videoUrls) {
             NSString *url = [videoUrl objectForKey:@"url"];
+            NSString *source = [videoUrl objectForKey:@"source"];
             NSString *trimUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-            if (trimUrl && trimUrl.length > 0) {
+            if (trimUrl && trimUrl.length > 0 && ![source isEqualToString:@"yuanxian"]) {
                 canPlayVideo = YES;
                 break;
             }
