@@ -882,7 +882,10 @@
                 NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
                 NSString *topicId = [infoDic objectForKey:@"content_id"];
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
-                [self unSubscribingToChannels:topicId];
+                int contentType = [[infoDic objectForKey:@"content_type"] integerValue];
+                if (contentType == DRAMA_TYPE || contentType == COMIC_TYPE) {
+                    [self unSubscribingToChannels:topicId];
+                }
                 [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [favArr_ removeObjectAtIndex:indexPath.row];
                     [tableView reloadData];

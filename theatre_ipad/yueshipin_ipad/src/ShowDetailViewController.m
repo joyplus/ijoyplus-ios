@@ -623,7 +623,7 @@
         return;
     }
     
-    [self SubscribingToChannels];
+//    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -647,25 +647,6 @@
     }];
 }
 
-- (void)SubscribingToChannels
-{
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
-    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
-        if (succeeded)
-        {
-            NSLog(@"Successfully subscribed to channel!");
-        }
-        else
-        {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-        }
-    }];
-}
-
 - (void)collectionBtnClicked
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -674,7 +655,7 @@
         return;
     }
     
-    [self SubscribingToChannels];
+//    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
