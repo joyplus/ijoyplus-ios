@@ -456,8 +456,8 @@
 
 
 -(BOOL)checkNetWork{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         return YES;
     }
     else{

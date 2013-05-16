@@ -1284,8 +1284,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 }
 
 -(void)sendHttpRequest:(NSString *)str{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         str = [str stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         NSLog(@"The request url is %@",str);
         NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:str] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
@@ -1302,8 +1302,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     NSLog(@"iphoneAvplayerViewController didFailWithError:%@",error);
     
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
        [self retryUrltoPlay];
     }
     

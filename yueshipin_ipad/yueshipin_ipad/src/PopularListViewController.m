@@ -167,8 +167,8 @@
     if(cacheResult != nil){
         [self parseLunboData:cacheResult];
     }
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathLunbo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseLunboData:result];
@@ -202,15 +202,16 @@
     }
     umengPageName = POPULAR_MOVIE_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache: [NSString stringWithFormat: @"top_list_%i", topicType]];
     if(cacheResult != nil){
         [self parseTopsListData:cacheResult];
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
