@@ -54,6 +54,7 @@
 @synthesize segmentedControl = segmentedControl_;
 @synthesize wechatImgStr = wechatImgStr_;
 @synthesize willPlayIndex;
+@synthesize canPlayVideo;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -465,5 +466,41 @@
     }
 
 }
+
+- (void)checkCanPlayVideo
+{
+    for (NSDictionary *epi in episodesArr_) {
+        NSArray *videoUrls = [epi objectForKey:@"video_urls"];
+        for (NSDictionary *videoUrl in videoUrls) {
+            NSString *url = [videoUrl objectForKey:@"url"];
+            NSString *source = [videoUrl objectForKey:@"source"];
+            NSString *trimUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if (trimUrl && trimUrl.length > 0 && ![source isEqualToString:@"yuanxian"]) {
+                canPlayVideo = YES;
+                break;
+            }
+        }
+        if (canPlayVideo) {
+            break;
+        } else {
+            NSArray *downUrls = [epi objectForKey:@"down_urls"];
+            for (NSDictionary *downUrl in downUrls) {
+                NSArray *urls = [downUrl objectForKey:@"urls"];
+                for (NSDictionary *url in urls) {
+                    NSString *realurl = [url objectForKey:@"url"];
+                    NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    if (trimUrl && trimUrl.length > 0) {
+                        canPlayVideo = YES;
+                        break;
+                    }
+                }
+                if (canPlayVideo) {
+                    break;
+                }
+            }
+        }
+    }
+}
+
 
 @end
