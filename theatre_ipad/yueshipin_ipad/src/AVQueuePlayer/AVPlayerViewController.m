@@ -678,7 +678,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     vidoeTitle.textAlignment = UITextAlignmentCenter;
     [topToolbar addSubview:vidoeTitle];
     
-    if ((type == 2 || type == 3 || type == 131) && !isDownloaded) {
+    if ((type == 2 || type == 3 || type == 131)) {
         selectButton = [UIButton buttonWithType:UIButtonTypeCustom];
         selectButton.frame = CGRectMake(topToolbar.frame.size.width - 20 - 100, 0, 100, BUTTON_HEIGHT);
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
@@ -1318,12 +1318,45 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         } completion:^(BOOL finished) {
             [epsideArrayView removeFromSuperview];
         }];
-    } else {
+    }
+    else
+    {
+        NSMutableArray * downloadedIndex = [[NSMutableArray alloc] init];
+        NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId];
+        NSArray * episodes = [video objectForKey:@"episodes"];
+        if (type == SHOW_TYPE)
+        {
+            for (int i =0;i < episodes.count; i ++)
+            {
+                NSDictionary * dic = [episodes objectAtIndex:i];
+                for (int j = 0; j < downloadedItem.count; j ++)
+                {
+                    NSDictionary * item = [downloadedItem objectAtIndex:j];
+                    if ([[dic objectForKey:@"name"] isEqualToString:[item objectForKey:@"name"]])
+                    {
+                        [downloadedIndex addObject:[NSString stringWithFormat:@"%d",i]];
+                        continue;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int j = 0; j < downloadedItem.count; j ++)
+            {
+                NSDictionary * item = [downloadedItem objectAtIndex:j];
+                NSString * index = [item objectForKey:@"name"];
+                [downloadedIndex addObject:[NSString stringWithFormat:@"%d",([index intValue] - 1)]];
+                continue;
+            }
+        }
+        
         [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt_pressed"] forState:UIControlStateNormal];
         [episodeListviewController.view setHidden:NO];
         episodeListviewController.view.alpha = 1;
         episodeListviewController.currentNum = currentNum;
         episodeListviewController.episodeArray = subnameArray;
+        episodeListviewController.downloadedIndex = downloadedIndex;
         [self.view addSubview:episodeListviewController.view];
         [episodeListviewController.table reloadData];
         [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^{
@@ -1901,7 +1934,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
     self.mScrubber.enabled = NO;    
 }
-- (void)playOneEpisode:(int)num
+- (void)playOneEpisode:(int)num isDownload:(BOOL)isDownload
 {
     [self destoryPlayer];
     isFromSelectBtn = YES;
@@ -1913,8 +1946,49 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self disableScrubber];
     [self resetControlVisibilityTimer];
     lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
-    [self preparePlayVideo];
-    [self recordPlayStatics];
+    self.isDownloaded = isDownload;
+    if (isDownload)
+    {
+        NSArray * playlists = [CommonMotheds localPlaylists:self.prodId];
+        NSDictionary * playInfo = [[video objectForKey:@"episodes"] objectAtIndex:currentNum];
+        
+        NSDictionary * curPlayInfo = nil;
+        for (NSDictionary * dic in playlists)
+        {
+            if ([[dic objectForKey:@"name"] isEqualToString:[playInfo objectForKey:@"name"]])
+            {
+                curPlayInfo = dic;
+                break;
+            }
+        }
+        
+        self.videoFormat = [curPlayInfo objectForKey:@"downloadType"];
+        self.m3u8Duration = [[curPlayInfo objectForKey:@"duration"] doubleValue];
+        self.videoUrl = [curPlayInfo objectForKey:@"videoUrl"];
+        self.type = [[curPlayInfo objectForKey:@"type"] intValue];
+        if ([videoFormat isEqualToString:@"m3u8"])
+        {
+            [[AppDelegate instance] startHttpServer];
+            workingUrl = [NSURL URLWithString: videoUrl];
+        } else {
+            workingUrl = [[NSURL alloc] initFileURLWithPath:videoUrl];
+        }
+        [self setURL:workingUrl];
+        
+        //刷新视图
+        if (type == DRAMA_TYPE || type == COMIC_TYPE) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@：第%@集", name, subname];
+        } else if(type == SHOW_TYPE){
+            subname = [subnameArray objectAtIndex:self.currentNum];
+            vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
+        }
+    }
+    else
+    {
+        [self preparePlayVideo];
+        [self recordPlayStatics];
+    }
 }
 
 - (void)scrollViewBeginDragging:(UIScrollView *)scrollView

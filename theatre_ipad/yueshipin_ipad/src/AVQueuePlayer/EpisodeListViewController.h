@@ -16,6 +16,7 @@
 @property (nonatomic) int currentNum;
 @property (nonatomic) int type;
 @property (nonatomic, strong) NSArray *episodeArray;
+@property (nonatomic, strong) NSArray *downloadedIndex;
 @property (nonatomic, strong) UITableView *table;
 @property (nonatomic, weak) id <AVPlayerViewControllerDelegate> delegate;
 @end

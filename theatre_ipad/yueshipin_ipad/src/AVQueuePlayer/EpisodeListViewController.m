@@ -23,6 +23,7 @@
 @synthesize delegate;
 @synthesize tableCellHeight;
 @synthesize tableWidth;
+@synthesize downloadedIndex;
 @synthesize maxEpisodeNum;
 
 - (void)viewDidUnload
@@ -113,6 +114,25 @@
     } else {
         nameLabel.textColor = [UIColor colorWithRed:144/255.0 green:144/255.0 blue:144/255.0 alpha:1];
     }
+    
+    BOOL isDownload = NO;
+    for (NSString * index in self.downloadedIndex)
+    {
+        if ([index intValue] == indexPath.row)
+        {
+            isDownload = YES;
+            break;
+        }
+    }
+    if (isDownload)
+    {
+        nameLabel.text = @"已下载";
+    }
+    else{
+        nameLabel.text = @"未下载";
+    }
+    
+    
     return cell;
 }
 
@@ -128,7 +148,17 @@
         currentNum = indexPath.row;
         [table reloadData];
         [table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-        [delegate playOneEpisode:indexPath.row];
+        
+        BOOL isDownload = NO;
+        for (NSString * index in self.downloadedIndex)
+        {
+            if (indexPath.row == [index intValue])
+            {
+                isDownload = YES;
+                break;
+            }
+        }
+        [delegate playOneEpisode:indexPath.row isDownload:isDownload];
     }    
 }
 
