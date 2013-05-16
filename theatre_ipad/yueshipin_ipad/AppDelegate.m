@@ -19,13 +19,10 @@
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "HTTPServer.h"
-#import "PageManageViewController.h"
 #import "UIImage+ResizeAdditions.h"
 #import "CommonMotheds.h"
 #import "DatabaseManager.h"
 #import "SegmentUrl.h"
-#import "CustomNavigationViewController.h"
-#import "IphoneAVPlayerViewController.h"
 #include <sys/socket.h>
 #include <sys/sysctl.h>
 #include <net/if.h>
@@ -54,7 +51,6 @@
 @synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
-@synthesize tabBarView;
 @synthesize closed;
 @synthesize networkStatus;
 @synthesize hostReach;
@@ -261,14 +257,14 @@
     }
     else
     {
-        tabBarView = [[TabBarViewController alloc] init];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
-        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
-        //navCtrl.navigationBarHidden = YES;
-        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
-        [self.downLoadManager resumeDownLoad];
-        self.window.rootViewController = tabBarView;
-        [[BundingTVManager shareInstance] connecteServer];
+//        tabBarView = [[TabBarViewController alloc] init];
+//        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
+//        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
+//        //navCtrl.navigationBarHidden = YES;
+//        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
+//        [self.downLoadManager resumeDownLoad];
+//        self.window.rootViewController = tabBarView;
+//        [[BundingTVManager shareInstance] connecteServer];
     }
     
     [self.window makeKeyAndVisible];
@@ -370,12 +366,12 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     
-    [self clearRespForWXView];
+//    [self clearRespForWXView];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [self.downLoadManager pauseAllTask];
+//    [self.downLoadManager pauseAllTask];
     
     //When app enter background, add a new local Notification
     [self addLocalNotification];
@@ -393,7 +389,7 @@
 }
 
 -(void)iphoneContinueDownload{
-   [self.downLoadManager appDidEnterForeground];
+//   [self.downLoadManager appDidEnterForeground];
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
@@ -482,9 +478,9 @@
         }
     } 
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        [self.downLoadManager networkChanged:networkStatus];
-    }
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+//        [self.downLoadManager networkChanged:networkStatus];
+//    }
     
 }
 
@@ -547,36 +543,36 @@
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
--(void) onRequestAppMessage
-{
-    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
-    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
-    respRootViewCtrl.delegate = self;
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    UIViewController * rootViewCtrl = navCtrl.topViewController;
-    if (rootViewCtrl.presentedViewController)
-    {
-        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
-        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
-        {
-            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
-            UIViewController * topCtrl = cNavCtrl.topViewController;
-            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
-            {
-                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
-                [playCtrl clearPlayerData];
-            }
-            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
-            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        }
-        else
-        {
-            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
-        }
-    }
-    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
-    [navCtrl pushViewController:respRootViewCtrl animated:NO];
-}
+//-(void) onRequestAppMessage
+//{
+//    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+//    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
+//    respRootViewCtrl.delegate = self;
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    UIViewController * rootViewCtrl = navCtrl.topViewController;
+//    if (rootViewCtrl.presentedViewController)
+//    {
+//        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
+//        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
+//        {
+//            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
+//            UIViewController * topCtrl = cNavCtrl.topViewController;
+//            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
+//            {
+//                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
+//                [playCtrl clearPlayerData];
+//            }
+//            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
+//            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+//        }
+//        else
+//        {
+//            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
+//        }
+//    }
+//    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
+//    [navCtrl pushViewController:respRootViewCtrl animated:NO];
+//}
 
 // wecha sdk delegate
 -(void) onReq:(BaseReq*)req
@@ -584,7 +580,7 @@
     //
     if([req isKindOfClass:[GetMessageFromWXReq class]])
     {
-        [self onRequestAppMessage];
+//        [self onRequestAppMessage];
     }
 }
 -(void) onResp:(BaseResp*)resp{
@@ -643,63 +639,63 @@
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
-- (void)clearRespForWXView
-{
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
-    {
-        [navCtrl popViewControllerAnimated:NO];
-    }
-    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
-    {
-        [navCtrl popViewControllerAnimated:NO];
-        [navCtrl popViewControllerAnimated:NO];
-    }
-}
+//- (void)clearRespForWXView
+//{
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
+//    {
+//        [navCtrl popViewControllerAnimated:NO];
+//    }
+//    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
+//    {
+//        [navCtrl popViewControllerAnimated:NO];
+//        [navCtrl popViewControllerAnimated:NO];
+//    }
+//}
 
 #pragma mark - RespForWXRootViewControllerDelegate
-- (void)removeRespForWXRootView
-{
-    tabBarView.tabBar.hidden = NO;
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    [navCtrl popViewControllerAnimated:NO];
-}
+//- (void)removeRespForWXRootView
+//{
+//    tabBarView.tabBar.hidden = NO;
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    [navCtrl popViewControllerAnimated:NO];
+//}
+//
+//- (void)backButtonClick
+//{
+//    [WXApi openWXApp];
+//    tabBarView.tabBar.hidden = NO;
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    [navCtrl popViewControllerAnimated:NO];
+//}
 
-- (void)backButtonClick
-{
-    [WXApi openWXApp];
-    tabBarView.tabBar.hidden = NO;
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    [navCtrl popViewControllerAnimated:NO];
-}
-
-- (void)shareVideoResp:(NSDictionary *)data
-{
-    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
-    
-    WXMediaMessage *message = [WXMediaMessage message];
-    
-    message.title = [data objectForKey:@"name"];
-    message.description = [data objectForKey:@"description"];
-    
-    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
-    
-    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-    
-    
-    [message setThumbImage:thumb];
-    
-    WXVideoObject *ext = [WXVideoObject object];
-    ext.videoUrl = [data objectForKey:@"videoURL"];
-    
-    message.mediaObject = ext;
-    
-    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
-    resp.message = message;
-    resp.bText = NO;
-    
-    [WXApi sendResp:resp];
-}
+//- (void)shareVideoResp:(NSDictionary *)data
+//{
+//    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
+//    
+//    WXMediaMessage *message = [WXMediaMessage message];
+//    
+//    message.title = [data objectForKey:@"name"];
+//    message.description = [data objectForKey:@"description"];
+//    
+//    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
+//    
+//    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+//    
+//    
+//    [message setThumbImage:thumb];
+//    
+//    WXVideoObject *ext = [WXVideoObject object];
+//    ext.videoUrl = [data objectForKey:@"videoURL"];
+//    
+//    message.mediaObject = ext;
+//    
+//    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
+//    resp.message = message;
+//    resp.bText = NO;
+//    
+//    [WXApi sendResp:resp];
+//}
 
 - (void)setIdleTimerDisabled:(NSNotification *)notification
 {

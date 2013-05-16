@@ -8,25 +8,20 @@
 
 #import <UIKit/UIKit.h>
 #import "SinaWeibo.h"
-#import "TabBarViewController.h"
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
-#import "DownLoadManager.h"
 #import "NewDownloadManager.h"
 #import "WXApi.h"
 #import "NewM3u8DownloadManager.h"
-#import "RespForWXRootViewController.h"
-#import "BundingTVManager.h"
 
 @class RootViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate,RespForWXRootViewControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, NSURLConnectionDelegate, UIAlertViewDelegate,WXApiDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
 @property (strong, nonatomic) RootViewController *rootViewController;
 
-@property (strong, nonatomic) TabBarViewController *tabBarView;
 
 @property (assign, nonatomic) BOOL closed;
 
@@ -41,8 +36,6 @@
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
 @property (nonatomic) float mediaVolumeValue;
-
-@property (strong, nonatomic)DownLoadManager *downLoadManager;
 
 @property (strong, nonatomic) NewDownloadManager *padDownloadManager;
 
