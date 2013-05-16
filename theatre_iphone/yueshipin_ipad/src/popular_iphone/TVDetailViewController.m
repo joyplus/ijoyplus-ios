@@ -153,9 +153,10 @@
     if(cacheResult != nil){
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
-       
+        
          [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
