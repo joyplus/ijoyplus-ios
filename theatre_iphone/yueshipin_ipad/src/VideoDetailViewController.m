@@ -92,8 +92,8 @@
 
 - (void)shareBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -263,7 +263,7 @@
 //- (void)addListBtnClicked
 //{
 //    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-//    if([hostReach currentReachabilityStatus] == NotReachable) {
+//    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
 //        [UIUtility showNetWorkError:self.view];
 //        return;
 //    }
@@ -276,8 +276,8 @@
 
 - (void)reportBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }

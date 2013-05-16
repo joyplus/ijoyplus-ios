@@ -12,7 +12,7 @@
 @implementation CommonMotheds
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    if([hostReach currentReachabilityStatus]  != NotReachable){
         return YES;
     }
     else{
