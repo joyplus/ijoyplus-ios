@@ -155,8 +155,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)checkUpdateBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -220,8 +220,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)suggestionBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -233,8 +233,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)commentBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -259,8 +259,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)sinaSwitchClicked:(UISwitch *)sender
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         sender.on = !sender.isOn;
         return;
@@ -300,8 +300,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
 
 - (void)followBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }

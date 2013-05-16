@@ -177,8 +177,8 @@ void transferDataFromOldDbWithCatch()
     if(cacheResult != nil){
         [self parseLunboData:cacheResult];
     }
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathLunbo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseLunboData:result];
@@ -215,8 +215,9 @@ void transferDataFromOldDbWithCatch()
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -261,8 +262,9 @@ void transferDataFromOldDbWithCatch()
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -306,8 +308,9 @@ void transferDataFromOldDbWithCatch()
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathComicTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -354,8 +357,9 @@ void transferDataFromOldDbWithCatch()
         [myHUD showProgressBar:self.view];
     }
     showReloads = 2;
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
