@@ -357,22 +357,16 @@ enum
     
     [self dataBaseChanged];
     
-//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
-//    titleText.backgroundColor = [UIColor clearColor];
-//    titleText.textColor=[UIColor whiteColor];
-//    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-//    [titleText setText:@"悦榜"];
-//    self.navigationItem.titleView=titleText;
     self.title = @"悦榜";
     
-    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 55, 44);
-    leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
-    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-    self.navigationItem.leftBarButtonItem = leftButtonItem;
+//    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
+//    leftButton.frame = CGRectMake(0, 0, 55, 44);
+//    leftButton.backgroundColor = [UIColor clearColor];
+//    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
+//    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
+//    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+//    self.navigationItem.leftBarButtonItem = leftButtonItem;
     
     
 //    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];

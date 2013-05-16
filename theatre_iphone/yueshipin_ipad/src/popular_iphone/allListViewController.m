@@ -106,23 +106,17 @@
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
     [self.view addSubview:backGround];
-//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 50)];
-//    titleText.backgroundColor = [UIColor clearColor];
-//    titleText.textColor=[UIColor whiteColor];
-//    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-//    [titleText setText:@"悦单"];
-//    self.navigationItem.titleView=titleText;
     self.title = @"悦单";
     
-    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
-    leftButton.frame = CGRectMake(0, 0, 55, 44);
-    leftButton.backgroundColor = [UIColor clearColor];
-    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
-    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
-    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
-    self.navigationItem.leftBarButtonItem = leftButtonItem;
-    self.navigationItem.hidesBackButton = YES;
+//    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [leftButton addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
+//    leftButton.frame = CGRectMake(0, 0, 55, 44);
+//    leftButton.backgroundColor = [UIColor clearColor];
+//    [leftButton setImage:[UIImage imageNamed:@"search.png"] forState:UIControlStateNormal];
+//    [leftButton setImage:[UIImage imageNamed:@"search_f.png"] forState:UIControlStateHighlighted];
+//    UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+//    self.navigationItem.leftBarButtonItem = leftButtonItem;
+//    self.navigationItem.hidesBackButton = YES;
     
     
 //    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
