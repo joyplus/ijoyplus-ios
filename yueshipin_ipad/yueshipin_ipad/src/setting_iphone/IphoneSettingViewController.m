@@ -134,7 +134,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:careUs];
     
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(10, 335, 300, 35);
+    aboutUs.frame = CGRectMake(10, 380, 300, 35);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
@@ -149,7 +149,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:update];
     
     UIButton *xinshouyindao = [UIButton buttonWithType:UIButtonTypeCustom];
-    xinshouyindao.frame = CGRectMake(10, 380, 300, 35);
+    xinshouyindao.frame = CGRectMake(10, 335, 300, 35);
     [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao.png"] forState:UIControlStateNormal];
     [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
     [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
