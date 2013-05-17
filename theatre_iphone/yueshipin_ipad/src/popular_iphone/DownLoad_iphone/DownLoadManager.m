@@ -1324,8 +1324,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     if (status_Code >= 200 && status_Code <= 299) {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         NSString *content_type = [headerFields objectForKey:@"Content-Type"];
-         NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
-        if (![content_type hasPrefix:@"text/html"] && contentLength.intValue >100) {
+         //NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
+        if (![content_type hasPrefix:@"text/html"] /*&& contentLength.intValue >100*/) {
       
             NSString *proid = [downloadInfoArr_ objectAtIndex:0];
             NSString *urlStr = connection.originalRequest.URL.absoluteString;
