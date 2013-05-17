@@ -8,11 +8,11 @@
 
 #import "SegmentControlView.h"
 
-#define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"恐怖",@"惊悚",@"悬疑",@"伦理",@"爱情",@"剧情",@"喜剧",@"科幻",@"动作",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
-#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"美国",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
+#define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"悬疑",@"伦理",@"爱情",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
+#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
 
 #define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"青春偶像",@"家庭伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
-#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"韩国",@"美国",@"日本",@"其他",nil]
+#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
 
 #define  COMIC_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil]
 #define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
@@ -81,7 +81,7 @@
     }
     _segControlBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 306, 30)];
     _segControlBg.center = CGPointMake(160, 21);
-    _segControlBg.backgroundColor = [UIColor redColor];
+    _segControlBg.backgroundColor = [UIColor clearColor];
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnSelf)];
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate = self;
@@ -93,12 +93,25 @@
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         if (i == 0) {
             btn.enabled = NO;
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment1.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment1_s.png"] forState:UIControlStateHighlighted];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment1_s.png"] forState:UIControlStateDisabled];
         }
-        btn.frame = CGRectMake(51*i, 0, 51, 30);
+        else if (i == [arr count]-1){
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment3.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment3_s.png"] forState:UIControlStateHighlighted];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment3_s.png"] forState:UIControlStateDisabled];
+        }
+        else{
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment2.png"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment2_s.png"] forState:UIControlStateHighlighted];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment2_s.png"] forState:UIControlStateDisabled];
+        }
+        
+        btn.frame = CGRectMake(50*i, 0, 51, 30);
         btn.tag = 100+i;
         [btn setTitle:str forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:15];
         [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
         [_segControlBg addSubview:btn];
@@ -138,7 +151,7 @@
     
     if (btn.tag < 105) {
         NSString *selectedStr = [arr objectAtIndex:(btn.tag-100)];
-        NSString *key = [self getKeyByString:selectedStr];
+        NSString *key = [SegmentControlView getKeyByString:selectedStr];
         PreKey_ = selectedStr;
         if ([selectedStr isEqualToString:@"全部"]) {
             selectedStr = @"";
@@ -156,7 +169,7 @@
     [_delegate didTapOnSegmentView];
 }
 
--(NSString *)getKeyByString:(NSString *)str{
++(NSString *)getKeyByString:(NSString *)str{
     NSMutableArray *typeArr = [NSMutableArray arrayWithCapacity:5];
     [typeArr addObjectsFromArray:MOVIE_ALL_TYPE];
     [typeArr addObjectsFromArray:TV_ALL_TYPE];
@@ -273,23 +286,39 @@
     if ([currentKey isEqualToString:@"全部"]) {
         return;
     }
-    for (UIView *view in [self subviews]) {
-        if ([view isKindOfClass:[UIScrollView class]]) {
-            UIScrollView *scrollview = (UIScrollView *)view;
-            for (UIView *view in [scrollview subviews]) {
-                if ([view isKindOfClass:[UIButton class]]) {
-                    UIButton *btn = (UIButton *)view;
-                    if ([btn.titleLabel.text isEqualToString:currentKey]) {
-                        btn.selected = YES;
-                        return;
-                    }
-                }
+    //NSString *key = [SegmentControlView getKeyByString:currentKey];
+    NSString *key = [SegmentControlView getKeyByString:currentKey];
+    [_parametersDic setObject:currentKey forKey:key];
+    UIScrollView *firstScroll = (UIScrollView *)[self viewWithTag:90];
+    for (UIView *view in [firstScroll subviews]) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton *btn = (UIButton *)view;
+            if (btn.tag == 0) {
+                btn.selected = NO;
+            }
+        if ([btn.titleLabel.text isEqualToString:currentKey]) {
+            btn.selected = YES;
+            return;
+        }
+      }
+    }
+    UIScrollView *secondScroll = (UIScrollView *)[self viewWithTag:91];
+    for (UIView *view in [secondScroll subviews]) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton *btn = (UIButton *)view;
+            if (btn.tag == 100) {
+                btn.selected = NO;
+            }
+            if ([btn.titleLabel.text isEqualToString:currentKey]) {
+                btn.selected = YES;
+                return;
             }
         }
     }
 }
 -(void)setScrollViewWithItems:(NSArray *)items atPosition:(int)position{
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 36*position, 240, 36)];
+    scrollView.tag = 90+position;
     int all = [items count];
     int pageCount = (all%5 == 0) ? (all/5) : (all/5+1);
     scrollView.contentSize = CGSizeMake(240*pageCount, 36);
@@ -322,6 +351,7 @@
 }
 
 -(void)didSelect:(UIButton *)btn{
+    btn.selected = YES;
     NSString *str = btn.titleLabel.text;
     if ([str isEqualToString:@"全部"]) {
         str = @"";
@@ -329,13 +359,45 @@
     
     if (btn.tag < 100) {
         [_parametersDic setObject:str forKey:@"sub_type"];
+        [self resetButtonStateInPosition:0];
     }
     else if(btn.tag >100 && btn.tag <200){
         [_parametersDic setObject:str forKey:@"area"];
+        [self resetButtonStateInPosition:1];
     }
     else if(btn.tag >200 && btn.tag <300){
         [_parametersDic setObject:str forKey:@"year"];
+        [self resetButtonStateInPosition:2];
     }
+    btn.selected = YES;
     [_delegate filtrateWithVideoType:_videoType parameters:_parametersDic];
+}
+-(void)resetButtonStateInPosition:(int)position{
+    UIScrollView *scrollView = nil;
+    switch (position) {
+        case 0:{
+             scrollView = (UIScrollView *)[self viewWithTag:90];
+            
+            break;
+        }
+        case 1:{
+             scrollView = (UIScrollView *)[self viewWithTag:91];
+            break;
+        }
+        case 2:{
+             scrollView = (UIScrollView *)[self viewWithTag:92];
+            break;
+        }
+        default:
+            break;
+    }
+    for (UIView *view in [scrollView subviews]) {
+        if ([view isKindOfClass:[UIButton class]]) {
+            UIButton *btn = (UIButton *)view;
+            btn.selected = NO;
+        }
+        
+    }
+
 }
 @end

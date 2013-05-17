@@ -35,6 +35,7 @@ enum{
 @property (nonatomic, strong) NSArray *showLabelArr;
 @property (nonatomic, strong) UIView *segControlBg;
 -(void)setSegmentControl:(int)type;
++(NSString *)getKeyByString:(NSString *)str;
 @end
 
 

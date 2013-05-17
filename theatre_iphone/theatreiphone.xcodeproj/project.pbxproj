@@ -249,6 +249,13 @@
 		E77320391741D5D9009BA2D2 /* VideoTypeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */; };
 		E77349741740F75000176BA4 /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349731740F75000176BA4 /* ChannelViewController.m */; };
 		E77349781741026500176BA4 /* SegmentControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349771741026400176BA4 /* SegmentControlView.m */; };
+		E77ADE5B1745D49D001A69B5 /* segment1_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE551745D49D001A69B5 /* segment1_s@2x.png */; };
+		E77ADE5C1745D49D001A69B5 /* segment1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE561745D49D001A69B5 /* segment1@2x.png */; };
+		E77ADE5D1745D49D001A69B5 /* segment2_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE571745D49D001A69B5 /* segment2_s@2x.png */; };
+		E77ADE5E1745D49D001A69B5 /* segment2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE581745D49D001A69B5 /* segment2@2x.png */; };
+		E77ADE5F1745D49D001A69B5 /* segment3_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE591745D49D001A69B5 /* segment3_s@2x.png */; };
+		E77ADE601745D49D001A69B5 /* segment3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE5A1745D49D001A69B5 /* segment3@2x.png */; };
+		E77ADE621745D80F001A69B5 /* fengexian _shu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE611745D80F001A69B5 /* fengexian _shu@2x.png */; };
 		E77DC12A17165E49002B6536 /* feedBackhead@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */; };
 		E77DC12B17165E49002B6536 /* iphoneCheckUpdate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12817165E49002B6536 /* iphoneCheckUpdate@2x.png */; };
 		E77DC12C17165E49002B6536 /* iphoneCheckUpdatePress@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12917165E49002B6536 /* iphoneCheckUpdatePress@2x.png */; };
@@ -835,6 +842,13 @@
 		E77349731740F75000176BA4 /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ../popular_iphone/ChannelViewController.m; sourceTree = "<group>"; };
 		E77349761741026400176BA4 /* SegmentControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentControlView.h; sourceTree = "<group>"; };
 		E77349771741026400176BA4 /* SegmentControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentControlView.m; sourceTree = "<group>"; };
+		E77ADE551745D49D001A69B5 /* segment1_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment1_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment1_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77ADE561745D49D001A69B5 /* segment1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment1@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment1@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77ADE571745D49D001A69B5 /* segment2_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment2_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment2_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77ADE581745D49D001A69B5 /* segment2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment2@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment2@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77ADE591745D49D001A69B5 /* segment3_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment3_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment3_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77ADE5A1745D49D001A69B5 /* segment3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment3@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment3@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77ADE611745D80F001A69B5 /* fengexian _shu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fengexian _shu@2x.png"; path = "yueshipin_ipad/Resource_iphone/fengexian _shu@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "feedBackhead@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/feedBackhead@2x.jpg"; sourceTree = SOURCE_ROOT; };
 		E77DC12817165E49002B6536 /* iphoneCheckUpdate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneCheckUpdate@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneCheckUpdate@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77DC12917165E49002B6536 /* iphoneCheckUpdatePress@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneCheckUpdatePress@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneCheckUpdatePress@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1507,6 +1521,13 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E77ADE611745D80F001A69B5 /* fengexian _shu@2x.png */,
+				E77ADE551745D49D001A69B5 /* segment1_s@2x.png */,
+				E77ADE561745D49D001A69B5 /* segment1@2x.png */,
+				E77ADE571745D49D001A69B5 /* segment2_s@2x.png */,
+				E77ADE581745D49D001A69B5 /* segment2@2x.png */,
+				E77ADE591745D49D001A69B5 /* segment3_s@2x.png */,
+				E77ADE5A1745D49D001A69B5 /* segment3@2x.png */,
 				E70A6D5C1744F7ED00CFF5E7 /* gengduo_bg@2x.png */,
 				E70A6D581744F0FC00CFF5E7 /* jiantou_gengduo@2x.png */,
 				E70A6D561744EF0F00CFF5E7 /* fengexian_gengduo@2x.png */,
@@ -2570,6 +2591,13 @@
 				E70A6D571744EF0F00CFF5E7 /* fengexian_gengduo@2x.png in Resources */,
 				E70A6D591744F0FC00CFF5E7 /* jiantou_gengduo@2x.png in Resources */,
 				E70A6D5D1744F7EE00CFF5E7 /* gengduo_bg@2x.png in Resources */,
+				E77ADE5B1745D49D001A69B5 /* segment1_s@2x.png in Resources */,
+				E77ADE5C1745D49D001A69B5 /* segment1@2x.png in Resources */,
+				E77ADE5D1745D49D001A69B5 /* segment2_s@2x.png in Resources */,
+				E77ADE5E1745D49D001A69B5 /* segment2@2x.png in Resources */,
+				E77ADE5F1745D49D001A69B5 /* segment3_s@2x.png in Resources */,
+				E77ADE601745D49D001A69B5 /* segment3@2x.png in Resources */,
+				E77ADE621745D80F001A69B5 /* fengexian _shu@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

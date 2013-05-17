@@ -64,6 +64,10 @@ enum{
     [showBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
     showBtn.adjustsImageWhenDisabled = NO;
     [self addSubview:showBtn];
+    
+//    UIImageView *fengexian = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian _shu@2x.png"]];
+//    fengexian.frame = CGRectMake(79, 0, 3, 65);
+//    [self addSubview:fengexian];
 }
 
 -(void)setSelectAtIndex:(int)index{
