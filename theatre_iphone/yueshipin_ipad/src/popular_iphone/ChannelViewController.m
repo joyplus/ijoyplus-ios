@@ -15,6 +15,7 @@
 #import "TVDetailViewController.h"
 #import "IphoneMovieDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
+#import "CacheUtility.h"
 @implementation ChannelViewController
 @synthesize titleButton = titleButton_;
 @synthesize segV = _segV;
@@ -390,9 +391,17 @@
     NSString *subType = [parameters objectForKey:@"sub_type"];
     NSString *year = [parameters objectForKey:@"year"];
     NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
-    [_progressHUD show:YES];
+    NSString *cacheKey = [NSString stringWithFormat:@"%@%@%@",subType,area,year];
+    id result =  [[CacheUtility sharedCache] loadFromCache:cacheKey];
+    if (result != nil) {
+        [self analyzeData:result];
+    }
+    else{
+      [_progressHUD show:YES];
+    }
+    
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        NSLog(@"success");
+        [[CacheUtility sharedCache] putInCache:cacheKey result:result];
         [_progressHUD setHidden:YES];
         [self analyzeData:result];
         [self reloadTableList];
