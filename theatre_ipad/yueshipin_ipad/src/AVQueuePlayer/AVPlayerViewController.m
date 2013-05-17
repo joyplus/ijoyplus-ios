@@ -43,6 +43,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) UIButton *volumeBtn;
 @property (nonatomic, strong) UIButton *selectButton;
 @property (nonatomic, strong) UIButton *qualityBtn;
+@property (nonatomic, strong) UIButton *downloadLogoBtn;
 @property (nonatomic, strong) UIView *playCacheView;
 @property (nonatomic, strong) NSTimer *controlVisibilityTimer;
 @property (nonatomic, strong) MBProgressHUD *myHUD;
@@ -116,7 +117,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 @synthesize m3u8Duration,isChangeQuality;
 @synthesize localPlaylists;
-
+@synthesize downloadLogoBtn;
 #pragma mark
 #pragma mark View Controller
 
@@ -229,6 +230,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     defaultErrorMessage = @"即将使用网页播放";
     resolution = GAO_QING;
     [self showPlayVideoView];
+    
+    [self customizeTopToolbar];
+    [self customizeBottomToolbar];
+    
     if (isDownloaded) {
         [self getVideoInfo];
         [self loadLastPlaytime];
@@ -244,8 +249,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
         [self playVideo];
     }
-    [self customizeTopToolbar];
-    [self customizeBottomToolbar];
     
     tableCellHeight = EPISODE_TABLE_CELL_HEIGHT;
     tableWidth = EPISODE_TABLE_WIDTH;
@@ -513,7 +516,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         resolutionNum++;
         resolution = GAO_QING;
     }
-    if (resolutionNum > 1) {
+    if (resolutionNum > 1 && !isDownloaded)
+    {
         [qualityBtn setHidden:NO];
     }
     
@@ -541,7 +545,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         if ([defaultErrorMessage hasPrefix:@"即"]) {
             [self performSelector:@selector(showWebView) withObject:nil afterDelay:2];
         } else {
-            [qualityBtn setEnabled:YES];
+            if (!isDownloaded)
+            {
+                qualityBtn.hidden = NO;
+                downloadLogoBtn.hidden = YES;
+            }
         }
     }
 }
@@ -632,11 +640,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)customizeTopToolbar
 {
     topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-//    if (isDownloaded) {
-//        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-//    } else {
-//        topToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 20, self.view.frame.size.height, TOP_TOOLBAR_HEIGHT)];
-//    }
+    
     [topToolbar setBackgroundImage:[[UIImage imageNamed:@"top_toolbar_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(2, 5, 5, 5)] forToolbarPosition:UIToolbarPositionAny barMetrics:UIBarMetricsDefault];
     [self.view addSubview:topToolbar];
     
@@ -825,9 +829,26 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt_pressed"] forState:UIControlStateHighlighted];
     [qualityBtn addTarget:self action:@selector(qualityBtnClicked:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:qualityBtn];
-    if (resolutionNum > 1 && !isDownloaded) {
-        [qualityBtn setHidden:NO];
+    
+    downloadLogoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [downloadLogoBtn setEnabled:NO];
+    downloadLogoBtn.frame = CGRectMake(mToolbar.frame.size.width - 100 - 20, mPlayButton.frame.origin.y, 55, BUTTON_HEIGHT);
+    [downloadLogoBtn setBackgroundImage:[UIImage imageNamed:@"bendi_icon"] forState:UIControlStateDisabled];
+    [mToolbar addSubview:downloadLogoBtn];
+    downloadLogoBtn.hidden = YES;
+    
+    if (isDownloaded)
+    {
+        [downloadLogoBtn setHidden:NO];
     }
+    else
+    {
+        if (resolutionNum > 1)
+        {
+            [qualityBtn setHidden:NO];
+        }
+    }
+    
     [self initScrubberTimer];
     [self syncPlayPauseButtons];
     [self syncScrubber];
@@ -880,7 +901,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [selectButton setBackgroundImage:[UIImage imageNamed:@"select_bt"] forState:UIControlStateNormal];
             }
             [topToolbar setHidden:YES];
-            [qualityBtn setBackgroundImage:[UIImage imageNamed:@"quality_bt"] forState:UIControlStateNormal];
+            
             [resolutionPopTipView dismissAnimated:NO];
             resolutionPopTipView = nil;
             [bottomView setHidden:YES];
@@ -1040,6 +1061,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             subname = [subnameArray objectAtIndex:self.currentNum];
             vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         }
+        qualityBtn.hidden = YES;
+        downloadLogoBtn.hidden = NO;
     }
     else
     {
@@ -1061,6 +1084,16 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             lastPlayTime = CMTimeMakeWithSeconds(1, NSEC_PER_SEC);
             [self preparePlayVideo];
             [self recordPlayStatics];
+            if (resolutionNum > 1)
+            {
+                [qualityBtn setHidden:NO];
+                downloadLogoBtn.hidden = YES;
+            }
+            else
+            {
+                [qualityBtn setHidden:YES];
+                downloadLogoBtn.hidden = YES;
+            }
         }
         else
         {
@@ -1709,7 +1742,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 {
     mPlayButton.enabled = YES;
     mStopButton.enabled = YES;
-    [qualityBtn setEnabled:YES];
+    if (!isDownloaded)
+    {
+        [qualityBtn setEnabled:YES];
+    }
     [mSwitchButton setEnabled:YES];
     for (UIView *asubview in routeBtn.subviews) {
         if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
@@ -1727,7 +1763,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 -(void)disablePlayerButtons
 {
-    [qualityBtn setEnabled:NO];
     self.mPlayButton.enabled = NO;
     self.mStopButton.enabled = NO;
     [mPrevButton setEnabled:NO];
@@ -1983,11 +2018,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             subname = [subnameArray objectAtIndex:self.currentNum];
             vidoeTitle.text = [NSString stringWithFormat:@"%@", subname];
         }
+        downloadLogoBtn.hidden = NO;
+        qualityBtn.hidden = YES;
     }
     else
     {
         [self preparePlayVideo];
         [self recordPlayStatics];
+        if (resolutionNum > 1)
+        {
+            [qualityBtn setHidden:NO];
+            downloadLogoBtn.hidden = YES;
+        }
+        else
+        {
+            [qualityBtn setHidden:YES];
+            downloadLogoBtn.hidden = YES;
+        }
     }
 }
 
