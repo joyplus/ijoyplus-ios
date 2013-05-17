@@ -107,7 +107,6 @@
     _progressHUD  = [[MBProgressHUD alloc] initWithView:self.view];
     _progressHUD.labelText = @"加载中...";
     _progressHUD.opacity = 0.5;
-    //[_progressHUD show:YES];
     [self.view addSubview:_progressHUD];
      
     [self initDefaultParameters];

@@ -104,8 +104,8 @@
     
     for (int i = 0; i < 10; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(18+(i%2)*140, 92+(i/2)*45, 125, 20);
-        btn.titleLabel.font = [UIFont systemFontOfSize:16];
+        btn.frame = CGRectMake(12+(i%2)*145, 92+(i/2)*45, 125, 20);
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         btn.tag= 100+i;
         [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];

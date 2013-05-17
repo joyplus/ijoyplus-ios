@@ -8,7 +8,7 @@
 
 #import "SegmentControlView.h"
 
-#define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"悬疑",@"伦理",@"爱情",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
+#define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"爱情",@"悬疑",@"伦理",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
 #define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
 
 #define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"青春偶像",@"家庭伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
@@ -226,7 +226,7 @@
 
         for ( int i = 0; i < 3; i++) {
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            btn.frame = CGRectMake(300, 12+36*i, 9, 14);
+            btn.frame = CGRectMake(302, 12+36*i, 9, 14);
             [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateHighlighted];
             [self addSubview:btn];
@@ -325,11 +325,11 @@
 
 }
 -(void)setScrollViewWithItems:(NSArray *)items atPosition:(int)position{
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 36*position, 240, 36)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 36*position, 245, 36)];
     scrollView.tag = 90+position;
     int all = [items count];
     int pageCount = (all%5 == 0) ? (all/5) : (all/5+1);
-    scrollView.contentSize = CGSizeMake(240*pageCount, 36);
+    scrollView.contentSize = CGSizeMake(245*pageCount, 36);
     scrollView.pagingEnabled = YES;
     scrollView.showsHorizontalScrollIndicator = NO;
     scrollView.showsVerticalScrollIndicator = NO;
@@ -340,9 +340,10 @@
             btn.selected = YES;
         }
         btn.tag = position*100+i;
-        btn.frame = CGRectMake(48*i, 0, 48, 36);
+        btn.frame = CGRectMake(49*i, 0, 49, 36);
         [btn setTitle:str forState:UIControlStateNormal];
-        btn.titleLabel.font = [UIFont systemFontOfSize:14];
+        btn.titleLabel.font = [UIFont systemFontOfSize:13];
+        btn.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
         [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateSelected];
