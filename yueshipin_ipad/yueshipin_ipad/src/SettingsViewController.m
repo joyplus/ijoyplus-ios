@@ -126,15 +126,8 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [followBtn addTarget:self action:@selector(followBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:followBtn];
         
-        aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
-        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
-        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
-        [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:aboutBtn];
-        
         speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        speakBtn.frame = CGRectMake(leftWidth, aboutBtn.frame.origin.y + aboutBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        speakBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
         [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -146,6 +139,13 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate_pressed"] forState:UIControlStateHighlighted];
         [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:checkUpdateBtn];
+        
+        aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        aboutBtn.frame = CGRectMake(leftWidth, checkUpdateBtn.frame.origin.y + checkUpdateBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
+        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
+        [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:aboutBtn];
         
         
     }
