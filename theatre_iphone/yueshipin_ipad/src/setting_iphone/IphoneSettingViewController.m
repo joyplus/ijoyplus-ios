@@ -134,7 +134,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:careUs];
     
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(10, 290, 300, 35);
+    aboutUs.frame = CGRectMake(10, 335, 300, 35);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
@@ -142,7 +142,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:aboutUs];
     
     UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
-    update.frame = CGRectMake(10, 335, 300, 35);
+    update.frame = CGRectMake(10, 290, 300, 35);
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdate.png"] forState:UIControlStateNormal];
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdatePress.png"] forState:UIControlStateHighlighted];
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
