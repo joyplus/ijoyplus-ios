@@ -26,7 +26,7 @@ enum{
 }
 -(void)initSelectButton{
     UIButton *movieBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    movieBtn.frame = CGRectMake(0, 0, 80, 65);
+    movieBtn.frame = CGRectMake(0, 0, 81, 65);
     movieBtn.tag = 100000;
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"dianying.png"] forState:UIControlStateNormal];
     [movieBtn setBackgroundImage:[UIImage imageNamed:@"dianying_s.png"] forState:UIControlStateHighlighted];
@@ -36,7 +36,7 @@ enum{
     [self addSubview:movieBtn];
     
     UIButton *tvBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    tvBtn.frame = CGRectMake(80, 0, 80, 65);
+    tvBtn.frame = CGRectMake(80, 0, 81, 65);
     tvBtn.tag = 100001;
     [tvBtn setBackgroundImage:[UIImage imageNamed:@"dianshiju.png"] forState:UIControlStateNormal];
     [tvBtn setBackgroundImage:[UIImage imageNamed:@"dianshiju_s.png"] forState:UIControlStateHighlighted];
@@ -46,7 +46,7 @@ enum{
     [self addSubview:tvBtn];
     
     UIButton *comicBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    comicBtn.frame = CGRectMake(160, 0, 80, 65);
+    comicBtn.frame = CGRectMake(160, 0, 81, 65);
     comicBtn.tag = 100002;
     [comicBtn setBackgroundImage:[UIImage imageNamed:@"dongman.png"] forState:UIControlStateNormal];
     [comicBtn setBackgroundImage:[UIImage imageNamed:@"dongman_s.png"] forState:UIControlStateHighlighted];
@@ -56,7 +56,7 @@ enum{
     [self addSubview:comicBtn];
     
     UIButton *showBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    showBtn.frame = CGRectMake(240, 0, 80, 65);
+    showBtn.frame = CGRectMake(240, 0, 81, 65);
     showBtn.tag = 100003;
     [showBtn setBackgroundImage:[UIImage imageNamed:@"zongyi.png"] forState:UIControlStateNormal];
     [showBtn setBackgroundImage:[UIImage imageNamed:@"zongyi_s.png"] forState:UIControlStateHighlighted];
@@ -64,10 +64,12 @@ enum{
     [showBtn addTarget:self action:@selector(buttonSelect:) forControlEvents:UIControlEventTouchUpInside];
     showBtn.adjustsImageWhenDisabled = NO;
     [self addSubview:showBtn];
+    for (int i = 0; i<3; i++) {
+        UIImageView *fengexian = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian _shu@2x.png"]];
+        fengexian.frame = CGRectMake(80*(i+1), 0, 2, 65);
+        [self addSubview:fengexian];
+    }
     
-//    UIImageView *fengexian = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fengexian _shu@2x.png"]];
-//    fengexian.frame = CGRectMake(79, 0, 3, 65);
-//    [self addSubview:fengexian];
 }
 
 -(void)setSelectAtIndex:(int)index{
