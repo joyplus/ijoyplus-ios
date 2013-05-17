@@ -286,35 +286,43 @@
     if ([currentKey isEqualToString:@"全部"]) {
         return;
     }
-    //NSString *key = [SegmentControlView getKeyByString:currentKey];
+  
     NSString *key = [SegmentControlView getKeyByString:currentKey];
     [_parametersDic setObject:currentKey forKey:key];
-    UIScrollView *firstScroll = (UIScrollView *)[self viewWithTag:90];
-    for (UIView *view in [firstScroll subviews]) {
-        if ([view isKindOfClass:[UIButton class]]) {
-            UIButton *btn = (UIButton *)view;
-            if (btn.tag == 0) {
-                btn.selected = NO;
-            }
-        if ([btn.titleLabel.text isEqualToString:currentKey]) {
-            btn.selected = YES;
-            return;
-        }
-      }
-    }
-    UIScrollView *secondScroll = (UIScrollView *)[self viewWithTag:91];
-    for (UIView *view in [secondScroll subviews]) {
-        if ([view isKindOfClass:[UIButton class]]) {
-            UIButton *btn = (UIButton *)view;
-            if (btn.tag == 100) {
-                btn.selected = NO;
-            }
-            if ([btn.titleLabel.text isEqualToString:currentKey]) {
-                btn.selected = YES;
-                return;
+    if ([key isEqualToString:@"sub_type"]) {
+        UIScrollView *firstScroll = (UIScrollView *)[self viewWithTag:90];
+        for (UIView *view in [firstScroll subviews]) {
+            if ([view isKindOfClass:[UIButton class]]) {
+                UIButton *btn = (UIButton *)view;
+                if (btn.tag == 0) {
+                    btn.selected = NO;
+                }
+                if ([btn.titleLabel.text isEqualToString:currentKey]) {
+                    btn.selected = YES;
+                    return;
+                }
             }
         }
+
     }
+    else if([key isEqualToString:@"area"]){
+        UIScrollView *secondScroll = (UIScrollView *)[self viewWithTag:91];
+        for (UIView *view in [secondScroll subviews]) {
+            if ([view isKindOfClass:[UIButton class]]) {
+                UIButton *btn = (UIButton *)view;
+                if (btn.tag == 100) {
+                    btn.selected = NO;
+                }
+                if ([btn.titleLabel.text isEqualToString:currentKey]) {
+                    btn.selected = YES;
+                    return;
+                }
+            }
+        }
+
+    
+    }
+
 }
 -(void)setScrollViewWithItems:(NSArray *)items atPosition:(int)position{
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(50, 36*position, 240, 36)];
