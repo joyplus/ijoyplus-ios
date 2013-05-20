@@ -16,6 +16,16 @@
 #import "IphoneMovieDetailViewController.h"
 #import "IphoneShowDetailViewController.h"
 #import "CacheUtility.h"
+#import "DimensionalCodeScanViewController.h"
+#import "ContainerUtility.h"
+#import "UnbundingViewController.h"
+#define BUNDING_HEIGHT 30
+#define BUNDING_BUTTON_TAG 20001
+enum
+{
+    TYPE_BUNDING_TV = 1,
+    TYPE_UNBUNDING
+};
 @implementation ChannelViewController
 @synthesize titleButton = titleButton_;
 @synthesize segV = _segV;
@@ -53,6 +63,15 @@
     UIBarButtonItem *leftButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     self.navigationItem.leftBarButtonItem = leftButtonItem;
     self.navigationItem.hidesBackButton = YES;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     titleButton_ = [UIButton buttonWithType:UIButtonTypeCustom];
     titleButton_.frame = CGRectMake(0, 0, 100, 60);
@@ -111,6 +130,17 @@
     [self.view addSubview:_progressHUD];
      
     [self initDefaultParameters];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(managerTVBunding)
+                                                 name:@"bundingTVSucceeded"
+                                               object:nil];
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+   [super viewWillAppear:animated];
+   [self managerTVBunding];
 }
 
 -(void)initDefaultParameters{
@@ -128,6 +158,28 @@
     SearchPreViewController *searchViewCotroller = [[SearchPreViewController alloc] init];
     searchViewCotroller.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:searchViewCotroller animated:YES];
+}
+
+-(void)setting:(id)sender
+{
+    UIImageView * scanView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"scan_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 0, 342.5, 0)]];
+    scanView.frame = CGRectMake(0, 0, 320, (kCurrentWindowHeight - 44));
+    scanView.backgroundColor = [UIColor clearColor];
+    
+    DimensionalCodeScanViewController * reader = [DimensionalCodeScanViewController new];
+    reader.supportedOrientationsMask = ZBarOrientationMask(UIInterfaceOrientationPortrait);
+    reader.showsZBarControls = NO;
+    reader.showsHelpOnFail = NO;
+    reader.showsCameraControls = NO;
+    reader.cameraOverlayView = scanView;
+    ZBarImageScanner *scanner = reader.scanner;
+    [scanner setSymbology: ZBAR_I25
+                   config: ZBAR_CFG_ENABLE
+                       to: 0];
+    
+    reader.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:reader
+                                         animated:YES];
 }
 
 -(void)closeFiltrateView{
@@ -421,6 +473,70 @@
     
     NSArray *itemsArr = [result objectForKey:@"results"];
     [_dataArr addObjectsFromArray:itemsArr];
+    
+    
+}
+
+#pragma mark -
+#pragma mark - TVBunding
+-(void)showBundingView{
+    UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
+    if (btn == nil) {
+        btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT+1);
+        [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv.png"] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv_s.png"] forState:UIControlStateHighlighted];
+        [btn addTarget:self action:@selector(pushView) forControlEvents:UIControlEventTouchUpInside];
+        btn.tag = BUNDING_BUTTON_TAG;
+        [self.view addSubview:btn];
+    }
+    btn.hidden = NO;
+  
+    _segV.frame = CGRectMake(0, BUNDING_HEIGHT, 320, 42);
+    _filtrateView.frame = CGRectMake(0,42+BUNDING_HEIGHT, 320,108);
+    _tableList.frame = CGRectMake(0, 42+BUNDING_HEIGHT, 320, kCurrentWindowHeight -44-42-48-BUNDING_HEIGHT);
+}
+
+-(void)dismissBundingView{
+    UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
+    btn.hidden = YES;
+    
+    _segV.frame = CGRectMake(0, 0, 320, 42);
+    _filtrateView.frame = CGRectMake(0,42, 320,108);
+    _tableList.frame = CGRectMake(0, 42, 320, kCurrentWindowHeight -44-42-48);
+}
+- (void)managerTVBunding
+{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber *isbunding = [data objectForKey:KEY_IS_BUNDING];
+    if (![isbunding boolValue] || nil == isbunding)
+    {
+        [self setViewType:TYPE_UNBUNDING];
+    }
+    else
+    {
+        [self setViewType:TYPE_BUNDING_TV];
+    }
+    
+}
+
+- (void)setViewType:(NSInteger)type
+{
+    if (TYPE_BUNDING_TV == type)
+    {
+        [self showBundingView];
+        
+    }
+    else if (TYPE_UNBUNDING == type)
+    {
+        [self dismissBundingView];
+    }
+}
+
+-(void)pushView{
+    UnbundingViewController *ubCtrl = [[UnbundingViewController alloc] init];
+    [self.navigationController pushViewController:ubCtrl animated:YES];
 }
 
 - (void)didReceiveMemoryWarning

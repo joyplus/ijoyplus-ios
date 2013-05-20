@@ -23,9 +23,18 @@
 #import "CommonMotheds.h"
 #import "DownLoadManager.h"
 #import "DimensionalCodeScanViewController.h"
+#import "ContainerUtility.h"
+#import "UnbundingViewController.h"
 #define pageSize 20
 #define MOVIE_TYPE 9001
 #define TV_TYPE 9000
+#define BUNDING_BUTTON_TAG 19999
+#define BUNDING_HEIGHT 30
+enum
+{
+    TYPE_BUNDING_TV = 1,
+    TYPE_UNBUNDING
+};
 @interface allListViewController ()
 
 @end
@@ -119,14 +128,14 @@
     self.navigationItem.hidesBackButton = YES;
     
     
-//    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
-//    rightButton.frame = CGRectMake(0, 0, 55, 44);
-//    rightButton.backgroundColor = [UIColor clearColor];
-//    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
-//    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
-//    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
-//    self.navigationItem.rightBarButtonItem = rightButtonItem;
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [rightButton addTarget:self action:@selector(setting:) forControlEvents:UIControlEventTouchUpInside];
+    rightButton.frame = CGRectMake(0, 0, 55, 44);
+    rightButton.backgroundColor = [UIColor clearColor];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn.png"] forState:UIControlStateNormal];
+    [rightButton setImage:[UIImage imageNamed:@"scan_btn_f.png"] forState:UIControlStateHighlighted];
+    UIBarButtonItem *rightButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonItem;
     
     self.tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, kCurrentWindowHeight-92) style:UITableViewStylePlain];
     self.tableList.backgroundColor = [UIColor clearColor];
@@ -146,6 +155,11 @@
         refreshHeaderView_ = view;
         //[refreshHeaderView_ refreshLastUpdatedDate];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(managerTVBunding)
+                                                 name:@"bundingTVSucceeded"
+                                               object:nil];
    
 }
 - (void)viewDidUnload{
@@ -157,6 +171,7 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
+    [self managerTVBunding];
     if (0 == self.listArray.count)
     {
         [self loadData];
@@ -348,6 +363,64 @@
 	reloading_ = NO;
 	[refreshHeaderView_ egoRefreshScrollViewDataSourceDidFinishedLoading:tableList_];
 	
+}
+
+#pragma mark -
+#pragma mark - TVBunding
+-(void)showBundingView{
+    UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
+    if (btn == nil) {
+        btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT+1);
+        [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv.png"] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv_s.png"] forState:UIControlStateHighlighted];
+        [btn addTarget:self action:@selector(pushView) forControlEvents:UIControlEventTouchUpInside];
+        btn.tag = BUNDING_BUTTON_TAG;
+        [self.view addSubview:btn];
+    }
+    btn.hidden = NO;
+    
+    self.tableList.frame = CGRectMake(0, BUNDING_HEIGHT, 320, kCurrentWindowHeight-92-BUNDING_HEIGHT);
+}
+
+-(void)dismissBundingView{
+    UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
+    btn.hidden = YES;
+    
+   self.tableList.frame = CGRectMake(0, 0, 320, kCurrentWindowHeight-92);
+}
+- (void)managerTVBunding
+{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
+    NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+    NSNumber *isbunding = [data objectForKey:KEY_IS_BUNDING];
+    if (![isbunding boolValue] || nil == isbunding)
+    {
+        [self setViewType:TYPE_UNBUNDING];
+    }
+    else
+    {
+        [self setViewType:TYPE_BUNDING_TV];
+    }
+  
+}
+
+- (void)setViewType:(NSInteger)type
+{
+    if (TYPE_BUNDING_TV == type)
+    {
+        [self showBundingView];
+        
+    }
+    else if (TYPE_UNBUNDING == type)
+    {
+        [self dismissBundingView];
+    }
+}
+
+-(void)pushView{
+    UnbundingViewController *ubCtrl = [[UnbundingViewController alloc] init];
+    [self.navigationController pushViewController:ubCtrl animated:YES];
 }
 
 @end
