@@ -503,6 +503,7 @@
         [AppDelegate instance].currentDownloadingNum = 0;
     }
     [self reloadSubitems];
+    [self.parentDelegate refreshDownloadView];
     if(subitems == nil || subitems.count == 0){
         DownloadItem *pItem = (DownloadItem *)[DatabaseManager findFirstByCriteria: DownloadItem.class queryString:[NSString stringWithFormat:@"WHERE itemId = %@", self.itemId]];
         [DatabaseManager deleteObject:pItem];
