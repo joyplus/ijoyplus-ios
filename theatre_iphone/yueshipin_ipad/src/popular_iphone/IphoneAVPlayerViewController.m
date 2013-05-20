@@ -1771,7 +1771,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     [self addCacheview];
     
     clearBgView_.hidden = YES;
-    
+    lastPlayTime_ = [mPlayer currentTime];
     [mPlayer pause];
     mPlayer = nil;
     switch (btn.tag) {
@@ -2210,6 +2210,9 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     if(CMTimeGetSeconds([mPlayer currentTime])> 0){
         playbackTime = [NSNumber numberWithFloat:CMTimeGetSeconds([mPlayer currentTime])].intValue;
     }
+    if (playbackTime == 0) {
+        playbackTime = [NSNumber numberWithFloat:CMTimeGetSeconds(lastPlayTime_)].intValue;
+    }
     int duration = 0;
     if(CMTimeGetSeconds([self playerItemDuration]) > 0){
         duration = [NSNumber numberWithFloat:CMTimeGetSeconds([self playerItemDuration])].intValue;
@@ -2228,7 +2231,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         if (nil == prodId_)
             return;
         
-        if ((duration - playbackTime)>5) {
+        if (duration == 0 || (duration - playbackTime)>5) {
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
         }
         else{ 
