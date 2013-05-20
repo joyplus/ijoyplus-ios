@@ -189,7 +189,8 @@
     [super viewWillAppear:animated];
     if (videoArray.count == 0) {
         [self retrieveData];
-    } else if(revertSearchCriteria){
+    }
+    if(revertSearchCriteria){
         UIButton *allBtn = (UIButton *)[topCategoryView viewWithTag:1101];
         [allBtn sendActionsForControlEvents:UIControlEventTouchDown];
         revertSearchCriteria = NO;
