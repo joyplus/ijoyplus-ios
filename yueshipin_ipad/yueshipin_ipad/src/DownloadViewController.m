@@ -553,6 +553,11 @@
     [self updateDiskStorage];
 }
 
+- (void)refreshDownloadView
+{
+    [_gmGridView reloadData];
+}
+
 #pragma mark -
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
