@@ -762,6 +762,13 @@
 
 - (void)clearLastBtnImage
 {
+    for (int i = 0; i < totalEpisodeNumber; i ++)
+    {
+        UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:(i + 1)];
+        [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    }
+    /*
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
@@ -772,6 +779,7 @@
         [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
     }
+     */
 }
 
 - (void)dramaPlay:(UIButton *)btn

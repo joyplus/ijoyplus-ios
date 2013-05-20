@@ -302,6 +302,7 @@
 - (void)changePlayingEpisodeBtn:(int)currentNum
 {
     [self clearLastBtnImage];
+    NSLog(@"当前播放集数:%d",currentNum+1);
     [[CacheUtility sharedCache]putInCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId] result:[NSNumber numberWithInt:currentNum+1]];
     UIButton *btn = (UIButton *)[episodeView viewWithTag:currentNum+1];
     [btn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
@@ -762,16 +763,28 @@
 
 - (void)clearLastBtnImage
 {
+    for (int i = 0; i < totalEpisodeNumber; i ++)
+    {
+        UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:(i + 1)];
+        [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    }
+    
+    
+    /*
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
         lastNum = [lastNumObj integerValue];
     }
+    
     if (lastNum > 0 && lastNum <= episodeArray.count) {
+        NSLog(@"上次播放集数:%d",lastNum+1);
         UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:lastNum];
         [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
     }
+     */
 }
 
 - (void)dramaPlay:(UIButton *)btn
