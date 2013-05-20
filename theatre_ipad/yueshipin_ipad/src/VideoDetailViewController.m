@@ -159,10 +159,17 @@
     }
     else
     {
-        if ([[playInfo objectForKey:@"id"] isEqualToString:Id])
+        for (NSDictionary * dic in playlists)
         {
-            return [playlists objectAtIndex:0];
+            if ([[dic objectForKey:@"itemId"] isEqualToString:Id])
+            {
+                return dic;
+            }
         }
+//        if ([[playInfo objectForKey:@"id"] isEqualToString:Id])
+//        {
+//            return [playlists objectAtIndex:0];
+//        }
     }
     return nil;
 }

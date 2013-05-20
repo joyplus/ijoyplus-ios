@@ -15,4 +15,5 @@
 +(BOOL)isFirstTimeRun;
 +(BOOL)isVersionUpdate;
 +(void)setVersion;
++ (NSArray *)localPlaylists:(NSString *)mediaId;
 @end

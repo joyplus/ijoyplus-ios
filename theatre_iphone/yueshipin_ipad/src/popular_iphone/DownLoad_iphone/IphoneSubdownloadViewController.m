@@ -391,14 +391,16 @@
                 NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
-                iphoneAVPlayerViewController.nameStr = [NSString stringWithFormat:@"%@ 第%d集",name,num];
-                iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.nameStr = name;
+                iphoneAVPlayerViewController.playNum = num - 1;
+                iphoneAVPlayerViewController.videoType = DRAMA_TYPE;
             }
             else if (downloadItem.type == 3){
                 iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
                 iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.videoType = SHOW_TYPE;
             }
             NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];
             NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];

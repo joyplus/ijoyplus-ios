@@ -1144,7 +1144,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
+    
+    NSString *key = nil;
+    if (type == SHOW_TYPE)
+    {
+        key = [NSString stringWithFormat:@"%@%@", @"show", self.prodId];
+    }
+    else if (type == DRAMA_TYPE || type == COMIC_TYPE)
+    {
+        key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
+    }
+    else
+    {
+        return;
+    }
+    
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil)
     {
@@ -1170,16 +1184,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil)
         {
-            NSString *key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
-            [[CacheUtility sharedCache] putInCache:key result:result];
+            NSString *key = nil;
+            
             if (type == SHOW_TYPE)
             {
                 video = (NSDictionary *)[result objectForKey:@"show"];
+                key = [NSString stringWithFormat:@"%@%@", @"show", self.prodId];
             }
             else if (type == DRAMA_TYPE || type == COMIC_TYPE)
             {
                 video = (NSDictionary *)[result objectForKey:@"tv"];
+                key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
             }
+            
+            [[CacheUtility sharedCache] putInCache:key result:result];
+            
             NSArray * episodes = [video objectForKey:@"episodes"];
             [self prepareOnlinePlay:episodes];
         }

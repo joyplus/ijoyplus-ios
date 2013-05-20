@@ -93,6 +93,7 @@
     BOOL    isTVReady;
     
     AVMutableAudioMix *audioMix_;
+    NSArray * localPlaylist;
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;
@@ -141,6 +142,8 @@
 @property (nonatomic, assign) double playDuration;
 @property (nonatomic, strong)NSDictionary *continuePlayInfo;
 @property (nonatomic, assign) BOOL isPlayFromRecord;
+@property (nonatomic, strong) NSArray * localPlaylist;
+@property (nonatomic, strong) UIButton * localLogoBtn;
 - (void)setURL:(NSURL*)URL;
 - (NSURL*)URL;
 - (void)clearPlayerData;
