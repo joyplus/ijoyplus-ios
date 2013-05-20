@@ -799,6 +799,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [tableList_ reloadData];
 
     lastPlayTime_ = kCMTimeZero;
+    [self disableBottomToolBarButtons];
+    
     [self addCacheview];
 
     [self initDataSource:playNum];
@@ -1934,9 +1936,9 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             if (!islocalFile_)
             {
                 [self showNOThisClearityUrl:NO];
+                clarityButton_.hidden = NO;
+                localLogoBtn.hidden = YES;
                 [self playNext];
-//                clarityButton_.hidden = NO;
-//                localLogoBtn.hidden = YES;
             }
             else
             {
@@ -2415,11 +2417,13 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     if (logo.hidden)
     {
         islocalFile_ = NO;
-        
+        [self disableBottomToolBarButtons];
         [self initDataSource:playNum];
         [self beginToPlay];
         
         [self recordPlayStatics];
+        clarityButton_.hidden = NO;
+        localLogoBtn.hidden = YES;
         [self clearSelectView];
         bottomToolBar_.hidden = YES;
         selectButton_.selected = YES;
