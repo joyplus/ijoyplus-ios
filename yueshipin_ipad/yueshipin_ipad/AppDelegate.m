@@ -226,6 +226,7 @@
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
+    networkStatus = 2;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
     [MobClick updateOnlineConfig];
