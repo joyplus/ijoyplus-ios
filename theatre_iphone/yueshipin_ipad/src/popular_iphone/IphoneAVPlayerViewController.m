@@ -827,6 +827,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 	// Do any additional setup after loading the view.
     [self initPlayerView];
     [self initUI];
+    
     if (!islocalFile_) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
         //初始化数据；
@@ -839,8 +840,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         else{
             [self initDataPlayFromRecord];
         }
-        clarityButton_.hidden = NO;
-        localLogoBtn.hidden = YES;
     }
     else
     {
@@ -853,9 +852,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [self setPath:local_file_path_];
         }
         [self getVideoDetail];
-        clarityButton_.hidden = YES;
-        localLogoBtn.hidden = NO;
     }
+    
+    [self clearSelectView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appDidEnterBackground:)
@@ -1543,9 +1542,6 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     localLogoBtn.tag = LOCAL_LOGO_BUTTON_TAG;
     [bottomToolBar_ addSubview:localLogoBtn];
     
-    
-    [self clearSelectView];
-    
     volumeView_ = [ [MPVolumeView alloc] initWithFrame:CGRectMake(60, 7, 30, 30)];
     volumeView_.backgroundColor = [UIColor clearColor];
     [volumeView_ setShowsVolumeSlider:NO];
@@ -1723,20 +1719,21 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
         }
         
-        
         clearBgView_.hidden = YES;
+        localLogoBtn.hidden = YES;
     }
     else
     {
+        clarityButton_.hidden = YES;
         if (islocalFile_)
         {
-            clarityButton_.hidden = YES;
+            localLogoBtn.hidden = NO;
+        }
+        else
+        {
             localLogoBtn.hidden = YES;
         }
     }
-    
-    
-    
 }
 -(void)syncCurrentClear{
     NSString *clearType = nil;
