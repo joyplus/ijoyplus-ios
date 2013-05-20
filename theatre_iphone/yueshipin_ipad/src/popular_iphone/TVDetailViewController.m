@@ -1398,9 +1398,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0,304, 250)];
     bgImgView.image = [UIImage imageNamed:@"download_bg.png"];
     [bgView addSubview:bgImgView];
-    
+        
     UIButton *close = [UIButton buttonWithType:UIButtonTypeCustom];
-    close.frame = CGRectMake(262, 2, 40, 40);
+    close.frame = CGRectMake(257, 10, 40, 40);
     [close setBackgroundImage:[UIImage imageNamed:@"download_shut.png"] forState:UIControlStateNormal];
     [close setBackgroundImage:[UIImage imageNamed:@"download_shut_pressed.png"] forState:UIControlStateHighlighted];
     [close addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
