@@ -11,7 +11,7 @@
 #define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"爱情",@"悬疑",@"伦理",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
 #define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
 
-#define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"青春偶像",@"家庭伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
+#define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"偶像",@"伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
 #define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
 
 #define  COMIC_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil]
@@ -20,7 +20,7 @@
 #define  SHOW_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"播报",@"旅游",@"音乐",@"美食",@"纪实",@"曲艺",@"生活",@"游戏",@"互动",@"财经",@"求职",@"其他", nil]
 #define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
 
-#define  MOVIE_YEAR  [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",nil]
+#define  MOVIE_YEAR  [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",@"其他",nil]
 
 @implementation SegmentControlView
 @synthesize seg = _seg;
@@ -203,21 +203,21 @@
         bgView.image = [[UIImage imageNamed:@"gengduo_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 40)];
         [self addSubview:bgView];
         
-        UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 8, 50, 20)];
+        UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 7, 50, 20)];
         typelabel.text = @"类型:";
         typelabel.font = [UIFont systemFontOfSize:15];
         typelabel.textColor = [UIColor whiteColor];
         typelabel.backgroundColor = [UIColor clearColor];
         [self addSubview:typelabel];
         
-        UILabel *arealabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 44, 50, 20)];
+        UILabel *arealabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 43, 50, 20)];
         arealabel.text = @"地区:";
         arealabel.font = [UIFont systemFontOfSize:15];
         arealabel.textColor = [UIColor whiteColor];
         arealabel.backgroundColor = [UIColor clearColor];
         [self addSubview:arealabel];
         
-        UILabel *yearlabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 80, 50, 20)];
+        UILabel *yearlabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 79, 50, 20)];
         yearlabel.text = @"年份:";
         yearlabel.font = [UIFont systemFontOfSize:15];
         yearlabel.textColor = [UIColor whiteColor];
@@ -342,7 +342,7 @@
         btn.tag = position*100+i;
         btn.frame = CGRectMake(49*i, 0, 49, 36);
         [btn setTitle:str forState:UIControlStateNormal];
-        btn.titleLabel.font = [UIFont systemFontOfSize:13];
+        btn.titleLabel.font = [UIFont systemFontOfSize:15];
         btn.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
@@ -364,6 +364,19 @@
     if ([str isEqualToString:@"全部"]) {
         str = @"";
     }
+    else if ([str isEqualToString:@"偶像"]) {
+        str = @"青春偶像";
+    }
+    else if ([str isEqualToString:@"伦理"]) {
+        str = @"家庭伦理";
+    }
+    else if ([str isEqualToString:@"欧洲"]) {
+        str = @"欧洲地区";
+    }
+    else if ([str isEqualToString:@"东南亚"]) {
+        str = @"东南亚地区";
+    }
+    
     if (btn.tag < 100) {
         [_parametersDic setObject:str forKey:@"sub_type"];
         [self resetButtonStateInPosition:0];
