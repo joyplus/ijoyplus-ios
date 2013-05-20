@@ -309,6 +309,7 @@
 		E766D18B173389D6006F9940 /* zaixianfankui@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D189173389D5006F9940 /* zaixianfankui@2x.png */; };
 		E766D18E17338F68006F9940 /* ti_jiao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D18C17338F68006F9940 /* ti_jiao_s@2x.png */; };
 		E766D18F17338F68006F9940 /* ti_jiao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E766D18D17338F68006F9940 /* ti_jiao@2x.png */; };
+		E77AA6F6174A339400A05493 /* 3G_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77AA6F5174A339400A05493 /* 3G_bg@2x.png */; };
 		E77DC12A17165E49002B6536 /* feedBackhead@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */; };
 		E77DC12B17165E49002B6536 /* iphoneCheckUpdate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12817165E49002B6536 /* iphoneCheckUpdate@2x.png */; };
 		E77DC12C17165E49002B6536 /* iphoneCheckUpdatePress@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77DC12917165E49002B6536 /* iphoneCheckUpdatePress@2x.png */; };
@@ -1358,6 +1359,7 @@
 		E766D189173389D5006F9940 /* zaixianfankui@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "zaixianfankui@2x.png"; path = "yueshipin_ipad/Resource_iphone/zaixianfankui@2x.png"; sourceTree = SOURCE_ROOT; };
 		E766D18C17338F68006F9940 /* ti_jiao_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ti_jiao_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/ti_jiao_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		E766D18D17338F68006F9940 /* ti_jiao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ti_jiao@2x.png"; path = "yueshipin_ipad/Resource_iphone/ti_jiao@2x.png"; sourceTree = SOURCE_ROOT; };
+		E77AA6F5174A339400A05493 /* 3G_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "3G_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/3G_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77DC12717165E49002B6536 /* feedBackhead@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "feedBackhead@2x.jpg"; path = "yueshipin_ipad/Resource_iphone/feedBackhead@2x.jpg"; sourceTree = SOURCE_ROOT; };
 		E77DC12817165E49002B6536 /* iphoneCheckUpdate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneCheckUpdate@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneCheckUpdate@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77DC12917165E49002B6536 /* iphoneCheckUpdatePress@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphoneCheckUpdatePress@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphoneCheckUpdatePress@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -2482,6 +2484,7 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E77AA6F5174A339400A05493 /* 3G_bg@2x.png */,
 				E766D18C17338F68006F9940 /* ti_jiao_s@2x.png */,
 				E766D18D17338F68006F9940 /* ti_jiao@2x.png */,
 				E766D188173389D5006F9940 /* zaixianfankui_s@2x.png */,
@@ -4498,6 +4501,7 @@
 				EBC3F9B8173CD5A70009FCBE /* Default-Landscape~ipad.png in Resources */,
 				EBC3F9B9173CD5C90009FCBE /* Default.png in Resources */,
 				EBC3F9BA173CD5CF0009FCBE /* Default@2x.png in Resources */,
+				E77AA6F6174A339400A05493 /* 3G_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

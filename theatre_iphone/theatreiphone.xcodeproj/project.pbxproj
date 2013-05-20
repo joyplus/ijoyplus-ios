@@ -253,6 +253,7 @@
 		E77320391741D5D9009BA2D2 /* VideoTypeSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = E77320381741D5D9009BA2D2 /* VideoTypeSegment.m */; };
 		E77349741740F75000176BA4 /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349731740F75000176BA4 /* ChannelViewController.m */; };
 		E77349781741026500176BA4 /* SegmentControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = E77349771741026400176BA4 /* SegmentControlView.m */; };
+		E77AA6F4174A323D00A05493 /* 3G_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77AA6F3174A323D00A05493 /* 3G_bg@2x.png */; };
 		E77ADE5B1745D49D001A69B5 /* segment1_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE551745D49D001A69B5 /* segment1_s@2x.png */; };
 		E77ADE5C1745D49D001A69B5 /* segment1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE561745D49D001A69B5 /* segment1@2x.png */; };
 		E77ADE5D1745D49D001A69B5 /* segment2_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E77ADE571745D49D001A69B5 /* segment2_s@2x.png */; };
@@ -850,6 +851,7 @@
 		E77349731740F75000176BA4 /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ../popular_iphone/ChannelViewController.m; sourceTree = "<group>"; };
 		E77349761741026400176BA4 /* SegmentControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentControlView.h; sourceTree = "<group>"; };
 		E77349771741026400176BA4 /* SegmentControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentControlView.m; sourceTree = "<group>"; };
+		E77AA6F3174A323D00A05493 /* 3G_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "3G_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/3G_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77ADE551745D49D001A69B5 /* segment1_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment1_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment1_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77ADE561745D49D001A69B5 /* segment1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment1@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment1@2x.png"; sourceTree = SOURCE_ROOT; };
 		E77ADE571745D49D001A69B5 /* segment2_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "segment2_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/segment2_s@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1529,6 +1531,7 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E77AA6F3174A323D00A05493 /* 3G_bg@2x.png */,
 				E77ADE611745D80F001A69B5 /* fengexian _shu@2x.png */,
 				E77ADE551745D49D001A69B5 /* segment1_s@2x.png */,
 				229091CC174621110034660D /* bendi_icon@2x.png */,
@@ -2614,6 +2617,7 @@
 				229091D1174621110034660D /* local_file_icon@2x.png in Resources */,
 				229091D2174621110034660D /* share_btn_disabled.png in Resources */,
 				229091D3174621110034660D /* share_btn_disabled@2x.png in Resources */,
+				E77AA6F4174A323D00A05493 /* 3G_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

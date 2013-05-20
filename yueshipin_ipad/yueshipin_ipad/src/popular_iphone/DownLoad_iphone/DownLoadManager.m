@@ -869,10 +869,18 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
     else{
         netWorkStatus = status;
-        if(netWorkStatus == 0){
+        if(netWorkStatus == 0){ //no network
             [self pauseAllTask];
         }
-        else{
+        else if(netWorkStatus == 1){ //3g ,2g
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            BOOL isSupport3GDownload = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
+            
+            if (!isSupport3GDownload) {
+                [self pauseAllTask];
+            }
+        }
+        else{  //wifi
             [self appDidEnterForeground];
         }
     }
