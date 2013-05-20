@@ -683,7 +683,7 @@ enum
     {
         bundingTipsView.hidden = NO;
         
-        scrollRect.origin.y = 71;
+        scrollRect.origin.y = 68;
         scrollRect.size.height = kCurrentWindowHeight - 125 - 30;
         scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - 30);
         topRect.origin.y = 30;
