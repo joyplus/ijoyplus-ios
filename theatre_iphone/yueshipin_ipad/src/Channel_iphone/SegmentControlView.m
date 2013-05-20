@@ -360,21 +360,19 @@
 }
 
 -(void)didSelect:(UIButton *)btn{
-    btn.selected = YES;
     NSString *str = btn.titleLabel.text;
     if ([str isEqualToString:@"全部"]) {
         str = @"";
     }
-    
     if (btn.tag < 100) {
         [_parametersDic setObject:str forKey:@"sub_type"];
         [self resetButtonStateInPosition:0];
     }
-    else if(btn.tag >100 && btn.tag <200){
+    else if(btn.tag >=100 && btn.tag <200){
         [_parametersDic setObject:str forKey:@"area"];
         [self resetButtonStateInPosition:1];
     }
-    else if(btn.tag >200 && btn.tag <300){
+    else if(btn.tag >=200 && btn.tag <300){
         [_parametersDic setObject:str forKey:@"year"];
         [self resetButtonStateInPosition:2];
     }

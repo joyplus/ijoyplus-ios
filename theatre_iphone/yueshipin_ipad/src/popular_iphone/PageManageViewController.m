@@ -514,7 +514,7 @@ enum
     if (nil == bundingTipsView)
     {
         bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]highlightedImage:[UIImage imageNamed:@"bunding_tv_s.png"]];
-        bundingTipsView.frame = CGRectMake(0, 0, 320, 34);
+        bundingTipsView.frame = CGRectMake(0, 0, 320, 31);
         [self.view addSubview:bundingTipsView];
         bundingTipsView.backgroundColor = [UIColor clearColor];
         
@@ -653,6 +653,7 @@ enum
     {
         [self setViewType:TYPE_BUNDING_TV];
     }
+
 }
 
 - (void)TopImageTaped
@@ -683,14 +684,14 @@ enum
         bundingTipsView.hidden = NO;
         
         scrollRect.origin.y = 71;
-        scrollRect.size.height = kCurrentWindowHeight - 125 - 34;
-        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - 34);
-        topRect.origin.y = 34;
+        scrollRect.size.height = kCurrentWindowHeight - 125 - 30;
+        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - 30);
+        topRect.origin.y = 30;
         
-        movieRect.size.height = (kCurrentWindowHeight - 130 - 34);
-        tvRect.size.height = (kCurrentWindowHeight - 130 - 34);
-        showRect.size.height = (kCurrentWindowHeight - 130 - 34);
-        comicRect.size.height = (kCurrentWindowHeight - 130 - 34);
+        movieRect.size.height = (kCurrentWindowHeight - 130 - 30);
+        tvRect.size.height = (kCurrentWindowHeight - 130 - 30);
+        showRect.size.height = (kCurrentWindowHeight - 130 - 30);
+        comicRect.size.height = (kCurrentWindowHeight - 130 - 30);
         
     }
     else if (TYPE_UNBUNDING == type)
