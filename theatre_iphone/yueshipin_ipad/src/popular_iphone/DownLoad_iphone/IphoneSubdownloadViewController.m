@@ -399,7 +399,7 @@
                 iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
-                iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.playNum = num - 1;
                 iphoneAVPlayerViewController.videoType = SHOW_TYPE;
             }
             NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];

@@ -806,6 +806,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self beginToPlay];
     
     [self recordPlayStatics];
+    
+    [self clearSelectView];
+    
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -896,7 +899,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     myHUD.opacity = 0;
     [myHUD show:YES];
     
-    if (!islocalFile_) {
+    if (!islocalFile_)
+    {
           [self.view addSubview:myHUD];
     }
 
@@ -1931,8 +1935,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             {
                 [self showNOThisClearityUrl:NO];
                 [self playNext];
-                clarityButton_.hidden = NO;
-                localLogoBtn.hidden = YES;
+//                clarityButton_.hidden = NO;
+//                localLogoBtn.hidden = YES;
             }
             else
             {
@@ -2397,6 +2401,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
     playNum = indexPath.row;
     
+    tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
+    //selectButton_.selected = NO;
     [tableList_ reloadData];
     
     [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0]];
@@ -2414,7 +2420,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         [self beginToPlay];
         
         [self recordPlayStatics];
-        
+        [self clearSelectView];
         bottomToolBar_.hidden = YES;
         selectButton_.selected = YES;
         [self showToolBar];
@@ -2600,11 +2606,24 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
 }
 -(void)addCacheview{
-    [playCacheView_ removeFromSuperview];
-    [self.view addSubview:playCacheView_];
+    
     [self initWillPlayLabel];
-    myHUD.hidden = NO;
-    [self.view bringSubviewToFront:myHUD];
+    
+    if (!islocalFile_)
+    {
+        [playCacheView_ removeFromSuperview];
+        [self.view addSubview:playCacheView_];
+        if (nil == myHUD.superview)
+        {
+            [self.view addSubview:myHUD];
+        }
+        myHUD.frame = CGRectMake(170,186, 200, 80);
+        [self.view bringSubviewToFront:myHUD];
+        
+        myHUD.hidden = NO;
+        [myHUD show:YES];
+    }
+
 }
 
 
