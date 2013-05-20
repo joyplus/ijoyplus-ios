@@ -2401,7 +2401,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
     playNum = indexPath.row;
     
-    tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
+    //tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
     //selectButton_.selected = NO;
     [tableList_ reloadData];
     
