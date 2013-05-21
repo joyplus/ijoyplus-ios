@@ -154,7 +154,9 @@ static BundingTVManager * manager = nil;
 - (void) messageReceived:(NSDictionary *)messageDict
 {
     //解除绑定
-    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"] && !isUserUnbind)
+    if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"]
+        && !isUserUnbind
+        && [[messageDict objectForKey:@"user_id"] isEqualToString:_userId])
     {
         [MobClick event:KEY_UNBINDED];
         //添加已绑定数据缓存
