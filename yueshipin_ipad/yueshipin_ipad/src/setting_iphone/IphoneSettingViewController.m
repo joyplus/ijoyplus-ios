@@ -105,10 +105,15 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     UIImageView *networkImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 70, 300, 45)];
     networkImg.image = [UIImage imageNamed:@"3G_bg.png"];
     networkImg.userInteractionEnabled = YES;
+
     UISwitch *networkSet = [[UISwitch alloc] initWithFrame:CGRectMake(220, 6, 40, 22)];
     networkSet.transform =  CGAffineTransformMakeScale(0.80, 0.80);
     [networkSet addTarget:self action:@selector(networkSetSwitchClicked:) forControlEvents:UIControlEventValueChanged];
-    networkSet.onTintColor = [UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1];
+    networkSet.onTintColor = [UIColor orangeColor];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    networkSet.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
+
     [networkImg addSubview:networkSet];
     [scrollView addSubview:networkImg];
    
