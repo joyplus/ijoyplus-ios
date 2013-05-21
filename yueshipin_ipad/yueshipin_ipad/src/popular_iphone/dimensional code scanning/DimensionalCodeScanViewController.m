@@ -34,6 +34,9 @@
         [scanTimer invalidate];
         scanTimer = nil;
     }
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:UIApplicationDidBecomeActiveNotification
+                                                  object:nil];
 }
 
 - (void)viewDidLoad
@@ -43,12 +46,11 @@
     
     self.readerDelegate = self;
     
-//    UILabel *titleText = [[UILabel alloc] initWithFrame: CGRectMake(90, 0, 40, 40)];
-//    titleText.backgroundColor = [UIColor clearColor];
-//    titleText.textColor=[UIColor whiteColor];
-//    [titleText setFont:[UIFont boldSystemFontOfSize:18.0]];
-//    [titleText setText:@"扫一扫"];
-//    self.navigationItem.titleView=titleText;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(appDidBecomeActive)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
     self.title = @"扫一扫";
     
     UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -118,6 +120,11 @@
     //[UIView setAnimationDidStopSelector:@selector(fireANewTimer)];
     scanSymbolView.frame = CGRectMake(72, kCurrentWindowHeight - 391 + 168.5, 175, 20.5);
     [UIView commitAnimations];
+}
+
+- (void)appDidBecomeActive
+{
+    [self fireANewTimer];
 }
 
 #pragma mark - 
