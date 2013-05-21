@@ -48,6 +48,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     lock_ = [[NSLock alloc] init];
     [[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(addtoDownLoadQueue:) name:@"DOWNLOAD_MSG" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
 }
 
 -(void)addtoDownLoadQueue:(id)sender{
@@ -277,13 +278,21 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
 }
 
 -(void)postIsloadingBoolValue{
+    if ([self isHaveLoadingTask]) {
+         [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:YES]];
+    }
+    else{
+        [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:NO]];
+    }
+}
+
+-(BOOL)isHaveLoadingTask{
     for (AFDownloadRequestOperation *af in downLoadQueue_) {
-        if ([af.operationStatus isEqualToString:@"loading"]||[af.operationStatus isEqualToString:@"waiting"]) {
-            [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:YES]];
-            return;
+        if ([af.operationStatus isEqualToString:@"loading"]||[af.operationStatus isEqualToString:@"waiting"]){
+            return YES;
         }
     }
-   [[NSNotificationCenter defaultCenter]postNotificationName:SYSTEM_IDLE_TIMER_DISABLED object:[NSNumber numberWithBool:NO]];
+    return NO;
 }
 -(void)retry:(NSTimer *)timer{
     AFDownloadRequestOperation *oldDownloadRequestOperation = [timer userInfo];
@@ -863,7 +872,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     [self.downLoadMGdelegate updateFreeSapceWithTotalSpace:totalSpace UsedSpace:(totalSpace-totalFreeSpace)];
 }
 
--(void)networkChanged:(int)status{
+-(void)networkChanged:(NSNotification *)msg{
+    int status = [(NSNumber *)(msg.object) intValue];
     if (status == netWorkStatus) {
         return;
     }
@@ -873,12 +883,24 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
             [self pauseAllTask];
         }
         else if(netWorkStatus == 1){ //3g ,2g
+            
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             BOOL isSupport3GDownload = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
-            
-            if (!isSupport3GDownload) {
-                [self pauseAllTask];
+            if ([self isHaveLoadingTask]) {
+                if (isSupport3GDownload) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"友情提示" message:@"你将使用2G/3G网络下载视频，若如此将会耗费大量的流量" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"继续下载", nil];
+                    alert.tag = 199;
+                    [alert show];
+                }
+                else{
+                    [self pauseAllTask];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"友情提示" message:@"wifi已断开，视频下载将中止，您可以在设置里将在2G/3G网络下载视频打开来继续下载" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                    alert.tag = 299;
+                    [alert show];
+                    
+                }
             }
+
         }
         else{  //wifi
             [self appDidEnterForeground];
@@ -886,6 +908,17 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 199) {
+        
+        if (buttonIndex == 0) {
+            [self pauseAllTask];
+        }
+        else if (buttonIndex == 1){
+        // 不做处理
+        }
+    }
+}
 -(void)waringPlus{
     NSString *numStr = [[CacheUtility sharedCache] loadFromCache:@"warning_number"];
     int num = 0;

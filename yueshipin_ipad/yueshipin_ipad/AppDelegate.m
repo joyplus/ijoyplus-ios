@@ -456,38 +456,63 @@
     self.hostReach = [Reachability reachabilityWithHostname: @"www.baidu.com"];
     [self.hostReach startNotifier];
     
-    self.internetReach = [Reachability reachabilityForInternetConnection];
-    [self.internetReach startNotifier];
-    
-    self.wifiReach = [Reachability reachabilityForLocalWiFi];
-    [self.wifiReach startNotifier];
+//    self.internetReach = [Reachability reachabilityForInternetConnection];
+//    [self.internetReach startNotifier];
+//    
+//    self.wifiReach = [Reachability reachabilityForLocalWiFi];
+//    [self.wifiReach startNotifier];
 }
 //Called by Reachability whenever status changes.
 - (void)reachabilityChanged:(NSNotification* )note {
     Reachability *curReach = (Reachability *)[note object];
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    networkStatus = [curReach currentReachabilityStatus];
+    int currentStatus = [curReach currentReachabilityStatus];
+    networkStatus = currentStatus;
+     NSLog(@"networkStatus -------------------%d",currentStatus);
+    //网络变化的通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:NETWORK_CHANGED object:[NSNumber numberWithInt:currentStatus]];
     
-    if(self.networkStatus != NotReachable){
-        NSLog(@"Network is fine.");
-        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
-        [self triggerDownload];
-        [ActionUtility generateUserId:nil];
-        if ([self isWifiReachable]) {
-            show3GAlertSeq = @"0";
-        } else {
-            @synchronized(show3GAlertSeq){
-                if ([show3GAlertSeq isEqualToString:@"0"]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
-                    show3GAlertSeq = @"1";
-                }
-            }
-        }
-    } 
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        [self.downLoadManager networkChanged:networkStatus];
+    switch (currentStatus) {
+        case NotReachable:  //无网络
+            break;
+        case ReachableViaWWAN: //3G,GPRS
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [self triggerDownload];
+            [ActionUtility generateUserId:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:@"0"];
+            break;
+        case ReachableViaWiFi: // wifi
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [self triggerDownload];
+            [ActionUtility generateUserId:nil];
+            break;
+            
+        default:
+            break;
     }
+    
+   
+    
+//    if(self.networkStatus != NotReachable){
+//        NSLog(@"Network is fine.");
+//        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+//        [self triggerDownload];
+//        [ActionUtility generateUserId:nil];
+//        if ([self isWifiReachable]) {
+//            show3GAlertSeq = @"0";
+//        } else {
+//            @synchronized(show3GAlertSeq){
+//                if ([show3GAlertSeq isEqualToString:@"0"]) {
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
+//                    show3GAlertSeq = @"1";
+//                }
+//            }
+//        }
+//    } 
+    
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+//        [self.downLoadManager networkChanged:networkStatus];
+//    }
     
 }
 
