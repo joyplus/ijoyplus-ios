@@ -9,6 +9,8 @@
 #import "EpisodeListViewController.h"
 #import "CommonHeader.h"
 
+#define KEY_DOWNLOAD_LOGO   (12341)
+
 @interface EpisodeListViewController ()<UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) int tableWidth;
 @property (nonatomic) int tableCellHeight;
@@ -23,6 +25,7 @@
 @synthesize delegate;
 @synthesize tableCellHeight;
 @synthesize tableWidth;
+@synthesize downloadedIndex;
 @synthesize maxEpisodeNum;
 
 - (void)viewDidUnload
@@ -91,11 +94,19 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.backgroundColor = [UIColor clearColor];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        UIImageView * downloadLogo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"local_file_icon"]];
+        downloadLogo.tag = KEY_DOWNLOAD_LOGO;
+        downloadLogo.frame = CGRectMake(tableWidth - 32, 5, 32, 32);
+        [cell.contentView addSubview:downloadLogo];
+        downloadLogo.backgroundColor = [UIColor clearColor];
+        downloadLogo.hidden = YES;
+        
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectZero];
         nameLabel.backgroundColor = [UIColor clearColor];
         nameLabel.font = [UIFont systemFontOfSize:16];
         nameLabel.tag = 1001;
-        nameLabel.frame = CGRectMake(5, 5, tableWidth - 10, tableCellHeight - 10);
+        nameLabel.frame = CGRectMake(5, 5, tableWidth - 37, tableCellHeight - 10);
         [cell.contentView addSubview:nameLabel];
     }
     UILabel *nameLabel  = (UILabel *)[cell viewWithTag:1001];
@@ -113,6 +124,26 @@
     } else {
         nameLabel.textColor = [UIColor colorWithRed:144/255.0 green:144/255.0 blue:144/255.0 alpha:1];
     }
+    
+    BOOL isDownload = NO;
+    UIImageView * logo = (UIImageView *)[cell.contentView viewWithTag:KEY_DOWNLOAD_LOGO];
+    for (NSString * index in self.downloadedIndex)
+    {
+        if ([index intValue] == indexPath.row)
+        {
+            isDownload = YES;
+            break;
+        }
+    }
+    if (isDownload)
+    {
+        logo.hidden = NO;
+    }
+    else{
+        logo.hidden = YES;
+    }
+    
+    
     return cell;
 }
 
@@ -128,8 +159,18 @@
         currentNum = indexPath.row;
         [table reloadData];
         [table scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
-        [delegate playOneEpisode:indexPath.row];
-    }    
+        
+        BOOL isDownload = NO;
+        for (NSString * index in self.downloadedIndex)
+        {
+            if (indexPath.row == [index intValue])
+            {
+                isDownload = YES;
+                break;
+            }
+        }
+        [delegate playOneEpisode:indexPath.row isDownload:isDownload];
+    }
 }
 
 #pragma mark -
