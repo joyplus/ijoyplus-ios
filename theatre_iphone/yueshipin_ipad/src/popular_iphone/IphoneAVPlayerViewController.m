@@ -864,6 +864,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                                              selector:@selector(appDidBecomeActive:)
                                                  name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
                                                object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
 }
 
 -(void)initUI{
@@ -891,7 +892,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
     [self.view addSubview:playCacheView_];
     
-    myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
+    myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 300, 80)];
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+110);
     myHUD.backgroundColor = [UIColor clearColor];
     myHUD.userInteractionEnabled = NO;
@@ -1297,7 +1298,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
     }
     else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"亲，网络出问题了，请检查后重试！" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
         [alert show];
     
     }
@@ -2467,6 +2468,19 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
    [self resetMyTimer];
 }
+
+#pragma mark -
+#pragma mark - NetworkChangedNSNotification
+-(void)networkChanged:(NSNotification *)notify{
+    int status = [(NSNumber *)(notify.object) intValue];
+    if (status == 0) {
+        myHUD.labelText = @"亲，网络出问题了，请检查后重试！";
+    }
+    else{
+        myHUD.labelText = @"正在加载，请稍等";
+    }
+}
+
 #pragma mark -
 #pragma mark - 
 

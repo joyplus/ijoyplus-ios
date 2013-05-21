@@ -67,7 +67,7 @@
 
 -(void)appDidEnterForeground;
 
--(void)networkChanged:(int)status;
+//-(void)networkChanged:(int)status;
 
 -(void)waringPlus;
 -(void)waringReduce;
