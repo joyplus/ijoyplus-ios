@@ -406,9 +406,9 @@
                     int pageNum = floor(i/5.0);
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+                    //[nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 6) + 6, showListView.frame.size.width, 54.5)];
+                    [nameBtn setFrame:CGRectMake(floor(pageNum*showListView.frame.size.width), floor((i%5) * (54.5 + 6) + 6), showListView.frame.size.width, 54.5)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
