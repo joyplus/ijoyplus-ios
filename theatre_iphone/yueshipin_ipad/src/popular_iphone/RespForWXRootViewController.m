@@ -59,7 +59,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.title = @"悅视频";
+    self.title = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];;
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.userInteractionEnabled = YES;
