@@ -233,7 +233,6 @@ enum
         default:
             break;
     }
-    [_filtrateView setViewWithType:videoType_];
     [_parameters setObject:[NSNumber numberWithInt:videoType_] forKey:@"type"];
     [_parameters setObject:@"" forKey:@"sub_type"];
     [_parameters setObject:@"" forKey:@"area"];

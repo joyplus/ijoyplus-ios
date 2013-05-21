@@ -50,6 +50,7 @@
     return self;
 }
 -(void)setSegmentControl:(int)type{
+    PreKey_ = @"全部";
     if (_seg) {
         [_seg removeFromSuperview];
          _seg = nil;
