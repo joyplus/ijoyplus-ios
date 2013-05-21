@@ -556,16 +556,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 if (0 == eArr.count) 
                 {
                     downLoad.enabled = NO;
-                    play.hidden = YES;
                     isEnableReportBtn = NO;
                 }
-                else
-                {
-                    play.hidden = NO;
-                }
                 if (self.canPlayVideo) {
+                    play.hidden = NO;
                     expectbtn.hidden = YES;
                 } else {
+                    play.hidden = YES;
                     expectbtn.hidden = NO;
                 }
                 
