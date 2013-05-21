@@ -447,6 +447,7 @@ enum
     id result =  [[CacheUtility sharedCache] loadFromCache:cacheKey];
     if (result != nil) {
         [self analyzeData:result];
+        [self reloadTableList];
     }
     else{
       [_progressHUD show:YES];
