@@ -2426,7 +2426,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     {
         islocalFile_ = NO;
         [self disableBottomToolBarButtons];
-        [self addCacheview];
+        [self addCacheview]; 
         [self initDataSource:playNum];
         [self beginToPlay];
         
