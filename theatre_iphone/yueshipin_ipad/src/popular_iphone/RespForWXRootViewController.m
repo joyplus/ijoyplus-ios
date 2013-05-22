@@ -229,6 +229,7 @@
              
          } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
              [tempHUD hide:YES];
+             [UIUtility showDetailError:self.view error:error];
          }];
         
     }
@@ -256,6 +257,7 @@
     {
         [_viewRespForWX refreshTableView:nil];
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -287,6 +289,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
      {
          [_viewRespForWX refreshTableView:nil];
+         [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -343,6 +346,7 @@
      {
          [_viewRespForWX refreshTableView:nil];
          [tempHUD hide:YES];
+         [UIUtility showDetailError:self.view error:error];
      }];
     
     [searchBar_ resignFirstResponder];

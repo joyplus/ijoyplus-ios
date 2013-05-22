@@ -502,6 +502,8 @@
 		EBC19B7016E97BFC0001429C /* AHAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC19B6F16E97BFC0001429C /* AHAlertView.m */; };
 		EBC298BA16F04615009DF9FD /* IpadPageNameConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC298B916F04615009DF9FD /* IpadPageNameConstant.m */; };
 		EBC39F0E174C691500DB8EFD /* SystemMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC39F0D174C691500DB8EFD /* SystemMethods.m */; };
+		EBC39F17174C847700DB8EFD /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC39F15174C847700DB8EFD /* error.png */; };
+		EBC39F18174C847700DB8EFD /* warning.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC39F16174C847700DB8EFD /* warning.png */; };
 		EBCE722B1744B0430054F9C3 /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBCE722A1744B0430054F9C3 /* AVPlayerView.m */; };
 		EBCE722E1744B38D0054F9C3 /* IntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBCE722D1744B38D0054F9C3 /* IntroductionView.m */; };
 		EBE799081717C9420047535A /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE799071717C9420047535A /* DatabaseManager.m */; };
@@ -1168,6 +1170,8 @@
 		EBC298BB16F04DCF009DF9FD /* EnvConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvConstant.h; sourceTree = "<group>"; };
 		EBC39F0C174C691500DB8EFD /* SystemMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemMethods.h; sourceTree = "<group>"; };
 		EBC39F0D174C691500DB8EFD /* SystemMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemMethods.m; sourceTree = "<group>"; };
+		EBC39F15174C847700DB8EFD /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = error.png; path = yueshipin_ipad/Resource_iphone/error.png; sourceTree = SOURCE_ROOT; };
+		EBC39F16174C847700DB8EFD /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = warning.png; path = yueshipin_ipad/Resource_iphone/warning.png; sourceTree = SOURCE_ROOT; };
 		EBCE72291744B0430054F9C3 /* AVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
 		EBCE722A1744B0430054F9C3 /* AVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
 		EBCE722C1744B38D0054F9C3 /* IntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroductionView.h; sourceTree = "<group>"; };
@@ -1575,6 +1579,8 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				EBC39F15174C847700DB8EFD /* error.png */,
+				EBC39F16174C847700DB8EFD /* warning.png */,
 				2246E76D174C66AA00551B4F /* LOGO */,
 				E77AA6F3174A323D00A05493 /* 3G_bg@2x.png */,
 				E77ADE611745D80F001A69B5 /* fengexian _shu@2x.png */,
@@ -2676,6 +2682,8 @@
 				2246E781174C66AA00551B4F /* logo_sinahd.png in Resources */,
 				2246E782174C66AA00551B4F /* logo_sohu.png in Resources */,
 				2246E783174C66AA00551B4F /* logo_youku.png in Resources */,
+				EBC39F17174C847700DB8EFD /* error.png in Resources */,
+				EBC39F18174C847700DB8EFD /* warning.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2933,8 +2941,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: yongqing li (95XW9X94ZC)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yongqing li (95XW9X94ZC)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2951,8 +2959,8 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 				);
 				PRODUCT_NAME = theatreiphone;
-				PROVISIONING_PROFILE = "CFE19187-4624-4A1E-BD24-7B96F5277871";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CFE19187-4624-4A1E-BD24-7B96F5277871";
+				PROVISIONING_PROFILE = "820C27ED-76DD-4F03-AA67-489276D89231";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "820C27ED-76DD-4F03-AA67-489276D89231";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

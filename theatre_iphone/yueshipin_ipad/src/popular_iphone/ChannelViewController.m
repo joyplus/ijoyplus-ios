@@ -19,6 +19,7 @@
 #import "DimensionalCodeScanViewController.h"
 #import "ContainerUtility.h"
 #import "UnbundingViewController.h"
+#import "UIUtility.h"
 #define BUNDING_HEIGHT 30
 #define BUNDING_BUTTON_TAG 20001
 enum
@@ -419,7 +420,8 @@ enum
             [_pullToRefreshManager setPullToRefreshViewVisible:NO];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@",error);
+        [self performSelector:@selector(reloadTableList) withObject:nil afterDelay:0.0f];
+        [UIUtility showDetailError:self.view error:error];
     }];
 
 }
@@ -459,8 +461,8 @@ enum
         [self analyzeData:result];
         [self reloadTableList];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@",error);
         [_progressHUD setHidden:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 

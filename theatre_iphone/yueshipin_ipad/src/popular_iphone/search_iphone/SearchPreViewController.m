@@ -154,7 +154,7 @@
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
  
 }
@@ -271,10 +271,9 @@
         [searchResultList_  reloadData];
         [tempHUD hide:YES];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
         [tempHUD hide:YES];
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     

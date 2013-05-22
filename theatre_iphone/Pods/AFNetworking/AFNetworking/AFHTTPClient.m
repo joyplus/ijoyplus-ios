@@ -457,10 +457,11 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method 
                                       path:(NSString *)path 
-                                parameters:(NSDictionary *)parameters 
+                                parameters:(NSDictionary *)parameters
 {	
     NSURL *url = [NSURL URLWithString:path relativeToURL:self.baseURL];
 	NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] initWithURL:url] autorelease];
+    [request setTimeoutInterval:15];
     [request setHTTPMethod:method];
     [request setAllHTTPHeaderFields:self.defaultHeaders];
 	

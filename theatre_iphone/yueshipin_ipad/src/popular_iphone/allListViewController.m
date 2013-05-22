@@ -102,7 +102,7 @@ enum
         }
          [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         [tempHUD hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 
 
@@ -349,6 +349,7 @@ enum
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 

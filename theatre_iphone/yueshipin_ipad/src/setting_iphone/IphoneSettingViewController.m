@@ -470,7 +470,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
             }
             
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [UIUtility showDetailError:self.view error:error];
         }];
         
         

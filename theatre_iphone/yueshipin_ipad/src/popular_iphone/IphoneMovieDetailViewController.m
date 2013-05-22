@@ -189,6 +189,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"movie",itemId ];
@@ -202,14 +203,13 @@
                                     parameters:reqData
                                        success:^(AFHTTPRequestOperation *operation, id result)
      {
-        [[CacheUtility sharedCache] putInCache:reviews_key result:result];
+         [[CacheUtility sharedCache] putInCache:reviews_key result:result];
          arrReviewData_ = [result objectForKey:@"reviews"];
          [self.tableView reloadData];
          
-     }
-                                       failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
      {
-        
+         
      }];
     
 }

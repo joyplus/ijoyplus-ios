@@ -25,6 +25,7 @@
 #import "ContainerUtility.h"
 #import "IntroductionView.h"
 #import "DatabaseManager.h"
+#import "UIUtility.h"
 #define PAGE_NUM 4
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -131,12 +132,11 @@ enum
         [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         if(self.tvListArr == nil){
             self.tvListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [progressHUD_ hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     }
@@ -179,12 +179,11 @@ enum
          [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         if(self.movieListArr == nil){
             self.movieListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-         [progressHUD_ hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [progressHUD_ hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
         
 }
@@ -232,13 +231,12 @@ enum
         [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         if(self.showListArr == nil){
             self.showListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [self loadTable:SHOW_TYPE];
         [progressHUD_ hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
@@ -263,9 +261,8 @@ enum
         
         [self loadTable:SHOW_TYPE];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         [self loadTable:SHOW_TYPE];
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
@@ -314,11 +311,11 @@ enum
         [progressHUD_ hide:YES];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         if(self.comicListArr == nil){
             self.comicListArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [progressHUD_ hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 

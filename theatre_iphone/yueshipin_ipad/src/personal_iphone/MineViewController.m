@@ -93,12 +93,11 @@
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         if(self.favArr == nil){
             self.favArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [progressHUD_ hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 }
@@ -125,7 +124,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
       [progressHUD_ hide:YES];
-      [CommonMotheds showInternetError:error inView:self.view];
+      [UIUtility showDetailError:self.view error:error];
     }];
 
 
@@ -387,7 +386,7 @@
         [self parseWatchResultData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [progressHUD_ hide:YES];
-       [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 }
@@ -869,6 +868,7 @@
                     [tableView reloadData];
                     [self Selectbutton:button1_];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -886,6 +886,7 @@
                     [tableView reloadData];
                     [self Selectbutton:button2_];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -910,7 +911,7 @@
                         [UIUtility showSystemError:self.view];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                    [UIUtility showSystemError:self.view];
+                    [UIUtility showDetailError:self.view error:error];
                 }];
 
                 break;
@@ -1010,6 +1011,7 @@
                 [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [self loadRecordData];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 
             }

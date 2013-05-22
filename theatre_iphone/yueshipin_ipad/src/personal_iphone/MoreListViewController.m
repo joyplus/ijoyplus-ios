@@ -241,6 +241,7 @@
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                     [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -254,6 +255,7 @@
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV" object:nil];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -273,7 +275,7 @@
                         [UIUtility showSystemError:self.view];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                    [UIUtility showSystemError:self.view];
+                    [UIUtility showDetailError:self.view error:error];
                 }];
 
                 break;
@@ -336,7 +338,7 @@
         [self.tableView reloadData];
         [pullToRefreshManagerFAV_ tableViewReloadFinished];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+       [UIUtility showDetailError:self.view error:error];
     }];
     
 }
