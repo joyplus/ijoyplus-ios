@@ -475,7 +475,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 if (!islocalFile_) {
                     [self syncLogo:workingUrl_];
                 }
-                
+                else
+                {
+                    UILabel * label = (UILabel *)[topToolBar_ viewWithTag:100001];
+                    label.text = nil;
+                    sourceLogo_.image = nil;
+                }
                 
                 CMTime playerDuration = [self playerItemDuration];
                 totalTimeLable_.text = [TimeUtility formatTimeInSecond:CMTimeGetSeconds(playerDuration)];
@@ -1387,7 +1392,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     tableList_.dataSource = self;
     [self.view addSubview:tableList_];
     
-    if (!islocalFile_) {
+    //if (!islocalFile_)
+    {
         UILabel *sourceText = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 30, 18)];
         //sourceText.text = @"来源:";
         sourceText.tag = 100001;
@@ -1996,6 +2002,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
                 tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, height);
+                [tableList_ reloadData];
                 if(playNum >= 0 && playNum < episodesArr_.count){
                     [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0]
                                        atScrollPosition:UITableViewScrollPositionMiddle
@@ -2426,7 +2433,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     {
         islocalFile_ = NO;
         [self disableBottomToolBarButtons];
-        [self addCacheview]; 
+        [self addCacheview];
         [self initDataSource:playNum];
         [self beginToPlay];
         
