@@ -174,4 +174,19 @@
     }
 }
 
++ (void)showAppDetailError:(MBProgressHUD *)HUD error:(NSError *)error
+{
+    if (error.code == -1001 || error.code == -1004 || error.code == -1009){
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+    } else {
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.systemError", nil);
+    }
+    [HUD show:YES];
+    [HUD hide:YES afterDelay:3];
+}
+
 @end
