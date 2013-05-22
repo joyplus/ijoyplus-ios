@@ -93,6 +93,17 @@
 		22447FF716F18D4A00058985 /* TSPopoverPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FEF16F18D4A00058985 /* TSPopoverPopoverView.m */; };
 		22447FF816F18D4A00058985 /* TSPopoverTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF216F18D4A00058985 /* TSPopoverTouchView.m */; };
 		22447FF916F18D4A00058985 /* UIBarButtonItem+WEPopover.m in Sources */ = {isa = PBXBuildFile; fileRef = 22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */; };
+		2246E779174C66AA00551B4F /* logo_56.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E76E174C66AA00551B4F /* logo_56.png */; };
+		2246E77A174C66AA00551B4F /* logo_fengxing.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E76F174C66AA00551B4F /* logo_fengxing.png */; };
+		2246E77B174C66AA00551B4F /* logo_letv.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E770174C66AA00551B4F /* logo_letv.png */; };
+		2246E77C174C66AA00551B4F /* logo_m1905.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E771174C66AA00551B4F /* logo_m1905.png */; };
+		2246E77D174C66AA00551B4F /* logo_pps.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E772174C66AA00551B4F /* logo_pps.png */; };
+		2246E77E174C66AA00551B4F /* logo_pptv.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E773174C66AA00551B4F /* logo_pptv.png */; };
+		2246E77F174C66AA00551B4F /* logo_qiyi.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E774174C66AA00551B4F /* logo_qiyi.png */; };
+		2246E780174C66AA00551B4F /* logo_qq.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E775174C66AA00551B4F /* logo_qq.png */; };
+		2246E781174C66AA00551B4F /* logo_sinahd.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E776174C66AA00551B4F /* logo_sinahd.png */; };
+		2246E782174C66AA00551B4F /* logo_sohu.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E777174C66AA00551B4F /* logo_sohu.png */; };
+		2246E783174C66AA00551B4F /* logo_youku.png in Resources */ = {isa = PBXBuildFile; fileRef = 2246E778174C66AA00551B4F /* logo_youku.png */; };
 		2249C9A8169C2C2E00757A2E /* ProgramNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */; };
 		22513492171138620002886B /* ReviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22513491171138620002886B /* ReviewViewController.m */; };
 		2255800B171EC6BB002385D1 /* AFCheckBindAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2255800A171EC6BB002385D1 /* AFCheckBindAPIClient.m */; };
@@ -621,6 +632,17 @@
 		22447FF216F18D4A00058985 /* TSPopoverTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSPopoverTouchView.m; sourceTree = "<group>"; };
 		22447FF316F18D4A00058985 /* UIBarButtonItem+WEPopover.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+WEPopover.h"; sourceTree = "<group>"; };
 		22447FF416F18D4A00058985 /* UIBarButtonItem+WEPopover.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+WEPopover.m"; sourceTree = "<group>"; };
+		2246E76E174C66AA00551B4F /* logo_56.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_56.png; sourceTree = "<group>"; };
+		2246E76F174C66AA00551B4F /* logo_fengxing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_fengxing.png; sourceTree = "<group>"; };
+		2246E770174C66AA00551B4F /* logo_letv.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_letv.png; sourceTree = "<group>"; };
+		2246E771174C66AA00551B4F /* logo_m1905.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_m1905.png; sourceTree = "<group>"; };
+		2246E772174C66AA00551B4F /* logo_pps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_pps.png; sourceTree = "<group>"; };
+		2246E773174C66AA00551B4F /* logo_pptv.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_pptv.png; sourceTree = "<group>"; };
+		2246E774174C66AA00551B4F /* logo_qiyi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_qiyi.png; sourceTree = "<group>"; };
+		2246E775174C66AA00551B4F /* logo_qq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_qq.png; sourceTree = "<group>"; };
+		2246E776174C66AA00551B4F /* logo_sinahd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_sinahd.png; sourceTree = "<group>"; };
+		2246E777174C66AA00551B4F /* logo_sohu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_sohu.png; sourceTree = "<group>"; };
+		2246E778174C66AA00551B4F /* logo_youku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_youku.png; sourceTree = "<group>"; };
 		2249C9A6169C2C2D00757A2E /* ProgramNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgramNavigationController.h; sourceTree = "<group>"; };
 		2249C9A7169C2C2D00757A2E /* ProgramNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgramNavigationController.m; sourceTree = "<group>"; };
 		22513490171138620002886B /* ReviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReviewViewController.h; sourceTree = "<group>"; };
@@ -1288,6 +1310,25 @@
 			path = TSPopover;
 			sourceTree = "<group>";
 		};
+		2246E76D174C66AA00551B4F /* LOGO */ = {
+			isa = PBXGroup;
+			children = (
+				2246E76E174C66AA00551B4F /* logo_56.png */,
+				2246E76F174C66AA00551B4F /* logo_fengxing.png */,
+				2246E770174C66AA00551B4F /* logo_letv.png */,
+				2246E771174C66AA00551B4F /* logo_m1905.png */,
+				2246E772174C66AA00551B4F /* logo_pps.png */,
+				2246E773174C66AA00551B4F /* logo_pptv.png */,
+				2246E774174C66AA00551B4F /* logo_qiyi.png */,
+				2246E775174C66AA00551B4F /* logo_qq.png */,
+				2246E776174C66AA00551B4F /* logo_sinahd.png */,
+				2246E777174C66AA00551B4F /* logo_sohu.png */,
+				2246E778174C66AA00551B4F /* logo_youku.png */,
+			);
+			name = LOGO;
+			path = yueshipin_ipad/Resource_iphone/LOGO;
+			sourceTree = SOURCE_ROOT;
+		};
 		2266A1EE171C1DB30062DB95 /* FayeObjc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1531,6 +1572,7 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				2246E76D174C66AA00551B4F /* LOGO */,
 				E77AA6F3174A323D00A05493 /* 3G_bg@2x.png */,
 				E77ADE611745D80F001A69B5 /* fengexian _shu@2x.png */,
 				E77ADE551745D49D001A69B5 /* segment1_s@2x.png */,
@@ -2618,6 +2660,17 @@
 				229091D2174621110034660D /* share_btn_disabled.png in Resources */,
 				229091D3174621110034660D /* share_btn_disabled@2x.png in Resources */,
 				E77AA6F4174A323D00A05493 /* 3G_bg@2x.png in Resources */,
+				2246E779174C66AA00551B4F /* logo_56.png in Resources */,
+				2246E77A174C66AA00551B4F /* logo_fengxing.png in Resources */,
+				2246E77B174C66AA00551B4F /* logo_letv.png in Resources */,
+				2246E77C174C66AA00551B4F /* logo_m1905.png in Resources */,
+				2246E77D174C66AA00551B4F /* logo_pps.png in Resources */,
+				2246E77E174C66AA00551B4F /* logo_pptv.png in Resources */,
+				2246E77F174C66AA00551B4F /* logo_qiyi.png in Resources */,
+				2246E780174C66AA00551B4F /* logo_qq.png in Resources */,
+				2246E781174C66AA00551B4F /* logo_sinahd.png in Resources */,
+				2246E782174C66AA00551B4F /* logo_sohu.png in Resources */,
+				2246E783174C66AA00551B4F /* logo_youku.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2874,8 +2927,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: yongqing li (95XW9X94ZC)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yongqing li (95XW9X94ZC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -2892,8 +2945,8 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 				);
 				PRODUCT_NAME = theatreiphone;
-				PROVISIONING_PROFILE = "820C27ED-76DD-4F03-AA67-489276D89231";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "820C27ED-76DD-4F03-AA67-489276D89231";
+				PROVISIONING_PROFILE = "CFE19187-4624-4A1E-BD24-7B96F5277871";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CFE19187-4624-4A1E-BD24-7B96F5277871";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
