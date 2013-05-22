@@ -501,6 +501,7 @@
 		EBBE2462171518B500091F24 /* Harpy.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBE2460171518B500091F24 /* Harpy.m */; };
 		EBC19B7016E97BFC0001429C /* AHAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC19B6F16E97BFC0001429C /* AHAlertView.m */; };
 		EBC298BA16F04615009DF9FD /* IpadPageNameConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC298B916F04615009DF9FD /* IpadPageNameConstant.m */; };
+		EBC39F0E174C691500DB8EFD /* SystemMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC39F0D174C691500DB8EFD /* SystemMethods.m */; };
 		EBCE722B1744B0430054F9C3 /* AVPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBCE722A1744B0430054F9C3 /* AVPlayerView.m */; };
 		EBCE722E1744B38D0054F9C3 /* IntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBCE722D1744B38D0054F9C3 /* IntroductionView.m */; };
 		EBE799081717C9420047535A /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EBE799071717C9420047535A /* DatabaseManager.m */; };
@@ -1165,6 +1166,8 @@
 		EBC298B816F04615009DF9FD /* IpadPageNameConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IpadPageNameConstant.h; sourceTree = "<group>"; };
 		EBC298B916F04615009DF9FD /* IpadPageNameConstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IpadPageNameConstant.m; sourceTree = "<group>"; };
 		EBC298BB16F04DCF009DF9FD /* EnvConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvConstant.h; sourceTree = "<group>"; };
+		EBC39F0C174C691500DB8EFD /* SystemMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemMethods.h; sourceTree = "<group>"; };
+		EBC39F0D174C691500DB8EFD /* SystemMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemMethods.m; sourceTree = "<group>"; };
 		EBCE72291744B0430054F9C3 /* AVPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVPlayerView.h; sourceTree = "<group>"; };
 		EBCE722A1744B0430054F9C3 /* AVPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVPlayerView.m; sourceTree = "<group>"; };
 		EBCE722C1744B38D0054F9C3 /* IntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroductionView.h; sourceTree = "<group>"; };
@@ -2065,6 +2068,8 @@
 				22CE9F31169A729300D4FC76 /* UIImage+Scale.m */,
 				E7872DA616FC35B100017785 /* CommonMotheds.h */,
 				E7872DA716FC35B100017785 /* CommonMotheds.m */,
+				EBC39F0C174C691500DB8EFD /* SystemMethods.h */,
+				EBC39F0D174C691500DB8EFD /* SystemMethods.m */,
 			);
 			path = common;
 			sourceTree = "<group>";
@@ -2838,6 +2843,7 @@
 				E79C3E5517432DC40076AEBF /* FiltrateCell.m in Sources */,
 				EBCE722B1744B0430054F9C3 /* AVPlayerView.m in Sources */,
 				EBCE722E1744B38D0054F9C3 /* IntroductionView.m in Sources */,
+				EBC39F0E174C691500DB8EFD /* SystemMethods.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

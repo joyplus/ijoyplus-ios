@@ -25,10 +25,8 @@
 #import "SegmentUrl.h"
 #import "CustomNavigationViewController.h"
 #import "IphoneAVPlayerViewController.h"
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
+#import "SystemMethods.h"
+
 #define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
@@ -153,59 +151,6 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
-- (void)saveChannelRecord
-{
-    NSString * appKey = @"efd3fb70a08b4a608fccd421f21a79e8";
-    NSString * deviceName = [[[UIDevice currentDevice] name] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString * mac = [self macString];
-    NSString * urlString = [NSString stringWithFormat:@"http://log.umtrack.com/ping/%@/?devicename=%@&mac=%@", appKey,deviceName,mac];
-    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL: [NSURL URLWithString:urlString]] delegate:nil];
-}
-
-- (NSString * )macString{
-    int                 mib[6];
-    size_t              len;
-    char                *buf;
-    unsigned char       *ptr;
-    struct if_msghdr    *ifm;
-    struct sockaddr_dl  *sdl;
-    
-    mib[0] = CTL_NET;
-    mib[1] = AF_ROUTE;
-    mib[2] = 0;
-    mib[3] = AF_LINK;
-    mib[4] = NET_RT_IFLIST;
-    
-    if ((mib[5] = if_nametoindex("en0")) == 0) {
-        printf("Error: if_nametoindex error\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 1\n");
-        return NULL;
-    }
-    
-    if ((buf = malloc(len)) == NULL) {
-        printf("Could not allocate memory. error!\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 2");
-        free(buf);
-        return NULL;
-    }
-    
-    ifm = (struct if_msghdr *)buf;
-    sdl = (struct sockaddr_dl *)(ifm + 1);
-    ptr = (unsigned char *)LLADDR(sdl);
-    NSString *macString = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
-                           *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5)];
-    free(buf);
-    return macString;
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
@@ -220,7 +165,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
-    [self saveChannelRecord];
+    
+    SystemMethods *sys = [[SystemMethods alloc]init];
+    [sys saveChannelRecord];
+    
     NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
@@ -244,24 +192,14 @@
  
     [DatabaseManager initDatabase];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-//        [self customizeAppearance];
-//        [self initDownloadManager];
-//        self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-//        self.window.rootViewController = self.rootViewController;
-    }
-    else
-    {
-        tabBarView = [[TabBarViewController alloc] init];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
-        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
-        //navCtrl.navigationBarHidden = YES;
-        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
-        [self.downLoadManager resumeDownLoad];
-        self.window.rootViewController = tabBarView;
-        [[BundingTVManager shareInstance] connecteServer];
-    }
+    tabBarView = [[TabBarViewController alloc] init];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
+    //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
+    //navCtrl.navigationBarHidden = YES;
+    self.downLoadManager = [DownLoadManager defaultDownLoadManager];
+    [self.downLoadManager resumeDownLoad];
+    self.window.rootViewController = tabBarView;
+    [[BundingTVManager shareInstance] connecteServer];
     
     [self.window makeKeyAndVisible];
     
