@@ -137,26 +137,34 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
-        NSMutableArray *allAudioParams = [NSMutableArray array];
-        NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
-        if ([audioTracks count]>1) {
-            for (int i = 0; i < [audioTracks count]; i++) {
-                AVMutableAudioMixInputParameters *audioInputParams =
-                [AVMutableAudioMixInputParameters audioMixInputParameters];
-                if (i > 0) {
-                    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+        [self prepareToPlayAsset:asset];
+        
+        NSString * nameStr = @"myQueue";
+        const char * queueName = [nameStr UTF8String];
+        dispatch_queue_t queue = dispatch_queue_create(queueName, NULL);
+        dispatch_async(queue, ^(void){
+            NSMutableArray *allAudioParams = [NSMutableArray array];
+            NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+            if ([audioTracks count]>1)
+            {
+                for (int i = 0; i < [audioTracks count]; i++)
+                {
+                    AVMutableAudioMixInputParameters *audioInputParams =
+                    [AVMutableAudioMixInputParameters audioMixInputParameters];
+                    if (i > 0)
+                    {
+                        [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+                    }
+                    AVAssetTrack *track = [audioTracks objectAtIndex:i];
+                    [audioInputParams setTrackID:[track trackID]];
+                    [allAudioParams addObject:audioInputParams];
                 }
-                AVAssetTrack *track = [audioTracks objectAtIndex:i];
-                [audioInputParams setTrackID:[track trackID]];
-                [allAudioParams addObject:audioInputParams];
+                audioMix_ = [AVMutableAudioMix audioMix];
+                [audioMix_ setInputParameters:allAudioParams];
             }
-            audioMix_ = [AVMutableAudioMix audioMix];
-            [audioMix_ setInputParameters:allAudioParams];
-        }
-        [self prepareToPlayAsset:asset ];
-	}
+        });
+    }
 }
 
 
@@ -1315,22 +1323,30 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    //NSLog(@"begin at :%@",[[NSDate date] description]);
     NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
     int status_Code = HTTPResponse.statusCode;
-    if (status_Code >= 200 && status_Code <= 299) {
+    if (status_Code >= 200 && status_Code <= 299)
+    {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
+        //NSLog(@"step1 :%@",[[NSDate date] description]);
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-        if (![content_type hasPrefix:@"text/html"]) {
-             [self setURL:connection.originalRequest.URL];
-             [connection cancel];
+        if (![content_type hasPrefix:@"text/html"])
+        {
+            //NSLog(@"step2 :%@",[[NSDate date] description]);
+            [self setURL:connection.originalRequest.URL];
+            //NSLog(@"step3 :%@",[[NSDate date] description]);
+            [connection cancel];
             if (isPlayOnTV)
             {
                 [self pushWebURLToCloudTV:@"411"];
             }
-             return;
+            //NSLog(@"end 1 at:%@",[[NSDate date] description]);
+            return;
         }
     
     }
+    NSLog(@"end 2 at:%@",[[NSDate date] description]);
     [self retryUrltoPlay];
 }
 -(void)initTopToolBar{

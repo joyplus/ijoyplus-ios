@@ -137,25 +137,33 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
-        NSMutableArray *allAudioParams = [NSMutableArray array];
-        NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
-        if ([audioTracks count]>1) {
-            for (int i = 0; i < [audioTracks count]; i++) {
-                AVMutableAudioMixInputParameters *audioInputParams =
-                [AVMutableAudioMixInputParameters audioMixInputParameters];
-                if (i > 0) {
-                    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+        [self prepareToPlayAsset:asset];
+        
+        NSString * nameStr = @"myQueue";
+        const char * queueName = [nameStr UTF8String];
+        dispatch_queue_t queue = dispatch_queue_create(queueName, NULL);
+        dispatch_async(queue, ^(void){
+            NSMutableArray *allAudioParams = [NSMutableArray array];
+            NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+            if ([audioTracks count]>1)
+            {
+                for (int i = 0; i < [audioTracks count]; i++)
+                {
+                    AVMutableAudioMixInputParameters *audioInputParams =
+                    [AVMutableAudioMixInputParameters audioMixInputParameters];
+                    if (i > 0)
+                    {
+                        [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+                    }
+                    AVAssetTrack *track = [audioTracks objectAtIndex:i];
+                    [audioInputParams setTrackID:[track trackID]];
+                    [allAudioParams addObject:audioInputParams];
                 }
-                AVAssetTrack *track = [audioTracks objectAtIndex:i];
-                [audioInputParams setTrackID:[track trackID]];
-                [allAudioParams addObject:audioInputParams];
+                audioMix_ = [AVMutableAudioMix audioMix];
+                [audioMix_ setInputParameters:allAudioParams];
             }
-            audioMix_ = [AVMutableAudioMix audioMix];
-            [audioMix_ setInputParameters:allAudioParams];
-        }
-        [self prepareToPlayAsset:asset ];
+        });
 	}
 }
 

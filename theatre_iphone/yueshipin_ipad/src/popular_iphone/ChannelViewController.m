@@ -236,9 +236,9 @@ enum
 #pragma mark -
 #pragma mark - SegmentDelegate
 -(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key{
-    NSString *area = [_parameters objectForKey:@"area"];
-    NSString *subType = [_parameters objectForKey:@"sub_type"];
-    NSString *year = [_parameters objectForKey:@"year"];
+//    NSString *area = [_parameters objectForKey:@"area"];
+//    NSString *subType = [_parameters objectForKey:@"sub_type"];
+//    NSString *year = [_parameters objectForKey:@"year"];
 //    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
     
     if ([key isEqualToString:@"sub_type"]) {
@@ -419,19 +419,20 @@ enum
     id result =  [[CacheUtility sharedCache] loadFromCache:cacheKey];
     if (result != nil) {
         [self analyzeData:result];
-        [self reloadTableList];
+        [_tableList reloadData];
     }
     else{
       [_progressHUD show:YES];
+      [self analyzeData:result];
+      [_tableList reloadData];
     }
-    
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:cacheKey result:result];
-        [_progressHUD setHidden:YES];
+        [_progressHUD hide:YES];
         [self analyzeData:result];
         [self reloadTableList];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [_progressHUD setHidden:YES];
+         [_progressHUD hide:YES];
         [UIUtility showDetailError:self.view error:error];
     }];
 }
@@ -443,11 +444,10 @@ enum
     else{
         [_dataArr removeAllObjects];
     }
-    
-    NSArray *itemsArr = [result objectForKey:@"results"];
-    [_dataArr addObjectsFromArray:itemsArr];
-    
-    
+    if (result != nil) {
+        NSArray *itemsArr = [result objectForKey:@"results"];
+        [_dataArr addObjectsFromArray:itemsArr];
+    }
 }
 
 #pragma mark -
