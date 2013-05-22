@@ -11,5 +11,5 @@
 @interface SystemMethods : NSObject
 
 - (void)saveChannelRecord;
-
+- (BOOL)addSkipBackupAttributeToItemAtURL:(NSURL *)URL;
 @end

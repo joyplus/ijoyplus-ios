@@ -246,7 +246,7 @@ enum
     NSString *area = [_parameters objectForKey:@"area"];
     NSString *subType = [_parameters objectForKey:@"sub_type"];
     NSString *year = [_parameters objectForKey:@"year"];
-    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
+//    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
     
     if ([key isEqualToString:@"sub_type"]) {
         [_parameters setObject:str forKey:@"sub_type"];
@@ -442,7 +442,7 @@ enum
     NSString *area = [parameters objectForKey:@"area"];
     NSString *subType = [parameters objectForKey:@"sub_type"];
     NSString *year = [parameters objectForKey:@"year"];
-    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
+//    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
     NSString *cacheKey = [NSString stringWithFormat:@"%@%@%@",subType,area,year];
     id result =  [[CacheUtility sharedCache] loadFromCache:cacheKey];
     if (result != nil) {

@@ -167,7 +167,9 @@
             break;
         }
     }
-    NSLog(@"cache num = %i", cacheQueue.count);
+    if (ENVIRONMENT == 0) {        
+        NSLog(@"cache num = %i", cacheQueue.count);
+    }
     [self.cache setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] setObject:cacheQueue forKey:CACHE_QUEUE];
     [[NSUserDefaults standardUserDefaults] synchronize];
