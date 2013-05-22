@@ -124,6 +124,7 @@
             [tempBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
             tempBtn.tag = 1101 + i;
             [tempBtn addTarget:self action:@selector(categoryBtnClicked:) forControlEvents:UIControlEventTouchDown];
+            tempBtn.titleLabel.font = [UIFont systemFontOfSize:15];
             [topCategoryView addSubview:tempBtn];
         }
         [self.view addSubview:topCategoryView];
@@ -189,7 +190,8 @@
     [super viewWillAppear:animated];
     if (videoArray.count == 0) {
         [self retrieveData];
-    } else if(revertSearchCriteria){
+    }
+    if(revertSearchCriteria){
         UIButton *allBtn = (UIButton *)[topCategoryView viewWithTag:1101];
         [allBtn sendActionsForControlEvents:UIControlEventTouchDown];
         revertSearchCriteria = NO;

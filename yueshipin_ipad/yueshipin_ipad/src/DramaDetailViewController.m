@@ -229,7 +229,8 @@
     episodeView.delegate = self;
     episodeView.backgroundColor = [UIColor clearColor];
     
-    self.introContentTextView = [[UITextView alloc]initWithFrame: CGRectMake(0, 0, 0, 100)];
+    self.introContentTextView = [[UITextView alloc]initWithFrame: CGRectMake(0, 1000, 430, 100)];
+    self.introContentTextView.editable = NO;
     self.introContentTextView.textColor = CMConstants.grayColor;
     self.introContentTextView.layer.borderWidth = 1;
     self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
@@ -761,6 +762,13 @@
 
 - (void)clearLastBtnImage
 {
+    for (int i = 0; i < totalEpisodeNumber; i ++)
+    {
+        UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:(i + 1)];
+        [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    }
+    /*
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
@@ -771,6 +779,7 @@
         [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
     }
+     */
 }
 
 - (void)dramaPlay:(UIButton *)btn
@@ -802,8 +811,8 @@
 
 - (void)dingBtnClicked:(id)sender
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -830,8 +839,8 @@
 
 - (void)expectVideo
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -882,8 +891,8 @@
 - (void)collectionBtnClicked
 {
     
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -915,8 +924,8 @@
 
 - (void)downloadBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }

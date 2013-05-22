@@ -355,8 +355,12 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     //NSLog(@"commitEditingStyle");
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        NSString *itemId = [NSString stringWithFormat:@"%@", [[videoArray objectAtIndex:indexPath.row] objectForKey:@"content_id"]];
-        [self unSubscribingToChannels:itemId];
+        NSDictionary *tempItem = [videoArray objectAtIndex:indexPath.row];
+        NSString *itemId = [NSString stringWithFormat:@"%@", [tempItem objectForKey:@"content_id"]];
+        int contentType = [[tempItem objectForKey:@"content_type"] integerValue];
+        if (contentType == DRAMA_TYPE || contentType == COMIC_TYPE) {            
+            [self unSubscribingToChannels:itemId];
+        }
         [self deleteVideo:itemId];
         [videoArray removeObjectAtIndex:indexPath.row];
         if(videoArray.count > 1){

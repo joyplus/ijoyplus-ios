@@ -31,8 +31,6 @@
     UITapGestureRecognizer *tapGesture;
 }
 
-- (void)SubscribingToChannels;
-
 @end
 
 @implementation MovieDetailViewController
@@ -420,7 +418,7 @@
         positionY = topicListViewController.view.frame.origin.y + (topics.count > 5 ? 5 : topics.count)*30;
     }
     
-    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 8, 42, 18);
+    self.commentImage.frame = CGRectMake(LEFT_WIDTH, positionY + 20, 42, 18);
     self.commentImage.image = [UIImage imageNamed:@"comment_title"];
     
     if(commentListViewController == nil){
@@ -433,7 +431,7 @@
         [self.bgScrollView addSubview:commentListViewController.view];
     }
     [commentListViewController.tableView reloadData];
-    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 35, 430, commentListViewController.tableHeight);
+    commentListViewController.view.frame = CGRectMake(LEFT_WIDTH, positionY + 48, 430, commentListViewController.tableHeight);
     
     [self.bgScrollView setContentSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height+ (topics.count > 5 ? 5 : topics.count)*30+commentListViewController.tableHeight + increasePositionY)];
 }
@@ -479,13 +477,13 @@
 
 - (void)expectVideo
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-    [self SubscribingToChannels];
+    //电影不需要注册消息推送
+//    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -517,8 +515,8 @@
 
 - (void)dingBtnClicked:(id)sender
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+   // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -543,34 +541,15 @@
     }];
 }
 
-- (void)SubscribingToChannels
-{
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
-    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
-        if (succeeded)
-        {
-            NSLog(@"Successfully subscribed to channel!");
-        }
-        else
-        {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-        }
-    }];
-}
-
 - (void)collectionBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-    [self SubscribingToChannels];
+    //电影不需要注册消息推送
+//    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -630,8 +609,8 @@
 
 - (void)downloadBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+   // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }

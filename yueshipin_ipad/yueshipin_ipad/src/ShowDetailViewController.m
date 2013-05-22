@@ -406,9 +406,9 @@
                     int pageNum = floor(i/5.0);
                     NSDictionary *item = [episodeArray objectAtIndex:i];
                     UIButton *nameBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                    [nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+                    //[nameBtn.titleLabel setLineBreakMode:NSLineBreakByTruncatingTail];
                     nameBtn.tag = i + 1;
-                    [nameBtn setFrame:CGRectMake(pageNum*showListView.frame.size.width, (i%5) * (54.5 + 6) + 6, showListView.frame.size.width, 54.5)];
+                    [nameBtn setFrame:CGRectMake(floor(pageNum*showListView.frame.size.width), floor((i%5) * (54.5 + 6) + 6), showListView.frame.size.width, 54.5)];
                     NSString *name = [NSString stringWithFormat:@"%@", [item objectForKey:@"name"]];
                     if ([item objectForKey:@"name"] == nil) {
                         name = @"";
@@ -589,8 +589,8 @@
 
 - (void)dingBtnClicked:(id)sender
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -617,13 +617,13 @@
 
 - (void)expectVideo
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+   // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-    [self SubscribingToChannels];
+    //综艺不需要注册消息推送
+//    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -647,34 +647,15 @@
     }];
 }
 
-- (void)SubscribingToChannels
-{
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
-    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
-        if (succeeded)
-        {
-            NSLog(@"Successfully subscribed to channel!");
-        }
-        else
-        {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-        }
-    }];
-}
-
 - (void)collectionBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
-    [self SubscribingToChannels];
+    //综艺不需要注册消息推送
+//    [self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -702,8 +683,8 @@
 
 - (void)downloadBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+   // Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }

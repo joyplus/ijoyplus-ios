@@ -177,8 +177,8 @@ void transferDataFromOldDbWithCatch()
     if(cacheResult != nil){
         [self parseLunboData:cacheResult];
     }
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathLunbo parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseLunboData:result];
@@ -208,15 +208,16 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_MOVIE_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
     if(cacheResult != nil){
         [self parseMovieTopsData:cacheResult];
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -254,15 +255,16 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_TV_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"tv_top_list"];
     if(cacheResult != nil){
         [self parseTvTopsData:cacheResult];
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathTvTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -299,15 +301,16 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_COMIC_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"comic_top_list"];
     if(cacheResult != nil){
         [self parseComicTopsData:cacheResult];
     } else {
         [myHUD showProgressBar:self.view];
     }
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathComicTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -346,7 +349,7 @@ void transferDataFromOldDbWithCatch()
     }
     umengPageName = POPULAR_SHOW_TOP_LIST;
     [MobClick beginLogPageView:umengPageName];
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"show_top_list"];
     if(cacheResult != nil){
         [self parseShowTopsData:cacheResult];
@@ -354,8 +357,9 @@ void transferDataFromOldDbWithCatch()
         [myHUD showProgressBar:self.view];
     }
     showReloads = 2;
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [myHUD hide];
+        [UIUtility showNetWorkError:self.view];
     } else {
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -1301,22 +1305,22 @@ void transferDataFromOldDbWithCatch()
     int prodType = [[item objectForKey:@"prod_type"] integerValue];
     if(prodType == MOVIE_TYPE){
         MovieDetailViewController *viewController = [[MovieDetailViewController alloc] initWithNibName:@"MovieDetailViewController" bundle:nil];
-        viewController.fromViewController = self;
+//        viewController.fromViewController = self;
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:YES];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
     } else if(prodType == DRAMA_TYPE || prodType == COMIC_TYPE){
         DramaDetailViewController *viewController = [[DramaDetailViewController alloc] initWithNibName:@"DramaDetailViewController" bundle:nil];
         viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
     } else if(prodType == SHOW_TYPE){
         ShowDetailViewController *viewController = [[ShowDetailViewController alloc] initWithNibName:@"ShowDetailViewController" bundle:nil];
         viewController.fromViewController = self;
         viewController.prodId = [NSString stringWithFormat:@"%@", [item objectForKey:@"prod_id"]];
         viewController.view.frame = CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:NO];
     }
 }
 
