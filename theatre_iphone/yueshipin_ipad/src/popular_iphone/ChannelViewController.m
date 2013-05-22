@@ -415,7 +415,7 @@ enum
     NSString *subType = [parameters objectForKey:@"sub_type"];
     NSString *year = [parameters objectForKey:@"year"];
 //    NSLog(@"地区: %@\n 类型: %@\n 年份: %@\n ",area,subType,year);
-    NSString *cacheKey = [NSString stringWithFormat:@"%@%@%@",subType,area,year];
+    NSString *cacheKey = [NSString stringWithFormat:@"%d%@%@%@",videoType_,subType,area,year];
     id result =  [[CacheUtility sharedCache] loadFromCache:cacheKey];
     if (result != nil) {
         [self analyzeData:result];
