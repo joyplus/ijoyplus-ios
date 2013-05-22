@@ -1304,6 +1304,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 
 - (void)destoryPlayer
 {
+    if (isDownloaded)
+    {
+        [[AppDelegate instance] stopHttpServer];
+    }
     [self.mPlayer removeObserver:self forKeyPath:kRateKey];
 	[self.mPlayerItem removeObserver:self forKeyPath:kStatusKey];
     [self.mPlayer removeObserver:self forKeyPath:kCurrentItemKey];
