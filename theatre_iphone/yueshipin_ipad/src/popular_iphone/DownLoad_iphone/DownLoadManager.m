@@ -894,7 +894,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                     [alert show];
                 }
                 else{
-                    [self pauseAllTask];
+                    [self stopAllTasksWith2GAnd3GNetWork];
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"友情提示" message:@"wifi已断开，视频下载将中止，您可以在设置里将在2G/3G网络下载视频打开来继续下载" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
                     alert.tag = 299;
                     [alert show];
@@ -909,11 +909,41 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
 }
 
+-(void)stopAllTasksWith2GAnd3GNetWork{
+    [self pauseAllTask];
+    for (AFDownloadRequestOperation *mc in downLoadQueue_){
+        if ([mc.operationStatus isEqualToString:@"loading"] || [mc.operationStatus isEqualToString:@"waiting"]) {
+            mc.operationStatus = @"stop";
+            NSString *prodId = mc.operationId;
+            NSRange range = [prodId rangeOfString:@"_"];
+            if (range.location == NSNotFound){
+                NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId];
+                NSArray *arr = [DatabaseManager findByCriteria:[DownloadItem class] queryString:query];
+                if ([arr count]>0) {
+                    DownloadItem *downloadItem = [arr objectAtIndex:0];
+                    downloadItem.downloadStatus = @"stop";
+                    [DatabaseManager update:downloadItem];
+                }
+            }
+            else{
+                NSString *query = [NSString stringWithFormat:@"WHERE subitemId ='%@'",prodId];
+                NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+                if ([arr count]>0) {
+                 SubdownloadItem *subDownloadItem = [arr objectAtIndex:0];
+                    subDownloadItem.downloadStatus = @"stop";
+                    [DatabaseManager update:subDownloadItem];
+                }
+            
+            }
+            
+        }
+   }
+    [self.downLoadMGdelegate reFreshUI];
+}
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (alertView.tag == 199) {
-        
         if (buttonIndex == 0) {
-            [self pauseAllTask];
+            [self stopAllTasksWith2GAnd3GNetWork];
         }
         else if (buttonIndex == 1){
             // 不做处理

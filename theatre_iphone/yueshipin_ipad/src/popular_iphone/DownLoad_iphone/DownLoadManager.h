@@ -17,6 +17,7 @@
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)downloadUrlTnvalidWithId:(NSString *)itemId inClass:(NSString *)className;
 -(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used;
+-(void)reFreshUI;
 @end
 
 

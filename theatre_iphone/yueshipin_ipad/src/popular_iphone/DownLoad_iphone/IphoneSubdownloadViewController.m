@@ -184,6 +184,9 @@
     }
 }
 
+-(void)reFreshUI{
+    [self reloadDataSource];
+}
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         int num = [self getTagNum:itemId];

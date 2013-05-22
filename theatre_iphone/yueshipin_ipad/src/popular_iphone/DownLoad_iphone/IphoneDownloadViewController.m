@@ -243,6 +243,9 @@
         [self reloadDataSource];
     }
 }
+-(void)reFreshUI{
+   [self reloadDataSource];
+}
 -(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used{
     UIView *view = [self.view viewWithTag:12345];
     float freePresent = used /total ;
