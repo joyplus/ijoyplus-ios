@@ -1945,6 +1945,9 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 localLogoBtn.hidden = NO;
                 //[self playNextLocalFile];
             }
+            
+            [tableList_ reloadData];
+            
             break;
         }
         case CLARITY_BUTTON_TAG:{
