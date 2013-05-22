@@ -59,7 +59,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.title = @"悅视频";
+    self.title = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.userInteractionEnabled = YES;
@@ -309,8 +309,8 @@
     }
     [[CacheUtility sharedCache] putInCache:@"serach_history" result:historyArr];
     
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable)
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                         message:@"网络异常，请检查网络。"
