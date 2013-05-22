@@ -17,6 +17,7 @@
 #import "NewM3u8DownloadManager.h"
 #import "RespForWXRootViewController.h"
 #import "BundingTVManager.h"
+#import "AdViewController.h"
 
 @class RootViewController;
 
@@ -49,6 +50,8 @@
 @property (nonatomic, strong) NSString *playWithDownload;
 
 @property (nonatomic, assign)BOOL isInPlayView;
+
+@property (nonatomic, strong) AdViewController *adViewController;
 + (AppDelegate *) instance;
 - (void)startHttpServer;
 - (void)stopHttpServer;

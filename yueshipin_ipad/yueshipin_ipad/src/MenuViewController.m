@@ -54,6 +54,7 @@
 #import "MovieDetailViewController.h"
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
+#import "AdViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
@@ -195,9 +196,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if(![AppDelegate instance].triggeredByPlayer){
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
-    }
+//    if(![AppDelegate instance].triggeredByPlayer){
+//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+//        
+//        AdViewController *adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(200, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
+//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+//    }
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
@@ -218,6 +222,7 @@
     [super viewDidAppear:animated];
     if(![AppDelegate instance].triggeredByPlayer){
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
     }
 }
 
@@ -342,7 +347,10 @@
         VideoViewController *videoViewController = (VideoViewController *)viewController;
         videoViewController.revertSearchCriteria = YES;
     }
-	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
+	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:YES];
+    
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+    
     if(selectedIndex < 10){
         BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
         if(!isReachable) {

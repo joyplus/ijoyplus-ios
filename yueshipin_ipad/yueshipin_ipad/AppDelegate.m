@@ -67,6 +67,7 @@
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
+@synthesize adViewController;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -208,6 +209,7 @@
     {
         [self customizeAppearance];
         [self initDownloadManager];
+        self.adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(0, 0, self.window.bounds.size.height - LEFT_MENU_DIPLAY_WIDTH - RIGHT_VIEW_WIDTH, self.window.bounds.size.width)];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
         self.window.rootViewController = self.rootViewController;
     }
@@ -239,7 +241,6 @@
     }
     
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
-    
     return YES;
 }
 

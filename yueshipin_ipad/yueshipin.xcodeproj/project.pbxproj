@@ -928,6 +928,7 @@
 		EBC19B7016E97BFC0001429C /* AHAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC19B6F16E97BFC0001429C /* AHAlertView.m */; };
 		EBC298BA16F04615009DF9FD /* IpadPageNameConstant.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC298B916F04615009DF9FD /* IpadPageNameConstant.m */; };
 		EBC39F11174C6DC900DB8EFD /* SystemMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC39F10174C6DC900DB8EFD /* SystemMethods.m */; };
+		EBC39F1B174CD2AD00DB8EFD /* AdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBC39F1A174CD2AD00DB8EFD /* AdViewController.m */; };
 		EBC3F9AF173C9AFD0009FCBE /* share_btn_disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = EBC3F9AE173C9AFD0009FCBE /* share_btn_disabled.png */; };
 		EBC3F9B6173CD5380009FCBE /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D11DB316A641D900B49FFD /* Default-568h@2x.png */; };
 		EBC3F9B7173CD57F0009FCBE /* Default-Landscape@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = EB9382A41668A1E00046A3B1 /* Default-Landscape@2x~ipad.png */; };
@@ -2089,6 +2090,8 @@
 		EBC298BB16F04DCF009DF9FD /* EnvConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnvConstant.h; sourceTree = "<group>"; };
 		EBC39F0F174C6DC900DB8EFD /* SystemMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemMethods.h; sourceTree = "<group>"; };
 		EBC39F10174C6DC900DB8EFD /* SystemMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SystemMethods.m; sourceTree = "<group>"; };
+		EBC39F19174CD2AD00DB8EFD /* AdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdViewController.h; sourceTree = "<group>"; };
+		EBC39F1A174CD2AD00DB8EFD /* AdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdViewController.m; sourceTree = "<group>"; };
 		EBC3F9AE173C9AFD0009FCBE /* share_btn_disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_btn_disabled.png; sourceTree = "<group>"; };
 		EBC3F9B1173CD5230009FCBE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		EBC3F9B3173CD52E0009FCBE /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
@@ -3586,6 +3589,8 @@
 		EBBA0CEC165B253900D3F11B /* popular */ = {
 			isa = PBXGroup;
 			children = (
+				EBC39F19174CD2AD00DB8EFD /* AdViewController.h */,
+				EBC39F1A174CD2AD00DB8EFD /* AdViewController.m */,
 				EB02F64916DAFFF0001C2E3A /* AVQueuePlayer */,
 				EBBE24431715186B00091F24 /* PopularTopViewController.h */,
 				EBBE24441715186B00091F24 /* PopularTopViewController.m */,
@@ -4784,6 +4789,7 @@
 				221507A7172A5BF400A90A60 /* IphoneDownloadViewController.m in Sources */,
 				221507A8172A5BF400A90A60 /* IphoneSubdownloadViewController.m in Sources */,
 				EBC39F11174C6DC900DB8EFD /* SystemMethods.m in Sources */,
+				EBC39F1B174CD2AD00DB8EFD /* AdViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
