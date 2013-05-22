@@ -43,7 +43,7 @@
 					<object class="IBUILabel" id="396176702">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{42, 12}, {237, 21}}</string>
+						<string key="NSFrame">{{42, 12}, {237, 23}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="330698133"/>
@@ -75,7 +75,7 @@
 					<object class="IBUIActivityIndicatorView" id="390947881">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">-2147483356</int>
-						<string key="NSFrame">{{15, 17}, {20, 20}}</string>
+						<string key="NSFrame">{{29, 18}, {20, 20}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="396176702"/>
@@ -89,7 +89,6 @@
 						<string key="NSFrame">{{72, 30}, {176, 21}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -165,8 +164,8 @@
 						<object class="NSMutableArray" key="children">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="396176702"/>
-							<reference ref="390947881"/>
 							<reference ref="330698133"/>
+							<reference ref="390947881"/>
 						</object>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Demo Table Header View</string>
