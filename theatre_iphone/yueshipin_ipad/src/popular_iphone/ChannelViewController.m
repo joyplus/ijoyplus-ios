@@ -433,7 +433,7 @@ enum
         [self reloadTableList];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
          [_progressHUD hide:YES];
-        [UIUtility showDetailError:self.view error:error];
+        [self reloadTableList];
     }];
 }
 
