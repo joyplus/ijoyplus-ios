@@ -89,7 +89,16 @@
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"])
             {
-                filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
+                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                {
+                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
+                }
+                else
+                {
+                    NSString *idStr = item.subitemId ;
+                    NSArray *tempArr =  [idStr componentsSeparatedByString:@"_"];
+                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",LOCAL_HTTP_SERVER_URL,item.itemId,idStr,[tempArr objectAtIndex:1]];
+                }
             }
             else
             {
