@@ -863,6 +863,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         {
             [self setPath:local_file_path_];
         }
+        selectButton_.enabled = NO;
         [self getVideoDetail];
     }
     
@@ -2051,6 +2052,10 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 {
     [urlConnection cancel];
     urlConnection = nil;
+    if (islocalFile_)
+    {
+        [[AppDelegate instance] stopHttpServer];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
     [[AppDelegate instance] stopHttpServer];
     
@@ -2543,6 +2548,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 
 - (void)playLocal:(NSDictionary *)file
 {
+    [self destoryPlayer];
     //self.playDuration = [[file objectForKey:@"duration"] intValue];
     if ([[file objectForKey:@"downloadType"] isEqualToString:@"m3u8"])
     {
@@ -2582,7 +2588,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     else if (DRAMA_TYPE == videoType_ || COMIC_TYPE == videoType_)
     {
-        key = [NSString stringWithFormat:@"%@%@", @"drama", self.prodId];
+        key = [NSString stringWithFormat:@"%@%@", @"tv", self.prodId];
     }
     else
     {
@@ -2592,6 +2598,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
     if(cacheResult != nil)
     {
+        selectButton_.enabled = YES;
         NSDictionary * episodesDic = nil;
         if (DRAMA_TYPE == videoType_ || COMIC_TYPE == videoType_)
         {
@@ -2607,6 +2614,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[CacheUtility sharedCache] putInCache:key result:result];
+        selectButton_.enabled = YES;
         NSDictionary * episodesDic = nil;
         if (DRAMA_TYPE == videoType_ || COMIC_TYPE == videoType_)
         {
