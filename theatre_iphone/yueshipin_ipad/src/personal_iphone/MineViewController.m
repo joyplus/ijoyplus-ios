@@ -932,11 +932,11 @@
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
         if (succeeded)
         {
-            NSLog(@"Successfully subscribed to channel!");
+            NSLog(@"Successfully unsubscribed to channel!");
         }
         else
         {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+            NSLog(@"Failed to unsubscribe to broadcast channel; Error: %@",error);
         }
     }];
 }
