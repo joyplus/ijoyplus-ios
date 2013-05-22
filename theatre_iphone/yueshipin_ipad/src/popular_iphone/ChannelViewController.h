@@ -10,10 +10,9 @@
 #import "SegmentControlView.h"
 #import "VideoTypeSegment.h"
 #import "FiltrateCell.h"
-#import "EGORefreshTableHeaderView.h"
-#import "MNMBottomPullToRefreshManager.h"
 #import "MBProgressHUD.h"
-@interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>{
+#import "PullRefreshManagerClinet.h"
+@interface ChannelViewController : UIViewController<VideoTypeSegmentDelegate,SegmentDelegate,FiltrateViewDelegate,FiltrateCellDelegate,UITableViewDataSource,UITableViewDelegate,PullRefreshManagerClinetDelegate>{
     UIButton *titleButton_;
     int typeSelectIndex_;
     int videoType_;
@@ -26,7 +25,6 @@
 @property(nonatomic, strong)UITableView *tableList;
 @property(nonatomic, strong)NSMutableArray *dataArr;
 @property(nonatomic, strong)NSMutableDictionary *parameters;
-@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
-@property (strong, nonatomic) EGORefreshTableHeaderView *refreshHeaderView;
 @property (strong, nonatomic) MBProgressHUD *progressHUD;
+@property (strong, nonatomic) PullRefreshManagerClinet *pullRefreshManager;
 @end

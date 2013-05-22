@@ -31,6 +31,7 @@
 @synthesize topicId = topicId_;
 @synthesize rightButtonItem = rightButtonItem_;
 @synthesize type = type_;
+@synthesize pullRefreshManager = pullRefreshManager_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -104,6 +105,11 @@
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:tableList_];
     
+    pullRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:tableList_];
+    pullRefreshManager_.delegate = self;
+    
+    [pullRefreshManager_ setShowHeaderView:NO];
+    loadCount_ = 1;
 }
 
 -(void)back:(id)sender{
@@ -149,6 +155,30 @@
     }];
     
     
+}
+
+-(void)loadMore{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", [NSString stringWithFormat:@"%d",loadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size",[NSNumber numberWithInt:type_], @"type", nil];
+    
+    [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *searchResult = [result objectForKey:@"results"];
+            if(searchResult != nil && searchResult.count > 0){
+                [searchResults_ addObjectsFromArray:searchResult];
+            }
+            
+        }
+        
+     [tableList_ reloadData];
+     pullRefreshManager_.canLoadMore = YES;
+     [pullRefreshManager_ loadMoreCompleted];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       
+    }];
+
+
+
 }
 - (void)showFailureView:(float)closeTime
 {
@@ -298,6 +328,27 @@
     }];
 }
 
+
+#pragma mark -
+#pragma mark - UIScrollviewDelegate
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullRefreshManager_ scrollViewScrolled:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullRefreshManager_ scrollViewEnd:scrollView];
+}
+
+#pragma mark -
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoLoadMore{
+    loadCount_ ++;
+    [self loadMore];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

@@ -42,9 +42,8 @@ enum
 @implementation allListViewController
 @synthesize listArray = listArray_;
 @synthesize tableList = tableList_;
-@synthesize pullToRefreshManager = pullToRefreshManager_;
-@synthesize refreshHeaderView = refreshHeaderView_;
 @synthesize customNavigationButtonView = customNavigationButtonView_;
+@synthesize pullToRefreshManager = pullToRefreshManager_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -68,14 +67,11 @@ enum
     else {
       
     }
-    
-    [self.tableList reloadData];
 }
 
 
 -(void)loadData{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
-    
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
     if(cacheResult != nil){
@@ -94,13 +90,13 @@ enum
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [self parseTopsListData:result];
         [tempHUD hide:YES];
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [self refreshCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.listArray == nil){
             self.listArray = [[NSMutableArray alloc]initWithCapacity:10];
         }
-         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [self refreshCompleted];
         [tempHUD hide:YES];
         [UIUtility showDetailError:self.view error:error];
     }];
@@ -144,18 +140,9 @@ enum
     self.tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.tableList];
     
-    
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:tableList_ withClient:self];
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:tableList_];
+    pullToRefreshManager_.delegate = self;
     reloads_ = 2;
-    if (refreshHeaderView_ == nil) {
-        EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - tableList_.bounds.size.height, self.view.frame.size.width, tableList_.bounds.size.height)];
-        view.backgroundColor = [UIColor clearColor];
-        view.delegate = self;
-        [tableList_ addSubview:view];
-        refreshHeaderView_ = view;
-        //[refreshHeaderView_ refreshLastUpdatedDate];
-    }
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(managerTVBunding)
                                                  name:@"bundingTVSucceeded"
@@ -165,8 +152,6 @@ enum
 - (void)viewDidUnload{
     [super viewDidUnload];
     tableList_ = nil;
-    pullToRefreshManager_ = nil;
-    refreshHeaderView_ = nil;
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -285,50 +270,33 @@ enum
     
 }
 
-
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)aScrollView{
-
-    [refreshHeaderView_ egoRefreshScrollViewDidScroll:aScrollView];
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
-    
-        [refreshHeaderView_ egoRefreshScrollViewDidEndDragging:aScrollView];
-         [pullToRefreshManager_ tableViewReleased];
-
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
+
+
 #pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoReFresh{
     reloads_ = 2;
     [self loadData];
-    reloading_ = YES;
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
-	
 }
 
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	
-	return reloading_; // should return if data source model is reloading
-	
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	
-	return [NSDate date]; // should return date data source was last changed
-	
-}
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+-(void)pulltoLoadMore{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: [NSNumber numberWithInt:reloads_], @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -343,27 +311,23 @@ enum
         } else {
             
         }
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-        if(tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-        }
+        [self loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         [UIUtility showDetailError:self.view error:error];
     }];
+    
 }
 
-- (void)loadTable {
+
+- (void)refreshCompleted {
     [tableList_ reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ refreshCompleted];
 }
 
-- (void)doneLoadingTableViewData{
-	
-	//  model should call this when its done loading
-	reloading_ = NO;
-	[refreshHeaderView_ egoRefreshScrollViewDataSourceDidFinishedLoading:tableList_];
-	
+-(void)loadMoreCompleted{
+    [tableList_ reloadData];
+    pullToRefreshManager_.canLoadMore = YES;
+    [pullToRefreshManager_ loadMoreCompleted];
 }
 
 #pragma mark -

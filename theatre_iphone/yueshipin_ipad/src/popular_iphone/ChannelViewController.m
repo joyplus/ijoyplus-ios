@@ -35,9 +35,8 @@ enum
 @synthesize tableList = _tableList;
 @synthesize dataArr = _dataArr;
 @synthesize parameters = _parameters;
-@synthesize pullToRefreshManager = _pullToRefreshManager;
-@synthesize refreshHeaderView = _refreshHeaderView;
 @synthesize progressHUD = _progressHUD;
+@synthesize pullRefreshManager = pullToRefreshManager_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -115,15 +114,8 @@ enum
     _tableList.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableList];
     
-    
-    _pullToRefreshManager = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:_tableList withClient:self];
-    if (_refreshHeaderView == nil) {
-        EGORefreshTableHeaderView *egoRefreshTableHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - _tableList.bounds.size.height, self.view.frame.size.width, _tableList.bounds.size.height)];
-        egoRefreshTableHeaderView.backgroundColor = [UIColor clearColor];
-        egoRefreshTableHeaderView.delegate = self;
-        [_tableList addSubview:egoRefreshTableHeaderView];
-        _refreshHeaderView = egoRefreshTableHeaderView;
-    }
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:_tableList];
+    pullToRefreshManager_.delegate = self;
     
     _progressHUD  = [[MBProgressHUD alloc] initWithView:self.view];
     _progressHUD.labelText = @"加载中...";
@@ -374,51 +366,41 @@ enum
 
 #pragma mark -
 #pragma mark - UIScrollviewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)aScrollView{
-   [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
-    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
-    [_pullToRefreshManager tableViewReleased];
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+     [pullToRefreshManager_ scrollViewEnd:scrollView];
+}
+
+-(void)reloadTableList{
+    [_tableList reloadData];
+    [pullToRefreshManager_ refreshCompleted];
 }
 
 #pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	isLoading_ = YES;
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoReFresh{
     [_parameters setObject:@"1" forKey:@"page_num"];
     [self sendHttpRequest:_parameters];
-    [self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
 }
 
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	
-	return isLoading_;
-	
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	
-	return [NSDate date]; 
-	
-}
-
-#pragma mark -
-#pragma mark MNMBottomPullToRefreshManager Methods
-- (void)MNMBottomPullToRefreshManagerClientReloadTable{
+-(void)pulltoLoadMore{
     int loadCount = [[_parameters objectForKey:@"page_num"] intValue];
     loadCount++;
     [_parameters setObject:[NSString stringWithFormat:@"%d",loadCount] forKey:@"page_num"];
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:_parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSArray *itemsArr = [result objectForKey:@"results"];
         [_dataArr addObjectsFromArray:itemsArr];
-        [self reloadTableList];
-        if ([itemsArr count]<12) {
-            [_pullToRefreshManager setPullToRefreshViewVisible:NO];
-        }
+        [_tableList reloadData];
+        pullToRefreshManager_.canLoadMore = YES;
+        [pullToRefreshManager_ loadMoreCompleted];
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(reloadTableList) withObject:nil afterDelay:0.0f];
         [UIUtility showDetailError:self.view error:error];
@@ -426,18 +408,6 @@ enum
 
 }
 
--(void)reloadTableList{
-    [_tableList reloadData];
-    [_pullToRefreshManager tableViewReloadFinished];
-}
-
-- (void)doneLoadingTableViewData{
-	
-	//  model should call this when its done loading
-	isLoading_ = NO;
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_tableList];
-	
-}
 #pragma mark -
 #pragma mark - SendHttpRequest
 -(void)sendHttpRequest:(NSDictionary *)parameters{
