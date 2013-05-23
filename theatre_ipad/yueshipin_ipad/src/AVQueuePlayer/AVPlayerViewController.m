@@ -342,7 +342,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     } else {
         [self parseVideoData:[video objectForKey:@"episodes"]];
@@ -1203,7 +1203,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [self prepareOnlinePlay:episodes];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
