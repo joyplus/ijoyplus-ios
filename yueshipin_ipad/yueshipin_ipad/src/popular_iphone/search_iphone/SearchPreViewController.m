@@ -268,6 +268,12 @@
             NSArray *searchResult = [result objectForKey:@"results"];
             if(searchResult != nil && searchResult.count > 0){
                 [searchResults_ addObjectsFromArray:searchResult];
+                if ([searchResult count]< PAGESIZE) {
+                    pullRefreshManager_.canLoadMore = NO;
+                }
+                else{
+                    pullRefreshManager_.canLoadMore = YES;
+                }
             }
             else{
                 [self showFailureView:1];
@@ -556,15 +562,18 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *searchResult = [result objectForKey:@"results"];
-            if(searchResult != nil && searchResult.count > 0){
+            if(searchResult != nil){
                 [searchResults_ addObjectsFromArray:searchResult];
             }
-            else{
-                
+            if ([searchResult count]< PAGESIZE) {
+                pullRefreshManager_.canLoadMore = NO;
             }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
+            
         }
         [searchResultList_ reloadData];
-        pullRefreshManager_.canLoadMore = YES;
         [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         
