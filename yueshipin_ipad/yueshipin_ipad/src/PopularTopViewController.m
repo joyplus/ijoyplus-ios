@@ -224,9 +224,8 @@ void transferDataFromOldDbWithCatch()
             [self parseMovieTopsData:result];
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"%@", error);
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }

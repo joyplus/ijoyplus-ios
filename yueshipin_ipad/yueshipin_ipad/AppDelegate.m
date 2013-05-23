@@ -368,11 +368,11 @@
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
-    if([myhostReach currentReachabilityStatus] == NotReachable) {
-         UIView *rootView = self.window.rootViewController.view;
-         [UIUtility showNetWorkError:rootView];
-    };
+//    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
+//    if([myhostReach currentReachabilityStatus] == NotReachable) {
+//         UIView *rootView = self.window.rootViewController.view;
+//         [UIUtility showNetWorkError:rootView];
+//    };
     
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
