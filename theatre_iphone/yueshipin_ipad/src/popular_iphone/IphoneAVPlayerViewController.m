@@ -1478,7 +1478,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     [bottomView_ addSubview:mScrubber];
     
     
-    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(9, 8, 90, 10)];
+    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(mScrubber.frame.origin.x - 55, 8, 50, 10)];
     seeTimeLabel_.backgroundColor = [UIColor clearColor];
     seeTimeLabel_.font = [UIFont systemFontOfSize:12];
     seeTimeLabel_.textAlignment = NSTextAlignmentLeft;
