@@ -84,9 +84,9 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     if (type_ == 1) {
         favLoadCount_ = 1;
-        pullToRefreshManagerFAV_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:600 tableView:self.tableView withClient:self];
-        [self.tableView reloadData];
-        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+        pullToRefreshManagerFAV_ = [[PullRefreshManagerClinet alloc]initWithTableView:self.tableView];
+        pullToRefreshManagerFAV_.delegate = self;
+        [pullToRefreshManagerFAV_ setShowHeaderView:NO];
     }
     
 }
@@ -333,7 +333,8 @@
         }
 
         [self.tableView reloadData];
-        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+        pullToRefreshManagerFAV_.canLoadMore = YES;
+        [pullToRefreshManagerFAV_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
        
     }];
@@ -429,21 +430,25 @@
 
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManagerFAV_ scrollViewBegin];
+}
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-        
+    [pullToRefreshManagerFAV_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
     
-    [pullToRefreshManagerFAV_ tableViewReleased];
+    [pullToRefreshManagerFAV_ scrollViewEnd:aScrollView];
     
 }
 
 #pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-     [CommonMotheds showNetworkDisAbledAlert:self.view];
+#pragma mark PullRefreshManagerClinetDelegate Methods
+-(void)pulltoLoadMore{
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     favLoadCount_++;
     [self loadMyFavsData];
 }
