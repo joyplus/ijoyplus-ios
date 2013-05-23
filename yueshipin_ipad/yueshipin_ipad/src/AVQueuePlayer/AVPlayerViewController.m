@@ -198,7 +198,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     subname = nil;
     video = nil;
     videoHttpUrl = nil;
-    self.URL = nil;
+    //self.URL = nil;
     mPlaybackView = nil;
     
     mToolbar = nil;
