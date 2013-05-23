@@ -57,7 +57,6 @@ enum
 @synthesize slider = slider_;
 @synthesize pageMGIcon = pageMGIcon_;
 @synthesize refreshHeaderViewForMovieList = refreshHeaderViewForMovieList_;
-@synthesize refreshHeaderViewForShowList = refreshHeaderViewForShowList_;
 @synthesize refreshHeaderViewForTvList = refreshHeaderViewForTvList_;
 @synthesize showTopId = showTopId_;
 @synthesize pullToRefreshManager = pullToRefreshManager_;
@@ -229,9 +228,9 @@ enum
             }
         }
         
-        [self loadTable:SHOW_TYPE];
+        [showTableList_ reloadData];
+        [pullToRefreshManager_ refreshCompleted];
         [progressHUD_ hide:YES];
-        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         if(self.showListArr == nil){
@@ -254,15 +253,12 @@ enum
             NSArray *tempTopsArray = [result objectForKey:@"items"];
             if(tempTopsArray.count > 0){
                 [self.showListArr addObjectsFromArray:tempTopsArray];
-
-            }
-            
-            if(tempTopsArray.count < PAGESIZE){
-                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
             }
         }
         
-        [self loadTable:SHOW_TYPE];
+     [showTableList_ reloadData];
+     pullToRefreshManager_.canLoadMore = YES;
+     [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
         [self loadTable:SHOW_TYPE];
@@ -492,15 +488,6 @@ enum
         tvLoadCount_ = 1;
     }
 
-    if (refreshHeaderViewForShowList_ == nil) {
-        refreshHeaderViewForShowList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, 0.0f -showTableList_.bounds.size.height, self.view.frame.size.width, showTableList_.bounds.size.height)];
-        refreshHeaderViewForShowList_.backgroundColor = [UIColor clearColor];
-        refreshHeaderViewForShowList_.delegate = self;
-        [showTableList_ addSubview:refreshHeaderViewForShowList_];
-        //[refreshHeaderViewForShowList_ refreshLastUpdatedDate];
-        showLoadCount_ = 1;
-    }
-    
     if (nil == refreshHeaderViewForComicList_)
     {
         refreshHeaderViewForComicList_ = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, 0.0f -showTableList_.bounds.size.height, self.view.frame.size.width, showTableList_.bounds.size.height)];
@@ -511,7 +498,9 @@ enum
         comicLoadCount_ = 1;
     }
     
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:showTableList_ withClient:self];
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc]initWithTableView:showTableList_];
+    pullToRefreshManager_.delegate = self;
+    showLoadCount_ = 1;
     
     if (nil == bundingTipsView)
     {
@@ -587,7 +576,6 @@ enum
     self.showTableList = nil;
     self.refreshHeaderViewForMovieList = nil;
     self.refreshHeaderViewForTvList = nil;
-    self.refreshHeaderViewForShowList = nil;
     self.refreshHeaderViewForComicList = nil;
 }
 -(void)buttonChange:(UIButton *)btn{
@@ -893,7 +881,11 @@ enum
 
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
-//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManager_ scrollViewBegin];
+}
+
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     switch (scrollView.tag){
@@ -945,6 +937,29 @@ enum
     }
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    switch (scrollView.tag) {
+        case MOVIE_TYPE:{
+            [refreshHeaderViewForMovieList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        case TV_TYPE:{
+            [refreshHeaderViewForTvList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        case SHOW_TYPE:{
+            [pullToRefreshManager_ scrollViewScrolled:scrollView];
+            break;
+        }
+        case COMIC_TYPE:{
+            [refreshHeaderViewForComicList_ egoRefreshScrollViewDidScroll:scrollView];
+            break;
+        }
+        default:
+            break;
+    }
+    
+}
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
   
@@ -958,7 +973,7 @@ enum
             break;
         }
         case SHOW_TYPE:{
-            [refreshHeaderViewForShowList_ egoRefreshScrollViewDidEndDragging:aScrollView];
+             [pullToRefreshManager_ scrollViewEnd:aScrollView];
             break;
         }
         case COMIC_TYPE:{
@@ -969,9 +984,6 @@ enum
         default:
             break;
     }
-    
-    [pullToRefreshManager_ tableViewReleased];
-    
 }
 
 #pragma mark -
@@ -984,11 +996,6 @@ enum
     }
     else if (view == refreshHeaderViewForTvList_){
         [self loadTVTopsData];
-    }
-    else if (view == refreshHeaderViewForShowList_){
-        showLoadCount_ = 1;
-        [self loadShowTopsData];
-        [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     }
     else if (view == refreshHeaderViewForComicList_)
     {
@@ -1020,7 +1027,6 @@ enum
 	reloading_ = NO;
 	[refreshHeaderViewForMovieList_ egoRefreshScrollViewDataSourceDidFinishedLoading:movieTableList_];
     [refreshHeaderViewForTvList_ egoRefreshScrollViewDataSourceDidFinishedLoading:tvTableList_];
-    [refreshHeaderViewForShowList_ egoRefreshScrollViewDataSourceDidFinishedLoading:showTableList_];
 	[refreshHeaderViewForComicList_ egoRefreshScrollViewDataSourceDidFinishedLoading:comicTableList_];
 }
 
@@ -1049,10 +1055,18 @@ enum
     {
         [comicTableList_ reloadData];
     }
-    [pullToRefreshManager_ tableViewReloadFinished];
-    
 }
 
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoReFresh{
+    showLoadCount_ = 1;
+    [self loadShowTopsData];
+}
+-(void)pulltoLoadMore{
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
+    showLoadCount_++;
+    [self loadMoreShowTopsData];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
