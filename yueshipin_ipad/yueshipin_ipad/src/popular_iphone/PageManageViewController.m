@@ -201,6 +201,7 @@ enum
                 NSArray *tempArray = [[tempTopsArray objectAtIndex:0] objectForKey:@"items"];
                 [ self.showListArr addObjectsFromArray:tempArray];
             }
+            
         }
         
         [showTableList_ reloadData];
@@ -224,6 +225,13 @@ enum
                 
                 if(tempArray.count > 0) {
                     [self.showListArr addObjectsFromArray:tempArray];
+                }
+                if ([tempArray count] < PAGESIZE) {
+                    pullToRefreshManager_.canLoadMore = NO;
+                }
+                else{
+                    
+                    pullToRefreshManager_.canLoadMore = YES;
                 }
             }
         }
@@ -254,10 +262,17 @@ enum
             if(tempTopsArray.count > 0){
                 [self.showListArr addObjectsFromArray:tempTopsArray];
             }
+            if ([tempTopsArray count] < PAGESIZE) {
+                 pullToRefreshManager_.canLoadMore = NO;
+            }
+            else{
+            
+                 pullToRefreshManager_.canLoadMore = YES;
+            }
         }
         
      [showTableList_ reloadData];
-     pullToRefreshManager_.canLoadMore = YES;
+    
      [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
