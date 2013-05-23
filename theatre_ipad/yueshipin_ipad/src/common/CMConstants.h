@@ -114,6 +114,11 @@
 
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 
+#define ADV_IMAGE_CLICKED_EVENT @"ue_adv_image_clicked"
+#define ADV_IMAGE_NAME @"advertisement_image"
+#define ADV_PAHT @"advertisementUrl"
+#define ADV_TARGET_PATH @"advertisementTargetUrl"
+
 typedef enum {
     MOVIE_TYPE = 1,
     DRAMA_TYPE = 2,
