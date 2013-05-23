@@ -8,48 +8,39 @@
 
 #import "AdViewController.h"
 #import "CommonHeader.h"
-
-@interface AdViewController (){
-    UIImageView *adImageView;
-    UIButton *adImageBtn;
-}
+#import "SDImageCache.h"
+@interface AdViewController ()
 
 @end
 
 @implementation AdViewController
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    adImageView = nil;
-    adImageBtn = nil;
-}
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
         [self.view setBackgroundColor:[UIColor clearColor]];
         
-        adImageView = [[UIImageView alloc]initWithFrame:frame];
-        [adImageView setImageWithURL:[NSURL URLWithString:@"http://cms.csdnimg.cn/article/201305/03/51834e6634ddf.jpg"]];
-        [self.view addSubview:adImageView];
-        
-        adImageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        adImageBtn.frame = adImageView.frame;
-        [adImageBtn addTarget:self action:@selector(adImageBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:adImageBtn];
     }
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
 - (void)adImageBtnClicked
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@""]];
+    [MobClick event:ADV_IMAGE_CLICKED_EVENT];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[AppDelegate instance].advTargetUrl]];
+}
+
+- (void)setAdvImage:(NSURL *)imageURL
+{
+    UIImageView *adImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 428, 750)];
+    [[SDImageCache sharedImageCache] clearDisk];
+    [adImageView setImageWithURL:imageURL];
+    [self.view addSubview:adImageView];
+    
+    UIButton *adImageBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    adImageBtn.frame = adImageView.frame;
+    [adImageBtn addTarget:self action:@selector(adImageBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:adImageBtn];
 }
 
 

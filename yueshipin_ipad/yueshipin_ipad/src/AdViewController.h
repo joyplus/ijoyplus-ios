@@ -10,4 +10,6 @@
 
 - (id)initWithFrame:(CGRect)frame;
 
+- (void)setAdvImage:(NSURL *)imageURL;
+
 @end

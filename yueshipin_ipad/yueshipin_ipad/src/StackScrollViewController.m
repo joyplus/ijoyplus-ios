@@ -918,7 +918,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 			viewAtRight2 = nil;
             if ([controller isKindOfClass:[AdViewController class]]) {
                 [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-                [viewAtRight setFrame:CGRectMake(LEFT_MENU_DIPLAY_WIDTH + RIGHT_VIEW_WIDTH - 75, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
+                [viewAtRight setFrame:CGRectMake(LEFT_MENU_DIPLAY_WIDTH + RIGHT_VIEW_WIDTH - 80, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
             } else {                
                 [UIView beginAnimations:nil context:NULL];
                 [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];
