@@ -158,6 +158,7 @@
         NSLog(@"%@", error);
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
@@ -184,7 +185,7 @@
         [tableList_ reloadData];
         [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
@@ -355,7 +356,7 @@
             NSLog(@"fail");
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 

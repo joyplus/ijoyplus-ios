@@ -272,7 +272,7 @@
                         [UIUtility showSystemError:self.view];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                    [UIUtility showSystemError:self.view];
+                   [UIUtility showDetailError:self.view error:error];
                 }];
 
                 break;

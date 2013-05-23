@@ -102,7 +102,7 @@ enum
         }
         [self refreshCompleted];
         [tempHUD hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 
 
