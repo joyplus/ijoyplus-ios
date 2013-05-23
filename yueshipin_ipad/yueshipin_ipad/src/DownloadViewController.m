@@ -53,6 +53,8 @@
     spaceInfoLabel = nil;
     diskUsedProgress_ = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DISK_STORAGE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateDownloadView" object:nil];
+    
     [super viewDidUnload];
 }
 
@@ -61,6 +63,8 @@
     [super viewDidLoad];    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
+    
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch

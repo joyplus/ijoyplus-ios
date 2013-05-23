@@ -229,6 +229,7 @@
 		22E7424F170997CE006DEB72 /* back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22E7424D170997CE006DEB72 /* back@2x.png */; };
 		22EB916D174DB93B0089F351 /* bendi_icon_iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EB916B174DB93B0089F351 /* bendi_icon_iPhone@2x.png */; };
 		22EB916E174DB93B0089F351 /* local_file_icon_iPhone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EB916C174DB93B0089F351 /* local_file_icon_iPhone@2x.png */; };
+		22EB9170174E02680089F351 /* setting_3G_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22EB916F174E02680089F351 /* setting_3G_bg@2x.png */; };
 		22EF004516B767410001F743 /* GridViewCellDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 22EF003916B767410001F743 /* GridViewCellDemo.m */; };
 		22EF004616B767410001F743 /* UMGridViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22EF003B16B767410001F743 /* UMGridViewController.m */; };
 		22EF004716B767410001F743 /* libUMAppNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF003C16B767410001F743 /* libUMAppNetwork.a */; };
@@ -1260,6 +1261,7 @@
 		22E7424D170997CE006DEB72 /* back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "back@2x.png"; path = "yueshipin_ipad/Resource_iphone/back@2x.png"; sourceTree = SOURCE_ROOT; };
 		22EB916B174DB93B0089F351 /* bendi_icon_iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bendi_icon_iPhone@2x.png"; path = "yueshipin_ipad/Resource_iphone/bendi_icon_iPhone@2x.png"; sourceTree = SOURCE_ROOT; };
 		22EB916C174DB93B0089F351 /* local_file_icon_iPhone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "local_file_icon_iPhone@2x.png"; path = "yueshipin_ipad/Resource_iphone/local_file_icon_iPhone@2x.png"; sourceTree = SOURCE_ROOT; };
+		22EB916F174E02680089F351 /* setting_3G_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting_3G_bg@2x.png"; sourceTree = "<group>"; };
 		22EF003816B767410001F743 /* GridViewCellDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridViewCellDemo.h; sourceTree = "<group>"; };
 		22EF003916B767410001F743 /* GridViewCellDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridViewCellDemo.m; sourceTree = "<group>"; };
 		22EF003A16B767410001F743 /* UMGridViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UMGridViewController.h; sourceTree = "<group>"; };
@@ -2884,6 +2886,7 @@
 		EB14D451165B618800CB3260 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				22EB916F174E02680089F351 /* setting_3G_bg@2x.png */,
 				225065FD174B866B00D3D4E6 /* bendi_icon.png */,
 				225065FE174B866B00D3D4E6 /* bendi_icon@2x.png */,
 				225065FF174B866B00D3D4E6 /* local_file_icon.png */,
@@ -4603,6 +4606,7 @@
 				E71FCF92174DBE190096A98C /* blueArrow@2x.png in Resources */,
 				E71FCF9D174DBE2B0096A98C /* DemoTableFooterView.xib in Resources */,
 				E71FCF9F174DBE2B0096A98C /* DemoTableHeaderView.xib in Resources */,
+				22EB9170174E02680089F351 /* setting_3G_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
