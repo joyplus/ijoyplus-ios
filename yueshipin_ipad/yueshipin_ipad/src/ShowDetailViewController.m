@@ -187,8 +187,8 @@
     
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 445, 430, 100);
     self.introContentTextView.textColor = CMConstants.grayColor;
-    self.introContentTextView.layer.borderWidth = 1;
-    self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    self.introContentTextView.layer.borderWidth = 0.5;
+    self.introContentTextView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
