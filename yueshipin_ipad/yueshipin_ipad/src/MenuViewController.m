@@ -196,12 +196,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    if(![AppDelegate instance].triggeredByPlayer){
-//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
-//        
-//        AdViewController *adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(200, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
-//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
-//    }
+    if(![AppDelegate instance].triggeredByPlayer){
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+    }
 }
 
 - (void)updateDownloadNum:(NSNotification *)aNotification
@@ -217,14 +215,14 @@
         badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
     }
 }
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    if(![AppDelegate instance].triggeredByPlayer){
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
-    }
-}
+//
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    if(![AppDelegate instance].triggeredByPlayer){
+//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+//    }
+//}
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];

@@ -471,7 +471,7 @@
                 if (![item.downloadStatus hasPrefix:@"error"]) {
                     [self movieImageClicked:position];
                 }
-                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:self.class];
+                [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
             } else {
                 SubdownloadViewController *viewController = [[SubdownloadViewController alloc] initWithFrame:CGRectMake(0, 0, RIGHT_VIEW_WIDTH, self.view.bounds.size.height)];
                 viewController.parentDelegate = self;
