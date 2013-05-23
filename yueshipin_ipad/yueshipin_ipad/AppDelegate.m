@@ -253,8 +253,7 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
     if ([fileManager fileExistsAtPath:filePath]) {
-        NSURL *imageUrl = [NSURL fileURLWithPath:filePath];
-        [self.adViewController setAdvImage:imageUrl];
+        [self.adViewController setAdvImage:filePath];
     }
 }
 

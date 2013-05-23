@@ -426,7 +426,7 @@
 
 - (void)movieListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
     [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
@@ -440,7 +440,7 @@
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     [dramaPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];

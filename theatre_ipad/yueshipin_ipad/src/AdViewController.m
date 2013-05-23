@@ -8,7 +8,7 @@
 
 #import "AdViewController.h"
 #import "CommonHeader.h"
-#import "SDImageCache.h"
+
 @interface AdViewController ()
 
 @end
@@ -30,11 +30,11 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[AppDelegate instance].advTargetUrl]];
 }
 
-- (void)setAdvImage:(NSURL *)imageURL
+- (void)setAdvImage:(NSString *)imagePath
 {
     UIImageView *adImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 428, 750)];
-    [[SDImageCache sharedImageCache] clearDisk];
-    [adImageView setImageWithURL:imageURL];
+    NSData *data = [NSData dataWithContentsOfFile:imagePath];
+    adImageView.image = [UIImage imageWithData:data];
     [self.view addSubview:adImageView];
     
     UIButton *adImageBtn = [UIButton buttonWithType:UIButtonTypeCustom];

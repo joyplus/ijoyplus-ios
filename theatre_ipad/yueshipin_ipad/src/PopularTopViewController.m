@@ -576,7 +576,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)movieListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -589,7 +589,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -602,7 +602,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)showListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -615,7 +615,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)comicListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
