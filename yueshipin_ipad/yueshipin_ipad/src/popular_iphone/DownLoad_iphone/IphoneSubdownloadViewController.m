@@ -200,6 +200,9 @@
 -(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used{
 
 }
+-(void)reFreshUI{
+    [self reloadDataSource];
+}
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }
