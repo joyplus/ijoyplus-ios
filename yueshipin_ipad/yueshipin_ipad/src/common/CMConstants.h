@@ -113,6 +113,9 @@
 
 #define CACHE_QUEUE @"MY_CACHE_QUEUE"
 
+#define ADV_PAHT @"advertisementUrl"
+#define ADV_TARGET_PATH @"advertisementTargetUrl"
+
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 
 typedef enum {
