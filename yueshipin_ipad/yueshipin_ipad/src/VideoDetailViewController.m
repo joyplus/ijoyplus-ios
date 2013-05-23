@@ -347,11 +347,11 @@
 - (void)closeBtnClicked
 {
     fromViewController.moveToLeft = YES;
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
-//    if (fromViewController == nil) {
-//    } else {
-//        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
-//    }
+    if (fromViewController == nil) {
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider];
+    } else {
+        [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:fromViewController.class];
+    }
 }
 
 - (void)getDownloadUrls:(int)num

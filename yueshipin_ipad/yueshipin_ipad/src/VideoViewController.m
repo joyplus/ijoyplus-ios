@@ -17,6 +17,7 @@
 #import "CommonHeader.h"
 #import "CategoryUtility.h"
 #import "CategoryItem.h"
+#import "AdViewController.h"
 
 #define SUB_CATEGORY_NUM_PER_ROW            (4)
 #define SUB_CATEGORY_NUM_PER_COL            (6)
@@ -270,6 +271,7 @@
 
 - (void)hideSubcategoryView
 {
+    [[AppDelegate instance].rootViewController.stackScrollViewController.slideViews sendSubviewToBack:self.view];
     subcategoryView.alpha = 0;
     for (UIView *subview in subcategoryView.subviews) {
         subview.alpha = 0;
@@ -323,7 +325,7 @@
 
 - (void)categoryBtnClicked:(UIButton *)btn
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     int num = btn.tag - 1101;
     if (subcategoryView && !subcategoryView.hidden && num != hightLightCategoryArray.count -1) {
         [self hideSubcategoryView];
@@ -566,14 +568,15 @@
     subcategoryImage.frame = CGRectMake(0, 0, subcategoryView.frame.size.width, subcategoryView.frame.size.height);
     
     [self.view addSubview:subcategoryView];
+    [self.view bringSubviewToFront:subcategoryView];
     [subcategoryView setHidden:NO];
+    [[AppDelegate instance].rootViewController.stackScrollViewController.slideViews bringSubviewToFront:self.view];
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for (UIView *subview in subcategoryView.subviews) {
             subview.alpha = 1;
         }
         subcategoryView.alpha = 1;
     } completion:^(BOOL finished) {
-        
     }];
 }
 

@@ -716,31 +716,34 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
-            if([viewController isKindOfClass:clazz]){
-                if (clazz != AdViewController.class) {                    
+            if (viewController.class != AdViewController.class) {
+                if([viewController isKindOfClass:clazz]){
                     [viewController.view setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
                     //                UIView * rightView = [viewController.view viewWithTag:1111];
                     //                rightView.hidden = NO;
+                    
+                    break;
+                } else{
+                    [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
+                    for (UIView *subview in viewController.view.subviews) {
+                        [subview setAlpha:0];
+                    }
+                    [viewController.view setAlpha:0];
                 }
-                break;
-            } else{
-                [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
-                for (UIView *subview in viewController.view.subviews) {
-                    [subview setAlpha:0];
-                }
-                [viewController.view setAlpha:0];
             }
         }
     } completion:^(BOOL finished) {
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
-            if([viewController isKindOfClass:clazz]){
-                [self managerCloseTipsView];
-                break;
-            } else {
-                [[slideViews viewWithTag:20110106+i] removeFromSuperview];
-                [viewControllersStack removeObjectAtIndex:i];
-                viewController = nil;
+            if (viewController.class != AdViewController.class) {
+                if([viewController isKindOfClass:clazz]){
+                    [self managerCloseTipsView];
+                    break;
+                } else {
+                    [[slideViews viewWithTag:20110106+i] removeFromSuperview];
+                    [viewControllersStack removeObjectAtIndex:i];
+                    viewController = nil;
+                }
             }
         }
     }];
