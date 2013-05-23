@@ -1553,7 +1553,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     localLogoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     localLogoBtn.frame = CGRectMake(kFullWindowHeight-87, 8, 33, 27);
     localLogoBtn.backgroundColor = [UIColor clearColor];
-    [localLogoBtn setBackgroundImage:[UIImage imageNamed:@"bendi_icon"] forState:UIControlStateNormal];
+    [localLogoBtn setBackgroundImage:[UIImage imageNamed:@"bendi_icon_iPhone"] forState:UIControlStateNormal];
     localLogoBtn.tag = LOCAL_LOGO_BUTTON_TAG;
     [bottomToolBar_ addSubview:localLogoBtn];
     
@@ -2359,7 +2359,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         line.frame = CGRectMake(1, 37, cell.frame.size.width-2, 1);
         [cell.contentView addSubview:line];
         
-        UIImageView * logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"local_file_icon"]];
+        UIImageView * logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"local_file_icon_iPhone"]];
         logo.frame = CGRectMake(tableList_.frame.size.width - 25, 0, 25, 25);
         [cell.contentView addSubview:logo];
         logo.backgroundColor = [UIColor clearColor];
