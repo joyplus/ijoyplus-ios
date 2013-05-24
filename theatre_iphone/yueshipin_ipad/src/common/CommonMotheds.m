@@ -69,9 +69,20 @@
 }
 
 + (NSArray *)localPlaylists:(NSString *)mediaId
+                       type:(NSInteger)type
 {
-    NSArray * tmpSubitems = [DatabaseManager findByCriteria:SubdownloadItem.class
-                                                queryString:[NSString stringWithFormat:@"WHERE itemId = %@", mediaId]];
+    NSArray * tmpSubitems = nil;
+    if (MOVIE_TYPE == type)
+    {
+        tmpSubitems = [DatabaseManager findByCriteria:DownloadItem.class
+                                          queryString:[NSString stringWithFormat:@"WHERE itemId = %@", mediaId]];
+    }
+    else
+    {
+        tmpSubitems = [DatabaseManager findByCriteria:SubdownloadItem.class
+                                          queryString:[NSString stringWithFormat:@"WHERE itemId = %@", mediaId]];
+    }
+    
     NSArray * playlists = [tmpSubitems sortedArrayUsingComparator:^(SubdownloadItem *a, SubdownloadItem *b) {
         NSNumber *first =  [NSNumber numberWithInt:a.subitemId.intValue];
         NSNumber *second = [NSNumber numberWithInt:b.subitemId.intValue];
@@ -79,60 +90,112 @@
     }];
     
     NSMutableArray * playlistInfo = [[NSMutableArray alloc] init];
-    for (int i = 0; i < playlists.count; i ++)
+    
+    if (MOVIE_TYPE == type)
     {
-        NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
-        SubdownloadItem *item = [playlists objectAtIndex:i];
-        item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
-        if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
+        if (0 != playlists.count)
         {
-            NSString *filePath;
-            if ([item.downloadType isEqualToString:@"m3u8"])
+            NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
+            DownloadItem *item = [playlists objectAtIndex:0];
+            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class
+                                                               queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
             {
-                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                NSString *filePath;
+                if ([item.downloadType isEqualToString:@"m3u8"])
                 {
-                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
+                    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                    {
+                        filePath = [NSString stringWithFormat:@"%@/%@/%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.itemId];
+                    }
+                    else
+                    {
+                        NSString *subPath = [NSString stringWithFormat:@"%@_%@",item.itemId,@"1"];
+                        filePath = [NSString stringWithFormat:@"%@/%@/%@/1.m3u8",LOCAL_HTTP_SERVER_URL, item.itemId,subPath];
+                    }
                 }
                 else
                 {
-                    NSString *idStr = item.subitemId ;
-                    NSArray *tempArr =  [idStr componentsSeparatedByString:@"_"];
-                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",LOCAL_HTTP_SERVER_URL,item.itemId,idStr,[tempArr objectAtIndex:1]];
+                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                    NSString *documentsDirectory = [paths objectAtIndex:0];
+                    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                    {
+                        filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
+                    }
+                    else
+                    {
+                        NSString * fileName = [item.itemId stringByAppendingString:@".mp4"];
+                        filePath = [documentsDirectory stringByAppendingPathComponent:fileName];
+                    }
                 }
+                [playInfo setObject:filePath forKey:@"videoUrl"];
+                [playInfo setObject:item.downloadType forKey:@"downloadType"];
+                [playInfo setObject:[NSNumber numberWithDouble:item.duration] forKey:@"duration"];
+                [playInfo setObject:item.name forKey:@"name"];
+                [playInfo setObject:item.itemId forKey:@"itemId"];
+                [playInfo setObject:[NSString stringWithFormat:@"%d",item.type] forKey:@"type"];
+                
+                [playlistInfo addObject:playInfo];
             }
-            else
+        }
+    }
+    else
+    {
+        for (int i = 0; i < playlists.count; i ++)
+        {
+            NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
+            SubdownloadItem *item = [playlists objectAtIndex:i];
+            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
+            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
             {
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString *documentsDirectory = [paths objectAtIndex:0];
-                if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                NSString *filePath;
+                if ([item.downloadType isEqualToString:@"m3u8"])
                 {
-                    filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
+                    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                    {
+                        filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
+                    }
+                    else
+                    {
+                        NSString *idStr = item.subitemId ;
+                        NSArray *tempArr =  [idStr componentsSeparatedByString:@"_"];
+                        filePath = [NSString stringWithFormat:@"%@/%@/%@/%@.m3u8",LOCAL_HTTP_SERVER_URL,item.itemId,idStr,[tempArr objectAtIndex:1]];
+                    }
                 }
                 else
                 {
-                    filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.subitemId]];
+                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                    NSString *documentsDirectory = [paths objectAtIndex:0];
+                    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+                    {
+                        filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
+                    }
+                    else
+                    {
+                        filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.subitemId]];
+                    }
                 }
+                [playInfo setObject:filePath forKey:@"videoUrl"];
+                [playInfo setObject:item.downloadType forKey:@"downloadType"];
+                [playInfo setObject:[NSNumber numberWithDouble:item.duration] forKey:@"duration"];
+                
+                NSString * videoName = nil;
+                if (item.type == SHOW_TYPE)
+                {
+                    videoName = item.name;
+                }
+                else
+                {
+                    videoName = item.subitemId;//[NSString stringWithFormat:@"%@: 第%@集",self.titleContent,item.subitemId];
+                }
+                
+                [playInfo setObject:videoName forKey:@"name"];
+                [playInfo setObject:item.itemId forKey:@"itemId"];
+                [playInfo setObject:item.subitemId forKey:@"subItemId"];
+                [playInfo setObject:[NSString stringWithFormat:@"%d",item.type] forKey:@"type"];
+                
+                [playlistInfo addObject:playInfo];
             }
-            [playInfo setObject:filePath forKey:@"videoUrl"];
-            [playInfo setObject:item.downloadType forKey:@"downloadType"];
-            [playInfo setObject:[NSNumber numberWithDouble:item.duration] forKey:@"duration"];
-            
-            NSString * videoName = nil;
-            if (item.type == SHOW_TYPE)
-            {
-                videoName = item.name;
-            }
-            else
-            {
-                videoName = item.subitemId;//[NSString stringWithFormat:@"%@: 第%@集",self.titleContent,item.subitemId];
-            }
-            
-            [playInfo setObject:videoName forKey:@"name"];
-            [playInfo setObject:item.itemId forKey:@"itemId"];
-            [playInfo setObject:item.subitemId forKey:@"subItemId"];
-            [playInfo setObject:[NSString stringWithFormat:@"%d",item.type] forKey:@"type"];
-            
-            [playlistInfo addObject:playInfo];
         }
     }
     

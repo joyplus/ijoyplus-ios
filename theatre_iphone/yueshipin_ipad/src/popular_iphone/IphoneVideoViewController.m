@@ -95,14 +95,14 @@
 - (NSDictionary *)downloadedItem:(NSString *)Id
                            index:(NSInteger)index
 {
-    NSArray * playlists = [CommonMotheds localPlaylists:Id];
+    NSArray * playlists = [CommonMotheds localPlaylists:Id type:type_];
     
     if (0 == playlists.count)
     {
         return nil;
     }
     
-    NSDictionary * playInfo = [[infoDic_ objectForKey:@"episodes"] objectAtIndex:index];
+    NSDictionary * playInfo = [episodesArr_ objectAtIndex:(index + 1)];
     
     if (COMIC_TYPE == type_
         || DRAMA_TYPE == type_)
@@ -502,6 +502,7 @@
         iphoneAVPlayerViewController.local_file_path = [info objectForKey:@"videoUrl"];
         if ([[info objectForKey:@"downloadType"] isEqualToString:@"m3u8"])
         {
+            [[AppDelegate instance] startHttpServer];
             iphoneAVPlayerViewController.isM3u8 = YES;
             iphoneAVPlayerViewController.playDuration = [[info objectForKey:@"duration"] doubleValue];
             iphoneAVPlayerViewController.playNum = num;
@@ -524,6 +525,14 @@
             iphoneAVPlayerViewController.playNum = num;
             iphoneAVPlayerViewController.videoType = SHOW_TYPE;
         }
+        else if (MOVIE_TYPE == type)
+        {
+            subitemId = [info objectForKey:@"itemId"];
+            iphoneAVPlayerViewController.nameStr = self.name;
+            iphoneAVPlayerViewController.playNum = 0;
+            iphoneAVPlayerViewController.videoType = MOVIE_TYPE;
+        }
+        
         NSString *str = [NSString stringWithFormat:@"%@_local",subitemId];
         NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
         iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);

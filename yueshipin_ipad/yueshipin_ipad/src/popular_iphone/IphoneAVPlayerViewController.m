@@ -1926,7 +1926,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 return;
             }
             islocalFile_ = NO;
-            self.localPlaylist = [CommonMotheds localPlaylists:self.prodId];
+            self.localPlaylist = [CommonMotheds localPlaylists:self.prodId type:videoType_];
             if ((playNum + 1) >= episodesArr_.count)
             {
                 [self playEnd];
@@ -2510,7 +2510,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 - (NSMutableArray *)downloadIndexArray
 {
     NSMutableArray * dArray = [[NSMutableArray alloc] init];
-    NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId];
+    NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId  type:videoType_];
     self.localPlaylist = downloadedItem;
     if (videoType_ == SHOW_TYPE)
     {
