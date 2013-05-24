@@ -489,11 +489,12 @@
 
 - (void)deleteItemWithIndex:(NSInteger)index
 {
-    [itemArr_ removeObjectAtIndex:index];
-    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
+   
+     NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
+//    
+//    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     
-    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-    SubdownloadItem *item = [arr objectAtIndex:index];
+    SubdownloadItem *item = [itemArr_ objectAtIndex:index];
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
@@ -525,6 +526,7 @@
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
     
     [DatabaseManager deleteObject:item];
+    [itemArr_ removeObjectAtIndex:index];
     
     NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     
