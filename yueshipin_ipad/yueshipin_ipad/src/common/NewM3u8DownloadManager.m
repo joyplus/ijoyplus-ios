@@ -91,12 +91,14 @@
     if (item.type != 1) {        
         downloadingOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
     }
+    
+    __block typeof (self) myself = self;
     [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file to %@", filePath);
-        [self performSelectorInBackground:@selector(generatePlaylistFile:) withObject:filePath];
+        [myself performSelectorInBackground:@selector(generatePlaylistFile:) withObject:filePath];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"Error: %@", error);
-        [self stopDownloading];
+        [myself stopDownloading];
     }];
     [downloadingOperation setProgressiveDownloadProgressBlock:nil];
     previousProgress = 0;

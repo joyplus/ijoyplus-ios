@@ -754,7 +754,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 {
     CGRect frame = [UIScreen mainScreen].bounds;
     NSInteger lastViewControllerIndex = viewControllersStack.count - 1;
-    if(lastViewControllerIndex < 0 || lastViewControllerIndex >= viewControllersStack.count){
+    if(lastViewControllerIndex <= 0 || lastViewControllerIndex >= viewControllersStack.count){
         return;
     }
     

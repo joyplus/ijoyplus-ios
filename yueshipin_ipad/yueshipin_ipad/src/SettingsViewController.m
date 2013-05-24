@@ -99,11 +99,11 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
         [self.view addSubview:sinaSwitch];
         
-        UIImageView * download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 190, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        UIImageView * download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 200, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
         download3GBG.image = [UIImage imageNamed:@"setting_3G_bg"];
         [self.view addSubview:download3GBG];
         
-        download3GSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 210, 75, 27)];
+        download3GSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 220, 75, 27)];
         [download3GSwitch addTarget:self action:@selector(Download3GSwitchClicked:) forControlEvents:UIControlEventValueChanged];
         [self.view addSubview:download3GSwitch];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -117,7 +117,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [self.view addSubview:clearCacheBtn];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 30, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
