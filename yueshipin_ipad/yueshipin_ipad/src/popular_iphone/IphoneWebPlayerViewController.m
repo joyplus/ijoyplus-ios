@@ -67,14 +67,17 @@
         return;
     } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
         [self initPlayerView];
+
         [AppDelegate instance].isInPlayView = YES;
+
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(initWebView)
-                                                     name:@"addWebView"
-                                                   object:nil];
+                                             selector:@selector(initWebView)
+                                                 name:@"addWebView"
+                                               object:nil];
     } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
         [self initWebView];
     }
+
     
 }
 

@@ -132,7 +132,7 @@
 }
 
 -(void)loadData{
-     MBProgressHUD *tempHUD;
+    MBProgressHUD *tempHUD;
     NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
     if (itemId == nil) {
         itemId = [self.infoDic objectForKey:@"content_id"];
@@ -148,6 +148,7 @@
         isLoaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"movie"];
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
         favCount_ = [[videoInfo_ objectForKey:@"favority_num"] integerValue];
@@ -179,6 +180,7 @@
 
         }
         episodesArr_ = [videoInfo_ objectForKey:@"episodes"];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
@@ -187,6 +189,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"movie",itemId ];
@@ -501,15 +504,18 @@
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateHighlighted];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateDisabled];
                     downLoad.enabled = NO;
-                    play.hidden = YES;
-                    expectbtn.hidden = NO;
                     isEnableReportBtn = NO;
                 }
                 else{
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video.png"] forState:UIControlStateNormal];
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateHighlighted];
+                }
+                if (self.canPlayVideo) {
                     play.hidden = NO;
                     expectbtn.hidden = YES;
+                } else {
+                    play.hidden = YES;
+                    expectbtn.hidden = NO;
                 }
                 [downLoad setBackgroundImage:[UIImage imageNamed:@"download_video_pressed.png"] forState:UIControlStateSelected];
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
@@ -805,27 +811,9 @@
 
 - (void)expectVideo
 {
-    [self SubscribingToChannels];
+    //电影不需要注册消息推送
+//    [self SubscribingToChannels];
     [self addVideotoFav:ADDEXPECT];
-}
-
-- (void)SubscribingToChannels
-{
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
-    NSArray *channels = [NSArray arrayWithObjects:[NSString stringWithFormat:@"CHANNEL_PROD_%@",self.prodId], nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
-        if (succeeded)
-        {
-            NSLog(@"Successfully subscribed to channel!");
-        }
-        else
-        {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-        }
-    }];
 }
 
 - (void)addVideotoFav:(NSInteger)type
@@ -861,8 +849,8 @@
             break;
         }
         case 10002:{
-            
-            [self SubscribingToChannels];
+            //电影不需要注册消息推送
+//            [self SubscribingToChannels];
             [self addVideotoFav:ADDFAV];
             
             break;
