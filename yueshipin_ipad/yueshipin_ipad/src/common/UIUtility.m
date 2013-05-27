@@ -11,6 +11,9 @@
 #import "MBProgressHUD.h"
 #import "ContainerUtility.h"
 
+#define SYSTEM_ERROR_TAG 8430527297345
+#define NET_WORK_ERROR_TAG 32094585372
+
 @interface UIUtility (){
     MBProgressHUD *HUD;
 }
@@ -66,23 +69,29 @@
 
 + (void)showNetWorkError:(UIView *)view
 {
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
-    [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.opacity = 0.5;
-    HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+    
+    MBProgressHUD *HUD = (MBProgressHUD *)[view viewWithTag:NET_WORK_ERROR_TAG];
+    if (HUD == nil) {        
+        HUD = [[MBProgressHUD alloc] initWithView:view];
+        [view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"warning"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.opacity = 0.5;
+        HUD.labelText = NSLocalizedString(@"message.networkError", nil);
+    }
     [HUD show:YES];
     [HUD hide:YES afterDelay:1.5];
 }
 + (void)showSystemError:(UIView *)view
 {
-    MBProgressHUD *HUD = [[MBProgressHUD alloc] initWithView:view];
-    [view addSubview:HUD];
-    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.labelText = NSLocalizedString(@"message.systemError", nil);
-    HUD.opacity = 0.5;
+    MBProgressHUD *HUD = (MBProgressHUD *)[view viewWithTag:SYSTEM_ERROR_TAG];
+    if (HUD == nil) {
+        [view addSubview:HUD];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = NSLocalizedString(@"message.systemError", nil);
+        HUD.opacity = 0.5;
+    }
     [HUD show:YES];
     [HUD hide:YES afterDelay:1.5];
 }
@@ -163,6 +172,15 @@
     HUD.labelText = @"空间不足，请清理内存后重试。";
     [HUD show:YES];
     [HUD hide:YES afterDelay:3];
+}
+
++ (void)showDetailError:(UIView *)view  error:(NSError *)error
+{
+    if (error.code == -1001 || error.code == -1004 || error.code == -1009){
+        [self showNetWorkError:view];
+    } else {
+        [self showSystemError:view];
+    }
 }
 
 @end

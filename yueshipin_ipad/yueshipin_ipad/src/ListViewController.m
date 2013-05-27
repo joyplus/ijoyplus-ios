@@ -142,7 +142,7 @@
             NSLog(@"%@", error);
             topsArray = [[NSMutableArray alloc]initWithCapacity:10];
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }
@@ -413,6 +413,7 @@
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
