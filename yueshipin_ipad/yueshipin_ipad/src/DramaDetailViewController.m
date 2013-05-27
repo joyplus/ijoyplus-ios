@@ -232,8 +232,8 @@
     self.introContentTextView = [[UITextView alloc]initWithFrame: CGRectMake(0, 1000, 430, 100)];
     self.introContentTextView.editable = NO;
     self.introContentTextView.textColor = CMConstants.grayColor;
-    self.introContentTextView.layer.borderWidth = 1;
-    self.introContentTextView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    self.introContentTextView.layer.borderWidth = 0.5;
+    self.introContentTextView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;
     [self.bgScrollView addSubview:self.introContentTextView];
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
@@ -344,7 +344,7 @@
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     } else {
         [myHUD hide];
@@ -762,6 +762,13 @@
 
 - (void)clearLastBtnImage
 {
+    for (int i = 0; i < totalEpisodeNumber; i ++)
+    {
+        UIButton *lastbtn = (UIButton *)[episodeView viewWithTag:(i + 1)];
+        [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
+        [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
+    }
+    /*
     id lastNumObj = [[CacheUtility sharedCache]loadFromCache:[NSString stringWithFormat:@"drama_epi_%@", self.prodId]];
     int lastNum = -1;
     if(lastNumObj != nil){
@@ -772,6 +779,7 @@
         [lastbtn setTitleColor:CMConstants.grayColor forState:UIControlStateNormal];
         [lastbtn setBackgroundImage:[UIImage imageNamed:@"drama"] forState:UIControlStateNormal];
     }
+     */
 }
 
 - (void)dramaPlay:(UIButton *)btn
@@ -803,8 +811,8 @@
 
 - (void)dingBtnClicked:(id)sender
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -825,14 +833,14 @@
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"pushed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
 - (void)expectVideo
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -857,7 +865,7 @@
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -883,8 +891,8 @@
 - (void)collectionBtnClicked
 {
     
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -910,14 +918,14 @@
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
 - (void)downloadBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }

@@ -26,10 +26,8 @@
 #import "SegmentUrl.h"
 #import "CustomNavigationViewController.h"
 #import "IphoneAVPlayerViewController.h"
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
+#import "SystemMethods.h"
+#import "AFDownloadRequestOperation.h"
 
 #define DAY(day)        (day * 3600 * 24)
 
@@ -70,6 +68,8 @@
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
+@synthesize adViewController;
+@synthesize advUrl, advTargetUrl;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -156,61 +156,6 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
-- (void)saveChannelRecord
-{
-    NSString * appKey = @"efd3fb70a08b4a608fccd421f21a79e8";
-    NSString * deviceName = [[[UIDevice currentDevice] name] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString * mac = [self macString];
-    NSString * urlString = [NSString stringWithFormat:@"http://log.umtrack.com/ping/%@/?devicename=%@&mac=%@", appKey,deviceName,mac];
-    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL: [NSURL URLWithString:urlString]] delegate:nil];
-}
-
-- (NSString * )macString{
-    
-    int                 mib[6];
-    size_t              len;
-    char                *buf;
-    unsigned char       *ptr;
-    struct if_msghdr    *ifm;
-    struct sockaddr_dl  *sdl;
-    
-    mib[0] = CTL_NET;
-    mib[1] = AF_ROUTE;
-    mib[2] = 0;
-    mib[3] = AF_LINK;
-    mib[4] = NET_RT_IFLIST;
-    
-    if ((mib[5] = if_nametoindex("en0")) == 0) {
-        printf("Error: if_nametoindex error\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 1\n");
-        return NULL;
-    }
-    
-    if ((buf = malloc(len)) == NULL) {
-        printf("Could not allocate memory. error!\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 2");
-        free(buf);
-        return NULL;
-    }
-    
-    ifm = (struct if_msghdr *)buf;
-    sdl = (struct sockaddr_dl *)(ifm + 1);
-    ptr = (unsigned char *)LLADDR(sdl);
-    NSString *macString = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
-                           *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5)];
-    free(buf);
-    
-    return macString;
-}
-
 - (void)initDownloadManager
 {
     padDownloadManager = [[NewDownloadManager alloc]init];
@@ -226,11 +171,19 @@
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
+    networkStatus = 2;
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
-    [self saveChannelRecord];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
+    
+    SystemMethods *sys = [[SystemMethods alloc]init];
+    [sys saveChannelRecord];
+    NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    if ([sys addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:documentsDirectory]]) {
+        NSLog(@"Ignore for iClode success.");
+    }
+    
     NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
@@ -258,6 +211,7 @@
     {
         [self customizeAppearance];
         [self initDownloadManager];
+        [self initAdViewController];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
         self.window.rootViewController = self.rootViewController;
     }
@@ -289,8 +243,18 @@
     }
     
     mediaVolumeValue = [MPMusicPlayerController applicationMusicPlayer].volume;
-    
     return YES;
+}
+
+- (void)initAdViewController
+{
+    self.adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(0, 0, self.window.bounds.size.height - LEFT_MENU_DIPLAY_WIDTH - RIGHT_VIEW_WIDTH, self.window.bounds.size.width)];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        [self.adViewController setAdvImage:filePath];
+    }
 }
 
 - (void)onlineConfigCallBack:(NSNotification *)notification {
@@ -307,6 +271,10 @@
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
+    self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
+    self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
+    [self downloadAdvImage];
+    
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
     }
@@ -399,11 +367,11 @@
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
-    if([myhostReach currentReachabilityStatus] == NotReachable) {
-         UIView *rootView = self.window.rootViewController.view;
-         [UIUtility showNetWorkError:rootView];
-    };
+//    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
+//    if([myhostReach currentReachabilityStatus] == NotReachable) {
+//         UIView *rootView = self.window.rootViewController.view;
+//         [UIUtility showNetWorkError:rootView];
+//    };
     
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -455,38 +423,63 @@
     self.hostReach = [Reachability reachabilityWithHostname: @"www.baidu.com"];
     [self.hostReach startNotifier];
     
-    self.internetReach = [Reachability reachabilityForInternetConnection];
-    [self.internetReach startNotifier];
-    
-    self.wifiReach = [Reachability reachabilityForLocalWiFi];
-    [self.wifiReach startNotifier];
+//    self.internetReach = [Reachability reachabilityForInternetConnection];
+//    [self.internetReach startNotifier];
+//    
+//    self.wifiReach = [Reachability reachabilityForLocalWiFi];
+//    [self.wifiReach startNotifier];
 }
 //Called by Reachability whenever status changes.
 - (void)reachabilityChanged:(NSNotification* )note {
     Reachability *curReach = (Reachability *)[note object];
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    networkStatus = [curReach currentReachabilityStatus];
+    int currentStatus = [curReach currentReachabilityStatus];
+    networkStatus = currentStatus;
+     NSLog(@"networkStatus -------------------%d",currentStatus);
+    //网络变化的通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:NETWORK_CHANGED object:[NSNumber numberWithInt:currentStatus]];
     
-    if(self.networkStatus != NotReachable){
-        NSLog(@"Network is fine.");
-        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
-        [self triggerDownload];
-        [ActionUtility generateUserId:nil];
-        if ([self isWifiReachable]) {
-            show3GAlertSeq = @"0";
-        } else {
-            @synchronized(show3GAlertSeq){
-                if ([show3GAlertSeq isEqualToString:@"0"]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
-                    show3GAlertSeq = @"1";
-                }
-            }
-        }
-    } 
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        [self.downLoadManager networkChanged:networkStatus];
+    switch (currentStatus) {
+        case NotReachable:  //无网络
+            break;
+        case ReachableViaWWAN: //3G,GPRS
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [self triggerDownload];
+            [ActionUtility generateUserId:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:@"0"];
+            break;
+        case ReachableViaWiFi: // wifi
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [self triggerDownload];
+            [ActionUtility generateUserId:nil];
+            break;
+            
+        default:
+            break;
     }
+    
+   
+    
+//    if(self.networkStatus != NotReachable){
+//        NSLog(@"Network is fine.");
+//        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+//        [self triggerDownload];
+//        [ActionUtility generateUserId:nil];
+//        if ([self isWifiReachable]) {
+//            show3GAlertSeq = @"0";
+//        } else {
+//            @synchronized(show3GAlertSeq){
+//                if ([show3GAlertSeq isEqualToString:@"0"]) {
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
+//                    show3GAlertSeq = @"1";
+//                }
+//            }
+//        }
+//    } 
+    
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+//        [self.downLoadManager networkChanged:networkStatus];
+//    }
     
 }
 
@@ -709,6 +702,34 @@
 {
     BOOL disabled = [notification.object boolValue];
     [[UIApplication sharedApplication] setIdleTimerDisabled: disabled];
+}
+
+- (void)downloadAdvImage
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+    NSEnumerator *e = [contents objectEnumerator];
+    NSString *filename;
+    while ((filename = [e nextObject])) {
+        if ([filename hasPrefix:ADV_IMAGE_NAME]) {
+            [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+        }
+    }
+    
+    NSURL *url = [NSURL URLWithString:self.advUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
+    AFDownloadRequestOperation *downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+    [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Successfully downloaded file to %@", filePath);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        self.advUrl = nil;
+        [operation cancel];
+    }];
+    [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+    }];
+    [downloadingOperation start];
 }
 
 @end

@@ -107,6 +107,7 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [myHUD hide];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }
@@ -264,7 +265,7 @@
 //                [[AppDelegate instance].rootViewController showFailureModalView:1.5];
 //            }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
     if(checkboxes.count > 0){
