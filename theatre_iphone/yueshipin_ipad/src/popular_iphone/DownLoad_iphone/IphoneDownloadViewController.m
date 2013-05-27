@@ -243,6 +243,9 @@
         [self reloadDataSource];
     }
 }
+-(void)reFreshUI{
+   [self reloadDataSource];
+}
 -(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used{
     UIView *view = [self.view viewWithTag:12345];
     float freePresent = used /total ;
@@ -466,8 +469,8 @@
         }
         
        else if ([item.downloadStatus isEqualToString:@"waiting"] || [item.downloadStatus isEqualToString:@"loading"]) {
-           Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-           if([hostReach currentReachabilityStatus] == NotReachable){
+           //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+           if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
            
                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
                [alert show];
@@ -489,8 +492,8 @@
            
         }
        else if ([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"]){
-           Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-           if([hostReach currentReachabilityStatus] == NotReachable){
+           //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+           if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
                
                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
                [alert show];

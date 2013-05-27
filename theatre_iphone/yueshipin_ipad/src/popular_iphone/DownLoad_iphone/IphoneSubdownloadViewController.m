@@ -184,6 +184,9 @@
     }
 }
 
+-(void)reFreshUI{
+    [self reloadDataSource];
+}
 -(void)downloadFinishwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]){
         int num = [self getTagNum:itemId];
@@ -391,14 +394,16 @@
                 NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
-                iphoneAVPlayerViewController.nameStr = [NSString stringWithFormat:@"%@ 第%d集",name,num];
-                iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.nameStr = name;
+                iphoneAVPlayerViewController.playNum = num - 1;
+                iphoneAVPlayerViewController.videoType = DRAMA_TYPE;
             }
             else if (downloadItem.type == 3){
                 iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
-                iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.playNum = num - 1;
+                iphoneAVPlayerViewController.videoType = SHOW_TYPE;
             }
             NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];
             NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
@@ -415,8 +420,8 @@
 
     }
    else if ([downloadItem.downloadStatus isEqualToString:@"waiting"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
-       Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-       if([hostReach currentReachabilityStatus] == NotReachable){
+       //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+       if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
            
            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
            [alert show];
@@ -437,8 +442,8 @@
        
     }
     else if ([downloadItem.downloadStatus isEqualToString:@"stop"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable){
+        //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
             [alert show];
@@ -484,11 +489,11 @@
 
 - (void)deleteItemWithIndex:(NSInteger)index
 {
-    [itemArr_ removeObjectAtIndex:index];
+    
     NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
     
-    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-    SubdownloadItem *item = [arr objectAtIndex:index];
+//    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
+    SubdownloadItem *item = [itemArr_ objectAtIndex:index];
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
@@ -520,6 +525,8 @@
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
     
     [DatabaseManager deleteObject:item];
+    
+    [itemArr_ removeObjectAtIndex:index];
     
     NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     

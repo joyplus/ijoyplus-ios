@@ -25,4 +25,5 @@
 - (void)hide;
 + (void)showPlayVideoFailure:(UIView *)view;
 + (void)showNoSpace:(UIView *)view;
++ (void)showDetailError:(UIView *)view  error:(NSError *)error;
 @end

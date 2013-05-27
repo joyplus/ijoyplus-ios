@@ -22,6 +22,7 @@
 #import "CommonMotheds.h"
 #import "SubdownloadItem.h"
 #import "DatabaseManager.h"
+
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
  NSString * const k_PlayableKey		= @"playable";
@@ -45,6 +46,7 @@
 #define VOLUME_BUTTON_TAG 10008
 #define SELECT_BUTTON_TAG 10009
 #define CLOUND_TV_BUTTON_TAG    10010
+#define LOCAL_LOGO_BUTTON_TAG   10011
 
 #define PLAIN_CLEAR 100
 #define HIGH_CLEAR 200
@@ -66,6 +68,7 @@ enum
     NSURLConnection     *urlConnection;
 }
 @property (nonatomic) double seekBeginTime;
+@property (nonatomic, strong) NSMutableArray * downloadIndex;
 - (void)stopMyTimer;
 - (void)beginMyTimer;
 - (void)showActivityView;
@@ -73,7 +76,9 @@ enum
 - (void)pushWebURLToCloudTV:(NSString *)pushType;
 - (void)setPlayVolume:(CGFloat)volume;
 - (void)controlCloundTV:(NSInteger)controlType;
-
+- (void)getVideoDetail;
+- (void)prepareOnlinePlay:(NSArray *)episodes;
+- (void)playLocal:(NSDictionary *)file;
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -87,6 +92,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize mPlayerItem ,mPlayer,mURL,mScrubber,myHUD;
 @synthesize selectButton = selectButton_;
 @synthesize clarityButton = clarityButton_;
+@synthesize localLogoBtn;
 @synthesize playButton = playButton_;
 @synthesize pauseButton = pauseButton;
 @synthesize cloundTVButton;
@@ -121,6 +127,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize isM3u8 = isM3u8_;
 @synthesize continuePlayInfo = continuePlayInfo_;
 @synthesize isPlayFromRecord = isPlayFromRecord_;
+@synthesize localPlaylist,downloadIndex;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -130,26 +137,34 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
-        NSMutableArray *allAudioParams = [NSMutableArray array];
-        NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
-        if ([audioTracks count]>1) {
-            for (int i = 0; i < [audioTracks count]; i++) {
-                AVMutableAudioMixInputParameters *audioInputParams =
-                [AVMutableAudioMixInputParameters audioMixInputParameters];
-                if (i > 0) {
-                    [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+        [self prepareToPlayAsset:asset];
+        
+        NSString * nameStr = @"myQueue";
+        const char * queueName = [nameStr UTF8String];
+        dispatch_queue_t queue = dispatch_queue_create(queueName, NULL);
+        dispatch_async(queue, ^(void){
+            NSMutableArray *allAudioParams = [NSMutableArray array];
+            NSArray *audioTracks =  [asset tracksWithMediaType:AVMediaTypeAudio];
+            if ([audioTracks count]>1)
+            {
+                for (int i = 0; i < [audioTracks count]; i++)
+                {
+                    AVMutableAudioMixInputParameters *audioInputParams =
+                    [AVMutableAudioMixInputParameters audioMixInputParameters];
+                    if (i > 0)
+                    {
+                        [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
+                    }
+                    AVAssetTrack *track = [audioTracks objectAtIndex:i];
+                    [audioInputParams setTrackID:[track trackID]];
+                    [allAudioParams addObject:audioInputParams];
                 }
-                AVAssetTrack *track = [audioTracks objectAtIndex:i];
-                [audioInputParams setTrackID:[track trackID]];
-                [allAudioParams addObject:audioInputParams];
+                audioMix_ = [AVMutableAudioMix audioMix];
+                [audioMix_ setInputParameters:allAudioParams];
             }
-            audioMix_ = [AVMutableAudioMix audioMix];
-            [audioMix_ setInputParameters:allAudioParams];
-        }
-        [self prepareToPlayAsset:asset ];
-	}
+        });
+    }
 }
 
 
@@ -459,6 +474,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 
                 if (!islocalFile_) {
                     [self syncLogo:workingUrl_];
+                }
+                else
+                {
+                    UILabel * label = (UILabel *)[topToolBar_ viewWithTag:100001];
+                    label.text = nil;
+                    sourceLogo_.image = nil;
                 }
                 
                 
@@ -770,8 +791,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         return;
     }
     if (islocalFile_) {
-        
-        [self playNextLocalFile];
+        UIButton * nextBtn = (UIButton *)[bottomToolBar_ viewWithTag:NEXT_BUTTON_TAG];
+        [nextBtn sendActionsForControlEvents:UIControlEventTouchUpInside];
+        //[self playNextLocalFile];
         return;
     }
     [self playNext];
@@ -790,6 +812,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [tableList_ reloadData];
 
     lastPlayTime_ = kCMTimeZero;
+    [self disableBottomToolBarButtons];
+    
     [self addCacheview];
 
     [self initDataSource:playNum];
@@ -797,6 +821,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [self beginToPlay];
     
     [self recordPlayStatics];
+    
+    [self clearSelectView];
+    
 }
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -812,6 +839,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     [self initPlayerView];
+    [self initUI];
     
     if (!islocalFile_) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(wifiNotAvailable:) name:WIFI_IS_NOT_AVAILABLE object:nil];
@@ -825,18 +853,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         else{
             [self initDataPlayFromRecord];
         }
-        
     }
-    else{        
-        if (isM3u8_) {
+    else
+    {
+        if (isM3u8_)
+        {
             [self setURL:[NSURL URLWithString:local_file_path_]];
         }
-        else{
-         [self setPath:local_file_path_];
-            
+        else
+        {
+            [self setPath:local_file_path_];
         }
+        selectButton_.enabled = NO;
+        [self getVideoDetail];
     }
-    [self initUI];
+    
+    [self clearSelectView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appDidEnterBackground:)
@@ -846,6 +878,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                                              selector:@selector(appDidBecomeActive:)
                                                  name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
                                                object:nil];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
 }
 
 -(void)initUI{
@@ -873,7 +906,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
     [self.view addSubview:playCacheView_];
     
-    myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 200, 80)];
+    myHUD = [[MBProgressHUD alloc] initWithFrame:CGRectMake(0, 0, 300, 80)];
     myHUD.center = CGPointMake(self.view.center.x, self.view.center.y+110);
     myHUD.backgroundColor = [UIColor clearColor];
     myHUD.userInteractionEnabled = NO;
@@ -882,7 +915,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     myHUD.opacity = 0;
     [myHUD show:YES];
     
-    if (!islocalFile_) {
+    if (!islocalFile_)
+    {
           [self.view addSubview:myHUD];
     }
 
@@ -1270,15 +1304,15 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 
 
 -(void)sendHttpRequest:(NSString *)str{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         str = [str stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
         NSLog(@"The request url is %@",str);
         NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:str] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
         urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
     }
     else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络异常，请检查网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"亲，网络出问题了，请检查后重试！" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
         [alert show];
     
     }
@@ -1288,30 +1322,38 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error{
     NSLog(@"iphoneAvplayerViewController didFailWithError:%@",error);
     
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
        [self retryUrltoPlay];
     }
     
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
+    //NSLog(@"begin at :%@",[[NSDate date] description]);
     NSHTTPURLResponse *HTTPResponse = (NSHTTPURLResponse *)response;
     int status_Code = HTTPResponse.statusCode;
-    if (status_Code >= 200 && status_Code <= 299) {
+    if (status_Code >= 200 && status_Code <= 299)
+    {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
+        //NSLog(@"step1 :%@",[[NSDate date] description]);
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-        if (![content_type hasPrefix:@"text/html"]) {
-             [self setURL:connection.originalRequest.URL];
-             [connection cancel];
+        if (![content_type hasPrefix:@"text/html"])
+        {
+            //NSLog(@"step2 :%@",[[NSDate date] description]);
+            [self setURL:connection.originalRequest.URL];
+            //NSLog(@"step3 :%@",[[NSDate date] description]);
+            [connection cancel];
             if (isPlayOnTV)
             {
                 [self pushWebURLToCloudTV:@"411"];
             }
-             return;
+            //NSLog(@"end 1 at:%@",[[NSDate date] description]);
+            return;
         }
     
     }
+    NSLog(@"end 2 at:%@",[[NSDate date] description]);
     [self retryUrltoPlay];
 }
 -(void)initTopToolBar{
@@ -1339,12 +1381,12 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     selectButton_.backgroundColor = [UIColor clearColor];
     selectButton_.tag = SELECT_BUTTON_TAG;
     [selectButton_ addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
-    if ((videoType_  == 2 ||videoType_  == 3) &&!islocalFile_) {
+    if ((videoType_  == 2 ||videoType_  == 3)) {
         [topToolBar_ addSubview:selectButton_];
     }
     
     
-    titleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(topToolBar_.frame.size.width/2.0 - 80.0f, 0, 160, 38)];
+    titleLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(topToolBar_.frame.size.width/2.0 - 120.0f, 0, 240, 38)];
     //titleLabel_.center = topToolBar_.center;
     titleLabel_.backgroundColor = [UIColor clearColor];
     titleLabel_.font = [UIFont systemFontOfSize:14];
@@ -1360,7 +1402,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     tableList_.dataSource = self;
     [self.view addSubview:tableList_];
     
-    if (!islocalFile_) {
+    //if (!islocalFile_)
+    {
         UILabel *sourceText = [[UILabel alloc] initWithFrame:CGRectMake(70, 8, 30, 18)];
         //sourceText.text = @"来源:";
         sourceText.tag = 100001;
@@ -1435,7 +1478,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     [bottomView_ addSubview:mScrubber];
     
     
-    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(9, 8, 90, 10)];
+    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(mScrubber.frame.origin.x - 55, 8, 50, 10)];
     seeTimeLabel_.backgroundColor = [UIColor clearColor];
     seeTimeLabel_.font = [UIFont systemFontOfSize:12];
     seeTimeLabel_.textAlignment = NSTextAlignmentLeft;
@@ -1516,7 +1559,12 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     [clarityButton_ addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
     [bottomToolBar_ addSubview:clarityButton_];
     
-    [self clearSelectView];
+    localLogoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    localLogoBtn.frame = CGRectMake(kFullWindowHeight-87, 8, 33, 27);
+    localLogoBtn.backgroundColor = [UIColor clearColor];
+    [localLogoBtn setBackgroundImage:[UIImage imageNamed:@"bendi_icon"] forState:UIControlStateNormal];
+    localLogoBtn.tag = LOCAL_LOGO_BUTTON_TAG;
+    [bottomToolBar_ addSubview:localLogoBtn];
     
     volumeView_ = [ [MPVolumeView alloc] initWithFrame:CGRectMake(60, 7, 30, 30)];
     volumeView_.backgroundColor = [UIColor clearColor];
@@ -1695,15 +1743,21 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             clearBgView_.frame = CGRectMake(bottomToolBar_.frame.size.width - clearBgView_.frame.size.width, clearBgView_.frame.origin.y, clearBgView_.frame.size.width, clearBgView_.frame.size.height);
         }
         
-        
         clearBgView_.hidden = YES;
+        localLogoBtn.hidden = YES;
     }
-    else{
+    else
+    {
         clarityButton_.hidden = YES;
+        if (islocalFile_)
+        {
+            localLogoBtn.hidden = NO;
+        }
+        else
+        {
+            localLogoBtn.hidden = YES;
+        }
     }
-    
-    
-    
 }
 -(void)syncCurrentClear{
     NSString *clearType = nil;
@@ -1771,7 +1825,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     [self addCacheview];
     
     clearBgView_.hidden = YES;
-    
+    lastPlayTime_ = [mPlayer currentTime];
     [mPlayer pause];
     mPlayer = nil;
     switch (btn.tag) {
@@ -1880,20 +1934,43 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             if (videoType_ == 1) {
                 return;
             }
-
-            if (!islocalFile_) {
+            islocalFile_ = NO;
+            self.localPlaylist = [CommonMotheds localPlaylists:self.prodId type:videoType_];
+            if ((playNum + 1) >= episodesArr_.count)
+            {
+                [self playEnd];
+                return;
+            }
+            //NSDictionary * nextInfo = [episodesArr_ objectAtIndex:(playNum + 1)];
+            NSDictionary * curInfo = nil;
+            for (NSDictionary * dic in localPlaylist)
+            {
+                NSString * Id = [NSString stringWithFormat:@"%@_%d",self.prodId,(playNum + 2)];
+                if ([[dic objectForKey:@"subItemId"] isEqualToString:Id])
+                {
+                    curInfo = dic;
+                    islocalFile_ = YES;
+                    break;
+                }
+            }
+            
+            if (!islocalFile_)
+            {
                 [self showNOThisClearityUrl:NO];
+                clarityButton_.hidden = NO;
+                localLogoBtn.hidden = YES;
                 [self playNext];
             }
-            else{
-                [self playNextLocalFile];
+            else
+            {
+                playNum ++;
+                [self playLocal:curInfo];
+                clarityButton_.hidden = YES;
+                localLogoBtn.hidden = NO;
+                //[self playNextLocalFile];
             }
             
-            
-//            if (isPlayOnTV)
-//            {
-//                [self pushWebURLToCloudTV:@"411"];
-//            }
+            [tableList_ reloadData];
             
             break;
         }
@@ -1910,12 +1987,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 [self.view bringSubviewToFront:clearBgView_];
             }
 
-            
             break;
         }
         case SELECT_BUTTON_TAG:{
             [self resetMyTimer];
             [self.view bringSubviewToFront:tableList_];
+            
+            self.downloadIndex = [self downloadIndexArray];
+            
             if (btn.selected) {
                 btn.selected = NO;
                 [UIView beginAnimations:nil context:nil];
@@ -1933,8 +2012,11 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 [UIView beginAnimations:nil context:nil];
                 [UIView setAnimationDuration:0.3];
                 tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, height);
+                [tableList_ reloadData];
                 if(playNum >= 0 && playNum < episodesArr_.count){
-                    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0] atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                    [tableList_  scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:playNum inSection:0]
+                                       atScrollPosition:UITableViewScrollPositionMiddle
+                                               animated:NO];
                 }
                 [UIView commitAnimations];
               
@@ -1979,8 +2061,11 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 {
     [urlConnection cancel];
     urlConnection = nil;
+    if (islocalFile_)
+    {
+        [[AppDelegate instance] stopHttpServer];
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WIFI_IS_NOT_AVAILABLE object:nil];
-    [[AppDelegate instance] stopHttpServer];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
@@ -2210,6 +2295,9 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     if(CMTimeGetSeconds([mPlayer currentTime])> 0){
         playbackTime = [NSNumber numberWithFloat:CMTimeGetSeconds([mPlayer currentTime])].intValue;
     }
+    if (playbackTime == 0) {
+        playbackTime = [NSNumber numberWithFloat:CMTimeGetSeconds(lastPlayTime_)].intValue;
+    }
     int duration = 0;
     if(CMTimeGetSeconds([self playerItemDuration]) > 0){
         duration = [NSNumber numberWithFloat:CMTimeGetSeconds([self playerItemDuration])].intValue;
@@ -2228,7 +2316,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         if (nil == prodId_)
             return;
         
-        if ((duration - playbackTime)>5) {
+        if (duration == 0 || (duration - playbackTime)>5) {
             [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
         }
         else{ 
@@ -2278,6 +2366,13 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         UIImageView *line = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"jishu_fen_ge_xian"]];
         line.frame = CGRectMake(1, 37, cell.frame.size.width-2, 1);
         [cell.contentView addSubview:line];
+        
+        UIImageView * logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"local_file_icon"]];
+        logo.frame = CGRectMake(tableList_.frame.size.width - 25, 0, 25, 25);
+        [cell.contentView addSubview:logo];
+        logo.backgroundColor = [UIColor clearColor];
+        logo.tag = 23414;
+        logo.hidden = YES;
     }
 
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -2304,6 +2399,23 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
     }
    
+    BOOL isDownload = NO;
+    UIImageView * logo = (UIImageView *)[cell.contentView viewWithTag:23414];
+    for (NSString * index in self.downloadIndex)
+    {
+        if ([index intValue] == indexPath.row + 1)
+        {
+            isDownload = YES;
+            break;
+        }
+    }
+    if (isDownload)
+    {
+        logo.hidden = NO;
+    }
+    else{
+        logo.hidden = YES;
+    }
     
     return cell;
 }
@@ -2319,21 +2431,61 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
     playNum = indexPath.row;
     
+    //tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
+    //selectButton_.selected = NO;
     [tableList_ reloadData];
     
     [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0]];
     lastPlayTime_ = kCMTimeZero;
+    
     [self addCacheview];
     
-    [self initDataSource:playNum];
-    [self beginToPlay];
-    
-    [self recordPlayStatics];
-    
-     bottomToolBar_.hidden = YES;
-    selectButton_.selected = YES;
-    [self showToolBar];
-    
+    UITableViewCell * curCell = [tableView cellForRowAtIndexPath:indexPath];
+    UIImageView * logo = (UIImageView *)[curCell.contentView viewWithTag:23414];
+    if (logo.hidden)
+    {
+        islocalFile_ = NO;
+        [self disableBottomToolBarButtons];
+        [self addCacheview];
+        [self initDataSource:playNum];
+        [self beginToPlay];
+        
+        [self recordPlayStatics];
+        clarityButton_.hidden = NO;
+        localLogoBtn.hidden = YES;
+        [self clearSelectView];
+        bottomToolBar_.hidden = YES;
+        selectButton_.selected = YES;
+        [self showToolBar];
+    }
+    else
+    {
+        islocalFile_ = YES;
+        NSDictionary * playInfo = nil;
+        for (int i = 0; i < self.localPlaylist.count; i ++)
+        {
+            NSDictionary * dic = [localPlaylist objectAtIndex:i];
+            if ([[dic objectForKey:@"subItemId"] isEqualToString:[NSString stringWithFormat:@"%@_%d",self.prodId,(indexPath.row + 1)]])
+            {
+                playInfo = dic;
+                break;
+            }
+        }
+        if (playInfo == nil)
+            return;
+        local_file_path_ = [playInfo objectForKey:@"videoUrl"];
+        if ([[playInfo objectForKey:@"downloadType"] isEqualToString:@"m3u8"])
+        {
+            [[AppDelegate instance] startHttpServer];
+            [self setURL:[NSURL URLWithString:local_file_path_]];
+        }
+        else
+        {
+            [self setPath:local_file_path_];
+        }
+        clarityButton_.hidden = YES;
+        localLogoBtn.hidden = NO;
+    }
 }
 
 #pragma mark -
@@ -2347,8 +2499,144 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
    [self resetMyTimer];
 }
+
+#pragma mark -
+#pragma mark - NetworkChangedNSNotification
+-(void)networkChanged:(NSNotification *)notify{
+    int status = [(NSNumber *)(notify.object) intValue];
+    if (status == 0) {
+        myHUD.labelText = @"亲，网络出问题了，请检查后重试！";
+    }
+    else{
+        myHUD.labelText = @"正在加载，请稍等";
+    }
+}
+
 #pragma mark -
 #pragma mark - 
+
+- (NSMutableArray *)downloadIndexArray
+{
+    NSMutableArray * dArray = [[NSMutableArray alloc] init];
+    NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId type:videoType_];
+    self.localPlaylist = downloadedItem;
+    if (videoType_ == SHOW_TYPE)
+    {
+        
+        for (int j = 0; j < downloadedItem.count; j ++)
+        {
+            NSDictionary * item = [downloadedItem objectAtIndex:j];
+            NSString * index = [item objectForKey:@"subItemId"];
+            
+            NSArray * arr = [index componentsSeparatedByString:@"_"];
+            if (arr.count != 2)
+            {
+                continue;
+            }
+            [dArray addObject:[arr objectAtIndex:1]];
+        }
+    }
+    else
+    {
+        for (int j = 0; j < downloadedItem.count; j ++)
+        {
+            NSDictionary * item = [downloadedItem objectAtIndex:j];
+            NSString * index = [item objectForKey:@"name"];
+            
+            NSArray * arr = [index componentsSeparatedByString:@"_"];
+            if (arr.count != 2)
+            {
+                return nil;
+            }
+            [dArray addObject:[arr objectAtIndex:1]];
+        }
+    }
+    return dArray;
+}
+
+- (void)playLocal:(NSDictionary *)file
+{
+    [self destoryPlayer];
+    //self.playDuration = [[file objectForKey:@"duration"] intValue];
+    if ([[file objectForKey:@"downloadType"] isEqualToString:@"m3u8"])
+    {
+        isM3u8_ = YES;
+    }
+    else
+    {
+        isM3u8_ = NO;
+    }
+    local_file_path_ = [file objectForKey:@"videoUrl"];
+    islocalFile_ = YES;
+    lastPlayTime_ = kCMTimeZero;
+    [self addCacheview];
+    if (isM3u8_)
+    {
+        [[AppDelegate instance] startHttpServer];
+        [self setURL:[NSURL URLWithString:local_file_path_]];
+    }
+    else
+    {
+        [self setPath:local_file_path_];
+    }
+}
+
+- (void)prepareOnlinePlay:(NSArray *)episodes
+{
+    episodesArr_ = episodes;
+    [self initWillPlayLabel];
+}
+
+- (void)getVideoDetail
+{
+    NSString *key = nil;
+    if (SHOW_TYPE == videoType_)
+    {
+        key = [NSString stringWithFormat:@"%@%@", @"show", self.prodId];
+    }
+    else if (DRAMA_TYPE == videoType_ || COMIC_TYPE == videoType_)
+    {
+        key = [NSString stringWithFormat:@"%@%@", @"tv", self.prodId];
+    }
+    else
+    {
+        return;
+    }
+    
+    id cacheResult = [[CacheUtility sharedCache] loadFromCache:key];
+    if(cacheResult != nil)
+    {
+        selectButton_.enabled = YES;
+        NSDictionary * episodesDic = nil;
+        if (DRAMA_TYPE == videoType_ || COMIC_TYPE == videoType_)
+        {
+            episodesDic = [cacheResult objectForKey:@"tv"];
+        }
+        else if (SHOW_TYPE == videoType_)
+        {
+            episodesDic = [cacheResult objectForKey:@"show"];
+        }
+        [self prepareOnlinePlay:[episodesDic objectForKey:@"episodes"]];
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] getPath:kPathProgramView parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        [[CacheUtility sharedCache] putInCache:key result:result];
+        selectButton_.enabled = YES;
+        NSDictionary * episodesDic = nil;
+        if (DRAMA_TYPE == videoType_ || COMIC_TYPE == videoType_)
+        {
+            episodesDic = [result objectForKey:@"tv"];
+        }
+        else if (SHOW_TYPE == videoType_)
+        {
+            episodesDic = [result objectForKey:@"show"];
+        }
+        [self prepareOnlinePlay:[episodesDic objectForKey:@"episodes"]];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
 
 - (void)recordPlayStatics
 {
@@ -2367,11 +2655,24 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     
 }
 -(void)addCacheview{
-    [playCacheView_ removeFromSuperview];
-    [self.view addSubview:playCacheView_];
+    
     [self initWillPlayLabel];
-    myHUD.hidden = NO;
-    [self.view bringSubviewToFront:myHUD];
+    
+    if (!islocalFile_)
+    {
+        [playCacheView_ removeFromSuperview];
+        [self.view addSubview:playCacheView_];
+        if (nil == myHUD.superview)
+        {
+            [self.view addSubview:myHUD];
+        }
+        myHUD.frame = CGRectMake(kFullWindowHeight/2 - 100,186, 200, 80);
+        [self.view bringSubviewToFront:myHUD];
+        
+        myHUD.hidden = NO;
+        [myHUD show:YES];
+    }
+
 }
 
 

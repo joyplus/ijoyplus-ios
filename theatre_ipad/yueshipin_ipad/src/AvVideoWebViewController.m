@@ -195,7 +195,8 @@
 
 - (void)playNextEpisode:(int)nextEpisodeNum
 {
-    if (currentNum != nextEpisodeNum) {        
+    if (currentNum != nextEpisodeNum)
+    {
         self.currentNum = nextEpisodeNum;
         if (self.currentNum < videoHttpUrlArray.count) {
             NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:self.currentNum]];

@@ -64,6 +64,7 @@
 @synthesize typeLabel = typeLabel_;
 @synthesize clearRecord = clearRecord_;
 @synthesize scrollBg;
+@synthesize progressHUD = progressHUD_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -74,16 +75,12 @@
 }
 
 -(void)loadMyFavsData{
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
+    [progressHUD_ show:YES];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserFavorities parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         self.favArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         if(responseCode == nil){
             NSArray *tempTopsArray = [result objectForKey:@"favorities"];
             if(tempTopsArray.count > 0){
@@ -96,26 +93,21 @@
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         if(self.favArr == nil){
             self.favArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
-        [tempHUD hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [progressHUD_ hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 }
 
 -(void)loadPersonalData{
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
+    [progressHUD_ show:YES];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:20], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathUserTopics parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         myListArr_  = [NSMutableArray arrayWithCapacity:10];
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
             NSArray *tempArr = [result objectForKey:@"tops"];
@@ -131,9 +123,8 @@
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
-       
-      [tempHUD hide:YES];
-      [CommonMotheds showInternetError:error inView:self.view];
+      [progressHUD_ hide:YES];
+      [UIUtility showDetailError:self.view error:error];
     }];
 
 
@@ -318,6 +309,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSinaWeibo) name:@"SINAWEIBOCHANGED" object:nil];
     
+    progressHUD_ = [[MBProgressHUD alloc] initWithView:self.view];
+    progressHUD_.labelText = @"加载中...";
+    progressHUD_.opacity = 0.5;
+    [self.view addSubview:progressHUD_];
 }
 - (void)viewDidUnload{
     [super viewDidUnload];
@@ -369,11 +364,7 @@
 }
 - (void)loadRecordData
 {
-    MBProgressHUD*tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:tempHUD];
-    tempHUD.labelText = @"加载中...";
-    tempHUD.opacity = 0.5;
-    [tempHUD show:YES];
+    
     
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"watch_record"];
     if(cacheResult != nil){
@@ -385,15 +376,17 @@
         }
         
     }
+    else{
+        [progressHUD_ show:YES];
+    }
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:(NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId], @"userid", @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-        [tempHUD hide:YES];
+        [progressHUD_ hide:YES];
         [self parseWatchResultData:result];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [tempHUD hide:YES];
-        NSLog(@"%@", error);
-       [CommonMotheds showInternetError:error inView:self.view];
+        [progressHUD_ hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 }
@@ -875,6 +868,7 @@
                     [tableView reloadData];
                     [self Selectbutton:button1_];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -883,12 +877,16 @@
                 NSDictionary *infoDic = [favArr_ objectAtIndex:indexPath.row];
                 NSString *topicId = [infoDic objectForKey:@"content_id"];
                 NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: topicId, @"prod_id", nil];
-                [self unSubscribingToChannels:topicId];
+                int contentType = [[infoDic objectForKey:@"content_type"] integerValue];
+                if (contentType == DRAMA_TYPE || contentType == COMIC_TYPE) {
+                    [self unSubscribingToChannels:topicId];
+                }
                 [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [favArr_ removeObjectAtIndex:indexPath.row];
                     [tableView reloadData];
                     [self Selectbutton:button2_];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -913,7 +911,7 @@
                         [UIUtility showSystemError:self.view];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                    [UIUtility showSystemError:self.view];
+                    [UIUtility showDetailError:self.view error:error];
                 }];
 
                 break;
@@ -934,11 +932,11 @@
     [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
         if (succeeded)
         {
-            NSLog(@"Successfully subscribed to channel!");
+            NSLog(@"Successfully unsubscribed to channel!");
         }
         else
         {
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+            NSLog(@"Failed to unsubscribe to broadcast channel; Error: %@",error);
         }
     }];
 }
@@ -964,8 +962,8 @@
 
 
 -(void)continuePlay:(id)sender{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         return;
     }    
@@ -1013,6 +1011,7 @@
                 [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
                     [self loadRecordData];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 
             }

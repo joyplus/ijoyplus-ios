@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "IphoneVideoViewController.h"
 #import "MNMBottomPullToRefreshManager.h"
-@interface IphoneShowDetailViewController : IphoneVideoViewController<MNMBottomPullToRefreshManagerClient>{
+#import "FeedBackView.h"
+@interface IphoneShowDetailViewController : IphoneVideoViewController<MNMBottomPullToRefreshManagerClient,FeedBackViewDelegate>{
   
     NSDictionary *videoInfo_;
     int videoType_;

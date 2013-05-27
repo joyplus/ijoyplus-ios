@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 #import "AFHTTPRequestOperation.h"
-#import "DownLoadManager.h"
 #define kAFNetworkingIncompleteDownloadFolderName @"Incomplete"
 
 @class AFDownloadRequestOperation;

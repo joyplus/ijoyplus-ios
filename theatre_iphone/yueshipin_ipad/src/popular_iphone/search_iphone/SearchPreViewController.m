@@ -39,6 +39,8 @@
 @synthesize searchResultList = searchResultList_;
 @synthesize listArr = listArr_;
 @synthesize searchResults = searchResults_;
+@synthesize pullRefreshManager = pullRefreshManager_;
+@synthesize currentSearchKey = currentSearchKey_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -104,8 +106,8 @@
     
     for (int i = 0; i < 10; i++) {
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(18+(i%2)*140, 92+(i/2)*45, 125, 20);
-        btn.titleLabel.font = [UIFont systemFontOfSize:16];
+        btn.frame = CGRectMake(12+(i%2)*145, 92+(i/2)*45, 125, 20);
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
         btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
         btn.tag= 100+i;
         [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -133,6 +135,10 @@
     searchResultList_.delegate = self;
     searchResultList_.tag = RESULT_LIST;
     
+    pullRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:searchResultList_];
+    pullRefreshManager_.delegate = self;
+    [pullRefreshManager_ setShowHeaderView:NO];
+    loadCount_ = 1;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
 }
@@ -154,7 +160,7 @@
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+
     }];
  
 }
@@ -240,18 +246,17 @@
 }
 
 -(void)loadSearchData:(NSString *)searchStr{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable){
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         return;
     }
-    
     MBProgressHUD  *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
     tempHUD.opacity = 0.5;
     [tempHUD show:YES];
     NSString *searchKey = [searchStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    currentSearchKey_ = searchKey;
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchKey, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3,131", @"type", nil];
     
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -266,20 +271,50 @@
                 [self showFailureView:1];
                 
             }
+            if ([searchResult count]< PAGESIZE){
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
         }
         
         [searchResultList_  reloadData];
         [tempHUD hide:YES];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
         [tempHUD hide:YES];
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
 }
 
+-(void)loadMore{
+
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:currentSearchKey_, @"keyword", [NSString stringWithFormat:@"%d",loadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size", @"1,2,3,131", @"type", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *searchResult = [result objectForKey:@"results"];
+            if(searchResult != nil && searchResult.count > 0){
+                [searchResults_ addObjectsFromArray:searchResult];
+            }
+            if ([searchResult count]< PAGESIZE){
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
+        }
+        [searchResultList_ reloadData];
+        [pullRefreshManager_ loadMoreCompleted];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       
+    }];
+
+
+}
 - (void)keyboardWillShow:(NSNotification *)aNotification
 {
     //获取键盘的高度
@@ -521,6 +556,28 @@
     }
 
 }
+
+#pragma mark -
+#pragma mark - UIScrollviewDelegate
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullRefreshManager_ scrollViewScrolled:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullRefreshManager_ scrollViewEnd:scrollView];
+}
+
+#pragma mark -
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoLoadMore{
+    loadCount_ ++;
+    [self loadMore];
+}
+
 
 - (void)viewDidUnload{
     [super viewDidUnload];

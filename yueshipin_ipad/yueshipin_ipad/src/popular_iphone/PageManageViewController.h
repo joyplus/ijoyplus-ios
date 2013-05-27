@@ -9,11 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "DDPageControl.h"
 #import "EGORefreshTableHeaderView.h"
-#import "MNMBottomPullToRefreshManager.h"
+#import "PullRefreshManagerClinet.h"
 #import "DimensionalCodeScanViewController.h"
 #import "BundingTVManager.h"
-
-@interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,MNMBottomPullToRefreshManagerClient,EGORefreshTableHeaderDelegate>{
+#import "MBProgressHUD.h"
+@interface PageManageViewController : UIViewController<UIScrollViewDelegate,UITableViewDataSource,UITableViewDelegate,PullRefreshManagerClinetDelegate,EGORefreshTableHeaderDelegate>{
 
     UIScrollView *scrollView_;
     DDPageControl *pageControl_;
@@ -39,10 +39,9 @@
     UIImageView *bundingTipsView;
     EGORefreshTableHeaderView *refreshHeaderViewForMovieList_;
     EGORefreshTableHeaderView *refreshHeaderViewForTvList_;
-    EGORefreshTableHeaderView *refreshHeaderViewForShowList_;
     EGORefreshTableHeaderView *refreshHeaderViewForComicList_;
     
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    PullRefreshManagerClinet *pullToRefreshManager_;
     
     BOOL reloading_;
     int movieLoadCount_;
@@ -69,11 +68,10 @@
 @property (strong, nonatomic)UIImageView *slider;
 @property (strong, nonatomic)UIImageView *pageMGIcon;
 @property (strong, nonatomic) NSString *showTopId;
-
+@property (strong, nonatomic)MBProgressHUD *progressHUD;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForComicList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForMovieList;
 @property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForTvList;
-@property (strong, nonatomic)EGORefreshTableHeaderView *refreshHeaderViewForShowList;
 
-@property (strong, nonatomic) MNMBottomPullToRefreshManager *pullToRefreshManager;
+@property (strong, nonatomic) PullRefreshManagerClinet *pullToRefreshManager;
 @end

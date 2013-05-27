@@ -9,12 +9,16 @@
 #import "VideoDetailViewController.h"
 #import "SelectListViewController.h"
 #import "CommonHeader.h"
+#import "CommonMotheds.h"
 #import "ListViewController.h"
 #import "AvVideoWebViewController.h"
 #import "CommentDetailViewController.h"
+#import "AVPlayerViewController.h"
+#import "SubdownloadItem.h"
 
 @interface VideoDetailViewController ()
-
+- (NSDictionary *)downloadedItem:(NSString *)Id
+                           index:(NSInteger)index;
 @end
 
 @implementation VideoDetailViewController
@@ -94,8 +98,8 @@
 
 - (void)shareBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -127,6 +131,47 @@
                               _sinaweibo.refreshToken, @"refresh_token", nil];
     [[NSUserDefaults standardUserDefaults] setObject:authData forKey:@"SinaWeiboAuthData"];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (NSDictionary *)downloadedItem:(NSString *)Id
+                           index:(NSInteger)index
+{
+    NSArray * playlists = [CommonMotheds localPlaylists:Id type:type];
+    
+    if (0 == playlists.count)
+    {
+        return nil;
+    }
+    
+    NSDictionary * playInfo = [[video objectForKey:@"episodes"] objectAtIndex:index];
+    
+    if (SHOW_TYPE == type
+        || COMIC_TYPE == type
+        || DRAMA_TYPE == type)
+    {
+        for (NSDictionary * dic in playlists)
+        {
+            if ([[dic objectForKey:@"name"] isEqualToString:[playInfo objectForKey:@"name"]])
+            {
+                return dic;
+            }
+        }
+    }
+    else
+    {
+        for (NSDictionary * dic in playlists)
+        {
+            if ([[dic objectForKey:@"itemId"] isEqualToString:Id])
+            {
+                return dic;
+            }
+        }
+//        if ([[playInfo objectForKey:@"id"] isEqualToString:Id])
+//        {
+//            return [playlists objectAtIndex:0];
+//        }
+    }
+    return nil;
 }
 
 #pragma mark - SinaWeibo Delegate
@@ -265,7 +310,7 @@
 //- (void)addListBtnClicked
 //{
 //    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-//    if([hostReach currentReachabilityStatus] == NotReachable) {
+//    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
 //        [UIUtility showNetWorkError:self.view];
 //        return;
 //    }
@@ -278,8 +323,8 @@
 
 - (void)reportBtnClicked
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -393,13 +438,42 @@
             [httpUrlArray addObject:@""];
         }
     }
-    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"])
+    {
         if (httpUrlArray.count > 0) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[httpUrlArray objectAtIndex:0]]];
         } else {
             [UIUtility showPlayVideoFailure:self.view];
         }
-    } else {
+    }
+    else
+    {
+        NSDictionary * info = [self downloadedItem:self.prodId index:num];
+        if (nil != info)
+        {
+            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
+            viewController.videoFormat = [info objectForKey:@"downloadType"];
+            viewController.isDownloaded = YES;
+            viewController.m3u8Duration = [[info objectForKey:@"duration"] intValue];
+            viewController.closeAll = YES;
+            viewController.videoUrl = [info objectForKey:@"videoUrl"];
+            viewController.type = type;
+            viewController.name = [video objectForKey:@"name"];
+            if (type == SHOW_TYPE)
+            {
+                viewController.subname = [info objectForKey:@"name"];
+            } else {
+                viewController.subname = [info objectForKey:@"subItemId"];
+            }
+            viewController.currentNum = num;
+            viewController.prodId = self.prodId;
+            viewController.video = video;
+            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+            [[UIApplication sharedApplication] setStatusBarHidden:YES];
+            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+            return;
+        }
+        
         BOOL hasVideoUrls = NO;
         for (int i = 0; i < episodeArray.count; i++) {
             NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
@@ -473,7 +547,12 @@
         NSArray *videoUrls = [epi objectForKey:@"video_urls"];
         for (NSDictionary *videoUrl in videoUrls) {
             NSString *url = [videoUrl objectForKey:@"url"];
+            NSString *source = [videoUrl objectForKey:@"source"];
             NSString *trimUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if ([source isEqualToString:@"yuanxian"]) {
+                canPlayVideo = NO;
+                return;
+            }
             if (trimUrl && trimUrl.length > 0) {
                 canPlayVideo = YES;
                 break;

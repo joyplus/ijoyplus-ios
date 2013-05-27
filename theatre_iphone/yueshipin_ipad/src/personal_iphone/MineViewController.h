@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MBProgressHUD.h"
 @interface MineViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>{
 
     UIView *bgView_;
@@ -56,4 +56,5 @@
 @property (nonatomic, strong)UIImageView *typeLabel;
 @property (nonatomic, strong)UIButton *clearRecord;
 @property (nonatomic, strong)UIScrollView *scrollBg;
+@property (nonatomic, strong)MBProgressHUD *progressHUD;
 @end

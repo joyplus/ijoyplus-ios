@@ -19,17 +19,12 @@
 #import "AHAlertView.h"
 #import <MediaPlayer/MediaPlayer.h>
 #import "HTTPServer.h"
-#import "PageManageViewController.h"
 #import "UIImage+ResizeAdditions.h"
 #import "CommonMotheds.h"
 #import "DatabaseManager.h"
 #import "SegmentUrl.h"
-#import "CustomNavigationViewController.h"
-#import "IphoneAVPlayerViewController.h"
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
+#import "SystemMethods.h"
+
 #define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
@@ -54,7 +49,6 @@
 @synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
-@synthesize tabBarView;
 @synthesize closed;
 @synthesize networkStatus;
 @synthesize hostReach;
@@ -69,6 +63,8 @@
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
+@synthesize adViewController;
+@synthesize advUrl, advTargetUrl;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -155,60 +151,6 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
-- (void)saveChannelRecord
-{
-    NSString * appKey = @"efd3fb70a08b4a608fccd421f21a79e8";
-    NSString * deviceName = [[[UIDevice currentDevice] name] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString * mac = [self macString];
-    NSString * urlString = [NSString stringWithFormat:@"http://log.umtrack.com/ping/%@/?devicename=%@&mac=%@", appKey,deviceName,mac];
-    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL: [NSURL URLWithString:urlString]] delegate:nil];
-}
-
-- (NSString * )macString{
-    int                 mib[6];
-    size_t              len;
-    char                *buf;
-    unsigned char       *ptr;
-    struct if_msghdr    *ifm;
-    struct sockaddr_dl  *sdl;
-    
-    mib[0] = CTL_NET;
-    mib[1] = AF_ROUTE;
-    mib[2] = 0;
-    mib[3] = AF_LINK;
-    mib[4] = NET_RT_IFLIST;
-    
-    if ((mib[5] = if_nametoindex("en0")) == 0) {
-        printf("Error: if_nametoindex error\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 1\n");
-        return NULL;
-    }
-    
-    if ((buf = malloc(len)) == NULL) {
-        printf("Could not allocate memory. error!\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 2");
-        free(buf);
-        return NULL;
-    }
-    
-    ifm = (struct if_msghdr *)buf;
-    sdl = (struct sockaddr_dl *)(ifm + 1);
-    ptr = (unsigned char *)LLADDR(sdl);
-    NSString *macString = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
-                           *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5)];
-    free(buf);
-    return macString;
-}
-
-
 - (void)initDownloadManager
 {
     padDownloadManager = [[NewDownloadManager alloc]init];
@@ -223,12 +165,20 @@
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
+    networkStatus = 2;
     show3GAlertSeq = @"0";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
-    [self saveChannelRecord];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
+    
+    SystemMethods *sys = [[SystemMethods alloc]init];
+    [sys saveChannelRecord];
+    NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    if ([sys addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:documentsDirectory]]) {
+        NSLog(@"Ignore for iClode success.");
+    }
+    
     NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
@@ -252,24 +202,11 @@
  
     [DatabaseManager initDatabase];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        [self customizeAppearance];
-        [self initDownloadManager];
-        self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-        self.window.rootViewController = self.rootViewController;
-    }
-    else
-    {
-        tabBarView = [[TabBarViewController alloc] init];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
-        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
-        //navCtrl.navigationBarHidden = YES;
-        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
-        [self.downLoadManager resumeDownLoad];
-        self.window.rootViewController = tabBarView;
-        [[BundingTVManager shareInstance] connecteServer];
-    }
+    [self customizeAppearance];
+    [self initDownloadManager];
+    [self initAdViewController];
+    self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
+    self.window.rootViewController = self.rootViewController;
     
     [self.window makeKeyAndVisible];
     
@@ -291,6 +228,18 @@
     return YES;
 }
 
+
+- (void)initAdViewController
+{
+    self.adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(0, 0, self.window.bounds.size.height - LEFT_MENU_DIPLAY_WIDTH - RIGHT_VIEW_WIDTH, self.window.bounds.size.width)];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        [self.adViewController setAdvImage:filePath];
+    }
+}
+
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
     //如果是测试
@@ -305,6 +254,10 @@
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
+    self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
+    self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
+    [self downloadAdvImage];
+    
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
     }
@@ -370,12 +323,12 @@
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     
-    [self clearRespForWXView];
+//    [self clearRespForWXView];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    [self.downLoadManager pauseAllTask];
+//    [self.downLoadManager pauseAllTask];
     
     //When app enter background, add a new local Notification
     [self addLocalNotification];
@@ -393,15 +346,15 @@
 }
 
 -(void)iphoneContinueDownload{
-   [self.downLoadManager appDidEnterForeground];
+//   [self.downLoadManager appDidEnterForeground];
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
-    if([myhostReach currentReachabilityStatus] == NotReachable) {
-         UIView *rootView = self.window.rootViewController.view;
-         [UIUtility showNetWorkError:rootView];
-    };
+//    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
+//    if([myhostReach currentReachabilityStatus] == NotReachable) {
+//         UIView *rootView = self.window.rootViewController.view;
+//         [UIUtility showNetWorkError:rootView];
+//    };
     
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -463,27 +416,29 @@
 - (void)reachabilityChanged:(NSNotification* )note {
     Reachability *curReach = (Reachability *)[note object];
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
-    networkStatus = [curReach currentReachabilityStatus];
+    int currentStatus = [curReach currentReachabilityStatus];
+    networkStatus = currentStatus;
+    NSLog(@"networkStatus -------------------%d",currentStatus);
+    //网络变化的通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:NETWORK_CHANGED object:[NSNumber numberWithInt:currentStatus]];
     
-    if(self.networkStatus != NotReachable){
-        NSLog(@"Network is fine.");
-        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
-        [self triggerDownload];
-        [ActionUtility generateUserId:nil];
-        if ([self isWifiReachable]) {
-            show3GAlertSeq = @"0";
-        } else {
-            @synchronized(show3GAlertSeq){
-                if ([show3GAlertSeq isEqualToString:@"0"]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
-                    show3GAlertSeq = @"1";
-                }
-            }
-        }
-    } 
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        [self.downLoadManager networkChanged:networkStatus];
+    switch (currentStatus) {
+        case NotReachable:  //无网络
+            break;
+        case ReachableViaWWAN: //3G,GPRS
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [self triggerDownload];
+            [ActionUtility generateUserId:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:@"0"];
+            break;
+        case ReachableViaWiFi: // wifi
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [self triggerDownload];
+            [ActionUtility generateUserId:nil];
+            break;
+            
+        default:
+            break;
     }
     
 }
@@ -547,36 +502,36 @@
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
--(void) onRequestAppMessage
-{
-    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
-    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
-    respRootViewCtrl.delegate = self;
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    UIViewController * rootViewCtrl = navCtrl.topViewController;
-    if (rootViewCtrl.presentedViewController)
-    {
-        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
-        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
-        {
-            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
-            UIViewController * topCtrl = cNavCtrl.topViewController;
-            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
-            {
-                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
-                [playCtrl clearPlayerData];
-            }
-            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
-            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-        }
-        else
-        {
-            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
-        }
-    }
-    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
-    [navCtrl pushViewController:respRootViewCtrl animated:NO];
-}
+//-(void) onRequestAppMessage
+//{
+//    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
+//    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
+//    respRootViewCtrl.delegate = self;
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    UIViewController * rootViewCtrl = navCtrl.topViewController;
+//    if (rootViewCtrl.presentedViewController)
+//    {
+//        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
+//        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
+//        {
+//            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
+//            UIViewController * topCtrl = cNavCtrl.topViewController;
+//            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
+//            {
+//                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
+//                [playCtrl clearPlayerData];
+//            }
+//            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
+//            [[UIApplication sharedApplication] setStatusBarHidden:NO];
+//        }
+//        else
+//        {
+//            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
+//        }
+//    }
+//    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
+//    [navCtrl pushViewController:respRootViewCtrl animated:NO];
+//}
 
 // wecha sdk delegate
 -(void) onReq:(BaseReq*)req
@@ -584,7 +539,7 @@
     //
     if([req isKindOfClass:[GetMessageFromWXReq class]])
     {
-        [self onRequestAppMessage];
+//        [self onRequestAppMessage];
     }
 }
 -(void) onResp:(BaseResp*)resp{
@@ -643,68 +598,96 @@
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
-- (void)clearRespForWXView
-{
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
-    {
-        [navCtrl popViewControllerAnimated:NO];
-    }
-    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
-    {
-        [navCtrl popViewControllerAnimated:NO];
-        [navCtrl popViewControllerAnimated:NO];
-    }
-}
+//- (void)clearRespForWXView
+//{
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
+//    {
+//        [navCtrl popViewControllerAnimated:NO];
+//    }
+//    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
+//    {
+//        [navCtrl popViewControllerAnimated:NO];
+//        [navCtrl popViewControllerAnimated:NO];
+//    }
+//}
 
 #pragma mark - RespForWXRootViewControllerDelegate
-- (void)removeRespForWXRootView
-{
-    tabBarView.tabBar.hidden = NO;
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    [navCtrl popViewControllerAnimated:NO];
-}
+//- (void)removeRespForWXRootView
+//{
+//    tabBarView.tabBar.hidden = NO;
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    [navCtrl popViewControllerAnimated:NO];
+//}
+//
+//- (void)backButtonClick
+//{
+//    [WXApi openWXApp];
+//    tabBarView.tabBar.hidden = NO;
+//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
+//    [navCtrl popViewControllerAnimated:NO];
+//}
 
-- (void)backButtonClick
-{
-    [WXApi openWXApp];
-    tabBarView.tabBar.hidden = NO;
-    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-    [navCtrl popViewControllerAnimated:NO];
-}
-
-- (void)shareVideoResp:(NSDictionary *)data
-{
-    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
-    
-    WXMediaMessage *message = [WXMediaMessage message];
-    
-    message.title = [data objectForKey:@"name"];
-    message.description = [data objectForKey:@"description"];
-    
-    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
-    
-    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-    
-    
-    [message setThumbImage:thumb];
-    
-    WXVideoObject *ext = [WXVideoObject object];
-    ext.videoUrl = [data objectForKey:@"videoURL"];
-    
-    message.mediaObject = ext;
-    
-    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
-    resp.message = message;
-    resp.bText = NO;
-    
-    [WXApi sendResp:resp];
-}
+//- (void)shareVideoResp:(NSDictionary *)data
+//{
+//    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
+//    
+//    WXMediaMessage *message = [WXMediaMessage message];
+//    
+//    message.title = [data objectForKey:@"name"];
+//    message.description = [data objectForKey:@"description"];
+//    
+//    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
+//    
+//    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
+//    
+//    
+//    [message setThumbImage:thumb];
+//    
+//    WXVideoObject *ext = [WXVideoObject object];
+//    ext.videoUrl = [data objectForKey:@"videoURL"];
+//    
+//    message.mediaObject = ext;
+//    
+//    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
+//    resp.message = message;
+//    resp.bText = NO;
+//    
+//    [WXApi sendResp:resp];
+//}
 
 - (void)setIdleTimerDisabled:(NSNotification *)notification
 {
     BOOL disabled = [notification.object boolValue];
     [[UIApplication sharedApplication] setIdleTimerDisabled: disabled];
+}
+
+- (void)downloadAdvImage
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+    NSEnumerator *e = [contents objectEnumerator];
+    NSString *filename;
+    while ((filename = [e nextObject])) {
+        if ([filename hasPrefix:ADV_IMAGE_NAME]) {
+            [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+        }
+    }
+    
+    NSURL *url = [NSURL URLWithString:self.advUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
+    AFDownloadRequestOperation *downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+    [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Successfully downloaded file to %@", filePath);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        self.advUrl = nil;
+        [operation cancel];
+    }];
+    [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+    }];
+    [downloadingOperation start];
 }
 
 @end

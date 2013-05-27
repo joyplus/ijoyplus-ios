@@ -55,6 +55,7 @@
 {
     [super viewDidLoad];
     [self.view addGestureRecognizer:self.swipeRecognizer];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
     [self reloadSubitems];
 }
 
@@ -154,8 +155,8 @@
 
 - (void)restartNewDownloading
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [AppDelegate instance].currentDownloadingNum = 0;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
@@ -217,8 +218,8 @@
 
 - (void)videoImageClicked:(NSInteger)index
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -365,44 +366,45 @@
 {
     if(position < subitems.count)
     {
-        NSMutableArray * playlists = [[NSMutableArray alloc] init];
-        for (int i = 0; i < subitems.count; i ++)
-        {
-            NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
-            
-            SubdownloadItem *item = [subitems objectAtIndex:i];
-            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
-            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
-            {
-                NSString *filePath;
-                if ([item.downloadType isEqualToString:@"m3u8"]) {
-                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
-                } else {
-                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                    NSString *documentsDirectory = [paths objectAtIndex:0];
-                    filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
-                }
-                [playInfo setObject:filePath forKey:@"videoUrl"];
-                [playInfo setObject:item.downloadType forKey:@"downloadType"];
-                [playInfo setObject:[NSNumber numberWithDouble:item.duration] forKey:@"duration"];
-                
-                NSString * videoName = nil;
-                if (item.type == SHOW_TYPE)
-                {
-                    videoName = item.name;
-                }
-                else
-                {
-                    videoName = [NSString stringWithFormat:@"%@: 第%@集",self.titleContent,item.subitemId];
-                }
-                
-                [playInfo setObject:videoName forKey:@"name"];
-                [playInfo setObject:itemId forKey:@"itemId"];
-                [playInfo setObject:[NSString stringWithFormat:@"%d",item.type] forKey:@"type"];
-                
-                [playlists addObject:playInfo];
-            }
-        }
+//        NSMutableArray * playlists = [[NSMutableArray alloc] init];
+//        for (int i = 0; i < subitems.count; i ++)
+//        {
+//            NSMutableDictionary * playInfo = [NSMutableDictionary dictionary];
+//            
+//            SubdownloadItem *item = [subitems objectAtIndex:i];
+//            item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
+//            if([item.downloadStatus isEqualToString:@"done"] || item.percentage == 100)
+//            {
+//                NSString *filePath;
+//                if ([item.downloadType isEqualToString:@"m3u8"]) {
+//                    filePath = [NSString stringWithFormat:@"%@/%@/%@/%@_%@.m3u8", LOCAL_HTTP_SERVER_URL, item.itemId, item.subitemId, item.itemId, item.subitemId];
+//                } else {
+//                    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//                    NSString *documentsDirectory = [paths objectAtIndex:0];
+//                    filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@_%@.mp4", item.itemId, item.subitemId]];
+//                }
+//                [playInfo setObject:filePath forKey:@"videoUrl"];
+//                [playInfo setObject:item.downloadType forKey:@"downloadType"];
+//                [playInfo setObject:[NSNumber numberWithDouble:item.duration] forKey:@"duration"];
+//                
+//                NSString * videoName = nil;
+//                if (item.type == SHOW_TYPE)
+//                {
+//                    videoName = item.name;
+//                }
+//                else
+//                {
+//                    videoName = [NSString stringWithFormat:@"%@: 第%@集",self.titleContent,item.subitemId];
+//                }
+//                
+//                [playInfo setObject:videoName forKey:@"name"];
+//                [playInfo setObject:itemId forKey:@"itemId"];
+//                [playInfo setObject:item.subitemId forKey:@"subItemId"];
+//                [playInfo setObject:[NSString stringWithFormat:@"%d",item.type] forKey:@"type"];
+//                
+//                [playlists addObject:playInfo];
+//            }
+//        }
         
         SubdownloadItem *item = [subitems objectAtIndex:position];
         item = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", item.itemId, item.subitemId]];
@@ -435,17 +437,17 @@
             }
             
             viewController.currentNum = 0;
-            for (int i = 0; i< playlists.count; i ++)
-            {
-                NSDictionary * dic = [playlists objectAtIndex:i];
-                if ([[dic objectForKey:@"videoUrl"] isEqualToString:filePath])
-                {
-                    viewController.currentNum = i;
-                    break;
-                }
-            }
+//            for (int i = 0; i< playlists.count; i ++)
+//            {
+//                NSDictionary * dic = [playlists objectAtIndex:i];
+//                if ([[dic objectForKey:@"videoUrl"] isEqualToString:filePath])
+//                {
+//                    viewController.currentNum = i;
+//                    break;
+//                }
+//            }
             viewController.prodId = itemId;
-            viewController.localPlaylists = playlists;
+            //viewController.localPlaylists = playlists;
             viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
             [[UIApplication sharedApplication] setStatusBarHidden:YES];
             [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
@@ -502,6 +504,7 @@
         [AppDelegate instance].currentDownloadingNum = 0;
     }
     [self reloadSubitems];
+    [self.parentDelegate refreshDownloadView];
     if(subitems == nil || subitems.count == 0){
         DownloadItem *pItem = (DownloadItem *)[DatabaseManager findFirstByCriteria: DownloadItem.class queryString:[NSString stringWithFormat:@"WHERE itemId = %@", self.itemId]];
         [DatabaseManager deleteObject:pItem];
@@ -515,7 +518,11 @@
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
 }
-
+- (void)refreshDownloadView
+{
+    [self reloadSubitems];
+    [_gmGridView reloadData];
+}
 #pragma mark -
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

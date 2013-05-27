@@ -15,7 +15,7 @@
     
     Reachability *hostReach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
 	// 判断连接类型
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if([hostReach currentReachabilityStatus]  == NotReachable) {
         HUD.labelText = NSLocalizedString(@"message.networkError", nil);
         sleep(1);
         return NO;
@@ -29,7 +29,7 @@
     
     Reachability *hostReach = [Reachability reachabilityWithHostname:@"www.baidu.com"];
 	// 判断连接类型
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    if([hostReach currentReachabilityStatus]  == NotReachable) {
         
         [self showNetworkError:view];
         return NO;

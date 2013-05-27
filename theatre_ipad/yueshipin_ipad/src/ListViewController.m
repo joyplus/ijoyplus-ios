@@ -142,7 +142,7 @@
             NSLog(@"%@", error);
             topsArray = [[NSMutableArray alloc]initWithCapacity:10];
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }

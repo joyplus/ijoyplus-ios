@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol VideoTypeSegmentDelegate <NSObject>
--(void)segmentDidSelectedAtIndex:(int)index;
+-(void)videoTypeSegmentDidSelectedAtIndex:(int)index;
 @end
 
 

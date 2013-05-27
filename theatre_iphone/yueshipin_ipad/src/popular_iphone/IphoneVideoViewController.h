@@ -37,10 +37,12 @@
 @property (nonatomic, assign) BOOL isNotification;
 @property (nonatomic, strong) UISegmentedControl *segmentedControl;
 @property (nonatomic, strong) NSString *wechatImgStr;
+@property (nonatomic) BOOL canPlayVideo;
 
 - (void)showOpSuccessModalView:(float)closeTime with:(int)type;
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;
 -(BOOL)checkNetWork;
 -(void)checkDownloadUrls:(NSDictionary *)infoDic;
+- (void)checkCanPlayVideo;
 @end

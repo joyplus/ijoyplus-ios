@@ -59,7 +59,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.title = @"悅视频";
+    self.title = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];;
     
     UIImageView *bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     bg.userInteractionEnabled = YES;
@@ -229,6 +229,7 @@
              
          } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
              [tempHUD hide:YES];
+             [UIUtility showDetailError:self.view error:error];
          }];
         
     }
@@ -256,6 +257,7 @@
     {
         [_viewRespForWX refreshTableView:nil];
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -287,6 +289,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
      {
          [_viewRespForWX refreshTableView:nil];
+         [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -309,8 +312,8 @@
     }
     [[CacheUtility sharedCache] putInCache:@"serach_history" result:historyArr];
     
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable)
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)])
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                         message:@"网络异常，请检查网络。"
@@ -343,6 +346,7 @@
      {
          [_viewRespForWX refreshTableView:nil];
          [tempHUD hide:YES];
+         [UIUtility showDetailError:self.view error:error];
      }];
     
     [searchBar_ resignFirstResponder];

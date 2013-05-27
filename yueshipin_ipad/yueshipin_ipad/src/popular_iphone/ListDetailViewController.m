@@ -150,7 +150,7 @@
         NSLog(@"%@", error);
        
         [tempHUD hide:YES];
-      
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 

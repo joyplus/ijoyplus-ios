@@ -29,7 +29,7 @@
         UIImageView *iconBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_placeholder.png"]];
         iconBgView.frame = CGRectMake(2, 12, 82, 111);
         [self addSubview:iconBgView];
-        self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(7.5, 15, 68, 100)];
+        self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(7, 18, 72, 101)];
         [self addSubview:self.imageView];
         
         self.label = [[UILabel alloc] initWithFrame:CGRectMake(105, 24, 169, 15)];

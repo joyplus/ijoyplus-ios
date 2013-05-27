@@ -12,9 +12,7 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "DownLoadManager.h"
-#import "NewDownloadManager.h"
 #import "WXApi.h"
-#import "NewM3u8DownloadManager.h"
 #import "RespForWXRootViewController.h"
 #import "BundingTVManager.h"
 
@@ -43,8 +41,6 @@
 @property (nonatomic) float mediaVolumeValue;
 
 @property (strong, nonatomic)DownLoadManager *downLoadManager;
-
-@property (strong, nonatomic) NewDownloadManager *padDownloadManager;
 
 @property (nonatomic, strong) NSString *playWithDownload;
 

@@ -84,9 +84,9 @@
     self.tableView.backgroundColor = [UIColor clearColor];
     if (type_ == 1) {
         favLoadCount_ = 1;
-        pullToRefreshManagerFAV_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:600 tableView:self.tableView withClient:self];
-        [self.tableView reloadData];
-        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+        pullToRefreshManagerFAV_ = [[PullRefreshManagerClinet alloc]initWithTableView:self.tableView];
+        pullToRefreshManagerFAV_.delegate = self;
+        [pullToRefreshManagerFAV_ setShowHeaderView:NO];
     }
     
 }
@@ -241,6 +241,7 @@
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                     [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -254,6 +255,7 @@
                     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
                     [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV" object:nil];
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+                    [UIUtility showDetailError:self.view error:error];
                 }];
                 break;
             }
@@ -273,7 +275,7 @@
                         [UIUtility showSystemError:self.view];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                    [UIUtility showSystemError:self.view];
+                    [UIUtility showDetailError:self.view error:error];
                 }];
 
                 break;
@@ -286,8 +288,8 @@
 }
 
 -(void)continuePlay:(id)sender{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
        [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -331,12 +333,18 @@
             if(tempTopsArray.count > 0){
                 [listArr_ addObjectsFromArray:tempTopsArray];
             }
+            if ([tempTopsArray count] < 10) {
+                pullToRefreshManagerFAV_.canLoadMore = NO;
+            }
+            else{
+            
+                pullToRefreshManagerFAV_.canLoadMore = YES;
+            }
         }
-
         [self.tableView reloadData];
-        [pullToRefreshManagerFAV_ tableViewReloadFinished];
+        [pullToRefreshManagerFAV_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+       [UIUtility showDetailError:self.view error:error];
     }];
     
 }
@@ -430,24 +438,26 @@
 
 #pragma mark -
 #pragma mark ScrollViewDelegate Methods
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManagerFAV_ scrollViewBegin];
+}
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-        
+    [pullToRefreshManagerFAV_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)aScrollView willDecelerate:(BOOL)decelerate {
     
-    [pullToRefreshManagerFAV_ tableViewReleased];
+    [pullToRefreshManagerFAV_ scrollViewEnd:aScrollView];
     
 }
 
 #pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-     [CommonMotheds showNetworkDisAbledAlert:self.view];
+#pragma mark PullRefreshManagerClinetDelegate Methods
+-(void)pulltoLoadMore{
+    [CommonMotheds showNetworkDisAbledAlert:self.view];
     favLoadCount_++;
     [self loadMyFavsData];
 }
-
-
 @end

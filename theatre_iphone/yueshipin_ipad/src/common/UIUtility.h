@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MBProgressHUD.h"
 
 @interface UIUtility : NSObject
 
@@ -25,4 +26,6 @@
 - (void)hide;
 + (void)showPlayVideoFailure:(UIView *)view;
 + (void)showNoSpace:(UIView *)view;
++ (void)showDetailError:(UIView *)view  error:(NSError *)error;
++ (void)showAppDetailError:(MBProgressHUD *)HUD error:(NSError *)error;
 @end

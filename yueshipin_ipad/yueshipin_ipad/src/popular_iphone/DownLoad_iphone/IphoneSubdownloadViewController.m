@@ -200,6 +200,9 @@
 -(void)updateFreeSapceWithTotalSpace:(float)total UsedSpace:(float)used{
 
 }
+-(void)reFreshUI{
+    [self reloadDataSource];
+}
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -381,30 +384,32 @@
             IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
             iphoneAVPlayerViewController.local_file_path = playPath;
             if ([downloadItem.downloadType isEqualToString:@"m3u8"]){
-              iphoneAVPlayerViewController.isM3u8 = YES;
-              iphoneAVPlayerViewController.playDuration = downloadItem.duration;
+                iphoneAVPlayerViewController.isM3u8 = YES;
+                iphoneAVPlayerViewController.playDuration = downloadItem.duration;
                 
-              iphoneAVPlayerViewController.playNum = 0;
+                iphoneAVPlayerViewController.playNum = 0;
             }
             iphoneAVPlayerViewController.islocalFile = YES;
             if (downloadItem.type == 2) {
                 NSString *name = [[downloadItem.name componentsSeparatedByString:@"_"] objectAtIndex:0];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
-                iphoneAVPlayerViewController.nameStr = [NSString stringWithFormat:@"%@ 第%d集",name,num];
-                iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.nameStr = name;
+                iphoneAVPlayerViewController.playNum = num - 1;
+                iphoneAVPlayerViewController.videoType = DRAMA_TYPE;
             }
             else if (downloadItem.type == 3){
                 iphoneAVPlayerViewController.nameStr =  [[downloadItem.name componentsSeparatedByString:@"_"] lastObject];
                 NSString *sub_name = [[downloadItem.subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
                 int num = [sub_name intValue];
-                iphoneAVPlayerViewController.playNum = num;
+                iphoneAVPlayerViewController.playNum = num - 1;
+                iphoneAVPlayerViewController.videoType = SHOW_TYPE;
             }
             NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];
             NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
             iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
             iphoneAVPlayerViewController.prodId = downloadItem.itemId;
-        
+            
             [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
         }
         else{
@@ -412,33 +417,33 @@
                                                   cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
             [alert show];
         }
-
-    }
-   else if ([downloadItem.downloadStatus isEqualToString:@"waiting"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
-       Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-       if([hostReach currentReachabilityStatus] == NotReachable){
-           
-           UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
-           [alert show];
-           return;
-       }
-       
-        downloadItem.downloadStatus = @"stop";
-       [DownLoadManager stop:downloadItem.subitemId];
-       [DatabaseManager update:downloadItem];
         
-       
-       int num = [self getTagNum:downloadItem.subitemId];
-       UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
-       label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", downloadItem.percentage];
-       
-       UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
-       progressView.progress = downloadItem.percentage/100.0;
-       
+    }
+    else if ([downloadItem.downloadStatus isEqualToString:@"waiting"] || [downloadItem.downloadStatus isEqualToString:@"loading"]) {
+        //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+            [alert show];
+            return;
+        }
+        
+        downloadItem.downloadStatus = @"stop";
+        [DownLoadManager stop:downloadItem.subitemId];
+        [DatabaseManager update:downloadItem];
+        
+        
+        int num = [self getTagNum:downloadItem.subitemId];
+        UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
+        label.text =  [NSString stringWithFormat:@"暂停：%i%%\n ", downloadItem.percentage];
+        
+        UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
+        progressView.progress = downloadItem.percentage/100.0;
+        
     }
     else if ([downloadItem.downloadStatus isEqualToString:@"stop"]||[downloadItem.downloadStatus isEqualToString:@"fail"]){
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable){
+        //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"网络中断，请检查您的网络。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
             [alert show];
@@ -446,7 +451,7 @@
         }
         
         downloadItem.downloadStatus = @"waiting";
-
+        
         [DatabaseManager update:downloadItem];
         int num = [self getTagNum:downloadItem.subitemId];
         UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
@@ -454,9 +459,9 @@
         
         UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
         progressView.progress = downloadItem.percentage/100.0;
-         
-       [DownLoadManager continueDownload:downloadItem.subitemId];
-    
+        
+        [DownLoadManager continueDownload:downloadItem.subitemId];
+        
     }
 
 
@@ -484,11 +489,12 @@
 
 - (void)deleteItemWithIndex:(NSInteger)index
 {
-    [itemArr_ removeObjectAtIndex:index];
-    NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
+   
+     NSString *query = [NSString stringWithFormat:@"WHERE itemId ='%@'",prodId_];
+//    
+//    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     
-    NSArray *arr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
-    SubdownloadItem *item = [arr objectAtIndex:index];
+    SubdownloadItem *item = [itemArr_ objectAtIndex:index];
     NSString *itemId = item.subitemId;
     [DownLoadManager stopAndClear:itemId];
     
@@ -520,6 +526,7 @@
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'",prodId_]];
     
     [DatabaseManager deleteObject:item];
+    [itemArr_ removeObjectAtIndex:index];
     
     NSArray *tempArr = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:query];
     
