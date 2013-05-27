@@ -1,0 +1,12 @@
+platform :ios
+
+pod 'AFNetworking', '1.0RC1'
+pod 'SDWebImage',   '2.6'
+pod 'EGOTableViewPullRefresh', '0.1.0'
+pod 'MBProgressHUD', '0.5'
+pod 'SFHFKeychainUtils', '0.0.1'
+pod 'Reachability', '3.0.0'
+pod 'iRate', '1.5.2'
+pod 'CocoaHTTPServer', '2.2.1'
+pod 'ZBarSDK', '1.2.2'
+pod 'FMDB', '2.0'

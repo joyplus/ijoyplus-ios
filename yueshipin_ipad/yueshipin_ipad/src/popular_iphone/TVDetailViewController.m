@@ -154,7 +154,8 @@
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
        
-         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        [self checkCanPlayVideo];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
@@ -190,12 +191,14 @@
             infoDic_ = videoInfo_;
         }
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"tv",proId ];
@@ -553,19 +556,17 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 BOOL isEnableReportBtn = YES;
                 if (0 == eArr.count) 
                 {
-
                     downLoad.enabled = NO;
-                    play.hidden = YES;
-                    expectbtn.hidden = NO;
                     isEnableReportBtn = NO;
                 }
-                else
-                {
-
+                if (self.canPlayVideo) {
                     play.hidden = NO;
                     expectbtn.hidden = YES;
+                } else {
+                    play.hidden = YES;
+                    expectbtn.hidden = NO;
                 }
-                    
+                
                 if (![self isDownloadURLExit])
                 {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];

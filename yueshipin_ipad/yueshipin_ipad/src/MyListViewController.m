@@ -130,8 +130,8 @@
         }
         [myHUD hide];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
         [myHUD hide];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 

@@ -38,8 +38,8 @@
     [super viewDidLoad];
     self.tableView.scrollEnabled = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.layer.borderWidth = 1;
-    self.tableView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    self.tableView.layer.borderWidth = 0.5;
+    self.tableView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
 }
@@ -68,9 +68,10 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(cell == nil){
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        UIView *view = [[UIView alloc]initWithFrame:CGRectZero];
+        cell.selectedBackgroundView = view;
         CustomColoredAccessory *accessory = [CustomColoredAccessory accessoryWithColor:[UIColor blackColor]];
-        accessory.highlightedColor = [UIColor whiteColor];
+        accessory.highlightedColor = CMConstants.yellowColor;
         cell.accessoryView = accessory;
         
         UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 5, cell.bounds.size.width+100, 20)];
@@ -78,21 +79,31 @@
         nameLabel.textColor = CMConstants.grayColor;
         nameLabel.tag = 1001;
         nameLabel.font = [UIFont systemFontOfSize:14];
+        nameLabel.highlightedTextColor = CMConstants.yellowColor;
         [cell.contentView addSubview:nameLabel];
         
         UIImageView *devidingLine = [[UIImageView alloc]initWithFrame:CGRectMake(0, 28, self.tableView.frame.size.width, 2)];
+        devidingLine.tag = 1002;
         devidingLine.image = [UIImage imageNamed:@"dividing"];
         [cell.contentView addSubview:devidingLine];
     }
-    NSDictionary *item =  [listData objectAtIndex:indexPath.row];
-    UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
-    nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"t_name"]];
+    if (indexPath.row < listData.count) {
+        NSDictionary *item =  [listData objectAtIndex:indexPath.row];
+        UILabel *nameLabel = (UILabel *)[cell viewWithTag:1001];
+        nameLabel.text = [NSString stringWithFormat:@"%@", [item objectForKey:@"t_name"]];
+        
+        UIImageView *imageView = (UIImageView *)[cell viewWithTag:1002];
+        if (indexPath.row == listData.count - 1) {
+            [imageView removeFromSuperview];
+        }
+    }
+    
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 30;
+    return 28;
 }
 /*
 // Override to support conditional editing of the table view.

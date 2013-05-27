@@ -33,6 +33,9 @@
 #import "CustomNavigationViewControllerPortrait.h"
 #import "UIUtility.h"
 #import "UIImage+ResizeAdditions.h"
+#import "CommonMotheds.h"
+#import "IphoneAVPlayerViewController.h"
+
 #define VIEWTAG   123654
 
 @interface IphoneVideoViewController ()
@@ -54,6 +57,7 @@
 @synthesize segmentedControl = segmentedControl_;
 @synthesize wechatImgStr = wechatImgStr_;
 @synthesize willPlayIndex;
+@synthesize canPlayVideo;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -86,6 +90,54 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (NSDictionary *)downloadedItem:(NSString *)Id
+                           index:(NSInteger)index
+{
+    NSArray * playlists = [CommonMotheds localPlaylists:Id type:type_];
+    
+    if (0 == playlists.count)
+    {
+        return nil;
+    }
+    
+    NSDictionary * playInfo = [episodesArr_ objectAtIndex:index];
+    
+    if (COMIC_TYPE == type_
+        || DRAMA_TYPE == type_)
+    {
+        for (NSDictionary * dic in playlists)
+        {
+            if ([[dic objectForKey:@"name"] isEqualToString:[NSString stringWithFormat:@"%@_%@",[dic objectForKey:@"itemId"],[playInfo objectForKey:@"name"]]])
+            {
+                return dic;
+            }
+        }
+    }
+    else if (SHOW_TYPE == type_)
+    {
+        NSString * showId = [NSString stringWithFormat:@"%@_%d",Id,(index + 1)];
+        for (NSDictionary * dic in playlists)
+        {
+            if ([[dic objectForKey:@"subItemId"] isEqualToString:showId])
+            {
+                return dic;
+            }
+        }
+    }
+    else
+    {
+        for (NSDictionary * dic in playlists)
+        {
+            if ([[dic objectForKey:@"itemId"] isEqualToString:Id])
+            {
+                return dic;
+            }
+        }
+    }
+    return nil;
+}
+
 
 #pragma mark - Table view data source
 
@@ -432,7 +484,7 @@
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    //[[UIApplication sharedApplication] setStatusBarHidden:YES];
+    
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         NSDictionary *dic = [episodesArr_ objectAtIndex:num];
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
@@ -440,6 +492,57 @@
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
         return;
     }
+    
+    
+    NSDictionary * info = [self downloadedItem:self.prodId index:num];
+    if (nil != info)
+    {
+        IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
+        
+        iphoneAVPlayerViewController.local_file_path = [info objectForKey:@"videoUrl"];
+        if ([[info objectForKey:@"downloadType"] isEqualToString:@"m3u8"])
+        {
+            [[AppDelegate instance] startHttpServer];
+            iphoneAVPlayerViewController.isM3u8 = YES;
+            iphoneAVPlayerViewController.playDuration = [[info objectForKey:@"duration"] doubleValue];
+            iphoneAVPlayerViewController.playNum = num;
+        }
+        iphoneAVPlayerViewController.islocalFile = YES;
+        NSInteger type = [[info objectForKey:@"type"] intValue];
+        NSString * subitemId = [info objectForKey:@"subItemId"];
+        if (type == 2)
+        {
+            //            NSString *name = [[name1 componentsSeparatedByString:@"_"] objectAtIndex:0];
+            //            NSString *sub_name = [[subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
+            iphoneAVPlayerViewController.nameStr = self.name;
+            iphoneAVPlayerViewController.playNum = num;
+            iphoneAVPlayerViewController.videoType = DRAMA_TYPE;
+        }
+        else if (type == 3){
+            //            iphoneAVPlayerViewController.nameStr =  [[name1 componentsSeparatedByString:@"_"] lastObject];
+            //            NSString *sub_name = [[subitemId componentsSeparatedByString:@"_"] objectAtIndex:1];
+            iphoneAVPlayerViewController.playNum = num;
+            iphoneAVPlayerViewController.videoType = SHOW_TYPE;
+        }
+        else if (MOVIE_TYPE == type)
+        {
+            subitemId = [info objectForKey:@"itemId"];
+            iphoneAVPlayerViewController.nameStr = self.name;
+            iphoneAVPlayerViewController.playNum = 0;
+            iphoneAVPlayerViewController.videoType = MOVIE_TYPE;
+        }
+        
+        
+        NSString * str = [NSString stringWithFormat:@"%@_local",subitemId];
+        NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
+        iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
+        iphoneAVPlayerViewController.prodId = self.prodId;
+        iphoneAVPlayerViewController.episodesArr = episodesArr_;
+        
+        [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
+        return;
+    }
+    
     IphoneWebPlayerViewController *iphoneWebPlayerViewController = [[IphoneWebPlayerViewController alloc] init];
     iphoneWebPlayerViewController.playNum = num;
     iphoneWebPlayerViewController.nameStr = name_;
@@ -456,8 +559,8 @@
 
 
 -(BOOL)checkNetWork{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         return YES;
     }
     else{
@@ -465,5 +568,45 @@
     }
 
 }
+
+- (void)checkCanPlayVideo
+{
+    for (NSDictionary *epi in episodesArr_) {
+        NSArray *videoUrls = [epi objectForKey:@"video_urls"];
+        for (NSDictionary *videoUrl in videoUrls) {
+            NSString *url = [videoUrl objectForKey:@"url"];
+            NSString *source = [videoUrl objectForKey:@"source"];
+            NSString *trimUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if ([source isEqualToString:@"yuanxian"]) {
+                canPlayVideo = NO;
+                return;
+            }
+            if (trimUrl && trimUrl.length > 0) {
+                canPlayVideo = YES;
+                break;
+            }
+        }
+        if (canPlayVideo) {
+            break;
+        } else {
+            NSArray *downUrls = [epi objectForKey:@"down_urls"];
+            for (NSDictionary *downUrl in downUrls) {
+                NSArray *urls = [downUrl objectForKey:@"urls"];
+                for (NSDictionary *url in urls) {
+                    NSString *realurl = [url objectForKey:@"url"];
+                    NSString *trimUrl = [realurl stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    if (trimUrl && trimUrl.length > 0) {
+                        canPlayVideo = YES;
+                        break;
+                    }
+                }
+                if (canPlayVideo) {
+                    break;
+                }
+            }
+        }
+    }
+}
+
 
 @end
