@@ -12,6 +12,7 @@
 @protocol DownloadViewControllerDelegate <NSObject>
 
 - (void)reloadItems;
+- (void)refreshDownloadView;
 
 @end
 

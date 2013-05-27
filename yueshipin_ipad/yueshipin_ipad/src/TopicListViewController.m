@@ -333,8 +333,8 @@
 {
     if(videoArray.count > 0){
         [table deselectRowAtIndexPath:indexPath animated:YES];
-        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-        if([hostReach currentReachabilityStatus] == NotReachable) {
+        //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
             [UIUtility showNetWorkError:self.view];
             return;
         }

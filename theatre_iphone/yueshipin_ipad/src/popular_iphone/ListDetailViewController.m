@@ -136,8 +136,6 @@
                 else{
                  [listArr_ addObjectsFromArray:tempTopsArray];
                 }
-                
-                
             }
             
         } else {
@@ -147,10 +145,8 @@
         [self.tableView reloadData];
 
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"%@", error);
-       
         [tempHUD hide:YES];
-      
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 

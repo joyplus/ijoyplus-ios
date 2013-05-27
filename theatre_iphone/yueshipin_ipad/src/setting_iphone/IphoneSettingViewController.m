@@ -92,6 +92,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     sinaSwith_.onTintColor = [UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1];
     [sinaImg addSubview:sinaSwith_];
     
+    
     sinaweibo_ = [AppDelegate instance].sinaweibo;
     sinaweibo_.delegate = self;
     if([sinaweibo_ isLoggedIn]){
@@ -101,9 +102,32 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     }
 
     [scrollView addSubview:sinaImg];
+    
+    UIImageView *networkImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 70, 300, 45)];
+    networkImg.image = [UIImage imageNamed:@"3G_bg.png"];
+    networkImg.userInteractionEnabled = YES;
+    UISwitch *networkSet = [[UISwitch alloc] initWithFrame:CGRectMake(220, 6, 40, 22)];
+    networkSet.transform =  CGAffineTransformMakeScale(0.80, 0.80);
+    [networkSet addTarget:self action:@selector(networkSetSwitchClicked:) forControlEvents:UIControlEventValueChanged];
+    networkSet.onTintColor = [UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    networkSet.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
+    [networkImg addSubview:networkSet];
+    [scrollView addSubview:networkImg];
+    
+    
+    sinaweibo_ = [AppDelegate instance].sinaweibo;
+    sinaweibo_.delegate = self;
+    if([sinaweibo_ isLoggedIn]){
+        sinaSwith_.on = YES;
+        NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
+        weiboName_.text = [NSString stringWithFormat:@"(%@)",username];;
+    }
+    
+    [scrollView addSubview:sinaImg];
    
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
-    clearCache.frame = CGRectMake(10, 90, 300, 35);
+    clearCache.frame = CGRectMake(10, 140, 300, 35);
     // [feedBack setTitle:@"清楚缓存" forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache.png"] forState:UIControlStateNormal];
     [clearCache setBackgroundImage:[UIImage imageNamed:@"my_setting_cache_s.png"] forState:UIControlStateHighlighted];
@@ -111,7 +135,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:clearCache];
 
     UIButton *feedBack = [UIButton buttonWithType:UIButtonTypeCustom];
-    feedBack.frame = CGRectMake(10, 155, 300, 35);
+    feedBack.frame = CGRectMake(10, 195, 300, 35);
    // [feedBack setTitle:@"意见反馈" forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other.png"] forState:UIControlStateNormal];
     [feedBack setBackgroundImage:[UIImage imageNamed:@"my_setting_other_s.png"] forState:UIControlStateHighlighted];
@@ -119,7 +143,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:feedBack];
     
     UIButton *suggest = [UIButton buttonWithType:UIButtonTypeCustom];
-    suggest.frame = CGRectMake(10, 200, 300, 35);
+    suggest.frame = CGRectMake(10, 240, 300, 35);
     //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4.png"] forState:UIControlStateNormal];
     [suggest setBackgroundImage:[UIImage imageNamed:@"my_setting_other4_s.png"] forState:UIControlStateHighlighted];
@@ -127,14 +151,14 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:suggest];
     
     UIButton *careUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    careUs.frame = CGRectMake(10, 245, 300, 35);
+    careUs.frame = CGRectMake(10, 285, 300, 35);
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3.png"] forState:UIControlStateNormal];
     [careUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other3_s.png"] forState:UIControlStateHighlighted];
     [careUs addTarget:self action:@selector(careUs:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:careUs];
     
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(10, 290, 300, 35);
+    aboutUs.frame = CGRectMake(10, 375, 300, 35);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
@@ -142,7 +166,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:aboutUs];
     
     UIButton *update = [UIButton buttonWithType:UIButtonTypeCustom];
-    update.frame = CGRectMake(10, 335, 300, 35);
+    update.frame = CGRectMake(10, 330, 300, 35);
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdate.png"] forState:UIControlStateNormal];
     [update setBackgroundImage:[UIImage imageNamed:@"iphoneCheckUpdatePress.png"] forState:UIControlStateHighlighted];
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
@@ -155,11 +179,11 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 //    [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
 //    [scrollView addSubview:xinshouyindao];
 	
-    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 390, 55, 13)];
+    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 430, 55, 13)];
     jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
     [scrollView addSubview:jinpin];
     
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 410,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 450,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
     [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
     _mGridView.datasource = self;
     _mGridView.delegate = self;
@@ -232,8 +256,8 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 
 - (void)sinaSwitchClicked:(UISwitch *)sender
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -254,6 +278,19 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     else if (buttonIndex == 0){
         sinaSwith_.on = YES;
     }
+}
+
+-(void)networkSetSwitchClicked:(UISwitch *)aswitch{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *value = nil;
+    if (aswitch.isOn) {
+        value = [NSNumber numberWithBool:YES];
+    }
+    else{
+        value = [NSNumber numberWithBool:NO];
+    }
+    [defaults setObject:value forKey:@"isSupport3GDownload"];
+    [defaults synchronize];
 }
 -(void)clearCache:(id)sender{
 
@@ -433,7 +470,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
             }
             
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-            
+            [UIUtility showDetailError:self.view error:error];
         }];
         
         

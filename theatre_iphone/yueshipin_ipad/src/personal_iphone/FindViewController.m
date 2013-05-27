@@ -31,6 +31,7 @@
 @synthesize topicId = topicId_;
 @synthesize rightButtonItem = rightButtonItem_;
 @synthesize type = type_;
+@synthesize pullRefreshManager = pullRefreshManager_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -104,6 +105,11 @@
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:tableList_];
     
+    pullRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:tableList_];
+    pullRefreshManager_.delegate = self;
+    
+    [pullRefreshManager_ setShowHeaderView:NO];
+    loadCount_ = 1;
 }
 
 -(void)back:(id)sender{
@@ -112,8 +118,8 @@
 }
 
 -(void)Search{
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable){
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
        [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -137,6 +143,12 @@
             else{
                 [self showFailureView:1];
             }
+            if ([searchResult count] < PAGESIZE) {
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
         }
         
         [tableList_ reloadData];
@@ -145,9 +157,39 @@
         NSLog(@"%@", error);
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
+}
+
+-(void)loadMore{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", [NSString stringWithFormat:@"%d",loadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size",[NSNumber numberWithInt:type_], @"type", nil];
+    
+    [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *searchResult = [result objectForKey:@"results"];
+            if(searchResult != nil && searchResult.count > 0){
+                [searchResults_ addObjectsFromArray:searchResult];
+            }
+            if ([searchResult count] < PAGESIZE) {
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
+            
+        }
+        
+     [tableList_ reloadData];
+     [pullRefreshManager_ loadMoreCompleted];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       
+    }];
+
+
+
 }
 - (void)showFailureView:(float)closeTime
 {
@@ -180,6 +222,7 @@
 
 
 -(void)Done:(id)sender{
+    [self addBtnClicked];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Update CreateMyListTwoViewController" object:selectedArr_];
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -252,6 +295,9 @@
     if (![selectedArr_ containsObject:item]) {
         [selectedArr_ addObject:item];
     }
+    else{
+        [selectedArr_ removeObject:item];
+    }
     if ([selectedArr_ count] == 0) {
         self.navigationItem.rightBarButtonItem = nil;
     }
@@ -260,7 +306,7 @@
         self.navigationItem.rightBarButtonItem = rightButtonItem_;
     }
     [self.tableList reloadData];
-    [self addBtnClicked];
+    //[self addBtnClicked];
 }
 
 - (void)addBtnClicked
@@ -289,10 +335,31 @@
             NSLog(@"fail");
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
+
+#pragma mark -
+#pragma mark - UIScrollviewDelegate
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullRefreshManager_ scrollViewScrolled:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullRefreshManager_ scrollViewEnd:scrollView];
+}
+
+#pragma mark -
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoLoadMore{
+    loadCount_ ++;
+    [self loadMore];
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

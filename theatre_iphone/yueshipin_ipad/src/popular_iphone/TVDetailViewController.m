@@ -153,9 +153,10 @@
     if(cacheResult != nil){
         isloaded_ = YES;
         videoInfo_ = (NSDictionary *)[cacheResult objectForKey:@"tv"];
-       
-         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        
+        [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
         NSLog(@"episodes count is %d",[episodesArr_ count]);
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [cacheResult objectForKey:@"topics"];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -190,12 +191,14 @@
             infoDic_ = videoInfo_;
         }
         [self SortEpisodes:[videoInfo_ objectForKey:@"episodes"]];
+        [self checkCanPlayVideo];
         summary_ = [videoInfo_ objectForKey:@"summary"];
         relevantList_ = [result objectForKey:@"topics"];
         [tempHUD hide:YES];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     NSString *reviews_key = [NSString stringWithFormat:@"%@%@reviews", @"tv",proId ];
@@ -553,19 +556,17 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 BOOL isEnableReportBtn = YES;
                 if (0 == eArr.count) 
                 {
-
                     downLoad.enabled = NO;
-                    play.hidden = YES;
-                    expectbtn.hidden = NO;
                     isEnableReportBtn = NO;
                 }
-                else
-                {
-
+                if (self.canPlayVideo) {
                     play.hidden = NO;
                     expectbtn.hidden = YES;
+                } else {
+                    play.hidden = YES;
+                    expectbtn.hidden = NO;
                 }
-                    
+                
                 if (![self isDownloadURLExit])
                 {
                     [downLoad setBackgroundImage:[UIImage imageNamed:@"cache_no.png"] forState:UIControlStateNormal];
@@ -1395,9 +1396,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
     UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0,304, 250)];
     bgImgView.image = [UIImage imageNamed:@"download_bg.png"];
     [bgView addSubview:bgImgView];
-    
+        
     UIButton *close = [UIButton buttonWithType:UIButtonTypeCustom];
-    close.frame = CGRectMake(260, 8, 40, 40);
+    close.frame = CGRectMake(257, 10, 40, 40);
     [close setBackgroundImage:[UIImage imageNamed:@"download_shut.png"] forState:UIControlStateNormal];
     [close setBackgroundImage:[UIImage imageNamed:@"download_shut_pressed.png"] forState:UIControlStateHighlighted];
     [close addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];

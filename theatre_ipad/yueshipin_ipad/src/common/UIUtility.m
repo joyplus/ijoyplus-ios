@@ -165,4 +165,13 @@
     [HUD hide:YES afterDelay:3];
 }
 
++ (void)showDetailError:(UIView *)view  error:(NSError *)error
+{
+    if (error.code == -1001 || error.code == -1004 || error.code == -1009){
+        [self showNetWorkError:view];
+    } else {
+        [self showSystemError:view];
+    }
+}
+
 @end

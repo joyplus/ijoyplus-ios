@@ -179,6 +179,7 @@
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
          {
             [tempHUD hide:YES];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
     

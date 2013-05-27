@@ -53,6 +53,7 @@
     spaceInfoLabel = nil;
     diskUsedProgress_ = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATE_DISK_STORAGE object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateDownloadView" object:nil];
     [super viewDidUnload];
 }
 
@@ -61,6 +62,7 @@
     [super viewDidLoad];    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -206,8 +208,8 @@
 
 - (void)restartNewDownloading
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] != NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [AppDelegate instance].currentDownloadingNum = 0;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
@@ -270,8 +272,8 @@
 
 - (void)movieImageClicked:(NSInteger)index
 {
-    Reachability *hostReach = [Reachability reachabilityForInternetConnection];
-    if([hostReach currentReachabilityStatus] == NotReachable) {
+    //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+    if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
         [UIUtility showNetWorkError:self.view];
         return;
     }
@@ -551,6 +553,11 @@
         [doneBtn setHidden:YES];
     }
     [self updateDiskStorage];
+}
+
+- (void)refreshDownloadView
+{
+    [_gmGridView reloadData];
 }
 
 #pragma mark -

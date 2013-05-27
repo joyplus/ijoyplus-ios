@@ -54,6 +54,7 @@
 #import "MovieDetailViewController.h"
 #import "DramaDetailViewController.h"
 #import "ShowDetailViewController.h"
+#import "AdViewController.h"
 
 #define  TABLE_HEADER_HEIGHT 20
 
@@ -197,6 +198,7 @@
     [super viewWillAppear:animated];
     if(![AppDelegate instance].triggeredByPlayer){
         [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
     }
 }
 
@@ -213,13 +215,14 @@
         badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
     }
 }
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    if(![AppDelegate instance].triggeredByPlayer){
-        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
-    }
-}
+//
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//    if(![AppDelegate instance].triggeredByPlayer){
+//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
+//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+//    }
+//}
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
@@ -342,7 +345,10 @@
         VideoViewController *videoViewController = (VideoViewController *)viewController;
         videoViewController.revertSearchCriteria = YES;
     }
-	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:NO];
+	[[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:YES removePreviousView:YES];
+    
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[AppDelegate instance].adViewController invokeByController:self isStackStartView:FALSE  removePreviousView:NO];
+    
     if(selectedIndex < 10){
         BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
         if(!isReachable) {

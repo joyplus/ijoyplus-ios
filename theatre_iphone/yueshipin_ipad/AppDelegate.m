@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "CommonHeader.h"
 #import "OpenUDID.h"
-#import "RootViewController.h"
 #import "MobClick.h"
 #import <Parse/Parse.h>
 #import "ActionUtility.h"
@@ -26,10 +25,8 @@
 #import "SegmentUrl.h"
 #import "CustomNavigationViewController.h"
 #import "IphoneAVPlayerViewController.h"
-#include <sys/socket.h>
-#include <sys/sysctl.h>
-#include <net/if.h>
-#include <net/if_dl.h>
+#import "SystemMethods.h"
+
 #define DAY(day)        (day * 3600 * 24)
 
 @interface AppDelegate ()
@@ -51,7 +48,6 @@
 
 @implementation AppDelegate
 @synthesize playWithDownload;
-@synthesize padDownloadManager;
 @synthesize window;
 @synthesize rootViewController;
 @synthesize tabBarView;
@@ -155,65 +151,6 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
-- (void)saveChannelRecord
-{
-    NSString * appKey = @"efd3fb70a08b4a608fccd421f21a79e8";
-    NSString * deviceName = [[[UIDevice currentDevice] name] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    NSString * mac = [self macString];
-    NSString * urlString = [NSString stringWithFormat:@"http://log.umtrack.com/ping/%@/?devicename=%@&mac=%@", appKey,deviceName,mac];
-    [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL: [NSURL URLWithString:urlString]] delegate:nil];
-}
-
-- (NSString * )macString{
-    int                 mib[6];
-    size_t              len;
-    char                *buf;
-    unsigned char       *ptr;
-    struct if_msghdr    *ifm;
-    struct sockaddr_dl  *sdl;
-    
-    mib[0] = CTL_NET;
-    mib[1] = AF_ROUTE;
-    mib[2] = 0;
-    mib[3] = AF_LINK;
-    mib[4] = NET_RT_IFLIST;
-    
-    if ((mib[5] = if_nametoindex("en0")) == 0) {
-        printf("Error: if_nametoindex error\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, NULL, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 1\n");
-        return NULL;
-    }
-    
-    if ((buf = malloc(len)) == NULL) {
-        printf("Could not allocate memory. error!\n");
-        return NULL;
-    }
-    
-    if (sysctl(mib, 6, buf, &len, NULL, 0) < 0) {
-        printf("Error: sysctl, take 2");
-        free(buf);
-        return NULL;
-    }
-    
-    ifm = (struct if_msghdr *)buf;
-    sdl = (struct sockaddr_dl *)(ifm + 1);
-    ptr = (unsigned char *)LLADDR(sdl);
-    NSString *macString = [NSString stringWithFormat:@"%02X:%02X:%02X:%02X:%02X:%02X",
-                           *ptr, *(ptr+1), *(ptr+2), *(ptr+3), *(ptr+4), *(ptr+5)];
-    free(buf);
-    return macString;
-}
-
-
-- (void)initDownloadManager
-{
-    padDownloadManager = [[NewDownloadManager alloc]init];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
@@ -224,11 +161,18 @@
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
-    [self saveChannelRecord];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onlineConfigCallBack:) name:UMOnlineConfigDidFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setIdleTimerDisabled:) name:SYSTEM_IDLE_TIMER_DISABLED object:nil];
+    
+    SystemMethods *sys = [[SystemMethods alloc]init];
+    [sys saveChannelRecord];
+    NSString *documentsDirectory= [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    if ([sys addSkipBackupAttributeToItemAtURL:[NSURL fileURLWithPath:documentsDirectory]]) {
+        NSLog(@"Ignore for iClode success.");
+    }
+    
     NSString *appKey = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kIpadAppKey];
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
@@ -252,24 +196,14 @@
  
     [DatabaseManager initDatabase];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-    {
-        [self customizeAppearance];
-        [self initDownloadManager];
-        self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
-        self.window.rootViewController = self.rootViewController;
-    }
-    else
-    {
-        tabBarView = [[TabBarViewController alloc] init];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
-        //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
-        //navCtrl.navigationBarHidden = YES;
-        self.downLoadManager = [DownLoadManager defaultDownLoadManager];
-        [self.downLoadManager resumeDownLoad];
-        self.window.rootViewController = tabBarView;
-        [[BundingTVManager shareInstance] connecteServer];
-    }
+    tabBarView = [[TabBarViewController alloc] init];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleBlackOpaque;
+    //UINavigationController * navCtrl = [[UINavigationController alloc] initWithRootViewController:tabBarView];
+    //navCtrl.navigationBarHidden = YES;
+    self.downLoadManager = [DownLoadManager defaultDownLoadManager];
+    [self.downLoadManager resumeDownLoad];
+    self.window.rootViewController = tabBarView;
+    [[BundingTVManager shareInstance] connecteServer];
     
     [self.window makeKeyAndVisible];
     
@@ -423,7 +357,7 @@
 - (void)triggerDownload
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
-        [padDownloadManager startDownloadingThreads];
+//        [padDownloadManager startDownloadingThreads];
     }
     else{
     
@@ -453,38 +387,58 @@
     self.hostReach = [Reachability reachabilityWithHostname: @"www.baidu.com"];
     [self.hostReach startNotifier];
     
-    self.internetReach = [Reachability reachabilityForInternetConnection];
-    [self.internetReach startNotifier];
-    
-    self.wifiReach = [Reachability reachabilityForLocalWiFi];
-    [self.wifiReach startNotifier];
+//    self.internetReach = [Reachability reachabilityForInternetConnection];
+//    [self.internetReach startNotifier];
+//    
+//    self.wifiReach = [Reachability reachabilityForLocalWiFi];
+//    [self.wifiReach startNotifier];
 }
 //Called by Reachability whenever status changes.
 - (void)reachabilityChanged:(NSNotification* )note {
     Reachability *curReach = (Reachability *)[note object];
     NSParameterAssert([curReach isKindOfClass: [Reachability class]]);
+    int currentStatus = [curReach currentReachabilityStatus];
     networkStatus = [curReach currentReachabilityStatus];
+    NSLog(@"networkStatus -------------------%d",currentStatus);
+    //网络变化的通知
+    [[NSNotificationCenter defaultCenter] postNotificationName:NETWORK_CHANGED object:[NSNumber numberWithInt:currentStatus]];
     
-    if(self.networkStatus != NotReachable){
-        NSLog(@"Network is fine.");
-        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
-        [self triggerDownload];
-        [ActionUtility generateUserId:nil];
-        if ([self isWifiReachable]) {
-            show3GAlertSeq = @"0";
-        } else {
-            @synchronized(show3GAlertSeq){
-                if ([show3GAlertSeq isEqualToString:@"0"]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
-                    show3GAlertSeq = @"1";
-                }
-            }
-        }
-    } 
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
-        [self.downLoadManager networkChanged:networkStatus];
+    switch (currentStatus) {
+        case NotReachable:  //无网络
+            break;
+        case ReachableViaWWAN: //3G,GPRS
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [ActionUtility generateUserId:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:@"0"];
+            break;
+        case ReachableViaWiFi: // wifi
+            [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+            [ActionUtility generateUserId:nil];
+            break;
+            
+        default:
+            break;
     }
+
+//    if(self.networkStatus != NotReachable){
+//        NSLog(@"Network is fine.");
+//        [[NSNotificationCenter defaultCenter] postNotificationName:KEY_NETWORK_BECOME_AVAILABLE object:nil];
+//        [ActionUtility generateUserId:nil];
+//        if ([self isWifiReachable]) {
+//            show3GAlertSeq = @"0";
+//        } else {
+//            @synchronized(show3GAlertSeq){
+//                if ([show3GAlertSeq isEqualToString:@"0"]) {
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:WIFI_IS_NOT_AVAILABLE object:show3GAlertSeq];
+//                    show3GAlertSeq = @"1";
+//                }
+//            }
+//        }
+//    } 
+//    
+//    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+//        [self.downLoadManager networkChanged:networkStatus];
+//    }
     
 }
 

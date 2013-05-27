@@ -173,6 +173,7 @@
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 }
