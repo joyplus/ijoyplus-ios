@@ -234,6 +234,13 @@
 		E738CD3A1713B8EB004C97E8 /* FeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = E738CD341713B8EB004C97E8 /* FeedbackViewController.xib */; };
 		E738CD3B1713B8EB004C97E8 /* L_FeedbackTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E738CD361713B8EB004C97E8 /* L_FeedbackTableViewCell.m */; };
 		E738CD3C1713B8EB004C97E8 /* R_FeedbackTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E738CD381713B8EB004C97E8 /* R_FeedbackTableViewCell.m */; };
+		E74E7E191754AC6B00A0472C /* iphone_shengdao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E171754AC6B00A0472C /* iphone_shengdao_s@2x.png */; };
+		E74E7E1A1754AC6B00A0472C /* iphone_shengdao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E181754AC6B00A0472C /* iphone_shengdao@2x.png */; };
+		E74E7E1C1754AD6E00A0472C /* iphone_shengdao_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E1B1754AD6E00A0472C /* iphone_shengdao_bg@2x.png */; };
+		E74E7E211754AF1300A0472C /* shengdao1_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E1D1754AF1300A0472C /* shengdao1_s@2x.png */; };
+		E74E7E221754AF1300A0472C /* shengdao1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E1E1754AF1300A0472C /* shengdao1@2x.png */; };
+		E74E7E231754AF1300A0472C /* shengdao2_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E1F1754AF1300A0472C /* shengdao2_s@2x.png */; };
+		E74E7E241754AF1300A0472C /* shengdao2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E74E7E201754AF1300A0472C /* shengdao2@2x.png */; };
 		E76341381728CC2500764126 /* tianjia_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E76341371728CC2400764126 /* tianjia_bg@2x.png */; };
 		E763413A1728D2AC00764126 /* wuxiazai@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E76341391728D2AB00764126 /* wuxiazai@2x.png */; };
 		E763413D1728EF7D00764126 /* jiechu_wenzi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E763413B1728EF7C00764126 /* jiechu_wenzi@2x.png */; };
@@ -848,6 +855,13 @@
 		E738CD361713B8EB004C97E8 /* L_FeedbackTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = L_FeedbackTableViewCell.m; sourceTree = "<group>"; };
 		E738CD371713B8EB004C97E8 /* R_FeedbackTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = R_FeedbackTableViewCell.h; sourceTree = "<group>"; };
 		E738CD381713B8EB004C97E8 /* R_FeedbackTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = R_FeedbackTableViewCell.m; sourceTree = "<group>"; };
+		E74E7E171754AC6B00A0472C /* iphone_shengdao_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_shengdao_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_shengdao_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		E74E7E181754AC6B00A0472C /* iphone_shengdao@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_shengdao@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_shengdao@2x.png"; sourceTree = SOURCE_ROOT; };
+		E74E7E1B1754AD6E00A0472C /* iphone_shengdao_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "iphone_shengdao_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/iphone_shengdao_bg@2x.png"; sourceTree = SOURCE_ROOT; };
+		E74E7E1D1754AF1300A0472C /* shengdao1_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shengdao1_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/shengdao1_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		E74E7E1E1754AF1300A0472C /* shengdao1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shengdao1@2x.png"; path = "yueshipin_ipad/Resource_iphone/shengdao1@2x.png"; sourceTree = SOURCE_ROOT; };
+		E74E7E1F1754AF1300A0472C /* shengdao2_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shengdao2_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/shengdao2_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		E74E7E201754AF1300A0472C /* shengdao2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shengdao2@2x.png"; path = "yueshipin_ipad/Resource_iphone/shengdao2@2x.png"; sourceTree = SOURCE_ROOT; };
 		E76341371728CC2400764126 /* tianjia_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tianjia_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/tianjia_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		E76341391728D2AB00764126 /* wuxiazai@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "wuxiazai@2x.png"; path = "yueshipin_ipad/Resource_iphone/wuxiazai@2x.png"; sourceTree = SOURCE_ROOT; };
 		E763413B1728EF7C00764126 /* jiechu_wenzi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "jiechu_wenzi@2x.png"; path = "yueshipin_ipad/Resource_iphone/jiechu_wenzi@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1594,6 +1608,13 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				E74E7E1D1754AF1300A0472C /* shengdao1_s@2x.png */,
+				E74E7E1E1754AF1300A0472C /* shengdao1@2x.png */,
+				E74E7E1F1754AF1300A0472C /* shengdao2_s@2x.png */,
+				E74E7E201754AF1300A0472C /* shengdao2@2x.png */,
+				E74E7E1B1754AD6E00A0472C /* iphone_shengdao_bg@2x.png */,
+				E74E7E171754AC6B00A0472C /* iphone_shengdao_s@2x.png */,
+				E74E7E181754AC6B00A0472C /* iphone_shengdao@2x.png */,
 				E797B17D174C996B0020DB06 /* blueArrow@2x.png */,
 				EBC39F15174C847700DB8EFD /* error.png */,
 				EBC39F16174C847700DB8EFD /* warning.png */,
@@ -2719,6 +2740,13 @@
 				E797B17E174C996B0020DB06 /* blueArrow@2x.png in Resources */,
 				E797B189174C997D0020DB06 /* DemoTableFooterView.xib in Resources */,
 				E797B18B174C997D0020DB06 /* DemoTableHeaderView.xib in Resources */,
+				E74E7E191754AC6B00A0472C /* iphone_shengdao_s@2x.png in Resources */,
+				E74E7E1A1754AC6B00A0472C /* iphone_shengdao@2x.png in Resources */,
+				E74E7E1C1754AD6E00A0472C /* iphone_shengdao_bg@2x.png in Resources */,
+				E74E7E211754AF1300A0472C /* shengdao1_s@2x.png in Resources */,
+				E74E7E221754AF1300A0472C /* shengdao1@2x.png in Resources */,
+				E74E7E231754AF1300A0472C /* shengdao2_s@2x.png in Resources */,
+				E74E7E241754AF1300A0472C /* shengdao2@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

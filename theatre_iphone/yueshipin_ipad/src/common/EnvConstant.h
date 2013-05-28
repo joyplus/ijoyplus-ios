@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
  //0: 测试环境     1. 正式环境
-#define ENVIRONMENT 0
+#define ENVIRONMENT 1
 
 #define VERSION @"1.0.1alpha"
 
@@ -33,7 +33,7 @@
 
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch2"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch1"
 #define CLOSE_VIDEO_MODE @"closeVideoMode2"
 
 
