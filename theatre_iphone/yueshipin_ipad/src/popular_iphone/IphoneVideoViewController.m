@@ -511,6 +511,7 @@
         NSInteger type = [[info objectForKey:@"type"] intValue];
 //        NSString * name1 = [info objectForKey:@"name"];
         NSString * subitemId = [info objectForKey:@"subItemId"];
+       
         if (type == 2)
         {
 //            NSString *name = [[name1 componentsSeparatedByString:@"_"] objectAtIndex:0];

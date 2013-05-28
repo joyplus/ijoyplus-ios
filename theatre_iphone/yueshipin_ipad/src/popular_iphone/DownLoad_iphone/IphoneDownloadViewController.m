@@ -458,7 +458,8 @@
                 iphoneAVPlayerViewController.islocalFile = YES;
                 iphoneAVPlayerViewController.nameStr = item.name;
                 iphoneAVPlayerViewController.prodId = item.itemId;
-                iphoneAVPlayerViewController.playNum = 0;
+                iphoneAVPlayerViewController.playNum = 1;
+                iphoneAVPlayerViewController.videoType = 1;
                 [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
             }
             else{
