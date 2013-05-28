@@ -2441,10 +2441,10 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     else{
         if ((duration - playbackTime)>5) {
-            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum)] result:[NSNumber numberWithInt:playbackTime] ];
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
         }
         else{
-            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum)] result:[NSNumber numberWithInt:0] ];
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:0] ];
         }
     }
 }
