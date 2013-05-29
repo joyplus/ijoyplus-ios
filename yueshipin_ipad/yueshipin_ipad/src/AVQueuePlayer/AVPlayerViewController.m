@@ -17,7 +17,7 @@
 #define RESOLUTION_KEY @"resolution_key"
 #define URL_KEY @"url_key"
 #define MAX_EPISODE_NUM 10
-
+#define TRACK_BUTTON_TAG 10012
 /* Asset keys */
 static NSString * const kTracksKey         = @"tracks";
 static NSString * const kPlayableKey		= @"playable";
@@ -49,6 +49,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic, strong) MBProgressHUD *myHUD;
 @property (nonatomic, strong) EpisodeListViewController *episodeListviewController;
 @property (nonatomic, strong) CMPopTipView *resolutionPopTipView;
+@property (nonatomic, strong) CMPopTipView *changeTrackView ;
 @property (nonatomic, strong) UIButton *biaoqingBtn;
 @property (nonatomic, strong) UIButton *gaoqingBtn;
 @property (nonatomic, strong) UIButton *chaoqingBtn;
@@ -91,6 +92,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 - (void)prepareToPlayAsset:(AVURLAsset *)asset;
 - (void)closeAllTimer;
 - (void)getVideoInfo;
+- (void)changeTracks:(int)type;
 
 @end
 
@@ -108,7 +110,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize type, isDownloaded, currentNum, closeAll;
 @synthesize workingUrl, myHUD, bottomView, controlVisibilityTimer;
 @synthesize episodeListviewController, subnameArray, lastPlayTime, resolutionLastPlaytime;
-@synthesize resolutionPopTipView, biaoqingBtn, chaoqingBtn, gaoqingBtn, routeBtn;
+@synthesize resolutionPopTipView, biaoqingBtn, chaoqingBtn, gaoqingBtn, routeBtn,changeTrackView;
 @synthesize vidoeTitle, videoWebViewControllerDelegate, airplayDeviceName, deviceOutputType;
 @synthesize prodId, applyTvView, resolutionNum, tipLabel, video, subname, name;
 @synthesize superClearArr, plainClearArr, highClearArr, urlArrayDictionary;
@@ -908,6 +910,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [[UIApplication sharedApplication] setStatusBarHidden:YES];
         }];
     }
+    
+    UIButton *tack = (UIButton *)[mToolbar viewWithTag:TRACK_BUTTON_TAG];
+    if (tack.selected) {
+        [self hiddenChangeTrackView];
+    }
+    
 }
 
 - (void)showPlayVideoView
@@ -1714,7 +1722,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 {
                     AVMutableAudioMixInputParameters *audioInputParams =
                     [AVMutableAudioMixInputParameters audioMixInputParameters];
-                    if (i > 0)
+                    if (i != 0)
                     {
                         [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
                     }
@@ -2175,6 +2183,113 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 
+#pragma mark - 
+#pragma mark trackChange
+-(void)showTrackSelectButton{
+    UIButton *trackSelect = [UIButton buttonWithType:UIButtonTypeCustom];
+    trackSelect.frame = CGRectMake( mPrevButton.frame.origin.x - 100,mPrevButton.frame.origin.y, 55, 50);
+    [trackSelect setBackgroundImage:[UIImage imageNamed:@"shengdao.png"] forState:UIControlStateNormal];
+    [trackSelect setBackgroundImage:[UIImage imageNamed:@"shengdao_s.png"] forState:UIControlStateHighlighted];
+    [trackSelect setBackgroundImage:[UIImage imageNamed:@"shengdao_s.png"] forState:UIControlStateSelected];
+    trackSelect.adjustsImageWhenHighlighted = NO;
+    trackSelect.tag = TRACK_BUTTON_TAG;
+    trackSelect.enabled = NO;
+    [trackSelect addTarget:self action:@selector(trackButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [mToolbar addSubview:trackSelect];
+}
+-(void)trackButtonPressed:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        [self showChangeTrackView];
+    }
+    else{
+        [self hiddenChangeTrackView];
+    }
+
+}
+-(void)showChangeTrackView{
+    if (changeTrackView == nil) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 240, 145)];
+        imageView.image = [UIImage imageNamed:@"ipad_shengdao_bg"];
+        imageView.userInteractionEnabled = YES;
+        UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [leftBtn setBackgroundImage:[UIImage imageNamed:@"ipad_shegdao1.png"] forState:UIControlStateNormal];
+        [leftBtn setBackgroundImage:[UIImage imageNamed:@"ipad_shegdao1_s.png"] forState:UIControlStateDisabled];
+        [leftBtn setBackgroundImage:[UIImage imageNamed:@"ipad_shegdao1_s.png"] forState:UIControlStateHighlighted];
+        leftBtn.enabled = NO;
+        leftBtn.tag = 300001;
+        [leftBtn addTarget:self action:@selector(trackButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+
+        leftBtn.frame = CGRectMake(10, 55, 99, 54);
+        [imageView addSubview:leftBtn];
+
+        UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [rightBtn setBackgroundImage:[UIImage imageNamed:@"ipad_shegdao2.png"] forState:UIControlStateNormal];
+        [rightBtn setBackgroundImage:[UIImage imageNamed:@"ipad_shegdao2_s.png"] forState:UIControlStateDisabled];
+        [rightBtn setBackgroundImage:[UIImage imageNamed:@"ipad_shegdao2_s.png"] forState:UIControlStateHighlighted];
+        rightBtn.tag = 300002;
+        [rightBtn addTarget:self action:@selector(trackButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        rightBtn.frame = CGRectMake(130, 55, 99, 54);
+        [imageView addSubview:rightBtn];
+
+        changeTrackView  = [[CMPopTipView alloc] initWithCustomView:imageView];
+        changeTrackView.backgroundColor = [UIColor clearColor];
+        changeTrackView.disableTapToDismiss = YES;
+        changeTrackView.animation = CMPopTipAnimationPop;
+        UIButton *button = (UIButton *)[mToolbar viewWithTag:TRACK_BUTTON_TAG];
+        [changeTrackView presentPointingAtView:button inView:self.view animated:YES];
+    }
+    [self.view bringSubviewToFront:changeTrackView];
+    changeTrackView.hidden = NO;
+    
+}
+
+-(void)hiddenChangeTrackView{
+         changeTrackView.hidden = YES;
+          UIButton *button = (UIButton *)[mToolbar viewWithTag:TRACK_BUTTON_TAG];
+          button.selected = NO;
+}
+
+-(void)trackButtonSelected:(UIButton *)btn{
+        for (UIView *view in changeTrackView.customView.subviews) {
+        if ([view isKindOfClass:[UIButton class]]) {
+                   UIButton *subBtn = (UIButton *)view;
+                    subBtn.enabled = YES;
+            }
+        }
+        btn.enabled = NO;
+        if (btn.tag == 300001){
+            [self changeTracks:0];
+            
+        }
+       else if(btn.tag == 300002){
+            [self changeTracks:1];
+           
+       }
+    
+}
+-(void)enableTracksSelectButton{
+    UIButton *button = (UIButton *)[mToolbar viewWithTag:TRACK_BUTTON_TAG];
+    button.enabled = YES;
+}
+
+- (void)changeTracks:(int)atype{    //0-第1个音轨；1-第2个音轨；
+        if (audioMix_) {
+                    NSArray *inputParametersArray = audioMix_.inputParameters;
+                    for (int i = 0; i < [inputParametersArray count]; i++) {
+                                AVMutableAudioMixInputParameters *oneAudioMixInPut = [inputParametersArray objectAtIndex:i];
+                                if (i == atype) {
+                                            [oneAudioMixInPut setVolume:0.6 atTime:[mPlayer currentTime]];
+                                        }
+                                else{
+                                            [oneAudioMixInPut setVolume:0.0 atTime:[mPlayer currentTime]];
+                                        }
+                                
+                            }
+                    [self.mPlayerItem setAudioMix:audioMix_];
+                }
+}
+
 #pragma mark -
 #pragma mark Loading the Asset Keys Asynchronously
 
@@ -2240,6 +2355,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     if (audioMix_) {
         [self.mPlayerItem setAudioMix:audioMix_];
+        [self showTrackSelectButton];
     }
     
     /* Observe the player item "status" key to determine when it is ready to play. */
@@ -2452,6 +2568,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                     }
                 }];
             }
+                [self enableTracksSelectButton];
                 break;
                 
             case AVPlayerStatusFailed:
