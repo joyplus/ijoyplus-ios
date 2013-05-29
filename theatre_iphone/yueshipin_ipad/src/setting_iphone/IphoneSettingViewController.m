@@ -178,21 +178,24 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
 //    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
 //    [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
 //    [scrollView addSubview:xinshouyindao];
-	
-    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 430, 55, 13)];
-    jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
-    [scrollView addSubview:jinpin];
     
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 450,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
-    [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
-    _mGridView.datasource = self;
-    _mGridView.delegate = self;
-    _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
-    _mGridView.autoresizesSubviews = NO;
-    _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+	if ([CommonMotheds getOnlineConfigValue] != 2) {
+        UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 430, 55, 13)];
+        jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
+        [scrollView addSubview:jinpin];
+        
+        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 450,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+        [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
+        _mGridView.datasource = self;
+        _mGridView.delegate = self;
+        _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
+        _mGridView.autoresizesSubviews = NO;
+        _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        
+        [_mGridView requestPromoterDataInBackground];
+        [scrollView addSubview:_mGridView];
+    }
     
-    [_mGridView requestPromoterDataInBackground];
-    [scrollView addSubview:_mGridView];
     
    
     
