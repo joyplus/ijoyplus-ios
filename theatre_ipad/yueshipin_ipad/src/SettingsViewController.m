@@ -47,7 +47,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UISwitch *sinaSwitch;
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
-    
+    UISwitch *download3GSwitch;
     UIButton *followBtn;
 }
 
@@ -84,7 +84,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
-        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 120, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 100, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
         sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
         
@@ -97,52 +97,62 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 140, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
         sinaSwitch.onTintColor = [UIColor colorWithRed:1 green:159.0/255.0 blue:204.0/255.0 alpha:1];
-        [self.view addSubview:sinaSwitch];                       
+        [self.view addSubview:sinaSwitch];
+        
+        UIImageView * download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 185, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        download3GBG.image = [UIImage imageNamed:@"setting_3G_bg"];
+        [self.view addSubview:download3GBG];
+        
+        download3GSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 205, 75, 27)];
+        [download3GSwitch addTarget:self action:@selector(Download3GSwitchClicked:) forControlEvents:UIControlEventValueChanged];
+        [self.view addSubview:download3GSwitch];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        download3GSwitch.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
        
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearCacheBtn.frame = CGRectMake(leftWidth, sinaWeiboBg.frame.origin.y + sinaWeiboBg.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        clearCacheBtn.frame = CGRectMake(leftWidth, download3GBG.frame.origin.y + download3GBG.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:suggestionBtn];
         
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        commentBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:commentBtn];
         
         followBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        followBtn.frame = CGRectMake(leftWidth, commentBtn.frame.origin.y + commentBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        followBtn.frame = CGRectMake(leftWidth, commentBtn.frame.origin.y + commentBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow"] forState:UIControlStateNormal];
         [followBtn setBackgroundImage:[UIImage imageNamed:@"follow_pressed"] forState:UIControlStateHighlighted];
         [followBtn addTarget:self action:@selector(followBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:followBtn];
         
         speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        speakBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        speakBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
         [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:speakBtn];
         
         UIButton *checkUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate"] forState:UIControlStateNormal];
         [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate_pressed"] forState:UIControlStateHighlighted];
         [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:checkUpdateBtn];
         
         aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(leftWidth, checkUpdateBtn.frame.origin.y + checkUpdateBtn.frame.size.height + 10, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        aboutBtn.frame = CGRectMake(leftWidth, checkUpdateBtn.frame.origin.y + checkUpdateBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
         [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
         [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -276,6 +286,20 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                                                  otherButtonTitles:@"确定", nil];
         [alertView show];
     }
+}
+
+- (void)Download3GSwitchClicked:(UISwitch *)sender
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *value = nil;
+    if (download3GSwitch.isOn) {
+        value = [NSNumber numberWithBool:YES];
+    }
+    else{
+        value = [NSNumber numberWithBool:NO];
+    }
+    [defaults setObject:value forKey:@"isSupport3GDownload"];
+    [defaults synchronize];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

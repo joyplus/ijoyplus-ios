@@ -27,7 +27,8 @@
 #import "IphoneAVPlayerViewController.h"
 #import "SystemMethods.h"
 
-#define DAY(day)        (day * 3600 * 24)
+#define DAY(day)                (day * 3600 * 24)
+#define kSysMaxTimePerBgTask    (10 * 60)
 
 @interface AppDelegate ()
 @property (nonatomic, strong) Reachability *hostReach;
@@ -65,6 +66,7 @@
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
+@synthesize bgTask;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -310,6 +312,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     [self.downLoadManager pauseAllTask];
+    [self continueDownloadWhenEnterBackground:application];
     
     //When app enter background, add a new local Notification
     [self addLocalNotification];
@@ -546,6 +549,66 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
     }
     
+}
+
+#pragma mark - 
+#pragma mark - download at background
+
+- (void)continueDownloadWhenEnterBackground:(UIApplication *)application
+{
+    UIDevice* device = [UIDevice currentDevice];
+    
+    BOOL backgroundSupported = NO;
+    
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+        
+        backgroundSupported = device.multitaskingSupported;
+    
+    if (!backgroundSupported)
+    {
+        return;
+    }
+    
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        
+        // Clean up any unfinished task business by marking where you
+        
+        // stopped or ending the task outright.
+        
+        [self.downLoadManager pauseAllTask];
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    }];
+    
+    
+    
+    // Start the long-running task and return immediately.
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        int curDownloadNum = [DownLoadManager downloadingTaskCount];
+        BOOL isDownloadFinish = (curDownloadNum == 0 ? YES : NO);
+        if (!isDownloadFinish)
+        {
+            [self.downLoadManager resumeDownLoad];
+        }
+        
+        while (!isDownloadFinish)
+        {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            [NSThread sleepForTimeInterval:5];
+            isDownloadFinish = ([DownLoadManager downloadingTaskCount] == 0 ? YES : NO);
+        }
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    });
 }
 
 #pragma mark - 
