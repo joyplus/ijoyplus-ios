@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface FindViewController : UIViewController<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate>{
+#import "PullRefreshManagerClinet.h"
+@interface FindViewController : UIViewController<UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate,PullRefreshManagerClinetDelegate>{
    UISearchBar *searchBar_;
    UITableView *tableList_;
    NSMutableArray *searchResults_;
@@ -16,6 +16,7 @@
    NSString *topicId_;
    UIBarButtonItem *rightButtonItem_;
    int type_;
+   int loadCount_;
 }
 @property (nonatomic, strong)UISearchBar *searchBar;
 @property (nonatomic, strong)UITableView *tableList;
@@ -24,4 +25,5 @@
 @property (nonatomic, strong)NSString *topicId;
 @property (nonatomic, strong)UIBarButtonItem *rightButtonItem;
 @property (nonatomic, assign)int type;
+@property (nonatomic, strong)PullRefreshManagerClinet *pullRefreshManager;
 @end

@@ -251,6 +251,9 @@
     label.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",total,(total-used)];
 
 }
+-(void)reFreshUI{
+ [self reloadDataSource];
+}
 -(void)back:(id)sender{
     [self.navigationController popViewControllerAnimated:YES];
 }

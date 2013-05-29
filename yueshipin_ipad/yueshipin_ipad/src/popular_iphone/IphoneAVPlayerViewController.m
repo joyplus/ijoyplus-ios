@@ -1469,7 +1469,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     [bottomView_ addSubview:mScrubber];
     
     
-    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(9, 8, 90, 10)];
+    seeTimeLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(mScrubber.frame.origin.x - 55, 8, 50, 10)];
     seeTimeLabel_.backgroundColor = [UIColor clearColor];
     seeTimeLabel_.font = [UIFont systemFontOfSize:12];
     seeTimeLabel_.textAlignment = NSTextAlignmentLeft;
@@ -1553,7 +1553,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     localLogoBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     localLogoBtn.frame = CGRectMake(kFullWindowHeight-87, 8, 33, 27);
     localLogoBtn.backgroundColor = [UIColor clearColor];
-    [localLogoBtn setBackgroundImage:[UIImage imageNamed:@"bendi_icon"] forState:UIControlStateNormal];
+    [localLogoBtn setBackgroundImage:[UIImage imageNamed:@"bendi_icon_iPhone"] forState:UIControlStateNormal];
     localLogoBtn.tag = LOCAL_LOGO_BUTTON_TAG;
     [bottomToolBar_ addSubview:localLogoBtn];
     
@@ -1926,7 +1926,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 return;
             }
             islocalFile_ = NO;
-            self.localPlaylist = [CommonMotheds localPlaylists:self.prodId];
+            self.localPlaylist = [CommonMotheds localPlaylists:self.prodId type:videoType_];
             if ((playNum + 1) >= episodesArr_.count)
             {
                 [self playEnd];
@@ -2359,7 +2359,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         line.frame = CGRectMake(1, 37, cell.frame.size.width-2, 1);
         [cell.contentView addSubview:line];
         
-        UIImageView * logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"local_file_icon"]];
+        UIImageView * logo = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"local_file_icon_iPhone"]];
         logo.frame = CGRectMake(tableList_.frame.size.width - 25, 0, 25, 25);
         [cell.contentView addSubview:logo];
         logo.backgroundColor = [UIColor clearColor];
@@ -2510,7 +2510,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 - (NSMutableArray *)downloadIndexArray
 {
     NSMutableArray * dArray = [[NSMutableArray alloc] init];
-    NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId];
+    NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId  type:videoType_];
     self.localPlaylist = downloadedItem;
     if (videoType_ == SHOW_TYPE)
     {

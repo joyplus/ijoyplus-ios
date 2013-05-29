@@ -397,8 +397,14 @@ enum
     [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:_parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSArray *itemsArr = [result objectForKey:@"results"];
         [_dataArr addObjectsFromArray:itemsArr];
+        
+        if ([itemsArr count]<12) {
+            pullToRefreshManager_.canLoadMore = NO;
+        }
+        else{
+            pullToRefreshManager_.canLoadMore = YES;
+        }
         [_tableList reloadData];
-        pullToRefreshManager_.canLoadMore = YES;
         [pullToRefreshManager_ loadMoreCompleted];
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -447,6 +453,13 @@ enum
     if (result != nil) {
         NSArray *itemsArr = [result objectForKey:@"results"];
         [_dataArr addObjectsFromArray:itemsArr];
+        
+        if ([itemsArr count]<12) {
+            pullToRefreshManager_.canLoadMore = NO;
+        }
+        else{
+            pullToRefreshManager_.canLoadMore = YES;
+        }
     }
 }
 

@@ -152,6 +152,20 @@
     [[AppDelegate instance].padDownloadManager stopDownloading];
 }
 
++ (void)updateDBAfterStopDownload
+{
+    BOOL displayNoSpaceFlag = NO;
+    for (DownloadItem *item in [DatabaseManager allObjects:DownloadItem.class]) {
+        displayNoSpaceFlag = [self changeItemStatusToStop:item];
+    }
+    for (SubdownloadItem *item in [DatabaseManager allObjects:SubdownloadItem.class]) {
+        displayNoSpaceFlag = [self changeItemStatusToStop:item];
+    }
+    
+    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance].padDownloadManager stopDownloading];
+}
+
 + (BOOL)changeItemStatusToStop:(DownloadItem *)item
 {
     if ([item isKindOfClass:[SubdownloadItem class]]) {

@@ -223,6 +223,12 @@ enum
                 if(tempArray.count > 0) {
                     [self.showListArr addObjectsFromArray:tempArray];
                 }
+                if ([tempArray count] < PAGESIZE){
+                    pullToRefreshManager_.canLoadMore = NO;
+                }
+                else{
+                    pullToRefreshManager_.canLoadMore = YES;
+                }
             }
         }
         
@@ -253,9 +259,14 @@ enum
                 [self.showListArr addObjectsFromArray:tempTopsArray];
 
             }
+            if ([tempTopsArray count] < PAGESIZE){
+                pullToRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullToRefreshManager_.canLoadMore = YES;
+            }
             
             [showTableList_ reloadData];
-            pullToRefreshManager_.canLoadMore = YES;
             [pullToRefreshManager_ loadMoreCompleted];
         }
         

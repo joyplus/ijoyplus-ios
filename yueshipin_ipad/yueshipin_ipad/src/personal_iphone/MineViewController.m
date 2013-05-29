@@ -98,7 +98,7 @@
             self.favArr = [[NSMutableArray alloc]initWithCapacity:10];
         }
         [progressHUD_ hide:YES];
-        [CommonMotheds showInternetError:error inView:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
 }
@@ -126,7 +126,7 @@
         NSLog(@"%@", error);
        
       [progressHUD_ hide:YES];
-      [CommonMotheds showInternetError:error inView:self.view];
+      [UIUtility showDetailError:self.view error:error];
     }];
 
 
@@ -390,7 +390,7 @@
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [progressHUD_ hide:YES];
         NSLog(@"%@", error);
-       [CommonMotheds showInternetError:error inView:self.view];
+       [UIUtility showDetailError:self.view error:error];
     }];
     
 }
@@ -912,7 +912,7 @@
                         [UIUtility showSystemError:self.view];
                     }
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                    [UIUtility showSystemError:self.view];
+                    [UIUtility showDetailError:self.view error:error];
                 }];
 
                 break;

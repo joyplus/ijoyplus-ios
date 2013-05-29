@@ -31,6 +31,7 @@
 @synthesize topicId = topicId_;
 @synthesize rightButtonItem = rightButtonItem_;
 @synthesize type = type_;
+@synthesize pullRefreshManager = pullRefreshManager_;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -104,6 +105,11 @@
     tableList_.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:tableList_];
     
+    pullRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:tableList_];
+    pullRefreshManager_.delegate = self;
+    
+    [pullRefreshManager_ setShowHeaderView:NO];
+    
 }
 
 -(void)back:(id)sender{
@@ -117,7 +123,7 @@
        [UIUtility showNetWorkError:self.view];
         return;
     }
-    
+    loadCount_ = 1;
     MBProgressHUD  *tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
     [self.view addSubview:tempHUD];
     tempHUD.labelText = @"加载中...";
@@ -137,6 +143,13 @@
             else{
                 [self showFailureView:1];
             }
+            
+            if ([searchResult count] < PAGESIZE) {
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
         }
         
         [tableList_ reloadData];
@@ -145,10 +158,40 @@
         NSLog(@"%@", error);
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
         [tempHUD hide:YES];
+        [UIUtility showDetailError:self.view error:error];
     }];
     
     
 }
+
+-(void)loadMore{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:searchBar_.text, @"keyword", [NSString stringWithFormat:@"%d",loadCount_], @"page_num", [NSNumber numberWithInt:PAGESIZE], @"page_size",[NSNumber numberWithInt:type_], @"type", nil];
+    
+    [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *searchResult = [result objectForKey:@"results"];
+            if(searchResult != nil && searchResult.count > 0){
+                [searchResults_ addObjectsFromArray:searchResult];
+            }
+            if ([searchResult count] < PAGESIZE) {
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
+        }
+        
+        [tableList_ reloadData];
+        [pullRefreshManager_ loadMoreCompleted];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showDetailError:self.view error:error];
+    }];
+    
+    
+    
+}
+
 - (void)showFailureView:(float)closeTime
 {
     
@@ -266,6 +309,27 @@
     [self.tableList reloadData];
 }
 
+#pragma mark -
+#pragma mark - UIScrollviewDelegate
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullRefreshManager_ scrollViewScrolled:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [pullRefreshManager_ scrollViewEnd:scrollView];
+}
+
+#pragma mark -
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoLoadMore{
+    loadCount_ ++;
+    [self loadMore];
+}
+
 - (void)addBtnClicked
 {
     if (![CommonMotheds isNetworkEnbled]) {
@@ -292,7 +356,7 @@
             NSLog(@"fail");
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 

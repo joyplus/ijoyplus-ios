@@ -34,7 +34,7 @@
 
 //友盟在线参数
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch1"
-#define CLOSE_VIDEO_MODE @"closeVideoMode1"
+#define CLOSE_VIDEO_MODE @"closeVideoMode2"
 
 
 //正式环境

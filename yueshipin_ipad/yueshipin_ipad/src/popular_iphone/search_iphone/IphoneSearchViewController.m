@@ -125,7 +125,7 @@
         NSLog(@"%@", error);
         searchResults_ = [[NSMutableArray alloc]initWithCapacity:10];
         [tempHUD hide:YES];
-        
+        [UIUtility showDetailError:self.view error:error];
     }];
 
 

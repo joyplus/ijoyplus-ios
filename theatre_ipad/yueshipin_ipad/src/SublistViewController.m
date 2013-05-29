@@ -38,8 +38,8 @@
     [super viewDidLoad];
     self.tableView.scrollEnabled = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableView.layer.borderWidth = 1;
-    self.tableView.layer.borderColor = CMConstants.tableBorderColor.CGColor;
+    self.tableView.layer.borderWidth = 0.5;
+    self.tableView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;
     [self.view setBackgroundColor:[UIColor whiteColor]];
     
 }

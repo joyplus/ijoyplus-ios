@@ -333,10 +333,15 @@
             if(tempTopsArray.count > 0){
                 [listArr_ addObjectsFromArray:tempTopsArray];
             }
+            if ([tempTopsArray count] < 10) {
+                pullToRefreshManagerFAV_.canLoadMore = NO;
+            }
+            else{
+            
+                pullToRefreshManagerFAV_.canLoadMore = YES;
+            }
         }
-
         [self.tableView reloadData];
-        pullToRefreshManagerFAV_.canLoadMore = YES;
         [pullToRefreshManagerFAV_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
        [UIUtility showDetailError:self.view error:error];

@@ -19,6 +19,7 @@
 + (BOOL)isAirPlayActive;
 + (float)getFreeDiskspace;
 + (void)triggerSpaceNotEnough;
++ (void)updateDBAfterStopDownload;
 + (int)getReadyItemNumber;
 
 @end

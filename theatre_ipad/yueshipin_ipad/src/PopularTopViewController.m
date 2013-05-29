@@ -14,7 +14,7 @@
 #import "ShowDetailViewController.h"
 #import "ListViewController.h"
 #import "SubsearchViewController.h"
-#import "CommonHeader.h"
+#import "CommonHeader.h" 
 
 #define TOP_IMAGE_HEIGHT 170
 #define VIDEO_BUTTON_WIDTH 120
@@ -226,7 +226,7 @@ void transferDataFromOldDbWithCatch()
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }
@@ -272,7 +272,7 @@ void transferDataFromOldDbWithCatch()
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }
@@ -319,7 +319,7 @@ void transferDataFromOldDbWithCatch()
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }
@@ -368,7 +368,7 @@ void transferDataFromOldDbWithCatch()
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     }
 }
@@ -576,7 +576,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)movieListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -589,7 +589,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -602,7 +602,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)showListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
@@ -615,7 +615,7 @@ void transferDataFromOldDbWithCatch()
 
 - (void)comicListBtnClicked:(UIButton *)sender
 {
-    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewInSlider:self];
+    [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
     [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {

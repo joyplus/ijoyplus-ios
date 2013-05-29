@@ -136,7 +136,7 @@
 - (NSDictionary *)downloadedItem:(NSString *)Id
                            index:(NSInteger)index
 {
-    NSArray * playlists = [CommonMotheds localPlaylists:Id];
+    NSArray * playlists = [CommonMotheds localPlaylists:Id type:type];
     
     if (0 == playlists.count)
     {
@@ -448,9 +448,9 @@
     }
     else
     {
-        if (nil != [self downloadedItem:self.prodId index:num])
+        NSDictionary * info = [self downloadedItem:self.prodId index:num];
+        if (nil != info)
         {
-            NSDictionary * info = [self downloadedItem:self.prodId index:num];
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.videoFormat = [info objectForKey:@"downloadType"];
             viewController.isDownloaded = YES;
@@ -458,7 +458,7 @@
             viewController.closeAll = YES;
             viewController.videoUrl = [info objectForKey:@"videoUrl"];
             viewController.type = type;
-            viewController.name = [info objectForKey:@"name"];
+            viewController.name = [video objectForKey:@"name"];//[info objectForKey:@"name"];
             if (type == SHOW_TYPE)
             {
                 viewController.subname = [info objectForKey:@"name"];

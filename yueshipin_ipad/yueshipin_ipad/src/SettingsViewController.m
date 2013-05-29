@@ -45,6 +45,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UIButton *aboutBtn;
     UIButton *speakBtn;
     UISwitch *sinaSwitch;
+    UISwitch *download3GSwitch;
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
     
@@ -84,7 +85,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         topImage.image = [UIImage imageNamed:@"setting_title"];
         [self.view addSubview:topImage];
         
-        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 120, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        sinaWeiboBg = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 110, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
         sinaWeiboBg.image = [UIImage imageNamed:@"setting_cell_bg"];
         [self.view addSubview:sinaWeiboBg];
         
@@ -94,19 +95,29 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaUsernameLabel.textColor = CMConstants.titleBlueColor;
         [sinaWeiboBg addSubview:sinaUsernameLabel];
         
-        sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 140, 75, 27)];
+        sinaSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 130, 75, 27)];
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
-        [self.view addSubview:sinaSwitch];                       
+        [self.view addSubview:sinaSwitch];
+        
+        UIImageView * download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 200, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        download3GBG.image = [UIImage imageNamed:@"setting_3G_bg"];
+        [self.view addSubview:download3GBG];
+        
+        download3GSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 220, 75, 27)];
+        [download3GSwitch addTarget:self action:@selector(Download3GSwitchClicked:) forControlEvents:UIControlEventValueChanged];
+        [self.view addSubview:download3GSwitch];
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        download3GSwitch.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
        
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearCacheBtn.frame = CGRectMake(leftWidth, sinaWeiboBg.frame.origin.y + sinaWeiboBg.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        clearCacheBtn.frame = CGRectMake(leftWidth, download3GBG.frame.origin.y + download3GBG.frame.size.height + 30, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 40, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 30, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -275,6 +286,20 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
                                                  otherButtonTitles:@"确定", nil];
         [alertView show];
     }
+}
+
+- (void)Download3GSwitchClicked:(UISwitch *)sender
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSNumber *value = nil;
+    if (download3GSwitch.isOn) {
+        value = [NSNumber numberWithBool:YES];
+    }
+    else{
+        value = [NSNumber numberWithBool:NO];
+    }
+    [defaults setObject:value forKey:@"isSupport3GDownload"];
+    [defaults synchronize];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

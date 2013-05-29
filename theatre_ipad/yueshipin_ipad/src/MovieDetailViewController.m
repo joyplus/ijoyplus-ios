@@ -207,8 +207,8 @@
 
     self.introContentTextView.frame = CGRectMake(LEFT_WIDTH, 440, 430, 100);
     self.introContentTextView.textColor = CMConstants.grayColor;
-    self.introContentTextView.layer.borderWidth = 1;
-    self.introContentTextView.layer.borderColor = [UIColor colorWithRed:213/255.0 green:213/255.0 blue:213/255.0 alpha:1].CGColor;
+    self.introContentTextView.layer.borderWidth = 0.5;
+    self.introContentTextView.layer.borderColor = [UIColor colorWithRed:203/255.0 green:203/255.0 blue:203/255.0 alpha:1].CGColor;;
     tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(introBtnClicked)];
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
@@ -263,7 +263,7 @@
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [myHUD hide];
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     } else {
         [myHUD hide];
@@ -503,7 +503,7 @@
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -537,7 +537,7 @@
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"pushed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -569,7 +569,7 @@
             [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
