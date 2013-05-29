@@ -73,6 +73,7 @@
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
 #define UPDATE_DISK_STORAGE @"update_disk_storage"
 #define NO_ENOUGH_SPACE @"no_enough_space"
+#define RELOAD_MENU_ITEM @"reload_menu_item"
 #define LEAST_DISK_SPACE 300.0/1024.0
 
 #define MOVE_TO_CLOSE_TAG 867394029

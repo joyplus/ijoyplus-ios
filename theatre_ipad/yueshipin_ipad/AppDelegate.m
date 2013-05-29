@@ -163,7 +163,10 @@
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
-    self.showVideoSwitch = @"0";
+    self.showVideoSwitch = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:SHOW_VIDEO_SWITCH];
+    if (self.showVideoSwitch == nil) {
+        self.showVideoSwitch = @"2";
+    }
     self.closeVideoMode = @"0";
     networkStatus = 2;
     show3GAlertSeq = @"0";
@@ -266,6 +269,8 @@
     }
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
+    [[ContainerUtility sharedInstance] setAttribute:self.showVideoSwitch forKey:SHOW_VIDEO_SWITCH];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
