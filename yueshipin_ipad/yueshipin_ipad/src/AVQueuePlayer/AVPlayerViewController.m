@@ -88,7 +88,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 - (BOOL)isPlaying;
 - (void)playerItemDidReachEnd:(NSNotification *)notification ;
 - (void)observeValueForKeyPath:(NSString*) path ofObject:(id)object change:(NSDictionary*)change context:(void*)context;
-- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys;
+- (void)prepareToPlayAsset:(AVURLAsset *)asset;
 - (void)closeAllTimer;
 - (void)getVideoInfo;
 
@@ -1725,21 +1725,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 audioMix_ = [AVMutableAudioMix audioMix];
                 [audioMix_ setInputParameters:allAudioParams];
             }
+            if (!isClosed)
+                [self prepareToPlayAsset:asset];
         });
         
-        NSArray *requestedKeys = [NSArray arrayWithObjects:kTracksKey, kPlayableKey, nil];
+       
         
         /* Tells the asset to load the values of any of the specified keys that are not already loaded. */
-        __block typeof (self) myself = self;
-        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
-         ^{
-             dispatch_async( dispatch_get_main_queue(),
-                            ^{
-                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
-                                if (!isClosed)
-                                    [myself prepareToPlayAsset:asset withKeys:requestedKeys];
-                            });
-         }];
+//        __block typeof (self) myself = self;
+//        [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:
+//         ^{
+//             dispatch_async( dispatch_get_main_queue(),
+//                            ^{
+//                                /* IMPORTANT: Must dispatch to main queue in order to operate on the AVPlayer and AVPlayerItem. */
+//                                
+//                            });
+//         }];
 	}
 }
 
@@ -2183,7 +2184,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
  Checks whether loading was successfull and whether the asset is playable.
  If so, sets up an AVPlayerItem and an AVPlayer to play the asset.
  */
-- (void)prepareToPlayAsset:(AVURLAsset *)asset withKeys:(NSArray *)requestedKeys
+- (void)prepareToPlayAsset:(AVURLAsset *)asset
 {
     /* Make sure that the value of each key has loaded successfully. */
     //	for (NSString *thisKey in requestedKeys)
