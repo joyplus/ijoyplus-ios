@@ -73,6 +73,7 @@
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
 #define UPDATE_DISK_STORAGE @"update_disk_storage"
 #define NO_ENOUGH_SPACE @"no_enough_space"
+#define RELOAD_MENU_ITEM @"reload_menu_item"
 #define LEAST_DISK_SPACE 300.0/1024.0
 
 #define MOVE_TO_CLOSE_TAG 867394029
@@ -105,6 +106,7 @@
 #define SHOW_PLAY_INTRO_WITH_DOWNLOAD @"show_play_intro_with_download"
 #define WIFI_IS_NOT_AVAILABLE @"wifi_is_not_available"
 #define KEY_NETWORK_BECOME_AVAILABLE    (@"network_available")
+#define NETWORK_CHANGED  @"networkChanged"
 #define APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION   (@"applicationDidEnterBackground")
 #define APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION      (@"applicationDidBecomeActive")
 

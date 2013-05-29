@@ -202,4 +202,9 @@
     return playlistInfo;
 }
 
++(int)getOnlineConfigValue{
+
+   NSString *valueStr = [AppDelegate instance].showVideoSwitch;
+   return [valueStr intValue];
+}
 @end

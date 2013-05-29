@@ -55,6 +55,7 @@
 {
     [super viewDidLoad];
     [self.view addGestureRecognizer:self.swipeRecognizer];
+     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
     [self reloadSubitems];
 }
 
@@ -517,7 +518,11 @@
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
     [[NSNotificationCenter defaultCenter] postNotificationName:UPDATE_DISK_STORAGE object:nil];
 }
-
+- (void)refreshDownloadView
+{
+    [self reloadSubitems];
+    [_gmGridView reloadData];
+}
 #pragma mark -
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
