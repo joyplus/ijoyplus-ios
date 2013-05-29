@@ -45,6 +45,9 @@
 @property (nonatomic, strong) NSString *playWithDownload;
 
 @property (nonatomic, assign)BOOL isInPlayView;
+
+@property UIBackgroundTaskIdentifier bgTask;
+
 + (AppDelegate *) instance;
 - (void)startHttpServer;
 - (void)stopHttpServer;

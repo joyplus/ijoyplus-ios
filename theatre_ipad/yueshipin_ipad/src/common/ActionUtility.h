@@ -20,5 +20,5 @@
 + (float)getFreeDiskspace;
 + (void)triggerSpaceNotEnough;
 + (int)getReadyItemNumber;
-
++ (void)updateDBAfterStopDownload;
 @end

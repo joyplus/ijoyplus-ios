@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "AppDelegate.h"
 @interface CommonMotheds : NSObject
 +(BOOL)isNetworkEnbled;
 +(void)showNetworkDisAbledAlert:(UIView *)view;
@@ -17,4 +17,6 @@
 +(void)setVersion;
 + (NSArray *)localPlaylists:(NSString *)mediaId
                        type:(NSInteger)type;
++(int)getOnlineConfigValue;
+
 @end
