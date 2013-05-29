@@ -47,7 +47,7 @@ NSString * const k_CurrentItemKey	= @"currentItem";
 #define SELECT_BUTTON_TAG 10009
 #define CLOUND_TV_BUTTON_TAG    10010
 #define LOCAL_LOGO_BUTTON_TAG   10011
-
+#define TRACK_BUTTON_TAG 10012
 #define PLAIN_CLEAR 100
 #define HIGH_CLEAR 200
 #define SUPER_CLEAR 300
@@ -79,6 +79,7 @@ enum
 - (void)getVideoDetail;
 - (void)prepareOnlinePlay:(NSArray *)episodes;
 - (void)playLocal:(NSDictionary *)file;
+- (void)changeTracks:(int)type;
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -138,8 +139,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         
         workingUrl_ = URL.absoluteString;
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
-        [self prepareToPlayAsset:asset];
-        
+       
         NSString * nameStr = @"myQueue";
         const char * queueName = [nameStr UTF8String];
         dispatch_queue_t queue = dispatch_queue_create(queueName, NULL);
@@ -152,7 +152,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 {
                     AVMutableAudioMixInputParameters *audioInputParams =
                     [AVMutableAudioMixInputParameters audioMixInputParameters];
-                    if (i > 0)
+                    if (i != 0)
                     {
                         [audioInputParams setVolume:0.0 atTime:kCMTimeZero];
                     }
@@ -163,6 +163,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 audioMix_ = [AVMutableAudioMix audioMix];
                 [audioMix_ setInputParameters:allAudioParams];
             }
+             [self prepareToPlayAsset:asset];
         });
 	}
 }
@@ -228,6 +229,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     if (audioMix_) {
         [self.mPlayerItem setAudioMix:audioMix_];
+        [self showTrackSelectButton];
     }
     /* Observe the player item "status" key to determine when it is ready to play. */
     [self.mPlayerItem addObserver:self
@@ -490,6 +492,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self initScrubberTimer];
                 [self initTimeLabelTimer];
                 [self enableBottomToolBarButtons];
+                [self enableTracksSelectButton];
                 //[self showToolBar];
                 
                 [mPlayer play];
@@ -672,6 +675,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     clarityButton_.selected = NO;
     tableList_.frame = CGRectMake(kFullWindowHeight-110, 55, 100, 0);
     clearBgView_.hidden = YES;
+    [self hiddenChangeTrackView];
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 -(void)showToolBar{
@@ -703,7 +707,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         clarityButton_.selected = NO;
         clearBgView_.hidden = YES;
     }
-    
+    UIButton *tack = (UIButton *)[bottomToolBar_ viewWithTag:TRACK_BUTTON_TAG];
+    if (tack.selected) {
+        tack.selected = NO;
+        [self hiddenChangeTrackView];
+    }
     
     [self resetMyTimer];
     
@@ -1750,6 +1758,89 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         }
     }
 }
+
+
+-(void)showTrackSelectButton{
+        UIButton *trackSelect = [UIButton buttonWithType:UIButtonTypeCustom];
+        trackSelect.frame = CGRectMake(kFullWindowHeight-160, 7, 33, 27);
+        trackSelect.backgroundColor = [UIColor clearColor];
+        [trackSelect setBackgroundImage:[UIImage imageNamed:@"iphone_shengdao"] forState:UIControlStateNormal];
+        [trackSelect setBackgroundImage:[UIImage imageNamed:@"iphone_shengdao_s"] forState:UIControlStateHighlighted];
+        [trackSelect setBackgroundImage:[UIImage imageNamed:@"iphone_shengdao_s"] forState:UIControlStateSelected];
+        trackSelect.adjustsImageWhenHighlighted = NO;
+        trackSelect.tag = TRACK_BUTTON_TAG;
+        trackSelect.enabled = NO;
+        [trackSelect addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
+        [bottomToolBar_ addSubview:trackSelect];
+}
+-(void)showChangeTrackView{
+        if (changeTrackView_ == nil) {
+                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 138, 109)];
+                imageView.image = [UIImage imageNamed:@"iphone_shengdao_bg"];
+                imageView.userInteractionEnabled = YES;
+                UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [leftBtn setBackgroundImage:[UIImage imageNamed:@"shengdao1"] forState:UIControlStateNormal];
+                [leftBtn setBackgroundImage:[UIImage imageNamed:@"shengdao1_s"] forState:UIControlStateDisabled];
+                [leftBtn setBackgroundImage:[UIImage imageNamed:@"shengdao1_s"] forState:UIControlStateHighlighted];
+                leftBtn.enabled = NO;
+                leftBtn.tag = 300001;
+                [leftBtn addTarget:self action:@selector(trackButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+        
+                leftBtn.frame = CGRectMake(5, 55, 60, 32);
+                [imageView addSubview:leftBtn];
+        
+                UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                [rightBtn setBackgroundImage:[UIImage imageNamed:@"shengdao2"] forState:UIControlStateNormal];
+                [rightBtn setBackgroundImage:[UIImage imageNamed:@"shengdao2_s"] forState:UIControlStateDisabled];
+                [rightBtn setBackgroundImage:[UIImage imageNamed:@"shengdao2_s"] forState:UIControlStateHighlighted];
+                rightBtn.tag = 300002;
+                [rightBtn addTarget:self action:@selector(trackButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+                rightBtn.frame = CGRectMake(74, 55, 60, 32);
+                [imageView addSubview:rightBtn];
+        
+                changeTrackView_  = [[CMPopTipView alloc] initWithCustomView:imageView];
+                changeTrackView_.backgroundColor = [UIColor clearColor];
+                changeTrackView_.disableTapToDismiss = YES;
+                changeTrackView_.animation = CMPopTipAnimationPop;
+                UIButton *button = (UIButton *)[bottomToolBar_ viewWithTag:TRACK_BUTTON_TAG];
+                [changeTrackView_ presentPointingAtView:button inView:self.view animated:YES];
+            }
+        [self.view bringSubviewToFront:changeTrackView_];
+        changeTrackView_.hidden = NO;
+    
+    }
+
+-(void)hiddenChangeTrackView{
+      changeTrackView_.hidden = YES;
+      UIButton *button = (UIButton *)[bottomToolBar_ viewWithTag:TRACK_BUTTON_TAG];
+      button.selected = NO;
+}
+
+-(void)trackButtonSelected:(UIButton *)btn{
+        for (UIView *view in changeTrackView_.customView.subviews) {
+                if ([view isKindOfClass:[UIButton class]]) {
+                       UIButton *subBtn = (UIButton *)view;
+                        subBtn.enabled = YES;
+                    }
+            }
+        btn.enabled = NO;
+        if (btn.tag == 300001)
+            {
+                    [self changeTracks:0];
+                
+            }
+       else if(btn.tag == 300002)
+            {
+                    [self changeTracks:1];
+                
+                }
+       
+}
+-(void)enableTracksSelectButton{
+        UIButton *button = (UIButton *)[bottomToolBar_ viewWithTag:TRACK_BUTTON_TAG];
+        button.enabled = YES;
+}
+
 -(void)syncCurrentClear{
     NSString *clearType = nil;
     for ( NSDictionary *dic in plainClearArr) {
@@ -1977,7 +2068,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 clearBgView_.hidden = NO;
                 [self.view bringSubviewToFront:clearBgView_];
             }
-            
+             [self hiddenChangeTrackView];
             break;
         }
         case SELECT_BUTTON_TAG:{
@@ -2037,6 +2128,19 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             }
         }
             break;
+        case TRACK_BUTTON_TAG:{
+            [self resetMyTimer];
+            btn.selected = !btn.selected;
+            if (btn.selected) {
+                    [self showChangeTrackView];
+            }
+            else{
+                [self hiddenChangeTrackView];
+            }
+            clearBgView_.hidden = YES;
+            clarityButton_.selected = NO;
+            break;
+        }
         default:
             break;
     }
@@ -2336,6 +2440,24 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
 }
 
+
+#pragma mark - changeTracks
+- (void)changeTracks:(int)type{    //0-第1个音轨；1-第2个音轨；
+    if (audioMix_) {
+            NSArray *inputParametersArray = audioMix_.inputParameters;
+            for (int i = 0; i < [inputParametersArray count]; i++) {
+                    AVMutableAudioMixInputParameters *oneAudioMixInPut = [inputParametersArray objectAtIndex:i];
+                    if (i == type) {
+                            [oneAudioMixInPut setVolume:0.6 atTime:[mPlayer currentTime]];
+                        }
+                    else{
+                            [oneAudioMixInPut setVolume:0.0 atTime:[mPlayer currentTime]];
+                        }
+                    
+                }
+            [self.mPlayerItem setAudioMix:audioMix_];
+        }
+}
 #pragma mark -
 #pragma mark - TableViewDelegate & dataSource
 
