@@ -2451,12 +2451,12 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             
         }
         else{
-            
+            NSString * str = [NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum + 1)];
             if (videoType_ == 1) {
-                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum)] result:[NSNumber numberWithInt:0] ];
+                 [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
             }
             else{
-                 [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:0] ];
+                 [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
             
             }
            
