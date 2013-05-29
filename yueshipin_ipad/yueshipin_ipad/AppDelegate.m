@@ -27,6 +27,7 @@
 #import "CustomNavigationViewController.h"
 #import "IphoneAVPlayerViewController.h"
 #import "SystemMethods.h"
+#import "AFDownloadRequestOperation.h"
 
 #define DAY(day)        (day * 3600 * 24)
 
@@ -68,6 +69,7 @@
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
 @synthesize adViewController;
+@synthesize advUrl, advTargetUrl;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -209,7 +211,7 @@
     {
         [self customizeAppearance];
         [self initDownloadManager];
-        self.adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(0, 0, self.window.bounds.size.height - LEFT_MENU_DIPLAY_WIDTH - RIGHT_VIEW_WIDTH, self.window.bounds.size.width)];
+        [self initAdViewController];
         self.rootViewController = [[RootViewController alloc] initWithNibName:nil bundle:nil];
         self.window.rootViewController = self.rootViewController;
     }
@@ -244,6 +246,17 @@
     return YES;
 }
 
+- (void)initAdViewController
+{
+    self.adViewController = [[AdViewController alloc]initWithFrame: CGRectMake(0, 0, self.window.bounds.size.height - LEFT_MENU_DIPLAY_WIDTH - RIGHT_VIEW_WIDTH, self.window.bounds.size.width)];
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
+    if ([fileManager fileExistsAtPath:filePath]) {
+        [self.adViewController setAdvImage:filePath];
+    }
+}
+
 - (void)onlineConfigCallBack:(NSNotification *)notification {
     NSString *appKey = [notification.userInfo objectForKey:kIpadAppKey];
     //如果是测试
@@ -258,6 +271,10 @@
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
+    self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
+    self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
+    [self downloadAdvImage];
+    
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
     }
@@ -350,11 +367,11 @@
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
-    if([myhostReach currentReachabilityStatus] == NotReachable) {
-         UIView *rootView = self.window.rootViewController.view;
-         [UIUtility showNetWorkError:rootView];
-    };
+//    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
+//    if([myhostReach currentReachabilityStatus] == NotReachable) {
+//         UIView *rootView = self.window.rootViewController.view;
+//         [UIUtility showNetWorkError:rootView];
+//    };
     
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
@@ -685,6 +702,34 @@
 {
     BOOL disabled = [notification.object boolValue];
     [[UIApplication sharedApplication] setIdleTimerDisabled: disabled];
+}
+
+- (void)downloadAdvImage
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
+    NSEnumerator *e = [contents objectEnumerator];
+    NSString *filename;
+    while ((filename = [e nextObject])) {
+        if ([filename hasPrefix:ADV_IMAGE_NAME]) {
+            [fileManager removeItemAtPath:[DocumentsDirectory stringByAppendingPathComponent:filename] error:NULL];
+        }
+    }
+    
+    NSURL *url = [NSURL URLWithString:self.advUrl];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, ADV_IMAGE_NAME];
+    AFDownloadRequestOperation *downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+    [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Successfully downloaded file to %@", filePath);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+        self.advUrl = nil;
+        [operation cancel];
+    }];
+    [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+    }];
+    [downloadingOperation start];
 }
 
 @end

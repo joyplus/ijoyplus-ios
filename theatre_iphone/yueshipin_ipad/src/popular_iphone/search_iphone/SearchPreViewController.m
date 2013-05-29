@@ -271,6 +271,12 @@
                 [self showFailureView:1];
                 
             }
+            if ([searchResult count]< PAGESIZE){
+                pullRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                pullRefreshManager_.canLoadMore = YES;
+            }
         }
         
         [searchResultList_  reloadData];
@@ -294,12 +300,14 @@
             if(searchResult != nil && searchResult.count > 0){
                 [searchResults_ addObjectsFromArray:searchResult];
             }
+            if ([searchResult count]< PAGESIZE){
+                pullRefreshManager_.canLoadMore = NO;
+            }
             else{
-              
+                pullRefreshManager_.canLoadMore = YES;
             }
         }
         [searchResultList_ reloadData];
-        pullRefreshManager_.canLoadMore = YES;
         [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
        

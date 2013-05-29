@@ -716,29 +716,34 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
     [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
-            if([viewController isKindOfClass:clazz]){
-                [viewController.view setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
-//                UIView * rightView = [viewController.view viewWithTag:1111];
-//                rightView.hidden = NO;
-                break;
-            } else{
-                [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
-                for (UIView *subview in viewController.view.subviews) {
-                    [subview setAlpha:0];
+            if (viewController.class != AdViewController.class) {
+                if([viewController isKindOfClass:clazz]){
+                    [viewController.view setFrame:CGRectMake(LEFT_VIEW_WIDTH - LEFT_MENU_DIPLAY_WIDTH - 10, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
+                    //                UIView * rightView = [viewController.view viewWithTag:1111];
+                    //                rightView.hidden = NO;
+                    
+                    break;
+                } else{
+                    [viewController.view setFrame:CGRectMake(frame.size.height, viewController.view.frame.origin.y, viewController.view.frame.size.width, viewController.view.frame.size.height)];
+                    for (UIView *subview in viewController.view.subviews) {
+                        [subview setAlpha:0];
+                    }
+                    [viewController.view setAlpha:0];
                 }
-                [viewController.view setAlpha:0];
             }
         }
     } completion:^(BOOL finished) {
         for (int i = viewControllersStack.count -1 ; i > 0; i--) {
             UIViewController *viewController = [viewControllersStack objectAtIndex:i];
-            if([viewController isKindOfClass:clazz]){
-                [self managerCloseTipsView];
-                break;
-            } else {
-                [[slideViews viewWithTag:20110106+i] removeFromSuperview];
-                [viewControllersStack removeObjectAtIndex:i];
-                viewController = nil;
+            if (viewController.class != AdViewController.class) {
+                if([viewController isKindOfClass:clazz]){
+                    [self managerCloseTipsView];
+                    break;
+                } else {
+                    [[slideViews viewWithTag:20110106+i] removeFromSuperview];
+                    [viewControllersStack removeObjectAtIndex:i];
+                    viewController = nil;
+                }
             }
         }
     }];
@@ -749,7 +754,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 {
     CGRect frame = [UIScreen mainScreen].bounds;
     NSInteger lastViewControllerIndex = viewControllersStack.count - 1;
-    if(lastViewControllerIndex < 0 || lastViewControllerIndex >= viewControllersStack.count){
+    if(lastViewControllerIndex <= 0 || lastViewControllerIndex >= viewControllersStack.count){
         return;
     }
     
@@ -840,12 +845,12 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         [left setCloseTipsViewHidden:YES];
     }
     
-	if([viewControllersStack count] > 1 && removePreviousView)
+	if([viewControllersStack count] > 2 && removePreviousView)
     {
 		NSInteger indexOfViewController = [viewControllersStack
-										   indexOfObject:invokeByController]+1;
+										   indexOfObject:invokeByController]+2;
         //add code by huokun at 13/03/20 for BUG#214 “当迁移视图时，判断堆栈中，是否存在SearchViewController，若存在，刷新tableView”
-        for (int i = 0; i < indexOfViewController; i ++)
+        for (int i = 0; i < indexOfViewController && indexOfViewController < [viewControllersStack count]; i ++)
         {
             UIViewController * ctrl = [viewControllersStack objectAtIndex:i];
             if ([ctrl isKindOfClass:[PersonalViewController class]] && moveToLeft)
@@ -857,7 +862,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
         //add code end
 		if ([invokeByController parentViewController]) {
 			indexOfViewController = [viewControllersStack
-									 indexOfObject:[invokeByController parentViewController]]+1;
+									 indexOfObject:[invokeByController parentViewController]]+2;
 		}
 		
 		NSInteger viewControllerCount = [viewControllersStack count];
@@ -913,7 +918,7 @@ const NSInteger SLIDE_VIEWS_START_X_POS = 0;
 			viewAtRight2 = nil;
             if ([controller isKindOfClass:[AdViewController class]]) {
                 [viewAtLeft setFrame:CGRectMake(SLIDE_VIEWS_MINUS_X_POSITION, viewAtLeft.frame.origin.y, viewAtLeft.frame.size.width, viewAtLeft.frame.size.height)];
-                [viewAtRight setFrame:CGRectMake(LEFT_MENU_DIPLAY_WIDTH + RIGHT_VIEW_WIDTH - 75, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
+                [viewAtRight setFrame:CGRectMake(LEFT_MENU_DIPLAY_WIDTH + RIGHT_VIEW_WIDTH - 80, viewAtRight.frame.origin.y, viewAtRight.frame.size.width, viewAtRight.frame.size.height)];
             } else {                
                 [UIView beginAnimations:nil context:NULL];
                 [UIView setAnimationTransition:UIViewAnimationTransitionNone forView:viewAtLeft cache:YES];

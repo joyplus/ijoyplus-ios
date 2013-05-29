@@ -52,6 +52,9 @@
 @property (nonatomic, assign)BOOL isInPlayView;
 
 @property (nonatomic, strong) AdViewController *adViewController;
+
+@property (nonatomic, strong)NSString *advUrl;
+@property (nonatomic, strong)NSString *advTargetUrl;
 + (AppDelegate *) instance;
 - (void)startHttpServer;
 - (void)stopHttpServer;

@@ -13,7 +13,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import "CMPopTipView.h"
 #import "BundingTVManager.h"
-@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,BundingTVManagerDelegate>{
+@interface IphoneAVPlayerViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,BundingTVManagerDelegate,FayeClientDelegate>{
     UIToolbar *topToolBar_;
     UIToolbar *bottomToolBar_;
     AVPlayerView *avplayerView_;
@@ -36,6 +36,7 @@
     NSString *nameStr_;
     CMPopTipView *clearBgView_;
     
+    CMPopTipView *changeTrackView_;
     NSMutableArray *sortEpisodesArr_;
     NSArray *episodesArr_;
     int playNum;
@@ -94,6 +95,8 @@
     
     AVMutableAudioMix *audioMix_;
     NSArray * localPlaylist;
+    
+    
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
 @property (nonatomic, strong) UIToolbar *bottomToolBar;

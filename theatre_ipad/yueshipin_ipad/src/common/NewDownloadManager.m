@@ -24,6 +24,7 @@
 @property (nonatomic, strong)NSArray *allSubdownloadItems;
 @property (nonatomic, strong)NSLock *myLock;
 @property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
+@property (nonatomic, assign) int netWorkStatus;
 @end
 
 @implementation NewDownloadManager
@@ -33,11 +34,15 @@
 @synthesize displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
 @synthesize padM3u8DownloadManager;
+@synthesize netWorkStatus;
 - (id)init
 {
     self = [super init];
     if (self) {
         myLock = [[NSLock alloc]init];
+        Reachability *hostReach = [Reachability reachabilityForInternetConnection];
+        netWorkStatus = [hostReach currentReachabilityStatus];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
     }
     return self;
 }
@@ -266,6 +271,76 @@
         totalFreeSpace_ = [freeFileSystemSizeInBytes floatValue]/1024.0f/1024.0f/1024.0f;
     }
     return totalFreeSpace_;
+}
+
+-(void)networkChanged:(NSNotification *)msg
+{
+    int status = [(NSNumber *)(msg.object) intValue];
+    if (status == netWorkStatus) {
+        return;
+    }
+    else{
+        netWorkStatus = status;
+        if(netWorkStatus == 0){ //no network
+            [self stopDownloading];
+        }
+        else if(netWorkStatus == 1){ //3g ,2g
+            
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            BOOL isSupport3GDownload = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
+            if ([ActionUtility getReadyItemNumber] > 0)
+            {
+                if (isSupport3GDownload)
+                {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"友情提示"
+                                                                    message:@"你将使用2G/3G网络下载视频，若如此将会耗费大量的流量"
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"取消"
+                                                          otherButtonTitles:@"继续下载", nil];
+                    alert.tag = 199;
+                    [alert show];
+                }
+                else
+                {
+                    [self stopDownloading];
+                    [ActionUtility updateDBAfterStopDownload];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"updateDownloadView"
+                                                                        object:nil];
+                    
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"友情提示"
+                                                                    message:@"wifi已断开，视频下载将中止，您可以在设置里将在2G/3G网络下载视频打开来继续下载"
+                                                                   delegate:self
+                                                          cancelButtonTitle:@"确定"
+                                                          otherButtonTitles:nil, nil];
+                    alert.tag = 299;
+                    [alert show];
+                    
+                }
+            }
+            
+        }
+        else
+        {
+            //wifi
+        }
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 199) {
+        
+        if (buttonIndex == 0)
+        {
+            [self stopDownloading];
+            [ActionUtility updateDBAfterStopDownload];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateDownloadView"
+                                                                object:nil];
+        }
+        else if (buttonIndex == 1)
+        {
+            // 不做处理
+        }
+    }
 }
 
 @end

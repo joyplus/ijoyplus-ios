@@ -198,7 +198,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     subname = nil;
     video = nil;
     videoHttpUrl = nil;
-    self.URL = nil;
+    //self.URL = nil;
     mPlaybackView = nil;
     
     mToolbar = nil;
@@ -342,7 +342,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             }
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             
-            [UIUtility showSystemError:self.view];
+            [UIUtility showDetailError:self.view error:error];
         }];
     } else {
         [self parseVideoData:[video objectForKey:@"episodes"]];
@@ -1014,9 +1014,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)nextBtnClicked
 {
     isDownloaded = NO;
-    NSArray * playlists = [CommonMotheds localPlaylists:self.prodId];
+    NSArray * playlists = [CommonMotheds localPlaylists:self.prodId type:self.type];
     NSInteger nextNum = currentNum + 1;
-    NSDictionary * playInfo = [[video objectForKey:@"episodes"] objectAtIndex:nextNum];
+    NSArray * epArr = [video objectForKey:@"episodes"];
+    if (nextNum >= epArr.count)
+    {
+        [self closeSelf];
+        return;
+    }
+    NSDictionary * playInfo = [epArr objectAtIndex:nextNum];
     
     NSDictionary * curPlayInfo = nil;
     for (NSDictionary * dic in playlists)
@@ -1203,7 +1209,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [self prepareOnlinePlay:episodes];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-        [UIUtility showSystemError:self.view];
+        [UIUtility showDetailError:self.view error:error];
     }];
 }
 
@@ -1378,7 +1384,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     else
     {
         NSMutableArray * downloadedIndex = [[NSMutableArray alloc] init];
-        NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId];
+        NSArray * downloadedItem = [CommonMotheds localPlaylists:self.prodId type:self.type];
         NSArray * episodes = [video objectForKey:@"episodes"];
         if (type == SHOW_TYPE)
         {
@@ -2015,7 +2021,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     self.isDownloaded = isDownload;
     if (isDownload)
     {
-        NSArray * playlists = [CommonMotheds localPlaylists:self.prodId];
+        NSArray * playlists = [CommonMotheds localPlaylists:self.prodId type:self.type];
         NSDictionary * playInfo = [[video objectForKey:@"episodes"] objectAtIndex:currentNum];
         
         NSDictionary * curPlayInfo = nil;
