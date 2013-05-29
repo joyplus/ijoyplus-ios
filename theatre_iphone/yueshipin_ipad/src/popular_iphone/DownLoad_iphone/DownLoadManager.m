@@ -722,6 +722,29 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     }
     return count;
 }
+
++ (int)downloadingTaskCount
+{
+    int count = 0;
+    for (DownloadItem *item in [DatabaseManager allObjects:[DownloadItem class]]) {
+        if (([item.downloadStatus isEqualToString:@"waiting"]
+             || [item.downloadStatus isEqualToString:@"loading"])
+            && ![item.downloadStatus isEqualToString:@""])
+        {
+            count ++;
+        }
+    }
+    for (SubdownloadItem *item in [DatabaseManager allObjects:[SubdownloadItem class]])
+    {
+        if ([item.downloadStatus isEqualToString:@"waiting"]
+            || [item.downloadStatus isEqualToString:@"loading"])
+        {
+            count ++;
+        }
+    }
+    return count;
+}
+
 -(void)pauseAllTask{
     [[DownLoadManager defaultDownLoadManager] invalidateRetryTimer];
     

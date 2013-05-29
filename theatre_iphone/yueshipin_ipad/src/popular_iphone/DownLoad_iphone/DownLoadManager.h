@@ -64,6 +64,8 @@
 
 +(int)downloadTaskCount;
 
++ (int)downloadingTaskCount;
+
 -(void)pauseAllTask;
 
 -(void)appDidEnterForeground;
