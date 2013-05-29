@@ -494,7 +494,7 @@
     }
     
     
-    NSDictionary * info = [self downloadedItem:self.prodId index:num-1];
+    NSDictionary * info = [self downloadedItem:self.prodId index:num];
     if (nil != info)
     {
         IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];

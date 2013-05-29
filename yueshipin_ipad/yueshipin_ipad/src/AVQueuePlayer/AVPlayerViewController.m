@@ -17,7 +17,7 @@
 #define RESOLUTION_KEY @"resolution_key"
 #define URL_KEY @"url_key"
 #define MAX_EPISODE_NUM 10
-#define TRACK_BUTTON_TAG 10012
+#define TRACK_BUTTON_TAG 10013
 /* Asset keys */
 static NSString * const kTracksKey         = @"tracks";
 static NSString * const kPlayableKey		= @"playable";
@@ -81,6 +81,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) BOOL isFromSelectBtn;
 @property (nonatomic) BOOL isAppEnterBackground;
 @property BOOL isChangeQuality;
+@property (nonatomic, strong) UIButton *trackSelect;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -104,7 +105,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 #pragma mark -
 @implementation AVPlayerViewController
 @synthesize mPlayer, mPlayerItem, mPlaybackView;
-@synthesize mToolbar, topToolbar, mPlayButton, mStopButton, mScrubber, mNextButton, mPrevButton, volumeSlider, mSwitchButton;
+@synthesize mToolbar, topToolbar, mPlayButton, mStopButton, mScrubber, mNextButton, mPrevButton, volumeSlider, mSwitchButton,trackSelect;
 @synthesize currentPlaybackTimeLabel, totalTimeLabel, volumeBtn, qualityBtn, selectButton;
 @synthesize playCacheView, resolution, videoHttpUrl, nameLabel;
 @synthesize type, isDownloaded, currentNum, closeAll;
@@ -1732,6 +1733,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 }
                 audioMix_ = [AVMutableAudioMix audioMix];
                 [audioMix_ setInputParameters:allAudioParams];
+                [self showTrackSelectButton];
             }
             if (!isClosed)
                 [self prepareToPlayAsset:asset];
@@ -2186,16 +2188,17 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 #pragma mark - 
 #pragma mark trackChange
 -(void)showTrackSelectButton{
-    UIButton *trackSelect = [UIButton buttonWithType:UIButtonTypeCustom];
-    trackSelect.frame = CGRectMake( mPrevButton.frame.origin.x - 100,mPrevButton.frame.origin.y, 55, 50);
-    [trackSelect setBackgroundImage:[UIImage imageNamed:@"shengdao.png"] forState:UIControlStateNormal];
-    [trackSelect setBackgroundImage:[UIImage imageNamed:@"shengdao_s.png"] forState:UIControlStateHighlighted];
-    [trackSelect setBackgroundImage:[UIImage imageNamed:@"shengdao_s.png"] forState:UIControlStateSelected];
-    trackSelect.adjustsImageWhenHighlighted = NO;
+    trackSelect = [UIButton buttonWithType:UIButtonTypeCustom];
+    trackSelect.frame = CGRectMake( 280,25, 55, 50);
+    [trackSelect setBackgroundImage:[UIImage imageNamed:@"ipad_shengdao"] forState:UIControlStateNormal];
+    [trackSelect setBackgroundImage:[UIImage imageNamed:@"ipad_shengdao_s"] forState:UIControlStateHighlighted];
+    [trackSelect setBackgroundImage:[UIImage imageNamed:@"ipad_shengdao_s"] forState:UIControlStateSelected];
+    //trackSelect.adjustsImageWhenHighlighted = NO;
     trackSelect.tag = TRACK_BUTTON_TAG;
-    trackSelect.enabled = NO;
+      trackSelect.enabled = NO;
     [trackSelect addTarget:self action:@selector(trackButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [mToolbar addSubview:trackSelect];
+  
 }
 -(void)trackButtonPressed:(UIButton *)btn{
     btn.selected = !btn.selected;
@@ -2269,8 +2272,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
 }
 -(void)enableTracksSelectButton{
-    UIButton *button = (UIButton *)[mToolbar viewWithTag:TRACK_BUTTON_TAG];
-    button.enabled = YES;
+    trackSelect.hidden = NO;
+    trackSelect.enabled = YES;
 }
 
 - (void)changeTracks:(int)atype{    //0-第1个音轨；1-第2个音轨；
@@ -2284,7 +2287,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                                 else{
                                             [oneAudioMixInPut setVolume:0.0 atTime:[mPlayer currentTime]];
                                         }
-                                
+                        
                             }
                     [self.mPlayerItem setAudioMix:audioMix_];
                 }
@@ -2355,7 +2358,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     if (audioMix_) {
         [self.mPlayerItem setAudioMix:audioMix_];
-        [self showTrackSelectButton];
     }
     
     /* Observe the player item "status" key to determine when it is ready to play. */
@@ -2517,6 +2519,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 }
                 [self enablePlayerButtons];
                 [self enableNextButton];
+                [self enableTracksSelectButton];
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {
                         [subview setAlpha:0];
@@ -2568,7 +2571,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                     }
                 }];
             }
-                [self enableTracksSelectButton];
+                
                 break;
                 
             case AVPlayerStatusFailed:
