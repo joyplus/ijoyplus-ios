@@ -326,6 +326,12 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    if (bgTask != UIBackgroundTaskInvalid)
+    {
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+    }
     [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
 }
 

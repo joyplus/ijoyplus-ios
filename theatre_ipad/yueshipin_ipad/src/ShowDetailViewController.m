@@ -762,7 +762,7 @@
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
-        finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
+        finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
         [finder setupWorkingUrl];
         [self updateBadgeIcon];
         return YES;
