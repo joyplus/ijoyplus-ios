@@ -494,7 +494,7 @@
         return;
     }
     
-    NSDictionary * info = [self downloadedItem:self.prodId index:num];
+    NSDictionary * info = [self downloadedItem:self.prodId index:num-1];
     if (nil != info)
     {
         IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
@@ -511,6 +511,7 @@
         NSInteger type = [[info objectForKey:@"type"] intValue];
 //        NSString * name1 = [info objectForKey:@"name"];
         NSString * subitemId = [info objectForKey:@"subItemId"];
+       
         if (type == 2)
         {
 //            NSString *name = [[name1 componentsSeparatedByString:@"_"] objectAtIndex:0];

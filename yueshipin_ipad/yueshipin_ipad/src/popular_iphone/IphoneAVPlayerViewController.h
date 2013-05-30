@@ -35,7 +35,7 @@
     UILabel *totalTimeLable_;
     NSString *nameStr_;
     CMPopTipView *clearBgView_;
-    
+    CMPopTipView *changeTrackView_;
     NSMutableArray *sortEpisodesArr_;
     NSArray *episodesArr_;
     int playNum;
