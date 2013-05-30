@@ -664,9 +664,13 @@
 
 -(void)more{
     moreBtn_.selected = !moreBtn_.selected;
+    float height = [self heightForString:summary_ fontSize:13 andWidth:271];
     if (moreBtn_.selected) {
-        summaryBg_.frame = CGRectMake(14, 25, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-        summaryLabel_.frame = CGRectMake(28, 28, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+        if (height < 85) {
+            return;
+        }
+        summaryBg_.frame = CGRectMake(14, 25, 292, height+5);
+        summaryLabel_.frame = CGRectMake(28, 28, 264,height);
         //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
         
     }

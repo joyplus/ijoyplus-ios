@@ -1072,7 +1072,11 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(void)more{
     moreBtn_.selected = !moreBtn_.selected;
+    float height = [self heightForString:summary_ fontSize:13 andWidth:271];
     if (moreBtn_.selected) {
+        if (height < 85) {
+            return;
+        }
         summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
         summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
       
