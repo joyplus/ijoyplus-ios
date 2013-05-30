@@ -92,7 +92,7 @@
 		[table setDataSource:self];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setShowsVerticalScrollIndicator:NO];
-		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+		//[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[self.view addSubview:table];
         
         pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
