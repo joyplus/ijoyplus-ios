@@ -807,7 +807,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         else if(row == 2){
             if (moreBtn_.selected) {
-                return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
+                float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+                
+                if (height < 85) {
+                    return 125;
+                }
+                return height+40;
+
             }
             else{
                 return 125;

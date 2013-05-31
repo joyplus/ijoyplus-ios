@@ -539,7 +539,13 @@
         }
         else if(row == 2){
             if (moreBtn_.selected) {
-                return [self heightForString:summary_ fontSize:13 andWidth:271]+30;
+                float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+                
+                if (height < 85) {
+                    return 115;
+                }
+                return height+30;
+
             }
             else{
                 return 115;
