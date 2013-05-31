@@ -1001,6 +1001,7 @@
         } else if(self.m3u8DownloadUrls.count > 0){
             subitem.downloadType = @"m3u8";
         }
+        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;

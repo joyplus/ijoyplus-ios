@@ -43,6 +43,7 @@
             tempDbObj.downloadType = [rs stringForColumn:@"download_type"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
             tempDbObj.subitemId = [rs stringForColumn:@"subitem_id"];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [subdownloadArray addObject:tempDbObj];
         }
         [rs close];
@@ -62,6 +63,7 @@
             tempDbObj.isDownloadingNum = [[rs stringForColumn:@"is_downloading_num"] intValue];
             tempDbObj.downloadType = [rs stringForColumn:@"download_type"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [downloadArray addObject:tempDbObj];
         }
         [rs close];
@@ -122,8 +124,8 @@
         NSLog(@"Could not open db in DatabaseManager!");
     }
     // Create tables
-    [db executeUpdate:@"create table if not exists DownloadItem (itemId text PRIMARY KEY, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, urlArray text, isDownloadingNum integer, downloadType text, duration double)"];
-    [db executeUpdate:@"create table if not exists SubdownloadItem (itemId text, subitemId text, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, urlArray text, isDownloadingNum integer, downloadType text, duration double)"];
+    [db executeUpdate:@"create table if not exists DownloadItem (itemId text PRIMARY KEY, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, urlArray text, isDownloadingNum integer, downloadType text, duration double, mp4SourceNum integer)"];
+    [db executeUpdate:@"create table if not exists SubdownloadItem (itemId text, subitemId text, imageUrl text, name text, fileName text, downloadStatus text, type integer, percentage integer, url text, urlArray text, isDownloadingNum integer, downloadType text, duration double, mp4SourceNum integer)"];
     [db executeUpdate:@"create table if not exists SegmentUrl (itemId text, subitemId text, url text, seqNum integer)"];
     
     [db close];
@@ -155,6 +157,7 @@
             tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
             tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [resultArray addObject:tempDbObj];
             
         } else if (dbObjectClass == SubdownloadItem.class) {
@@ -174,6 +177,7 @@
             tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
             tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
              [resultArray addObject:tempDbObj];
             
         } else if (dbObjectClass == SegmentUrl.class) {
@@ -218,6 +222,7 @@
             tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
             tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [rs close];
             [db close];
             
@@ -240,6 +245,7 @@
             tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
             tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [rs close];
             [db close];
             
@@ -296,6 +302,7 @@
             tempDbObj.isDownloadingNum = [[rs stringForColumn:@"isDownloadingNum"] intValue];
             tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [resultArray addObject:tempDbObj];
             
         } else if (dbObjectClass == SubdownloadItem.class) {
@@ -315,6 +322,7 @@
             tempDbObj.downloadType = [rs stringForColumn:@"downloadType"];
             tempDbObj.duration = [[rs stringForColumn:@"duration"] doubleValue];
             tempDbObj.subitemId = [rs stringForColumn:@"subitemId"];
+            tempDbObj.mp4SourceNum = [[rs stringForColumn:@"mp4SourceNum"] intValue];
             [resultArray addObject:tempDbObj];
         } else if (dbObjectClass == SegmentUrl.class) {
         
@@ -377,12 +385,12 @@
     [queue inDatabase:^(FMDatabase *db) {
         if (dbObject.class == DownloadItem.class) {
             DownloadItem *obj = (DownloadItem *)dbObject;
-            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName == nil ? @"":obj.fileName, obj.downloadStatus == nil ?@"":obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url == nil ? @"":obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType == nil ?@"":obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
-            [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName == nil ? @"":obj.fileName, obj.downloadStatus == nil ?@"":obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url == nil ? @"":obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType == nil ?@"":obj.downloadType, [NSNumber numberWithDouble:obj.duration],[NSNumber numberWithInt:obj.mp4SourceNum], nil];
+            [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration, mp4SourceNum) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
         } else if (dbObject.class == SubdownloadItem.class) {
             SubdownloadItem *obj = (SubdownloadItem *)dbObject;
-            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName ==nil?@"":obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
-            [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName ==nil?@"":obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration],[NSNumber numberWithInt:obj.mp4SourceNum], nil];
+            [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration, mp4SourceNum) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
         } else if (dbObject.class == SegmentUrl.class) {
             SegmentUrl *obj = (SegmentUrl *)dbObject;
             NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.url, [NSNumber numberWithInt:obj.seqNum], nil];
@@ -415,12 +423,12 @@
         for (NSObject *dbObject in dbObjectArray) {            
             if (dbObject.class == DownloadItem.class) {
                 DownloadItem *obj = (DownloadItem *)dbObject;
-                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName == nil ? @"":obj.fileName, obj.downloadStatus == nil ?@"":obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType == nil ?@"":obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
-                [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.imageUrl, obj.name, obj.fileName == nil ? @"":obj.fileName, obj.downloadStatus == nil ?@"":obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType == nil ?@"":obj.downloadType, [NSNumber numberWithDouble:obj.duration],[NSNumber numberWithInt:obj.mp4SourceNum], nil];
+                [db executeUpdate:@"insert into DownloadItem(itemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration, mp4SourceNum) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
             } else if (dbObject.class == SubdownloadItem.class) {
                 SubdownloadItem *obj = (SubdownloadItem *)dbObject;
-                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration], nil];
-                [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration) values (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
+                NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.imageUrl, obj.name, obj.fileName, obj.downloadStatus, [NSNumber numberWithInt:obj.type], [NSNumber numberWithInt:obj.percentage], obj.url, [self getUrls:obj.urlArray], [NSNumber numberWithInt:obj.isDownloadingNum], obj.downloadType, [NSNumber numberWithDouble:obj.duration],[NSNumber numberWithInt:obj.mp4SourceNum], nil];
+                [db executeUpdate:@"insert into SubdownloadItem(itemId, subitemId, imageUrl, name, fileName, downloadStatus, type, percentage, url, urlArray, isDownloadingNum, downloadType, duration, mp4SourceNum) values (?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)" withArgumentsInArray:parameterArray];
             } else if (dbObject.class == SegmentUrl.class) {
                 SegmentUrl *obj = (SegmentUrl *)dbObject;
                 NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.url, [NSNumber numberWithInt:obj.seqNum], nil];

@@ -37,7 +37,7 @@
 - (void)setupWorkingUrl
 {
     if (urlIndex >= 0 && urlIndex < item.urlArray.count) {
-        if (urlIndex >= mp4DownloadUrlNum && [item.downloadType isEqualToString:@"mp4"]) {
+        if (urlIndex >= item.mp4SourceNum && [item.downloadType isEqualToString:@"mp4"]) {
             item.downloadType = @"m3u8";
             [DatabaseManager update:item];
         }

@@ -645,6 +645,7 @@
     
     item.urlArray = tempArray;
     item.downloadURLSource = self.downloadSource;
+    item.mp4SourceNum = self.mp4DownloadUrls.count;
     [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
