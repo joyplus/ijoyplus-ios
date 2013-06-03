@@ -158,7 +158,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [scrollView addSubview:careUs];
     
     UIButton *aboutUs = [UIButton buttonWithType:UIButtonTypeCustom];
-    aboutUs.frame = CGRectMake(10, 375, 300, 35);
+    aboutUs.frame = CGRectMake(10, 420, 300, 35);
     //[aboutUs setTitle:@"关于我们" forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2.png"] forState:UIControlStateNormal];
     [aboutUs setBackgroundImage:[UIImage imageNamed:@"my_setting_other2_s.png"] forState:UIControlStateHighlighted];
@@ -172,19 +172,19 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [update addTarget:self action:@selector(update:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:update];
     
-//    UIButton *xinshouyindao = [UIButton buttonWithType:UIButtonTypeCustom];
-//    xinshouyindao.frame = CGRectMake(10, 380, 300, 35);
-//    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao.png"] forState:UIControlStateNormal];
-//    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
-//    [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
-//    [scrollView addSubview:xinshouyindao];
+    UIButton *xinshouyindao = [UIButton buttonWithType:UIButtonTypeCustom];
+    xinshouyindao.frame = CGRectMake(10, 375, 300, 35);
+    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao.png"] forState:UIControlStateNormal];
+    [xinshouyindao setBackgroundImage:[UIImage imageNamed:@"xinshouyindao_s.png"] forState:UIControlStateHighlighted];
+    [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
+    [scrollView addSubview:xinshouyindao];
     
 	if ([CommonMotheds getOnlineConfigValue] != 2) {
-        UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 430, 55, 13)];
+        UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 475, 55, 13)];
         jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
         [scrollView addSubview:jinpin];
         
-        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 450,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 495,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
         [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
         _mGridView.datasource = self;
         _mGridView.delegate = self;
