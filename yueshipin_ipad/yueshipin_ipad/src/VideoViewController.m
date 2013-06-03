@@ -140,17 +140,9 @@
         table.tableFooterView = [[UIView alloc] init];
 		[self.view addSubview:table];
         
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
+        pullToRefreshManager_.delegate = self;
         
-        if (_refreshHeaderView == nil) {
-            EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, 529 - 18, table.bounds.size.height)];
-            view.backgroundColor = [UIColor clearColor];
-            view.delegate = self;
-            [table addSubview:view];
-            _refreshHeaderView = view;
-            
-        }
-        //[_refreshHeaderView refreshLastUpdatedDate];
     }
     return self;
 }
@@ -225,7 +217,6 @@
             [myHUD showProgressBar:table];
         }
     }
-    reloads_ = 1;
     [self performSelectorInBackground:@selector(sendRequest) withObject:nil];
 }
 
@@ -239,7 +230,7 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [myHUD hide];
-            reloads_++;
+
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [myHUD hide];
@@ -259,9 +250,9 @@
             [videoArray addObjectsFromArray:tempTopsArray];
         }
         if(tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            pullToRefreshManager_.canLoadMore = NO;
         } else {
-            [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+            pullToRefreshManager_.canLoadMore = YES;
         }
     } else {
         [UIUtility showSystemError:self.view];
@@ -282,45 +273,13 @@
 
 - (void)loadTable {
     [table reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ refreshCompleted];
 }
 
 
 - (void)reloadTableViewDataSource{
     reloads_ = 2;
     [self retrieveData];
-	_reloading = YES;
-}
-
-
-- (void)doneLoadingTableViewData{
-	
-	//  model should call this when its done loading
-	_reloading = NO;
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:table];
-	
-}
-
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	
-	[self reloadTableViewDataSource];
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
-	
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	
-	return _reloading; // should return if data source model is reloading
-	
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	
-	return [NSDate date]; // should return date data source was last changed
-	
 }
 
 - (void)categoryBtnClicked:(UIButton *)btn
@@ -639,20 +598,30 @@
     }
 }
 
-#pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClient
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    [pullToRefreshManager_ tableViewScrolled];
+#pragma mark -
+#pragma mark - UIScrollviewDelegate
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManager_ scrollViewBegin];
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+#pragma mark -
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoReFresh{
+
+    [self reloadTableViewDataSource];
+}
+
+-(void)pulltoLoadMore{
+    
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
@@ -671,14 +640,20 @@
         } else {
             
         }
-        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         if(tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            pullToRefreshManager_.canLoadMore = NO;
         }
+        else{
+            pullToRefreshManager_.canLoadMore = YES;
+        }
+        [table reloadData];
+        [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
+    
 }
+
 
 #pragma mark -
 #pragma mark Table view data source

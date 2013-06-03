@@ -53,9 +53,12 @@
         
         isShowHeaderView_ = YES;
         DemoTableHeaderView *headerV = (DemoTableHeaderView *)[nib objectAtIndex:0];
+        headerV.frame = CGRectMake(headerV.frame.origin.x, headerV.frame.origin.y, atableview.frame.size.width, headerV.frame.size.height);
+        headerV.title.center = CGPointMake(headerV.center.x, headerV.title.center.y);
+        headerV.dateLabel.center = CGPointMake(headerV.center.x, headerV.dateLabel.center.y);
         
         CALayer *layer = [CALayer layer];
-		layer.frame = CGRectMake(25.0f, headerV.frame.size.height - 65.0f, 30.0f, 55.0f);
+		layer.frame = CGRectMake(25, headerV.frame.size.height - 65.0f, 30.0f, 55.0f);
 		layer.contentsGravity = kCAGravityResizeAspect;
 		layer.contents = (id)[UIImage imageNamed:@"blueArrow.png"].CGImage;
         arrowImageView = layer;
@@ -66,6 +69,10 @@
         // set the custom view for "load more". See DemoTableFooterView.xib.
         nib = [[NSBundle mainBundle] loadNibNamed:@"DemoTableFooterView" owner:self options:nil];
         DemoTableFooterView *footerV = (DemoTableFooterView *)[nib objectAtIndex:0];
+        footerV.frame = CGRectMake(footerV.frame.origin.x, footerV.frame.origin.y, atableview.frame.size.width, footerV.frame.size.height);
+        footerV.activityIndicator.center = footerV.center;
+        
+        NSLog(@"%f %f %f %f",footerV.frame.origin.x,footerV.frame.origin.y,footerV.frame.size.width,footerV.frame.size.height);
         self.footerView = footerV;
     }
     return self;
