@@ -535,15 +535,7 @@ enum
     progressHUD_.labelText = @"加载中...";
     progressHUD_.opacity = 0.5;
     [self.view addSubview:progressHUD_];
-    
-    
-    //新手引导
-//    if ([CommonMotheds isFirstTimeRun]) {
-//        [self showIntroductionView];
-//    }
-//    if ([CommonMotheds isVersionUpdate]) {
-//        [self showIntroductionView];
-//    }
+
 }
 
 
