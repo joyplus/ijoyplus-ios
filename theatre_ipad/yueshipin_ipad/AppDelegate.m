@@ -391,10 +391,6 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         [padDownloadManager startDownloadingThreads];
     }
-    else{
-    
-  }
-    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -514,37 +510,6 @@
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
-//-(void) onRequestAppMessage
-//{
-//    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
-//    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
-//    respRootViewCtrl.delegate = self;
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    UIViewController * rootViewCtrl = navCtrl.topViewController;
-//    if (rootViewCtrl.presentedViewController)
-//    {
-//        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
-//        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
-//        {
-//            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
-//            UIViewController * topCtrl = cNavCtrl.topViewController;
-//            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
-//            {
-//                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
-//                [playCtrl clearPlayerData];
-//            }
-//            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
-//            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-//        }
-//        else
-//        {
-//            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
-//        }
-//    }
-//    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
-//    [navCtrl pushViewController:respRootViewCtrl animated:NO];
-//}
-
 // wecha sdk delegate
 -(void) onReq:(BaseReq*)req
 {
@@ -578,23 +543,15 @@
     }
     
     bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        
         // Clean up any unfinished task business by marking where you
-        
         // stopped or ending the task outright.
-        
         //[self.padDownloadManager stopDownloading];
-        
         [application endBackgroundTask:bgTask];
-        
         bgTask = UIBackgroundTaskInvalid;
         
     }];
-    
-    
-    
+     
     // Start the long-running task and return immediately.
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         // Do the work associated with the task, preferably in chunks.
@@ -670,64 +627,6 @@
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
-//- (void)clearRespForWXView
-//{
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
-//    {
-//        [navCtrl popViewControllerAnimated:NO];
-//    }
-//    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
-//    {
-//        [navCtrl popViewControllerAnimated:NO];
-//        [navCtrl popViewControllerAnimated:NO];
-//    }
-//}
-
-#pragma mark - RespForWXRootViewControllerDelegate
-//- (void)removeRespForWXRootView
-//{
-//    tabBarView.tabBar.hidden = NO;
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    [navCtrl popViewControllerAnimated:NO];
-//}
-//
-//- (void)backButtonClick
-//{
-//    [WXApi openWXApp];
-//    tabBarView.tabBar.hidden = NO;
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    [navCtrl popViewControllerAnimated:NO];
-//}
-
-//- (void)shareVideoResp:(NSDictionary *)data
-//{
-//    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
-//    
-//    WXMediaMessage *message = [WXMediaMessage message];
-//    
-//    message.title = [data objectForKey:@"name"];
-//    message.description = [data objectForKey:@"description"];
-//    
-//    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
-//    
-//    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-//    
-//    
-//    [message setThumbImage:thumb];
-//    
-//    WXVideoObject *ext = [WXVideoObject object];
-//    ext.videoUrl = [data objectForKey:@"videoURL"];
-//    
-//    message.mediaObject = ext;
-//    
-//    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
-//    resp.message = message;
-//    resp.bText = NO;
-//    
-//    [WXApi sendResp:resp];
-//}
-
 - (void)setIdleTimerDisabled:(NSNotification *)notification
 {
     BOOL disabled = [notification.object boolValue];
@@ -760,6 +659,14 @@
     [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
     }];
     [downloadingOperation start];
+}
+
+- (void)decreaseDownloadingNum
+{
+    currentDownloadingNum--;
+    if (currentDownloadingNum < 0) {
+        currentDownloadingNum = 0;
+    }
 }
 
 @end

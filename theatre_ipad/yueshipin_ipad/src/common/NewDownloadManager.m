@@ -174,7 +174,7 @@
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [[AppDelegate instance] decreaseDownloadingNum];
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -191,7 +191,7 @@
 
 - (void)startNewDownloadItem
 {
-    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance] decreaseDownloadingNum];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
 }
 

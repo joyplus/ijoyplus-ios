@@ -52,5 +52,6 @@
 - (void)stopHttpServer;
 - (BOOL)isParseReachable;
 - (BOOL)isWifiReachable;
+- (void)decreaseDownloadingNum;
 
 @end
