@@ -2519,7 +2519,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     cell.textLabel.font = [UIFont systemFontOfSize:12];
      
     if (indexPath.row == playNum) {
-        cell.textLabel.textColor = [UIColor colorWithRed:253/255.0 green:128/255.0 blue:8/255.0 alpha:1];
+        cell.textLabel.textColor = [UIColor colorWithRed:240/255.0 green:51/255.0 blue:171/255.0 alpha:1];
     }
     else{
         cell.textLabel.textColor = [UIColor whiteColor];
