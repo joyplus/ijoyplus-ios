@@ -22,6 +22,7 @@
 #import "CommonMotheds.h"
 #import "SubdownloadItem.h"
 #import "DatabaseManager.h"
+#import "TFHpple.h"
 
 /* Asset keys */
  NSString * const k_TracksKey         = @"tracks";
@@ -80,6 +81,7 @@ enum
 - (void)prepareOnlinePlay:(NSArray *)episodes;
 - (void)playLocal:(NSDictionary *)file;
 - (void)changeTracks:(int)type;
+
 @end
 static void *AVPlayerDemoPlaybackViewControllerRateObservationContext = &AVPlayerDemoPlaybackViewControllerRateObservationContext;
 static void *AVPlayerDemoPlaybackViewControllerStatusObservationContext = &AVPlayerDemoPlaybackViewControllerStatusObservationContext;
@@ -982,9 +984,11 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         
         if ([source_str isEqualToString:@"wangpan"]) {
             [temp_dic setObject:@"0.1" forKey:@"level"];
-        } else if ([source_str isEqualToString:@"le_tv_fee"]) {
+        }
+        else if ([source_str isEqualToString:@"le_tv_fee"]) {
             [temp_dic setObject:@"0.2" forKey:@"level"];
-        } if ([source_str isEqualToString:@"letv"]) {
+        }
+        else if ([source_str isEqualToString:@"letv"]) {
             [temp_dic setObject:@"1" forKey:@"level"];
         }
         else if ([source_str isEqualToString:@"fengxing"]){
@@ -1016,6 +1020,22 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         else if ([source_str isEqualToString:@"m1905"]){
             [temp_dic setObject:@"11" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"12" forKey:@"level"];
+            NSArray * dURL = [temp_dic objectForKey:@"urls"];
+            if (0 == dURL.count)
+                return;
+            NSDictionary * firstDic = [dURL objectAtIndex:0];
+            NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[firstDic objectForKey:@"url"]];
+            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+            if (nil != downloadURL)
+            {
+                [newDic setObject:downloadURL forKey:@"url"];
+                [newDic setObject:[firstDic objectForKey:@"file"] forKey:@"file"];
+                [newDic setObject:[firstDic objectForKey:@"type"] forKey:@"type"];
+            }
+            [temp_dic setObject:[NSArray arrayWithObject:newDic] forKey:@"urls"];
         }
         [tempSortArr addObject:temp_dic];
     }
@@ -1318,9 +1338,13 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 -(void)sendHttpRequest:(NSString *)str{
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
-        str = [str stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
-        NSLog(@"The request url is %@",str);
-        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:str] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
+        NSString *formattedUrl = str;
+        if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+            int nowDate = [[NSDate date] timeIntervalSince1970];
+            formattedUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+        }
+        NSLog(@"The request url is %@",formattedUrl);
+        NSURLRequest *request = [[NSURLRequest alloc]initWithURL:[NSURL URLWithString:formattedUrl] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:20];
         urlConnection = [NSURLConnection connectionWithRequest:request delegate:self];
     }
     else{
@@ -2325,7 +2349,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         [playUrlArr addObjectsFromArray:plainClearArr];
     }
     for (NSMutableDictionary *dic in playUrlArr) {
-        NSString *tempStr = [[dic objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+        
+        NSString * str = [dic objectForKey:@"url"];
+        NSString *tempStr = str;
+        if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+            int nowDate = [[NSDate date] timeIntervalSince1970];
+            tempStr = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+        }
+        
         if ([tempStr isEqualToString:urlStr]) {
             source_str = [dic objectForKey:@"source"];
             break;
@@ -2370,7 +2401,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     else if ([source_str isEqualToString:@"m1905"]){
         logoImg = [UIImage imageNamed:@"logo_m1905"];
     }
-    else if ([source_str isEqualToString:@"wangpan"]){
+    else if ([source_str isEqualToString:@"wangpan"]
+             || [source_str isEqualToString:@"baidu_wangpan"]){
         logoImg = [UIImage imageNamed:@"logo_pptv"];
     }
 
@@ -2463,6 +2495,34 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         }
     }
 }
+
+//- (NSString *)getDownloadURLWithHTML:(NSString *)url
+//{
+//    NSData *htmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+//    TFHpple *xpathParser = [[TFHpple alloc] initWithHTMLData:htmlData];
+//    NSArray *elements  = [xpathParser searchWithXPathQuery:@"//a"]; // get the title
+//    
+//    NSString * downloadURL = nil;
+//    for (TFHppleElement * element in elements)
+//    {
+//        NSDictionary * dic = [element attributes];
+//        
+//        NSLog(@"%@",[dic objectForKey:@"class"]);
+//        NSLog(@"%@",[dic objectForKey:@"id"]);
+//        NSLog(@"%@",[element content]);
+//        
+//        if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
+//             && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
+//            ([[dic objectForKey:@"class"] isEqualToString:@"btn blue-btn"]
+//             && [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"]))
+//        {
+//            downloadURL = [element objectForKey:@"href"];
+//            [downloadURL stringByReplacingOccurrencesOfString:@"amp;" withString:@""];
+//            NSLog(@"%@",downloadURL);
+//        }
+//    }
+//    return downloadURL;
+//}
 
 
 #pragma mark - changeTracks 

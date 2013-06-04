@@ -155,6 +155,9 @@
 		22B262B41697F86400B7732C /* SearchResultsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B262B31697F86400B7732C /* SearchResultsViewCell.m */; };
 		22BC875416D7373300EEDC67 /* clear_bt_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */; };
 		22BC875516D7373300EEDC67 /* clear_bt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22BC875316D7373300EEDC67 /* clear_bt@2x.png */; };
+		22C9210D175C85AA00F1405A /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C92108175C85AA00F1405A /* TFHpple.m */; };
+		22C9210E175C85AA00F1405A /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C9210A175C85AA00F1405A /* TFHppleElement.m */; };
+		22C9210F175C85AA00F1405A /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C9210C175C85AA00F1405A /* XPathQuery.m */; };
 		22CE9F32169A729300D4FC76 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F31169A729300D4FC76 /* UIImage+Scale.m */; };
 		22CE9F5C169AA7FD00D4FC76 /* SendWeiboViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22CE9F5B169AA7FD00D4FC76 /* SendWeiboViewController.m */; };
 		22D11DB416A641D900B49FFD /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22D11DB316A641D900B49FFD /* Default-568h@2x.png */; };
@@ -738,6 +741,12 @@
 		22B262B31697F86400B7732C /* SearchResultsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultsViewCell.m; sourceTree = "<group>"; };
 		22BC875216D7373300EEDC67 /* clear_bt_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt_pressed@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt_pressed@2x.png"; sourceTree = SOURCE_ROOT; };
 		22BC875316D7373300EEDC67 /* clear_bt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "clear_bt@2x.png"; path = "yueshipin_ipad/Resource_iphone/clear_bt@2x.png"; sourceTree = SOURCE_ROOT; };
+		22C92107175C85AA00F1405A /* TFHpple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHpple.h; sourceTree = "<group>"; };
+		22C92108175C85AA00F1405A /* TFHpple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHpple.m; sourceTree = "<group>"; };
+		22C92109175C85AA00F1405A /* TFHppleElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHppleElement.h; sourceTree = "<group>"; };
+		22C9210A175C85AA00F1405A /* TFHppleElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHppleElement.m; sourceTree = "<group>"; };
+		22C9210B175C85AA00F1405A /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
+		22C9210C175C85AA00F1405A /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		22CE9F30169A729300D4FC76 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		22CE9F31169A729300D4FC76 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
 		22CE9F5A169AA7FD00D4FC76 /* SendWeiboViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendWeiboViewController.h; sourceTree = "<group>"; };
@@ -1443,6 +1452,19 @@
 			name = WechatShare;
 			sourceTree = "<group>";
 		};
+		22C92106175C85AA00F1405A /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				22C92107175C85AA00F1405A /* TFHpple.h */,
+				22C92108175C85AA00F1405A /* TFHpple.m */,
+				22C92109175C85AA00F1405A /* TFHppleElement.h */,
+				22C9210A175C85AA00F1405A /* TFHppleElement.m */,
+				22C9210B175C85AA00F1405A /* XPathQuery.h */,
+				22C9210C175C85AA00F1405A /* XPathQuery.m */,
+			);
+			path = HTML;
+			sourceTree = "<group>";
+		};
 		22EF003616B767410001F743 /* UMUFP */ = {
 			isa = PBXGroup;
 			children = (
@@ -2087,6 +2109,7 @@
 		EB6DEAAA165A34F200AF8003 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				22C92106175C85AA00F1405A /* HTML */,
 				E797B17F174C997D0020DB06 /* PullRefresh */,
 				EBE799051717C9250047535A /* database */,
 				EBCE72291744B0430054F9C3 /* AVPlayerView.h */,
@@ -2918,6 +2941,9 @@
 				E797B188174C997D0020DB06 /* DemoTableFooterView.m in Sources */,
 				E797B18A174C997D0020DB06 /* DemoTableHeaderView.m in Sources */,
 				E797B18C174C997D0020DB06 /* PullRefreshManagerClinet.m in Sources */,
+				22C9210D175C85AA00F1405A /* TFHpple.m in Sources */,
+				22C9210E175C85AA00F1405A /* TFHppleElement.m in Sources */,
+				22C9210F175C85AA00F1405A /* XPathQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3008,7 +3034,7 @@
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yongqing li (95XW9X94ZC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3026,7 +3052,7 @@
 				);
 				PRODUCT_NAME = theatreiphone;
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CFE19187-4624-4A1E-BD24-7B96F5277871";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

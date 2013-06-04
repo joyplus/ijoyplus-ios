@@ -633,6 +633,7 @@
                  itemId = [self.infoDic objectForKey:@"id"];
             }
             showDownlooadViewController.prodId = itemId;
+            
             showDownlooadViewController.listArr =  [NSMutableArray arrayWithArray:episodesArr_];
             NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
             if (titleStr == nil) {

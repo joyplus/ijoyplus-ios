@@ -22,14 +22,12 @@
 @synthesize workingUrl;
 @synthesize urlIndex;
 @synthesize item;
-@synthesize mp4DownloadUrlNum;
 
 - (id)init
 {
     self = [super init];
     if (self) {
         urlIndex = 0;
-        mp4DownloadUrlNum = 0;
     }
     return self;
 }
