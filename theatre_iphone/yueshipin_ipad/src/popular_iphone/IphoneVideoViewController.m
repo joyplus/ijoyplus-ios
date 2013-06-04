@@ -546,6 +546,7 @@
 //        NSString * name1 = [info objectForKey:@"name"];
         NSString * subitemId = [info objectForKey:@"subItemId"];
        
+         NSString *str = [NSString stringWithFormat:@"%@_local",subitemId];
         if (type == 2)
         {
 //            NSString *name = [[name1 componentsSeparatedByString:@"_"] objectAtIndex:0];
@@ -566,9 +567,10 @@
             iphoneAVPlayerViewController.nameStr = self.name;
             iphoneAVPlayerViewController.playNum = 0;
             iphoneAVPlayerViewController.videoType = MOVIE_TYPE;
+            str = [NSString stringWithFormat:@"%@_1_local",prodId_];
         }
         
-        NSString *str = [NSString stringWithFormat:@"%@_local",subitemId];
+       
         NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
         iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
         iphoneAVPlayerViewController.prodId = self.prodId;

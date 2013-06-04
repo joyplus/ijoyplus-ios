@@ -1342,7 +1342,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     if (status_Code >= 200 && status_Code <= 299) {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-        if (![content_type hasPrefix:@"text/html"]) {
+        NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
+        if (![content_type hasPrefix:@"text/html"] &&  contentLength.intValue > 0) {
             [self setURL:connection.originalRequest.URL];
             [connection cancel];
             if (isPlayOnTV)
@@ -2432,14 +2433,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     else
     {
-        NSString * str = [NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum + 1)];
-        if ((duration - playbackTime)>5)
-        {
-            [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:playbackTime]];
+        if ((duration - playbackTime)>5) {
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
+            
         }
-        else
-        {
+        else{
+            NSString * str = [NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum + 1)];
             [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
+            
         }
     }
 }

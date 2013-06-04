@@ -1374,7 +1374,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         //NSLog(@"step1 :%@",[[NSDate date] description]);
         NSString *content_type = [NSString stringWithFormat:@"%@", [headerFields objectForKey:@"Content-Type"]];
-        if (![content_type hasPrefix:@"text/html"])
+        NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
+        if (![content_type hasPrefix:@"text/html"] && contentLength.intValue > 0)
         {
             //NSLog(@"step2 :%@",[[NSDate date] description]);
             [self setURL:connection.originalRequest.URL];
@@ -2473,24 +2474,12 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     else{
         if ((duration - playbackTime)>5) {
-            if (videoType_ == 1) {
-                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum)] result:[NSNumber numberWithInt:playbackTime] ];
-            }
-            else{
-                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
-            
-            }
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
             
         }
         else{
             NSString * str = [NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum + 1)];
-            if (videoType_ == 1) {
-                 [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
-            }
-            else{
-                 [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
-            
-            }
+            [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
            
         }
     }
