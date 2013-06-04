@@ -393,7 +393,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [temp_dic setObject:@"10" forKey:@"level"];
         }else if ([source_str isEqualToString:@"pps"]){
             [temp_dic setObject:@"11" forKey:@"level"];
-        } else {
+        }else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+            NSArray * dURL = [temp_dic objectForKey:@"urls"];
+            if (0 == dURL.count)
+                return;
+            NSDictionary * firstDic = [dURL objectAtIndex:0];
+            NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[firstDic objectForKey:@"url"]];
+            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+            if (nil != downloadURL)
+            {
+                [newDic setObject:downloadURL forKey:@"url"];
+                [newDic setObject:[firstDic objectForKey:@"file"] forKey:@"file"];
+                [newDic setObject:[firstDic objectForKey:@"type"] forKey:@"type"];
+            }
+            [temp_dic setObject:[NSArray arrayWithObject:newDic] forKey:@"urls"];
+        }
+        else {
             [temp_dic setObject:@"100" forKey:@"level"];
         }
         [tempSortArr addObject:temp_dic];
@@ -2551,7 +2567,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 54, 17);
                     } else if ([source_str isEqualToString:@"qq"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
-                    } else if ([source_str isEqualToString:@"pptv"] || [source_str isEqualToString:@"wangpan"]){
+                    } else if ([source_str isEqualToString:@"pptv"]
+                               || [source_str isEqualToString:@"wangpan"]
+                               || [source_str isEqualToString:@"baidu_wangpan"]){
                         source_str = @"pptv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 56, 17);
                     } else if ([source_str isEqualToString:@"m1905"]){

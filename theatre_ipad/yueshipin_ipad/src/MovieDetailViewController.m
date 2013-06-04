@@ -650,7 +650,7 @@
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
     finder.item = item;
-    finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
+    //finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
     [finder setupWorkingUrl];
     
     [self updateBadgeIcon];
