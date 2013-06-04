@@ -993,6 +993,11 @@
     subitem.downloadStatus = @"waiting";
     [self getDownloadUrls:num-1];
     
+    if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
+    {
+        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+    }
+    
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
