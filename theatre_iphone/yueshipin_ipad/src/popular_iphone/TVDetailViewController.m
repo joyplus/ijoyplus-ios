@@ -1070,7 +1070,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],nil];
     CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
     check.downloadInfoArr = infoArr;
-    check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
+    check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:num]];
     check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
     [CheckDownloadUrlsManager addToCheckQueue:check];
 }
