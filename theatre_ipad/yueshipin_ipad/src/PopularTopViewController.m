@@ -1174,7 +1174,8 @@ void transferDataFromOldDbWithCatch()
               
         UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
         NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
-        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
+        titleLabel.textAlignment = NSTextAlignmentLeft;
+        [titleLabel setText:[NSString stringWithFormat:@"%@", titleText]];
     }
     return cell;
 }
