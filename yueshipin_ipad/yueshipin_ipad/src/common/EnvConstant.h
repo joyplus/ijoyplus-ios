@@ -58,5 +58,5 @@
 #endif
 
 //本地消息推送默认内容
-#define LOCAL_NOTIFICATION_YUEDAN_ID 9823
+#define LOCAL_NOTIFICATION_YUEDAN_ID (@"9823")
 #define DEFAULT_LOCAL_NOTIFICATION_CONTENT @"《虎胆龙威5》从纽约到莫斯科，好莱坞铁血硬汉布鲁斯·威利斯强势归来，再次拯救世界！$《云图》六个人六个时空，从公元1850年一直延伸到后末日未来，看似毫不相干却又环环相扣！$《霍比特人1：意外之旅》灰袍巫师甘道夫与霍比特人比尔博·巴金斯的冒险之旅！$《欲体焚情》限制级女星Izna受雇于潇洒勇猛的情报官员Ayaan，接近可怕的杀手Kabir并让他掉进“甜蜜陷阱”。$《乌云背后的幸福线》两个失意的人在一起艰难探索人生，他们之间关系也开始产生了微妙的变化……"

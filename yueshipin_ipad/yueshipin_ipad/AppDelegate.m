@@ -597,24 +597,56 @@
 #pragma mark - 
 #pragma mark - LocalNotification
 
+- (void)getLocalNotificationMsg
+{
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", LOCAL_NOTIFICATION_YUEDAN_ID, @"top_id", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString * content = [result objectForKey:@"content"];
+            [[CacheUtility sharedCache] putInCache:@"local_notification_content" result:content];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@",error);
+        }];
+    }
+}
+
 - (void)addLocalNotification
 {
-    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
-    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
-    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
-    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
-    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
+    NSString * notificationMsg = (NSString *)[[CacheUtility sharedCache] loadFromCache:@"local_notification_content"];
+    NSArray * notificationArr = [notificationMsg componentsSeparatedByString:@"$"];
+    if (0 == notificationArr.count)
+    {
+        notificationArr = [DEFAULT_LOCAL_NOTIFICATION_CONTENT componentsSeparatedByString:@"$"];
+        [[CacheUtility sharedCache] putInCache:@"local_notification_content" result:DEFAULT_LOCAL_NOTIFICATION_CONTENT];
+    }
     
-    [self addLocalNotificationInterVal:DAY(4)
-                               message:firstStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 2)
-                               message:secondStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 3)
-                               message:thirdStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 4)
-                               message:fourthStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 5)
-                               message:fifthStr];
+    int random = arc4random()%5;
+    
+    for (int i = 0; i < notificationArr.count; i ++)
+    {
+        NSString * msg = [notificationArr objectAtIndex:random];
+        [self addLocalNotificationInterVal:DAY(4 * (i + 1))
+                                   message:msg];
+        random ++;
+        random = (random >= 5) ? 0 : random;
+    }
+    
+    //    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
+    //    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
+    //    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
+    //    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
+    //    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
+    //
+    //    [self addLocalNotificationInterVal:DAY(4)
+    //                               message:firstStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 2)
+    //                               message:secondStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 3)
+    //                               message:thirdStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 4)
+    //                               message:fourthStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 5)
+    //                               message:fifthStr];
 }
 
 - (void)addLocalNotificationInterVal:(NSTimeInterval)time
