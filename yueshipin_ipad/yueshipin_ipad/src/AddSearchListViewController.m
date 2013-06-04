@@ -95,7 +95,7 @@
     [doneBtn setHidden:YES];
     [self.view addSubview:doneBtn];
     
-    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 120, 420, 570)];
+    table = [[UITableView alloc]initWithFrame:CGRectMake(LEFT_WIDTH - 15, 120, 420, 570)];
     table.delegate = self;
     table.dataSource = self;
     table.backgroundColor = [UIColor clearColor];

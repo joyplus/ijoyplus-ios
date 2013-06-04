@@ -677,7 +677,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             [cell addSubview:bgBtn];
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-            bgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            bgBtn.titleLabel.font = [UIFont systemFontOfSize:13];
             [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
@@ -1081,8 +1081,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
         if (height < 85) {
             return;
         }
-        summaryBg_.frame = CGRectMake(14, 35, 292, height+5);
-        summaryLabel_.frame = CGRectMake(28, 35, 264,height);
+        summaryBg_.frame = CGRectMake(14, 35, 292, height+10);
+        summaryLabel_.frame = CGRectMake(28, 35+5, 264,height);
     }
     else{
         summaryBg_.frame = CGRectMake(14, 35, 292, 90);
