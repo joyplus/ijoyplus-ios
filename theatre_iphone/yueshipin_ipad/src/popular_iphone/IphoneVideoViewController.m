@@ -546,7 +546,7 @@
 //        NSString * name1 = [info objectForKey:@"name"];
         NSString * subitemId = [info objectForKey:@"subItemId"];
        
-         NSString *str = [NSString stringWithFormat:@"%@_local",subitemId];
+        NSString *str = subitemId;
         if (type == 2)
         {
 //            NSString *name = [[name1 componentsSeparatedByString:@"_"] objectAtIndex:0];
@@ -567,7 +567,7 @@
             iphoneAVPlayerViewController.nameStr = self.name;
             iphoneAVPlayerViewController.playNum = 0;
             iphoneAVPlayerViewController.videoType = MOVIE_TYPE;
-            str = [NSString stringWithFormat:@"%@_1_local",prodId_];
+            str = [NSString stringWithFormat:@"%@_1",prodId_];
         }
         
        

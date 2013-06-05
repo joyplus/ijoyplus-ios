@@ -451,7 +451,7 @@
                     
                
                 }
-                NSString *str = [NSString stringWithFormat:@"%@_1_local",item.itemId];
+                NSString *str = [NSString stringWithFormat:@"%@_1",item.itemId];
                 NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
                 iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
                 

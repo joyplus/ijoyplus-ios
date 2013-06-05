@@ -825,7 +825,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     playNum++;
     [tableList_ reloadData];
 
+    [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:0]];
     lastPlayTime_ = kCMTimeZero;
+    
     [self disableBottomToolBarButtons];
     
     [self addCacheview];
@@ -1269,6 +1271,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     return (NSComparisonResult)NSOrderedSame;
 };
+/*
 -(void)playNextLocalFile{
     NSString *queryString = [NSString stringWithFormat:@"where itemId = '%@' AND downloadStatus = 'finish'",prodId_];
     NSArray *items = [DatabaseManager findByCriteria:[SubdownloadItem class] queryString:queryString];
@@ -1316,6 +1319,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 }
                 prodId_ = sub.itemId;
                 videoType_ = sub.type;
+                [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0]];
                 lastPlayTime_ = kCMTimeZero;
                 [self addCacheview];
                 if (!isM3u8_) {
@@ -1333,7 +1337,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
      [self playEnd];
 }
-
+*/
 
 -(void)sendHttpRequest:(NSString *)str{
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
@@ -2474,11 +2478,11 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     else{
         if ((duration - playbackTime)>5) {
-            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
+            [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:playbackTime] ];
             
         }
         else{
-            NSString * str = [NSString stringWithFormat:@"%@_%d_local",prodId_,(playNum + 1)];
+            NSString * str = [NSString stringWithFormat:@"%@_%d",prodId_,(playNum + 1)];
             [[CacheUtility sharedCache] putInCache:str result:[NSNumber numberWithInt:0] ];
            
         }
@@ -2622,7 +2626,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     //selectButton_.selected = NO;
     [tableList_ reloadData];
     
-    [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,playNum] result:[NSNumber numberWithInt:0]];
+    [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum+1)] result:[NSNumber numberWithInt:0]];
     lastPlayTime_ = kCMTimeZero;
     
     [self addCacheview];
@@ -2755,6 +2759,8 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
     local_file_path_ = [file objectForKey:@"videoUrl"];
     islocalFile_ = YES;
+    
+    [[CacheUtility sharedCache] putInCache:[NSString stringWithFormat:@"%@_%d",prodId_,(playNum +1)] result:[NSNumber numberWithInt:0]];
     lastPlayTime_ = kCMTimeZero;
     [self addCacheview];
     if (isM3u8_)
