@@ -477,7 +477,7 @@
             pullToRefreshManager_.canLoadMore = NO;
         }
         else{
-            pullToRefreshManager_.canLoadMore = NO;
+            pullToRefreshManager_.canLoadMore = YES;
         }
         [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
