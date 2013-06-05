@@ -738,6 +738,7 @@
             else if (videoType == SHOW_TYPE)
             {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
+                titleLabel.textAlignment = NSTextAlignmentLeft;
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
                 //判断UserName是否为数字,字母，下滑线。
                 NSCharacterSet *dateCharacters = [[NSCharacterSet
@@ -764,7 +765,7 @@
                     
                 }
                 
-                titleLabel.text = [NSString stringWithFormat:@"更新至%@", curEpisode];
+                titleLabel.text = [NSString stringWithFormat:@"  %@", curEpisode];
             }
             else
             {
