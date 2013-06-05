@@ -18,5 +18,6 @@
 + (NSArray *)localPlaylists:(NSString *)mediaId
                        type:(NSInteger)type;
 +(int)getOnlineConfigValue;
++(NSString *)getDownloadURLWithHTML:(NSString *)url;
 
 @end

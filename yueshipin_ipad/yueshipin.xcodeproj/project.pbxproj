@@ -198,6 +198,9 @@
 		227C09DD170AFB2D00BEC1E5 /* fenxiang_weixin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09DB170AFB2C00BEC1E5 /* fenxiang_weixin@2x.png */; };
 		227C09DE170AFB2D00BEC1E5 /* shareWX_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09DC170AFB2C00BEC1E5 /* shareWX_bg@2x.png */; };
 		227C09E0170AFB9C00BEC1E5 /* fenxiang_weixin_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 227C09DF170AFB9B00BEC1E5 /* fenxiang_weixin_s@2x.png */; };
+		228982D3175F0BD600B6000C /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = 228982CE175F0BD600B6000C /* TFHpple.m */; };
+		228982D4175F0BD600B6000C /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 228982D0175F0BD600B6000C /* TFHppleElement.m */; };
+		228982D5175F0BD600B6000C /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 228982D2175F0BD600B6000C /* XPathQuery.m */; };
 		229CA6D416DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m in Sources */ = {isa = PBXBuildFile; fileRef = 229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */; };
 		22AAA4B81697D42E00333F76 /* CreateMyListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22AAA4B71697D42E00333F76 /* CreateMyListOneViewController.m */; };
 		22B0463D16BB65FF005966B8 /* CustomNavigationButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22B0463A16BB65FF005966B8 /* CustomNavigationButtonView.m */; };
@@ -1256,6 +1259,12 @@
 		227C09DB170AFB2C00BEC1E5 /* fenxiang_weixin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fenxiang_weixin@2x.png"; path = "yueshipin_ipad/Resource_iphone/fenxiang_weixin@2x.png"; sourceTree = SOURCE_ROOT; };
 		227C09DC170AFB2C00BEC1E5 /* shareWX_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shareWX_bg@2x.png"; path = "yueshipin_ipad/Resource_iphone/shareWX_bg@2x.png"; sourceTree = SOURCE_ROOT; };
 		227C09DF170AFB9B00BEC1E5 /* fenxiang_weixin_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "fenxiang_weixin_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/fenxiang_weixin_s@2x.png"; sourceTree = SOURCE_ROOT; };
+		228982CD175F0BD600B6000C /* TFHpple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHpple.h; sourceTree = "<group>"; };
+		228982CE175F0BD600B6000C /* TFHpple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHpple.m; sourceTree = "<group>"; };
+		228982CF175F0BD600B6000C /* TFHppleElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHppleElement.h; sourceTree = "<group>"; };
+		228982D0175F0BD600B6000C /* TFHppleElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHppleElement.m; sourceTree = "<group>"; };
+		228982D1175F0BD600B6000C /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
+		228982D2175F0BD600B6000C /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		229CA6D216DB78AF00C60661 /* CustomNavigationViewControllerPortrait.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationViewControllerPortrait.h; sourceTree = "<group>"; };
 		229CA6D316DB78AF00C60661 /* CustomNavigationViewControllerPortrait.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationViewControllerPortrait.m; sourceTree = "<group>"; };
 		22AAA4B61697D42D00333F76 /* CreateMyListOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateMyListOneViewController.h; sourceTree = "<group>"; };
@@ -2449,6 +2458,19 @@
 			name = WechatShare;
 			sourceTree = "<group>";
 		};
+		228982CC175F0BD600B6000C /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				228982CD175F0BD600B6000C /* TFHpple.h */,
+				228982CE175F0BD600B6000C /* TFHpple.m */,
+				228982CF175F0BD600B6000C /* TFHppleElement.h */,
+				228982D0175F0BD600B6000C /* TFHppleElement.m */,
+				228982D1175F0BD600B6000C /* XPathQuery.h */,
+				228982D2175F0BD600B6000C /* XPathQuery.m */,
+			);
+			path = HTML;
+			sourceTree = "<group>";
+		};
 		22EF003616B767410001F743 /* UMUFP */ = {
 			isa = PBXGroup;
 			children = (
@@ -3536,6 +3558,7 @@
 		EB6DEAAA165A34F200AF8003 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				228982CC175F0BD600B6000C /* HTML */,
 				E71FCF93174DBE2B0096A98C /* PullRefresh */,
 				EBC39F0F174C6DC900DB8EFD /* SystemMethods.h */,
 				EBC39F10174C6DC900DB8EFD /* SystemMethods.m */,
@@ -4996,6 +5019,9 @@
 				E754B67B17571C920077CCA9 /* SegmentControlView.m in Sources */,
 				E754B67C17571C920077CCA9 /* VideoTypeSegment.m in Sources */,
 				E754B67F17571D130077CCA9 /* ChannelViewController.m in Sources */,
+				228982D3175F0BD600B6000C /* TFHpple.m in Sources */,
+				228982D4175F0BD600B6000C /* TFHppleElement.m in Sources */,
+				228982D5175F0BD600B6000C /* XPathQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
