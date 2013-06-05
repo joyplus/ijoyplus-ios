@@ -364,8 +364,8 @@
         btn.titleLabel.font = [UIFont systemFontOfSize:15];
         btn.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
-        [btn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateSelected];
+        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
+        [btn setTitleColor:[UIColor orangeColor] forState:UIControlStateSelected];
         [btn addTarget:self action:@selector(didSelect:) forControlEvents:UIControlEventTouchUpInside];
         [scrollView addSubview:btn];
     }
