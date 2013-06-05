@@ -917,7 +917,7 @@
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;
-            check.oneEsp = [episodesArr_ objectAtIndex:0];
+            check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
             check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
             [CheckDownloadUrlsManager addToCheckQueue:check];
             break;

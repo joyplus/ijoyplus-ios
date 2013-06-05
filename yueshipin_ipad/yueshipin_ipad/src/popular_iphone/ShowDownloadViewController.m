@@ -198,7 +198,7 @@
         
         CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
         check.downloadInfoArr = infoArr;
-        check.oneEsp = [listArr_ objectAtIndex:num];
+        check.oneEsp = [self checkDownloadUrls:[EpisodeIdArr_ objectAtIndex:0]];
         check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
         [CheckDownloadUrlsManager addToCheckQueue:check];
     }
@@ -322,6 +322,40 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(NSMutableDictionary *)checkDownloadUrls:(NSDictionary *)iDic
+{
+    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:iDic];
+    NSMutableArray * downloadArr = [NSMutableArray arrayWithArray:[dic objectForKey:@"down_urls"]];
+    
+    for (int i = 0; i < downloadArr.count; i++)
+    {
+        NSMutableDictionary * downloadInfo = [NSMutableDictionary dictionaryWithDictionary:[downloadArr objectAtIndex:i]];
+        if (![[downloadInfo objectForKey:@"source"] isEqualToString:@"baidu_wangpan"])
+        {
+            continue;
+        }
+        
+        NSArray * urlArr = [downloadInfo objectForKey:@"urls"];
+        NSMutableArray * newArr = [NSMutableArray array];
+        if (0 != urlArr.count)
+        {
+            NSDictionary * urlDic = [urlArr objectAtIndex:0];
+            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+            [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
+            [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];
+            [newDic setObject:tureDownloadURL forKey:@"url"];
+            [newArr addObject:newDic];
+        }
+        [downloadInfo setObject:newArr forKey:@"urls"];
+        [downloadArr replaceObjectAtIndex:i withObject:downloadInfo];
+    }
+    
+    [dic setObject:downloadArr forKey:@"down_urls"];
+    
+    return dic;
 }
 
 @end
