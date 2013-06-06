@@ -614,23 +614,6 @@
         random ++;
         random = (random >= 5) ? 0 : random;
     }
-    
-//    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
-//    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
-//    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
-//    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
-//    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
-//    
-//    [self addLocalNotificationInterVal:DAY(4)
-//                               message:firstStr];
-//    [self addLocalNotificationInterVal:(DAY(4) * 2)
-//                               message:secondStr];
-//    [self addLocalNotificationInterVal:(DAY(4) * 3)
-//                               message:thirdStr];
-//    [self addLocalNotificationInterVal:(DAY(4) * 4)
-//                               message:fourthStr];
-//    [self addLocalNotificationInterVal:(DAY(4) * 5)
-//                               message:fifthStr];
 }
 
 - (void)addLocalNotificationInterVal:(NSTimeInterval)time
