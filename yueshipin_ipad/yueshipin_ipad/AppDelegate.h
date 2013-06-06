@@ -55,6 +55,7 @@
 
 @property (nonatomic, strong)NSString *advUrl;
 @property (nonatomic, strong)NSString *advTargetUrl;
+@property UIBackgroundTaskIdentifier bgTask;
 + (AppDelegate *) instance;
 - (void)startHttpServer;
 - (void)stopHttpServer;
