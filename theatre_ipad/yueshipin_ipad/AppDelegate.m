@@ -697,10 +697,11 @@
 
 - (void)decreaseDownloadingNum
 {
-    currentDownloadingNum--;
-    if (currentDownloadingNum < 0) {
-        currentDownloadingNum = 0;
-    }
+//    currentDownloadingNum--;
+//    if (currentDownloadingNum < 0) {
+//        currentDownloadingNum = 0;
+//    }
+    currentDownloadingNum = 0;
 }
 
 @end
