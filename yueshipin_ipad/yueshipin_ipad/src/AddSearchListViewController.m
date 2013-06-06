@@ -68,7 +68,7 @@
     self.bgImage.image = [UIImage imageNamed:@"left_background@2x.jpg"];
     [self.view addSubview:self.bgImage];
 
-    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45, 107, 26)];
+    titleImage = [[UIImageView alloc]initWithFrame:CGRectMake(LEFT_WIDTH, 45, 132, 42)];
     titleImage.image = [UIImage imageNamed:@"add_video_title"];
     [self.view addSubview:titleImage];
     
