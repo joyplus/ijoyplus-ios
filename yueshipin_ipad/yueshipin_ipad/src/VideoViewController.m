@@ -739,11 +739,11 @@
             else if (videoType == SHOW_TYPE)
             {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
-                titleLabel.textAlignment = NSTextAlignmentLeft;
+                titleLabel.textAlignment = NSTextAlignmentCenter;
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
                 //判断UserName是否为数字,字母，下滑线。
                 NSCharacterSet *dateCharacters = [[NSCharacterSet
-                                                   characterSetWithCharactersInString:@"1234567890-/"] invertedSet];
+                                                   characterSetWithCharactersInString:@"1234567890"] invertedSet];
                 NSRange dateRange = [curEpisode rangeOfCharacterFromSet:dateCharacters];
                 
                 if (dateRange.location != NSNotFound
@@ -755,18 +755,18 @@
                 }
                 else
                 {
-                    if (![curEpisode hasPrefix:@"20"])
-                    {
-                        curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
-                    }
-                    
                     nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 23);
                     nameLabel.numberOfLines = 1;
                     titleLabel.hidden = NO;
                     
                 }
+                if ([curEpisode length] == 8) {
+                    NSString *year = [curEpisode substringWithRange:NSMakeRange(0, 4)];
+                    NSString *month = [curEpisode substringWithRange:NSMakeRange(4, 2)];
+                    NSString *day = [curEpisode substringWithRange:NSMakeRange(6, 2)];
+                    titleLabel.text = [NSString stringWithFormat:@"%@/%@/%@",year,month,day];
+                }
                 
-                titleLabel.text = [NSString stringWithFormat:@"  %@", curEpisode];
             }
             else
             {
