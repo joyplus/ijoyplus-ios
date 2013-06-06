@@ -63,6 +63,7 @@
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
+@synthesize recommendAppSwich;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
@@ -162,6 +163,7 @@
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
     self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
+    self.recommendAppSwich = @"0";
     show3GAlertSeq = @"0";
     [MobClick updateOnlineConfig];
     [MobClick checkUpdate];
@@ -240,12 +242,16 @@
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
+        self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
     }
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
     }
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
+    }
+    if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
+        self.recommendAppSwich = @"0";
     }
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];

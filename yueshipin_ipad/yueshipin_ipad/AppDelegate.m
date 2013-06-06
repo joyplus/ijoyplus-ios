@@ -287,6 +287,9 @@
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
     }
+    if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
+        self.recommendAppSwich = @"0";
+    }
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:self.showVideoSwitch forKey:SHOW_VIDEO_SWITCH];
