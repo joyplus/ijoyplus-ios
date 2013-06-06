@@ -980,6 +980,29 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
 }
+
++ (int)downloadingTaskCount
+{
+    int count = 0;
+    for (DownloadItem *item in [DatabaseManager allObjects:[DownloadItem class]]) {
+        if (([item.downloadStatus isEqualToString:@"waiting"]
+             || [item.downloadStatus isEqualToString:@"loading"])
+            && ![item.downloadStatus isEqualToString:@""])
+        {
+            count ++;
+        }
+    }
+    for (SubdownloadItem *item in [DatabaseManager allObjects:[SubdownloadItem class]])
+    {
+        if ([item.downloadStatus isEqualToString:@"waiting"]
+            || [item.downloadStatus isEqualToString:@"loading"])
+        {
+            count ++;
+        }
+    }
+    return count;
+}
+
 @end
 
 
@@ -1591,4 +1614,6 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
     }
     return nil;
 }
+
+
 @end

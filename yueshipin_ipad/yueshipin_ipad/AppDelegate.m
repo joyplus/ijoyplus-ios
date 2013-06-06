@@ -69,7 +69,7 @@
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
 @synthesize adViewController;
-@synthesize advUrl, advTargetUrl;
+@synthesize advUrl, advTargetUrl,bgTask;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -352,6 +352,15 @@
 {
     [self.downLoadManager pauseAllTask];
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        [self continueiPadDownloadWhenEnterBackground:application];
+    }
+    else
+    {
+        [self continueiPhoneDownloadWhenEnterBackground:application];
+    }
+    
     //When app enter background, add a new local Notification
     [self addLocalNotification];
     // end
@@ -364,6 +373,12 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    if (bgTask != UIBackgroundTaskInvalid)
+    {
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+    }
     [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
 }
 
@@ -592,6 +607,115 @@
          [[NSNotificationCenter defaultCenter] postNotificationName:@"wechat_share_success" object:nil];
     }
 
+}
+
+#pragma mark -
+#pragma mark - download at background
+
+- (void)continueiPadDownloadWhenEnterBackground:(UIApplication *)application
+{
+    UIDevice* device = [UIDevice currentDevice];
+    
+    BOOL backgroundSupported = NO;
+    
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+        
+        backgroundSupported = device.multitaskingSupported;
+    
+    if (!backgroundSupported)
+    {
+        return;
+    }
+    
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // Clean up any unfinished task business by marking where you
+        // stopped or ending the task outright.
+        //[self.padDownloadManager stopDownloading];
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+        
+    }];
+    
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        int curDownloadNum = [NewDownloadManager downloadingTaskCount];
+        BOOL isDownloadFinish = (curDownloadNum == 0 ? YES : NO);
+        if (!isDownloadFinish)
+        {
+            [self.padDownloadManager startDownloadingThreads];
+        }
+        
+        while (!isDownloadFinish)
+        {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            [NSThread sleepForTimeInterval:5];
+            isDownloadFinish = ([NewDownloadManager downloadingTaskCount] == 0 ? YES : NO);
+        }
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    });
+}
+
+- (void)continueiPhoneDownloadWhenEnterBackground:(UIApplication *)application
+{
+    UIDevice* device = [UIDevice currentDevice];
+    
+    BOOL backgroundSupported = NO;
+    
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+        
+        backgroundSupported = device.multitaskingSupported;
+    
+    if (!backgroundSupported)
+    {
+        return;
+    }
+    
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        
+        // Clean up any unfinished task business by marking where you
+        
+        // stopped or ending the task outright.
+        
+        [self.downLoadManager pauseAllTask];
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    }];
+    
+    
+    
+    // Start the long-running task and return immediately.
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        int curDownloadNum = [DownLoadManager downloadingTaskCount];
+        BOOL isDownloadFinish = (curDownloadNum == 0 ? YES : NO);
+        if (!isDownloadFinish)
+        {
+            [self.downLoadManager resumeDownLoad];
+        }
+        
+        while (!isDownloadFinish)
+        {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            [NSThread sleepForTimeInterval:5];
+            isDownloadFinish = ([DownLoadManager downloadingTaskCount] == 0 ? YES : NO);
+        }
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    });
 }
 
 #pragma mark - 
