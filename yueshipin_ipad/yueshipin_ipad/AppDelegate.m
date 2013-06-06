@@ -65,6 +65,7 @@
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
+@synthesize recommendAppSwich;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
@@ -168,10 +169,11 @@
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
-    self.showVideoSwitch = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:SHOW_VIDEO_SWITCH];
-    if (self.showVideoSwitch == nil) {
-        self.showVideoSwitch = @"2";
+    self.recommendAppSwich = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:RECOMMEND_APP_SWITCH];
+    if (self.recommendAppSwich == nil) {
+        self.recommendAppSwich = @"1";
     }
+    self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
     networkStatus = 2;
@@ -271,6 +273,7 @@
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
+        self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
