@@ -521,7 +521,9 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
-                    [cell addSubview:downLoad];
+                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                        [cell addSubview:downLoad];
+                    }
                 }
 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];

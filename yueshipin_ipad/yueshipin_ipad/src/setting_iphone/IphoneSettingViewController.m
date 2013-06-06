@@ -170,7 +170,8 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:xinshouyindao];
 	
-    if ([CommonMotheds getOnlineConfigValue] != 2) {
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) 
+    {
         UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 465, 55, 13)];
         jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
         [scrollView addSubview:jinpin];

@@ -425,7 +425,9 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 
                 if (isloaded_) {
-                    [cell addSubview:downLoad];
+                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                        [cell addSubview:downLoad];
+                    }
                 }
     
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
