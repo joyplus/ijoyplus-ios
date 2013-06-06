@@ -886,7 +886,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)expectVideo
 {
-    [self SubscribingToChannels];
+    //[self SubscribingToChannels];
     [self addVideotoFav:ADDEXPECT];
 }
 
@@ -916,6 +916,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if([responseCode isEqualToString:kSuccessResCode]){
+            [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
             [self showOpSuccessModalView:1.5 with:type];
@@ -943,7 +944,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             break;
         }
         case 10002:{
-            [self SubscribingToChannels];
+            //[self SubscribingToChannels];
             [self addVideotoFav:ADDFAV];
             break;
         }
