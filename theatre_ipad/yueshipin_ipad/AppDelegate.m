@@ -61,6 +61,7 @@
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
+@synthesize recommendAppSwich;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
@@ -165,11 +166,12 @@
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
-    self.showVideoSwitch = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:SHOW_VIDEO_SWITCH];
-    if (self.showVideoSwitch == nil) {
-        self.showVideoSwitch = @"2";
+    self.recommendAppSwich = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:RECOMMEND_APP_SWITCH];
+    if (self.recommendAppSwich == nil) {
+        self.recommendAppSwich = @"1";
     }
     self.closeVideoMode = @"0";
+    self.showVideoSwitch = @"0";
     networkStatus = 2;
     show3GAlertSeq = @"0";
     [MobClick updateOnlineConfig];
@@ -258,6 +260,7 @@
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
+        self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
     }
     self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
     self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
@@ -268,6 +271,9 @@
     }
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
+    }
+    if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
+        self.recommendAppSwich = @"0";
     }
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
