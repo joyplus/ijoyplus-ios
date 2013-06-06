@@ -13,7 +13,6 @@
 #import "CommentListViewController.h"
 #import "ListViewController.h"
 #import "DownloadItem.h"
-#import "DownloadHandler.h"
 #import "DownloadUrlFinder.h"
 #import <QuartzCore/QuartzCore.h>
 #import <Parse/Parse.h>
