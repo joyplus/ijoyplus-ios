@@ -410,6 +410,7 @@
     
     //when app become active ,cancel all local notification .
     [self cancelLocalNotification];
+    [self getLocalNotificationMsg];
     
     //add notification
     [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
