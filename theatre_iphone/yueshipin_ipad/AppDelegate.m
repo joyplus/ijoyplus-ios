@@ -344,6 +344,11 @@
         
         bgTask = UIBackgroundTaskInvalid;
     }
+    
+    if (httpServer && ![httpServer isRunning]) {
+        [httpServer start:NULL];
+    }
+    
     [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
 }
 
