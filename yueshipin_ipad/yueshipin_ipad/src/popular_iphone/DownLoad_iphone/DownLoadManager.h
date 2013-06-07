@@ -69,7 +69,7 @@
 -(void)appDidEnterForeground;
 
 //-(void)networkChanged:(int)status;
-
++ (int)downloadingTaskCount;
 -(void)waringPlus;
 -(void)waringReduce;
 @end

@@ -157,7 +157,7 @@
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [[AppDelegate instance] decreaseDownloadingNum];
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -170,7 +170,7 @@
             tempitem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempitem.itemId, tempitem.subitemId]];
             tempitem.percentage = 100;
             tempitem.downloadStatus  = @"done";
-            [AppDelegate instance].currentDownloadingNum = 0;
+            [[AppDelegate instance] decreaseDownloadingNum];
             [DatabaseManager update:tempitem];
             break;
         }
@@ -235,7 +235,7 @@
     if([subitem.downloadStatus isEqualToString:@"start"] || [subitem.downloadStatus isEqualToString:@"waiting"]){
         if ([subitem.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [AppDelegate instance].currentDownloadingNum = 0;
+            [[AppDelegate instance] decreaseDownloadingNum];
         }
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"stop";
@@ -501,7 +501,7 @@
         }
     }
     if ([ActionUtility getStartItemNumber] == 0) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [[AppDelegate instance] decreaseDownloadingNum];
     }
     [self reloadSubitems];
     [self.parentDelegate refreshDownloadView];
