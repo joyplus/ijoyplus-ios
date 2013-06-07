@@ -31,7 +31,6 @@
 @class CheckDownloadUrlsManager;
 @interface DownLoadManager : NSObject<M3u8DownLoadManagerDelegate>{
     NSThread *downloadThread_;
-    NSString *downloadId_;
     NSArray *allItems_;
     NSArray *allSubItems_;
     DownloadItem *downloadItem_;
@@ -44,7 +43,6 @@
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
 @property (nonatomic, strong)NSThread *downloadThread;
-@property (nonatomic, strong)NSString *downloadId;
 @property (nonatomic, strong)NSArray *allItems;
 @property (nonatomic, strong)NSArray *allSubItems;
 @property (nonatomic, strong)DownloadItem *downloadItem;
@@ -52,6 +50,7 @@
 @property (nonatomic, strong)NSLock *lock;
 @property (nonatomic, assign)BOOL isResetLoading;
 @property (nonatomic, strong)NSTimer *retryTimer;
+@property (nonatomic, strong) NSMutableDictionary *downloadItemDic;
 +(DownLoadManager *)defaultDownLoadManager;
 
 -(void)resumeDownLoad;
@@ -63,6 +62,8 @@
 +(void)continueDownload:(NSString *)downloadId;
 
 +(int)downloadTaskCount;
+
++ (int)downloadingTaskCount;
 
 -(void)pauseAllTask;
 

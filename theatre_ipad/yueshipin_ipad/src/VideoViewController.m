@@ -139,17 +139,9 @@
         table.tableFooterView = [[UIView alloc] init];
 		[self.view addSubview:table];
         
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        
-        if (_refreshHeaderView == nil) {
-            EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, 529 - 18, table.bounds.size.height)];
-            view.backgroundColor = [UIColor clearColor];
-            view.delegate = self;
-            [table addSubview:view];
-            _refreshHeaderView = view;
-            
-        }
-        //[_refreshHeaderView refreshLastUpdatedDate];
+        pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
+        pullToRefreshManager_.delegate = self;
+
     }
     return self;
 }
@@ -224,7 +216,6 @@
             [myHUD showProgressBar:table];
         }
     }
-    reloads_ = 1;
     [self performSelectorInBackground:@selector(sendRequest) withObject:nil];
 }
 
@@ -238,7 +229,7 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [myHUD hide];
-            reloads_++;
+    
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
             [myHUD hide];
@@ -258,9 +249,9 @@
             [videoArray addObjectsFromArray:tempTopsArray];
         }
         if(tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+             pullToRefreshManager_.canLoadMore = NO;
         } else {
-            [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+             pullToRefreshManager_.canLoadMore = YES;
         }
     } else {
         [UIUtility showSystemError:self.view];
@@ -281,45 +272,13 @@
 
 - (void)loadTable {
     [table reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ refreshCompleted];
 }
 
 
 - (void)reloadTableViewDataSource{
     reloads_ = 2;
     [self retrieveData];
-	_reloading = YES;
-}
-
-
-- (void)doneLoadingTableViewData{
-	
-	//  model should call this when its done loading
-	_reloading = NO;
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:table];
-	
-}
-
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	
-	[self reloadTableViewDataSource];
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.0];
-	
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	
-	return _reloading; // should return if data source model is reloading
-	
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	
-	return [NSDate date]; // should return date data source was last changed
-	
 }
 
 - (void)categoryBtnClicked:(UIButton *)btn
@@ -640,20 +599,30 @@
     }
 }
 
+
 #pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClient
+#pragma mark - UIScrollviewDelegate
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [pullToRefreshManager_ scrollViewBegin];
+}
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    [pullToRefreshManager_ tableViewScrolled];
+     [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+#pragma mark -
+#pragma mark - PullRefreshManagerClinetDelegate
+-(void)pulltoReFresh{
+    [self reloadTableViewDataSource];
+}
+
+
+- (void)pulltoLoadMore {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
@@ -674,8 +643,12 @@
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         if(tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+             pullToRefreshManager_.canLoadMore = NO;
         }
+        else{
+             pullToRefreshManager_.canLoadMore = YES;
+        }
+        [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
@@ -765,10 +738,11 @@
             else if (videoType == SHOW_TYPE)
             {
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
+                titleLabel.textAlignment = NSTextAlignmentCenter;
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
                 //判断UserName是否为数字,字母，下滑线。
                 NSCharacterSet *dateCharacters = [[NSCharacterSet
-                                                   characterSetWithCharactersInString:@"1234567890-/"] invertedSet];
+                                                   characterSetWithCharactersInString:@"1234567890"] invertedSet];
                 NSRange dateRange = [curEpisode rangeOfCharacterFromSet:dateCharacters];
                 
                 if (dateRange.location != NSNotFound
@@ -780,18 +754,18 @@
                 }
                 else
                 {
-                    if (![curEpisode hasPrefix:@"20"])
-                    {
-                        curEpisode = [NSString stringWithFormat:@"20%@", curEpisode];
-                    }
-                    
                     nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 23);
                     nameLabel.numberOfLines = 1;
                     titleLabel.hidden = NO;
                     
                 }
-                
-                titleLabel.text = [NSString stringWithFormat:@"更新至%@", curEpisode];
+                if ([curEpisode length] == 8) {
+                    NSString *year = [curEpisode substringWithRange:NSMakeRange(0, 4)];
+                    NSString *month = [curEpisode substringWithRange:NSMakeRange(4, 2)];
+                    NSString *day = [curEpisode substringWithRange:NSMakeRange(6, 2)];
+                    titleLabel.text = [NSString stringWithFormat:@"%@/%@/%@",year,month,day];
+                }
+
             }
             else
             {

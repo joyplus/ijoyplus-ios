@@ -49,7 +49,7 @@
 
 #define kIpadAppKey @"kIpadAppkey"
 #define KWXCODENUM  @"weixinImageNum"
-
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos"
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1
 #define umengAppKey @"50c069e25270154e81000056"
@@ -71,6 +71,7 @@
 #define SYSTEM_IDLE_TIMER_DISABLED @"system_idle_timer_disabled"
 
 #define UPDATE_DOWNLOAD_ITEM_NUM @"update_download_item_num"
+#define RELOAD_MENU_ITEM @"reload_menu_item"
 #define UPDATE_DISK_STORAGE @"update_disk_storage"
 #define NO_ENOUGH_SPACE @"no_enough_space"
 #define LEAST_DISK_SPACE 300.0/1024.0
@@ -98,6 +99,8 @@
 #define APPIRATER_APP_ID				587246114
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
+
+#define AMERICANVIDEOS @"1"
 
 #define SHOW_MENU_INTRO @"show_menu_intro"
 #define WEIBO_INTRO @"weibbo_intro"

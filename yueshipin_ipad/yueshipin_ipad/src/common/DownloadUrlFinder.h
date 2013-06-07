@@ -12,7 +12,6 @@
 @interface DownloadUrlFinder : NSObject
 
 @property (nonatomic, strong)DownloadItem *item;
-@property (nonatomic) int mp4DownloadUrlNum;
 
 - (id)init;
 - (void)setupWorkingUrl;

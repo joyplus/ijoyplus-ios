@@ -170,23 +170,23 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [xinshouyindao addTarget:self action:@selector(xinshouyindao) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:xinshouyindao];
 	
-    UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 465, 55, 13)];
-    jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
-    [scrollView addSubview:jinpin];
-    
-    _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 495,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
-    [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
-    _mGridView.datasource = self;
-    _mGridView.delegate = self;
-    _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
-    _mGridView.autoresizesSubviews = NO;
-    _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
-    [_mGridView requestPromoterDataInBackground];
-    [scrollView addSubview:_mGridView];
-    
-   
-    
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) 
+    {
+        UIImageView *jinpin = [[UIImageView alloc] initWithFrame:CGRectMake(15, 465, 55, 13)];
+        jinpin.image = [UIImage imageNamed:@"jingpintuijian.png"];
+        [scrollView addSubview:jinpin];
+        
+        _mGridView = [[UMUFPGridView alloc] initWithFrame:CGRectMake(12, 495,296,260) appkey:umengAppKey slotId:nil currentViewController:self];
+        [_mGridView setBackgroundColor:[UIColor colorWithRed:120.0/255 green:120.0/255 blue:120.0/255 alpha:0.2]];
+        _mGridView.datasource = self;
+        _mGridView.delegate = self;
+        _mGridView.dataLoadDelegate = (id<GridViewDataLoadDelegate>)self;
+        _mGridView.autoresizesSubviews = NO;
+        _mGridView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        
+        [_mGridView requestPromoterDataInBackground];
+        [scrollView addSubview:_mGridView];
+    }
 }
 
 -(void)back:(id)sender{

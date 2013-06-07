@@ -138,6 +138,39 @@
     return nil;
 }
 
+-(NSMutableDictionary *)checkDownloadUrls:(NSDictionary *)iDic
+{
+    NSMutableDictionary * dic = [NSMutableDictionary dictionaryWithDictionary:iDic];
+    NSMutableArray * downloadArr = [NSMutableArray arrayWithArray:[dic objectForKey:@"down_urls"]];
+    
+    for (int i = 0; i < downloadArr.count; i++)
+    {
+        NSMutableDictionary * downloadInfo = [NSMutableDictionary dictionaryWithDictionary:[downloadArr objectAtIndex:i]];
+        if (![[downloadInfo objectForKey:@"source"] isEqualToString:@"baidu_wangpan"])
+        {
+            continue;
+        }
+        
+        NSArray * urlArr = [downloadInfo objectForKey:@"urls"];
+        NSMutableArray * newArr = [NSMutableArray array];
+        if (0 != urlArr.count)
+        {
+            NSDictionary * urlDic = [urlArr objectAtIndex:0];
+            NSString * tureDownloadURL = [CommonMotheds getDownloadURLWithHTML:[urlDic objectForKey:@"url"]];
+            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+            [newDic setObject:[urlDic objectForKey:@"file"] forKey:@"file"];
+            [newDic setObject:[urlDic objectForKey:@"type"] forKey:@"type"];
+            [newDic setObject:tureDownloadURL forKey:@"url"];
+            [newArr addObject:newDic];
+        }
+        [downloadInfo setObject:newArr forKey:@"urls"];
+        [downloadArr replaceObjectAtIndex:i withObject:downloadInfo];
+    }
+    
+    [dic setObject:downloadArr forKey:@"down_urls"];
+    
+    return dic;
+}
 
 #pragma mark - Table view data source
 
@@ -494,7 +527,7 @@
     }
     
     
-    NSDictionary * info = [self downloadedItem:self.prodId index:num-1];
+    NSDictionary * info = [self downloadedItem:self.prodId index:num];
     if (nil != info)
     {
         IphoneAVPlayerViewController *iphoneAVPlayerViewController = [[IphoneAVPlayerViewController alloc] init];
@@ -510,6 +543,8 @@
         iphoneAVPlayerViewController.islocalFile = YES;
         NSInteger type = [[info objectForKey:@"type"] intValue];
         NSString * subitemId = [info objectForKey:@"subItemId"];
+        
+        NSString *str = subitemId;
         if (type == 2)
         {
             //            NSString *name = [[name1 componentsSeparatedByString:@"_"] objectAtIndex:0];
@@ -530,10 +565,9 @@
             iphoneAVPlayerViewController.nameStr = self.name;
             iphoneAVPlayerViewController.playNum = 0;
             iphoneAVPlayerViewController.videoType = MOVIE_TYPE;
+            str = [NSString stringWithFormat:@"%@_1",prodId_];
         }
         
-        
-        NSString * str = [NSString stringWithFormat:@"%@_local",subitemId];
         NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
         iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
         iphoneAVPlayerViewController.prodId = self.prodId;

@@ -101,15 +101,7 @@
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super init]) {
 		[self.view setFrame:frame];
-//		UIImageView *leftLineImageView = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, 3, self.view.frame.size.height-27)];
-//        leftLineImageView.image = [[UIImage imageNamed:@"menu_left_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
-//        [self.view addSubview:leftLineImageView];
-//        
-//        UIImageView *bottomLineImageView = [[UIImageView alloc]initWithFrame:CGRectMake(3, self.view.frame.size.height-27, self.view.frame.size.width -3, self.view.frame.size.height)];
-//        bottomLineImageView.image = [[UIImage imageNamed:@"menu_bottom_line"] resizableImageWithCapInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
-//        [self.view addSubview:bottomLineImageView];
-        
-        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"recommend_icon", @"", @"setting_icon", nil];
+        [self initMenuIcons];
 		self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, LEFT_MENU_DIPLAY_WIDTH, self.view.frame.size.height - TABLE_HEADER_HEIGHT) style:UITableViewStylePlain];
         [self.tableView setSeparatorStyle:UITableViewCellSelectionStyleNone];
 		[self.tableView setDelegate:self];
@@ -121,18 +113,34 @@
 		self.tableView.tableFooterView = footerView;
         
 		[self.view addSubview:self.tableView];
-		
-//		UIView* verticalLineView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.size.width, -5, 1, self.view.frame.size.height)];
-//		[verticalLineView setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
-//		[verticalLineView setBackgroundColor:[UIColor whiteColor]];
-//		[self.view addSubview:verticalLineView];
-//		[self.view bringSubviewToFront:verticalLineView];
-        
+
         selectedIndex = 0;
         [self initMenuController];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDownloadNum:) name:UPDATE_DOWNLOAD_ITEM_NUM object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshMenu) name:RELOAD_MENU_ITEM object:nil];
 	}
     return self;
+}
+
+
+- (void)initMenuIcons
+{
+    if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"] && [[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
+        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"recommend_icon", @"", @"setting_icon", nil];
+    } else if(![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"] && [[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
+        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"", @"recommend_icon", @"", @"setting_icon", nil];
+    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"] && ![[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]){
+        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"download_icon", @"", @"", @"setting_icon", nil];
+    } else {
+        menuIconArray = [NSArray arrayWithObjects:@"popular_top", @"popular_list", @"movie_icon", @"drama_icon", @"comic_icon", @"show_icon", @"search_icon", @"personal_icon", @"", @"", @"", @"setting_icon", nil];
+    }
+}
+
+
+- (void)refreshMenu
+{
+    [self initMenuIcons];
+    [tableView reloadData];
 }
 
 - (void)initMenuController
@@ -214,13 +222,6 @@
         badgeView.badgeText = [NSString stringWithFormat:@"%i", newNum];
     }
 }
-//
-//- (void)viewDidAppear:(BOOL)animated {
-//    [super viewDidAppear:animated];
-//    if(![AppDelegate instance].triggeredByPlayer){
-//        [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:[self getViewControllerByIndex] invokeByController:self isStackStartView:YES removePreviousView:NO];
-//    }
-//}
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
 	[super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
@@ -310,9 +311,17 @@
     } else if(selectedIndex == 7){
         return personalViewController;
     } else if(selectedIndex == 8){
-        return downloadViewController;
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
+            return downloadViewController;
+        } else {
+            return nil;
+        }
     } else if(selectedIndex == 9){
-        return appViewController;
+        if ([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
+            return appViewController;
+        } else {
+            return nil;
+        }
     } else if(selectedIndex == 10){
         return nil;
     } else {
@@ -324,6 +333,12 @@
 {
     selectedIndex = indexPath.row;
     if(selectedIndex == 10){
+        return;
+    }
+    if (selectedIndex == 8 && ![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]) {
+        return;
+    }
+    if (selectedIndex == 9 && ![[AppDelegate instance].recommendAppSwich isEqualToString:@"0"]) {
         return;
     }
     for (int i = 0; i < 12; i++) {

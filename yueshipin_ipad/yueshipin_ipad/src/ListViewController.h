@@ -7,8 +7,8 @@
 //
 
 #import "CommonHeader.h"
-
-@interface ListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>{
+#import "PullRefreshManagerClinet.h"
+@interface ListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, PullRefreshManagerClinetDelegate>{
     UITableView *table;
     NSMutableArray *topsArray;
     UIButton *closeBtn;
