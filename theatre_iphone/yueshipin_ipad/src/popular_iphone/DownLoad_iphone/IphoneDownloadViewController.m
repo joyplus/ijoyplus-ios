@@ -53,7 +53,7 @@
     titleText.backgroundColor = [UIColor clearColor];
     titleText.textColor=[UIColor whiteColor];
     [titleText setFont:[UIFont boldSystemFontOfSize:20.0]];
-    [titleText setText:@"视频下载"];
+    [titleText setText:@"本地视频"];
     titleText.shadowColor = [UIColor colorWithRed:121.0/255 green:64.0/255 blue:0 alpha:1];
     titleText.center = self.navigationItem.titleView.center;
     self.navigationItem.titleView=titleText;
@@ -451,14 +451,14 @@
                     
                
                 }
-                NSString *str = [NSString stringWithFormat:@"%@_1_local",item.itemId];
+                NSString *str = [NSString stringWithFormat:@"%@_1",item.itemId];
                 NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
                 iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
                 
                 iphoneAVPlayerViewController.islocalFile = YES;
                 iphoneAVPlayerViewController.nameStr = item.name;
                 iphoneAVPlayerViewController.prodId = item.itemId;
-                iphoneAVPlayerViewController.playNum = 1;
+                iphoneAVPlayerViewController.playNum = 0;
                 iphoneAVPlayerViewController.videoType = 1;
                 [self presentViewController:iphoneAVPlayerViewController animated:YES completion:nil];
             }

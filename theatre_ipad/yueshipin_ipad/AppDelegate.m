@@ -41,6 +41,7 @@
 - (void)addLocalNotificationInterVal:(NSTimeInterval)time
                              message:(NSString *)msg;
 - (void)cancelLocalNotification;
+- (void)getLocalNotificationMsg;
 
 @end
 
@@ -60,11 +61,13 @@
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
+@synthesize recommendAppSwich;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
 @synthesize adViewController;
 @synthesize advUrl, advTargetUrl;
+@synthesize bgTask;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -163,8 +166,12 @@
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
-    self.showVideoSwitch = @"0";
+    self.recommendAppSwich = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:RECOMMEND_APP_SWITCH];
+    if (self.recommendAppSwich == nil) {
+        self.recommendAppSwich = @"1";
+    }
     self.closeVideoMode = @"0";
+    self.showVideoSwitch = @"0";
     networkStatus = 2;
     show3GAlertSeq = @"0";
     [MobClick updateOnlineConfig];
@@ -250,9 +257,15 @@
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
+    
+    NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
+    if (hiddenAVS != nil) {
+        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+    }
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
+        self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
     }
     self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
     self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
@@ -264,8 +277,13 @@
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
     }
+    if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
+        self.recommendAppSwich = @"0";
+    }
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
+    [[ContainerUtility sharedInstance] setAttribute:self.showVideoSwitch forKey:SHOW_VIDEO_SWITCH];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -328,7 +346,8 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-//    [self.downLoadManager pauseAllTask];
+    //[self.padDownloadManager stopDownloading];
+    [self continueDownloadWhenEnterBackground:application];
     
     //When app enter background, add a new local Notification
     [self addLocalNotification];
@@ -342,7 +361,16 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
+    //[self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
+    if (bgTask != UIBackgroundTaskInvalid)
+    {
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+    }
+    if (httpServer && ![httpServer isRunning]) {
+        [httpServer start:NULL];
+    }
 }
 
 -(void)iphoneContinueDownload{
@@ -350,12 +378,6 @@
 }
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-//    Reachability *myhostReach = [Reachability reachabilityForInternetConnection];
-//    if([myhostReach currentReachabilityStatus] == NotReachable) {
-//         UIView *rootView = self.window.rootViewController.view;
-//         [UIUtility showNetWorkError:rootView];
-//    };
-    
     if (application.applicationIconBadgeNumber != 0) {
         application.applicationIconBadgeNumber = 0;
         PFInstallation *installation = [PFInstallation currentInstallation];
@@ -367,6 +389,7 @@
     
     //when app become active ,cancel all local notification .
     [self cancelLocalNotification];
+    [self getLocalNotificationMsg];
     
     //add notification
     [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
@@ -378,16 +401,11 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad){
         [padDownloadManager startDownloadingThreads];
     }
-    else{
-    
-  }
-    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    
 }
 //- (NSUInteger)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window{
 //    
@@ -502,37 +520,6 @@
 5. 用户因第三方如电信部门的通讯线路故障、技术问题、网络、电脑故障、系统不稳定性及其他各种不可抗力量原因而遭受到的一切损失，我公司不承担责任。因技术故障等不可抗时间影响到服务的正常运行的，我公司承诺在第一时间内与相关单位配合，及时处理进行修复，但用户因此而遭受的一切损失，我公司不承担责任。";
 }
 
-//-(void) onRequestAppMessage
-//{
-//    // 微信请求App提供内容， 需要app提供内容后使用sendRsp返回
-//    RespForWXRootViewController * respRootViewCtrl = [[RespForWXRootViewController alloc] init];
-//    respRootViewCtrl.delegate = self;
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    UIViewController * rootViewCtrl = navCtrl.topViewController;
-//    if (rootViewCtrl.presentedViewController)
-//    {
-//        UIViewController * persentedCtrl = rootViewCtrl.presentedViewController;
-//        if ([persentedCtrl isKindOfClass:[CustomNavigationViewController class]])
-//        {
-//            CustomNavigationViewController * cNavCtrl = (CustomNavigationViewController *)persentedCtrl;
-//            UIViewController * topCtrl = cNavCtrl.topViewController;
-//            if ([topCtrl isKindOfClass:[IphoneAVPlayerViewController class]])
-//            {
-//                IphoneAVPlayerViewController * playCtrl = (IphoneAVPlayerViewController *)topCtrl;
-//                [playCtrl clearPlayerData];
-//            }
-//            [topCtrl dismissViewControllerAnimated:NO completion:NULL];
-//            [[UIApplication sharedApplication] setStatusBarHidden:NO];
-//        }
-//        else
-//        {
-//            [rootViewCtrl dismissViewControllerAnimated:NO completion:NULL];
-//        }
-//    }
-//    respRootViewCtrl.hidesBottomBarWhenPushed = YES;
-//    [navCtrl pushViewController:respRootViewCtrl animated:NO];
-//}
-
 // wecha sdk delegate
 -(void) onReq:(BaseReq*)req
 {
@@ -547,27 +534,94 @@
     
 }
 
+#pragma mark -
+#pragma mark - download at background
+
+- (void)continueDownloadWhenEnterBackground:(UIApplication *)application
+{
+    UIDevice* device = [UIDevice currentDevice];
+    
+    BOOL backgroundSupported = NO;
+    
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+        
+        backgroundSupported = device.multitaskingSupported;
+    
+    if (!backgroundSupported)
+    {
+        return;
+    }
+    
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // Clean up any unfinished task business by marking where you
+        // stopped or ending the task outright.
+        //[self.padDownloadManager stopDownloading];
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+        
+    }];
+     
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        int curDownloadNum = [NewDownloadManager downloadingTaskCount];
+        BOOL isDownloadFinish = (curDownloadNum == 0 ? YES : NO);
+        if (!isDownloadFinish)
+        {
+            [self.padDownloadManager startDownloadingThreads];
+        }
+        
+        while (!isDownloadFinish)
+        {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            [NSThread sleepForTimeInterval:5];
+            isDownloadFinish = ([NewDownloadManager downloadingTaskCount] == 0 ? YES : NO);
+        }
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    });
+}
+
 #pragma mark - 
 #pragma mark - LocalNotification
 
+- (void)getLocalNotificationMsg
+{
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", LOCAL_NOTIFICATION_YUEDAN_ID, @"top_id", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString * content = [result objectForKey:@"content"];
+            [[CacheUtility sharedCache] putInCache:@"local_notification_content" result:content];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@",error);
+        }];
+    }
+}
+
 - (void)addLocalNotification
 {
-    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
-    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
-    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
-    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
-    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
+    NSString * notificationMsg = (NSString *)[[CacheUtility sharedCache] loadFromCache:@"local_notification_content"];
+    NSArray * notificationArr = [notificationMsg componentsSeparatedByString:@"$"];
+    if (0 == notificationArr.count)
+    {
+        notificationArr = [DEFAULT_LOCAL_NOTIFICATION_CONTENT componentsSeparatedByString:@"$"];
+        [[CacheUtility sharedCache] putInCache:@"local_notification_content" result:DEFAULT_LOCAL_NOTIFICATION_CONTENT];
+    }
     
-    [self addLocalNotificationInterVal:DAY(4)
-                               message:firstStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 2)
-                               message:secondStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 3)
-                               message:thirdStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 4)
-                               message:fourthStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 5)
-                               message:fifthStr];
+    int random = arc4random()%5;
+    
+    for (int i = 0; i < notificationArr.count; i ++)
+    {
+        NSString * msg = [notificationArr objectAtIndex:random];
+        [self addLocalNotificationInterVal:DAY(4 * (i + 1))
+                                   message:msg];
+        random ++;
+        random = (random >= 5) ? 0 : random;
+    }
 }
 
 - (void)addLocalNotificationInterVal:(NSTimeInterval)time
@@ -597,64 +651,6 @@
 {
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
-
-//- (void)clearRespForWXView
-//{
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    if ([navCtrl.topViewController isKindOfClass:[RespForWXRootViewController class]])
-//    {
-//        [navCtrl popViewControllerAnimated:NO];
-//    }
-//    else if ([navCtrl.topViewController isKindOfClass:[RespForWXDetailViewController class]])
-//    {
-//        [navCtrl popViewControllerAnimated:NO];
-//        [navCtrl popViewControllerAnimated:NO];
-//    }
-//}
-
-#pragma mark - RespForWXRootViewControllerDelegate
-//- (void)removeRespForWXRootView
-//{
-//    tabBarView.tabBar.hidden = NO;
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    [navCtrl popViewControllerAnimated:NO];
-//}
-//
-//- (void)backButtonClick
-//{
-//    [WXApi openWXApp];
-//    tabBarView.tabBar.hidden = NO;
-//    UINavigationController * navCtrl = [tabBarView.viewControllers objectAtIndex:tabBarView.selectedIndex];
-//    [navCtrl popViewControllerAnimated:NO];
-//}
-
-//- (void)shareVideoResp:(NSDictionary *)data
-//{
-//    //NSDictionary * shareData = [NSDictionary dictionaryWithObjectsAndKeys:downloadUrl,@"videoURL",title,@"name",description ,@"description",thumb,@"thumb",nil];
-//    
-//    WXMediaMessage *message = [WXMediaMessage message];
-//    
-//    message.title = [data objectForKey:@"name"];
-//    message.description = [data objectForKey:@"description"];
-//    
-//    NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumb"]];
-//    
-//    UIImage * thumb = [UIImage imageWithData:[NSData dataWithContentsOfURL:url]];
-//    
-//    
-//    [message setThumbImage:thumb];
-//    
-//    WXVideoObject *ext = [WXVideoObject object];
-//    ext.videoUrl = [data objectForKey:@"videoURL"];
-//    
-//    message.mediaObject = ext;
-//    
-//    GetMessageFromWXResp* resp = [[GetMessageFromWXResp alloc] init];
-//    resp.message = message;
-//    resp.bText = NO;
-//    
-//    [WXApi sendResp:resp];
-//}
 
 - (void)setIdleTimerDisabled:(NSNotification *)notification
 {
@@ -688,6 +684,15 @@
     [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
     }];
     [downloadingOperation start];
+}
+
+- (void)decreaseDownloadingNum
+{
+//    currentDownloadingNum--;
+//    if (currentDownloadingNum < 0) {
+//        currentDownloadingNum = 0;
+//    }
+    currentDownloadingNum = 0;
 }
 
 @end

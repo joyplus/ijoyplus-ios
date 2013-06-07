@@ -120,7 +120,7 @@
         nameLabel.text = [NSString stringWithFormat:@"%@", [self.episodeArray objectAtIndex:indexPath.row]];
     }
     if (indexPath.row == currentNum) {
-        nameLabel.textColor = [UIColor colorWithRed:255/255.0 green:145/255.0 blue:0 alpha:1];
+        nameLabel.textColor = [UIColor colorWithRed:252/255.0 green:53/255.0 blue:180/255.0 alpha:1];
     } else {
         nameLabel.textColor = [UIColor colorWithRed:144/255.0 green:144/255.0 blue:144/255.0 alpha:1];
     }

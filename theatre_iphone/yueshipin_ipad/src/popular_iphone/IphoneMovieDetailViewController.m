@@ -521,7 +521,9 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
-                    [cell addSubview:downLoad];
+                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                        [cell addSubview:downLoad];
+                    }
                 }
 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
@@ -745,7 +747,13 @@
         }
         else if(row == 1){
             if (moreBtn_.selected) {
-                 return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
+                float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+                
+                if (height < 85) {
+                    return 125;
+                }
+                return height+40;
+
             }
             else{
                  return 125;
@@ -911,7 +919,7 @@
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;
-            check.oneEsp = [episodesArr_ objectAtIndex:0];
+            check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
             check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
             [CheckDownloadUrlsManager addToCheckQueue:check];
             break;
@@ -970,9 +978,13 @@
 -(void)more{
    
         moreBtn_.selected = !moreBtn_.selected;
+        float height = [self heightForString:summary_ fontSize:13 andWidth:271];
         if (moreBtn_.selected) {
-            summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-            summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+            if (height < 85) {
+                return;
+            }
+            summaryBg_.frame = CGRectMake(14, 35, 292, height+5);
+            summaryLabel_.frame = CGRectMake(28, 35, 264,height);
             
             
         }

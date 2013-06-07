@@ -13,6 +13,7 @@
 
 @property (nonatomic, weak)id<DownloadingDelegate>delegate;
 @property (nonatomic, weak)id<SubdownloadingDelegate>subdelegate;
++ (int)downloadingTaskCount;
 - (void)startDownloadingThreads;
 - (void)stopDownloading;
 - (id)init;

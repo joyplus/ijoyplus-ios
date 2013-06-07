@@ -17,4 +17,5 @@
 +(void)setVersion;
 + (NSArray *)localPlaylists:(NSString *)mediaId
                        type:(NSInteger)type;
++(NSString *)getDownloadURLWithHTML:(NSString *)url;
 @end

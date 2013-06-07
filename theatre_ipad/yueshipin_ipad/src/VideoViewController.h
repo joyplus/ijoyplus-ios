@@ -8,18 +8,18 @@
 
 #import "CommonHeader.h"
 #import "MenuViewController.h"
+#import "PullRefreshManagerClinet.h"
 
 #define SLIDER_VIEW_TAG 8924355
 #define VIDEO_LOGO_HEIGHT 108
 #define VIDEO_LOGO_WIDTH 78
 
-@interface VideoViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>{
+@interface VideoViewController : SlideBaseViewController<UITableViewDataSource, UITableViewDelegate,PullRefreshManagerClinetDelegate, UIScrollViewDelegate>{
     UIImageView *sloganImageView;
     UITableView *table;
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    PullRefreshManagerClinet *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
-    EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
     NSString *umengPageName;
 }
