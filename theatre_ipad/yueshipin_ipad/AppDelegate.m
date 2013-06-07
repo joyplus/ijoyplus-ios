@@ -368,6 +368,9 @@
         
         bgTask = UIBackgroundTaskInvalid;
     }
+    if (httpServer && ![httpServer isRunning]) {
+        [httpServer start:NULL];
+    }
 }
 
 -(void)iphoneContinueDownload{
