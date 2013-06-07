@@ -99,6 +99,8 @@
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 
+#define AMERICANVIDEOS @"1"
+
 #define SHOW_MENU_INTRO @"show_menu_intro"
 #define WEIBO_INTRO @"weibbo_intro"
 #define SHOW_MENU_INTRO_YUEDAN @"show_menu_intro_yuedan"
