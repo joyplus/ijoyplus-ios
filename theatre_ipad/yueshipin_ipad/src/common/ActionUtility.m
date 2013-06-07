@@ -148,7 +148,7 @@
     if(displayNoSpaceFlag) {
         [[NSNotificationCenter defaultCenter]postNotificationName:NO_ENOUGH_SPACE object:nil];
     }
-    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance] decreaseDownloadingNum];
     [[AppDelegate instance].padDownloadManager stopDownloading];
 }
 
@@ -162,7 +162,7 @@
         displayNoSpaceFlag = [self changeItemStatusToStop:item];
     }
     
-    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance] decreaseDownloadingNum];
     [[AppDelegate instance].padDownloadManager stopDownloading];
 }
 

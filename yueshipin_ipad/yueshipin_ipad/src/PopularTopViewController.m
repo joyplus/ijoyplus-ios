@@ -31,7 +31,7 @@
     UITableView *table;
     DDPageControl *pageControl;
     NSArray *lunboArray;
-    MNMBottomPullToRefreshManager *showPullToRefreshManager_;
+    PullRefreshManagerClinet *showPullToRefreshManager_;
     NSUInteger showReloads;
     EGORefreshTableHeaderView *_refreshHeaderView;
     BOOL _reloading;
@@ -83,17 +83,17 @@
         sloganImageView.frame = CGRectMake(15, 36, 261, 42);
         [self.view addSubview:sloganImageView];
         
-        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 5) style:UITableViewStylePlain];
+        table = [[UITableView alloc] initWithFrame:CGRectMake(3, 92, self.view.frame.size.width - 16, self.view.frame.size.height - TOP_SOLGAN_HEIGHT - 20) style:UITableViewStylePlain];
         [table setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 		[table setDelegate:self];
 		[table setDataSource:self];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setShowsVerticalScrollIndicator:NO];
-		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[self.view addSubview:table];
         
-        showPullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        showPullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
+        showPullToRefreshManager_.delegate = self;
+        [showPullToRefreshManager_ setShowHeaderView:NO];
         showReloads = 2;
         if (_refreshHeaderView == nil) {
             EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - table.bounds.size.height, self.view.frame.size.width, table.bounds.size.height)];
@@ -110,7 +110,6 @@
 
 - (void)loadTable {
     [table reloadData];
-    [showPullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -363,6 +362,7 @@ void transferDataFromOldDbWithCatch()
         NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
         [[AFServiceAPIClient sharedClient] getPath:kPathShowTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseShowTopsData:result];
+            //[self refreshCompleted];
             [myHUD hide];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
@@ -386,7 +386,10 @@ void transferDataFromOldDbWithCatch()
                 [showTopsArray addObjectsFromArray:tempArray];
             }
             if (tempArray.count < 10) {
-                [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                showPullToRefreshManager_.canLoadMore = NO;
+            }
+            else {
+                showPullToRefreshManager_.canLoadMore = YES;
             }
         }
     } else {
@@ -403,7 +406,6 @@ void transferDataFromOldDbWithCatch()
 //    -    [[CacheUtility sharedCache]removeObjectForKey: @"show_top_list"];
 //    -    [[CacheUtility sharedCache]removeObjectForKey: @"comic_top_list"];
     [self retrieveLunboData];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     if(topType == MOVIE_TOP){
         [self retrieveMovieTopsData];
     } else if(topType == DRAMA_TOP){
@@ -411,7 +413,7 @@ void transferDataFromOldDbWithCatch()
     } else if(topType == COMIC_TOP){
         [self retrieveComicTopsData];
     } else if(topType == SHOW_TOP){
-        [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
+       
         [self retrieveShowTopsData];
     }
     _reloading = YES;
@@ -465,7 +467,7 @@ void transferDataFromOldDbWithCatch()
 	
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+-(void)pulltoLoadMore {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -487,13 +489,21 @@ void transferDataFromOldDbWithCatch()
             }
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
             if(tempTopsArray.count < 10){
-                [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                showPullToRefreshManager_.canLoadMore = NO;
             }
+            else{
+                showPullToRefreshManager_.canLoadMore = YES;
+            }
+            [showPullToRefreshManager_ loadMoreCompleted];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         }];
     }
     
+}
+- (void)refreshCompleted {
+    [table reloadData];
+    [showPullToRefreshManager_ refreshCompleted];
 }
 
 - (void)updateScrollView
@@ -510,6 +520,11 @@ void transferDataFromOldDbWithCatch()
 {
 	DDPageControl *thePageControl = (DDPageControl *)sender ;
 	[scrollView setContentOffset: CGPointMake(scrollView.bounds.size.width * thePageControl.currentPage, scrollView.contentOffset.y) animated: YES] ;
+}
+
+- (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [showPullToRefreshManager_ scrollViewBegin];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
@@ -530,7 +545,7 @@ void transferDataFromOldDbWithCatch()
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
         if(topType == SHOW_TOP){
-            [showPullToRefreshManager_ tableViewScrolled];
+           [showPullToRefreshManager_ scrollViewScrolled:aScrollView];
         }         
     }
 }
@@ -547,7 +562,7 @@ void transferDataFromOldDbWithCatch()
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
         if(topType == SHOW_TOP){
-            [showPullToRefreshManager_ tableViewReleased];
+          [showPullToRefreshManager_ scrollViewEnd:aScrollView];
         }
     }
 }
@@ -576,7 +591,7 @@ void transferDataFromOldDbWithCatch()
 - (void)movieListBtnClicked:(UIButton *)sender
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
+
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -589,7 +604,7 @@ void transferDataFromOldDbWithCatch()
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+   
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -602,7 +617,7 @@ void transferDataFromOldDbWithCatch()
 - (void)showListBtnClicked:(UIButton *)sender
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:YES];
+    
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -615,7 +630,7 @@ void transferDataFromOldDbWithCatch()
 - (void)comicListBtnClicked:(UIButton *)sender
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
-    [showPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+    
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
@@ -1173,8 +1188,9 @@ void transferDataFromOldDbWithCatch()
         }
               
         UILabel *titleLabel = (UILabel *)[cell viewWithTag:4031];
+        titleLabel.textAlignment = NSTextAlignmentLeft;
         NSString *titleText = (NSString *)[item objectForKey:@"cur_item_name"];
-        [titleLabel setText:[NSString stringWithFormat:@"更新至：%@", titleText]];
+        [titleLabel setText:[NSString stringWithFormat:@"%@", titleText]];
     }
     return cell;
 }

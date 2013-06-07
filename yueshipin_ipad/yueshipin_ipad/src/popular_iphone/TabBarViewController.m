@@ -7,6 +7,7 @@
 //
 
 #import "TabBarViewController.h"
+#import "ChannelViewController.h"
 #import "allListViewController.h"
 #import "PageManageViewController.h"
 #import "MineViewController.h"
@@ -30,6 +31,9 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        ChannelViewController *channelview = [[ChannelViewController alloc] init];
+        UINavigationController *channelNav = [[UINavigationController alloc] initWithRootViewController:channelview];
+        [channelNav.navigationBar setBackgroundImage:[UIImage imageNamed:@"top_bg_common.png"]forBarMetrics:UIBarMetricsDefault];
         
         allListViewController *allListview = [[allListViewController alloc] init];
         //RespForWXRootViewController *allListview = [[RespForWXRootViewController alloc] init];
@@ -52,19 +56,24 @@
         UIImage *tabBackground = [[UIImage imageNamed:@"tab_bg.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
         [[UITabBar appearance] setBackgroundImage:tabBackground];
         [[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tab_bg_zhong_212.png"]];
-        self.viewControllers = [NSArray arrayWithObjects:sortNav,allListNav,downLoadNavCtrl,mineNav, nil];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEDAN];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:YUEBANG];
+        
+        self.viewControllers = [NSArray arrayWithObjects:channelNav,sortNav,allListNav,downLoadNavCtrl,mineNav, nil];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setImage:[UIImage imageNamed:@"icon_tab5.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:PINDAO];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:MINE];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:XIAZAI];
+        
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:YUEDAN];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEBANG];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:4] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:4] setTitle:MINE];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:4] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setImage:[UIImage imageNamed:@"icon_tab3.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitle:XIAZAI];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         self.tabBar.selectedImageTintColor = [UIColor orangeColor];
         self.selectedIndex = 0;
         [self setNoHighlightTabBar];
@@ -80,11 +89,11 @@
 -(void)setBadgeValue{
     int count = [DownLoadManager downloadTaskCount];
     if (count > 0) {
-         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setBadgeValue:[NSString stringWithFormat:@"%d",count]];
         
     }
     else{
-         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setBadgeValue:nil];
+         [(UITabBarItem *)[self.tabBar.items objectAtIndex:3] setBadgeValue:nil];
     }
 
     

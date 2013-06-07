@@ -20,6 +20,8 @@
 #import "ContainerUtility.h"
 #import "UnbundingViewController.h"
 #import "UIUtility.h"
+#import "IntroductionView.h"
+#import "CommonMotheds.h"
 #define BUNDING_HEIGHT 30
 #define BUNDING_BUTTON_TAG 20001
 enum
@@ -129,6 +131,20 @@ enum
                                              selector:@selector(managerTVBunding)
                                                  name:@"bundingTVSucceeded"
                                                object:nil];
+    
+    //新手引导
+    if ([CommonMotheds isFirstTimeRun]) {
+        [self showIntroductionView];
+    }
+    if ([CommonMotheds isVersionUpdate]) {
+        [self showIntroductionView];
+    }
+}
+
+-(void)showIntroductionView{
+    CGSize size = [UIApplication sharedApplication].delegate.window.bounds.size;
+    IntroductionView *inView = [[IntroductionView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    [inView show];
 }
 
 -(void)viewWillAppear:(BOOL)animated{

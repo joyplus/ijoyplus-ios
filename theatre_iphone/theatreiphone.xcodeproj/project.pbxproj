@@ -83,6 +83,9 @@
 		221507A8172A5BF400A90A60 /* IphoneSubdownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 221507A4172A5BF400A90A60 /* IphoneSubdownloadViewController.m */; };
 		22210B2016EE0661008EDF11 /* libWeChatSDK_armv7_armv7s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22210B1D16EE0661008EDF11 /* libWeChatSDK_armv7_armv7s.a */; };
 		2226B9F716C0F3F20068A8FA /* AppRecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */; };
+		2228FD26175DAED700D25256 /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2228FD21175DAED700D25256 /* TFHpple.m */; };
+		2228FD27175DAED700D25256 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 2228FD23175DAED700D25256 /* TFHppleElement.m */; };
+		2228FD28175DAED700D25256 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 2228FD25175DAED700D25256 /* XPathQuery.m */; };
 		22343DDA16BC026500AFE83A /* AFDownloadRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343DD916BC026500AFE83A /* AFDownloadRequestOperation.m */; };
 		22345874169E991C009A65BE /* IphoneVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22345873169E991B009A65BE /* IphoneVideoViewController.m */; };
 		223AD77D170560350017A09C /* icon_tab4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 223AD77C170560350017A09C /* icon_tab4@2x.png */; };
@@ -628,6 +631,12 @@
 		22210B1F16EE0661008EDF11 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		2226B9F516C0F3F10068A8FA /* AppRecommendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRecommendViewController.h; sourceTree = "<group>"; };
 		2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRecommendViewController.m; sourceTree = "<group>"; };
+		2228FD20175DAED700D25256 /* TFHpple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHpple.h; sourceTree = "<group>"; };
+		2228FD21175DAED700D25256 /* TFHpple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHpple.m; sourceTree = "<group>"; };
+		2228FD22175DAED700D25256 /* TFHppleElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHppleElement.h; sourceTree = "<group>"; };
+		2228FD23175DAED700D25256 /* TFHppleElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHppleElement.m; sourceTree = "<group>"; };
+		2228FD24175DAED700D25256 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
+		2228FD25175DAED700D25256 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		22343DD816BC026500AFE83A /* AFDownloadRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFDownloadRequestOperation.h; sourceTree = "<group>"; };
 		22343DD916BC026500AFE83A /* AFDownloadRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFDownloadRequestOperation.m; sourceTree = "<group>"; };
 		22345872169E991B009A65BE /* IphoneVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneVideoViewController.h; sourceTree = "<group>"; };
@@ -1443,6 +1452,19 @@
 			name = WechatShare;
 			sourceTree = "<group>";
 		};
+		22C92106175C85AA00F1405A /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				2228FD20175DAED700D25256 /* TFHpple.h */,
+				2228FD21175DAED700D25256 /* TFHpple.m */,
+				2228FD22175DAED700D25256 /* TFHppleElement.h */,
+				2228FD23175DAED700D25256 /* TFHppleElement.m */,
+				2228FD24175DAED700D25256 /* XPathQuery.h */,
+				2228FD25175DAED700D25256 /* XPathQuery.m */,
+			);
+			path = HTML;
+			sourceTree = "<group>";
+		};
 		22EF003616B767410001F743 /* UMUFP */ = {
 			isa = PBXGroup;
 			children = (
@@ -2087,6 +2109,7 @@
 		EB6DEAAA165A34F200AF8003 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				22C92106175C85AA00F1405A /* HTML */,
 				E797B17F174C997D0020DB06 /* PullRefresh */,
 				EBE799051717C9250047535A /* database */,
 				EBCE72291744B0430054F9C3 /* AVPlayerView.h */,
@@ -2918,6 +2941,9 @@
 				E797B188174C997D0020DB06 /* DemoTableFooterView.m in Sources */,
 				E797B18A174C997D0020DB06 /* DemoTableHeaderView.m in Sources */,
 				E797B18C174C997D0020DB06 /* PullRefreshManagerClinet.m in Sources */,
+				2228FD26175DAED700D25256 /* TFHpple.m in Sources */,
+				2228FD27175DAED700D25256 /* TFHppleElement.m in Sources */,
+				2228FD28175DAED700D25256 /* XPathQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3008,7 +3034,7 @@
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3026,7 +3052,6 @@
 				);
 				PRODUCT_NAME = theatreiphone;
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3036,7 +3061,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3054,7 +3079,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 				);
 				PRODUCT_NAME = theatreiphone;
-				PROVISIONING_PROFILE = "67FFD528-4E22-476C-93C7-3D352FF9D2DB";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "67FFD528-4E22-476C-93C7-3D352FF9D2DB";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

@@ -13,7 +13,6 @@
 #import "CommentListViewController.h"
 #import "ListViewController.h"
 #import "DownloadItem.h"
-#import "DownloadHandler.h"
 #import "DownloadUrlFinder.h"
 #import <QuartzCore/QuartzCore.h>
 #import <Parse/Parse.h>
@@ -227,9 +226,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-//        [self.downloadBtn setHidden:YES];
-//    }
+    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+        [self.downloadBtn setHidden:YES];
+    }
     if(video == nil){
         [self retrieveData];
     }
@@ -639,17 +638,24 @@
     } else if(self.m3u8DownloadUrls.count > 0){
         item.downloadType = @"m3u8";
     }
+    
+    if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
+    {
+        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+    }
+    
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
     [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     
     item.urlArray = tempArray;
     item.downloadURLSource = self.downloadSource;
+    item.mp4SourceNum = self.mp4DownloadUrls.count;
     [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
     finder.item = item;
-    finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
+    //finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
     [finder setupWorkingUrl];
     
     [self updateBadgeIcon];

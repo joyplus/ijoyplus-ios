@@ -7,7 +7,7 @@
 //
 
 #import "CommonHeader.h"
-
-@interface DingListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
+#import "PullRefreshManagerClinet.h"
+@interface DingListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, PullRefreshManagerClinetDelegate>
 
 @end

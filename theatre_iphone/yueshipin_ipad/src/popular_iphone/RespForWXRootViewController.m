@@ -125,15 +125,44 @@
     
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"movie_top_list"];
 
-    NSString *responseCode = [cacheResult objectForKey:@"res_code"];
-    if(responseCode == nil)
+    if (nil != cacheResult)
     {
-        NSArray * resultArr = [cacheResult objectForKey:@"tops"];
-        if (resultArr.count > 0)
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil)
         {
-            NSDictionary *item = [resultArr objectAtIndex:0];
-            _strHotId = [item objectForKey:@"id"];
+            NSArray * resultArr = [cacheResult objectForKey:@"tops"];
+            if (resultArr.count > 0)
+            {
+                NSDictionary *item = [resultArr objectAtIndex:0];
+                _strHotId = [item objectForKey:@"id"];
+            }
         }
+    }
+    else
+    {
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:10], @"page_size", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathMoiveTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString *responseCode = [result objectForKey:@"res_code"];
+            if(responseCode == nil)
+            {
+                
+                NSArray * resultArr = [result objectForKey:@"tops"];
+                if (resultArr.count > 0)
+                {
+                    NSDictionary *item = [resultArr objectAtIndex:0];
+                    _strHotId = [item objectForKey:@"id"];
+                    [self viewDidAppear:NO];
+                }
+                
+                NSArray *tempTopsArray = [result objectForKey:@"tops"];
+                if(tempTopsArray.count > 0)
+                {
+                    [[CacheUtility sharedCache] putInCache:@"movie_top_list" result:result];
+                }
+            }
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error){
+            [UIUtility showDetailError:self.view error:error];
+        }];
     }
 }
 
@@ -142,7 +171,8 @@
     [super viewDidAppear:animated];
     
     //获取网络数据
-    if (SEGMENT_VIEW_TYPE == _viewRespForWX.viewType)
+    if (SEGMENT_VIEW_TYPE == _viewRespForWX.viewType
+        && nil != _strHotId)
     {
         if (DATA_TYPE_HOT == _viewRespForWX.dataType)
         {

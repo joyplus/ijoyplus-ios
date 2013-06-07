@@ -83,11 +83,11 @@
     _segControlBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 306, 30)];
     _segControlBg.center = CGPointMake(160, 21);
     _segControlBg.backgroundColor = [UIColor clearColor];
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnSelf)];
-    tapRecognizer.numberOfTapsRequired = 1;
-    tapRecognizer.delegate = self;
-    tapRecognizer.cancelsTouchesInView = NO;
-    [_segControlBg addGestureRecognizer:tapRecognizer];
+//    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapOnSelf)];
+//    tapRecognizer.numberOfTapsRequired = 1;
+//    tapRecognizer.delegate = self;
+//    tapRecognizer.cancelsTouchesInView = NO;
+//    [_segControlBg addGestureRecognizer:tapRecognizer];
     
     for (int i = 0; i < [arr count]; i++) {
         NSString *str = arr[i];
@@ -97,16 +97,19 @@
             [btn setBackgroundImage:[UIImage imageNamed:@"segment1.png"] forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageNamed:@"segment1_s.png"] forState:UIControlStateHighlighted];
             [btn setBackgroundImage:[UIImage imageNamed:@"segment1_s.png"] forState:UIControlStateDisabled];
+            [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
         }
         else if (i == [arr count]-1){
             [btn setBackgroundImage:[UIImage imageNamed:@"segment3.png"] forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageNamed:@"segment3_s.png"] forState:UIControlStateHighlighted];
-            [btn setBackgroundImage:[UIImage imageNamed:@"segment3_s.png"] forState:UIControlStateDisabled];
+            [btn setBackgroundImage:[UIImage imageNamed:@"segment3_s.png"] forState:UIControlStateSelected];
+            [btn addTarget:self action:@selector(moreButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         }
         else{
             [btn setBackgroundImage:[UIImage imageNamed:@"segment2.png"] forState:UIControlStateNormal];
             [btn setBackgroundImage:[UIImage imageNamed:@"segment2_s.png"] forState:UIControlStateHighlighted];
             [btn setBackgroundImage:[UIImage imageNamed:@"segment2_s.png"] forState:UIControlStateDisabled];
+            [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
         }
         
         btn.frame = CGRectMake(50*i, 0, 51, 30);
@@ -114,7 +117,7 @@
         [btn setTitle:str forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         btn.titleLabel.font = [UIFont systemFontOfSize:15];
-        [btn addTarget:self action:@selector(selectButton:) forControlEvents:UIControlEventTouchUpInside];
+        
         [_segControlBg addSubview:btn];
     }
     [self addSubview:_segControlBg];
@@ -122,6 +125,7 @@
 -(void)selectButton:(UIButton *)btn{
     for (int i = 0; i < 6; i++) {
         UIButton *oneBtn = (UIButton *)[_segControlBg viewWithTag:100+i];
+        NSLog(@"%d",oneBtn.tag);
         if (100+i == btn.tag) {
             oneBtn.enabled = NO;
         }
@@ -130,6 +134,9 @@
         
         }
     }
+    UIButton *moreBtn = (UIButton *)[_segControlBg viewWithTag:105];
+    moreBtn.selected = NO;
+    [_delegate didTapOnSegmentView];
     
     NSArray *arr = nil;
     switch (videoType_) {
@@ -150,7 +157,6 @@
             break;
     }
     
-    if (btn.tag < 105) {
         NSString *selectedStr = [arr objectAtIndex:(btn.tag-100)];
         NSString *key = [SegmentControlView getKeyByString:selectedStr];
         PreKey_ = selectedStr;
@@ -158,14 +164,26 @@
             selectedStr = @"";
         }
         [_delegate segmentDidSelectedLabelStr:selectedStr withKey:key];
-    }
-    else{
-        
-        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_];
-    }
-    
+   
 }
 
+-(void)moreButtonPressed:(UIButton *)btn{
+    btn.selected = !btn.selected;
+    if (btn.selected) {
+        for (int i = 0; i < 5; i++) {
+            UIButton *oneBtn = (UIButton *)[_segControlBg viewWithTag:100+i];
+            oneBtn.enabled = YES;
+            
+        }
+        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_];
+    }
+    else{
+    
+        [_delegate didTapOnSegmentView];
+    }
+    
+  
+}
 -(void)tapOnSelf{
     [_delegate didTapOnSegmentView];
 }

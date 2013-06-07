@@ -285,9 +285,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-//        [self.downloadBtn setHidden:YES];
-//    }
+    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+        [self.downloadBtn setHidden:YES];
+    }
     if(video == nil){
         [self retrieveData];
     }
@@ -850,12 +850,13 @@
         return;
     }
     
-    [self SubscribingToChannels];
+    //[self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
+            [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
             int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
@@ -902,12 +903,13 @@
         return;
     }
     
-    [self SubscribingToChannels];
+    //[self SubscribingToChannels];
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
+            [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
@@ -993,6 +995,11 @@
     subitem.downloadStatus = @"waiting";
     [self getDownloadUrls:num-1];
     
+    if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
+    {
+        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+    }
+    
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
@@ -1006,10 +1013,11 @@
         } else if(self.m3u8DownloadUrls.count > 0){
             subitem.downloadType = @"m3u8";
         }
+        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
-        finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
+        //finder.mp4DownloadUrlNum = self.mp4DownloadUrls.count;
         [finder setupWorkingUrl];
         [self updateBadgeIcon];
         return YES;
