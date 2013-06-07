@@ -49,7 +49,7 @@
 
 #define kIpadAppKey @"kIpadAppkey"
 #define KWXCODENUM  @"weixinImageNum"
-
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos"
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1
 #define umengAppKey @"5188664c56240b42b7010a45"
