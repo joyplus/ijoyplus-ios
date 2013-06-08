@@ -196,7 +196,13 @@
     
     NSString *hiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
     if (hiddenAVS == nil) {
-        [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+        if ([CHANNEL_ID isEqualToString:@""]) {
+             [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
+        else{
+             [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
+    
     }
     
     playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
@@ -279,16 +285,16 @@
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
     
-    NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
-    if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
-         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
-         [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
-    }
-    
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
+        
+        NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
+        if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
+            [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+            [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
+        }
     }
     self.advUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_PAHT]];
     self.advTargetUrl = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:ADV_TARGET_PATH]];
