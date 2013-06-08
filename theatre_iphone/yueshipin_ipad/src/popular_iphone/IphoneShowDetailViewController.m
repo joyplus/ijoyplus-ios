@@ -107,7 +107,9 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:self.tableView];
+    [pullToRefreshManager_ setShowHeaderView:NO];
+    pullToRefreshManager_.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -204,8 +206,11 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
+            if ([comments count]<10) {
+                pullToRefreshManager_.canLoadMore = NO;
+            }
             else{
-              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                pullToRefreshManager_.canLoadMore = YES;
             }
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -216,7 +221,7 @@
 }
 - (void)loadTable {
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ loadMoreCompleted];
 }
 
 - (void)viewDidUnload{
@@ -966,17 +971,19 @@
     [self playVideo:playNum-1];
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+
+    [pullToRefreshManager_ scrollViewBegin];
+}
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore {
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     
