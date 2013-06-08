@@ -83,6 +83,9 @@
 		221507A8172A5BF400A90A60 /* IphoneSubdownloadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 221507A4172A5BF400A90A60 /* IphoneSubdownloadViewController.m */; };
 		22210B2016EE0661008EDF11 /* libWeChatSDK_armv7_armv7s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 22210B1D16EE0661008EDF11 /* libWeChatSDK_armv7_armv7s.a */; };
 		2226B9F716C0F3F20068A8FA /* AppRecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */; };
+		2228FD26175DAED700D25256 /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = 2228FD21175DAED700D25256 /* TFHpple.m */; };
+		2228FD27175DAED700D25256 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 2228FD23175DAED700D25256 /* TFHppleElement.m */; };
+		2228FD28175DAED700D25256 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 2228FD25175DAED700D25256 /* XPathQuery.m */; };
 		22343DDA16BC026500AFE83A /* AFDownloadRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 22343DD916BC026500AFE83A /* AFDownloadRequestOperation.m */; };
 		22345874169E991C009A65BE /* IphoneVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22345873169E991B009A65BE /* IphoneVideoViewController.m */; };
 		223AD77D170560350017A09C /* icon_tab4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 223AD77C170560350017A09C /* icon_tab4@2x.png */; };
@@ -460,10 +463,6 @@
 		EB6DEAC6165A34F200AF8003 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABA165A34F200AF8003 /* NSDate-Utilities.m */; };
 		EB6DEAC7165A34F200AF8003 /* StringUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABC165A34F200AF8003 /* StringUtility.m */; };
 		EB6DEAC8165A34F200AF8003 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABE165A34F200AF8003 /* UIUtility.m */; };
-		EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */; };
-		EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */; };
-		EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */; };
-		EB8201251665A5E20015F447 /* MNMBottomPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201211665A5E20015F447 /* MNMBottomPullToRefreshView.m */; };
 		EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201291665A9E90015F447 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EB8201541665B4E40015F447 /* CustomPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201531665B4E40015F447 /* CustomPlaceHolderTextView.m */; };
 		EB82018B1665D41F0015F447 /* cb_dark_off.png in Resources */ = {isa = PBXBuildFile; fileRef = EB8201721665D41F0015F447 /* cb_dark_off.png */; };
@@ -628,6 +627,12 @@
 		22210B1F16EE0661008EDF11 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
 		2226B9F516C0F3F10068A8FA /* AppRecommendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppRecommendViewController.h; sourceTree = "<group>"; };
 		2226B9F616C0F3F10068A8FA /* AppRecommendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppRecommendViewController.m; sourceTree = "<group>"; };
+		2228FD20175DAED700D25256 /* TFHpple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHpple.h; sourceTree = "<group>"; };
+		2228FD21175DAED700D25256 /* TFHpple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHpple.m; sourceTree = "<group>"; };
+		2228FD22175DAED700D25256 /* TFHppleElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHppleElement.h; sourceTree = "<group>"; };
+		2228FD23175DAED700D25256 /* TFHppleElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHppleElement.m; sourceTree = "<group>"; };
+		2228FD24175DAED700D25256 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
+		2228FD25175DAED700D25256 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		22343DD816BC026500AFE83A /* AFDownloadRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFDownloadRequestOperation.h; sourceTree = "<group>"; };
 		22343DD916BC026500AFE83A /* AFDownloadRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFDownloadRequestOperation.m; sourceTree = "<group>"; };
 		22345872169E991B009A65BE /* IphoneVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneVideoViewController.h; sourceTree = "<group>"; };
@@ -1107,12 +1112,6 @@
 		EB6DEABD165A34F200AF8003 /* UIUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIUtility.h; sourceTree = "<group>"; };
 		EB6DEABE165A34F200AF8003 /* UIUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIUtility.m; sourceTree = "<group>"; };
 		EB6DEAD7165A36E600AF8003 /* CommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
-		EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
-		EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MNMBottomPullToRefreshArrow@2x.png"; sourceTree = "<group>"; };
-		EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshManager.h; sourceTree = "<group>"; };
-		EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBottomPullToRefreshManager.m; sourceTree = "<group>"; };
-		EB8201201665A5E20015F447 /* MNMBottomPullToRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshView.h; sourceTree = "<group>"; };
-		EB8201211665A5E20015F447 /* MNMBottomPullToRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBottomPullToRefreshView.m; sourceTree = "<group>"; };
 		EB8201281665A9E90015F447 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
 		EB8201291665A9E90015F447 /* OpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenUDID.m; sourceTree = "<group>"; };
 		EB8201521665B4E40015F447 /* CustomPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPlaceHolderTextView.h; sourceTree = "<group>"; };
@@ -1441,6 +1440,19 @@
 				227C09CC170A818600BEC1E5 /* RespForWXRootView.m */,
 			);
 			name = WechatShare;
+			sourceTree = "<group>";
+		};
+		22C92106175C85AA00F1405A /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				2228FD20175DAED700D25256 /* TFHpple.h */,
+				2228FD21175DAED700D25256 /* TFHpple.m */,
+				2228FD22175DAED700D25256 /* TFHppleElement.h */,
+				2228FD23175DAED700D25256 /* TFHppleElement.m */,
+				2228FD24175DAED700D25256 /* XPathQuery.h */,
+				2228FD25175DAED700D25256 /* XPathQuery.m */,
+			);
+			path = HTML;
 			sourceTree = "<group>";
 		};
 		22EF003616B767410001F743 /* UMUFP */ = {
@@ -1975,7 +1987,6 @@
 				EBB59CB816670A3E00F646C7 /* umeng */,
 				EB82016C1665D41F0015F447 /* SSCheckBoxView */,
 				EB8201271665A9E90015F447 /* OpenUDID */,
-				EB82011B1665A5E20015F447 /* MNMBottomPullToRefresh */,
 				EBBA00FA1664BC510069FE7E /* Anypic */,
 				EBF3A9931663973200EBF56D /* FFPopController */,
 				EBB732EC165C7789008E407E /* JSONKit */,
@@ -2087,6 +2098,7 @@
 		EB6DEAAA165A34F200AF8003 /* common */ = {
 			isa = PBXGroup;
 			children = (
+				22C92106175C85AA00F1405A /* HTML */,
 				E797B17F174C997D0020DB06 /* PullRefresh */,
 				EBE799051717C9250047535A /* database */,
 				EBCE72291744B0430054F9C3 /* AVPlayerView.h */,
@@ -2131,19 +2143,6 @@
 				EBC39F0D174C691500DB8EFD /* SystemMethods.m */,
 			);
 			path = common;
-			sourceTree = "<group>";
-		};
-		EB82011B1665A5E20015F447 /* MNMBottomPullToRefresh */ = {
-			isa = PBXGroup;
-			children = (
-				EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */,
-				EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */,
-				EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */,
-				EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */,
-				EB8201201665A5E20015F447 /* MNMBottomPullToRefreshView.h */,
-				EB8201211665A5E20015F447 /* MNMBottomPullToRefreshView.m */,
-			);
-			path = MNMBottomPullToRefresh;
 			sourceTree = "<group>";
 		};
 		EB8201271665A9E90015F447 /* OpenUDID */ = {
@@ -2400,8 +2399,6 @@
 				EB6DEA77165A2F1A00AF8003 /* InfoPlist.strings in Resources */,
 				EBB732F9165C7789008E407E /* SinaWeibo.bundle in Resources */,
 				EBF3A979166309AC00EBF56D /* Localizable.strings in Resources */,
-				EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */,
-				EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */,
 				EB82018B1665D41F0015F447 /* cb_dark_off.png in Resources */,
 				EB82018C1665D41F0015F447 /* cb_dark_off@2x.png in Resources */,
 				EB82018D1665D41F0015F447 /* cb_dark_on.png in Resources */,
@@ -2801,8 +2798,6 @@
 				EBBA01041664BC510069FE7E /* UIImage+AlphaAdditions.m in Sources */,
 				EBBA01051664BC510069FE7E /* UIImage+ResizeAdditions.m in Sources */,
 				EBBA01061664BC510069FE7E /* UIImage+RoundedCornerAdditions.m in Sources */,
-				EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */,
-				EB8201251665A5E20015F447 /* MNMBottomPullToRefreshView.m in Sources */,
 				EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */,
 				EB8201541665B4E40015F447 /* CustomPlaceHolderTextView.m in Sources */,
 				EB82019B1665D41F0015F447 /* UIHelpers.m in Sources */,
@@ -2918,6 +2913,9 @@
 				E797B188174C997D0020DB06 /* DemoTableFooterView.m in Sources */,
 				E797B18A174C997D0020DB06 /* DemoTableHeaderView.m in Sources */,
 				E797B18C174C997D0020DB06 /* PullRefreshManagerClinet.m in Sources */,
+				2228FD26175DAED700D25256 /* TFHpple.m in Sources */,
+				2228FD27175DAED700D25256 /* TFHppleElement.m in Sources */,
+				2228FD28175DAED700D25256 /* XPathQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3008,7 +3006,7 @@
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3026,7 +3024,6 @@
 				);
 				PRODUCT_NAME = theatreiphone;
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3036,7 +3033,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Yongqing Li (5N3A7RMGPK)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3054,7 +3051,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 				);
 				PRODUCT_NAME = theatreiphone;
-				PROVISIONING_PROFILE = "67FFD528-4E22-476C-93C7-3D352FF9D2DB";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "67FFD528-4E22-476C-93C7-3D352FF9D2DB";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;

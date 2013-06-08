@@ -185,6 +185,7 @@
         [tableList_ reloadData];
         [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [pullRefreshManager_ loadMoreCompleted];
         [UIUtility showDetailError:self.view error:error];
     }];
     

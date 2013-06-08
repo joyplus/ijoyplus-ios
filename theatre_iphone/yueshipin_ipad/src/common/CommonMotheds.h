@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 @interface CommonMotheds : NSObject
+
 +(BOOL)isNetworkEnbled;
 +(void)showNetworkDisAbledAlert:(UIView *)view;
 +(void)showInternetError:(NSError *)error inView:(UIView *)view;
@@ -18,4 +19,6 @@
 + (NSArray *)localPlaylists:(NSString *)mediaId
                        type:(NSInteger)type;
 +(int)getOnlineConfigValue;
++(NSString *)getDownloadURLWithHTML:(NSString *)url;
+
 @end

@@ -277,6 +277,7 @@ enum
      [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [pullToRefreshManager_ loadMoreCompleted];
         [self loadTable:SHOW_TYPE];
         
     }];
@@ -543,21 +544,10 @@ enum
     progressHUD_.labelText = @"加载中...";
     progressHUD_.opacity = 0.5;
     
-    //新手引导
-    if ([CommonMotheds isFirstTimeRun]) {
-        [self showIntroductionView];
-    }
-    if ([CommonMotheds isVersionUpdate]) {
-        [self showIntroductionView];
-    }
+    
 }
 
 
--(void)showIntroductionView{
-    CGSize size = [UIApplication sharedApplication].delegate.window.bounds.size;
-    IntroductionView *inView = [[IntroductionView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    [inView show];
-}
 -(void)viewWillAppear:(BOOL)animated{
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     if (0 == self.movieListArr.count)
@@ -1046,15 +1036,6 @@ enum
 	[refreshHeaderViewForComicList_ egoRefreshScrollViewDataSourceDidFinishedLoading:comicTableList_];
 }
 
-
-#pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert:self.view];
-    showLoadCount_++;
-    [self loadMoreShowTopsData];
-    
-}
 
 - (void)loadTable:(int)type {
     

@@ -43,6 +43,7 @@
 - (void)showOpFailureModalView:(float)closeTime with:(int)type;
 -(void)playVideo:(int)num;
 -(BOOL)checkNetWork;
--(void)checkDownloadUrls:(NSDictionary *)infoDic;
+-(NSMutableDictionary *)checkDownloadUrls:(NSDictionary *)infoDic;
 - (void)checkCanPlayVideo;
+
 @end

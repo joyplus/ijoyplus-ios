@@ -26,5 +26,6 @@
 @property (nonatomic, strong) NSString *downloadType;
 @property (nonatomic) double duration;
 @property (nonatomic, strong)NSString *downloadURLSource;
+@property int mp4SourceNum;
 
 @end

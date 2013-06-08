@@ -7,7 +7,7 @@
 //
 
 #import "CommonHeader.h"
-
-@interface CollectionListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
+#import "PullRefreshManagerClinet.h"
+@interface CollectionListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, PullRefreshManagerClinetDelegate>
 
 @end

@@ -53,4 +53,5 @@
 - (void)updateBadgeIcon;
 - (void)playVideo:(int)num;
 - (BOOL)validadUrl:(NSString *)originalUrl;
+- (NSMutableArray *)tureWangpanDownloadURL:(NSArray *)wangpanHTML;
 @end
