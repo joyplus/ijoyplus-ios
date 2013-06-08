@@ -463,10 +463,6 @@
 		EB6DEAC6165A34F200AF8003 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABA165A34F200AF8003 /* NSDate-Utilities.m */; };
 		EB6DEAC7165A34F200AF8003 /* StringUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABC165A34F200AF8003 /* StringUtility.m */; };
 		EB6DEAC8165A34F200AF8003 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABE165A34F200AF8003 /* UIUtility.m */; };
-		EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */; };
-		EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */; };
-		EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */ = {isa = PBXBuildFile; fileRef = EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */; };
-		EB8201251665A5E20015F447 /* MNMBottomPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201211665A5E20015F447 /* MNMBottomPullToRefreshView.m */; };
 		EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201291665A9E90015F447 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EB8201541665B4E40015F447 /* CustomPlaceHolderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201531665B4E40015F447 /* CustomPlaceHolderTextView.m */; };
 		EB82018B1665D41F0015F447 /* cb_dark_off.png in Resources */ = {isa = PBXBuildFile; fileRef = EB8201721665D41F0015F447 /* cb_dark_off.png */; };
@@ -1116,12 +1112,6 @@
 		EB6DEABD165A34F200AF8003 /* UIUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIUtility.h; sourceTree = "<group>"; };
 		EB6DEABE165A34F200AF8003 /* UIUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIUtility.m; sourceTree = "<group>"; };
 		EB6DEAD7165A36E600AF8003 /* CommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
-		EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MNMBottomPullToRefreshArrow.png; sourceTree = "<group>"; };
-		EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MNMBottomPullToRefreshArrow@2x.png"; sourceTree = "<group>"; };
-		EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshManager.h; sourceTree = "<group>"; };
-		EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBottomPullToRefreshManager.m; sourceTree = "<group>"; };
-		EB8201201665A5E20015F447 /* MNMBottomPullToRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBottomPullToRefreshView.h; sourceTree = "<group>"; };
-		EB8201211665A5E20015F447 /* MNMBottomPullToRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBottomPullToRefreshView.m; sourceTree = "<group>"; };
 		EB8201281665A9E90015F447 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
 		EB8201291665A9E90015F447 /* OpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenUDID.m; sourceTree = "<group>"; };
 		EB8201521665B4E40015F447 /* CustomPlaceHolderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPlaceHolderTextView.h; sourceTree = "<group>"; };
@@ -1997,7 +1987,6 @@
 				EBB59CB816670A3E00F646C7 /* umeng */,
 				EB82016C1665D41F0015F447 /* SSCheckBoxView */,
 				EB8201271665A9E90015F447 /* OpenUDID */,
-				EB82011B1665A5E20015F447 /* MNMBottomPullToRefresh */,
 				EBBA00FA1664BC510069FE7E /* Anypic */,
 				EBF3A9931663973200EBF56D /* FFPopController */,
 				EBB732EC165C7789008E407E /* JSONKit */,
@@ -2154,19 +2143,6 @@
 				EBC39F0D174C691500DB8EFD /* SystemMethods.m */,
 			);
 			path = common;
-			sourceTree = "<group>";
-		};
-		EB82011B1665A5E20015F447 /* MNMBottomPullToRefresh */ = {
-			isa = PBXGroup;
-			children = (
-				EB82011C1665A5E20015F447 /* MNMBottomPullToRefreshArrow.png */,
-				EB82011D1665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png */,
-				EB82011E1665A5E20015F447 /* MNMBottomPullToRefreshManager.h */,
-				EB82011F1665A5E20015F447 /* MNMBottomPullToRefreshManager.m */,
-				EB8201201665A5E20015F447 /* MNMBottomPullToRefreshView.h */,
-				EB8201211665A5E20015F447 /* MNMBottomPullToRefreshView.m */,
-			);
-			path = MNMBottomPullToRefresh;
 			sourceTree = "<group>";
 		};
 		EB8201271665A9E90015F447 /* OpenUDID */ = {
@@ -2423,8 +2399,6 @@
 				EB6DEA77165A2F1A00AF8003 /* InfoPlist.strings in Resources */,
 				EBB732F9165C7789008E407E /* SinaWeibo.bundle in Resources */,
 				EBF3A979166309AC00EBF56D /* Localizable.strings in Resources */,
-				EB8201221665A5E20015F447 /* MNMBottomPullToRefreshArrow.png in Resources */,
-				EB8201231665A5E20015F447 /* MNMBottomPullToRefreshArrow@2x.png in Resources */,
 				EB82018B1665D41F0015F447 /* cb_dark_off.png in Resources */,
 				EB82018C1665D41F0015F447 /* cb_dark_off@2x.png in Resources */,
 				EB82018D1665D41F0015F447 /* cb_dark_on.png in Resources */,
@@ -2824,8 +2798,6 @@
 				EBBA01041664BC510069FE7E /* UIImage+AlphaAdditions.m in Sources */,
 				EBBA01051664BC510069FE7E /* UIImage+ResizeAdditions.m in Sources */,
 				EBBA01061664BC510069FE7E /* UIImage+RoundedCornerAdditions.m in Sources */,
-				EB8201241665A5E20015F447 /* MNMBottomPullToRefreshManager.m in Sources */,
-				EB8201251665A5E20015F447 /* MNMBottomPullToRefreshView.m in Sources */,
 				EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */,
 				EB8201541665B4E40015F447 /* CustomPlaceHolderTextView.m in Sources */,
 				EB82019B1665D41F0015F447 /* UIHelpers.m in Sources */,

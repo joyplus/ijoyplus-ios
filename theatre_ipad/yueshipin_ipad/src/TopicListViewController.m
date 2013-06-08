@@ -18,7 +18,7 @@
     UITableView *table;
     UIImageView *titleImage;
     NSMutableArray *videoArray;
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
+    PullRefreshManagerClinet *pullToRefreshManager_;
     NSUInteger reloads_;
     int pageSize;
     UIButton *closeBtn;
@@ -76,7 +76,9 @@
     [self.view addSubview:table];
     reloads_ = 2;
     pageSize = 10;
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
+    pullToRefreshManager_.delegate = self;
+    [pullToRefreshManager_ setShowHeaderView:NO];
     [self loadTable];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData:) name:PERSONAL_VIEW_REFRESH object:nil];
     
@@ -90,7 +92,7 @@
 
 - (void)loadTable {
     [table reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ loadMoreCompleted];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -143,9 +145,9 @@
             [videoArray addObjectsFromArray:videos];
         }
         if(videos.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            pullToRefreshManager_.canLoadMore = NO;
         } else {
-            [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+            pullToRefreshManager_.canLoadMore = YES;
         }
     }
     [self loadTable];
@@ -352,17 +354,19 @@
 }
 
 #pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClient
-
+#pragma mark PullToRefreshManagerClient
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    [pullToRefreshManager_ scrollViewBegin];
+}
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [pullToRefreshManager_ tableViewScrolled];
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
@@ -383,7 +387,11 @@
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         if(tempArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            pullToRefreshManager_.canLoadMore = NO;
+        }
+        else{
+            pullToRefreshManager_.canLoadMore = YES;
+        
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
