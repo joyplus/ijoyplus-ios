@@ -181,6 +181,18 @@
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
     }
+    
+    NSString *hiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if (hiddenAVS == nil) {
+       if ([CHANNEL_ID isEqualToString:@""]) {
+            [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+           
+       }
+        else{
+            [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:HIDDEN_AMERICAN_VIDEOS];
+       }
+   }
+    
     playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
@@ -240,15 +252,14 @@
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
     
-    NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
-        if (hiddenAVS != nil) {
-        [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
-    }
-    
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
         self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
+        NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
+        if (hiddenAVS != nil) {
+            [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+        }
     }
     if(self.showVideoSwitch == nil || [self.showVideoSwitch isEqualToString:@"(null)"]){
         self.showVideoSwitch = @"0";
