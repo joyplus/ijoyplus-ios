@@ -17,14 +17,14 @@
 #import "ShowDetailViewController.h"
 #import "AvVideoWebViewController.h"
 #import "EGORefreshTableHeaderView.h"
-
+#import "PullRefreshManagerClinet.h"
 #define TABLE_VIEW_WIDTH 370
 #define MIN_BUTTON_WIDTH 45
 #define MAX_BUTTON_WIDTH 355
 #define BUTTON_HEIGHT 33
 #define BUTTON_TITLE_GAP 13
 
-@interface PersonalViewController () <MNMBottomPullToRefreshManagerClient, EGORefreshTableHeaderDelegate>
+@interface PersonalViewController () <PullRefreshManagerClinetDelegate, EGORefreshTableHeaderDelegate>
 {
     UIView *backgroundView;
     UIImageView *topImage;
@@ -45,7 +45,7 @@
     BOOL accessed;
     UIButton *clickedBtn;
 }
-@property (nonatomic, strong) MNMBottomPullToRefreshManager *pullToRefreshManager_;
+@property (nonatomic, strong) PullRefreshManagerClinet *pullToRefreshManager_;
 @property (nonatomic) NSUInteger reloads_;
 @property (nonatomic, strong) EGORefreshTableHeaderView *_refreshHeaderView;
 @property (nonatomic) BOOL _reloading;
@@ -169,7 +169,7 @@
         [removeAllBtn addTarget:self action:@selector(removeAllBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:removeAllBtn];
         
-        tableHeight = 0;
+        tableHeight = 370;
         table = [[UITableView alloc] initWithFrame:CGRectMake(50, 325, 400, tableHeight) style:UITableViewStylePlain];
         table.layer.borderWidth = 1;
         table.layer.borderColor = CMConstants.tableBorderColor.CGColor;
@@ -190,7 +190,9 @@
             _refreshHeaderView = view;
         }
         
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
+        pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
+        [pullToRefreshManager_ setShowHeaderView:NO];
+        pullToRefreshManager_.delegate = self;
     }
     return self;
 }
@@ -231,7 +233,6 @@
     [table reloadData];
     tableHeight = tableHeight >= 370 ? 370 : tableHeight;
     table.frame = CGRectMake(50, 325, 400, tableHeight);
-    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 
@@ -336,9 +337,9 @@
 //                [[CacheUtility sharedCache] putInCache:key result:tplaybackTime];
 //            }
             if (sortedwatchRecordArray.count >= 10) {
-                [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
+                pullToRefreshManager_.canLoadMore = YES;
             } else {
-                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                pullToRefreshManager_.canLoadMore = NO;
             }
         }
     }
@@ -363,17 +364,21 @@
     supportBtn.selected = NO;
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+
+    [pullToRefreshManager_ scrollViewBegin];
+}
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [pullToRefreshManager_ tableViewScrolled];
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
     [_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
  
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
     [_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore{
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -396,10 +401,16 @@
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         if(tempArray.count < 10){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+            pullToRefreshManager_.canLoadMore = NO;
         }
+        else{
+           pullToRefreshManager_.canLoadMore = YES;
+        }
+        [pullToRefreshManager_ loadMoreCompleted];
+        
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [pullToRefreshManager_ loadMoreCompleted];
     }];
 }
 
@@ -724,7 +735,6 @@
 {
     sortedwatchRecordArray = [[NSArray alloc]init];
     [self loadTable];
-    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathRemoveAllPlay parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [removeAllBtn setHidden:YES];

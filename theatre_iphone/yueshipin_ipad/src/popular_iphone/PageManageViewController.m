@@ -272,6 +272,7 @@ enum
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self loadTable:SHOW_TYPE];
+        [pullToRefreshManager_ loadMoreCompleted];
         [UIUtility showDetailError:self.view error:error];
     }];
     
@@ -535,15 +536,7 @@ enum
     progressHUD_.labelText = @"加载中...";
     progressHUD_.opacity = 0.5;
     [self.view addSubview:progressHUD_];
-    
-    
-    //新手引导
-//    if ([CommonMotheds isFirstTimeRun]) {
-//        [self showIntroductionView];
-//    }
-//    if ([CommonMotheds isVersionUpdate]) {
-//        [self showIntroductionView];
-//    }
+
 }
 
 

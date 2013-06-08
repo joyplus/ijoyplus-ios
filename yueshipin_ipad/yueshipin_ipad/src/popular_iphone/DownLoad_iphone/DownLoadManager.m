@@ -56,7 +56,14 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     NSArray *infoArr = (NSArray *)((NSNotification *)sender).object;
     NSString *prodId = [infoArr objectAtIndex:0];
     NSString *tempUrlStr = [infoArr objectAtIndex:1];
-    NSString *urlStr = [tempUrlStr stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    
+    NSString *urlStr = tempUrlStr;
+    if([tempUrlStr rangeOfString:@"{now_date}"].location != NSNotFound){
+        int nowDate = [[NSDate date] timeIntervalSince1970];
+        urlStr = [tempUrlStr stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+    }
+    
+    //NSString *urlStr = [tempUrlStr stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     
     NSString *type = [infoArr objectAtIndex:4];
     int num = [[infoArr objectAtIndex:5] intValue];
@@ -973,6 +980,29 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
    [[CacheUtility sharedCache] putInCache:@"warning_number" result:[NSString stringWithFormat:@"%d",num]];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"SET_WARING_NUM" object:nil];
 }
+
++ (int)downloadingTaskCount
+{
+    int count = 0;
+    for (DownloadItem *item in [DatabaseManager allObjects:[DownloadItem class]]) {
+        if (([item.downloadStatus isEqualToString:@"waiting"]
+             || [item.downloadStatus isEqualToString:@"loading"])
+            && ![item.downloadStatus isEqualToString:@""])
+        {
+            count ++;
+        }
+    }
+    for (SubdownloadItem *item in [DatabaseManager allObjects:[SubdownloadItem class]])
+    {
+        if ([item.downloadStatus isEqualToString:@"waiting"]
+            || [item.downloadStatus isEqualToString:@"loading"])
+        {
+            count ++;
+        }
+    }
+    return count;
+}
+
 @end
 
 
@@ -1298,7 +1328,15 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     for (NSDictionary *dic in down_urlsArr) {
         NSArray *oneSourceArr = [dic objectForKey:@"urls"];
         for (NSDictionary *oneUrlInfo in oneSourceArr) {
-            NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+            
+            NSString * str = [oneUrlInfo objectForKey:@"url"];
+            NSString *tempUrl = str;
+            if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+                int nowDate = [[NSDate date] timeIntervalSince1970];
+                tempUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+            }
+            
+            //NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
             NSString *type = [oneUrlInfo objectForKey:@"file"];
             NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
             if ([type isEqualToString:@"mp4"]) {
@@ -1342,7 +1380,14 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     NSString *type = [downloadInfoArr_ objectAtIndex:3];
     int num = [[downloadInfoArr_ objectAtIndex:4] intValue];
     num++;
-    NSString *urlStr = [tempUrlStr stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+    
+    NSString *urlStr = tempUrlStr;
+    if([tempUrlStr rangeOfString:@"{now_date}"].location != NSNotFound){
+        int nowDate = [[NSDate date] timeIntervalSince1970];
+        urlStr = [tempUrlStr stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+    }
+    
+    //NSString *urlStr = [tempUrlStr stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
     NSString *fileType = nil;
     for (NSDictionary *dic  in allUrls_) {
            NSString *str = [dic objectForKey:@"url"];
@@ -1397,8 +1442,8 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     if (status_Code >= 200 && status_Code <= 299) {
         NSDictionary *headerFields = [HTTPResponse allHeaderFields];
         NSString *content_type = [headerFields objectForKey:@"Content-Type"];
-         //NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
-        if (![content_type hasPrefix:@"text/html"]/* && contentLength.intValue >100*/) {
+        NSString *contentLength = [headerFields objectForKey:@"Content-Length"];
+        if (![content_type hasPrefix:@"text/html"] && contentLength.intValue >0) {
       
             NSString *proid = [downloadInfoArr_ objectAtIndex:0];
             NSString *urlStr = connection.originalRequest.URL.absoluteString;
@@ -1551,7 +1596,15 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
     for (NSDictionary *dic in down_urlsArr) {
         NSArray *oneSourceArr = [dic objectForKey:@"urls"];
         for (NSDictionary *oneUrlInfo in oneSourceArr) {
-            NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
+            
+            NSString * str = [oneUrlInfo objectForKey:@"url"];
+            NSString *tempUrl = str;
+            if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+                int nowDate = [[NSDate date] timeIntervalSince1970];
+                tempUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
+            }
+            
+            //NSString *tempUrl = [[oneUrlInfo objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
             NSString *type = [oneUrlInfo objectForKey:@"file"];
             NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
             return myDic;
@@ -1561,4 +1614,6 @@ static NSMutableArray *CheckDownloadUrlsQueue_ = nil;
     }
     return nil;
 }
+
+
 @end

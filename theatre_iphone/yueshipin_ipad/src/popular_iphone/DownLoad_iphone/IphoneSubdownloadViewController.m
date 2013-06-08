@@ -405,7 +405,7 @@
                 iphoneAVPlayerViewController.playNum = num - 1;
                 iphoneAVPlayerViewController.videoType = SHOW_TYPE;
             }
-            NSString *str = [NSString stringWithFormat:@"%@_local",downloadItem.subitemId];
+            NSString *str = [NSString stringWithFormat:@"%@",downloadItem.subitemId];
             NSNumber *cacheResult = [[CacheUtility sharedCache] loadFromCache:str];
             iphoneAVPlayerViewController.lastPlayTime = CMTimeMakeWithSeconds(cacheResult.floatValue + 1, NSEC_PER_SEC);
             iphoneAVPlayerViewController.prodId = downloadItem.itemId;

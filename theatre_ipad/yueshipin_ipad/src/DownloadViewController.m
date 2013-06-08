@@ -210,7 +210,7 @@
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [[AppDelegate instance] decreaseDownloadingNum];
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -223,7 +223,7 @@
             item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
             item.downloadStatus = @"done";
             item.percentage = 100;
-            [AppDelegate instance].currentDownloadingNum = 0;
+            [[AppDelegate instance] decreaseDownloadingNum];
             [DatabaseManager update:item];
             break;
         }
@@ -289,7 +289,7 @@
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]){
         if ([item.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [AppDelegate instance].currentDownloadingNum = 0;
+            [[AppDelegate instance] decreaseDownloadingNum];
         }
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
@@ -544,7 +544,7 @@
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat:@"delete from SubdownloadItem WHERE itemId = %@", item.itemId]];
     [DatabaseManager deleteObject:item];
     if ([ActionUtility getStartItemNumber] == 0) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [[AppDelegate instance] decreaseDownloadingNum];
     }
     allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];

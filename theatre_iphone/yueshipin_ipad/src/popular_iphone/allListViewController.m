@@ -314,6 +314,7 @@ enum
         [self loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
+        [pullToRefreshManager_ refreshCompleted];
     }];
     
 }

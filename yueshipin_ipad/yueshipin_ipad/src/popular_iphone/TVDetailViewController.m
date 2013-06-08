@@ -119,8 +119,6 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-     //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRecord) name:WATCH_HISTORY_REFRESH object:nil];
     
 }
@@ -268,9 +266,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
-            else{
-              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-            }
+            
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -280,7 +276,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 - (void)loadTable {
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+
 }
 
 - (void)viewDidUnload{
@@ -584,7 +580,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isloaded_) {
-                     [cell addSubview:downLoad];
+                    if ([CommonMotheds getOnlineConfigValue] != 2) {
+                        [cell addSubview:downLoad];
+                    }
                      [cell addSubview:expectbtn];
                 }
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -677,7 +675,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             [cell addSubview:bgBtn];
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-            bgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            bgBtn.titleLabel.font = [UIFont systemFontOfSize:13];
             [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
@@ -806,7 +804,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         else if(row == 2){
             if (moreBtn_.selected) {
-                return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
+                float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+                if (height < 85) {
+                    return 125;
+                }
+                return height+40;
+
             }
             else{
                 return 125;
@@ -879,7 +882,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 - (void)expectVideo
 {
-    [self SubscribingToChannels];
+    //[self SubscribingToChannels];
     [self addVideotoFav:ADDEXPECT];
 }
 
@@ -909,6 +912,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if([responseCode isEqualToString:kSuccessResCode]){
+            [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
             [self showOpSuccessModalView:1.5 with:type];
@@ -936,7 +940,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             break;
         }
         case 10002:{
-            [self SubscribingToChannels];
+            //[self SubscribingToChannels];
             [self addVideotoFav:ADDFAV];
             break;
         }
@@ -1063,7 +1067,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
     NSArray *infoArr = [NSArray arrayWithObjects:prodId,name,imgUrl,@"2",[NSString stringWithFormat:@"%d",num],nil];
     CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
     check.downloadInfoArr = infoArr;
-    check.oneEsp = [episodesArr_ objectAtIndex:num];
+    check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:num]];
     check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
     [CheckDownloadUrlsManager addToCheckQueue:check];
 }
@@ -1071,10 +1075,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
 
 -(void)more{
     moreBtn_.selected = !moreBtn_.selected;
+    float height = [self heightForString:summary_ fontSize:13 andWidth:271];
     if (moreBtn_.selected) {
-        summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-        summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
-      
+        if (height < 85) {
+            return;
+        }
+        summaryBg_.frame = CGRectMake(14, 35, 292, height+10);
+        summaryLabel_.frame = CGRectMake(28, 35+5, 264,height);
     }
     else{
         summaryBg_.frame = CGRectMake(14, 35, 292, 90);
@@ -1792,21 +1799,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
 
     }
-    
-    [pullToRefreshManager_ tableViewReleased];
-    
-    
 
 }
 
-
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    return;
-     [CommonMotheds showNetworkDisAbledAlert:self.view];
-    [self loadComments];
-    
-}
 
 #pragma mark -
 #pragma mark - FilmReviewViewCellDelegate

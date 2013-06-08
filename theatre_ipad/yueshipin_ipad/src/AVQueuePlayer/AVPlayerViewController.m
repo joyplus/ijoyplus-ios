@@ -278,6 +278,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
 }
 
 - (void)viewDidAppear: (BOOL) animated {
@@ -393,7 +394,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [temp_dic setObject:@"10" forKey:@"level"];
         }else if ([source_str isEqualToString:@"pps"]){
             [temp_dic setObject:@"11" forKey:@"level"];
-        } else {
+        }else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+            NSArray * dURL = [temp_dic objectForKey:@"urls"];
+            if (0 == dURL.count)
+                return;
+            NSDictionary * firstDic = [dURL objectAtIndex:0];
+            NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[firstDic objectForKey:@"url"]];
+            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+            if (nil != downloadURL)
+            {
+                [newDic setObject:downloadURL forKey:@"url"];
+                [newDic setObject:[firstDic objectForKey:@"file"] forKey:@"file"];
+                [newDic setObject:[firstDic objectForKey:@"type"] forKey:@"type"];
+            }
+            [temp_dic setObject:[NSArray arrayWithObject:newDic] forKey:@"urls"];
+        }
+        else {
             [temp_dic setObject:@"100" forKey:@"level"];
         }
         [tempSortArr addObject:temp_dic];
@@ -1335,6 +1352,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION
                                                   object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NETWORK_CHANGED object:nil];
     
     [self closeAllTimer];
     [self.urlConnection cancel];
@@ -2170,7 +2188,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     {
         [myHUD show:YES];
         [self.view bringSubviewToFront:myHUD];
-        myHUD.labelText = @"正在加载，请稍等";
+        //myHUD.labelText = @"正在加载，请稍等";
         myHUD.userInteractionEnabled = NO;
         [self.view addSubview:myHUD];
     }
@@ -2551,7 +2569,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 54, 17);
                     } else if ([source_str isEqualToString:@"qq"]){
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 17, 17);
-                    } else if ([source_str isEqualToString:@"pptv"] || [source_str isEqualToString:@"wangpan"]){
+                    } else if ([source_str isEqualToString:@"pptv"]
+                               || [source_str isEqualToString:@"wangpan"]
+                               || [source_str isEqualToString:@"baidu_wangpan"]){
                         source_str = @"pptv";
                         sourceImage.frame = CGRectMake(sourceLabel.frame.origin.x + sourceLabel.frame.size.width, 17, 56, 17);
                     } else if ([source_str isEqualToString:@"m1905"]){
@@ -2718,6 +2738,18 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 
 //=====================End Utility methods========================
 
+#pragma mark -
+#pragma mark - NetworkChangedNSNotification
+-(void)networkChanged:(NSNotification *)notify{
+    int status = [(NSNumber *)(notify.object) intValue];
+    if (status == 0) {
+         myHUD.labelText = @"亲，网络出问题了，请检查后重试！";
+    }
+    else{
+         myHUD.labelText = @"正在加载，请稍等";
+    }
+}
+	
 #pragma mark -
 #pragma mark - app进入后台/重新激活
 - (void)appDidEnterBackground:(NSNotification *)niti

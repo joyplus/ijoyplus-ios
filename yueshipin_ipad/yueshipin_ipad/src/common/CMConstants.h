@@ -49,7 +49,7 @@
 
 #define kIpadAppKey @"kIpadAppkey"
 #define KWXCODENUM  @"weixinImageNum"
-
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos"
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1
 #define umengAppKey @"50c069e25270154e81000056"
@@ -99,6 +99,8 @@
 #define APPIRATER_APP_ID				587246114
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
+
+#define AMERICANVIDEOS @"1"
 
 #define SHOW_MENU_INTRO @"show_menu_intro"
 #define WEIBO_INTRO @"weibbo_intro"

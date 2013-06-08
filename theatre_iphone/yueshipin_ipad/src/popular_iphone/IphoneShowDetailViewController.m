@@ -107,7 +107,9 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
+    pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:self.tableView];
+    [pullToRefreshManager_ setShowHeaderView:NO];
+    pullToRefreshManager_.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated{
@@ -204,8 +206,11 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
+            if ([comments count]<10) {
+                pullToRefreshManager_.canLoadMore = NO;
+            }
             else{
-              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
+                pullToRefreshManager_.canLoadMore = YES;
             }
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -216,7 +221,7 @@
 }
 - (void)loadTable {
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
+    [pullToRefreshManager_ loadMoreCompleted];
 }
 
 - (void)viewDidUnload{
@@ -425,7 +430,9 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 
                 if (isloaded_) {
-                    [cell addSubview:downLoad];
+                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                        [cell addSubview:downLoad];
+                    }
                 }
     
                 UIButton *report = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -540,7 +547,13 @@
         }
         else if(row == 2){
             if (moreBtn_.selected) {
-                return [self heightForString:summary_ fontSize:13 andWidth:271]+30;
+                float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+                
+                if (height < 85) {
+                    return 115;
+                }
+                return height+30;
+
             }
             else{
                 return 115;
@@ -627,6 +640,7 @@
                  itemId = [self.infoDic objectForKey:@"id"];
             }
             showDownlooadViewController.prodId = itemId;
+            
             showDownlooadViewController.listArr =  [NSMutableArray arrayWithArray:episodesArr_];
             NSString *titleStr = [self.infoDic objectForKey:@"prod_name"];
             if (titleStr == nil) {
@@ -672,7 +686,11 @@
 
 -(void)more{
     moreBtn_.selected = !moreBtn_.selected;
+    float height = [self heightForString:summary_ fontSize:13 andWidth:271];
     if (moreBtn_.selected) {
+        if (height < 85) {
+            return;
+        }
         summaryBg_.frame = CGRectMake(14, 25, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
         summaryLabel_.frame = CGRectMake(28, 28, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
         //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
@@ -953,17 +971,19 @@
     [self playVideo:playNum-1];
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+
+    [pullToRefreshManager_ scrollViewBegin];
+}
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    
+    [pullToRefreshManager_ scrollViewScrolled:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    [pullToRefreshManager_ tableViewReleased];
+    [pullToRefreshManager_ scrollViewEnd:scrollView];
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore {
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     

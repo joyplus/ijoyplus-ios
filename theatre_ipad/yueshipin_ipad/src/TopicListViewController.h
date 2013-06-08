@@ -7,7 +7,7 @@
 //
 
 #import "CommonHeader.h"
-
-@interface TopicListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
+#import "PullRefreshManagerClinet.h"
+@interface TopicListViewController : SlideBaseViewController <UITableViewDataSource, UITableViewDelegate, PullRefreshManagerClinetDelegate>
 
 @end

@@ -7,8 +7,9 @@
 //
 
 #import "CommonHeader.h"
+#import "PullRefreshManagerClinet.h"
 
-@interface AddSearchListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, MNMBottomPullToRefreshManagerClient>
+@interface AddSearchListViewController : GenericBaseViewController <UITableViewDataSource, UITableViewDelegate, PullRefreshManagerClinetDelegate>
 
 @property (nonatomic, strong)NSString *keyword;
 

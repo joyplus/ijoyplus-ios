@@ -12,6 +12,7 @@
 #import "DatabaseManager.h"
 #import "SubdownloadItem.h"
 #import "CMConstants.h"
+#import "TFHpple.h"
 
 @implementation CommonMotheds
 +(BOOL)isNetworkEnbled{
@@ -207,4 +208,34 @@
    NSString *valueStr = [AppDelegate instance].showVideoSwitch;
    return [valueStr intValue];
 }
+
++ (NSString *)getDownloadURLWithHTML:(NSString *)url
+{
+    NSData *htmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];
+    TFHpple *xpathParser = [[TFHpple alloc] initWithHTMLData:htmlData];
+    NSArray *elements  = [xpathParser searchWithXPathQuery:@"//a"]; // get the title
+    
+    NSString * downloadURL = nil;
+    for (TFHppleElement * element in elements)
+    {
+        NSDictionary * dic = [element attributes];
+        
+//        NSLog(@"%@",[dic objectForKey:@"class"]);
+//        NSLog(@"%@",[dic objectForKey:@"id"]);
+        NSLog(@"%@",[element content]);
+        
+        if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
+             && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
+            ([[dic objectForKey:@"class"] isEqualToString:@"btn blue-btn"]
+             && [[dic objectForKey:@"id"] isEqualToString:@"fileDownload"]))
+        {
+            downloadURL = [element objectForKey:@"href"];
+            [downloadURL stringByReplacingOccurrencesOfString:@"amp;" withString:@""];
+//            NSLog(@"%@",downloadURL);
+            return downloadURL;
+        }
+    }
+    return downloadURL;
+}
+
 @end

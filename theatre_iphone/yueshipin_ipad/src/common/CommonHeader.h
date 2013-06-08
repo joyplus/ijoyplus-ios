@@ -21,7 +21,6 @@
 #import "UIUtility.h"
 #import "UIImageView+WebCache.h"
 #import "TimeUtility.h"
-#import "MNMBottomPullToRefreshManager.h"
 #import "MBProgressHUD.h"
 #import "JSBadgeView.h"
 #import "ActionUtility.h"

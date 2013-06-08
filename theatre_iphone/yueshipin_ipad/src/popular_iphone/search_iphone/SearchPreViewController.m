@@ -310,7 +310,7 @@
         [searchResultList_ reloadData];
         [pullRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+       [pullRefreshManager_ loadMoreCompleted];
     }];
 
 
@@ -368,7 +368,7 @@
     [searchResultList_ removeFromSuperview ];
     [self hiddeViews];
     [self removeOverlay];
-    searchBar_.text = nil;
+    //searchBar_.text = nil;
     [searchBar setShowsCancelButton:YES animated:YES];
     for (id view in searchBar.subviews) {
         if ([view isKindOfClass:[UIButton class]]) {

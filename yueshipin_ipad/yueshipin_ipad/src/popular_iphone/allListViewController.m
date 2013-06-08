@@ -328,7 +328,7 @@ enum
         }
         [self loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-       
+       [pullToRefreshManager_ loadMoreCompleted];
     }];
     
 }

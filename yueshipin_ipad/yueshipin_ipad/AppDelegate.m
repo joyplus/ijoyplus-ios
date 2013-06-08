@@ -65,11 +65,12 @@
 @synthesize alertUserInfo;
 @synthesize showVideoSwitch;
 @synthesize closeVideoMode;
+@synthesize recommendAppSwich;
 @synthesize mediaVolumeValue;
 @synthesize show3GAlertSeq;
 @synthesize httpServer;
 @synthesize adViewController;
-@synthesize advUrl, advTargetUrl;
+@synthesize advUrl, advTargetUrl,bgTask;
 
 + (AppDelegate *) instance {
 	return (AppDelegate *) [[UIApplication sharedApplication] delegate];
@@ -168,10 +169,11 @@
         [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     }
     [MobClick startWithAppkey:umengAppKey reportPolicy:REALTIME channelId:CHANNEL_ID];
-    self.showVideoSwitch = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:SHOW_VIDEO_SWITCH];
-    if (self.showVideoSwitch == nil) {
-        self.showVideoSwitch = @"2";
+    self.recommendAppSwich = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:RECOMMEND_APP_SWITCH];
+    if (self.recommendAppSwich == nil) {
+        self.recommendAppSwich = @"1";
     }
+    self.showVideoSwitch = @"0";
     self.closeVideoMode = @"0";
     show3GAlertSeq = @"0";
     networkStatus = 2;
@@ -270,7 +272,14 @@
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"app_key" value:appKey];
         [[ContainerUtility sharedInstance] setAttribute:appKey forKey:kIpadAppKey];
     }
+    
+    NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
+    if (hiddenAVS != nil) {
+         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+    }
+    
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
+        self.recommendAppSwich = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:RECOMMEND_APP_SWITCH]];
         self.showVideoSwitch = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:SHOW_VIDEO_SWITCH]];
         self.closeVideoMode = [NSString stringWithFormat:@"%@", [notification.userInfo objectForKey:CLOSE_VIDEO_MODE]];
     }
@@ -283,6 +292,9 @@
     }
     if(self.closeVideoMode == nil || [self.closeVideoMode isEqualToString:@"(null)"]){
         self.closeVideoMode = @"0";
+    }
+    if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
+        self.recommendAppSwich = @"0";
     }
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
@@ -352,6 +364,15 @@
 {
     [self.downLoadManager pauseAllTask];
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+        [self continueiPadDownloadWhenEnterBackground:application];
+    }
+    else
+    {
+        [self continueiPhoneDownloadWhenEnterBackground:application];
+    }
+    
     //When app enter background, add a new local Notification
     [self addLocalNotification];
     // end
@@ -364,6 +385,17 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    if (bgTask != UIBackgroundTaskInvalid)
+    {
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+    }
+    
+    if (httpServer && ![httpServer isRunning]) {
+        [httpServer start:NULL];
+    }
+    
     [self performSelector:@selector(iphoneContinueDownload) withObject:nil afterDelay:5];
 }
 
@@ -389,6 +421,7 @@
     
     //when app become active ,cancel all local notification .
     [self cancelLocalNotification];
+    [self getLocalNotificationMsg];
     
     //add notification
     [[NSNotificationCenter defaultCenter] postNotificationName:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION
@@ -594,27 +627,168 @@
 
 }
 
+#pragma mark -
+#pragma mark - download at background
+
+- (void)continueiPadDownloadWhenEnterBackground:(UIApplication *)application
+{
+    UIDevice* device = [UIDevice currentDevice];
+    
+    BOOL backgroundSupported = NO;
+    
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+        
+        backgroundSupported = device.multitaskingSupported;
+    
+    if (!backgroundSupported)
+    {
+        return;
+    }
+    
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        // Clean up any unfinished task business by marking where you
+        // stopped or ending the task outright.
+        //[self.padDownloadManager stopDownloading];
+        [application endBackgroundTask:bgTask];
+        bgTask = UIBackgroundTaskInvalid;
+        
+    }];
+    
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        int curDownloadNum = [NewDownloadManager downloadingTaskCount];
+        BOOL isDownloadFinish = (curDownloadNum == 0 ? YES : NO);
+        if (!isDownloadFinish)
+        {
+            [self.padDownloadManager startDownloadingThreads];
+        }
+        
+        while (!isDownloadFinish)
+        {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            [NSThread sleepForTimeInterval:5];
+            isDownloadFinish = ([NewDownloadManager downloadingTaskCount] == 0 ? YES : NO);
+        }
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    });
+}
+
+- (void)continueiPhoneDownloadWhenEnterBackground:(UIApplication *)application
+{
+    UIDevice* device = [UIDevice currentDevice];
+    
+    BOOL backgroundSupported = NO;
+    
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)])
+        
+        backgroundSupported = device.multitaskingSupported;
+    
+    if (!backgroundSupported)
+    {
+        return;
+    }
+    
+    bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+        
+        // Clean up any unfinished task business by marking where you
+        
+        // stopped or ending the task outright.
+        
+        [self.downLoadManager pauseAllTask];
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    }];
+    
+    
+    
+    // Start the long-running task and return immediately.
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        // Do the work associated with the task, preferably in chunks.
+        int curDownloadNum = [DownLoadManager downloadingTaskCount];
+        BOOL isDownloadFinish = (curDownloadNum == 0 ? YES : NO);
+        if (!isDownloadFinish)
+        {
+            [self.downLoadManager resumeDownLoad];
+        }
+        
+        while (!isDownloadFinish)
+        {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            [NSThread sleepForTimeInterval:5];
+            isDownloadFinish = ([DownLoadManager downloadingTaskCount] == 0 ? YES : NO);
+        }
+        
+        [application endBackgroundTask:bgTask];
+        
+        bgTask = UIBackgroundTaskInvalid;
+        
+    });
+}
+
 #pragma mark - 
 #pragma mark - LocalNotification
 
+- (void)getLocalNotificationMsg
+{
+    if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: @"1", @"page_num", [NSNumber numberWithInt:5], @"page_size", LOCAL_NOTIFICATION_YUEDAN_ID, @"top_id", nil];
+        [[AFServiceAPIClient sharedClient] getPath:kPathTopItems parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+            NSString * content = [result objectForKey:@"content"];
+            [[CacheUtility sharedCache] putInCache:@"local_notification_content" result:content];
+        } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"%@",error);
+        }];
+    }
+}
+
 - (void)addLocalNotification
 {
-    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
-    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
-    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
-    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
-    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
+    NSString * notificationMsg = (NSString *)[[CacheUtility sharedCache] loadFromCache:@"local_notification_content"];
+    NSArray * notificationArr = [notificationMsg componentsSeparatedByString:@"$"];
+    if (0 == notificationArr.count)
+    {
+        notificationArr = [DEFAULT_LOCAL_NOTIFICATION_CONTENT componentsSeparatedByString:@"$"];
+        [[CacheUtility sharedCache] putInCache:@"local_notification_content" result:DEFAULT_LOCAL_NOTIFICATION_CONTENT];
+    }
     
-    [self addLocalNotificationInterVal:DAY(4)
-                               message:firstStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 2)
-                               message:secondStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 3)
-                               message:thirdStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 4)
-                               message:fourthStr];
-    [self addLocalNotificationInterVal:(DAY(4) * 5)
-                               message:fifthStr];
+    int random = arc4random()%5;
+    
+    for (int i = 0; i < notificationArr.count; i ++)
+    {
+        NSString * msg = [notificationArr objectAtIndex:random];
+        [self addLocalNotificationInterVal:DAY(4 * (i + 1))
+                                   message:msg];
+        random ++;
+        random = (random >= 5) ? 0 : random;
+    }
+    
+    //    NSString * firstStr  = @"亲，我们上了很多新片大片，要来看哦~";
+    //    NSString * secondStr = @"亲，你已经很久没来看小悦啦，是不是工作太忙？再忙也要抽空看个电影放松一下呀~";
+    //    NSString * thirdStr  = @"亲，忙碌了一整天，看一部喜欢的影片来缓解下疲劳吧~";
+    //    NSString * fourthStr = @"亲，小悦怀念曾经陪你一起看电影的时光，记得来看小悦哦~";
+    //    NSString * fifthStr  = @"亲，小悦觉得忙过一整天后最美的事情莫过于与喜欢的影片不期而遇，你觉得呢？";
+    //
+    //    [self addLocalNotificationInterVal:DAY(4)
+    //                               message:firstStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 2)
+    //                               message:secondStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 3)
+    //                               message:thirdStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 4)
+    //                               message:fourthStr];
+    //    [self addLocalNotificationInterVal:(DAY(4) * 5)
+    //                               message:fifthStr];
 }
 
 - (void)addLocalNotificationInterVal:(NSTimeInterval)time

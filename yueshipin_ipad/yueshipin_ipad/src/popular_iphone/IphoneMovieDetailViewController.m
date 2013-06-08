@@ -113,8 +113,6 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
-   
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -238,10 +236,6 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
-            else{
-                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-            
-            }
         }
        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -252,8 +246,7 @@
 - (void)loadTable {
     
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
-    
+   
 }
 
 - (void)viewDidUnload{
@@ -522,7 +515,10 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
-                    [cell addSubview:downLoad];
+                    
+                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                      [cell addSubview:downLoad];
+                    }
                 }
 
                 NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
@@ -623,7 +619,7 @@
             [cell addSubview:bgBtn];
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-            bgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            bgBtn.titleLabel.font = [UIFont systemFontOfSize:13];
             [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor orangeColor] forState:UIControlStateHighlighted];
@@ -746,7 +742,12 @@
         }
         else if(row == 1){
             if (moreBtn_.selected) {
-                 return [self heightForString:summary_ fontSize:13 andWidth:271]+40;
+                float height = [self heightForString:summary_ fontSize:13 andWidth:271];
+                
+                if (height < 85) {
+                    return 125;
+                }
+                 return height+40;
             }
             else{
                  return 125;
@@ -912,7 +913,7 @@
             
             CheckDownloadUrls *check = [[CheckDownloadUrls alloc] init];
             check.downloadInfoArr = infoArr;
-            check.oneEsp = [episodesArr_ objectAtIndex:0];
+            check.oneEsp = [self checkDownloadUrls:[episodesArr_ objectAtIndex:0]];
             check.checkDownloadUrlsDelegate = [CheckDownloadUrlsManager defaultCheckDownloadUrlsManager];
             [CheckDownloadUrlsManager addToCheckQueue:check];
             break;
@@ -971,11 +972,14 @@
 -(void)more{
    
         moreBtn_.selected = !moreBtn_.selected;
+       float height = [self heightForString:summary_ fontSize:13 andWidth:271];
         if (moreBtn_.selected) {
-            summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-            summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
-            
-            
+            if (height < 85) {
+                return;
+            }
+            summaryBg_.frame = CGRectMake(14, 35, 292, height+10);
+            summaryLabel_.frame = CGRectMake(28, 35 + 5, 264,height);
+    
         }
         else{
             summaryBg_.frame = CGRectMake(14, 35, 292, 90);
@@ -1150,22 +1154,6 @@
     
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    [pullToRefreshManager_ tableViewReleased];
-}
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    return;
-    [CommonMotheds showNetworkDisAbledAlert:self.view];
-    [self loadComments];
-
-}
 
 #pragma mark -
 #pragma mark - FilmReviewViewCellDelegate 
