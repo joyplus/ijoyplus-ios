@@ -20,7 +20,8 @@
 #import "ShowDownloadViewController.h"
 #import "CommonMotheds.h"
 #import "UIUtility.h"
-@interface IphoneShowDetailViewController ()
+#import "FeedBackView.h"
+@interface IphoneShowDetailViewController ()<FeedBackViewDelegate>
 
 @end
 
@@ -658,17 +659,23 @@
             break;
         }
         case 10005:{
+            FeedBackView * feedback = [[FeedBackView alloc] initWithFrame:CGRectMake(0, 2*kFullWindowHeight, 320, kFullWindowHeight)];
+            feedback.delegate = self;
+            UITabBarController * ctrl = [AppDelegate instance].tabBarView;
+            feedback.clipsToBounds = YES;
+            [ctrl.selectedViewController.view addSubview:feedback];
             
-            NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:prodId_, @"prod_id", nil];
-            [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
-
-                 [self showOpSuccessModalView:3 with:ADDFAV];
-                
-            } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
-                [self showOpFailureModalView:1 with:ADDFAV];
-            }];
+            [UIView beginAnimations:nil context:NULL];
             
-            break;
+            [UIView setAnimationDuration:0.5f];
+            
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+            
+            feedback.frame = CGRectMake(0, 0, 320, kFullWindowHeight);
+            
+            [UIView commitAnimations];
+            
+            return;
         }
   
         default:
@@ -980,6 +987,27 @@
     [CommonMotheds showNetworkDisAbledAlert:self.view];
     [self loadComments];
     
+}
+
+#pragma mark -
+#pragma mark - FeedBackDelegate
+- (void)feedBackType:(NSString *)type
+        detailReason:(NSString *)reason
+{
+    NSString *feedbackType = type;
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: \
+                                prodId_, @"prod_id",\
+                                name_ ,@"prod_name",\
+                                @"1",@"prod_type",\
+                                feedbackType,@"invalid_type",\
+                                reason,@"memo",\
+                                nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramInvalid parameters:parameters success:^(AFHTTPRequestOperation *operation, id result)
+     {
+         
+     }failure:^(__unused AFHTTPRequestOperation *operation, NSError *error)
+     {
+     }];
 }
 
 @end
