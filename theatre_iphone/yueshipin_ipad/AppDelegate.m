@@ -181,6 +181,11 @@
     if (appKey == nil) {
         [[ContainerUtility sharedInstance] setAttribute:kDefaultAppKey forKey:kIpadAppKey];
     }
+    NSString *hiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if (hiddenAVS == nil) {
+        [[ContainerUtility sharedInstance] setAttribute:AMERICANVIDEOS forKey:HIDDEN_AMERICAN_VIDEOS];
+    }
+
     playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
@@ -241,8 +246,9 @@
     }
     
     NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
-        if (hiddenAVS != nil) {
+    if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
         [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
+        [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
     }
     
     if ([CHANNEL_ID isEqualToString:@""]) {//参数self.showVideoSwitch只对app store生效
