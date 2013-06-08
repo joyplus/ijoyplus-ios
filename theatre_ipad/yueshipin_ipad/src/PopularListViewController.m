@@ -31,8 +31,7 @@
     UITableView *table;
     DDPageControl *pageControl;
     NSArray *lunboArray;
-    MNMBottomPullToRefreshManager *pullToRefreshManager_;
-    MNMBottomPullToRefreshManager *dramaPullToRefreshManager_;
+    PullRefreshManagerClinet *pullToRefreshManager_;
     NSUInteger reloads_;
     NSUInteger dramaReloads;
     EGORefreshTableHeaderView *_refreshHeaderView;
@@ -92,12 +91,12 @@
 		[table setDataSource:self];
         [table setBackgroundColor:[UIColor clearColor]];
         [table setShowsVerticalScrollIndicator:NO];
-		[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
+		//[table setAutoresizingMask:UIViewAutoresizingFlexibleHeight];
 		[self.view addSubview:table];
         
-        pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        dramaPullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:table withClient:self];
-        [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
+        pullToRefreshManager_.delegate = self;
+        [pullToRefreshManager_  setShowHeaderView:NO];
         reloads_ = 2;
         dramaReloads = 2;
         if (_refreshHeaderView == nil) {
@@ -115,8 +114,6 @@
 
 - (void)loadTable {
     [table reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
-    [dramaPullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -232,11 +229,7 @@
     [self retrieveLunboData];
 	if(topicType == MOVIE_TOPIC){
         [self retrieveTopsListData];
-        [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
-        [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     } else if(topicType == DRAMA_TOPIC){
-        [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-        [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
         [self retrieveTopsListData];
     }
     _reloading = YES;
@@ -289,7 +282,7 @@
 	
 }
 
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)pulltoLoadMore {
     if(![[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]){
         [UIUtility showNetWorkError:self.view];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
@@ -320,11 +313,14 @@
             
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
-        if(topicType ==  MOVIE_TOPIC && tempTopsArray.count < pageSize){
-            [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-        } else if(topicType ==  DRAMA_TOPIC && tempTopsArray.count < pageSize){
-            [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
+        if (tempTopsArray.count < pageSize) {
+                pullToRefreshManager_.canLoadMore = NO;
         }
+        else{
+                pullToRefreshManager_.canLoadMore = YES;
+        }
+                [pullToRefreshManager_ loadMoreCompleted];
+
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
@@ -347,6 +343,13 @@
                 [movieTopsArray addObjectsFromArray:tempTopsArray];
             } else if (topicType == DRAMA_TOPIC){
                 [tvTopsArray addObjectsFromArray:tempTopsArray];
+            }
+            
+            if (tempTopsArray.count < pageSize) {
+                    pullToRefreshManager_.canLoadMore = NO;
+            }
+            else{
+                    pullToRefreshManager_.canLoadMore = YES;
             }
         }
     } else {
@@ -371,6 +374,16 @@
 	[scrollView setContentOffset: CGPointMake(scrollView.bounds.size.width * thePageControl.currentPage, scrollView.contentOffset.y) animated: YES] ;
 }
 
+
+- (void) scrollViewWillBeginDragging:(UIScrollView *)ascrollView
+{
+    if (ascrollView.tag == 11270014) {
+            return;
+    }
+    [pullToRefreshManager_ scrollViewBegin];
+}
+
+
 - (void)scrollViewDidScroll:(UIScrollView *)aScrollView
 {
     if(aScrollView.tag == 11270014){
@@ -388,12 +401,8 @@
         }
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidScroll:aScrollView];
-        if(topicType == MOVIE_TOPIC){
-            [pullToRefreshManager_ tableViewScrolled];
-        } else if(topicType == DRAMA_TOPIC){
-            [dramaPullToRefreshManager_ tableViewScrolled];
-        }
-        
+
+         [pullToRefreshManager_ scrollViewScrolled:aScrollView];
     }
 }
 
@@ -408,11 +417,7 @@
     if(aScrollView.tag == 11270014){
     } else {
         [_refreshHeaderView egoRefreshScrollViewDidEndDragging:aScrollView];
-        if(topicType == MOVIE_TOPIC){
-            [pullToRefreshManager_ tableViewReleased];
-        } else if(topicType == DRAMA_TOPIC){
-            [dramaPullToRefreshManager_ tableViewReleased];
-        }
+        [pullToRefreshManager_ scrollViewEnd:aScrollView];
     }
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)ascrollView
@@ -427,33 +432,32 @@
 - (void)movieListBtnClicked:(UIButton *)sender
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
-    [pullToRefreshManager_ setPullToRefreshViewVisible:YES];
-    [dramaPullToRefreshManager_ setPullToRefreshViewVisible:NO];
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     topicType = MOVIE_TOPIC;
     [self initTopButtonImage];
-    [self loadTable];
+    //[self loadTable];
+    [self retrieveTopsListData];
 }
 
 - (void)dramaListBtnClicked:(UIButton *)sender
 {
     [[AppDelegate instance].rootViewController.stackScrollViewController removeViewToViewInSlider:AdViewController.class];
-    [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-    [dramaPullToRefreshManager_ setPullToRefreshViewVisible:YES];
+    
     BOOL isReachable = [[AppDelegate instance] performSelector:@selector(isParseReachable)];
     if(!isReachable) {
         [UIUtility showNetWorkError:self.view];
     }
     topicType = DRAMA_TOPIC;
     [self initTopButtonImage];
-    if (tvTopsArray.count > 0) {
-        [self loadTable];
-    } else {
-        [self retrieveTopsListData];
-    }
+    [self retrieveTopsListData];
+//    if (tvTopsArray.count > 0) {
+//        [self loadTable];
+//    } else {
+//        [self retrieveTopsListData];
+//    }
 }
 
 

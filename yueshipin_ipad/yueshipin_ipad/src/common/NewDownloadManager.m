@@ -344,4 +344,26 @@
     }
 }
 
++ (int)downloadingTaskCount
+{
+    int count = 0;
+    for (DownloadItem *item in [DatabaseManager allObjects:[DownloadItem class]]) {
+        if (([item.downloadStatus isEqualToString:@"waiting"]
+             || [item.downloadStatus isEqualToString:@"start"])
+            && ![item.downloadStatus isEqualToString:@""])
+        {
+            count ++;
+        }
+    }
+    for (SubdownloadItem *item in [DatabaseManager allObjects:[SubdownloadItem class]])
+    {
+        if ([item.downloadStatus isEqualToString:@"waiting"]
+            || [item.downloadStatus isEqualToString:@"start"])
+        {
+            count ++;
+        }
+    }
+    return count;
+}
+
 @end

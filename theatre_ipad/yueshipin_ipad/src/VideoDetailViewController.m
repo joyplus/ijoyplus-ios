@@ -174,6 +174,21 @@
     return nil;
 }
 
+- (NSMutableArray *)tureWangpanDownloadURL:(NSArray *)wangpanHTML
+{
+    NSMutableArray * urls = [NSMutableArray array];
+    for (NSString * url in wangpanHTML)
+    {
+        NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:url];
+        if (nil != downloadURL)
+        {
+            [urls addObject:downloadURL];
+        }
+    }
+    return urls;
+}
+
+
 #pragma mark - SinaWeibo Delegate
 
 - (void)sinaweiboDidLogIn:(SinaWeibo *)sinaweibo

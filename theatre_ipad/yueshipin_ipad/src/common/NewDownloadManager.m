@@ -174,7 +174,7 @@
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        [[AppDelegate instance] decreaseDownloadingNum];
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
@@ -191,7 +191,7 @@
 
 - (void)startNewDownloadItem
 {
-    [AppDelegate instance].currentDownloadingNum = 0;
+    [[AppDelegate instance] decreaseDownloadingNum];
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
 }
 
@@ -341,6 +341,28 @@
             // 不做处理
         }
     }
+}
+
++ (int)downloadingTaskCount
+{
+    int count = 0;
+    for (DownloadItem *item in [DatabaseManager allObjects:[DownloadItem class]]) {
+        if (([item.downloadStatus isEqualToString:@"waiting"]
+             || [item.downloadStatus isEqualToString:@"start"])
+            && ![item.downloadStatus isEqualToString:@""])
+        {
+            count ++;
+        }
+    }
+    for (SubdownloadItem *item in [DatabaseManager allObjects:[SubdownloadItem class]])
+    {
+        if ([item.downloadStatus isEqualToString:@"waiting"]
+            || [item.downloadStatus isEqualToString:@"start"])
+        {
+            count ++;
+        }
+    }
+    return count;
 }
 
 @end

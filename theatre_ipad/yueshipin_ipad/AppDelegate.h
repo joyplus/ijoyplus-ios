@@ -31,7 +31,7 @@
 
 @property (strong, nonatomic) NSString *showVideoSwitch;  // 0:有视频，播放视频，无视频，播放网页 1:只播放网页 2:调用safari打开播放网页
 @property (strong, nonatomic) NSString *closeVideoMode;   // 0:关闭视频和网页  1:只关闭视频，不关闭网页
-
+@property (strong, nonatomic) NSString *recommendAppSwich;// 0:显示推荐应用    1:隐藏推荐应用
 @property (assign, atomic) int currentDownloadingNum;
 
 @property (strong, nonatomic) NSDictionary * alertUserInfo;
@@ -45,10 +45,13 @@
 @property (nonatomic, strong) AdViewController *adViewController;
 @property (nonatomic, strong)NSString *advUrl;
 @property (nonatomic, strong)NSString *advTargetUrl;
+@property UIBackgroundTaskIdentifier bgTask;
+
 + (AppDelegate *) instance;
 - (void)startHttpServer;
 - (void)stopHttpServer;
 - (BOOL)isParseReachable;
 - (BOOL)isWifiReachable;
+- (void)decreaseDownloadingNum;
 
 @end

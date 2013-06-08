@@ -212,9 +212,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
-//        [self.downloadBtn setHidden:YES];
-//    }
+    if(![@"0" isEqualToString:[AppDelegate instance].showVideoSwitch]){
+        [self.downloadBtn setHidden:YES];
+    }
     if(video == nil){
         [self retrieveData];
     }
@@ -745,6 +745,11 @@
     subitem.downloadStatus = @"waiting";
     [self getDownloadUrls:num];
     
+    if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
+    {
+        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+    }
+    
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     
     [tempArray addObjectsFromArray:self.mp4DownloadUrls];
@@ -759,10 +764,11 @@
         } else if(self.m3u8DownloadUrls.count > 0){
             subitem.downloadType = @"m3u8";
         }
+        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
-        finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
+        //finder.mp4DownloadUrlNum = self.mp4DownloadUrls;
         [finder setupWorkingUrl];
         [self updateBadgeIcon];
         return YES;
