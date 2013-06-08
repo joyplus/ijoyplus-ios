@@ -379,9 +379,6 @@
 }
 
 #pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClient
-
-#pragma mark -
 #pragma mark - UIScrollviewDelegate
 - (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {

@@ -1037,15 +1037,6 @@ enum
 }
 
 
-#pragma mark -
-#pragma mark MNMBottomPullToRefreshManagerClientReloadTable Methods
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    [CommonMotheds showNetworkDisAbledAlert:self.view];
-    showLoadCount_++;
-    [self loadMoreShowTopsData];
-    
-}
-
 - (void)loadTable:(int)type {
     
     if (type == MOVIE_TYPE) {
