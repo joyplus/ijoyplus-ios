@@ -496,6 +496,7 @@ void transferDataFromOldDbWithCatch()
             }
             [showPullToRefreshManager_ loadMoreCompleted];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+            [showPullToRefreshManager_ loadMoreCompleted];
             [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
         }];
     }

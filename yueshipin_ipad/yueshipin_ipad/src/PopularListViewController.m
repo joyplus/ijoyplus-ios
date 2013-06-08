@@ -333,6 +333,7 @@
         //        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+        [pullToRefreshManager_ loadMoreCompleted];
     }];
 
 

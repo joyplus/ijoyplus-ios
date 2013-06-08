@@ -277,6 +277,7 @@ enum
      [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         NSLog(@"%@", error);
+        [pullToRefreshManager_ loadMoreCompleted];
         [self loadTable:SHOW_TYPE];
         
     }];

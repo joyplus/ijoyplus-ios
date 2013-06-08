@@ -344,6 +344,7 @@
         [self.tableView reloadData];
         [pullToRefreshManagerFAV_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+       [pullToRefreshManagerFAV_ loadMoreCompleted];
        [UIUtility showDetailError:self.view error:error];
     }];
     

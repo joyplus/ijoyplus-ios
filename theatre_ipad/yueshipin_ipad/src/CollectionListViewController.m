@@ -481,7 +481,9 @@
         else{
             pullToRefreshManager_.canLoadMore = YES;
         }
+        [pullToRefreshManager_ loadMoreCompleted];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [pullToRefreshManager_ loadMoreCompleted];
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     }];
 }

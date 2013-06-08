@@ -272,6 +272,7 @@ enum
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self loadTable:SHOW_TYPE];
+        [pullToRefreshManager_ loadMoreCompleted];
         [UIUtility showDetailError:self.view error:error];
     }];
     

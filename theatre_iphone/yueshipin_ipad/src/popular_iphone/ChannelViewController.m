@@ -425,6 +425,7 @@ enum
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self performSelector:@selector(reloadTableList) withObject:nil afterDelay:0.0f];
+         [pullToRefreshManager_ loadMoreCompleted];
         [UIUtility showDetailError:self.view error:error];
     }];
 
