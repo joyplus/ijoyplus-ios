@@ -119,8 +119,6 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-     //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480.0f tableView:self.tableView withClient:self];
-
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshRecord) name:WATCH_HISTORY_REFRESH object:nil];
     
 }
@@ -268,9 +266,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
-            else{
-              [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-            }
         }
         [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -280,7 +275,6 @@ NSComparator cmptr = ^(id obj1, id obj2){
 }
 - (void)loadTable {
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 - (void)viewDidUnload{
@@ -1806,21 +1800,9 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
 
     }
-    
-    [pullToRefreshManager_ tableViewReleased];
-    
-    
 
 }
 
-
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    return;
-     [CommonMotheds showNetworkDisAbledAlert:self.view];
-    [self loadComments];
-    
-}
 
 #pragma mark -
 #pragma mark - FilmReviewViewCellDelegate

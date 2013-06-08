@@ -113,8 +113,6 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
     
-    //pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:480 tableView:self.tableView withClient:self];
-   
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -238,10 +236,6 @@
                 [commentArray_ addObjectsFromArray:comments];
                 
             }
-            else{
-                [pullToRefreshManager_ setPullToRefreshViewVisible:NO];
-            
-            }
         }
        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -252,8 +246,7 @@
 - (void)loadTable {
     
     [self.tableView reloadData];
-    [pullToRefreshManager_ tableViewReloadFinished];
-    
+   
 }
 
 - (void)viewDidUnload{
@@ -1161,22 +1154,6 @@
     
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    
-    [pullToRefreshManager_ tableViewReleased];
-}
-
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
-    return;
-    [CommonMotheds showNetworkDisAbledAlert:self.view];
-    [self loadComments];
-
-}
 
 #pragma mark -
 #pragma mark - FilmReviewViewCellDelegate 
