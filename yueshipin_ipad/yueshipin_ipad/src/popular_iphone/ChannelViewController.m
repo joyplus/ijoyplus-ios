@@ -22,7 +22,7 @@
 #import "UIUtility.h"
 #import "CommonMotheds.h"
 #import "IntroductionView.h"
-#define BUNDING_HEIGHT 30
+#define BUNDING_HEIGHT 35
 #define BUNDING_BUTTON_TAG 20001
 enum
 {
@@ -485,7 +485,7 @@ enum
     UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
     if (btn == nil) {
         btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT+1);
+        btn.frame = CGRectMake(0, 0, 320, BUNDING_HEIGHT);
         [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv.png"] forState:UIControlStateNormal];
         [btn setBackgroundImage:[UIImage imageNamed:@"bunding_tv_s.png"] forState:UIControlStateHighlighted];
         [btn addTarget:self action:@selector(pushView) forControlEvents:UIControlEventTouchUpInside];
