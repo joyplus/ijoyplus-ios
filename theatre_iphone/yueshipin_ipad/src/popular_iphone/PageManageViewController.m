@@ -33,6 +33,7 @@
 #define COMIC_TYPE  (9003)
 #define PAGESIZE 10
 #define TOP_SEGMENT_VIEW_TAG    (123456)
+#define BUNDING_VIEW_HEIGHT     (35)
 enum
 {
     TYPE_BUNDING_TV = 1,
@@ -513,7 +514,7 @@ enum
     if (nil == bundingTipsView)
     {
         bundingTipsView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"bunding_tv.png"]highlightedImage:[UIImage imageNamed:@"bunding_tv_s.png"]];
-        bundingTipsView.frame = CGRectMake(0, 0, 320, 31);
+        bundingTipsView.frame = CGRectMake(0, 0, 320, BUNDING_VIEW_HEIGHT);
         [self.view addSubview:bundingTipsView];
         bundingTipsView.backgroundColor = [UIColor clearColor];
         
@@ -673,15 +674,15 @@ enum
     {
         bundingTipsView.hidden = NO;
         
-        scrollRect.origin.y = 68;
-        scrollRect.size.height = kCurrentWindowHeight - 125 - 30;
-        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - 30);
+        scrollRect.origin.y = 37 + BUNDING_VIEW_HEIGHT;
+        scrollRect.size.height = kCurrentWindowHeight - 125 - BUNDING_VIEW_HEIGHT;
+        scrollView_.contentSize = CGSizeMake(320*PAGE_NUM, kCurrentWindowHeight - 125 - BUNDING_VIEW_HEIGHT);
         topRect.origin.y = 30;
         
-        movieRect.size.height = (kCurrentWindowHeight - 130 - 30);
-        tvRect.size.height = (kCurrentWindowHeight - 130 - 30);
-        showRect.size.height = (kCurrentWindowHeight - 130 - 30);
-        comicRect.size.height = (kCurrentWindowHeight - 130 - 30);
+        movieRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
+        tvRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
+        showRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
+        comicRect.size.height = (kCurrentWindowHeight - 130 - BUNDING_VIEW_HEIGHT);
         
     }
     else if (TYPE_UNBUNDING == type)

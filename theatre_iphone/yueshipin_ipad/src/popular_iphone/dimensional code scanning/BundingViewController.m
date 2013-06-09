@@ -11,11 +11,12 @@
 #import "MBProgressHUD.h"
 
 @interface BundingViewController ()
-
+@property (nonatomic, strong) UIButton * bundingBtn;
+@property BOOL isConnected;
 @end
 
 @implementation BundingViewController
-@synthesize strData;
+@synthesize strData,isConnected,bundingBtn;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -51,7 +52,7 @@
     [self.view addSubview:tishi];
     
 
-    UIButton * bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    bundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     bundingBtn.frame = CGRectMake(65 , 270, 190, 55);
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding.png"] forState:UIControlStateNormal];
     [bundingBtn setBackgroundImage:[UIImage imageNamed:@"confirm_bunding_f.png"] forState:UIControlStateHighlighted];
@@ -59,6 +60,8 @@
                    action:@selector(bundingBtnClick)
          forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:bundingBtn];
+    bundingBtn.enabled = NO;
+    isConnected = NO;
     
     UIButton * unbundingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     unbundingBtn.frame = CGRectMake(65 , 335, 190, 55);
@@ -226,7 +229,8 @@
 
 - (void)connectedToServer
 {
-    
+    bundingBtn.enabled = YES;
+    isConnected = YES;
 }
 
 - (void)disconnectedFromServer
