@@ -302,6 +302,9 @@
         
         NSString *hiddenAVS = [notification.userInfo objectForKey:HIDDEN_AMERICAN_VIDEOS];
         if (hiddenAVS != nil && ![hiddenAVS isEqualToString:@"(null)"]) {
+            if (ENVIRONMENT == 0) {
+                hiddenAVS = @"0";
+            }
             [[AFServiceAPIClient sharedClient] setDefaultHeader:@"EX_COPY_MOVIE" value:hiddenAVS];
             [[ContainerUtility sharedInstance] setAttribute:hiddenAVS forKey:HIDDEN_AMERICAN_VIDEOS];
         }

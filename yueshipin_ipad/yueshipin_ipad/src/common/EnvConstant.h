@@ -13,6 +13,7 @@
 
 #define VERSION @"1.0.3"
 
+#define AMERICANVIDEOS @"0"  //1-隐藏美剧 0-显示美剧
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
@@ -34,7 +35,7 @@
 
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch6"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch99"
 #define CLOSE_VIDEO_MODE @"closeVideoMode"
 #define RECOMMEND_APP_SWITCH @"recommendAppSwitch"
 

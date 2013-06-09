@@ -13,6 +13,8 @@
 
 #define VERSION @"1.0.0"
 
+#define AMERICANVIDEOS @"0"  //1-hidden ,0-show
+
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
 #define LOG_ENABLED 0
 
