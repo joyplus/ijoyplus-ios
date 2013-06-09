@@ -975,8 +975,8 @@
             if (height < 85) {
                 return;
             }
-            summaryBg_.frame = CGRectMake(14, 35, 292, height+5);
-            summaryLabel_.frame = CGRectMake(28, 35, 264,height);
+            summaryBg_.frame = CGRectMake(14, 35, 292, height+10);
+            summaryLabel_.frame = CGRectMake(28, 35+5, 264,height);
             
             
         }

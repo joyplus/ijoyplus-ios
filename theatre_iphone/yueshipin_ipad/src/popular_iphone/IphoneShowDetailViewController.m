@@ -88,7 +88,7 @@
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 25, 292, 90);
-    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 20, 264,90)];
+    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 25, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
     summaryLabel_.numberOfLines = 0;
@@ -691,8 +691,8 @@
         if (height < 85) {
             return;
         }
-        summaryBg_.frame = CGRectMake(14, 25, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-        summaryLabel_.frame = CGRectMake(28, 28, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+        summaryBg_.frame = CGRectMake(14, 25, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+10);
+        summaryLabel_.frame = CGRectMake(28, 30, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
         //moreBtn_.frame = CGRectMake(288, [self heightForString:summary_ fontSize:13 andWidth:271], 18, 14);
         
     }

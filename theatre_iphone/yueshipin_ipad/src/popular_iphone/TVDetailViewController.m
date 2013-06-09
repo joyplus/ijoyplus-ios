@@ -99,7 +99,7 @@
     
     summaryBg_ = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"summryBg.png"] stretchableImageWithLeftCapWidth:50 topCapHeight:50 ]];
     summaryBg_.frame = CGRectMake(14, 35, 292, 90);
-    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 32, 264,90)];
+    summaryLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(28, 35, 264,90)];
     summaryLabel_.textColor = [UIColor grayColor];
     summaryLabel_.backgroundColor = [UIColor clearColor];
     summaryLabel_.numberOfLines = 0;
@@ -1080,8 +1080,8 @@ NSComparator cmptr = ^(id obj1, id obj2){
         if (height < 85) {
             return;
         }
-        summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+5);
-        summaryLabel_.frame = CGRectMake(28, 35, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
+        summaryBg_.frame = CGRectMake(14, 35, 292, [self heightForString:summary_ fontSize:13 andWidth:271]+10);
+        summaryLabel_.frame = CGRectMake(28, 35+5, 264,[self heightForString:summary_ fontSize:13 andWidth:271]);
       
     }
     else{
