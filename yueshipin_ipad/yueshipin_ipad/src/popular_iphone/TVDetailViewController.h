@@ -44,7 +44,7 @@
     UIButton *preDL_;
     BOOL isDownLoad_;
     BOOL isloaded_;
-    
+    BOOL isFavority_; 
     NSArray *arrReviewData_;
 }
 @property (nonatomic, strong) NSDictionary *videoInfo;

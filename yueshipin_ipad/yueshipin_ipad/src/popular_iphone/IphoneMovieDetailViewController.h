@@ -25,7 +25,7 @@
     BOOL _reloading;
     NSUInteger reloads_;
     BOOL isLoaded_;
-    
+    BOOL isFavority_;
     NSArray *arrReviewData_;
 
 }

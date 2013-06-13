@@ -93,7 +93,7 @@
     commentArray_ = [NSMutableArray arrayWithCapacity:10];
     [self loadData];
     [self loadComments];
-    
+    [self isFavority];
     favCount_ = [[self.infoDic objectForKey:@"favority_num" ] intValue];
     supportCount_ = [[self.infoDic objectForKey:@"support_num" ] intValue];
     
@@ -274,6 +274,31 @@ NSComparator cmptr = ^(id obj1, id obj2){
     }];
     
 }
+
+-(void)isFavority{
+    NSString *itemId = [self.infoDic objectForKey:@"prod_id"];
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"content_id"];
+    }
+    if (itemId == nil) {
+        itemId = [self.infoDic objectForKey:@"id"];
+    }
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: itemId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+        }
+        else{
+            isFavority_ = NO;
+        }
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [self performSelector:@selector(loadTable) withObject:nil afterDelay:0.0f];
+    }];
+    
+}
+
 - (void)loadTable {
     [self.tableView reloadData];
 
@@ -498,6 +523,13 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 addFav.tag = 10002;
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang.png"] forState:UIControlStateNormal];
                 [addFav setImage:[UIImage imageNamed:@"icon_shoucang_s.png"] forState:UIControlStateHighlighted];
+                [addFav setImage:[UIImage imageNamed:@"icon_shoucang1"] forState:UIControlStateSelected];
+                if (isFavority_) {
+                    addFav.selected = YES;
+                }
+                else{
+                    addFav.selected = NO;
+                }
                 if (favCount_ <1000) {
                     [addFav setTitle:[NSString stringWithFormat:@"(%d)",favCount_]  forState:UIControlStateNormal];
                     [expectbtn setTitle:[NSString stringWithFormat:@"想 看(%d)",favCount_] forState:UIControlStateNormal];
@@ -912,6 +944,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
         NSString *responseCode = [result objectForKey:@"res_code"];
         
         if([responseCode isEqualToString:kSuccessResCode]){
+            isFavority_ = YES; 
             [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_FAV"object:nil];
             favCount_++;
@@ -925,6 +958,25 @@ NSComparator cmptr = ^(id obj1, id obj2){
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self showOpFailureModalView:1.5 with:type];
     }];
+}
+
+
+-(void)Unfavority{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: prodId_, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            isFavority_ = NO;
+            favCount_--;
+            [self.tableView reloadData];
+            [self showOpSuccessModalView:1.5 with:2];
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+    
 }
 
 -(void)action:(id)sender {
@@ -941,7 +993,12 @@ NSComparator cmptr = ^(id obj1, id obj2){
         }
         case 10002:{
             //[self SubscribingToChannels];
-            [self addVideotoFav:ADDFAV];
+            if (isFavority_) {
+                [self Unfavority];
+            }
+            else{
+                [self addVideotoFav:ADDFAV];
+            }
             break;
         }
         case 10003:{
