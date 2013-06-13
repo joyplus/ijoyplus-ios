@@ -11,7 +11,7 @@
  //0: 测试环境     1. 正式环境
 #define ENVIRONMENT 0
 
-#define VERSION @"1.0.3"
+#define VERSION @"1.0.3alpha"
 
 #define AMERICANVIDEOS @"0"  //1-隐藏美剧 0-显示美剧
 
