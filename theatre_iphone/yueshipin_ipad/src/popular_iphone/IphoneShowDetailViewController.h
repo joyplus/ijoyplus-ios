@@ -28,6 +28,7 @@
     UIButton *moreBtn_;
     PullRefreshManagerClinet *pullToRefreshManager_;
     BOOL isloaded_ ;
+    BOOL isFavority_;
 }
 @property (nonatomic, strong) NSDictionary *videoInfo;
 @property (nonatomic, assign) int videoType;
