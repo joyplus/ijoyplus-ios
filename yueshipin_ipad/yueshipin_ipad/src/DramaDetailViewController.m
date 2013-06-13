@@ -29,6 +29,8 @@
     UIScrollView *episodeView;
     int episodePageNumber;
     int increasePositionY;
+    BOOL isFavority_;
+    int collectioNum;
 }
 
 @property (nonatomic, strong) UIScrollView *pageTabScrollView;
@@ -181,6 +183,7 @@
     self.collectionBtn.frame = CGRectMake(260 + 120, 340, 44, 44);
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection"] forState:UIControlStateNormal];
     [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateHighlighted];
+    [self.collectionBtn setBackgroundImage:[UIImage imageNamed:@"collection_pressed"] forState:UIControlStateSelected];
     [self.collectionBtn addTarget:self action:@selector(collectionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
     
     self.shareBtn.frame = CGRectMake(260 + 180, 340, 44, 44);
@@ -291,6 +294,7 @@
     if(video == nil){
         [self retrieveData];
     }
+    [self isFavority];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -388,6 +392,26 @@
     }
 }
 
+-(void)isFavority{
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:KPathProgramIsfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        int responseCode = [[result objectForKey:@"flag"] intValue];
+        if(responseCode == 1){
+            isFavority_ = YES;
+            self.collectionBtn.selected = YES;
+        }
+        else{
+            isFavority_ = NO;
+            self.collectionBtn.selected = NO;
+        }
+        
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+}
+
 - (void)showValues
 {
     NSString *url = [video objectForKey:@"ipad_poster"];
@@ -444,7 +468,7 @@
     } else {
         self.dingNumberLabel.text = [NSString stringWithFormat:@"顶(%i)", dingNum];
     }
-    int collectioNum = [[video objectForKey:@"favority_num"] intValue];
+     collectioNum = [[video objectForKey:@"favority_num"] intValue];
     if (collectioNum >= 1000) {
         self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
         [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -846,7 +870,6 @@
     }
     
     //[self SubscribingToChannels];
-    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
@@ -854,7 +877,7 @@
             [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            collectioNum++;
             if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -900,17 +923,24 @@
     
     //[self SubscribingToChannels];
     
+    if (isFavority_) {
+        [self unFavority];
+    }
+    else{
+        [self addtoFavority];
+    } 
+}
+
+-(void)addtoFavority{
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramFavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            
             [self SubscribingToChannels];
-            
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-            //            [[NSNotificationCenter defaultCenter] postNotificationName:PERSONAL_VIEW_REFRESH object:nil];
             [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
-            int collectioNum = [[video objectForKey:@"favority_num"] intValue] + 1;
+            isFavority_ = YES;
+            collectioNum++;
             if (collectioNum >= 1000) {
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
@@ -918,12 +948,43 @@
                 [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
             }
+             [self changeCollectionBtnState];
         } else {
-            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"collected"] closeTime:1.5];
+            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
     }];
+}
+
+-(void)unFavority{
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+        NSString *responseCode = [result objectForKey:@"res_code"];
+        if([responseCode isEqualToString:kSuccessResCode]){
+            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            isFavority_ = NO;
+            collectioNum--;
+            if (collectioNum >= 1000) {
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%.1fK)", collectioNum/1000.0];
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%.1fK)", collectioNum/1000.0] forState:UIControlStateNormal];
+            } else {
+                [self.expectbtn setTitle:[NSString stringWithFormat:@"(%i)", collectioNum] forState:UIControlStateNormal];
+                self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
+            }
+            [self changeCollectionBtnState];
+        }
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        [UIUtility showDetailError:self.view error:error];
+    }];
+}
+-(void)changeCollectionBtnState{
+    if (isFavority_) {
+        self.collectionBtn.selected = YES;
+    }
+    else{
+        self.collectionBtn.selected = NO;
+    }
 }
 
 - (void)downloadBtnClicked
