@@ -616,7 +616,7 @@
             [cell addSubview:bgBtn];
             
             NSDictionary *dic = [relevantList_ objectAtIndex:indexPath.row-1];
-            bgBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+            bgBtn.titleLabel.font = [UIFont systemFontOfSize:13];
             [bgBtn setTitle:[dic objectForKey:@"t_name"] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             [bgBtn setTitleColor:[UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1] forState:UIControlStateHighlighted];
