@@ -30,6 +30,7 @@
     UILabel *spaceInfoLabel;
     BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
+    BOOL isItunesFile;
 }
 
 @property (nonatomic, strong)NSArray *allDownloadItems;
@@ -192,13 +193,47 @@
 
 - (void)reloadItems
 {
-    allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
+    isItunesFile = NO;
+    if (![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+        isItunesFile = YES;
+        allDownloadItems = [NSMutableArray arrayWithArray:[self getItunesSyncItems]];
+    }
+    else{
+        allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
+    }
+
+    
     if (allDownloadItems.count == 0) {
         [editBtn setHidden:YES];
     } else {
         [editBtn setHidden:NO];
     }
     [_gmGridView reloadData];
+}
+
+-(NSArray *)getItunesSyncItems{
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:5];
+    NSError *error;
+    // 创建文件管理器
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    //指向文件目录
+    NSString *documentsDirectory= [NSHomeDirectory()
+                                   stringByAppendingPathComponent:@"Documents"];
+    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+    for (NSString *item in fileList) {
+        if ([item hasSuffix:@"mp4"]) {
+            DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.itemId =  @"0";
+            tempDbObj.name = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
+            tempDbObj.fileName = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
+            tempDbObj.downloadStatus = @"done";
+            tempDbObj.type = 1;
+            tempDbObj.percentage = 100;
+            tempDbObj.downloadType = @"mp4";
+            [arr addObject:tempDbObj];
+        }
+    }
+    return arr;
 }
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
@@ -342,7 +377,10 @@
     }
     
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
-    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+    if (!isItunesFile) {
+        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+    }
+    
     [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(10, 10, 105, 146)];
@@ -448,7 +486,10 @@
 {
     if(position < allDownloadItems.count){
         DownloadItem *item = [allDownloadItems objectAtIndex:position];
-        item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+        if (!isItunesFile) {
+             item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+        }
+       
         if([item.downloadStatus isEqualToString:@"done"] && item.type == 1){
             NSString *filePath;
             if ([item.downloadType isEqualToString:@"m3u8"]) {
@@ -456,7 +497,14 @@
             } else {
                 NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                 NSString *documentsDirectory = [paths objectAtIndex:0];
-                filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
+                
+                if (isItunesFile) {
+                    filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.fileName]];
+                }
+                else{
+                    filePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@.mp4", item.itemId]];
+                }
+                
             }
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
             viewController.videoFormat = item.downloadType;
@@ -510,13 +558,15 @@
 - (void)deleteItemWithIndex:(NSInteger)index
 {
     DownloadItem *item = [allDownloadItems objectAtIndex:index];
-    item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+    if (!isItunesFile) {
+         item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
+    }
+
     if ([item.downloadStatus isEqualToString:@"start"]) {
         [[AppDelegate instance].padDownloadManager stopDownloading];
     }
     [self removeLastPlaytime:item];
-    double result = [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = %@", item.itemId]];
-    
+ 
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSArray *contents = [fileManager contentsOfDirectoryAtPath:DocumentsDirectory error:NULL];
     NSEnumerator *e = [contents objectEnumerator];
@@ -532,7 +582,14 @@
             }
         }
     }
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+    NSString *filePath = nil;
+    if (isItunesFile) {
+         filePath = [NSString stringWithFormat:@"%@/%@.mp4", DocumentsDirectory, item.fileName];
+    }
+    else{
+         filePath = [NSString stringWithFormat:@"%@/%@", DocumentsDirectory, item.itemId];
+    }
+   
     if ([fileManager fileExistsAtPath:filePath]) {
         [fileManager removeItemAtPath:filePath error:nil];
     }
