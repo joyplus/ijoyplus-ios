@@ -8,7 +8,8 @@
 
 #import "CategoryUtility.h"
 #import "CategoryItem.h"
-
+#import "CMConstants.h"
+#import "ContainerUtility.h"
 @implementation CategoryUtility
 
 + (NSArray *)getHightlightCategoryByType:(VideoType)type
@@ -88,6 +89,8 @@
     item.value = @"日本";
     [categoryArray addObject:item];
     
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
     item = [[CategoryItem alloc]init];
     item.type = COMIC_TYPE;
     item.subtype = REGION_TYPE;
@@ -95,6 +98,7 @@
     item.key = @"europe";
     item.value = @"欧美";
     [categoryArray addObject:item];
+    }
     
     item = [[CategoryItem alloc]init];
     item.type = COMIC_TYPE;
@@ -364,6 +368,8 @@
     item.value = @"日本";
     [categoryArray addObject:item];
     
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
     item = [[CategoryItem alloc]init];
     item.type = COMIC_TYPE;
     item.subtype = REGION_TYPE;
@@ -371,6 +377,7 @@
     item.key = @"europe";
     item.value = @"欧美";
     [categoryArray addObject:item];
+    }
     
     item = [[CategoryItem alloc]init];
     item.type = COMIC_TYPE;
@@ -474,13 +481,27 @@
     item.value = @"台湾";
     [categoryArray addObject:item];
     
-    item = [[CategoryItem alloc]init];
-    item.type = MOVIE_TYPE;
-    item.subtype = REGION_TYPE;
-    item.label = @"美国";
-    item.key = @"america";
-    item.value = @"美国";
-    [categoryArray addObject:item];
+     NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]) {
+        item = [[CategoryItem alloc]init];
+        item.type = MOVIE_TYPE;
+        item.subtype = REGION_TYPE;
+        item.label = @"美国";
+        item.key = @"america";
+        item.value = @"美国";
+        [categoryArray addObject:item];
+    }
+    else{
+    
+        item = [[CategoryItem alloc]init];
+        item.type = MOVIE_TYPE;
+        item.subtype = REGION_TYPE;
+        item.label = @"日本";
+        item.key = @"japan";
+        item.value = @"日本";
+        [categoryArray addObject:item];
+    }
+    
     
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
@@ -733,6 +754,8 @@
     item.value = @"台湾";
     [categoryArray addObject:item];
     
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
     item.subtype = REGION_TYPE;
@@ -740,6 +763,7 @@
     item.key = @"america";
     item.value = @"美国";
     [categoryArray addObject:item];
+    }
     
     item = [[CategoryItem alloc]init];
     item.type = MOVIE_TYPE;
@@ -836,13 +860,26 @@
     item.value = @"内地";
     [categoryArray addObject:item];
     
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = REGION_TYPE;
-    item.label = @"美国";
-    item.key = @"america";
-    item.value = @"美国";
-    [categoryArray addObject:item];
+    
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
+        item = [[CategoryItem alloc]init];
+        item.type = DRAMA_TYPE;
+        item.subtype = REGION_TYPE;
+        item.label = @"美国";
+        item.key = @"america";
+        item.value = @"美国";
+        [categoryArray addObject:item];
+    }
+    else{
+        item = [[CategoryItem alloc]init];
+        item.type = DRAMA_TYPE;
+        item.subtype = REGION_TYPE;
+        item.label = @"日本";
+        item.key = @"japan";
+        item.value = @"日本";
+        [categoryArray addObject:item];
+    }
     
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
@@ -1083,13 +1120,18 @@
     item.value = @"韩国";
     [categoryArray addObject:item];
     
-    item = [[CategoryItem alloc]init];
-    item.type = DRAMA_TYPE;
-    item.subtype = REGION_TYPE;
-    item.label = @"美国";
-    item.key = @"america";
-    item.value = @"美国";
-    [categoryArray addObject:item];
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
+        item = [[CategoryItem alloc]init];
+        item.type = DRAMA_TYPE;
+        item.subtype = REGION_TYPE;
+        item.label = @"美国";
+        item.key = @"america";
+        item.value = @"美国";
+        [categoryArray addObject:item];
+
+    }
+    
     
     item = [[CategoryItem alloc]init];
     item.type = DRAMA_TYPE;
@@ -1178,6 +1220,8 @@
     item.value = @"日韩";
     [categoryArray addObject:item];
     
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
     item = [[CategoryItem alloc]init];
     item.type = SHOW_TYPE;
     item.subtype = REGION_TYPE;
@@ -1185,6 +1229,7 @@
     item.key = @"europe";
     item.value = @"欧美";
     [categoryArray addObject:item];
+    }
     
     item = [[CategoryItem alloc]init];
     item.type = SHOW_TYPE;
@@ -1407,6 +1452,8 @@
     item.value = @"日韩";
     [categoryArray addObject:item];
     
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
     item = [[CategoryItem alloc]init];
     item.type = SHOW_TYPE;
     item.subtype = REGION_TYPE;
@@ -1414,6 +1461,7 @@
     item.key = @"europe";
     item.value = @"欧美";
     [categoryArray addObject:item];
+    }
     
     item = [[CategoryItem alloc]init];
     item.type = SHOW_TYPE;
