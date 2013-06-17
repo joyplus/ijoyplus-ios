@@ -157,7 +157,7 @@
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     
-    isItunesFile = YES;
+    isItunesFile = NO;
     
     if (![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
         isItunesFile = YES;
