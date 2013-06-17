@@ -35,6 +35,7 @@
     NSInteger willPlayIndex;
     NSArray *episodeArray;
     NSString *umengPageName;
+    int playNum;
 }
 @property (strong, nonatomic)NSString *prodId;
 @property (nonatomic, strong)NSString *subname;
