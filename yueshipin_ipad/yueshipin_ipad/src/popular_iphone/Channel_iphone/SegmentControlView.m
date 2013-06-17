@@ -17,14 +17,16 @@
 //#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
 
 #define  COMIC_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil]
-#define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
+//#define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
 
 #define  SHOW_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"播报",@"旅游",@"音乐",@"美食",@"纪实",@"曲艺",@"生活",@"游戏",@"互动",@"财经",@"求职",@"其他", nil]
-#define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
+//#define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
 
 static NSMutableArray *MOVIE_YEAR = nil;
 static NSArray *MOVIE_ALL_AREA = nil;
 static NSArray *TV_ALL_AREA = nil;
+static NSArray *COMIC_ALL_AREA = nil;
+static NSArray *SHOW_ALL_AREA = nil;
 @implementation SegmentControlView
 @synthesize seg = _seg;
 @synthesize movieLabelArr = _movieLabelArr;
@@ -41,10 +43,14 @@ static NSArray *TV_ALL_AREA = nil;
     if ([HiddenAVS isEqualToString:@"0"]){
         MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
         TV_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil];
+        COMIC_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil];
+        SHOW_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil];
     }
     else{
         MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
         TV_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil];
+        COMIC_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"日本",@"国产",@"其他",nil];
+        SHOW_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"其他",nil];
     }
     
     
