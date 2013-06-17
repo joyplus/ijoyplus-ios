@@ -7,12 +7,14 @@
 //
 
 #import "SegmentControlView.h"
+#import "CMConstants.h"
+#import "ContainerUtility.h"
 
 #define MOVIE_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"动作",@"恐怖",@"惊悚",@"爱情",@"悬疑",@"伦理",@"剧情",@"喜剧",@"科幻",@"战争",@"冒险",@"音乐",@"动画",@"运动",@"奇幻",@"传记",@"古装",@"犯罪",@"武侠",@"其他", nil]
-#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
+//#define  MOVIE_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil]
 
 #define  TV_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"剧情",@"情感",@"偶像",@"伦理",@"喜剧",@"犯罪",@"战争",@"古装",@"动作",@"奇幻",@"经典",@"乡村",@"商战",@"历史",@"情景",@"TVB",@"其他", nil]
-#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
+//#define  TV_ALL_AREA   [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil]
 
 #define  COMIC_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"情感",@"科幻",@"热血",@"推理",@"搞笑",@"冒险",@"萝莉",@"校园",@"动作",@"机战",@"运动",@"耽美",@"战争",@"少年",@"少女",@"社会",@"原创",@"亲子",@"益智",@"励志" ,@"百合",@"其他",nil]
 #define  COMIC_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"其他",nil]
@@ -20,8 +22,9 @@
 #define  SHOW_ALL_TYPE  [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"播报",@"旅游",@"音乐",@"美食",@"纪实",@"曲艺",@"生活",@"游戏",@"互动",@"财经",@"求职",@"其他", nil]
 #define  SHOW_ALL_AREA  [NSArray arrayWithObjects:@"全部",@"港台",@"内地",@"日韩",@"欧美",@"其他",nil]
 
-#define  MOVIE_YEAR  [NSArray arrayWithObjects:@"全部",@"2013",@"2012",@"2011",@"2010",@"2009",@"2008",@"2007",@"2006",@"2005",@"其他",nil]
-
+static NSMutableArray *MOVIE_YEAR = nil;
+static NSArray *MOVIE_ALL_AREA = nil;
+static NSArray *TV_ALL_AREA = nil;
 @implementation SegmentControlView
 @synthesize seg = _seg;
 @synthesize movieLabelArr = _movieLabelArr;
@@ -30,13 +33,54 @@
 @synthesize showLabelArr = _showLabelArr;
 @synthesize delegate = _delegate;
 @synthesize segControlBg = _segControlBg;
+
+-(void)initVideoTagArr{
+    
+    //在线参数；
+    NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+    if ([HiddenAVS isEqualToString:@"0"]){
+        MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"美国",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
+        TV_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"美国",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil];
+    }
+    else{
+        MOVIE_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"内地",@"香港",@"台湾",@"日本",@"韩国",@"欧洲",@"东南亚",@"其他",nil];
+        TV_ALL_AREA = [NSArray arrayWithObjects:@"全部",@"香港",@"台湾",@"韩国",@"日本",@"内地",@"其他",nil];
+    }
+    
+    
+    MOVIE_YEAR = [NSMutableArray arrayWithObject:@"全部"];
+    //实例化一个NSDateFormatter对象
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    //设定时间格式,这里可以设置成自己需要的格式
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    //用[NSDate date]可以获取系统当前时间
+    NSString *year = [[dateFormatter stringFromDate:[NSDate date]] substringToIndex:4];
+    
+    for (int i = 0; i < 9; i++) {
+        int year_num = [year intValue]-i;
+        NSString *yearStr = [NSString stringWithFormat:@"%d",year_num];
+        [MOVIE_YEAR addObject:yearStr];
+    }
+    [MOVIE_YEAR addObject:@"其他"];
+}
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"动作",@"科幻",@"爱情",@"更多",nil];
-        _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"韩国",@"日本",@"香港",@"更多",nil];
+        
+        [self initVideoTagArr];
+        
+         NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+        if ([HiddenAVS isEqualToString:@"0"]) {
+            _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"动作",@"科幻",@"爱情",@"更多",nil];
+            _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"韩国",@"日本",@"香港",@"更多",nil];
+        }
+        else{
+            _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"内地",@"动作",@"科幻",@"爱情",@"更多",nil];
+            _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"内地",@"韩国",@"日本",@"香港",@"更多",nil];
+        }
+    
         _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"热血",@"更多",nil];
         _showLabelArr = [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"更多",nil];
         PreKey_ = @"全部";
