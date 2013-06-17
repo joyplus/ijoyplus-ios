@@ -25,7 +25,7 @@
     BOOL isNotification_;
     UISegmentedControl *segmentedControl_;
     NSString *wechatImgStr_;
-
+    int playNum_;
 }
 @property (nonatomic, strong) SinaWeibo *mySinaWeibo;
 @property (nonatomic, strong) NSDictionary *infoDic;
