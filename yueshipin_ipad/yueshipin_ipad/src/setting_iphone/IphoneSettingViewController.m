@@ -114,8 +114,10 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     networkSet.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
 
-    [networkImg addSubview:networkSet];
-    [scrollView addSubview:networkImg];
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+        [networkImg addSubview:networkSet];
+        [scrollView addSubview:networkImg];
+    }
    
     UIButton *clearCache = [UIButton buttonWithType:UIButtonTypeCustom];
     clearCache.frame = CGRectMake(10, 140, 300, 35);

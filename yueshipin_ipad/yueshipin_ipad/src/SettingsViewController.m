@@ -105,7 +105,9 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         
         download3GSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 220, 75, 27)];
         [download3GSwitch addTarget:self action:@selector(Download3GSwitchClicked:) forControlEvents:UIControlEventValueChanged];
-        [self.view addSubview:download3GSwitch];
+        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+          [self.view addSubview:download3GSwitch];
+        }
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         download3GSwitch.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
        
