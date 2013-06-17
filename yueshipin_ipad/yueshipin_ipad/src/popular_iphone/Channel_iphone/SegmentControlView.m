@@ -81,14 +81,17 @@ static NSArray *SHOW_ALL_AREA = nil;
         if ([HiddenAVS isEqualToString:@"0"]) {
             _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"动作",@"科幻",@"爱情",@"更多",nil];
             _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"美国",@"韩国",@"日本",@"香港",@"更多",nil];
+            _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"热血",@"更多",nil];
+          
         }
         else{
             _movieLabelArr = [NSArray arrayWithObjects:@"全部",@"内地",@"动作",@"科幻",@"爱情",@"更多",nil];
             _tvLabelArr = [NSArray arrayWithObjects:@"全部",@"内地",@"韩国",@"日本",@"香港",@"更多",nil];
+            _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"推理",@"国产",@"热血",@"更多",nil];
+            
         }
-    
-        _comicLabelArr = [NSArray arrayWithObjects:@"全部",@"日本",@"欧美",@"国产",@"热血",@"更多",nil];
         _showLabelArr = [NSArray arrayWithObjects:@"全部",@"综艺",@"选秀",@"情感",@"访谈",@"更多",nil];
+    
         PreKey_ = @"全部";
         UIView *segmentBg = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 42)];
         segmentBg.backgroundColor = [UIColor colorWithRed:65/255.0 green:65/255.0 blue:65/255.0 alpha:1];
