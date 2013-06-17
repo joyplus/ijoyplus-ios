@@ -48,7 +48,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UISwitch *download3GSwitch;
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
-    
+    UIImageView * download3GBG;
     UIButton *followBtn;
 }
 
@@ -99,15 +99,14 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [sinaSwitch addTarget:self action:@selector(sinaSwitchClicked:) forControlEvents:UIControlEventValueChanged];
         [self.view addSubview:sinaSwitch];
         
-        UIImageView * download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 200, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 200, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
         download3GBG.image = [UIImage imageNamed:@"setting_3G_bg"];
-        [self.view addSubview:download3GBG];
+        
         
         download3GSwitch = [[UISwitch alloc]initWithFrame:CGRectMake(390, 220, 75, 27)];
         [download3GSwitch addTarget:self action:@selector(Download3GSwitchClicked:) forControlEvents:UIControlEventValueChanged];
-        if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
-          [self.view addSubview:download3GSwitch];
-        }
+        [self.view addSubview:download3GBG];
+        [self.view addSubview:download3GSwitch];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         download3GSwitch.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
        
@@ -200,6 +199,15 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch.on = YES;
         NSString *username = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:kUserNickName];
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
+    }
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+        
+        download3GSwitch.hidden = NO;
+        download3GBG.hidden = NO;
+    }
+    else{
+        download3GSwitch.hidden = YES;
+        download3GBG.hidden = YES;
     }
     [MobClick beginLogPageView:SETTING];
 }
