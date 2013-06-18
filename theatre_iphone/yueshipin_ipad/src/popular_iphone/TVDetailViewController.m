@@ -584,7 +584,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
                 [downLoad addTarget:self action:@selector(action:) forControlEvents:UIControlEventTouchUpInside];
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isloaded_) {
-                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                    if ([CommonMotheds getOnlineConfigValue] == 0){
                         [cell addSubview:downLoad];
                     }
                      [cell addSubview:expectbtn];

@@ -521,7 +521,7 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
-                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                    if ([CommonMotheds getOnlineConfigValue] == 0){
                         [cell addSubview:downLoad];
                     }
                 }
