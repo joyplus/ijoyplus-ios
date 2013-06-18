@@ -501,6 +501,7 @@
                                                           delegate:self
                                                  cancelButtonTitle:@"取消"
                                                  otherButtonTitles:@"确定", nil];
+         alertView.tag = 8888;
         [alertView show];
     } else {
         [self willPlayVideo:num];
@@ -509,8 +510,23 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
+    if (alertView.tag == 8888) {
+          if(buttonIndex == 1){
+            [self willPlayVideo:willPlayIndex];
+        }
+    }
+    else if(alertView.tag == 9999){
+        NSDictionary *dic = [episodesArr_ objectAtIndex:playNum_];
+        NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
+        NSDictionary *urlInfo = [webUrlArr objectAtIndex:0];
+
+        if (buttonIndex == 0) {
+              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
+        }
+        else if(buttonIndex == 1){
+             [self beginPlayVideo:playNum_];
+         }
+        
     }
 }
 
@@ -519,7 +535,7 @@
     if (num < 0 || num >= episodesArr_.count) {
         return;
     }
-    
+     playNum_ = num;
     if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"2"]) {
         NSDictionary *dic = [episodesArr_ objectAtIndex:num];
         NSArray *webUrlArr = [dic objectForKey:@"video_urls"];
@@ -527,7 +543,16 @@
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[urlInfo objectForKey:@"url"]]];
         return;
     }
-    
+    else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]){
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"将使用何种方式来播放？" delegate:self cancelButtonTitle:@"Safari" otherButtonTitles:@"内置浏览器", nil];
+                alert.tag = 9999;
+                [alert show];
+                return;
+            }
+    [self beginPlayVideo:num];
+       
+}
+-(void)beginPlayVideo:(int)num{
     NSDictionary * info = [self downloadedItem:self.prodId index:num-1];
     if (nil != info)
     {

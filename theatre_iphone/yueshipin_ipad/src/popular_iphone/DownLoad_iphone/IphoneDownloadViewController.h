@@ -22,6 +22,7 @@
     float totalFreeSpace_;
     DownLoadManager *downLoadManager_;
     UIImageView *noItemView_;
+    BOOL isItunesFile;  
 }
 @property (nonatomic, strong)UIBarButtonItem *editButtonItem;
 @property (nonatomic, strong)UIBarButtonItem *doneButtonItem;

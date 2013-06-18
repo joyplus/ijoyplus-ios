@@ -112,8 +112,10 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     networkSet.onTintColor = [UIColor colorWithRed:247/255.0 green:122/255.0 blue:151/255.0 alpha:1];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     networkSet.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
-    [networkImg addSubview:networkSet];
-    [scrollView addSubview:networkImg];
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+            [networkImg addSubview:networkSet];
+            [scrollView addSubview:networkImg];
+    }
     
     
     sinaweibo_ = [AppDelegate instance].sinaweibo;
