@@ -46,7 +46,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.title = @"今晚剧场";
+    self.title = @"今晚影视";
     
     UIImageView *backGround = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background_common.png"]];
     backGround.frame = CGRectMake(0, 0, 320, kFullWindowHeight-64);

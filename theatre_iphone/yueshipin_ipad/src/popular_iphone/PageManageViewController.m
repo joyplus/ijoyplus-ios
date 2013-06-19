@@ -26,6 +26,8 @@
 #import "IntroductionView.h"
 #import "DatabaseManager.h"
 #import "UIUtility.h"
+#import "ContainerUtility.h"
+#import "CMConstants.h"
 #define PAGE_NUM 4
 #define TV_TYPE 9000
 #define MOVIE_TYPE 9001
@@ -98,9 +100,14 @@ enum
         self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [cacheResult objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            //NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[cacheResult objectForKey:@"tops"]];
             if(tempTopsArray.count > 0){
-
+                NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+                if ([HiddenAVS isEqualToString:@"1"]){
+                    [tempTopsArray removeObjectAtIndex:0];
+                
+                }
                 [ self.tvListArr addObjectsFromArray:tempTopsArray];
             }
         }
@@ -118,8 +125,13 @@ enum
         self.tvListArr = [[NSMutableArray alloc]initWithCapacity:PAGESIZE];
         NSString *responseCode = [result objectForKey:@"res_code"];
         if(responseCode == nil){
-            NSArray *tempTopsArray = [result objectForKey:@"tops"];
+            NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[result objectForKey:@"tops"]];
+            //NSArray *tempTopsArray = [result objectForKey:@"tops"];
             if(tempTopsArray.count > 0){
+                NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+                if ([HiddenAVS isEqualToString:@"1"]) {
+                    [tempTopsArray removeObjectAtIndex:0];
+                }
                [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
                 [ self.tvListArr addObjectsFromArray:tempTopsArray];
             }

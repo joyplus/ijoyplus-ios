@@ -63,7 +63,7 @@
     }
     self.title = name;
     textView_ = [[UITextView alloc] initWithFrame:CGRectMake(20, 50, 280, 80)];
-    textView_.text = [NSString stringWithFormat:@"我刚看了#%@#，分享一下吧。更多精彩尽在今晚剧场，欢迎下载：http://ums.bz/REGLDb/。",[infoDic_ objectForKey:@"name"]];
+    textView_.text = [NSString stringWithFormat:@"我刚看了#%@#，分享一下吧。更多精彩尽在今晚影视，欢迎下载：http://um0.cn/21NCpr/。",[infoDic_ objectForKey:@"name"]];
 
     [textView_ becomeFirstResponder];
     UIButton *share = [UIButton buttonWithType:UIButtonTypeCustom];

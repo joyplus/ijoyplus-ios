@@ -74,7 +74,7 @@
                                                  selector:@selector(initWebView)
                                                      name:@"addWebView"
                                                    object:nil];
-    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]) {
+    } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]||[[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]) {
         [self initWebView];
     }
     
