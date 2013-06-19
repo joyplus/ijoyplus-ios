@@ -157,7 +157,40 @@
     progressViewDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     progressLabelDic_ = [NSMutableDictionary dictionaryWithCapacity:5];
     
-    itemArr_ = [NSMutableArray arrayWithArray:[DatabaseManager allObjects:[DownloadItem class]]];
+    isItunesFile = NO;
+    
+    if (![[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+        isItunesFile = YES;
+        itemArr_ = [NSMutableArray arrayWithArray:[self getItunesSyncItems]];
+    }
+    else{
+       itemArr_ = [NSMutableArray arrayWithArray:[DatabaseManager allObjects:[DownloadItem class]]];
+    }
+}
+
+-(NSArray *)getItunesSyncItems{
+    NSMutableArray *arr = [NSMutableArray arrayWithCapacity:5];
+    NSError *error;
+    // 创建文件管理器
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    //指向文件目录
+    NSString *documentsDirectory= [NSHomeDirectory()
+                                   stringByAppendingPathComponent:@"Documents"];
+    NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
+    for (NSString *item in fileList) {
+        if ([item hasSuffix:@"mp4"]) {
+            DownloadItem *tempDbObj = [[DownloadItem alloc]init];
+            tempDbObj.itemId =  @"0";
+            tempDbObj.name = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
+            tempDbObj.fileName = [[item componentsSeparatedByString:@"."] objectAtIndex:0];
+            tempDbObj.downloadStatus = @"finish";
+            tempDbObj.type = 1;
+            tempDbObj.percentage = 100;
+            tempDbObj.downloadType = @"mp4";
+            [arr addObject:tempDbObj];
+        }
+    }
+    return arr;
 }
 -(void)reloadDataSource{
     [self initData];
@@ -428,13 +461,19 @@
             NSString *playPath = nil;
               
             if (![item.downloadType isEqualToString:@"m3u8"]) {
-                NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
-                for (NSString *str in fileList) {
-                    if ([str isEqualToString:fileName]) {
-                        playPath = [documentsDirectory stringByAppendingPathComponent:str];
-                        break;
+                if (!isItunesFile) {
+                    NSString *fileName = [item.itemId stringByAppendingString:@".mp4"];
+                    for (NSString *str in fileList) {
+                        if ([str isEqualToString:fileName]) {
+                            playPath = [documentsDirectory stringByAppendingPathComponent:str];
+                            break;
+                        }
                     }
                 }
+                else{
+                  playPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp4",item.fileName]];
+                }
+                
             }
             else{
                 [[AppDelegate instance] startHttpServer];
@@ -540,8 +579,7 @@
 
 - (void)deleteItemWithIndex:(NSInteger)index
 {
-    [itemArr_ removeObjectAtIndex:index];
-    
+   
     //对于错误信息
     NSError *error;
     // 创建文件管理器
@@ -551,7 +589,7 @@
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
     
-    DownloadItem *item = [[DatabaseManager allObjects:[DownloadItem class]] objectAtIndex:index];
+    DownloadItem *item = [itemArr_ objectAtIndex:index];
     NSString *itemId = item.itemId;
     NSString *subquery = [NSString stringWithFormat:@"WHERE itemId = '%@'",itemId];
     if ([item.downloadType isEqualToString:@"m3u8"]) {   //m3u8 直接删除对应的文件夹
@@ -580,16 +618,23 @@
         [DownLoadManager stopAndClear:itemId];
         
         //删除 对应的文件
-        for (NSString *nameStr in fileList) {
-            if (/*[nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]||*/[nameStr hasPrefix:itemId]) {
-                NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
-                [fileMgr removeItemAtPath:deleteFilePath error:&error];
+        if (!isItunesFile) {
+            for (NSString *nameStr in fileList) {
+                if (/*[nameStr hasPrefix:fileName] || [nameStr hasPrefix:subfileName]||*/[nameStr hasPrefix:itemId]) {
+                    NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:nameStr];
+                    [fileMgr removeItemAtPath:deleteFilePath error:&error];
+                }
             }
         }
+        else{
+            NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp4",item.fileName]];
+            [fileMgr removeItemAtPath:deleteFilePath error:&error];
+        }
+    
         
     }
     
-    
+    [itemArr_ removeObjectAtIndex:index];
     [DownLoadManager stopAndClear:itemId];
     [DatabaseManager deleteObject:item];
     [[DownLoadManager defaultDownLoadManager]waringPlus];

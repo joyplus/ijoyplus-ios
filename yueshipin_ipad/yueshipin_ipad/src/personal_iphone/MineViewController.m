@@ -829,6 +829,10 @@
     }
     else if (tableView.tag == Fav_TYPE){
         NSDictionary *dic = [favArr_ objectAtIndex:indexPath.row];
+        
+        if ([[dic objectForKey:@"hide"] isEqualToString:@"1"])
+            return;
+        
         NSString *type = [dic objectForKey:@"content_type"];
         if ([type isEqualToString:@"1"]) {
             IphoneMovieDetailViewController *detailViewController = [[IphoneMovieDetailViewController alloc] init];

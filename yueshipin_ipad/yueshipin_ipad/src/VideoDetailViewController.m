@@ -415,6 +415,7 @@
                                                           delegate:self
                                                  cancelButtonTitle:@"取消"
                                                  otherButtonTitles:@"确定", nil];
+        alertView.tag = 8888;
         [alertView show];
     } else {
         [self willPlayVideo:num];
@@ -423,9 +424,38 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex == 1){
-        [self willPlayVideo:willPlayIndex];
+    if (alertView.tag == 8888) {
+        if(buttonIndex == 1){
+            [self willPlayVideo:willPlayIndex];
+        }
     }
+    else{
+        NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
+        for (int i = 0; i < episodeArray.count; i++) {
+            NSArray *videoUrls = [[episodeArray objectAtIndex:i] objectForKey:@"video_urls"];
+            BOOL found = NO;
+            for (NSDictionary *videoUrl in videoUrls) {
+                NSString *url = [NSString stringWithFormat:@"%@", [videoUrl objectForKey:@"url"]];
+                if([self validadUrl:url]){
+                    NSString *httpUrl = [url stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    [httpUrlArray addObject:httpUrl];
+                    found = YES;
+                    break;
+                }
+            }
+            if (!found) {
+                [httpUrlArray addObject:@""];
+            }
+        }
+        if (buttonIndex == 0) {
+             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[httpUrlArray objectAtIndex:0]]];
+        }
+        else if(buttonIndex == 1){
+            [self beginPlayVideo:playNum withArray:httpUrlArray];
+        }
+        
+    }
+    
 }
 
 - (void)willPlayVideo:(int)num
@@ -433,6 +463,7 @@
     if(num < 0 || num >= episodeArray.count){
         return;
     }
+    playNum = num;
     [self recordPlayStatics];
     // 网页地址
     NSMutableArray *httpUrlArray = [[NSMutableArray alloc]initWithCapacity:5];
@@ -459,62 +490,74 @@
         } else {
             [UIUtility showPlayVideoFailure:self.view];
         }
+        return;
     }
-    else
+    else if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"将使用何种方式来播放？" delegate:self cancelButtonTitle:@"Safari" otherButtonTitles:@"内置浏览器", nil];
+        alert.tag = 9999;
+        [alert show];
+        return;
+    
+    }
+    
+    [self beginPlayVideo:num withArray:httpUrlArray];
+    
+}
+
+-(void)beginPlayVideo:(int)num  withArray:(NSMutableArray *)httpUrlArray{
+
+    NSDictionary * info = [self downloadedItem:self.prodId index:num];
+    if (nil != info)
     {
-        NSDictionary * info = [self downloadedItem:self.prodId index:num];
-        if (nil != info)
+        AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
+        viewController.videoFormat = [info objectForKey:@"downloadType"];
+        viewController.isDownloaded = YES;
+        viewController.m3u8Duration = [[info objectForKey:@"duration"] intValue];
+        viewController.closeAll = YES;
+        viewController.videoUrl = [info objectForKey:@"videoUrl"];
+        viewController.type = type;
+        viewController.name = [video objectForKey:@"name"];//[info objectForKey:@"name"];
+        if (type == SHOW_TYPE)
         {
-            AVPlayerViewController *viewController = [[AVPlayerViewController alloc]init];
-            viewController.videoFormat = [info objectForKey:@"downloadType"];
-            viewController.isDownloaded = YES;
-            viewController.m3u8Duration = [[info objectForKey:@"duration"] intValue];
-            viewController.closeAll = YES;
-            viewController.videoUrl = [info objectForKey:@"videoUrl"];
-            viewController.type = type;
-            viewController.name = [video objectForKey:@"name"];//[info objectForKey:@"name"];
-            if (type == SHOW_TYPE)
-            {
-                viewController.subname = [info objectForKey:@"name"];
-            } else {
-                viewController.subname = [info objectForKey:@"subItemId"];
-            }
-            viewController.currentNum = num;
-            viewController.prodId = self.prodId;
-            viewController.video = video;
-            viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
-            [[UIApplication sharedApplication] setStatusBarHidden:YES];
-            [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
-            return;
+            viewController.subname = [info objectForKey:@"name"];
+        } else {
+            viewController.subname = [info objectForKey:@"subItemId"];
         }
-        
-        BOOL hasVideoUrls = NO;
-        for (int i = 0; i < episodeArray.count; i++) {
-            NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-            if(videoUrlArray.count > 0){
-                for(NSDictionary *tempVideo in videoUrlArray){
-                    hasVideoUrls = YES;
-                    break;
-                }
-            }
-            if (hasVideoUrls) {
+        viewController.currentNum = num;
+        viewController.prodId = self.prodId;
+        viewController.video = video;
+        viewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, 768);
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+        [[AppDelegate instance].rootViewController pesentMyModalView:viewController];
+        return;
+    }
+    
+    BOOL hasVideoUrls = NO;
+    for (int i = 0; i < episodeArray.count; i++) {
+        NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
+        if(videoUrlArray.count > 0){
+            for(NSDictionary *tempVideo in videoUrlArray){
+                hasVideoUrls = YES;
                 break;
             }
         }
-        
-        AvVideoWebViewController *webViewController = [[AvVideoWebViewController alloc] init];
-        webViewController.videoHttpUrlArray = httpUrlArray;
-        webViewController.prodId = self.prodId;
-        webViewController.hasVideoUrls = hasVideoUrls;
-        webViewController.type = type;
-        webViewController.currentNum = num;
-        webViewController.dramaDetailViewControllerDelegate = self;
-        webViewController.video = video;
-        webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
+        if (hasVideoUrls) {
+            break;
+        }
     }
-}
+    
+    AvVideoWebViewController *webViewController = [[AvVideoWebViewController alloc] init];
+    webViewController.videoHttpUrlArray = httpUrlArray;
+    webViewController.prodId = self.prodId;
+    webViewController.hasVideoUrls = hasVideoUrls;
+    webViewController.type = type;
+    webViewController.currentNum = num;
+    webViewController.dramaDetailViewControllerDelegate = self;
+    webViewController.video = video;
+    webViewController.view.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
+    [[AppDelegate instance].rootViewController pesentMyModalView:[[UINavigationController alloc]initWithRootViewController:webViewController]];
 
+}
 - (void)recordPlayStatics
 {
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:type], @"prod_type", nil];
