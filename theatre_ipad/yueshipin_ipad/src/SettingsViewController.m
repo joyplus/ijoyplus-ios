@@ -48,6 +48,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
     UILabel *sinaUsernameLabel;
     SinaWeibo *_sinaweibo;
     UISwitch *download3GSwitch;
+    UIImageView * download3GBG;
     UIButton *followBtn;
 }
 
@@ -99,7 +100,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaSwitch.onTintColor = [UIColor colorWithRed:1 green:159.0/255.0 blue:204.0/255.0 alpha:1];
         [self.view addSubview:sinaSwitch];
         
-        UIImageView * download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 185, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
+        download3GBG = [[UIImageView alloc]initWithFrame:CGRectMake(leftWidth, 185, SETTING_OPTION_WIDTH, SETTING_OPTION_SINA_HEIGHT)];
         download3GBG.image = [UIImage imageNamed:@"setting_3G_bg"];
         [self.view addSubview:download3GBG];
         
@@ -200,6 +201,16 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         sinaUsernameLabel.text = [NSString stringWithFormat:@"(%@)", username];
     }
     [MobClick beginLogPageView:SETTING];
+    
+    if ([[AppDelegate instance].showVideoSwitch isEqualToString:@"0"]){
+        download3GSwitch.hidden = NO;
+        download3GBG.hidden = NO;
+    }
+    else{
+        download3GSwitch.hidden = YES;
+        download3GBG.hidden = YES;
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
