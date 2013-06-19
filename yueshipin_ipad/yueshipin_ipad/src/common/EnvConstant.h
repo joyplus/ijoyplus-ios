@@ -37,7 +37,7 @@
 //友盟在线参数
 #define SHOW_VIDEO_SWITCH @"showVideoSwitch99"
 #define CLOSE_VIDEO_MODE @"closeVideoMode"
-#define RECOMMEND_APP_SWITCH @"recommendAppSwitch"
+#define RECOMMEND_APP_SWITCH @"recommendAppSwitch1"
 
 
 //正式环境

@@ -282,6 +282,7 @@
 		22FEEED3168D463A00A71EF4 /* TVDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEED2168D463900A71EF4 /* TVDetailViewController.m */; };
 		22FEEEDD168D474D00A71EF4 /* IphoneMovieDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */; };
 		22FEEEE3168D4C7F00A71EF4 /* IphoneShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */; };
+		2A242BA91771CD0C00696FAF /* my_setting_version@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A242BA81771CD0C00696FAF /* my_setting_version@2x.png */; };
 		2A756BF01769B0FC00441FE8 /* icon_shoucang1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A756BEF1769B0FC00441FE8 /* icon_shoucang1@2x.png */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		E71A4450172B6F0000416565 /* xinshouyindao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */; };
@@ -1391,6 +1392,7 @@
 		22FEEEDC168D474C00A71EF4 /* IphoneMovieDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneMovieDetailViewController.m; sourceTree = "<group>"; };
 		22FEEEE1168D4C5C00A71EF4 /* IphoneShowDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IphoneShowDetailViewController.h; sourceTree = "<group>"; };
 		22FEEEE2168D4C6400A71EF4 /* IphoneShowDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IphoneShowDetailViewController.m; sourceTree = "<group>"; };
+		2A242BA81771CD0C00696FAF /* my_setting_version@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "my_setting_version@2x.png"; path = "yueshipin_ipad/Resource_iphone/my_setting_version@2x.png"; sourceTree = SOURCE_ROOT; };
 		2A756BEF1769B0FC00441FE8 /* icon_shoucang1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_shoucang1@2x.png"; path = "yueshipin_ipad/Resource_iphone/icon_shoucang1@2x.png"; sourceTree = SOURCE_ROOT; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2636,6 +2638,7 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				2A242BA81771CD0C00696FAF /* my_setting_version@2x.png */,
 				2A756BEF1769B0FC00441FE8 /* icon_shoucang1@2x.png */,
 				E754B6A6175722F60077CCA9 /* fengexian_gengduo@2x.png */,
 				E754B6A41757229F0077CCA9 /* jiantou_gengduo@2x.png */,
@@ -4780,6 +4783,7 @@
 				2223E03A176474C20010BA41 /* off_shelf_icon@2x.png in Resources */,
 				2223E03B176474C20010BA41 /* off_shelf@2x.png in Resources */,
 				2A756BF01769B0FC00441FE8 /* icon_shoucang1@2x.png in Resources */,
+				2A242BA91771CD0C00696FAF /* my_setting_version@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
