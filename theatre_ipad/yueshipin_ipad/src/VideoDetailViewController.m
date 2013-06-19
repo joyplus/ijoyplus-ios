@@ -589,8 +589,9 @@
     viewController.titleContent = [commentItem objectForKey:@"title"];
     viewController.content = [commentItem objectForKey:@"comments"];
     viewController.parentDelegateController = self;
-    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:YES];
-    self.moveToLeft = NO;
+    viewController.preViewController = self;
+    [[AppDelegate instance].rootViewController.stackScrollViewController addViewInSlider:viewController invokeByController:self isStackStartView:FALSE removePreviousView:YES moveToLeft:self.moveToLeft];
+    //self.moveToLeft = NO;
 }
 
 - (void)hideCloseBtn
