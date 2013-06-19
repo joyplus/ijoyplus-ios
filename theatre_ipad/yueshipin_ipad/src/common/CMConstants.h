@@ -96,7 +96,7 @@
 
 #define degreesToRadian(x) (3.14159265358979323846 * x/ 180.0)
 
-#define APPIRATER_APP_ID				(648175233)
+#define APPIRATER_APP_ID				(663599385)
 
 #define WATCH_RECORD_CACHE_KEY @"watch_record2"
 
