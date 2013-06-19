@@ -175,7 +175,8 @@
 
 - (void)unbundingBtnClick
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)dismissHUDView
