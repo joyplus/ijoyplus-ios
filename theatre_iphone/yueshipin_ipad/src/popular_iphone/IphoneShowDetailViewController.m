@@ -647,9 +647,10 @@
                         favCount_++;
                         [self showOpSuccessModalView:1 with:DING];
                         [self.tableView reloadData];
-                    } else {
-                        [self showOpFailureModalView:1 with:DING];
                     }
+//                    else {
+//                        [self showOpFailureModalView:1 with:DING];
+//                    }
                     
                 } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
                     [self showOpFailureModalView:1 with:DING];

@@ -951,9 +951,10 @@ NSComparator cmptr = ^(id obj1, id obj2){
             [self showOpSuccessModalView:1.5 with:type];
             [self.tableView reloadData];
             
-        } else {
-            [self showOpFailureModalView:1.5 with:type];
         }
+//        else {
+//            [self showOpFailureModalView:1.5 with:type];
+//        }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [self showOpFailureModalView:1.5 with:type];
