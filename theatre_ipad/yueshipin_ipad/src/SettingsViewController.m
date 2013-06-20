@@ -111,21 +111,35 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         download3GSwitch.on = [[defaults objectForKey:@"isSupport3GDownload"] boolValue];
        
         clearCacheBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        clearCacheBtn.frame = CGRectMake(leftWidth, download3GBG.frame.origin.y + download3GBG.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        clearCacheBtn.frame = CGRectMake(leftWidth, download3GBG.frame.origin.y + download3GBG.frame.size.height + 30, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean"] forState:UIControlStateNormal];
         [clearCacheBtn setBackgroundImage:[UIImage imageNamed:@"clean_pressed"] forState:UIControlStateHighlighted];
         [clearCacheBtn addTarget:self action:@selector(clearCacheBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:clearCacheBtn];
         
         suggestionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        suggestionBtn.frame = CGRectMake(leftWidth, clearCacheBtn.frame.origin.y + clearCacheBtn.frame.size.height, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice"] forState:UIControlStateNormal];
         [suggestionBtn setBackgroundImage:[UIImage imageNamed:@"advice_pressed"] forState:UIControlStateHighlighted];
         [suggestionBtn addTarget:self action:@selector(suggestionBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:suggestionBtn];
         
+        aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        aboutBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
+        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
+        [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:aboutBtn];
+        
+        UIButton *checkUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        checkUpdateBtn.frame = CGRectMake(leftWidth, aboutBtn.frame.origin.y + aboutBtn.frame.size.height, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate"] forState:UIControlStateNormal];
+        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate_pressed"] forState:UIControlStateHighlighted];
+        [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:checkUpdateBtn];
+        
         commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        commentBtn.frame = CGRectMake(leftWidth, suggestionBtn.frame.origin.y + suggestionBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        commentBtn.frame = CGRectMake(leftWidth, checkUpdateBtn.frame.origin.y + checkUpdateBtn.frame.size.height, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions"] forState:UIControlStateNormal];
         [commentBtn setBackgroundImage:[UIImage imageNamed:@"opinions_pressed"] forState:UIControlStateHighlighted];
         [commentBtn addTarget:self action:@selector(commentBtnClicked) forControlEvents:UIControlEventTouchUpInside];
@@ -139,25 +153,25 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         [self.view addSubview:followBtn];
         
         speakBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        speakBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        speakBtn.frame = CGRectMake(leftWidth, followBtn.frame.origin.y + followBtn.frame.size.height, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause"] forState:UIControlStateNormal];
         [speakBtn setBackgroundImage:[UIImage imageNamed:@"clause_pressed"] forState:UIControlStateHighlighted];
         [speakBtn addTarget:self action:@selector(speakBtnClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:speakBtn];
         
-        UIButton *checkUpdateBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        checkUpdateBtn.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
-        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate"] forState:UIControlStateNormal];
-        [checkUpdateBtn setBackgroundImage:[UIImage imageNamed:@"checkupdate_pressed"] forState:UIControlStateHighlighted];
-        [checkUpdateBtn addTarget:self action:@selector(checkUpdateBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:checkUpdateBtn];
+        UIButton *versions = [UIButton buttonWithType:UIButtonTypeCustom];
+        versions.frame = CGRectMake(leftWidth, speakBtn.frame.origin.y + speakBtn.frame.size.height, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
+        [versions setBackgroundImage:[UIImage imageNamed:@"version"] forState:UIControlStateNormal];
+        [versions setBackgroundImage:[UIImage imageNamed:@"version"] forState:UIControlStateHighlighted];
+        [self.view addSubview:versions];
         
-        aboutBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        aboutBtn.frame = CGRectMake(leftWidth, checkUpdateBtn.frame.origin.y + checkUpdateBtn.frame.size.height + 15, SETTING_OPTION_WIDTH, SETTING_OPTION_OTHER_HEIGHT);
-        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about"] forState:UIControlStateNormal];
-        [aboutBtn setBackgroundImage:[UIImage imageNamed:@"about_pressed"] forState:UIControlStateHighlighted];
-        [aboutBtn addTarget:self action:@selector(aboutBtnClicked) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:aboutBtn];
+        UILabel *versionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(257, 0, 200, SETTING_OPTION_OTHER_HEIGHT)];
+        versionsLabel.backgroundColor = [UIColor clearColor];
+        NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+        versionsLabel.text = bundleVersion;
+        versionsLabel.textColor = [UIColor grayColor];
+        [versions addSubview:versionsLabel];
+
         
         
     }
