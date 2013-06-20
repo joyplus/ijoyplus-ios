@@ -938,7 +938,7 @@
         if([responseCode isEqualToString:kSuccessResCode]){
             [self SubscribingToChannels];
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            [[AppDelegate instance].rootViewController showCollectSucceed];
             isFavority_ = YES;
             collectioNum++;
             if (collectioNum >= 1000) {
@@ -949,9 +949,10 @@
                 self.collectionNumberLabel.text = [NSString stringWithFormat:@"收藏(%i)", collectioNum];
             }
              [self changeCollectionBtnState];
-        } else {
-            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
         }
+//        else {
+//            [[AppDelegate instance].rootViewController showModalView:[UIImage imageNamed:@"expect_succeed"] closeTime:1.5];
+//        }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
         [UIUtility showDetailError:self.view error:error];
     }];
@@ -962,7 +963,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            [[AppDelegate instance].rootViewController showCancelCollectSucceed];
             isFavority_ = NO;
             collectioNum--;
             if (collectioNum >= 1000) {

@@ -218,21 +218,48 @@
         [view addSubview:label];
     }
     else if (type == DING
-             || type == ADDFAV
              || ADDEXPECT == type)
     {
-         UIImageView *temp = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"operation_is_successful.png"]];
-        temp.frame = CGRectMake(0, 0, 92, 27);
-        temp.center = view.center;
-        [view addSubview:temp];
+        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+        label.backgroundColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0.9;
+        label.center = view.center;
+        label.layer.masksToBounds = YES;
+        label.layer.cornerRadius = 6.0;
+        label.text = @"操作成功";
+        [view addSubview:label];
         
-        if (ADDEXPECT == type)
-        {
-            
-        }
+    }
+    else if(type == ADDFAV){
+        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+        label.backgroundColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0.9;
+        label.center = view.center;
+        label.layer.masksToBounds = YES;
+        label.layer.cornerRadius = 6.0;
+        label.text = @"收藏成功";
+        [view addSubview:label];
+    }
+    else if(type == UN_ADDFAV){
+        UILabel *label = [[UILabel alloc] initWithFrame: CGRectMake(0, 0, 92, 27)];
+        label.backgroundColor = [UIColor blackColor];
+        label.font = [UIFont systemFontOfSize:12];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        label.alpha = 0.9;
+        label.center = view.center;
+        label.layer.masksToBounds = YES;
+        label.layer.cornerRadius = 6.0;
+        label.text = @"取消成功";
+        [view addSubview:label];
     }
     
-    //[[AppDelegate instance].window addSubview:view];
     [self.view addSubview:view];
     [NSTimer scheduledTimerWithTimeInterval:closeTime target:self selector:@selector(removeOverlay) userInfo:nil repeats:NO];
 }

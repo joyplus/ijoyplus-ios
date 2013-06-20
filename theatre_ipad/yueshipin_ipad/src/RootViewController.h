@@ -68,6 +68,8 @@
 - (void)showSuccessModalView:(int)closeTime;
 - (void)showFailureModalView:(int)closeTime;
 - (void)showListFailureModalView:(int)closeTime;
+-(void)showCollectSucceed;
+-(void)showCancelCollectSucceed;
 - (void)showSharePopup;
 - (void)showCommentPopup;
 - (void)pesentMyModalView:(UIViewController *)viewController;

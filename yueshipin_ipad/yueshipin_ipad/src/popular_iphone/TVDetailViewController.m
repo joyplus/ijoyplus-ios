@@ -969,7 +969,7 @@ NSComparator cmptr = ^(id obj1, id obj2){
             isFavority_ = NO;
             favCount_--;
             [self.tableView reloadData];
-            [self showOpSuccessModalView:1.5 with:2];
+            [self showOpSuccessModalView:1.5 with:5];
         }
         
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

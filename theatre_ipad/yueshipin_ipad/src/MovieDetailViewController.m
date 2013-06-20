@@ -586,7 +586,7 @@
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
             [[NSNotificationCenter defaultCenter] postNotificationName:SEARCH_LIST_VIEW_REFRESH object:nil];
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            [[AppDelegate instance].rootViewController showCollectSucceed];
             isFavority_ = YES;
             collectioNum++;
             if (collectioNum >= 1000) {
@@ -610,7 +610,7 @@
     [[AFServiceAPIClient sharedClient] postPath:kPathProgramUnfavority parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];
         if([responseCode isEqualToString:kSuccessResCode]){
-            [[AppDelegate instance].rootViewController showSuccessModalView:1.5];
+            [[AppDelegate instance].rootViewController showCancelCollectSucceed];
             isFavority_ = NO;
             collectioNum--;
             if (collectioNum >= 1000) {
