@@ -510,8 +510,8 @@
     
     NSArray *fileList = [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error];
     
-    if ([item.fileName hasSuffix:@"m3u8"]) {
-        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:item.itemId];
+    if ([item.downloadType isEqualToString:@"m3u8"]) {
+        NSString *deleteFilePath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",item.itemId,item.subitemId]];
         [fileMgr removeItemAtPath:deleteFilePath error:&error];
     }
     else{
