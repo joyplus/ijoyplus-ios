@@ -772,7 +772,7 @@
                     titleLabel.text = [NSString stringWithFormat:@"%@/%@/%@",year,month,day];
                 }
                 else{
-                    titleLabel.text = curEpisode;
+                    titleLabel.text = nil;
                 }
                 
             }

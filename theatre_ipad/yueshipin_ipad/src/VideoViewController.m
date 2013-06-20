@@ -766,6 +766,9 @@
                     NSString *day = [curEpisode substringWithRange:NSMakeRange(6, 2)];
                     titleLabel.text = [NSString stringWithFormat:@"%@/%@/%@",year,month,day];
                 }
+                else{
+                    titleLabel.text = nil;
+                }
 
             }
             else
