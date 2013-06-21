@@ -168,7 +168,7 @@ NSString *templateReviewURL = @"itms-apps://ax.itunes.apple.com/WebObjects/MZSto
         UILabel *versionsLabel = [[UILabel alloc] initWithFrame:CGRectMake(257, 0, 200, SETTING_OPTION_OTHER_HEIGHT)];
         versionsLabel.backgroundColor = [UIColor clearColor];
         NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
-        versionsLabel.text = bundleVersion;
+        versionsLabel.text = [NSString stringWithFormat:@"v%@",bundleVersion];
         versionsLabel.textColor = [UIColor grayColor];
         [versions addSubview:versionsLabel];
     }
