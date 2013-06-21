@@ -768,6 +768,8 @@
                 }
                 else{
                     titleLabel.text = nil;
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
+                    nameLabel.numberOfLines = 2;
                 }
 
             }

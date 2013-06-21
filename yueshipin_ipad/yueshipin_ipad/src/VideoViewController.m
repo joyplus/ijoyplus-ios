@@ -742,10 +742,7 @@
                 UILabel *titleLabel = (UILabel *)[cell viewWithTag:4011 + i];
                 titleLabel.textAlignment = NSTextAlignmentCenter;
                 NSString *curEpisode = [NSString stringWithFormat:@"%@", [item objectForKey:@"cur_episode"]];
-                if ([[item objectForKey:@"prod_name"]hasPrefix:@"康熙来了"]) {
-                    NSLog(@"%@%@",[item objectForKey:@"prod_name"],curEpisode);
-                }
-                
+            
                 //判断UserName是否为数字,字母，下滑线。
                 NSCharacterSet *dateCharacters = [[NSCharacterSet
                                                    characterSetWithCharactersInString:@"1234567890"] invertedSet];
@@ -773,6 +770,8 @@
                 }
                 else{
                     titleLabel.text = nil;
+                    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, nameLabel.frame.origin.y, nameLabel.frame.size.width, 35);
+                    nameLabel.numberOfLines = 2;
                 }
                 
             }
