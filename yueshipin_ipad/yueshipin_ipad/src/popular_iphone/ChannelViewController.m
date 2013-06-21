@@ -459,6 +459,10 @@ enum
     }];
 }
 
+-(void)reFreshViewController{
+    [self pulltoReFresh];
+}
+
 -(void)analyzeData:(id)result{
     if (_dataArr == nil) {
         _dataArr = [NSMutableArray arrayWithCapacity:5];

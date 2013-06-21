@@ -344,7 +344,9 @@ enum
     [pullToRefreshManager_ loadMoreCompleted];
 }
 
-
+-(void)reFreshViewController{
+    [self pulltoReFresh];
+}
 #pragma mark -
 #pragma mark - TVBunding
 -(void)showBundingView{

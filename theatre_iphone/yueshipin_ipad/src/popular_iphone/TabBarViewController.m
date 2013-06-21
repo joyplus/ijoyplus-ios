@@ -85,6 +85,33 @@
     return self;
 }
 
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item{
+    int index = [self.tabBar.items indexOfObject:item];
+    if (index == self.selectedIndex) {
+            UINavigationController *nav = [self.viewControllers objectAtIndex:index];
+            UIViewController *tempViewComtroller = [nav.viewControllers objectAtIndex:0];
+            switch (index) {
+                case 0:{
+                        ChannelViewController *channelview = (ChannelViewController *)tempViewComtroller;
+                        [channelview reFreshViewController];
+                        break;
+                    }
+                case 1:{
+                         PageManageViewController *pagemanager = (PageManageViewController *)tempViewComtroller;
+                         [pagemanager reFreshViewController];
+                        break;
+                    }
+                case 2:{
+                        allListViewController *alllist = (allListViewController *)tempViewComtroller;
+                        [alllist reFreshViewController];
+                        break;
+                    }
+                default:
+                    break;
+             }
+        }
+}
+
 -(void)setBadgeValue{
     int count = [DownLoadManager downloadTaskCount];
     if (count > 0) {

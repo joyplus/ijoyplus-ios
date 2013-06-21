@@ -1072,6 +1072,12 @@ enum
     // Dispose of any resources that can be recreated.
 }
 
+-(void)reFreshViewController{
+    [self loadMovieTopsData];
+    [self loadTVTopsData];
+    [self loadComicTopsData];
+    [self loadShowTopsData];
+}
 #pragma mark -
 #pragma mark - dealloc
 - (void)dealloc

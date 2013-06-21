@@ -349,6 +349,10 @@ enum
     self.tableList.frame = CGRectMake(0, BUNDING_HEIGHT, 320, kCurrentWindowHeight-92-BUNDING_HEIGHT);
 }
 
+-(void)reFreshViewController{
+    [self pulltoReFresh];
+}
+
 -(void)dismissBundingView{
     UIButton *btn = (UIButton *)[self.view viewWithTag:BUNDING_BUTTON_TAG];
     btn.hidden = YES;

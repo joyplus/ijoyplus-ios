@@ -27,4 +27,5 @@
 @property(nonatomic, strong)NSMutableDictionary *parameters;
 @property (strong, nonatomic) MBProgressHUD *progressHUD;
 @property (strong, nonatomic) PullRefreshManagerClinet *pullRefreshManager;
+-(void)reFreshViewController;
 @end

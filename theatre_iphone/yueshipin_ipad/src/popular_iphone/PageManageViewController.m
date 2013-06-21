@@ -1082,6 +1082,12 @@ enum
     }    
 }
 
+-(void)reFreshViewController{
+    [self loadMovieTopsData];
+    [self loadTVTopsData];
+    [self loadComicTopsData];
+    [self loadShowTopsData];
+}
 #pragma mark -
 #pragma mark - PullRefreshManagerClinetDelegate
 -(void)pulltoReFresh{
