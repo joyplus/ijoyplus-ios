@@ -840,7 +840,7 @@
             detailViewController.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:detailViewController animated:YES];
         }
-        else if ([type isEqualToString:@"2"]){
+        else if ([type isEqualToString:@"2"]||[type isEqualToString:@"131"]){
             TVDetailViewController *detailViewController = [[TVDetailViewController alloc] init];
             detailViewController.infoDic = [favArr_ objectAtIndex:indexPath.row];
             detailViewController.hidesBottomBarWhenPushed = YES;
