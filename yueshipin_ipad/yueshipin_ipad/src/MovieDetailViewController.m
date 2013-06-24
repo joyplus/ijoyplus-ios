@@ -382,7 +382,7 @@
         self.playBtn.hidden = NO;
         self.expectbtn.hidden = YES;
         self.addListBtn.enabled = YES;
-        if(self.mp4DownloadUrls.count > 0 || self.m3u8DownloadUrls.count > 0){
+        if(self.downloadUrls.count > 0){
             // do nothing
             //        NSLog(@"mp4 count: %i", self.mp4DownloadUrls.count);
             //        NSLog(@"m3u8 count: %i", self.m3u8DownloadUrls.count);
@@ -698,25 +698,26 @@
     item.percentage = 0;
     item.type = 1;
     item.downloadStatus = @"waiting";
-    if (self.mp4DownloadUrls.count > 0) {
-        item.downloadType = @"mp4";
-        item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
-    } else if(self.m3u8DownloadUrls.count > 0){
-        item.downloadType = @"m3u8";
-    }
-    
+//    if (self.mp4DownloadUrls.count > 0) {
+//        item.downloadType = @"mp4";
+//        item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
+//    } else if(self.m3u8DownloadUrls.count > 0){
+//        item.downloadType = @"m3u8";
+//    }
+    item.fileName = [NSString stringWithFormat:@"%@%@", self.prodId, @".mp4"];
     if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
     {
-        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+        self.downloadUrls = [self tureWangpanDownloadURL:self.downloadUrls];
     }
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
-    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
-    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    [tempArray addObjectsFromArray:self.downloadUrls];
+//    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
+//    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     
     item.urlArray = tempArray;
     item.downloadURLSource = self.downloadSource;
-    item.mp4SourceNum = self.mp4DownloadUrls.count;
+    //item.mp4SourceNum = self.mp4DownloadUrls.count;
     [DatabaseManager save:item];
     
     DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];

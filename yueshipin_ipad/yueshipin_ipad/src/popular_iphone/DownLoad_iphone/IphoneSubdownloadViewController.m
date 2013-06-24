@@ -149,16 +149,17 @@
 }
 
 
-- (void)reFreshProgress:(double)progress withId:(NSString *)itemId inClass:(NSString *)className{
+- (void)reFreshProgress:(DownloadItem *)item withId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneSubdownloadViewController"]) {
          SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
         if ([subDownloadItem.downloadStatus isEqualToString:@"loading"]) {
-            float value = (float)progress;
+            float value = (float)(item.percentage/100.0f);
             int num = [self getTagNum:itemId];
             UIProgressView *progressView = [progressViewDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
             [progressView setProgress:value];
             int progressValue = (int)(100*value);
             subDownloadItem.percentage = progressValue;
+            subDownloadItem.m3u8DownloadInfo = item.m3u8DownloadInfo;
             UILabel *label = [progressLabelDic_ objectForKey:[NSString stringWithFormat:@"%d",num]];
             label.text = [NSString stringWithFormat:@"下载中：%i%%\n ",progressValue];
         }
@@ -354,6 +355,7 @@
     if (position >= [itemArr_ count]) {
         return;
     }
+    
     SubdownloadItem *downloadItem = [itemArr_ objectAtIndex:position];
     if ([downloadItem.downloadStatus isEqualToString:@"finish"]) {
         NSString *fileName = [downloadItem.subitemId stringByAppendingString:@".mp4"];
@@ -539,6 +541,17 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
     }
     [[DownLoadManager defaultDownLoadManager]waringPlus];
+}
+
+-(void)DownLoadManagerUpdateIsDownloadingNumberwithId:(NSString *)itemId
+                                               number:(int)num
+                                              inClass:(NSString*)className
+{
+    if ([className isEqualToString:@"IphoneSubdownloadViewController"])
+    {
+        SubdownloadItem *subDownloadItem = [self getDownloadItemById:itemId];
+        subDownloadItem.isDownloadingNum = num;
+    }
 }
 
 #pragma mark -

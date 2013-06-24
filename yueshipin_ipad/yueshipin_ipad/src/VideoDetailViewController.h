@@ -41,6 +41,7 @@
 @property (nonatomic, strong)NSString *subname;
 @property (assign, nonatomic)int type;
 @property (strong, nonatomic)SlideBaseViewController *fromViewController;
+@property (strong, nonatomic)NSMutableArray *downloadUrls;
 @property (strong, nonatomic)NSMutableArray *mp4DownloadUrls;
 @property (strong, nonatomic)NSMutableArray *m3u8DownloadUrls;
 @property (strong, nonatomic)NSString *downloadSource;

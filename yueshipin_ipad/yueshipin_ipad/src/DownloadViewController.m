@@ -17,6 +17,7 @@
 #import "AVPlayerViewController.h"
 #import "DDProgressView.h"
 #import "SegmentUrl.h"
+#import "CommonMotheds.h"
 
 @interface DownloadViewController ()<GMGridViewDataSource, GMGridViewActionDelegate, DownloadingDelegate,UIAlertViewDelegate>{
     UIImageView *topImage;
@@ -31,6 +32,7 @@
     BOOL displayNoSpaceFlag;
     __gm_weak GMGridView *_gmGridView;
     BOOL isItunesFile;
+    NSInteger retryConut;
 }
 
 @property (nonatomic, strong)NSArray *allDownloadItems;
@@ -61,7 +63,8 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];    
+    [super viewDidLoad];
+    retryConut = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
@@ -239,8 +242,29 @@
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
     NSLog(@"error in DownloadViewController");
-    [[AppDelegate instance].padDownloadManager stopDownloading];
-    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+    
+    if (![CommonMotheds isNetworkEnbled])
+    {
+        NSLog(@"网络异常");
+        return;
+    }
+    if (retryConut <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryConut ++;
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+    }
+    else
+    {
+        retryConut = 0;
+        DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
+        dlItem.downloadStatus = @"error";
+        [DatabaseManager update:dlItem];
+        [[AppDelegate instance].padDownloadManager stopDownloading];
+        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+        
+        [_gmGridView reloadData];
+    }
 }
 
 - (void)restartNewDownloading
@@ -254,13 +278,14 @@
 
 - (void)downloadSuccess:(NSString *)operationId
 {
+    retryConut = 0;
     for (int i = 0; i < allDownloadItems.count; i++) {
         DownloadItem *item = [allDownloadItems objectAtIndex:i];
         if (item.type == 1 && [item.itemId isEqualToString:operationId]) {
             item = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", item.itemId]];
             item.downloadStatus = @"done";
             item.percentage = 100;
-            [AppDelegate instance].currentDownloadingNum = 0;
+            //[AppDelegate instance].currentDownloadingNum = 0;
             [DatabaseManager update:item];
             break;
         }
@@ -326,7 +351,7 @@
     if([item.downloadStatus isEqualToString:@"start"] || [item.downloadStatus isEqualToString:@"waiting"]){
         if ([item.downloadStatus isEqualToString:@"start"]) {
             [[AppDelegate instance].padDownloadManager stopDownloading];
-            [AppDelegate instance].currentDownloadingNum = 0;
+            [AppDelegate instance].currentDownloadingNum --;//0
         }
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";

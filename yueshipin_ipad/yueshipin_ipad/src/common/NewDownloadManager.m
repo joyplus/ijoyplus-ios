@@ -15,6 +15,7 @@
 #import "DatabaseManager.h"
 #import "Reachability.h"
 #import "StringUtility.h"
+#import "CommonMotheds.h"
 
 @interface NewDownloadManager () 
 @property (nonatomic, strong)DownloadItem *downloadingItem;
@@ -24,6 +25,7 @@
 @property (nonatomic, strong)NSArray *allSubdownloadItems;
 @property (nonatomic, strong)NSLock *myLock;
 @property (strong, nonatomic) NewM3u8DownloadManager *padM3u8DownloadManager;
+@property NSInteger retryConut;
 @property int netWorkStatus;
 @end
 
@@ -34,7 +36,7 @@
 @synthesize displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
 @synthesize padM3u8DownloadManager;
-@synthesize netWorkStatus;
+@synthesize netWorkStatus,retryConut;
 - (id)init
 {
     self = [super init];
@@ -44,6 +46,7 @@
         Reachability *hostReach = [Reachability reachabilityForInternetConnection];
         netWorkStatus = [hostReach currentReachabilityStatus];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
+        retryConut = 0;
     }
     return self;
 }
@@ -51,7 +54,25 @@
 - (void)startDownloadingThreads
 {
     [myLock lock];
-    if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
+    
+    for (id obj in [AppDelegate instance].curDownloadingTask)
+    {
+        if ([obj isKindOfClass:[NewM3u8DownloadManager class]])
+        {
+            NewM3u8DownloadManager *manager = (NewM3u8DownloadManager *)obj;
+            [manager stopDownloading];
+        }
+        else
+        {
+            AFDownloadRequestOperation * reqOperation = (AFDownloadRequestOperation *)obj;
+            [reqOperation pause];
+            [reqOperation cancel];
+        }
+    }
+    
+    [[AppDelegate instance].curDownloadingTask removeAllObjects];
+    
+    if([AppDelegate instance].curDownloadingTask.count < MAX_DOWNLOADING_THREADS){
         allDownloadItems = [DatabaseManager allObjects:DownloadItem.class];
         allSubdownloadItems = [DatabaseManager allObjects:SubdownloadItem.class];
         [self startDownloadingThread:allDownloadItems status:@"start"];
@@ -71,11 +92,15 @@
 
 - (void)startDownloadingThread:(NSArray *)allItem status:(NSString *)status
 {
-    for (DownloadItem *item in allItem) {
-        if([AppDelegate instance].currentDownloadingNum < MAX_DOWNLOADING_THREADS){
-            if([item.downloadStatus isEqualToString:status]){
+    for (DownloadItem *item in allItem)
+    {
+        if([AppDelegate instance].curDownloadingTask.count < MAX_DOWNLOADING_THREADS)
+        {
+            if([item.downloadStatus isEqualToString:status])
+            {
                 downloadingItem = item;
-                if ([item.downloadType isEqualToString:@"m3u8"]) {
+                if ([item.downloadType isEqualToString:@"m3u8"])
+                {
                     padM3u8DownloadManager = [[NewM3u8DownloadManager alloc]init];
                     if(item.type == 1){
                         padM3u8DownloadManager.delegate = delegate == nil ? self : delegate;
@@ -84,10 +109,13 @@
                         padM3u8DownloadManager.subdelegate = subdelegate == nil ? self : subdelegate;
                         padM3u8DownloadManager.delegate = nil;
                     }
+                    //[AppDelegate instance].currentDownloadingNum ++;
+                    [[AppDelegate instance].curDownloadingTask addObject:padM3u8DownloadManager];
                     [padM3u8DownloadManager startDownloadingThreads:item];
-                } else {
+                }
+                else
+                {
                     if (![StringUtility stringIsEmpty:item.url]) {
-                        [AppDelegate instance].currentDownloadingNum++;
                         item.downloadStatus = @"start";
                         [DatabaseManager update:item];
                         NSURL *url = [NSURL URLWithString:item.url];
@@ -123,14 +151,19 @@
                                 [self downloadSuccess:downloadingItem.itemId suboperationId:((SubdownloadItem *)downloadingItem).subitemId];
                             }
                             [self stopDownloading];
+                            //[AppDelegate instance].currentDownloadingNum --;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             NSLog(@"Error: %@", error);
                             [operation cancel];
                         }];
                         [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
                         }];
+                        //[AppDelegate instance].currentDownloadingNum ++;
+                        [[AppDelegate instance].curDownloadingTask addObject:downloadingOperation];
                         [downloadingOperation start];
-                    } else {
+                    }
+                    else
+                    {
                         if (![item.downloadStatus isEqualToString:@"error"]) {
                             DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
                             finder.item = item;
@@ -147,41 +180,83 @@
 - (void)setDelegate:(id<DownloadingDelegate>)newdelegate
 {
     delegate = newdelegate;
-    if (downloadingItem.type == 1) {
-        [downloadingOperation setDownloadingDelegate: newdelegate];
-        [downloadingOperation setSubdownloadingDelegate: nil];
-        padM3u8DownloadManager.delegate = newdelegate;
+    if (downloadingItem.type == 1)
+    {
+        
+        for (id obj in [AppDelegate instance].curDownloadingTask)
+        {
+            if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
+            {
+                [downloadingOperation setDownloadingDelegate: newdelegate];
+                [downloadingOperation setSubdownloadingDelegate: nil];
+            }
+            else
+            {
+                NewM3u8DownloadManager *manager = (NewM3u8DownloadManager *)obj;
+                manager.delegate = newdelegate;
+            }
+        }
     } 
 }
 
 - (void)setSubdelegate:(id<SubdownloadingDelegate>)newdelegate
 {
     subdelegate = newdelegate;
-    if (downloadingItem.type != 1) {
-        downloadingOperation.downloadingDelegate = nil;
-        downloadingOperation.subdownloadingDelegate = newdelegate;
-        padM3u8DownloadManager.subdelegate = newdelegate;
+    if (downloadingItem.type != 1)
+    {
+        for (id obj in [AppDelegate instance].curDownloadingTask)
+        {
+            if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
+            {
+                downloadingOperation.downloadingDelegate = nil;
+                downloadingOperation.subdownloadingDelegate = newdelegate;
+            }
+            else
+            {
+                NewM3u8DownloadManager *manager = (NewM3u8DownloadManager *)obj;
+                manager.subdelegate = newdelegate;
+            }
+        }
     }
 }
 
 - (void)downloadFailure:(NSString *)operationId error:(NSError *)error
 {
     NSLog(@"error in download manager");
-    [self stopDownloading];
-    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+    if (![CommonMotheds isNetworkEnbled])
+    {
+        NSLog(@"网络异常");
+        return;
+    }
+    if (retryConut <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryConut ++;
+        [self stopDownloading];
+        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+    }
+    else
+    {
+        retryConut = 0;
+        DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
+        dlItem.downloadStatus = @"error";
+        [DatabaseManager update:dlItem];
+        [self stopDownloading];
+        [self startNewDownloadItem];
+    }
 }
 
 - (void)restartNewDownloading
 {
     //Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([[UIApplication sharedApplication].delegate performSelector:@selector(isParseReachable)]) {
-        [AppDelegate instance].currentDownloadingNum = 0;
+        //[AppDelegate instance].currentDownloadingNum = 0;
         [NSThread  detachNewThreadSelector:@selector(startDownloadingThreads) toTarget:[AppDelegate instance].padDownloadManager withObject:nil];
     }
 }
 
 - (void)downloadSuccess:(NSString *)operationId
 {
+    retryConut = 0;
     downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
@@ -192,24 +267,45 @@
 
 - (void)startNewDownloadItem
 {
-    [AppDelegate instance].currentDownloadingNum = 0;
+    //[AppDelegate instance].currentDownloadingNum = 0;
     [[AppDelegate instance].padDownloadManager startDownloadingThreads];
 }
 
 - (void)updateProgress:(NSString *)operationId progress:(float)progress
 {
+    downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
     [self updateProgress:progress];
 }
 
 - (void)downloadFailure:(NSString *)operationId suboperationId:(NSString *)suboperationId error:(NSError *)error
 {
     NSLog(@"error in download manager");
-    [self stopDownloading];
-    [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:10];
+    if (![CommonMotheds isNetworkEnbled])
+    {
+        NSLog(@"网络异常");
+        return;
+    }
+    if (retryConut <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryConut ++;
+        [self stopDownloading];
+        [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
+    }
+    else
+    {
+        retryConut = 0;
+        SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
+        tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
+        tempDownloadingItem.downloadStatus = @"error";
+        [DatabaseManager update:tempDownloadingItem];
+        [self stopDownloading];
+        [self startNewDownloadItem];
+    }
 }
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
+    retryConut = 0;
     SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
     tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempDownloadingItem.itemId, tempDownloadingItem.subitemId]];
     tempDownloadingItem.downloadStatus = @"done";
@@ -221,16 +317,17 @@
 
 - (void)updateProgress:(NSString *)operationId suboperationId:(NSString *)suboperationId progress:(float)progress
 {
+    downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
     [self updateProgress:progress];
 }
 
 - (void)updateProgress:(float)progress
 {
-    if(downloadingItem.class == DownloadItem.class) {
-        downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
-    } else if (downloadingItem.class == SubdownloadItem.class) {
-        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", downloadingItem.itemId, ((SubdownloadItem *)downloadingItem).subitemId]];
-    }
+//    if(downloadingItem.class == DownloadItem.class) {
+//        downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
+//    } else if (downloadingItem.class == SubdownloadItem.class) {
+//        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", downloadingItem.itemId, ((SubdownloadItem *)downloadingItem).subitemId]];
+//    }
     int thisProgress = progress * 100;
     if (thisProgress < 1 && downloadingItem.percentage != 0) {
         downloadingItem.percentage = 0;

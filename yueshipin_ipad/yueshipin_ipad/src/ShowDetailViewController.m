@@ -812,24 +812,26 @@
     
     if ([self.downloadSource isEqualToString:@"baidu_wangpan"])
     {
-        self.mp4DownloadUrls = [self tureWangpanDownloadURL:self.mp4DownloadUrls];
+        self.downloadUrls = [self tureWangpanDownloadURL:self.downloadUrls];
     }
     
     NSMutableArray *tempArray = [[NSMutableArray alloc]initWithCapacity:5];
     
-    [tempArray addObjectsFromArray:self.mp4DownloadUrls];
-    [tempArray addObjectsFromArray:self.m3u8DownloadUrls];
+    [tempArray addObjectsFromArray:self.downloadUrls];
+    //[tempArray addObjectsFromArray:self.mp4DownloadUrls];
+    //[tempArray addObjectsFromArray:self.m3u8DownloadUrls];
     subitem.urlArray = tempArray;
     subitem.downloadURLSource = self.downloadSource;
     
     if(subitem.urlArray.count > 0){
-        if (self.mp4DownloadUrls.count > 0) {
-            subitem.downloadType = @"mp4";
-            subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
-        } else if(self.m3u8DownloadUrls.count > 0){
-            subitem.downloadType = @"m3u8";
-        }
-        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
+//        if (self.mp4DownloadUrls.count > 0) {
+//            subitem.downloadType = @"mp4";
+//            subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
+//        } else if(self.m3u8DownloadUrls.count > 0){
+//            subitem.downloadType = @"m3u8";
+//        }
+//        subitem.mp4SourceNum = self.mp4DownloadUrls.count;
+        subitem.fileName = [NSString stringWithFormat:@"%@_%@.mp4", self.prodId, subitem.subitemId];
         [DatabaseManager save:subitem];
         DownloadUrlFinder *finder = [[DownloadUrlFinder alloc]init];
         finder.item = subitem;
