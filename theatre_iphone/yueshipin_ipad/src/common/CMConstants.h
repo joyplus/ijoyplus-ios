@@ -49,6 +49,10 @@
 
 #define kIpadAppKey @"kIpadAppkey"
 #define KWXCODENUM  @"weixinImageNum"
+
+#define NotificationSelectedValue @"pushNotificationSelectedValue"
+#define PUSH_NotificationSelected @"PushNotificationSelected"
+
 #define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos"
 #define LOCAL_KEYS_NUMBER 10
 #define MAX_DOWNLOADING_THREADS 1

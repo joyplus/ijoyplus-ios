@@ -26,7 +26,7 @@
 #import "CustomNavigationViewController.h"
 #import "IphoneAVPlayerViewController.h"
 #import "SystemMethods.h"
-
+#import "BPush.h"
 #define DAY(day)                (day * 3600 * 24)
 #define kSysMaxTimePerBgTask    (10 * 60)
 
@@ -154,6 +154,13 @@
     [WXApi registerApp:KWeChatAppID];
 }
 
+-(void)initBPush:(NSDictionary *)dictionary{
+    // 必须
+    [BPush setupChannel:dictionary];
+    // 必须。参数对象必须实现 onMethod: response:方法
+    [BPush setDelegate:self];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //如果是测试
@@ -192,10 +199,17 @@
             [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:HIDDEN_AMERICAN_VIDEOS];
        }
    }
+    //消息推送
+    NSString *notificationSelected = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:PUSH_NotificationSelected];
+    if (notificationSelected == nil) {
+             [[ContainerUtility sharedInstance] setAttribute:@"0" forKey:PUSH_NotificationSelected];
+    }
+
     playWithDownload = [NSString stringWithFormat:@"%@", [[ContainerUtility sharedInstance] attributeForKey:SHOW_PLAY_INTRO_WITH_DOWNLOAD]];
     [ActionUtility generateUserId:nil];
     [self initSinaweibo];
     [self initWeChat];
+    [self initBPush:launchOptions];
     [self monitorReachability];
     [self isParseReachable];
     [Parse setApplicationId:PARSE_APP_ID clientKey:PARSE_CLIENT_KEY];
@@ -283,25 +297,39 @@
     if(self.recommendAppSwich == nil || [self.recommendAppSwich isEqualToString:@"(null)"]){
         self.recommendAppSwich = @"0";
     }
+    
+    NSString *notifyS = [notification.userInfo objectForKey:NotificationSelectedValue];
+    [[ContainerUtility sharedInstance] setAttribute:notifyS forKey:PUSH_NotificationSelected];
+    
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:deviceToken];
-    NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IPHONE", nil];
-    [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
-    if (application.applicationIconBadgeNumber != 0) {
-        application.applicationIconBadgeNumber = 0;
-        [currentInstallation setBadge:0];
+        NSString *notificationSelected = (NSString *)[[ContainerUtility sharedInstance] attributeForKey:PUSH_NotificationSelected];
+        if ([notificationSelected isEqualToString:@"0"]) { //baidu
+            // 必须
+            [BPush registerDeviceToken:deviceToken];
+            // 必须。可以在其它时机调用,只有在该方法返回(通过 onMethod:response:回调)绑
+            //定成功时,app 才能接收到 Push 消息。一个 app 绑定成功至少一次即可(如果 access token 变更请重新绑定)。
+            [BPush bindChannel];
+        }
+        else if ([notificationSelected isEqualToString:@"1"]){  //parse
+            PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+            [currentInstallation setDeviceTokenFromData:deviceToken];
+            NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", @"CHANNEL_IOS1", nil];
+            [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
+            if (application.applicationIconBadgeNumber != 0) {
+                    application.applicationIconBadgeNumber = 0;
+                    [currentInstallation setBadge:0];
+                }
+            [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (succeeded)
+                        NSLog(@"Successfully subscribed to broadcast channel!");
+                    else
+                        NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
+            }];
     }
-    [currentInstallation saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded)
-            NSLog(@"Successfully subscribed to broadcast channel!");
-        else
-            NSLog(@"Failed to subscribe to broadcast channel; Error: %@",error);
-    }];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -315,6 +343,7 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     [self showAPNSMessage:userInfo];
+    [BPush handleNotification:userInfo];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -758,6 +787,19 @@
     {
         [navCtrl popViewControllerAnimated:NO];
         [navCtrl popViewControllerAnimated:NO];
+    }
+}
+
+#pragma mark - BPushDelegate
+- (void) onMethod:(NSString*)method response:(NSDictionary*)data {
+    if ([BPushRequestMethod_Bind isEqualToString:method]) {
+        NSDictionary* res = [[NSDictionary alloc] initWithDictionary:data];
+//        NSString *appid = [res valueForKey:BPushRequestAppIdKey];
+//        NSString *userid = [res valueForKey:BPushRequestUserIdKey];
+//        NSString *channelid = [res valueForKey:BPushRequestChannelIdKey];
+//        int returnCode = [[res valueForKey:BPushRequestErrorCodeKey] intValue];
+//        NSString *requestid = [res valueForKey:BPushRequestRequestIdKey];
+        NSLog(@"绑定百度消息推送返回信息：%@",res);
     }
 }
 
