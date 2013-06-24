@@ -287,6 +287,9 @@
 		2A110B101772DBC900558469 /* collectSucceed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A110B0E1772DBC900558469 /* collectSucceed@2x.png */; };
 		2A242BA91771CD0C00696FAF /* my_setting_version@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A242BA81771CD0C00696FAF /* my_setting_version@2x.png */; };
 		2A756BF01769B0FC00441FE8 /* icon_shoucang1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A756BEF1769B0FC00441FE8 /* icon_shoucang1@2x.png */; };
+		2A7736D11777EA0A0009FE68 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A7736CF1777EA090009FE68 /* libBPush.a */; };
+		2A7736D81777EE060009FE68 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A7736D71777EE060009FE68 /* BPushConfig.plist */; };
+		2AC6C9D41778165F004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9D31778165F004B8908 /* libBPush-simulator.a */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		E71A4450172B6F0000416565 /* xinshouyindao_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */; };
 		E71A4451172B6F0000416565 /* xinshouyindao@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A444F172B6F0000416565 /* xinshouyindao@2x.png */; };
@@ -606,7 +609,6 @@
 		EB6DEAC8165A34F200AF8003 /* UIUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEABE165A34F200AF8003 /* UIUtility.m */; };
 		EB6DEAD2165A367F00AF8003 /* GenericBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */; };
 		EB7D435B16F8348B0060816E /* select_bt_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB7D435A16F8348B0060816E /* select_bt_pressed.png */; };
-		EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201291665A9E90015F447 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EB8201461665B17E0015F447 /* CreateListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201441665B17E0015F447 /* CreateListOneViewController.m */; };
 		EB8201471665B17E0015F447 /* CreateListOneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB8201451665B17E0015F447 /* CreateListOneViewController.xib */; };
 		EB82014D1665B27D0015F447 /* box_content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB8201481665B27D0015F447 /* box_content@2x.png */; };
@@ -1400,6 +1402,11 @@
 		2A110B0E1772DBC900558469 /* collectSucceed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "collectSucceed@2x.png"; sourceTree = "<group>"; };
 		2A242BA81771CD0C00696FAF /* my_setting_version@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "my_setting_version@2x.png"; path = "yueshipin_ipad/Resource_iphone/my_setting_version@2x.png"; sourceTree = SOURCE_ROOT; };
 		2A756BEF1769B0FC00441FE8 /* icon_shoucang1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_shoucang1@2x.png"; path = "yueshipin_ipad/Resource_iphone/icon_shoucang1@2x.png"; sourceTree = SOURCE_ROOT; };
+		2A7736CD1777EA090009FE68 /* BPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPush.h; sourceTree = "<group>"; };
+		2A7736CF1777EA090009FE68 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
+		2A7736D41777ECF40009FE68 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
+		2A7736D71777EE060009FE68 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
+		2AC6C9D31778165F004B8908 /* libBPush-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libBPush-simulator.a"; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E71A444E172B6F0000416565 /* xinshouyindao_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "xinshouyindao_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/xinshouyindao_s@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1762,8 +1769,6 @@
 		EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GenericBaseViewController.m; path = ../GenericBaseViewController.m; sourceTree = "<group>"; };
 		EB6DEAD7165A36E600AF8003 /* CommonHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonHeader.h; sourceTree = "<group>"; };
 		EB7D435A16F8348B0060816E /* select_bt_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_bt_pressed.png; sourceTree = "<group>"; };
-		EB8201281665A9E90015F447 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
-		EB8201291665A9E90015F447 /* OpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenUDID.m; sourceTree = "<group>"; };
 		EB8201371665B08D0015F447 /* CreateListOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateListOneViewController.h; sourceTree = "<group>"; };
 		EB8201441665B17E0015F447 /* CreateListOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateListOneViewController.m; sourceTree = "<group>"; };
 		EB8201451665B17E0015F447 /* CreateListOneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateListOneViewController.xib; sourceTree = "<group>"; };
@@ -2270,6 +2275,8 @@
 				220E4925169BEE8C00A29756 /* Parse.framework in Frameworks */,
 				22EF004716B767410001F743 /* libUMAppNetwork.a in Frameworks */,
 				22210B2016EE0661008EDF11 /* libWeChatSDK_armv7_armv7s.a in Frameworks */,
+				2A7736D11777EA0A0009FE68 /* libBPush.a in Frameworks */,
+				2AC6C9D41778165F004B8908 /* libBPush-simulator.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2641,6 +2648,25 @@
 			path = popular_iphone/search_iphone;
 			sourceTree = "<group>";
 		};
+		2A7736CC1777EA090009FE68 /* BPush */ = {
+			isa = PBXGroup;
+			children = (
+				2AC6C9D31778165F004B8908 /* libBPush-simulator.a */,
+				2A7736CD1777EA090009FE68 /* BPush.h */,
+				2A7736CF1777EA090009FE68 /* libBPush.a */,
+				2A7736D71777EE060009FE68 /* BPushConfig.plist */,
+			);
+			path = BPush;
+			sourceTree = "<group>";
+		};
+		2A7736D31777ECF40009FE68 /* OpenUDID */ = {
+			isa = PBXGroup;
+			children = (
+				2A7736D41777ECF40009FE68 /* OpenUDID.h */,
+			);
+			path = OpenUDID;
+			sourceTree = "<group>";
+		};
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
@@ -3003,6 +3029,8 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				2A7736D31777ECF40009FE68 /* OpenUDID */,
+				2A7736CC1777EA090009FE68 /* BPush */,
 				2266A1EE171C1DB30062DB95 /* FayeObjc */,
 				EBBE245E171518B500091F24 /* Harpy */,
 				22447FE916F18D4A00058985 /* TSPopover */,
@@ -3014,7 +3042,6 @@
 				220E4920169BEE6D00A29756 /* JSBadgeView */,
 				EBB59CB816670A3E00F646C7 /* umeng */,
 				EB82016C1665D41F0015F447 /* SSCheckBoxView */,
-				EB8201271665A9E90015F447 /* OpenUDID */,
 				EBBA00FA1664BC510069FE7E /* Anypic */,
 				EBF3A9931663973200EBF56D /* FFPopController */,
 				EBB732EC165C7789008E407E /* JSONKit */,
@@ -3615,15 +3642,6 @@
 				E7872DA716FC35B100017785 /* CommonMotheds.m */,
 			);
 			path = common;
-			sourceTree = "<group>";
-		};
-		EB8201271665A9E90015F447 /* OpenUDID */ = {
-			isa = PBXGroup;
-			children = (
-				EB8201281665A9E90015F447 /* OpenUDID.h */,
-				EB8201291665A9E90015F447 /* OpenUDID.m */,
-			);
-			path = OpenUDID;
 			sourceTree = "<group>";
 		};
 		EB82016C1665D41F0015F447 /* SSCheckBoxView */ = {
@@ -4796,6 +4814,7 @@
 				2A110B0A1772AF5B00558469 /* version@2x.png in Resources */,
 				2A110B0F1772DBC900558469 /* cancelCollect@2x.png in Resources */,
 				2A110B101772DBC900558469 /* collectSucceed@2x.png in Resources */,
+				2A7736D81777EE060009FE68 /* BPushConfig.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4865,7 +4884,6 @@
 				EBBA01041664BC510069FE7E /* UIImage+AlphaAdditions.m in Sources */,
 				EBBA01051664BC510069FE7E /* UIImage+ResizeAdditions.m in Sources */,
 				EBBA01061664BC510069FE7E /* UIImage+RoundedCornerAdditions.m in Sources */,
-				EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */,
 				EB8201461665B17E0015F447 /* CreateListOneViewController.m in Sources */,
 				EB8201541665B4E40015F447 /* CustomPlaceHolderTextView.m in Sources */,
 				EB8201581665BA8E0015F447 /* CreateListTwoViewController.m in Sources */,
@@ -5123,6 +5141,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/WeChat\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
+					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = yueshipin;
 				PROVISIONING_PROFILE = "";
@@ -5152,6 +5171,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/WeChat\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
+					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = yueshipin;
 				PROVISIONING_PROFILE = "";
