@@ -237,6 +237,8 @@
 		2A7A3D50175F25830008A2B4 /* PullRefreshManagerClinet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A7A3D4B175F25830008A2B4 /* PullRefreshManagerClinet.m */; };
 		2A7A3D52175F29460008A2B4 /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A7A3D51175F29460008A2B4 /* blueArrow@2x.png */; };
 		2AA1BCA1175C78710018BC4B /* select_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA1BCA0175C78710018BC4B /* select_bt.png */; };
+		2AC6C9DF17781B01004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9DD17781B01004B8908 /* libBPush-simulator.a */; };
+		2AC6C9E017781B01004B8908 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9DE17781B01004B8908 /* libBPush.a */; };
 		403EDF2053454FB1BE959B18 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E1EA10697846CEAF3A0B4A /* libPods.a */; };
 		E71A4457172BF65000416565 /* menu_intro_yuebang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A4456172BF65000416565 /* menu_intro_yuebang@2x.png */; };
 		E73462A4171CEC5000EC5DCE /* IntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E73462A3171CEC5000EC5DCE /* IntroductionView.m */; };
@@ -342,7 +344,6 @@
 		EB6DEAD2165A367F00AF8003 /* GenericBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB6DEAD1165A367F00AF8003 /* GenericBaseViewController.m */; };
 		EB7D435B16F8348B0060816E /* select_bt_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EB7D435A16F8348B0060816E /* select_bt_pressed.png */; };
 		EB7FB690174E1E080039A4F8 /* AdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB7FB68F174E1E070039A4F8 /* AdViewController.m */; };
-		EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201291665A9E90015F447 /* OpenUDID.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		EB8201461665B17E0015F447 /* CreateListOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EB8201441665B17E0015F447 /* CreateListOneViewController.m */; };
 		EB8201471665B17E0015F447 /* CreateListOneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EB8201451665B17E0015F447 /* CreateListOneViewController.xib */; };
 		EB82014D1665B27D0015F447 /* box_content@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB8201481665B27D0015F447 /* box_content@2x.png */; };
@@ -1028,6 +1029,9 @@
 		2A7A3D4B175F25830008A2B4 /* PullRefreshManagerClinet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullRefreshManagerClinet.m; sourceTree = "<group>"; };
 		2A7A3D51175F29460008A2B4 /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blueArrow@2x.png"; sourceTree = "<group>"; };
 		2AA1BCA0175C78710018BC4B /* select_bt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_bt.png; sourceTree = "<group>"; };
+		2AC6C9DC17781B01004B8908 /* BPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPush.h; sourceTree = "<group>"; };
+		2AC6C9DD17781B01004B8908 /* libBPush-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libBPush-simulator.a"; sourceTree = "<group>"; };
+		2AC6C9DE17781B01004B8908 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
 		65E1EA10697846CEAF3A0B4A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E71A4456172BF65000416565 /* menu_intro_yuebang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_intro_yuebang@2x.png"; sourceTree = "<group>"; };
 		E73462A2171CEC5000EC5DCE /* IntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntroductionView.h; path = yueshipin_ipad/src/IntroductionView.h; sourceTree = SOURCE_ROOT; };
@@ -1165,7 +1169,6 @@
 		EB7FB68E174E1E060039A4F8 /* AdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdViewController.h; sourceTree = "<group>"; };
 		EB7FB68F174E1E070039A4F8 /* AdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdViewController.m; sourceTree = "<group>"; };
 		EB8201281665A9E90015F447 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
-		EB8201291665A9E90015F447 /* OpenUDID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenUDID.m; sourceTree = "<group>"; };
 		EB8201371665B08D0015F447 /* CreateListOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateListOneViewController.h; sourceTree = "<group>"; };
 		EB8201441665B17E0015F447 /* CreateListOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateListOneViewController.m; sourceTree = "<group>"; };
 		EB8201451665B17E0015F447 /* CreateListOneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreateListOneViewController.xib; sourceTree = "<group>"; };
@@ -1659,6 +1662,8 @@
 				22EF004716B767410001F743 /* libUMAppNetwork.a in Frameworks */,
 				22210B2016EE0661008EDF11 /* libWeChatSDK_armv7_armv7s.a in Frameworks */,
 				403EDF2053454FB1BE959B18 /* libPods.a in Frameworks */,
+				2AC6C9DF17781B01004B8908 /* libBPush-simulator.a in Frameworks */,
+				2AC6C9E017781B01004B8908 /* libBPush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1868,6 +1873,16 @@
 			path = PullRefresh;
 			sourceTree = "<group>";
 		};
+		2AC6C9DB17781B01004B8908 /* BPush */ = {
+			isa = PBXGroup;
+			children = (
+				2AC6C9DC17781B01004B8908 /* BPush.h */,
+				2AC6C9DD17781B01004B8908 /* libBPush-simulator.a */,
+				2AC6C9DE17781B01004B8908 /* libBPush.a */,
+			);
+			path = BPush;
+			sourceTree = "<group>";
+		};
 		EB02F64916DAFFF0001C2E3A /* AVQueuePlayer */ = {
 			isa = PBXGroup;
 			children = (
@@ -1893,6 +1908,7 @@
 		EB14D430165B357500CB3260 /* External */ = {
 			isa = PBXGroup;
 			children = (
+				2AC6C9DB17781B01004B8908 /* BPush */,
 				2266A1EE171C1DB30062DB95 /* FayeObjc */,
 				EBBE245E171518B500091F24 /* Harpy */,
 				22447FE916F18D4A00058985 /* TSPopover */,
@@ -2586,7 +2602,6 @@
 			isa = PBXGroup;
 			children = (
 				EB8201281665A9E90015F447 /* OpenUDID.h */,
-				EB8201291665A9E90015F447 /* OpenUDID.m */,
 			);
 			path = OpenUDID;
 			sourceTree = "<group>";
@@ -3625,7 +3640,6 @@
 				EBBA01041664BC510069FE7E /* UIImage+AlphaAdditions.m in Sources */,
 				EBBA01051664BC510069FE7E /* UIImage+ResizeAdditions.m in Sources */,
 				EBBA01061664BC510069FE7E /* UIImage+RoundedCornerAdditions.m in Sources */,
-				EB82012B1665A9E90015F447 /* OpenUDID.m in Sources */,
 				EB8201461665B17E0015F447 /* CreateListOneViewController.m in Sources */,
 				EB8201541665B4E40015F447 /* CustomPlaceHolderTextView.m in Sources */,
 				EB8201581665BA8E0015F447 /* CreateListTwoViewController.m in Sources */,
@@ -3825,6 +3839,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/WeChat\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
+					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = ipadtheatre;
 				PROVISIONING_PROFILE = "";
@@ -3854,6 +3869,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/umeng/UMUFP\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/WeChat\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
+					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = ipadtheatre;
 				PROVISIONING_PROFILE = "C76DAC09-1754-48D7-92C2-1D5219A3335F";
