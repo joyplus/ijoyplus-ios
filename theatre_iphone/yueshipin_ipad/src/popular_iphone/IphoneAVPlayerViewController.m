@@ -1622,7 +1622,10 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             break;
         }
     }
-    [bottomToolBar_ addSubview:volumeView_];
+    
+    if (!(isM3u8_ && islocalFile_)) {
+        [bottomToolBar_ addSubview:volumeView_];
+    }
     
     NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:@"kUserId"];
     NSDictionary * data = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];

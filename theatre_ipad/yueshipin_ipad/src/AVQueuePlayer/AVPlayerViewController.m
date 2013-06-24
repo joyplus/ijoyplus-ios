@@ -788,7 +788,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             break;
         }
     }
-    [mToolbar addSubview:routeBtn];
+     //m3u8&&本地的隐藏airplay
+    if(!(isDownloaded && [videoFormat isEqualToString:@"m3u8"])){
+        [mToolbar addSubview:routeBtn];
+    }
     
     mPlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
     mPlayButton.frame = CGRectMake(0, 0, 55, BUTTON_HEIGHT);
