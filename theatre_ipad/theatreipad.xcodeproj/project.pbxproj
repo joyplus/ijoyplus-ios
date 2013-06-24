@@ -239,6 +239,7 @@
 		2AA1BCA1175C78710018BC4B /* select_bt.png in Resources */ = {isa = PBXBuildFile; fileRef = 2AA1BCA0175C78710018BC4B /* select_bt.png */; };
 		2AC6C9DF17781B01004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9DD17781B01004B8908 /* libBPush-simulator.a */; };
 		2AC6C9E017781B01004B8908 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9DE17781B01004B8908 /* libBPush.a */; };
+		2AC6C9E41778241F004B8908 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2AC6C9E31778241F004B8908 /* BPushConfig.plist */; };
 		403EDF2053454FB1BE959B18 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E1EA10697846CEAF3A0B4A /* libPods.a */; };
 		E71A4457172BF65000416565 /* menu_intro_yuebang@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E71A4456172BF65000416565 /* menu_intro_yuebang@2x.png */; };
 		E73462A4171CEC5000EC5DCE /* IntroductionView.m in Sources */ = {isa = PBXBuildFile; fileRef = E73462A3171CEC5000EC5DCE /* IntroductionView.m */; };
@@ -1032,6 +1033,7 @@
 		2AC6C9DC17781B01004B8908 /* BPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPush.h; sourceTree = "<group>"; };
 		2AC6C9DD17781B01004B8908 /* libBPush-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libBPush-simulator.a"; sourceTree = "<group>"; };
 		2AC6C9DE17781B01004B8908 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
+		2AC6C9E31778241F004B8908 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
 		65E1EA10697846CEAF3A0B4A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E71A4456172BF65000416565 /* menu_intro_yuebang@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_intro_yuebang@2x.png"; sourceTree = "<group>"; };
 		E73462A2171CEC5000EC5DCE /* IntroductionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IntroductionView.h; path = yueshipin_ipad/src/IntroductionView.h; sourceTree = SOURCE_ROOT; };
@@ -1876,6 +1878,7 @@
 		2AC6C9DB17781B01004B8908 /* BPush */ = {
 			isa = PBXGroup;
 			children = (
+				2AC6C9E31778241F004B8908 /* BPushConfig.plist */,
 				2AC6C9DC17781B01004B8908 /* BPush.h */,
 				2AC6C9DD17781B01004B8908 /* libBPush-simulator.a */,
 				2AC6C9DE17781B01004B8908 /* libBPush.a */,
@@ -3557,6 +3560,7 @@
 				2A110B0C1772C33B00558469 /* version@2x.png in Resources */,
 				2A110B131772DDCA00558469 /* cancelCollect@2x.png in Resources */,
 				2A110B141772DDCA00558469 /* collectSucceed@2x.png in Resources */,
+				2AC6C9E41778241F004B8908 /* BPushConfig.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

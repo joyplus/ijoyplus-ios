@@ -212,6 +212,7 @@
 		2A756BEE1769A73200441FE8 /* icon_shoucang1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A756BED1769A73200441FE8 /* icon_shoucang1@2x.png */; };
 		2AC6C9D9177818CE004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9D7177818CE004B8908 /* libBPush-simulator.a */; };
 		2AC6C9DA177818CF004B8908 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9D8177818CE004B8908 /* libBPush.a */; };
+		2AC6C9E2177823B5004B8908 /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2AC6C9E1177823B5004B8908 /* BPushConfig.plist */; };
 		B3E72D02F27B43F78743B09A /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EC20A508D204BAE89F5A027 /* libPods.a */; };
 		E70A6D411744C0B300CFF5E7 /* title_xiala@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E70A6D401744C0B200CFF5E7 /* title_xiala@2x.png */; };
 		E70A6D451744C81E00CFF5E7 /* icon_tab5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E70A6D441744C81E00CFF5E7 /* icon_tab5@2x.png */; };
@@ -836,6 +837,7 @@
 		2AC6C9D6177818CE004B8908 /* BPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPush.h; sourceTree = "<group>"; };
 		2AC6C9D7177818CE004B8908 /* libBPush-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libBPush-simulator.a"; sourceTree = "<group>"; };
 		2AC6C9D8177818CE004B8908 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
+		2AC6C9E1177823B5004B8908 /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
 		459B84FA869C445E8C832D00 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		5EC20A508D204BAE89F5A027 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E70A6D401744C0B200CFF5E7 /* title_xiala@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "title_xiala@2x.png"; path = "yueshipin_ipad/Resource_iphone/title_xiala@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -1633,6 +1635,7 @@
 		2AC6C9D5177818CE004B8908 /* BPush */ = {
 			isa = PBXGroup;
 			children = (
+				2AC6C9E1177823B5004B8908 /* BPushConfig.plist */,
 				2AC6C9D6177818CE004B8908 /* BPush.h */,
 				2AC6C9D7177818CE004B8908 /* libBPush-simulator.a */,
 				2AC6C9D8177818CE004B8908 /* libBPush.a */,
@@ -2775,6 +2778,7 @@
 				2232E61E176ACDE100E37D7B /* off_shelf_icon@2x.png in Resources */,
 				2232E61F176ACDE100E37D7B /* off_shelf@2x.png in Resources */,
 				2A242BAB1771D60400696FAF /* my_setting_version@2x.png in Resources */,
+				2AC6C9E2177823B5004B8908 /* BPushConfig.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

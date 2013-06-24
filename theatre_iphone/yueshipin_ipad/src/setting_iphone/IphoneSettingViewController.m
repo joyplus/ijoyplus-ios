@@ -181,12 +181,12 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     [suggest addTarget:self action:@selector(suggest:) forControlEvents:UIControlEventTouchUpInside];
     [scrollView addSubview:suggest];
     
-    UIButton *version = [UIButton buttonWithType:UIButtonTypeCustom];
-    version.frame = CGRectMake(10, 386, 300, 35);
+    UIButton *versionBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    versionBtn.frame = CGRectMake(10, 386, 300, 35);
     //[suggest setTitle:@"免责声明" forState:UIControlStateNormal];
-    [version setBackgroundImage:[UIImage imageNamed:@"my_setting_version.png"] forState:UIControlStateNormal];
-    [version setBackgroundImage:[UIImage imageNamed:@"my_setting_version.png"] forState:UIControlStateHighlighted];
-    [scrollView addSubview:version];
+    [versionBtn setBackgroundImage:[UIImage imageNamed:@"my_setting_version.png"] forState:UIControlStateNormal];
+    [versionBtn setBackgroundImage:[UIImage imageNamed:@"my_setting_version.png"] forState:UIControlStateHighlighted];
+    [scrollView addSubview:versionBtn];
     
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:CGRectMake(150, 1, 150, 30)];
@@ -194,7 +194,7 @@ static int NUMBER_OF_APPS_PERPAGE = 9;
     versionLabel.font = [UIFont systemFontOfSize:14];
     versionLabel.text = [NSString stringWithFormat:@"v%@",bundleVersion];
     versionLabel.textColor = [UIColor grayColor];
-    [version addSubview:versionLabel];
+    [versionBtn addSubview:versionLabel];
     
     if ([[AppDelegate instance].recommendAppSwich isEqualToString:@"0"])
     {
