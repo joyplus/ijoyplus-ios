@@ -28,6 +28,7 @@
 @synthesize subname;
 @synthesize mp4DownloadUrls;
 @synthesize m3u8DownloadUrls;
+@synthesize downloadUrls;
 @synthesize downloadSource;
 @synthesize canPlayVideo;
 
@@ -53,7 +54,7 @@
     [self setCloseTipsViewHidden:NO];
     mp4DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
     m3u8DownloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
-    
+    downloadUrls = [[NSMutableArray alloc]initWithCapacity:5];
 }
 
 - (void)didReceiveMemoryWarning
@@ -77,6 +78,8 @@
     mp4DownloadUrls = nil;
     [m3u8DownloadUrls removeAllObjects];
     m3u8DownloadUrls = nil;
+    [downloadUrls removeAllObjects];
+    downloadUrls = nil;
     episodeArray = nil;
     umengPageName = nil;
 }
@@ -179,7 +182,13 @@
     NSMutableArray * urls = [NSMutableArray array];
     for (NSString * url in wangpanHTML)
     {
-        NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:url];
+        NSArray * array = [url componentsSeparatedByString:@"|"];
+        NSString * tureURL = nil;
+        if (array.count == 2)
+        {
+            tureURL = [array objectAtIndex:0];
+        }
+        NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL];
         if (nil != downloadURL)
         {
             [urls addObject:downloadURL];
@@ -375,6 +384,7 @@
     }
     [mp4DownloadUrls removeAllObjects];
     [m3u8DownloadUrls removeAllObjects];
+    [downloadUrls removeAllObjects];
     
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
     if(videoUrlArray.count > 0)
@@ -385,13 +395,17 @@
             NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
             for(NSDictionary *url in urlArray)
             {
-                if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
-                    NSString *videoUrl = [url objectForKey:@"url"];
-                    [mp4DownloadUrls addObject:videoUrl];
-                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
-                    NSString *videoUrl = [url objectForKey:@"url"];
-                    [m3u8DownloadUrls addObject:videoUrl];
-                }
+                NSString * videoInfo = [NSString stringWithFormat:@"%@|%@",[url objectForKey:@"url"],[url objectForKey:@"file"]];
+                //NSDictionary * videoDic = [NSDictionary dictionaryWithObjectsAndKeys:[url objectForKey:@"url"],@"url",[tempVideo objectForKey:@"source"],@"source",[url objectForKey:@"file"],@"type", nil];
+                //NSString *videoUrl = [url objectForKey:@"url"];
+                [downloadUrls addObject:videoInfo];
+//                if([@"mp4" isEqualToString:[url objectForKey:@"file"]]){
+//                    NSString *videoUrl = [url objectForKey:@"url"];
+//                    [mp4DownloadUrls addObject:videoUrl];
+//                } else if([@"m3u8" isEqualToString:[url objectForKey:@"file"]]){
+//                    NSString *videoUrl = [url objectForKey:@"url"];
+//                    [m3u8DownloadUrls addObject:videoUrl];
+//                }
             }
         }
     }

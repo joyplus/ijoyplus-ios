@@ -51,7 +51,7 @@
 #define KWXCODENUM  @"weixinImageNum"
 #define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos"
 #define LOCAL_KEYS_NUMBER 10
-#define MAX_DOWNLOADING_THREADS 1
+#define MAX_DOWNLOADING_THREADS 2
 #define umengAppKey @"50c069e25270154e81000056"
 
 #define YOU_KU @"youku"
