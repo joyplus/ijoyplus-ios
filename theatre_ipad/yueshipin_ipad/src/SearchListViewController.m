@@ -82,7 +82,7 @@
     pullToRefreshManager_ = [[PullRefreshManagerClinet alloc] initWithTableView:table];
     [pullToRefreshManager_ setShowHeaderView:NO];
     pullToRefreshManager_.delegate = self;
-    
+    [self loadData];
     [self loadTable];
     
     [self.view addGestureRecognizer:self.swipeRecognizer];
@@ -95,9 +95,7 @@
     [table reloadData];
 }
 
-
-- (void)viewWillAppear:(BOOL)animated
-{
+-(void)loadData{
     [myHUD showProgressBar:self.view];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:self.keyword, @"keyword", @"1", @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", @"1,2,3,131", @"type", nil];
     [[AFServiceAPIClient sharedClient] postPath:kPathSearch parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
@@ -125,6 +123,10 @@
         videoArray = [[NSMutableArray alloc]initWithCapacity:10];
     }];
     [MobClick beginLogPageView:SEARCH_LIST];
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (void)refreshSearchList
