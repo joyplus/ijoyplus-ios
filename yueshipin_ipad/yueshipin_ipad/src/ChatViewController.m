@@ -150,7 +150,7 @@
 - (void)getFinishedWithError:(NSError *)error
 {
     if (error == nil) {
-        NSString *temMsg = @"亲，说说你的使用感受吧，有任何问题我们会在第一时间解决哦。你的陪伴会让我们做的更好，谢谢你的支持：)";
+        NSString *temMsg = @"亲，说说您的使用感受吧。如果遇到哪部片子有问题，请附带片名，我们会在第一时间解决哦。您的陪伴会让我们做的更好，谢谢支持！";
         UIView *chatView = [self bubbleView:[NSString stringWithFormat:@"Angeline：%@", temMsg] from:NO];
         [self.chatArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:temMsg, @"text", @"self", @"speaker", chatView, @"view", nil]];
         
