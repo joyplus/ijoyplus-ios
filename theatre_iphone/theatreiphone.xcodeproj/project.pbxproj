@@ -1100,7 +1100,7 @@
 		EB63D3CA16D07A0200B642C7 /* title_download_show@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "title_download_show@2x.png"; path = "yueshipin_ipad/Resource_iphone/title_download_show@2x.png"; sourceTree = SOURCE_ROOT; };
 		EB6D2A4A173BC232005499CC /* success_img@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "success_img@2x.png"; path = "yueshipin_ipad/Resource_iphone/success_img@2x.png"; sourceTree = SOURCE_ROOT; };
 		EB6D2A4C173BC27B005499CC /* failure_img@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "failure_img@2x.png"; path = "yueshipin_ipad/Resource_iphone/failure_img@2x.png"; sourceTree = SOURCE_ROOT; };
-		EB6DEA68165A2F1A00AF8003 /* theatreiphone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = theatreiphone.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EB6DEA68165A2F1A00AF8003 /* iphonetheatre.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iphonetheatre.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB6DEA6C165A2F1A00AF8003 /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EB6DEA6E165A2F1A00AF8003 /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EB6DEA70165A2F1A00AF8003 /* CoreGraphics.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -2060,7 +2060,7 @@
 		EB6DEA69165A2F1A00AF8003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EB6DEA68165A2F1A00AF8003 /* theatreiphone.app */,
+				EB6DEA68165A2F1A00AF8003 /* iphonetheatre.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2397,7 +2397,7 @@
 			);
 			name = theatreiphone;
 			productName = yueshipin_ipad;
-			productReference = EB6DEA68165A2F1A00AF8003 /* theatreiphone.app */;
+			productReference = EB6DEA68165A2F1A00AF8003 /* iphonetheatre.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -3047,8 +3047,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Yongqing Li (AKLR55A3PU)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Scott Li (S86FV8S8MV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Scott Li (S86FV8S8MV)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3065,8 +3065,9 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
-				PRODUCT_NAME = theatreiphone;
-				PROVISIONING_PROFILE = "";
+				PRODUCT_NAME = iphonetheatre;
+				PROVISIONING_PROFILE = "F83C73A3-30F4-491A-93B5-93A62B1CC31B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F83C73A3-30F4-491A-93B5-93A62B1CC31B";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3094,7 +3095,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/EBarSDK\"",
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
-				PRODUCT_NAME = theatreiphone;
+				PRODUCT_NAME = iphonetheatre;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "67FFD528-4E22-476C-93C7-3D352FF9D2DB";
 				TARGETED_DEVICE_FAMILY = 1;
