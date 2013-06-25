@@ -3827,8 +3827,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0F213582443349C3B05019CB /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Scott Li (S86FV8S8MV)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Scott Li (S86FV8S8MV)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -3846,8 +3846,8 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = ipadtheatre;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "5D0E78F9-E027-48E3-B64E-28C270B82762";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "5D0E78F9-E027-48E3-B64E-28C270B82762";
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};

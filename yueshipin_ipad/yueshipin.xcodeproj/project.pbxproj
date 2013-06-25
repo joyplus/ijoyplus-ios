@@ -5133,7 +5133,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 459B84FA869C445E8C832D00 /* Pods.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: yongqing li (95XW9X94ZC)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: yongqing li (95XW9X94ZC)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5152,7 +5152,7 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = yueshipin;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "02EFBB36-95F7-46C8-A255-B13F22AFBEBE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
