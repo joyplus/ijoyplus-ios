@@ -379,13 +379,16 @@
 {
     [self.downLoadManager pauseAllTask];
     
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    if (![ActionUtility isAirPlayActive])
     {
-        [self continueiPadDownloadWhenEnterBackground:application];
-    }
-    else
-    {
-        [self continueiPhoneDownloadWhenEnterBackground:application];
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+        {
+            [self continueiPadDownloadWhenEnterBackground:application];
+        }
+        else
+        {
+            [self continueiPhoneDownloadWhenEnterBackground:application];
+        }
     }
     
     //When app enter background, add a new local Notification
