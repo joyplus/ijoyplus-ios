@@ -288,7 +288,6 @@
 		2A242BA91771CD0C00696FAF /* my_setting_version@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A242BA81771CD0C00696FAF /* my_setting_version@2x.png */; };
 		2A756BF01769B0FC00441FE8 /* icon_shoucang1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A756BEF1769B0FC00441FE8 /* icon_shoucang1@2x.png */; };
 		2A7736D11777EA0A0009FE68 /* libBPush.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A7736CF1777EA090009FE68 /* libBPush.a */; };
-		2A7B5BEC1779406700C9E38A /* BPushConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2A7B5BEB1779406700C9E38A /* BPushConfig.plist */; };
 		2A7B5BEF1779618F00C9E38A /* pingfen_s@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A7B5BED1779618F00C9E38A /* pingfen_s@2x.png */; };
 		2A7B5BF01779618F00C9E38A /* pingfen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A7B5BEE1779618F00C9E38A /* pingfen@2x.png */; };
 		2AC6C9D41778165F004B8908 /* libBPush-simulator.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC6C9D31778165F004B8908 /* libBPush-simulator.a */; };
@@ -1407,7 +1406,6 @@
 		2A7736CD1777EA090009FE68 /* BPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BPush.h; sourceTree = "<group>"; };
 		2A7736CF1777EA090009FE68 /* libBPush.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBPush.a; sourceTree = "<group>"; };
 		2A7736D41777ECF40009FE68 /* OpenUDID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenUDID.h; sourceTree = "<group>"; };
-		2A7B5BEB1779406700C9E38A /* BPushConfig.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BPushConfig.plist; sourceTree = "<group>"; };
 		2A7B5BED1779618F00C9E38A /* pingfen_s@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pingfen_s@2x.png"; path = "yueshipin_ipad/Resource_iphone/pingfen_s@2x.png"; sourceTree = SOURCE_ROOT; };
 		2A7B5BEE1779618F00C9E38A /* pingfen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pingfen@2x.png"; path = "yueshipin_ipad/Resource_iphone/pingfen@2x.png"; sourceTree = SOURCE_ROOT; };
 		2AC6C9D31778165F004B8908 /* libBPush-simulator.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libBPush-simulator.a"; sourceTree = "<group>"; };
@@ -2655,7 +2653,6 @@
 		2A7736CC1777EA090009FE68 /* BPush */ = {
 			isa = PBXGroup;
 			children = (
-				2A7B5BEB1779406700C9E38A /* BPushConfig.plist */,
 				2AC6C9D31778165F004B8908 /* libBPush-simulator.a */,
 				2A7736CD1777EA090009FE68 /* BPush.h */,
 				2A7736CF1777EA090009FE68 /* libBPush.a */,
@@ -4820,7 +4817,6 @@
 				2A110B0A1772AF5B00558469 /* version@2x.png in Resources */,
 				2A110B0F1772DBC900558469 /* cancelCollect@2x.png in Resources */,
 				2A110B101772DBC900558469 /* collectSucceed@2x.png in Resources */,
-				2A7B5BEC1779406700C9E38A /* BPushConfig.plist in Resources */,
 				2A7B5BEF1779618F00C9E38A /* pingfen_s@2x.png in Resources */,
 				2A7B5BF01779618F00C9E38A /* pingfen@2x.png in Resources */,
 			);
@@ -5099,7 +5095,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6924CF19-02C2-41CD-8019-CEF3780A009F";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -5152,7 +5147,6 @@
 					"\"$(SRCROOT)/yueshipin_ipad/External/BPush\"",
 				);
 				PRODUCT_NAME = yueshipin;
-				PROVISIONING_PROFILE = "02EFBB36-95F7-46C8-A255-B13F22AFBEBE";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

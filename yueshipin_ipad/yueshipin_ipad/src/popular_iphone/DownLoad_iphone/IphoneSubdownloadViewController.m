@@ -205,6 +205,10 @@
     [self reloadDataSource];
 }
 -(void)back:(id)sender{
+    for (DownloadItem * item in itemArr_)
+    {
+        [DatabaseManager update:item];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

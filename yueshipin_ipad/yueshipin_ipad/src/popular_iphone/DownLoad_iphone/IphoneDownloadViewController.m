@@ -150,6 +150,13 @@
     }
 }
 - (void)viewWillDisappear:(BOOL)animated{
+    for (id obj in itemArr_)
+    {
+        if (![obj isKindOfClass:[SubdownloadItem class]])
+        {
+            [DatabaseManager update:obj];
+        }
+    }
     gMGridView_.editing = NO;
 }
 
