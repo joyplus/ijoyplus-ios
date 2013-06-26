@@ -221,7 +221,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [super viewDidLoad];
     [self.navigationController setNavigationBarHidden:YES];
     self.view.backgroundColor = [UIColor blackColor];
-    isAppEnterBackground = NO;
+    //isAppEnterBackground = NO;
     isClosed = NO;
     if (type == 1) {
         umengPageName = MOVIE_PLAY;
@@ -2451,8 +2451,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                         change:(NSDictionary*)change
                        context:(void*)context
 {
-    if (isAppEnterBackground)
-        return;
+//    if (isAppEnterBackground)
+//        return;
     if (applyTvView == nil) {
         applyTvView = [[UIView alloc]initWithFrame:mPlaybackView.frame];
         applyTvView.tag = 9585403;
@@ -2763,7 +2763,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 #pragma mark - app进入后台/重新激活
 - (void)appDidEnterBackground:(NSNotification *)niti
 {
-    isAppEnterBackground = YES;
+    //isAppEnterBackground = YES;
     if (![ActionUtility isAirPlayActive])
     {
         if (self.isPlaying)
@@ -2777,7 +2777,7 @@ NSComparator cmpStr = ^(id obj1, id obj2){
 
 - (void)appDidBecomeActive:(NSNotification *)niti
 {
-    isAppEnterBackground = NO;
+    //isAppEnterBackground = NO;
 }
 
 @end
