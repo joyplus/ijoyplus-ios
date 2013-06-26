@@ -1208,7 +1208,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 }
                 tempDownloadRequestOperation.downloadingSegmentIndex = downloadedNum;
                 
-                if (tempDownloadRequestOperation.downloadingSegmentIndex == [urlArr count]-1)
+                if (tempDownloadRequestOperation.downloadingSegmentIndex == [urlArr count])
                 {
                     if (range.location == NSNotFound){
                         [self saveDataBaseIntable:@"DownloadItem" withId:idStr withStatus:@"finish" withPercentage:100];
