@@ -79,7 +79,15 @@ enum
     MBProgressHUD *tempHUD;
     id cacheResult = [[CacheUtility sharedCache] loadFromCache:@"top_list"];
     if(cacheResult != nil){
-        [self parseTopsListData:cacheResult];
+        self.listArray = [[NSMutableArray alloc]initWithCapacity:pageSize];
+        NSString *responseCode = [cacheResult objectForKey:@"res_code"];
+        if(responseCode == nil){
+            NSArray *tempTopsArray = [cacheResult objectForKey:@"tops"];
+            if(tempTopsArray.count > 0){
+                [ self.listArray addObjectsFromArray:tempTopsArray];
+            }
+        }
+        [self.tableList reloadData];
     } else {
         if(tempHUD == nil){
             tempHUD = [[MBProgressHUD alloc] initWithView:self.view];
