@@ -857,8 +857,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         //初始化数据；
         if (!isPlayFromRecord_) {
             
-            [self initDataSource:playNum];
-            [self beginToPlay];
+            dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+                [self initDataSource:playNum];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                 [self beginToPlay];
+                 [self clearSelectView];
+                });
+            });
+            
             
         }
         else{
@@ -877,9 +883,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }
         selectButton_.enabled = NO;
         [self getVideoDetail];
+        [self clearSelectView];
     }
     
-    [self clearSelectView];
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(appDidEnterBackground:)
@@ -1023,16 +1030,20 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             NSArray * dURL = [temp_dic objectForKey:@"urls"];
             if (0 == dURL.count)
                 return;
-            NSDictionary * firstDic = [dURL objectAtIndex:0];
-            NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[firstDic objectForKey:@"url"]];
-            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
-            if (nil != downloadURL)
-            {
-                [newDic setObject:downloadURL forKey:@"url"];
-                [newDic setObject:[firstDic objectForKey:@"file"] forKey:@"file"];
-                [newDic setObject:[firstDic objectForKey:@"type"] forKey:@"type"];
+            
+            NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
+            for (NSDictionary *oneDic in dURL) {
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+                if (nil != downloadURL)
+                {
+                    [newDic setObject:downloadURL forKey:@"url"];
+                    [newDic setObject:[oneDic objectForKey:@"file"] forKey:@"file"];
+                    [newDic setObject:[oneDic objectForKey:@"type"] forKey:@"type"];
+                    [newUrls addObject:newDic];
+                }
             }
-            [temp_dic setObject:[NSArray arrayWithObject:newDic] forKey:@"urls"];
+            [temp_dic setObject:newUrls forKey:@"urls"];
         }
         [tempSortArr addObject:temp_dic];
     }
@@ -1703,7 +1714,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             }
         }
         else if ([highClearArr count]>0) {
-            [view addSubview:plainClearBtn];
+            [view addSubview:highClearBtn];
             
             if ([plainClearArr count]>0) {
                 highClearBtn.frame = CGRectMake(43, 0, 42, 42);
@@ -1757,6 +1768,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         separatorView1.backgroundColor = [UIColor colorWithRed:80/255.0 green:80/255.0 blue:80/255.0 alpha:0.5];
         [view addSubview:separatorView1];
     }
+    
     if (num > 1) {
         view.frame = CGRectMake(0, 0, num*42, 50);
         clearBgView_  = [[CMPopTipView alloc] initWithCustomView:view];
@@ -2872,8 +2884,13 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             nameStr_ =  [continuePlayInfo_ objectForKey:@"prod_name"];
             episodesArr_ = [videoInfo objectForKey:@"episodes"];
             
-            [self initDataSource:playNum];
-            [self beginToPlay];
+            dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+                [self initDataSource:playNum];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                [self beginToPlay];
+                [self clearSelectView];
+                });
+            });
             
             titleLabel_.text = nameStr_;
             [tableList_ reloadData];
