@@ -337,10 +337,18 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 } else if (type == 3){
                     video = (NSDictionary *)[result objectForKey:@"show"];
                 }
-                [self parseVideoData:[video objectForKey:@"episodes"]];
-                [self parseCurrentNum];
-                [self parseResolutionNum];
-                [self sendRequest];
+//                [self parseVideoData:[video objectForKey:@"episodes"]];
+//                [self parseCurrentNum];
+//                [self parseResolutionNum];
+//                [self sendRequest];
+                dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+                    [self parseVideoData:[video objectForKey:@"episodes"]];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self parseResolutionNum];
+                        [self showPlayCacheView];
+                        [self sendRequest];
+                    });
+                });
             } else {
                 [UIUtility showSystemError:self.view];
             }
@@ -349,10 +357,15 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [UIUtility showSystemError:self.view];
         }];
     } else {
-        [self parseVideoData:[video objectForKey:@"episodes"]];
-        [self parseResolutionNum];
-        [self showPlayCacheView];
-        [self sendRequest];
+        
+        dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+              [self parseVideoData:[video objectForKey:@"episodes"]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self parseResolutionNum];
+                [self showPlayCacheView];
+                [self sendRequest];
+            });
+        });
     }
     
 }
@@ -399,16 +412,19 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             NSArray * dURL = [temp_dic objectForKey:@"urls"];
             if (0 == dURL.count)
                 return;
-            NSDictionary * firstDic = [dURL objectAtIndex:0];
-            NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[firstDic objectForKey:@"url"]];
-            NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
-            if (nil != downloadURL)
-            {
-                [newDic setObject:downloadURL forKey:@"url"];
-                [newDic setObject:[firstDic objectForKey:@"file"] forKey:@"file"];
-                [newDic setObject:[firstDic objectForKey:@"type"] forKey:@"type"];
+            NSMutableArray *newUrls = [NSMutableArray arrayWithCapacity:5];
+            for (NSDictionary *oneDic in dURL) {
+                NSString * downloadURL = [CommonMotheds getDownloadURLWithHTML:[oneDic objectForKey:@"url"]];
+                NSMutableDictionary * newDic = [NSMutableDictionary dictionary];
+                if (nil != downloadURL)
+                {
+                    [newDic setObject:downloadURL forKey:@"url"];
+                    [newDic setObject:[oneDic objectForKey:@"file"] forKey:@"file"];
+                    [newDic setObject:[oneDic objectForKey:@"type"] forKey:@"type"];
+                    [newUrls addObject:newDic];
+                }
             }
-            [temp_dic setObject:[NSArray arrayWithObject:newDic] forKey:@"urls"];
+            [temp_dic setObject:newUrls forKey:@"urls"];
         }
         else {
             [temp_dic setObject:@"100" forKey:@"level"];
