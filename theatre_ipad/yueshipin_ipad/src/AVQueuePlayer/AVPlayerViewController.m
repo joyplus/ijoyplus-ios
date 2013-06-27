@@ -344,9 +344,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
                             [self parseVideoData:[video objectForKey:@"episodes"]];
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                    [self parseResolutionNum];
-                                    [self showPlayCacheView];
-                                    [self sendRequest];
+                                [self parseCurrentNum];
+                                [self parseResolutionNum];
+                                [self sendRequest];
                                 });
                         });
             } else {
@@ -530,7 +530,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)parseCurrentNum
 {
     if (subnameArray.count > 0) {
-        currentNum = [subnameArray indexOfObject:subname];
+        //currentNum = [subnameArray indexOfObject:subname];
+        for (NSString *nameStr in subnameArray) {
+            if ([nameStr hasPrefix:subname]||[subname hasPrefix:nameStr]) {
+                currentNum = [subnameArray indexOfObject:nameStr];
+                break;
+            }
+        }
         if (currentNum < 0 || currentNum >= subnameArray.count) {
             currentNum = 0;
         }
