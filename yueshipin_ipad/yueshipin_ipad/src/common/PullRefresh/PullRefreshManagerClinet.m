@@ -72,7 +72,7 @@
         footerV.frame = CGRectMake(footerV.frame.origin.x, footerV.frame.origin.y, atableview.frame.size.width, footerV.frame.size.height);
         footerV.activityIndicator.center = footerV.center;
         
-        NSLog(@"%f %f %f %f",footerV.frame.origin.x,footerV.frame.origin.y,footerV.frame.size.width,footerV.frame.size.height);
+//        NSLog(@"%f %f %f %f",footerV.frame.origin.x,footerV.frame.origin.y,footerV.frame.size.width,footerV.frame.size.height);
         self.footerView = footerV;
     }
     return self;
@@ -310,8 +310,8 @@
         
         CGFloat scrollPosition = scrollView.contentSize.height - scrollView.frame.size.height - scrollView.contentOffset.y;
         if (scrollPosition < [self footerLoadMoreHeight]) {
-            NSLog(@"%f",[self footerLoadMoreHeight]);
-            NSLog(@"%f - %f - %f",scrollView.contentSize.height,scrollView.frame.size.height,scrollView.contentOffset.y);
+//            NSLog(@"%f",[self footerLoadMoreHeight]);
+//            NSLog(@"%f - %f - %f",scrollView.contentSize.height,scrollView.frame.size.height,scrollView.contentOffset.y);
             [self loadMore];
         }
     }

@@ -11,7 +11,7 @@
 //0: 测试环境     1. 正式环境
 #define ENVIRONMENT 1
 
-#define VERSION @"1.0.3"
+#define VERSION @"1.0.4"
 
 
 //0: 关闭loglog      1. 打开log      Log功能只有再测试环境才生效
@@ -34,9 +34,10 @@
 
 
 //友盟在线参数
-#define SHOW_VIDEO_SWITCH @"showVideoSwitch6"
-#define CLOSE_VIDEO_MODE @"closeVideoMode"
-#define RECOMMEND_APP_SWITCH @"recommendAppSwitch"
+#define SHOW_VIDEO_SWITCH @"showVideoSwitch7"
+#define CLOSE_VIDEO_MODE @"closeVideoMode7"
+#define RECOMMEND_APP_SWITCH @"recommendAppSwitch7"
+#define HIDDEN_AMERICAN_VIDEOS @"HiddenAmericanVideos7"
 
 
 //正式环境
