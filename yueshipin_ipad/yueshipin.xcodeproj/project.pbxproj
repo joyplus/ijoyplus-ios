@@ -791,7 +791,8 @@
 		EBBD9E2916EDD80900AF96E0 /* progress_thumb_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */; };
 		EBBD9E2A16EDD80900AF96E0 /* progress_thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */; };
 		EBBD9E51177C1C6100FF9989 /* 404.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E50177C1C6100FF9989 /* 404.jpg */; };
-		EBBD9E53177C25A500FF9989 /* 404_iphone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E52177C25A500FF9989 /* 404_iphone.jpg */; };
+		EBBD9E55177C515B00FF9989 /* 404iphone5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E54177C515B00FF9989 /* 404iphone5.jpg */; };
+		EBBD9E57177C526200FF9989 /* 404iphone4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBBD9E56177C526200FF9989 /* 404iphone4.jpg */; };
 		EBBDCE24166C39ED00C7129F /* AddSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */; };
 		EBBDCE2B166C518D00C7129F /* StackScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */; };
 		EBBDCE37166C98A300C7129F /* CustomColoredAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBDCE36166C98A300C7129F /* CustomColoredAccessory.m */; };
@@ -1987,7 +1988,8 @@
 		EBBD9E2716EDD80900AF96E0 /* progress_thumb_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = progress_thumb_pressed.png; sourceTree = "<group>"; };
 		EBBD9E2816EDD80900AF96E0 /* progress_thumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = progress_thumb.png; sourceTree = "<group>"; };
 		EBBD9E50177C1C6100FF9989 /* 404.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 404.jpg; sourceTree = "<group>"; };
-		EBBD9E52177C25A500FF9989 /* 404_iphone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 404_iphone.jpg; path = yueshipin_ipad/Resource_iphone/404_iphone.jpg; sourceTree = SOURCE_ROOT; };
+		EBBD9E54177C515B00FF9989 /* 404iphone5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 404iphone5.jpg; path = yueshipin_ipad/Resource_iphone/404iphone5.jpg; sourceTree = SOURCE_ROOT; };
+		EBBD9E56177C526200FF9989 /* 404iphone4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 404iphone4.jpg; path = yueshipin_ipad/Resource_iphone/404iphone4.jpg; sourceTree = SOURCE_ROOT; };
 		EBBDCE22166C39ED00C7129F /* AddSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddSearchViewController.h; sourceTree = "<group>"; };
 		EBBDCE23166C39ED00C7129F /* AddSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddSearchViewController.m; sourceTree = "<group>"; };
 		EBBDCE2A166C518D00C7129F /* StackScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StackScrollViewController.m; sourceTree = "<group>"; };
@@ -2644,7 +2646,8 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
-				EBBD9E52177C25A500FF9989 /* 404_iphone.jpg */,
+				EBBD9E56177C526200FF9989 /* 404iphone4.jpg */,
+				EBBD9E54177C515B00FF9989 /* 404iphone5.jpg */,
 				E754B6A6175722F60077CCA9 /* fengexian_gengduo@2x.png */,
 				E754B6A41757229F0077CCA9 /* jiantou_gengduo@2x.png */,
 				E754B6A21757225A0077CCA9 /* gengduo_bg@2x.png */,
@@ -4801,7 +4804,8 @@
 				E754B6A51757229F0077CCA9 /* jiantou_gengduo@2x.png in Resources */,
 				E754B6A7175722F60077CCA9 /* fengexian_gengduo@2x.png in Resources */,
 				EBBD9E51177C1C6100FF9989 /* 404.jpg in Resources */,
-				EBBD9E53177C25A500FF9989 /* 404_iphone.jpg in Resources */,
+				EBBD9E55177C515B00FF9989 /* 404iphone5.jpg in Resources */,
+				EBBD9E57177C526200FF9989 /* 404iphone4.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

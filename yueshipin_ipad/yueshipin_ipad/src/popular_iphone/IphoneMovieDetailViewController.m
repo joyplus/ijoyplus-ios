@@ -523,7 +523,7 @@
                 if (isLoaded_) {
                     [cell addSubview:expectbtn];
                     
-                    if ([CommonMotheds getOnlineConfigValue] == 2){
+                    if ([CommonMotheds getOnlineConfigValue] == 0){
                       [cell addSubview:downLoad];
                     }
                 }
