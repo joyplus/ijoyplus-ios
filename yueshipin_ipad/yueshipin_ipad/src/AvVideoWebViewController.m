@@ -166,7 +166,7 @@
         }
         else
         {
-            [self addWebView];
+            [self addWebView:NO];
         }
     }
 }
@@ -243,7 +243,7 @@
     }
 }
 
-- (void)addWebView
+- (void)addWebView:(BOOL)fromBaidu
 {
     CGRect bound = [UIScreen mainScreen].bounds;
 	webView = [[UIWebView alloc]initWithFrame:CGRectMake(0, 0, bound.size.height, bound.size.width)];
@@ -251,9 +251,16 @@
     webView.scalesPageToFit = YES;
     [self hideGradientBackground:webView];
     if (videoHttpUrlArray.count > 0 && currentNum < videoHttpUrlArray.count) {
-        NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
-        NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
-        [webView loadRequest:requestObj];
+        if (fromBaidu) {
+            NSString *boundle = [[NSBundle mainBundle] resourcePath];
+            webView.scrollView.scrollEnabled = NO;
+            webView.backgroundColor = [UIColor colorWithRed:218/255.0 green:218/255.0 blue:218/255.0 alpha:1];
+            [webView loadHTMLString:[NSString stringWithFormat:@"<body bgcolor='#dadada'><img src='404.jpg'/></body>"] baseURL:[NSURL fileURLWithPath:boundle]];
+        } else {
+            NSURL *url = [NSURL URLWithString:[videoHttpUrlArray objectAtIndex:currentNum]];
+            NSURLRequest *requestObj = [NSURLRequest requestWithURL:url];
+            [webView loadRequest:requestObj];
+        }
     }
     [webView setScalesPageToFit:YES];
     [self.view addSubview:webView];
@@ -266,9 +273,9 @@
     webView = nil;
 }
 
-- (void)reshowWebView
+- (void)reshowWebView:(BOOL)fromBaidu
 {
-    [self addWebView];
+    [self addWebView:fromBaidu];
 }
 
 @end
