@@ -138,6 +138,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
+        cloundTVButton.hidden = NO;
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
        
         NSString * nameStr = @"myQueue";
@@ -1650,6 +1651,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                            action:@selector(action:)
                  forControlEvents:UIControlEventTouchUpInside];
         [bottomToolBar_ addSubview:cloundTVButton];
+        cloundTVButton.hidden = YES;
     }
 }
 
