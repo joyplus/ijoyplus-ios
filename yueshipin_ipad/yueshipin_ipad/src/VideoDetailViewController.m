@@ -377,6 +377,17 @@
     }
 }
 
+NSComparator sortString = ^(id obj1, id obj2){
+    if ([obj1 floatValue] > [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([obj1 floatValue] < [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
+
 - (void)getDownloadUrls:(int)num
 {
     if(num < 0 || num >=episodeArray.count){
@@ -386,18 +397,87 @@
     [m3u8DownloadUrls removeAllObjects];
     [downloadUrls removeAllObjects];
     
+    NSMutableArray * allUrls_ = [NSMutableArray array];
     NSArray *videoUrlArray = [[episodeArray objectAtIndex:num] objectForKey:@"down_urls"];
-    if(videoUrlArray.count > 0)
-    {
-        for(NSDictionary *tempVideo in videoUrlArray)
-        {
-            self.downloadSource = [tempVideo objectForKey:@"source"];
-            NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
-            for(NSDictionary *url in urlArray)
-            {
-                NSString * videoInfo = [NSString stringWithFormat:@"%@|%@",[url objectForKey:@"url"],[url objectForKey:@"file"]];
-                [downloadUrls addObject:videoInfo];
+    
+    for (NSDictionary *dic in videoUrlArray) {
+        NSArray *oneSourceArr = [dic objectForKey:@"urls"];
+        NSString *source = [dic objectForKey:@"source"];
+        self.downloadSource = source;
+        for (NSDictionary *oneUrlInfo in oneSourceArr) {
+            
+            NSString * str = [oneUrlInfo objectForKey:@"url"];
+            NSString *tempUrl = str;
+            if([str rangeOfString:@"{now_date}"].location != NSNotFound){
+                int nowDate = [[NSDate date] timeIntervalSince1970];
+                tempUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
             }
+            NSString *filetype = [oneUrlInfo objectForKey:@"file"];
+            NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",filetype,@"type",source,@"source", nil];
+            
+            [allUrls_ addObject:myDic];
+        }
+    }
+    
+    NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
+    for (NSDictionary *dic in allUrls_)
+    {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        NSString *source_str = [temp_dic objectForKey:@"source"];
+        
+        if ([source_str isEqualToString:@"wangpan"]) {
+            [temp_dic setObject:@"0.1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"le_tv_fee"]) {
+            [temp_dic setObject:@"0.2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"letv"]) {
+            [temp_dic setObject:@"1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"fengxing"]){
+            [temp_dic setObject:@"2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qiyi"]){
+            [temp_dic setObject:@"3" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"youku"]){
+            [temp_dic setObject:@"4" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sinahd"]){
+            [temp_dic setObject:@"5" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sohu"]){
+            [temp_dic setObject:@"6" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"56"]){
+            [temp_dic setObject:@"7" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qq"]){
+            [temp_dic setObject:@"8" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pptv"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pps"]){
+            [temp_dic setObject:@"10" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"m1905"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"12" forKey:@"level"];
+        }
+        [tempSortArr addObject:temp_dic];
+    }
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:sortString];
+    allUrls_ = [NSMutableArray arrayWithArray:[tempSortArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    
+    if(allUrls_.count > 0)
+    {
+        for(NSDictionary *tempVideo in allUrls_)
+        {
+            NSString * videoInfo = [NSString stringWithFormat:@"%@|%@",[tempVideo objectForKey:@"url"],[tempVideo objectForKey:@"type"]];
+            [downloadUrls addObject:videoInfo];
         }
     }
 }
