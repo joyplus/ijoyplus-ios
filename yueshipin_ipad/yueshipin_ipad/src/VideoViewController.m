@@ -230,9 +230,10 @@
         [[AFServiceAPIClient sharedClient] getPath:kPathFilter parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [self parseData:result];
             [myHUD hide];
-
+            [self loadTable];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
             NSLog(@"%@", error);
+            [self loadTable];
             [myHUD hide];
             [UIUtility showDetailError:self.view error:error];
         }];
@@ -257,7 +258,7 @@
     } else {
         [UIUtility showSystemError:self.view];
     }
-    [self loadTable];
+    [table reloadData];
 }
 
 - (void)hideSubcategoryView
