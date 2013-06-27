@@ -940,7 +940,6 @@
             button.adjustsImageWhenHighlighted = NO;
             
             NSString *url = [self getDownloadUrl];
-//            NSString *url = @"http://v.youku.com/player/getM3U8/vid/127814846/type/flv/ts/%7Bnow_date%7D/useKeyframe/0/v.m3u8";
             if (url == nil || [url isEqualToString:@""]) {
                 NSLog(@"Get the download url is failed");
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"暂无下载地址" delegate:self cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
