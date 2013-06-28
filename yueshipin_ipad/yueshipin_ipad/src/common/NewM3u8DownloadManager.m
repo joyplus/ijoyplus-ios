@@ -65,8 +65,17 @@
                 [self performSelectorInBackground:@selector(downloadVideoSegment:) withObject:segmentUrlArray];
             }
         } else {
-            if (segmentUrlArray.count > 0) {
-                [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
+            if (segmentUrlArray.count > 0)
+            {
+                if ([item isKindOfClass:[SubdownloadItem class]])
+                {
+                    SubdownloadItem * subItem = (SubdownloadItem *)item;
+                    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE itemId = '%@' and subitemId = '%@'", subItem.itemId,subItem.subitemId]];
+                }
+                else
+                {
+                    [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"Delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
+                }
             }
             segmentIndex = 0;
             downloadInfo = [NSMutableArray array];
@@ -317,7 +326,7 @@
                     }
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"Error: %@", error);
+                NSLog(@"m3u8 file download Error: %@", error);
                 [operation cancel];
                 [opQueue cancelAllOperations];
                 segmentIndex = 9999999; // To break the loop;

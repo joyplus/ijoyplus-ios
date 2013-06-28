@@ -452,7 +452,17 @@
     }
     else if (dbObject.class == [SegmentUrl class]) {
         NSString *itemId = ((SegmentUrl *)dbObject).itemId;
-        NSString *sqlString = [NSString stringWithFormat:@"delete from SegmentUrl where itemId = '%@'",itemId];
+        NSString * subItemId = ((SegmentUrl *)dbObject).subitemId;
+        NSString *sqlString = nil;
+        if (nil == subItemId)
+        {
+            sqlString = [NSString stringWithFormat:@"delete from SegmentUrl where itemId = '%@'",itemId];
+        }
+        else
+        {
+            sqlString = [NSString stringWithFormat:@"delete from SegmentUrl where itemId = '%@' and subitemId = '%@'",itemId,subItemId];
+        }
+        
         [db executeUpdate:sqlString];
     }
     [db close];

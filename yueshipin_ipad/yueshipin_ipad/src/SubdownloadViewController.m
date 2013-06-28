@@ -506,7 +506,7 @@
     [self removeLastPlaytime:item];
     [DatabaseManager deleteObject:item];
     [DatabaseManager performSQLAggregation:[NSString stringWithFormat: @"delete from SubdownloadItem WHERE itemId = '%@' and subitemId = '%@'", item.itemId, item.subitemId]];
-    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@'", item.itemId]];
+    double result = [DatabaseManager performSQLAggregation: [NSString stringWithFormat: @"delete from SegmentUrl WHERE itemId = '%@' and subitemId = '%@'", item.itemId,item.subitemId]];
     NSLog(@"result = %f", result);
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
