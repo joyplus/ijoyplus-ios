@@ -70,6 +70,7 @@ enum
 }
 @property (nonatomic) double seekBeginTime;
 @property (nonatomic, strong) NSMutableArray * downloadIndex;
+@property (nonatomic) BOOL fromBaidu;
 - (void)stopMyTimer;
 - (void)beginMyTimer;
 - (void)showActivityView;
@@ -130,7 +131,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize isM3u8 = isM3u8_;
 @synthesize continuePlayInfo = continuePlayInfo_;
 @synthesize isPlayFromRecord = isPlayFromRecord_;
-@synthesize localPlaylist,downloadIndex;
+@synthesize localPlaylist,downloadIndex, fromBaidu;
 #pragma mark Asset URL
 
 - (void)setURL:(NSURL*)URL
@@ -986,6 +987,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     NSArray *down_load_urls = [episodesInfo objectForKey:@"down_urls"];
     NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
     for (NSDictionary *dic in down_load_urls) {
+        fromBaidu = NO;
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
         NSString *source_str = [temp_dic objectForKey:@"source"];
         
@@ -1029,6 +1031,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [temp_dic setObject:@"11" forKey:@"level"];
         }
         else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            fromBaidu = YES;
             [temp_dic setObject:@"12" forKey:@"level"];
             NSArray * dURL = [temp_dic objectForKey:@"urls"];
             if (0 == dURL.count)
@@ -1075,7 +1078,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             
             NSMutableDictionary *urlandSource = [NSMutableDictionary dictionaryWithCapacity:5];
             [urlandSource setObject:sourceStr forKey:@"source"];
-            [urlandSource setObject:url_str forKey:@"url"];
+            if (url_str){
+                [urlandSource setObject:url_str forKey:@"url"];
+            }
            
             if ([type_str isEqualToString:@"hd2"]) {
                  [superClearArr addObject:urlandSource];
@@ -1160,9 +1165,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self destoryPlayer];
                 [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:NO];
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:fromBaidu], @"fromBaidu", nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebView"
                                                                     object:self
-                                                                  userInfo:nil];
+                                                                  userInfo:userInfo];
             }
 
             break;
@@ -1230,9 +1236,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self destoryPlayer];
                 [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:YES];
+                NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:fromBaidu], @"fromBaidu", nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"addWebView"
                                                                     object:self
-                                                                  userInfo:nil];
+                                                                  userInfo:userInfo];
             }
 
             break;

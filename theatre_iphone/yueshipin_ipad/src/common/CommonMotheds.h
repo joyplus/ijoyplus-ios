@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AppDelegate.h"
 @interface CommonMotheds : NSObject
-
++ (BOOL)isIphone5;
 +(BOOL)isNetworkEnbled;
 +(void)showNetworkDisAbledAlert:(UIView *)view;
 +(void)showInternetError:(NSError *)error inView:(UIView *)view;

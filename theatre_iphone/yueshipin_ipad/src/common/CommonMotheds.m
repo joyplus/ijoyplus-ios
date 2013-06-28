@@ -14,7 +14,15 @@
 #import "CMConstants.h"
 #import "TFHpple.h"
 
+#define IS_IPHONE5  ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
 @implementation CommonMotheds
+
++ (BOOL)isIphone5
+{
+    return IS_IPHONE5;
+}
+
 +(BOOL)isNetworkEnbled{
     Reachability *hostReach = [Reachability reachabilityForInternetConnection];
     if([hostReach currentReachabilityStatus]  != NotReachable){

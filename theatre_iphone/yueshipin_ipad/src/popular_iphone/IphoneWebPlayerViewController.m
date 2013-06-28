@@ -71,11 +71,11 @@
         
         
         [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(initWebView)
+                                                 selector:@selector(initWebView:)
                                                      name:@"addWebView"
                                                    object:nil];
     } else if([[AppDelegate instance].showVideoSwitch isEqualToString:@"1"]||[[AppDelegate instance].showVideoSwitch isEqualToString:@"3"]) {
-        [self initWebView];
+        [self initWebView:nil];
     }
     
 }
@@ -94,12 +94,29 @@
 }
 
 
--(void)initWebView{
+-(void)initWebView:(NSNotification *)notfication{
     CGRect bounds = [UIScreen mainScreen].bounds;
-    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-54)];
+    webView_ = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, bounds.size.height, bounds.size.width-32)];
     webView_.scalesPageToFit = YES;
     webView_.delegate = self;
-    [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
+    if (notfication) {
+        NSDictionary *userInfo = notfication.userInfo;
+        BOOL fromBaidu = ((NSNumber *)[userInfo objectForKey:@"fromBaidu"]).boolValue;
+        if (fromBaidu) {
+            NSString *boundle = [[NSBundle mainBundle] resourcePath];
+            webView_.scrollView.scrollEnabled = NO;
+            webView_.backgroundColor = [UIColor colorWithRed:218/255.0 green:218/255.0 blue:218/255.0 alpha:1];
+            if ([CommonMotheds isIphone5]) {
+                [webView_ loadHTMLString:[NSString stringWithFormat:@"<body bgcolor='#dadada'><img src='404iphone5.jpg'/></body>"] baseURL:[NSURL fileURLWithPath:boundle]];
+            } else {
+                [webView_ loadHTMLString:[NSString stringWithFormat:@"<body bgcolor='#dadada'><img src='404iphone4.jpg'/></body>"] baseURL:[NSURL fileURLWithPath:boundle]];
+            }
+        } else {
+            [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
+        }
+    } else {
+        [webView_ loadRequest:[NSURLRequest requestWithURL:webUrl_]];
+    }
     [self.view addSubview:webView_];
 }
 
