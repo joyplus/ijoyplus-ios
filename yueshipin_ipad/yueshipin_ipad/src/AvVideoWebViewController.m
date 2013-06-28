@@ -17,7 +17,7 @@
 @property (nonatomic)BOOL appeared;
 @property (nonatomic, strong)NSMutableArray *subnameArray;
 
-- (void)addWebView;
+- (void)addWebView:(BOOL)fromBaidu;
 - (void)removeWebView;
 
 @end
