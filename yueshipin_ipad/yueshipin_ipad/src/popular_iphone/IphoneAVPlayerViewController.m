@@ -2837,7 +2837,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         {
             [self.view addSubview:myHUD];
         }
-        myHUD.frame = CGRectMake(kFullWindowHeight/2 - 100,186, 200, 80);
+        //myHUD.frame = CGRectMake(kFullWindowHeight/2 - 100,186, 200, 80);
         [self.view bringSubviewToFront:myHUD];
         
         myHUD.hidden = NO;
