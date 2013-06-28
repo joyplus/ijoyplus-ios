@@ -62,10 +62,10 @@
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitle:PINDAO];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:0] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitle:YUEDAN];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:2] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
-        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab2.png" ]];
+        [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setImage:[UIImage imageNamed:@"icon_tab1.png" ]];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitle:YUEBANG];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:1] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
         [(UITabBarItem *)[self.tabBar.items objectAtIndex:4] setImage:[UIImage imageNamed:@"icon_tab4.png" ]];
