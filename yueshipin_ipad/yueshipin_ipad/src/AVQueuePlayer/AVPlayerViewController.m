@@ -82,6 +82,7 @@ static NSString * const kCurrentItemKey	= @"currentItem";
 @property (nonatomic) BOOL isAppEnterBackground;
 @property BOOL isChangeQuality;
 @property (nonatomic, strong) UIButton *trackSelect;
+@property (nonatomic) BOOL fromBaidu;
 @end
 
 @interface AVPlayerViewController (Player)
@@ -120,7 +121,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 @synthesize tableCellHeight, tableWidth, maxEpisodeNum, umengPageName,urlConnection,isAppEnterBackground, videoFormat;
 @synthesize m3u8Duration,isChangeQuality;
 @synthesize localPlaylists;
-@synthesize downloadLogoBtn;
+@synthesize downloadLogoBtn, fromBaidu;
 #pragma mark
 #pragma mark View Controller
 
@@ -396,6 +397,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
     NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
     for (NSDictionary *dic in down_load_urls) {
+        fromBaidu = NO;
         NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
         NSString *source_str = [temp_dic objectForKey:@"source"];
         if ([source_str isEqualToString:@"wangpan"]) {
@@ -425,6 +427,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         }else if ([source_str isEqualToString:@"pps"]){
             [temp_dic setObject:@"11" forKey:@"level"];
         }else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            fromBaidu = YES;
             [temp_dic setObject:@"9" forKey:@"level"];
             NSArray * dURL = [temp_dic objectForKey:@"urls"];
             if (0 == dURL.count)
@@ -613,7 +616,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (closeAll) {
         [self dismissViewControllerAnimated:YES completion:nil];
     } else {
-        [videoWebViewControllerDelegate reshowWebView];
+        [videoWebViewControllerDelegate reshowWebView:fromBaidu];
         [self.navigationController popViewControllerAnimated:NO];
     }
     

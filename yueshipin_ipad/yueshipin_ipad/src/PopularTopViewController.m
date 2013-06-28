@@ -280,8 +280,13 @@ void transferDataFromOldDbWithCatch()
     [tvTopsArray removeAllObjects];
     NSString *responseCode = [result objectForKey:@"res_code"];
     if(responseCode == nil){
-        NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        //NSArray *tempTopsArray = [result objectForKey:@"tops"];
+        NSMutableArray *tempTopsArray = [NSMutableArray arrayWithArray:[result objectForKey:@"tops"]];
         if(tempTopsArray.count > 0){
+            NSString *HiddenAVS = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:HIDDEN_AMERICAN_VIDEOS];
+            if ([HiddenAVS isEqualToString:@"1"]){
+                [tempTopsArray removeObjectAtIndex:0];
+            }
             [[CacheUtility sharedCache] putInCache:@"tv_top_list" result:result];
             [tvTopsArray addObjectsFromArray:tempTopsArray];
         }

@@ -235,6 +235,7 @@
             NSLog(@"%@", error);
             [self loadTable];
             [myHUD hide];
+            [self loadTable];
             [UIUtility showDetailError:self.view error:error];
         }];
     }    

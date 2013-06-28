@@ -462,7 +462,7 @@
                 downLoad.titleLabel.font = [UIFont systemFontOfSize:14];
                 
                 if (isloaded_) {
-                    if ([CommonMotheds getOnlineConfigValue] != 2){
+                    if ([CommonMotheds getOnlineConfigValue] == 0){
                         [cell addSubview:downLoad];
                     }
                 }

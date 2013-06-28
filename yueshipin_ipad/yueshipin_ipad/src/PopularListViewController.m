@@ -299,7 +299,7 @@
     } else if(topicType == DRAMA_TOPIC){
         pageNumber = [NSNumber numberWithInt:dramaReloads];
     }
-    NSLog(@"!!!!!!!!!!!!!!!!!!!!!!!%@",pageNumber);
+//    NSLog(@"!!!!!!!!!!!!!!!!!!!!!!!%@",pageNumber);
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: pageNumber, @"page_num", [NSNumber numberWithInt:pageSize], @"page_size", [NSNumber numberWithInt:topicType], @"topic_type", nil];
     [[AFServiceAPIClient sharedClient] getPath:kPathTops parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         NSString *responseCode = [result objectForKey:@"res_code"];

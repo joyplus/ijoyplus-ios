@@ -19,5 +19,5 @@
                        type:(NSInteger)type;
 +(int)getOnlineConfigValue;
 +(NSString *)getDownloadURLWithHTML:(NSString *)url;
-
++ (BOOL)isIphone5;
 @end

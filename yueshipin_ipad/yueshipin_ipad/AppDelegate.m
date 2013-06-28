@@ -347,6 +347,7 @@
     NSString * pageNum = [notification.userInfo objectForKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:pageNum forKey:KWXCODENUM];
     [[ContainerUtility sharedInstance] setAttribute:self.showVideoSwitch forKey:SHOW_VIDEO_SWITCH];
+    [[ContainerUtility sharedInstance] setAttribute:self.recommendAppSwich forKey:RECOMMEND_APP_SWITCH];
     [[NSNotificationCenter defaultCenter] postNotificationName:RELOAD_MENU_ITEM object:nil];
 }
 
@@ -980,7 +981,7 @@
     [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSLog(@"Successfully downloaded file to %@", filePath);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+        NSLog(@"Download Ad Error: %@", error);
         self.advUrl = nil;
         [operation cancel];
     }];
