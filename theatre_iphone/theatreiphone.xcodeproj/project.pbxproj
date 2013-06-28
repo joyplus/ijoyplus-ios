@@ -491,6 +491,8 @@
 		EB8201A01665DB750015F447 /* cb_box_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = EB82019E1665DB750015F447 /* cb_box_off@2x.png */; };
 		EB938296166878F30046A3B1 /* TimeUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = EB938295166878F20046A3B1 /* TimeUtility.m */; };
 		EB93829916688CB30046A3B1 /* WatchRecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EB93829816688CB30046A3B1 /* WatchRecordCell.m */; };
+		EBA58ECD177D350E00D3D669 /* 404iphone4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBA58ECB177D350E00D3D669 /* 404iphone4.jpg */; };
+		EBA58ECE177D350E00D3D669 /* 404iphone5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EBA58ECC177D350E00D3D669 /* 404iphone5.jpg */; };
 		EBB59CB716670A2300F646C7 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB59CB616670A2300F646C7 /* libz.dylib */; };
 		EBB59CBE16670A3E00F646C7 /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB59CB916670A3E00F646C7 /* libMobClickLibrary.a */; };
 		EBB59CBF16670A3E00F646C7 /* libUMFeedback.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EBB59CBA16670A3E00F646C7 /* libUMFeedback.a */; };
@@ -1152,6 +1154,8 @@
 		EB938295166878F20046A3B1 /* TimeUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeUtility.m; sourceTree = "<group>"; };
 		EB93829716688CB20046A3B1 /* WatchRecordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WatchRecordCell.h; sourceTree = "<group>"; };
 		EB93829816688CB30046A3B1 /* WatchRecordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WatchRecordCell.m; sourceTree = "<group>"; };
+		EBA58ECB177D350E00D3D669 /* 404iphone4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 404iphone4.jpg; path = yueshipin_ipad/Resource_iphone/404iphone4.jpg; sourceTree = SOURCE_ROOT; };
+		EBA58ECC177D350E00D3D669 /* 404iphone5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 404iphone5.jpg; path = yueshipin_ipad/Resource_iphone/404iphone5.jpg; sourceTree = SOURCE_ROOT; };
 		EBB59CB616670A2300F646C7 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		EBB59CB916670A3E00F646C7 /* libMobClickLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobClickLibrary.a; sourceTree = "<group>"; };
 		EBB59CBA16670A3E00F646C7 /* libUMFeedback.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libUMFeedback.a; sourceTree = "<group>"; };
@@ -1630,6 +1634,8 @@
 		E711EFBE16917C090051D019 /* Resource_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				EBA58ECB177D350E00D3D669 /* 404iphone4.jpg */,
+				EBA58ECC177D350E00D3D669 /* 404iphone5.jpg */,
 				E74E7E1D1754AF1300A0472C /* shengdao1_s@2x.png */,
 				E74E7E1E1754AF1300A0472C /* shengdao1@2x.png */,
 				E74E7E1F1754AF1300A0472C /* shengdao2_s@2x.png */,
@@ -2770,6 +2776,8 @@
 				E74E7E231754AF1300A0472C /* shengdao2_s@2x.png in Resources */,
 				E74E7E241754AF1300A0472C /* shengdao2@2x.png in Resources */,
 				2AECD601177091DB00C1D9DB /* Default.png in Resources */,
+				EBA58ECD177D350E00D3D669 /* 404iphone4.jpg in Resources */,
+				EBA58ECE177D350E00D3D669 /* 404iphone5.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
