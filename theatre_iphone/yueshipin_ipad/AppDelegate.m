@@ -317,7 +317,7 @@
         else if ([notificationSelected isEqualToString:@"1"]){  //parse
             PFInstallation *currentInstallation = [PFInstallation currentInstallation];
             [currentInstallation setDeviceTokenFromData:deviceToken];
-            NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IOS", @"CHANNEL_IOS1", nil];
+            NSArray *channels = [NSArray arrayWithObjects:@"", @"CHANNEL_IPHONE", nil];
             [currentInstallation addUniqueObjectsFromArray:channels forKey:@"channels"];
             if (application.applicationIconBadgeNumber != 0) {
                     application.applicationIconBadgeNumber = 0;

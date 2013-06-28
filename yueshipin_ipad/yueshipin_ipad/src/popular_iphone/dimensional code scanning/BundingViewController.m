@@ -227,6 +227,23 @@
         }
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
+    else if ([[messageDict objectForKey:@"push_type"] isEqualToString:@"33"]
+        && [[messageDict objectForKey:@"user_id"] isEqualToString:userId])
+    {
+        [MobClick event:KEY_UNBINDED];
+        //添加已绑定数据缓存
+        NSDictionary * dic = (NSDictionary *)[[ContainerUtility sharedInstance] attributeForKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[ContainerUtility sharedInstance] setAttribute:[NSDictionary dictionaryWithObjectsAndKeys:[dic objectForKey:KEY_MACADDRESS],KEY_MACADDRESS,[NSNumber numberWithBool:NO],KEY_IS_BUNDING, nil]
+                                                 forKey:[NSString stringWithFormat:@"%@_isBunding",userId]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"bundingTVSucceeded" object:nil];
+        
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:nil
+                                                         message:@"已断开与电视端的绑定"
+                                                        delegate:nil
+                                               cancelButtonTitle:@"确定"
+                                               otherButtonTitles:nil, nil];
+        [alert show];
+    }
 }
 
 - (void)connectedToServer

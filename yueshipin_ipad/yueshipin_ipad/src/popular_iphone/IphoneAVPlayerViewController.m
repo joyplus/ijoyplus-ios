@@ -138,6 +138,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
+        cloundTVButton.hidden = NO;
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
        
         NSString * nameStr = @"myQueue";
@@ -1650,6 +1651,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                            action:@selector(action:)
                  forControlEvents:UIControlEventTouchUpInside];
         [bottomToolBar_ addSubview:cloundTVButton];
+        cloundTVButton.hidden = YES;
     }
 }
 
@@ -2835,7 +2837,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         {
             [self.view addSubview:myHUD];
         }
-        myHUD.frame = CGRectMake(kFullWindowHeight/2 - 100,186, 200, 80);
+        //myHUD.frame = CGRectMake(kFullWindowHeight/2 - 100,186, 200, 80);
         [self.view bringSubviewToFront:myHUD];
         
         myHUD.hidden = NO;
@@ -2876,7 +2878,14 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 }
             }
             if (videoType_ != 1 && subnameArray.count > 0) {
-                playNum = [subnameArray indexOfObject:[continuePlayInfo_ objectForKey:@"prod_subname"]];
+                //playNum = [subnameArray indexOfObject:[continuePlayInfo_ objectForKey:@"prod_subname"]];
+                NSString *localSubname = [continuePlayInfo_ objectForKey:@"prod_subname"];
+                for (NSString *subNameStr in subnameArray) {
+                    if ([localSubname hasPrefix:subNameStr]|| [subNameStr hasPrefix:localSubname]) {
+                       playNum = [subnameArray indexOfObject:subNameStr];
+                        break;
+                    }
+                }
                 if (playNum < 0 || playNum >= subnameArray.count) {
                     playNum = 0;
                 }

@@ -1208,7 +1208,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 }
                 tempDownloadRequestOperation.downloadingSegmentIndex = downloadedNum;
                 
-                if (tempDownloadRequestOperation.downloadingSegmentIndex == [urlArr count]-1)
+                if (tempDownloadRequestOperation.downloadingSegmentIndex == [urlArr count])
                 {
                     if (range.location == NSNotFound){
                         [self saveDataBaseIntable:@"DownloadItem" withId:idStr withStatus:@"finish" withPercentage:100];
@@ -1360,6 +1360,7 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
     NSArray *down_urlsArr = [infoDic objectForKey:@"down_urls"];
     for (NSDictionary *dic in down_urlsArr) {
         NSArray *oneSourceArr = [dic objectForKey:@"urls"];
+        NSString *source = [dic objectForKey:@"source"];
         for (NSDictionary *oneUrlInfo in oneSourceArr) {
             
             NSString * str = [oneUrlInfo objectForKey:@"url"];
@@ -1369,25 +1370,81 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 tempUrl = [str stringByReplacingOccurrencesOfString:@"{now_date}" withString:[NSString stringWithFormat:@"%i", nowDate]];
             }
             NSString *type = [oneUrlInfo objectForKey:@"file"];
-            NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type", nil];
+            NSDictionary *myDic = [NSDictionary dictionaryWithObjectsAndKeys:tempUrl,@"url",type,@"type",source,@"source", nil];
             
             [allUrls_ addObject:myDic];
-            
-            //            if ([type isEqualToString:@"mp4"]) {
-            //                [mp4UrlsArr addObject:myDic];
-            //            }
-            //            else if ([type isEqualToString:@"m3u8"]){
-            //                [m3u8UrlsArr addObject:myDic];
-            //            }
         }
-        
     }
-    //   [allUrls_ addObjectsFromArray:mp4UrlsArr];
-    //   [allUrls_ addObjectsFromArray:m3u8UrlsArr];
+    
+    NSMutableArray *tempSortArr = [NSMutableArray arrayWithCapacity:5];
+    for (NSDictionary *dic in allUrls_)
+    {
+        NSMutableDictionary *temp_dic = [NSMutableDictionary dictionaryWithDictionary:dic];
+        NSString *source_str = [temp_dic objectForKey:@"source"];
+        
+        if ([source_str isEqualToString:@"wangpan"]) {
+            [temp_dic setObject:@"0.1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"le_tv_fee"]) {
+            [temp_dic setObject:@"0.2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"letv"]) {
+            [temp_dic setObject:@"1" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"fengxing"]){
+            [temp_dic setObject:@"2" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qiyi"]){
+            [temp_dic setObject:@"3" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"youku"]){
+            [temp_dic setObject:@"4" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sinahd"]){
+            [temp_dic setObject:@"5" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"sohu"]){
+            [temp_dic setObject:@"6" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"56"]){
+            [temp_dic setObject:@"7" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"qq"]){
+            [temp_dic setObject:@"8" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pptv"]){
+            [temp_dic setObject:@"9" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"pps"]){
+            [temp_dic setObject:@"10" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"m1905"]){
+            [temp_dic setObject:@"11" forKey:@"level"];
+        }
+        else if ([source_str isEqualToString:@"baidu_wangpan"]){
+            [temp_dic setObject:@"12" forKey:@"level"];
+        }
+        [tempSortArr addObject:temp_dic];
+    }
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"level" ascending:YES comparator:sortStr];
+    allUrls_ = [NSMutableArray arrayWithArray:[tempSortArr sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]]];
+    
+    
     defaultUrlInfo_ = [allUrls_ objectAtIndex:0];
     sendCount_ = 0;
     [self sendHttpRequest];
 }
+
+NSComparator sortStr = ^(id obj1, id obj2){
+    if ([obj1 floatValue] > [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedDescending;
+    }
+    
+    if ([obj1 floatValue] < [obj2 floatValue]) {
+        return (NSComparisonResult)NSOrderedAscending;
+    }
+    return (NSComparisonResult)NSOrderedSame;
+};
 
 -(void)sendHttpRequest{
     if (sendCount_ < [allUrls_ count]) {

@@ -91,6 +91,10 @@
                     fileType = @"mp4";
                 }
                 
+                if ([fileType isEqualToString:@"m3u8"])
+                {
+                    item.fileName = @"";
+                }
                 
                 if (([item.downloadURLSource isEqualToString:@"sohu"] && ([fileType isEqualToString:@"m3u8"] || [fileType isEqualToString:@"m3u"]))
                     || (![contentType hasPrefix:@"text/html"]&& contentLength.intValue > 100))

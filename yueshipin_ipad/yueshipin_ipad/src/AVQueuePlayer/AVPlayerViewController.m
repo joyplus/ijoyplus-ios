@@ -234,6 +234,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     resolution = GAO_QING;
     [self showPlayVideoView];
     
+    if (video) {
+        [self getSubname:[video objectForKey:@"episodes"]];
+    }
     [self customizeTopToolbar];
     [self customizeBottomToolbar];
     
@@ -344,8 +347,8 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
                     [self parseVideoData:[video objectForKey:@"episodes"]];
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        [self parseCurrentNum];
                         [self parseResolutionNum];
-                        [self showPlayCacheView];
                         [self sendRequest];
                     });
                 });
@@ -357,7 +360,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             [UIUtility showSystemError:self.view];
         }];
     } else {
-        
         dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
               [self parseVideoData:[video objectForKey:@"episodes"]];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -370,6 +372,21 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
 }
 
+-(void)getSubname:(NSArray *)episodeArray{
+    if (subnameArray == nil) {
+        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+        for (NSDictionary *oneEpisode in episodeArray) {
+            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+            [subnameArray addObject:tempName];
+        }
+    }
+    if (video != nil) {
+        name = [video objectForKey:@"name"];
+        if ([StringUtility stringIsEmpty:subname] && self.currentNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+        }
+    }
+}
 - (void)parseVideoData:(NSArray *)episodeArray
 {
     // 视频地址
@@ -492,19 +509,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [urlArrayDictionary setValue:plainClearArr forKey:BIAO_QING];
     [urlArrayDictionary setValue:superClearArr forKey:CHAO_QING];
     
-    if (subnameArray == nil) {
-        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for (NSDictionary *oneEpisode in episodeArray) {
-            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-            [subnameArray addObject:tempName];
-        }
-    }
-    if (video != nil) {
-        name = [video objectForKey:@"name"];
-        if ([StringUtility stringIsEmpty:subname] && self.currentNum < subnameArray.count) {
-            subname = [subnameArray objectAtIndex:self.currentNum];
-        }
-    }
     [self loadLastPlaytime];
     if (combinedArr == nil) {
         combinedArr = [[NSMutableArray alloc]initWithCapacity:10];
@@ -527,7 +531,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 - (void)parseCurrentNum
 {
     if (subnameArray.count > 0) {
-        currentNum = [subnameArray indexOfObject:subname];
+        //currentNum = [subnameArray indexOfObject:subname];
+        for (NSString *nameStr in subnameArray) {
+            if ([nameStr hasPrefix:subname]||[subname hasPrefix:nameStr]) {
+                currentNum = [subnameArray indexOfObject:nameStr];
+                break;
+            }
+        }
         if (currentNum < 0 || currentNum >= subnameArray.count) {
             currentNum = 0;
         }
