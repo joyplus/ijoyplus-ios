@@ -234,6 +234,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     resolution = GAO_QING;
     [self showPlayVideoView];
     
+    if (video) {
+      [self getSubname:[video objectForKey:@"episodes"]];
+    }
     [self customizeTopToolbar];
     [self customizeBottomToolbar];
     
@@ -373,6 +376,23 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     
 }
 
+-(void)getSubname:(NSArray *)episodeArray{
+    if (subnameArray == nil) {
+        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
+        for (NSDictionary *oneEpisode in episodeArray) {
+            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
+            [subnameArray addObject:tempName];
+        }
+    }
+    if (video != nil) {
+        name = [video objectForKey:@"name"];
+        if ([StringUtility stringIsEmpty:subname] && self.currentNum < subnameArray.count) {
+            subname = [subnameArray objectAtIndex:self.currentNum];
+        }
+    }
+}
+
+
 - (void)parseVideoData:(NSArray *)episodeArray
 {
     // 视频地址
@@ -495,19 +515,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     [urlArrayDictionary setValue:plainClearArr forKey:BIAO_QING];
     [urlArrayDictionary setValue:superClearArr forKey:CHAO_QING];
     
-    if (subnameArray == nil) {        
-        subnameArray = [[NSMutableArray alloc]initWithCapacity:10];
-        for (NSDictionary *oneEpisode in episodeArray) {
-            NSString *tempName = [NSString stringWithFormat:@"%@", [oneEpisode objectForKey:@"name"]];
-            [subnameArray addObject:tempName];
-        }
-    }
-    if (video != nil) {
-        name = [video objectForKey:@"name"];
-        if ([StringUtility stringIsEmpty:subname] && self.currentNum < subnameArray.count) {
-            subname = [subnameArray objectAtIndex:self.currentNum];
-        }
-    }
     [self loadLastPlaytime];
     if (combinedArr == nil) {
         combinedArr = [[NSMutableArray alloc]initWithCapacity:10];
