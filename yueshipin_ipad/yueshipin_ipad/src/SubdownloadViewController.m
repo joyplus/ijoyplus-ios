@@ -264,7 +264,7 @@
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         subitem.downloadStatus = @"stop";
         [DatabaseManager update:subitem];
-    } else {
+    } else if([subitem.downloadStatus isEqualToString:@"stop"] || [subitem.downloadStatus isEqualToString:@"fail"]){
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
             [UIUtility showNoSpace:self.view];
