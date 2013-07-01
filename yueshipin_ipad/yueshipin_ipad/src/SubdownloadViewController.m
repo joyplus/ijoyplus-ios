@@ -167,7 +167,7 @@
     {
         retryConut = 0;
         SubdownloadItem * tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
-        tempDownloadingItem.downloadStatus = @"error";
+        tempDownloadingItem.downloadStatus = @"fail";
         [DatabaseManager update:tempDownloadingItem];
         [[AppDelegate instance].padDownloadManager stopDownloading];
         [[AppDelegate instance].padDownloadManager startDownloadingThreads];
@@ -348,7 +348,11 @@
     } else if([item.downloadStatus isEqualToString:@"error"]){
         progressLabel.frame = CGRectMake(13, 117, 98, 25);
         progressLabel.text = @"下载片源失效";
-    } 
+    }else if ([item.downloadStatus isEqualToString:@"fail"]){
+        progressLabel.frame = CGRectMake(13, 117, 98, 25);
+        progressLabel.text = @"下载失败";
+    }
+    
     progressLabel.textAlignment = NSTextAlignmentCenter;
     progressLabel.shadowColor = [UIColor blackColor];
     progressLabel.shadowOffset = CGSizeMake(1, 1);

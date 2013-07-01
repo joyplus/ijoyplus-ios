@@ -258,7 +258,7 @@
     {
         retryConut = 0;
         DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
-        dlItem.downloadStatus = @"error";
+        dlItem.downloadStatus = @"fail";//下载失败
         [DatabaseManager update:dlItem];
         [[AppDelegate instance].padDownloadManager stopDownloading];
         [[AppDelegate instance].padDownloadManager startDownloadingThreads];
@@ -356,7 +356,7 @@
         progressLabel.text = [NSString stringWithFormat:@"暂停：%i%%", (int)(progressView.progress*100)];
         item.downloadStatus = @"stop";
         [DatabaseManager update:item];
-    } else if([item.downloadStatus isEqualToString:@"stop"]){
+    } else if([item.downloadStatus isEqualToString:@"stop"] || [item.downloadStatus isEqualToString:@"fail"]){
         [self getFreeDiskspacePercent];
         if (totalFreeSpace_ <= LEAST_DISK_SPACE) {
             [UIUtility showNoSpace:self.view];
@@ -443,6 +443,9 @@
         } else if([item.downloadStatus isEqualToString:@"error"]){
             progressLabel.frame = CGRectMake(13, 117, 98, 25);
             progressLabel.text = @"下载片源失效";
+        } else if ([item.downloadStatus isEqualToString:@"fail"]){
+            progressLabel.frame = CGRectMake(13, 117, 98, 25);
+            progressLabel.text = @"下载失败";
         }
         
         progressLabel.textAlignment = NSTextAlignmentCenter;
