@@ -95,7 +95,7 @@
     
     AVMutableAudioMix *audioMix_;
     NSArray * localPlaylist;
-    
+    UIButton *airPlayButton_;
     
 }
 @property (nonatomic, strong) UIToolbar *topToolBar;
