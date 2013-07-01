@@ -187,11 +187,12 @@
         if (array.count == 2)
         {
             tureURL = [array objectAtIndex:0];
-        }
-        NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL];
-        if (nil != downloadURL)
-        {
-            [urls addObject:downloadURL];
+            
+            NSString *downloadURL = [CommonMotheds getDownloadURLWithHTML:tureURL];
+            if (nil != downloadURL)
+            {
+                [urls addObject:[NSString stringWithFormat:@"%@|%@",downloadURL,[array objectAtIndex:1]]];
+            }
         }
     }
     return urls;

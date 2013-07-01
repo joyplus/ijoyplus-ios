@@ -224,7 +224,7 @@
         
         //        NSLog(@"%@",[dic objectForKey:@"class"]);
         //        NSLog(@"%@",[dic objectForKey:@"id"]);
-        NSLog(@"%@",[element content]);
+        //NSLog(@"%@",[element content]);
         
         if (([[dic objectForKey:@"class"] isEqualToString:@"new-dbtn"]
              && [[dic objectForKey:@"id"] isEqualToString:@"downFileButtom"]) ||
