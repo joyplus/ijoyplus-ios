@@ -416,6 +416,10 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                         change:(NSDictionary*)change
                        context:(void*)context
 {
+    if (!mPlayer.airPlayVideoActive) {
+        [self disableAirPlayButton];
+    }
+    
 	/* AVPlayerItem "status" property value observer. */
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
@@ -432,7 +436,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self syncScrubber];
                 [self disableScrubber];
                 [self disableBottomToolBarButtons];
-                [self disableAirPlayButton];
                 
                 playButton_.hidden = YES;
                 pauseButton_.hidden = NO;

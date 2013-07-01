@@ -2528,7 +2528,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         [applyTvView addSubview:airlabel];
     }
     
-    
+    if (!mPlayer.airPlayVideoActive) {
+        [self disableAirPlayButton];
+    }
 	/* AVPlayerItem "status" property value observer. */
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
@@ -2544,7 +2546,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self syncScrubber];
                 [self disableScrubber];
                 [self disablePlayerButtons];
-                [self disableAirPlayButton];
                 [mPlayer play];
             }
             break;
