@@ -655,6 +655,8 @@
     [DownLoadManager stopAndClear:itemId];
     [DatabaseManager deleteObject:item];
     [[DownLoadManager defaultDownLoadManager]waringPlus];
+    
+    [self updateDiskSpace];
 }
 
 -(void)DownLoadManagerUpdateIsDownloadingNumberwithId:(NSString *)itemId

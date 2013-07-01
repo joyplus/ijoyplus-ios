@@ -643,6 +643,7 @@
     [DownLoadManager stopAndClear:itemId];
     [DatabaseManager deleteObject:item];
     [[DownLoadManager defaultDownLoadManager]waringPlus];
+    [self updateDiskSpace];
 }
 
 #pragma mark -
