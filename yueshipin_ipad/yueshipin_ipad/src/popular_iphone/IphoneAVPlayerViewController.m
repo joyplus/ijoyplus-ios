@@ -962,6 +962,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
     else if (videoType_ == 3){
         NSDictionary *item = [episodesArr_ objectAtIndex:playNum];
+        NSLog(@"%@",[item objectForKey:@"name"]);
         titleLabel_.text = [NSString stringWithFormat:@"%@",[item objectForKey:@"name"]];
     }
     
@@ -2908,7 +2909,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                 });
             });
             
-            titleLabel_.text = nameStr_;
+            [self initWillPlayLabel];
             [tableList_ reloadData];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {

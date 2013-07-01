@@ -107,14 +107,14 @@
     
     float freePresent = [self getFreeDiskspacePercent];
     
-    UIView * innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 320 * freePresent, 18)];
+    innerView = [[UIView alloc] initWithFrame:CGRectMake(0, 1, 320 * freePresent, 18)];
     innerView.backgroundColor = [CMConstants yellowColor];//[UIColor colorWithRed:247/255.0 green:100/255.0 blue:136/255.0 alpha:1];
     innerView.tag = 12345;
     [spaceBackground addSubview:innerView];
     
     [self.view addSubview:spaceBackground];
     
-    UILabel *spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    spaceInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
     spaceInfoLabel.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",totalSpace_,totalFreeSpace_];
     spaceInfoLabel.textAlignment = NSTextAlignmentCenter;
     spaceInfoLabel.backgroundColor = [UIColor clearColor];
@@ -127,9 +127,12 @@
     downLoadManager_.downLoadMGdelegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadDataSource) name:@"DELETE_ALL_SUBITEMS_MSG" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskSpace) name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
+    
+    [self updateDiskSpace];
     
     [self initData];
     //重新将downLoadManager的代理指向self;
@@ -224,6 +227,12 @@
     float percent = (totalSpace_-totalFreeSpace_)/totalSpace_;
     
     return percent;
+}
+
+-(void)updateDiskSpace{
+    
+    innerView.frame = CGRectMake(0, 1, 320 * [self getFreeDiskspacePercent], 18);
+    spaceInfoLabel.text = [NSString stringWithFormat:@"共:%0.2fGB/ 剩余%0.2fGB",totalSpace_,totalFreeSpace_];
 }
 -(void)downloadBeginwithId:(NSString *)itemId inClass:(NSString *)className{
     if ([className isEqualToString:@"IphoneDownloadViewController"]){

@@ -2940,7 +2940,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
                              });
                     });
             
-            titleLabel_.text = nameStr_;
+            [self initWillPlayLabel];
             [tableList_ reloadData];
         }
     } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
