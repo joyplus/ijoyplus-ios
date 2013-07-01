@@ -64,6 +64,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:UPDATE_DISK_STORAGE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNoEnoughSpace) name:NO_ENOUGH_SPACE object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshDownloadView) name:@"updateDownloadView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateDiskStorage) name:APPLICATION_DID_BECOME_ACTIVE_NOTIFICATION object:nil];
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
@@ -176,6 +177,7 @@
     [AppDelegate instance].padDownloadManager.delegate = self;
     [self reloadItems];
     [MobClick beginLogPageView:DOWNLOAD];
+    [self updateDiskStorage];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
