@@ -115,7 +115,8 @@
                 }
                 else
                 {
-                    if (![StringUtility stringIsEmpty:item.url]) {
+                    if (![StringUtility stringIsEmpty:item.url])
+                    {
                         item.downloadStatus = @"start";
                         [DatabaseManager update:item];
                         NSURL *url = [NSURL URLWithString:item.url];
@@ -129,38 +130,40 @@
                         } else {
                             filePath = [NSString stringWithFormat:@"%@/%@_%@.mp4", documentsDir, item.itemId, ((SubdownloadItem *)item).subitemId];
                         }
-                        downloadingOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
-                        downloadingOperation.operationId = item.itemId;
+                        AFDownloadRequestOperation *DLOperation = [[AFDownloadRequestOperation alloc] initWithRequest:request targetPath:filePath shouldResume:YES];
+                        DLOperation.operationId = item.itemId;
                         if(item.type == 1){
-                            downloadingOperation.downloadingDelegate = delegate == nil ? self : delegate;
-                            downloadingOperation.isDownloadingType = 1;
-                            downloadingOperation.subdownloadingDelegate = nil;
-                            downloadingOperation.suboperationId = @"";
+                            DLOperation.downloadingDelegate = delegate == nil ? self : delegate;
+                            DLOperation.isDownloadingType = 1;
+                            DLOperation.subdownloadingDelegate = nil;
+                            DLOperation.suboperationId = @"";
                         } else {
-                            downloadingOperation.downloadingDelegate = nil;
-                            downloadingOperation.isDownloadingType = 2;
-                            downloadingOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
-                            downloadingOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
+                            DLOperation.downloadingDelegate = nil;
+                            DLOperation.isDownloadingType = 2;
+                            DLOperation.subdownloadingDelegate = subdelegate == nil ? self : subdelegate;
+                            DLOperation.suboperationId = ((SubdownloadItem *)item).subitemId;
                         }
                         
-                        [downloadingOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                        __block AFDownloadRequestOperation * afOperation = DLOperation;
+                        [DLOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
                             NSLog(@"Successfully downloaded file to %@", filePath);
-                            if (downloadingItem.type == 1) {
-                                [self downloadSuccess:downloadingItem.itemId];
+                            downloadingOperation = afOperation;
+                            if (afOperation.isDownloadingType == 1) {
+                                [self downloadSuccess:afOperation.operationId];
                             } else {
-                                [self downloadSuccess:downloadingItem.itemId suboperationId:((SubdownloadItem *)downloadingItem).subitemId];
+                                [self downloadSuccess:afOperation.operationId suboperationId:afOperation.suboperationId];
                             }
-                            [self stopDownloading];
+                            //[self stopDownloading];
                             //[AppDelegate instance].currentDownloadingNum --;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                             NSLog(@"Error: %@", error);
                             [operation cancel];
                         }];
-                        [downloadingOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
+                        [DLOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
                         }];
                         //[AppDelegate instance].currentDownloadingNum ++;
-                        [[AppDelegate instance].curDownloadingTask addObject:downloadingOperation];
-                        [downloadingOperation start];
+                        [[AppDelegate instance].curDownloadingTask addObject:DLOperation];
+                        [DLOperation start];
                     }
                     else
                     {
@@ -170,7 +173,7 @@
                             [finder setupWorkingUrl];
                         }
                     }
-                    break;
+                    //break;
                 }
             }
         }
@@ -187,8 +190,9 @@
         {
             if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
             {
-                [downloadingOperation setDownloadingDelegate: newdelegate];
-                [downloadingOperation setSubdownloadingDelegate: nil];
+                AFDownloadRequestOperation * DLOperation = (AFDownloadRequestOperation *)obj;
+                [DLOperation setDownloadingDelegate: newdelegate];
+                [DLOperation setSubdownloadingDelegate: nil];
             }
             else
             {
@@ -208,8 +212,9 @@
         {
             if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
             {
-                downloadingOperation.downloadingDelegate = nil;
-                downloadingOperation.subdownloadingDelegate = newdelegate;
+                AFDownloadRequestOperation * DLOperation = (AFDownloadRequestOperation *)obj;
+                DLOperation.downloadingDelegate = nil;
+                DLOperation.subdownloadingDelegate = newdelegate;
             }
             else
             {
@@ -257,7 +262,7 @@
 - (void)downloadSuccess:(NSString *)operationId
 {
     retryConut = 0;
-    downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
+    downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
     [DatabaseManager update:downloadingItem];
@@ -294,10 +299,9 @@
     else
     {
         retryConut = 0;
-        SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
-        tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
-        tempDownloadingItem.downloadStatus = @"error";
-        [DatabaseManager update:tempDownloadingItem];
+        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
+        downloadingItem.downloadStatus = @"error";
+        [DatabaseManager update:downloadingItem];
         [self stopDownloading];
         [self startNewDownloadItem];
     }
@@ -306,11 +310,10 @@
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
     retryConut = 0;
-    SubdownloadItem *tempDownloadingItem = (SubdownloadItem *)downloadingItem;
-    tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", tempDownloadingItem.itemId, tempDownloadingItem.subitemId]];
-    tempDownloadingItem.downloadStatus = @"done";
-    tempDownloadingItem.percentage = 100;
-    [DatabaseManager update:tempDownloadingItem];
+    downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
+    downloadingItem.downloadStatus = @"done";
+    downloadingItem.percentage = 100;
+    [DatabaseManager update:downloadingItem];
     [self stopDownloading];
     [self startNewDownloadItem];
 }
@@ -323,11 +326,6 @@
 
 - (void)updateProgress:(float)progress
 {
-//    if(downloadingItem.class == DownloadItem.class) {
-//        downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", downloadingItem.itemId]];
-//    } else if (downloadingItem.class == SubdownloadItem.class) {
-//        downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", downloadingItem.itemId, ((SubdownloadItem *)downloadingItem).subitemId]];
-//    }
     int thisProgress = progress * 100;
     if (thisProgress < 1 && downloadingItem.percentage != 0) {
         downloadingItem.percentage = 0;
@@ -355,6 +353,15 @@
     [downloadingOperation pause];
     [downloadingOperation cancel];
     downloadingOperation = nil;
+//    for (id obj in [AppDelegate instance].curDownloadingTask)
+//    {
+//        if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
+//        {
+//            AFDownloadRequestOperation * DLOperation = (AFDownloadRequestOperation *)obj;
+//            [DLOperation pause];
+//            [DLOperation cancel];
+//        }
+//    }
     [padM3u8DownloadManager stopDownloading];
 }
 

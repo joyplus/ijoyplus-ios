@@ -104,7 +104,11 @@
                     item.url = workingUrl;
                     item.downloadType = fileType;
                     [DatabaseManager update:item];
-                    [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+                    
+                    if ([AppDelegate instance].curDownloadingTask.count < MAX_DOWNLOADING_THREADS)
+                    {
+                        [[AppDelegate instance].padDownloadManager startDownloadingThreads];
+                    }
                 }
                 else
                 {
