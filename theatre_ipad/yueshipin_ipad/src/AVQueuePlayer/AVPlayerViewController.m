@@ -345,10 +345,13 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 //                [self parseCurrentNum];
 //                [self parseResolutionNum];
 //                [self sendRequest];
+                if (video) {
+                    [self getSubname:[video objectForKey:@"episodes"]];
+                }
                 dispatch_async( dispatch_queue_create("newQueue", NULL), ^{
+                            [self parseCurrentNum];
                             [self parseVideoData:[video objectForKey:@"episodes"]];
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                [self parseCurrentNum];
                                 [self parseResolutionNum];
                                 [self sendRequest];
                                 });
