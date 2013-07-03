@@ -2462,7 +2462,9 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     if (![self player])
     {
         [self setPlayer:[AVPlayer playerWithPlayerItem:self.mPlayerItem]];
-        [mPlayer seekToTime:lastPlayTime];
+        if (CMTIME_IS_VALID(lastPlayTime)) {            
+            [mPlayer seekToTime:lastPlayTime];
+        }
         /* Observe the AVPlayer "currentItem" property to find out when any
          AVPlayer replaceCurrentItemWithPlayerItem: replacement will/did
          occur.*/
