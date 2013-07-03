@@ -1210,6 +1210,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             else{
                 NSLog(@"没找到可播放的地址！");                
                 [self destoryPlayer];
+                [self reportErrorVideo];
                 [[UIApplication sharedApplication] setStatusBarHidden:NO];
                 [self.navigationController popViewControllerAnimated:YES];
                 NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:fromBaidu], @"fromBaidu", nil];
@@ -2478,8 +2479,15 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
 //        if (videoType_ != 1 && playNum < subnameArray.count) {
 //            subname = [subnameArray objectAtIndex:playNum];
 //        }
+        NSString *durationStr = nil;
+        if (duration == 0) {
+            durationStr = @"";
+        }
+        else{
+            durationStr = [NSString stringWithFormat:@"%d",duration];
+        }
        NSString *subname = [subnameArray objectAtIndex:playNum];
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", playUrl, @"video_url", nil];
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", durationStr, @"duration", playUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
         [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
         } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
@@ -2499,6 +2507,22 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
 }
 
+-(void)reportErrorVideo{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    NSString *subname = [subnameArray objectAtIndex:playNum];
+    NSString *tempPlayType = @"1";
+    NSString *playUrl = ((AVURLAsset *)mPlayerItem.asset).URL.absoluteString;
+    if (playUrl == nil) {
+        tempPlayType = @"2";
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", prodId_, @"prod_id", nameStr_, @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:videoType_], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", @"-1", @"duration", webPlayUrl_, @"video_url", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
+}
 //- (NSString *)getDownloadURLWithHTML:(NSString *)url
 //{
 //    NSData *htmlData = [NSData dataWithContentsOfURL:[NSURL URLWithString:url]];

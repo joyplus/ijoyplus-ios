@@ -596,6 +596,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         resolutionInvalid = YES;
         if ([defaultErrorMessage hasPrefix:@"即"]) {
             [self performSelector:@selector(showWebView) withObject:nil afterDelay:2];
+            [self reportErrorVideo];
         } else {
             if (!isDownloaded)
             {
@@ -1722,7 +1723,14 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             tempPlayType = @"2";
             tempUrl = videoHttpUrl;
         }
-        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", [NSNumber numberWithInt:duration], @"duration", tempUrl, @"video_url", nil];
+        NSString *durationStr = nil;
+        if (duration == 0) {
+            durationStr = @"";
+        }
+        else{
+            durationStr = [NSString stringWithFormat:@"%f",duration];
+        }
+        NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:playbackTime], @"playback_time", durationStr, @"duration", tempUrl, @"video_url", nil];
         [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
             [[CacheUtility sharedCache] removeObjectForKey:WATCH_RECORD_CACHE_KEY];
             [[NSNotificationCenter defaultCenter] postNotificationName:WATCH_HISTORY_REFRESH object:nil];
@@ -1730,6 +1738,25 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
             NSLog(@"zz%@", error);
         }];
     }
+}
+
+-(void)reportErrorVideo{
+    NSString *userId = (NSString *)[[ContainerUtility sharedInstance]attributeForKey:kUserId];
+    if (subname == nil && currentNum >=0 && currentNum < subnameArray.count) {
+        subname = [subnameArray objectAtIndex:currentNum];
+    }
+    NSString *tempPlayType = @"1";
+    NSString *playUrl = ((AVURLAsset *)mPlayerItem.asset).URL.absoluteString;
+    if (playUrl == nil) {
+        tempPlayType = @"2";
+    }
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys: userId, @"userid", self.prodId, @"prod_id", [video objectForKey:@"name"], @"prod_name", subname, @"prod_subname", [NSNumber numberWithInt:self.type], @"prod_type", tempPlayType, @"play_type", [NSNumber numberWithInt:0], @"playback_time", @"-1", @"duration", videoHttpUrl, @"video_url", nil];
+    [[AFServiceAPIClient sharedClient] postPath:kPathAddPlayHistory parameters:parameters success:^(AFHTTPRequestOperation *operation, id result) {
+    } failure:^(__unused AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+    
 }
 
 - (void)loadLastPlaytime
