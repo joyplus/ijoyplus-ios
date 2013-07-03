@@ -2902,8 +2902,10 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             if (videoType_ != 1 && subnameArray.count > 0) {
                 //playNum = [subnameArray indexOfObject:[continuePlayInfo_ objectForKey:@"prod_subname"]];
                 NSString *localSubname = [continuePlayInfo_ objectForKey:@"prod_subname"];
+                localSubname = [localSubname stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
                 for (NSString *subNameStr in subnameArray) {
-                    if ([localSubname hasPrefix:subNameStr]|| [subNameStr hasPrefix:localSubname]) {
+                     NSString *tempStr = [subNameStr stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                    if ([localSubname hasPrefix:tempStr]|| [tempStr hasPrefix:localSubname]) {
                        playNum = [subnameArray indexOfObject:subNameStr];
                         break;
                     }
