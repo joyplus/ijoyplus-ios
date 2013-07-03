@@ -2366,14 +2366,38 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     }
 }
 -(void)enaleAirPlayButton{
-    UIView *tempView = [mPlaybackView viewWithTag:9585403];
-    if (tempView == nil) {
-        [mPlaybackView addSubview:applyTvView];
+    if (mPlayer.airPlayVideoActive) {
+        UIView *tempView = [mPlaybackView viewWithTag:9585403];
+        if (tempView == nil) {
+            [mPlaybackView addSubview:applyTvView];
+        }
+        for (UIView *asubview in routeBtn.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
+                [btn setBackgroundImage:[UIImage imageNamed:@"route_bt_light"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
+                break;
+            }
+        }
+    } else {
+        UIView *tempView = [mPlaybackView viewWithTag:9585403];
+        [tempView removeFromSuperview];
+        for (UIView *asubview in routeBtn.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
+                [btn setBackgroundImage:[UIImage imageNamed:@"route_bt"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
+                break;
+            }
+        }
     }
-    if (airPlayButton_) {
-        [airPlayButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt_light"] forState:UIControlStateNormal];
-        [airPlayButton_ setEnabled:YES];
-    }
+
 }
 
 - (void)changeTracks:(int)atype{    //0-第1个音轨；1-第2个音轨；
@@ -2553,9 +2577,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
         airlabel.textAlignment = NSTextAlignmentCenter;
         [applyTvView addSubview:airlabel];
     }
-    if (!mPlayer.airPlayVideoActive) {
-        [self disableAirPlayButton];
-    }
+   
 	/* AVPlayerItem "status" property value observer. */
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
@@ -2592,9 +2614,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self enablePlayerButtons];
                 [self enableNextButton];
                 [self enableTracksSelectButton];
-                if (mPlayer.airPlayVideoActive){
-                    [self enaleAirPlayButton];
-                }
+                [self enaleAirPlayButton];
                 
                 [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^{
                     for (UIView *subview in playCacheView.subviews) {

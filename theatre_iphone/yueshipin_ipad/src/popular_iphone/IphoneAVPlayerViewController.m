@@ -421,9 +421,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                         change:(NSDictionary*)change
                        context:(void*)context
 {
-    if (!mPlayer.airPlayVideoActive) {
-        [self disableAirPlayButton];
-    }
+
 	/* AVPlayerItem "status" property value observer. */
 	if (context == AVPlayerDemoPlaybackViewControllerStatusObservationContext)
 	{
@@ -1882,11 +1880,35 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     }
 }
 -(void)enaleAirPlayButton{
-    [avplayerView_ addSubview:ariplayView];
-    if (airPlayButton_) {
-        [airPlayButton_ setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt_light"] forState:UIControlStateNormal];
-        [airPlayButton_ setEnabled:YES];
+    if (mPlayer.airPlayVideoActive) {
+        [avplayerView_ addSubview:ariplayView];
+        for (UIView *asubview in volumeView_.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
+                [btn setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt_light"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
+                break;
+            }
+        }
     }
+    else{
+        [ariplayView removeFromSuperview];
+        for (UIView *asubview in volumeView_.subviews) {
+            if ([NSStringFromClass(asubview.class) isEqualToString:@"MPButton"]) {
+                UIButton *btn = (UIButton *)asubview;
+                [btn setImage:nil forState:UIControlStateNormal];
+                [btn setImage:nil forState:UIControlStateHighlighted];
+                [btn setImage:nil forState:UIControlStateSelected];
+                [btn setBackgroundImage:[UIImage imageNamed:@"iphone_route_bt"] forState:UIControlStateNormal];
+                [btn setEnabled:YES];
+                break;
+            }
+        }
+    }
+
 }
 
 
