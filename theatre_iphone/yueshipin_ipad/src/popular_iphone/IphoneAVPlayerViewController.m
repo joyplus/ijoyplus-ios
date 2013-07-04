@@ -472,9 +472,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self initTimeLabelTimer];
                 [self enableBottomToolBarButtons];
                 [self enableTracksSelectButton];
-                if (mPlayer.airPlayVideoActive){
-                    [self enaleAirPlayButton];
-                }
+                [self enaleAirPlayButton];
                 //[self showToolBar];
                 
                 [mPlayer play];
