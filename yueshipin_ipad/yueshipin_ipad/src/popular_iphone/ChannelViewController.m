@@ -268,15 +268,17 @@ enum
     [self sendHttpRequest:_parameters];
 }
 
--(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey{;
+-(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey moreButton:(UIButton *)btn{;
     _filtrateView.hidden = NO;
     [_filtrateView setViewWithType:type];
     [_filtrateView setFiltrateViewCurrentKey:currentKey];
     [self.view bringSubviewToFront:_filtrateView];
+    moreButton_ = btn;
 }
 
--(void)didTapOnSegmentView{
+-(void)didTapOnSegmentViewButton:(UIButton *)btn{
     [self closeFiltrateView];
+    moreButton_ = btn;
 }
 #pragma mark -
 #pragma mark - FiltrateDelegate
@@ -384,6 +386,11 @@ enum
 - (void) scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [pullToRefreshManager_ scrollViewBegin];
+    titleButton_.selected = NO;
+    _videoTypeSeg.hidden = YES;
+    
+    moreButton_.selected = NO;
+    [self closeFiltrateView];
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     [pullToRefreshManager_ scrollViewScrolled:scrollView];

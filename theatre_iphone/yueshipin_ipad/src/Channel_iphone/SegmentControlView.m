@@ -188,7 +188,7 @@ static NSArray *SHOW_ALL_AREA = nil;
     }
     UIButton *moreBtn = (UIButton *)[_segControlBg viewWithTag:105];
     moreBtn.selected = NO;
-    [_delegate didTapOnSegmentView];
+    [_delegate didTapOnSegmentViewButton:moreBtn];
     
     NSArray *arr = nil;
     switch (videoType_) {
@@ -227,18 +227,16 @@ static NSArray *SHOW_ALL_AREA = nil;
             oneBtn.enabled = YES;
             
         }
-        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_];
+        [_delegate moreSelectWithType:videoType_ withCurrentKey:PreKey_ moreButton:btn];
     }
     else{
     
-        [_delegate didTapOnSegmentView];
+        [_delegate didTapOnSegmentViewButton:btn];
     }
     
   
 }
--(void)tapOnSelf{
-    [_delegate didTapOnSegmentView];
-}
+
 
 +(NSString *)getKeyByString:(NSString *)str{
     NSMutableArray *typeArr = [NSMutableArray arrayWithCapacity:5];

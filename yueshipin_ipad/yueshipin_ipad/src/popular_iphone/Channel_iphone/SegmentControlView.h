@@ -16,8 +16,8 @@ enum{
 
 @protocol SegmentDelegate <NSObject>
 -(void)segmentDidSelectedLabelStr:(NSString *)str withKey:(NSString *)key;
--(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey;
--(void)didTapOnSegmentView;
+-(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey moreButton:(UIButton *)btn;
+-(void)didTapOnSegmentViewButton:(UIButton *)btn;
 @end
 
 
