@@ -270,37 +270,9 @@ static NSArray *SHOW_ALL_AREA = nil;
         // Initialization code
         UIImageView *bgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, -5, 320, self.frame.size.height+5)];
         bgView.image = [[UIImage imageNamed:@"gengduo_bg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 5, 0, 40)];
+        bgView.tag = 30000;
         [self addSubview:bgView];
         
-        UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 7, 50, 20)];
-        typelabel.text = @"类型:";
-        typelabel.font = [UIFont systemFontOfSize:15];
-        typelabel.textColor = [UIColor whiteColor];
-        typelabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:typelabel];
-        
-        UILabel *arealabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 43, 50, 20)];
-        arealabel.text = @"地区:";
-        arealabel.font = [UIFont systemFontOfSize:15];
-        arealabel.textColor = [UIColor whiteColor];
-        arealabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:arealabel];
-        
-        UILabel *yearlabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 79, 50, 20)];
-        yearlabel.text = @"年份:";
-        yearlabel.font = [UIFont systemFontOfSize:15];
-        yearlabel.textColor = [UIColor whiteColor];
-        yearlabel.backgroundColor = [UIColor clearColor];
-        [self addSubview:yearlabel];
-
-        for ( int i = 0; i < 3; i++) {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            btn.frame = CGRectMake(302, 12+36*i, 9, 14);
-            [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateNormal];
-            [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateHighlighted];
-            [self addSubview:btn];
-        }
-    
         _parametersDic = [NSMutableDictionary dictionaryWithCapacity:5];
         [_parametersDic setObject:@"" forKey:@"sub_type"];
         [_parametersDic setObject:@"" forKey:@"area"];
@@ -309,14 +281,50 @@ static NSArray *SHOW_ALL_AREA = nil;
     return self;
 }
 
+-(void)setStaticBg{
+    UIImageView *bg = (UIImageView *)[self viewWithTag:30000];
+    bg.frame = CGRectMake(0, -5, 320, self.frame.size.height+5);
+    
+    UILabel *typelabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 7, 50, 20)];
+    typelabel.text = @"类型:";
+    typelabel.font = [UIFont systemFontOfSize:15];
+    typelabel.textColor = [UIColor whiteColor];
+    typelabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:typelabel];
+    
+    UILabel *arealabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 43, 50, 20)];
+    arealabel.text = @"地区:";
+    arealabel.font = [UIFont systemFontOfSize:15];
+    arealabel.textColor = [UIColor whiteColor];
+    arealabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:arealabel];
+    
+    UILabel *yearlabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 79, 50, 20)];
+    yearlabel.text = @"年份:";
+    yearlabel.font = [UIFont systemFontOfSize:15];
+    yearlabel.textColor = [UIColor whiteColor];
+    yearlabel.backgroundColor = [UIColor clearColor];
+    [self addSubview:yearlabel];
+    
+    for ( int i = 0; i < 3; i++) {
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(302, 12+36*i, 9, 14);
+        [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateNormal];
+        [btn setBackgroundImage:[UIImage imageNamed:@"jiantou_gengduo.png"] forState:UIControlStateHighlighted];
+        [self addSubview:btn];
+    }
+
+}
 -(void)setViewWithType:(int)type{
     _videoType = type;
-    
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 108);
     for (UIView *view in [self subviews]) {
-        if ([view isKindOfClass:[UIScrollView class]]) {
-            [view removeFromSuperview];
+        if (view.tag == 30000) {
+            continue;
         }
+        [view removeFromSuperview];
     }
+    [self setStaticBg];
     switch (type) {
         case TYPE_MOVIE:{
             [self setScrollViewWithItems:MOVIE_ALL_TYPE atPosition:0];
@@ -488,5 +496,21 @@ static NSArray *SHOW_ALL_AREA = nil;
         
     }
 
+}
+
+-(void)dismissWithDuration:(float)duration{
+    [UIView beginAnimations:@"dismiss" context:NULL];
+    [UIView setAnimationDuration:duration];
+    UIImageView *bg = (UIImageView *)[self viewWithTag:30000];
+    bg.frame = CGRectMake(0, -5, 320, 0);
+    self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width, 0);
+    [UIView commitAnimations];
+    
+    for (UIView *view in [self subviews]) {
+        if (view.tag == 30000) {
+            continue;
+        }
+        [view removeFromSuperview];
+    }
 }
 @end

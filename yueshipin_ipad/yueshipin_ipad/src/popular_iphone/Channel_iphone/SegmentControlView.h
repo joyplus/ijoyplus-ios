@@ -53,6 +53,8 @@ enum{
 @property (nonatomic, weak) id <FiltrateViewDelegate> delegate;
 @property (nonatomic, strong)NSMutableDictionary *parametersDic;
 @property (nonatomic, strong)NSString *currentKey;
+
+-(void)dismissWithDuration:(float)duration;
 -(void)setViewWithType:(int)type;
 -(void)setFiltrateViewCurrentKey:(NSString *)currentKey;
 @end

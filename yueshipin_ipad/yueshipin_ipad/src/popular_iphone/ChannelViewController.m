@@ -101,12 +101,14 @@ enum
     
     _videoTypeSeg = [[VideoTypeSegment alloc] initWithFrame:CGRectMake(0, 0, 320, 65)];
     _videoTypeSeg.delegate = self;
-    _videoTypeSeg.hidden = YES;
+    //_videoTypeSeg.hidden = YES;
+    [_videoTypeSeg dissmiss];
     [self.view addSubview: _videoTypeSeg];
     
     _filtrateView = [[FiltrateView alloc] initWithFrame:CGRectMake(0, 42, 320, 108)];
     _filtrateView.delegate = self;
-    _filtrateView.hidden = YES;
+    //_filtrateView.hidden = YES;
+    [_filtrateView dismissWithDuration:0];
     [self.view addSubview:_filtrateView];
     
     _tableList = [[UITableView alloc] initWithFrame:CGRectMake(0, 42, 320, kCurrentWindowHeight -44-42-48) style:UITableViewStylePlain];
@@ -191,17 +193,20 @@ enum
 }
 
 -(void)closeFiltrateView{
-   _filtrateView.hidden = YES;
+   //_filtrateView.hidden = YES;
+    [_filtrateView dismissWithDuration:0.2];
 }
 
 -(void)showSegmentControl:(UIButton *)btn{
     btn.selected = !btn.selected;
     if (btn.selected) {
-        _videoTypeSeg.hidden = NO;
+        //_videoTypeSeg.hidden = NO;
+        [_videoTypeSeg show];
         [self.view bringSubviewToFront:_videoTypeSeg];
     }
     else{
-        _videoTypeSeg.hidden = YES;
+        //_videoTypeSeg.hidden = YES;
+        [_videoTypeSeg dissmiss];
     }
     [_videoTypeSeg setSelectAtIndex:typeSelectIndex_];
     
@@ -210,8 +215,10 @@ enum
 #pragma mark - videoTypeSegmentDelegate
 -(void)videoTypeSegmentDidSelectedAtIndex:(int)index{
     typeSelectIndex_ = index;
-    _videoTypeSeg.hidden = YES;
-    _filtrateView.hidden = YES;
+    //_videoTypeSeg.hidden = YES;
+    [_videoTypeSeg dissmiss];
+   // _filtrateView.hidden = YES;
+    [_filtrateView dismissWithDuration:0.2];
     titleButton_.selected = NO;
     switch (index) {
         case 0:
@@ -269,7 +276,7 @@ enum
 }
 
 -(void)moreSelectWithType:(int)type withCurrentKey:(NSString *)currentKey moreButton:(UIButton *)btn{;
-    _filtrateView.hidden = NO;
+    //_filtrateView.hidden = NO;
     [_filtrateView setViewWithType:type];
     [_filtrateView setFiltrateViewCurrentKey:currentKey];
     [self.view bringSubviewToFront:_filtrateView];
@@ -387,7 +394,8 @@ enum
 {
     [pullToRefreshManager_ scrollViewBegin];
     titleButton_.selected = NO;
-    _videoTypeSeg.hidden = YES;
+    //_videoTypeSeg.hidden = YES;
+    [_videoTypeSeg dissmiss];
     
     moreButton_.selected = NO;
     [self closeFiltrateView];
