@@ -902,7 +902,8 @@
                     [self playVideo:0];
                 }
                 else{
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，通过微信分享后才能观看该影片哦。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，通过微信分享后才能观看该影片哦。" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:@"取消", nil];
+                    alert.tag = 30000;
                     [alert show];
                     
                 }
@@ -1228,6 +1229,35 @@
     WXShareRecord *wxShare = [[WXShareRecord alloc] init];
     wxShare.prodId = prodId_;
     [DatabaseManager save:wxShare];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 20000) {
+        if (buttonIndex == 1) {
+            [self wechatShare:WXSceneSession];
+            [MobClick event:@"ue_wechat_friend_share"];
+        }
+        else if (buttonIndex == 2){
+            [self wechatShare:WXSceneTimeline];
+            [MobClick event:@"ue_wechat_social_share"];
+        }
+    }
+    else if(alertView.tag  == 30000){
+        if (buttonIndex == 0) {
+            if ([WXApi isWXAppInstalled]) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"分享到：" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"微信好友",@"微信朋友圈", nil];
+                alert.tag = 20000;
+                [alert show];
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没有安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+        }
+
+    }
+    
 }
 
 #pragma mark -

@@ -47,4 +47,5 @@
 -(BOOL)checkNetWork;
 -(NSMutableDictionary *)checkDownloadUrls:(NSDictionary *)infoDic;
 - (void)checkCanPlayVideo;
+-(void)wechatShare:(int)sence;
 @end

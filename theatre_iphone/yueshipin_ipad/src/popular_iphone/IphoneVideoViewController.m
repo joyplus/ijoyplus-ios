@@ -310,7 +310,6 @@
     
 }
 
-
 -(void)share:(id)sender event:(UIEvent *)event{
     
     if (![self checkNetWork]) {
@@ -334,27 +333,37 @@
     UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"分享到：" delegate:self cancelButtonTitle:@"取消"
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"新浪微博",@"微信好友",@"微信朋友圈", nil];
-    [sheet showInView:self.view];
+    [sheet showFromTabBar:self.tabBarController.tabBar];
 
     
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (![self checkNetWork]) {
-        [UIUtility showNetWorkError:self.view];
-        return;
-    }
-
-    if (buttonIndex == 0) {
-        [self sinaShare];
-    }else if (buttonIndex == 1) {
-        [self wechatShare:WXSceneSession];
-        [MobClick event:@"ue_wechat_friend_share"];
-    }else if(buttonIndex == 2) {
-        [self wechatShare:WXSceneTimeline];
-        [MobClick event:@"ue_wechat_social_share"];
-    }
+        if (![self checkNetWork]) {
+            [UIUtility showNetWorkError:self.view];
+            return;
+        }
+        
+        if (buttonIndex == 0) {
+            [self sinaShare];
+        }
+        else{
+            if ([WXApi isWXAppInstalled]) {
+                if (buttonIndex == 1){
+                    [self wechatShare:WXSceneSession];
+                    [MobClick event:@"ue_wechat_friend_share"];
+                }
+                else if(buttonIndex == 2){
+                    [self wechatShare:WXSceneTimeline];
+                    [MobClick event:@"ue_wechat_social_share"];
+                }
+            }
+            else{
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，你还没用安装微信，请安装后再试。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+        }
 }
 
 -(void)sinaShare{
