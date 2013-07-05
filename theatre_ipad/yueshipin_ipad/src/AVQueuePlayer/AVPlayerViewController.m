@@ -2360,6 +2360,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 
 -(void)disableAirPlayButton{
+    routeBtn.userInteractionEnabled = NO;
     UIView *tempView = [mPlaybackView viewWithTag:9585403];
     [tempView removeFromSuperview];
     if (airPlayButton_) {
@@ -2369,6 +2370,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 }
 
 -(void)enaleAirPlayButton{
+    routeBtn.userInteractionEnabled = YES;
     if (mPlayer.airPlayVideoActive) {
         UIView *tempView = [mPlaybackView viewWithTag:9585403];
         if (tempView == nil) {
