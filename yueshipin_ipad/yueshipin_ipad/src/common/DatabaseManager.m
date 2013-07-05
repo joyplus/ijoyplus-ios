@@ -13,6 +13,7 @@
 #import "DownloadItem.h"
 #import "SubdownloadItem.h"
 #import "SegmentUrl.h"
+#import "WXShareRecord.h"
 #define DocumentsDirectory [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject]
 #define DATABASE_PATH [DocumentsDirectory stringByAppendingPathComponent:@"yueshipin.db"]
 #define OLD_DATABASE_PATH [DocumentsDirectory stringByAppendingPathComponent:@"yueshipin.sqlite3"]
@@ -149,6 +150,7 @@
     [db executeUpdate:@"alter table SubdownloadItem add  mp4SourceNum integer"];
     [db executeUpdate:@"alter table SubdownloadItem add  m3u8DownloadInfo text"];
     [db executeUpdate:@"create table if not exists SegmentUrl (itemId text, subitemId text, url text, seqNum integer)"];
+    [db executeUpdate:@"create table if not exists WXShareRecord (prodId text, extend1 text, extend2 text, extend3 integer)"];
     
     [db close];
 }
@@ -483,6 +485,10 @@
             SegmentUrl *obj = (SegmentUrl *)dbObject;
             NSArray *parameterArray = [NSArray arrayWithObjects:obj.itemId, obj.subitemId, obj.url, [NSNumber numberWithInt:obj.seqNum], nil];
             [db executeUpdate:@"insert into SegmentUrl(itemId, subitemId, url, seqNum) values (?, ?, ?, ?)"  withArgumentsInArray:parameterArray];
+        }else if (dbObject.class == WXShareRecord.class){
+            WXShareRecord *obj = (WXShareRecord *)dbObject;
+            NSArray *parameterArray = [NSArray arrayWithObjects:obj.prodId, obj.extend1, obj.extend2, [NSNumber numberWithInt:obj.extend3], nil];
+             [db executeUpdate:@"insert into WXShareRecord(prodId, extend1, extend2, extend3) values (?, ?, ?, ?)"  withArgumentsInArray:parameterArray];
         }
     }];
     [queue close];
@@ -604,5 +610,25 @@
     [db close];
     
     return totalCount;
+}
+
+
++(BOOL)isWXSharedProdId:(NSString *)prodId{
+    FMDatabase *db = [FMDatabase databaseWithPath:DATABASE_PATH];
+    if (![db open]) {
+        NSLog(@"Could not open db in DatabaseManager!");
+        return 0;
+    }
+    FMResultSet *rs = [db executeQuery:[NSString stringWithFormat:@"select count(*) totalCount from WXShareRecord where prodId = '%@'",prodId]];
+    int totalCount = 0;
+    if ([rs next]) {
+        totalCount = [rs intForColumn:@"totalCount"];
+    }
+    if (totalCount > 0) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
 }
 @end

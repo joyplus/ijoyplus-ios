@@ -23,5 +23,5 @@
 + (void)update:(NSObject *)dbObject;
 + (NSInteger)count:(Class)dbObjectClass;
 +(NSInteger)countByCriteria:(Class)dbObjectClass queryString:(NSString *)queryString;
-
++(BOOL)isWXSharedProdId:(NSString *)proid;
 @end

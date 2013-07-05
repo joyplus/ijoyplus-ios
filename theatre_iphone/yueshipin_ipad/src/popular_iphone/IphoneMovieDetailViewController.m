@@ -26,7 +26,7 @@
 #import "UIUtility.h"
 #import "DatabaseManager.h"
 #import <Parse/Parse.h>
-
+#import "WXShareRecord.h"
 #define REVIEW_VIEW_TAG (11112)
 
 @interface IphoneMovieDetailViewController ()
@@ -114,6 +114,7 @@
     [moreBtn_ setBackgroundImage:[UIImage imageNamed:@"more_off"] forState:UIControlStateSelected];
     [moreBtn_ addTarget:self action:@selector(more:) forControlEvents:UIControlEventTouchUpInside];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveWXShareRecord) name:@"WXShare" object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -896,7 +897,20 @@
     UIButton *button = (UIButton *)sender;
     switch (button.tag) {
         case 10001:{
-            [self playVideo:0];
+            if ([source_ isEqualToString:@"baidu_wangpan"]) {
+                if ([DatabaseManager isWXSharedProdId:prodId_]) {
+                    [self playVideo:0];
+                }
+                else{
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"亲，通过微信分享后才能观看该影片哦。" delegate:self cancelButtonTitle:@"我知道了" otherButtonTitles:nil, nil];
+                    [alert show];
+                    
+                }
+            }
+            else{
+                [self playVideo:0];
+            }
+
             break;
         }
         case 10002:{
@@ -1132,6 +1146,7 @@
 - (NSString *)parseDownloadUrl:(NSDictionary *)tempVideo
 {
     NSString *videoUrl;
+    source_ = [tempVideo objectForKey:@"source"];
     NSArray *urlArray =  [tempVideo objectForKey:@"urls"];
     for(NSDictionary *url in urlArray){
         if([GAO_QING isEqualToString:[url objectForKey:@"type"]]&&[@"mp4" isEqualToString:[url objectForKey:@"file"]]){
@@ -1209,7 +1224,11 @@
     
 }
 
-
+-(void)saveWXShareRecord{
+    WXShareRecord *wxShare = [[WXShareRecord alloc] init];
+    wxShare.prodId = prodId_;
+    [DatabaseManager save:wxShare];
+}
 
 #pragma mark -
 #pragma mark - FilmReviewViewCellDelegate 
@@ -1263,4 +1282,7 @@
     }];
 }
 
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 @end

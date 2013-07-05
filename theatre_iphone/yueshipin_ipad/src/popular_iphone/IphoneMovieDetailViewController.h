@@ -29,6 +29,7 @@
     NSArray *arrReviewData_;
 
     BOOL isFavority_;
+    NSString *source_;
 }
 @property (nonatomic, strong) NSDictionary *videoInfo;
 @property (nonatomic, assign) int videoType;
