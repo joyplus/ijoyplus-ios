@@ -36,7 +36,7 @@
 @synthesize displayNoSpaceFlag;
 @synthesize allDownloadItems, allSubdownloadItems;
 @synthesize padM3u8DownloadManager;
-@synthesize netWorkStatus,retryConut;
+@synthesize netWorkStatus,retryConut,retryCountInfo;
 - (id)init
 {
     self = [super init];
@@ -47,6 +47,7 @@
         netWorkStatus = [hostReach currentReachabilityStatus];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:NETWORK_CHANGED object:nil];
         retryConut = 0;
+        retryCountInfo = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -156,7 +157,15 @@
                             //[self stopDownloading];
                             //[AppDelegate instance].currentDownloadingNum --;
                         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                            NSLog(@"Error: %@", error);
+                            NSLog(@"Download mp4 file error: %@", error);
+//                            if (afOperation.isDownloadingType == 1) {
+//                                [self downloadFailure:afOperation.operationId
+//                                                error:error];
+//                            } else {
+//                                [self downloadFailure:afOperation.operationId
+//                                       suboperationId:afOperation.suboperationId
+//                                                error:error];
+//                            }
                             [operation cancel];
                         }];
                         [DLOperation setProgressiveDownloadProgressBlock:^(NSInteger bytesRead, long long totalBytesRead, long long totalBytesExpected, long long totalBytesReadForFile, long long totalBytesExpectedToReadForFile) {
@@ -233,17 +242,25 @@
         NSLog(@"网络异常");
         return;
     }
-    if (retryConut <= DOWNLOAD_FAIL_RETRY_TIME)
+    
+    NSInteger retryNum = 0;
+    if ([retryCountInfo objectForKey:operationId])
     {
-        retryConut ++;
-        [self stopDownloading];
+        retryNum = [[retryCountInfo objectForKey:operationId] intValue];
+    }
+    
+    if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryNum ++;
+        [retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:operationId];
+        //[self stopDownloading];
         [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
     }
     else
     {
-        retryConut = 0;
+        [retryCountInfo setObject:@"0" forKey:operationId];
         DownloadItem * dlItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
-        dlItem.downloadStatus = @"error";
+        dlItem.downloadStatus = @"fail";
         [DatabaseManager update:dlItem];
         [self stopDownloading];
         [self startNewDownloadItem];
@@ -261,7 +278,7 @@
 
 - (void)downloadSuccess:(NSString *)operationId
 {
-    retryConut = 0;
+    [retryCountInfo setObject:@"0" forKey:operationId];
     downloadingItem = (DownloadItem *)[DatabaseManager findFirstByCriteria:DownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@", operationId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
@@ -290,17 +307,26 @@
         NSLog(@"网络异常");
         return;
     }
-    if (retryConut <= DOWNLOAD_FAIL_RETRY_TIME)
+    
+    NSInteger retryNum = 0;
+    NSString * numberStr = [retryCountInfo objectForKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
+    if (numberStr)
     {
-        retryConut ++;
-        [self stopDownloading];
+        retryNum = [numberStr intValue];
+    }
+    
+    if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryNum ++;
+        [retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
+        //[self stopDownloading];
         [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
     }
     else
     {
-        retryConut = 0;
+        [retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
         downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
-        downloadingItem.downloadStatus = @"error";
+        downloadingItem.downloadStatus = @"fail";
         [DatabaseManager update:downloadingItem];
         [self stopDownloading];
         [self startNewDownloadItem];
@@ -309,7 +335,7 @@
 
 - (void)downloadSuccess:(NSString *)operationId suboperationId:(NSString *)suboperationId
 {
-    retryConut = 0;
+    [retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
     downloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
     downloadingItem.downloadStatus = @"done";
     downloadingItem.percentage = 100;
@@ -350,19 +376,24 @@
 - (void)stopDownloading
 {
     downloadingItem = nil;
-    [downloadingOperation pause];
-    [downloadingOperation cancel];
-    downloadingOperation = nil;
-//    for (id obj in [AppDelegate instance].curDownloadingTask)
-//    {
-//        if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
-//        {
-//            AFDownloadRequestOperation * DLOperation = (AFDownloadRequestOperation *)obj;
-//            [DLOperation pause];
-//            [DLOperation cancel];
-//        }
-//    }
-    [padM3u8DownloadManager stopDownloading];
+//    [downloadingOperation pause];
+//    [downloadingOperation cancel];
+//    downloadingOperation = nil;
+    for (id obj in [AppDelegate instance].curDownloadingTask)
+    {
+        if (![obj isKindOfClass:[NewM3u8DownloadManager class]])
+        {
+            AFDownloadRequestOperation * DLOperation = (AFDownloadRequestOperation *)obj;
+            [DLOperation pause];
+            [DLOperation cancel];
+        }
+        else
+        {
+            NewM3u8DownloadManager * m3u8Manager = (NewM3u8DownloadManager *)obj;
+            [m3u8Manager stopDownloading];
+        }
+    }
+//    [padM3u8DownloadManager stopDownloading];
 }
 
 - (float)getFreeDiskspace

@@ -365,14 +365,18 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
         [downloadItemDic_ removeObjectForKey:tempdownloadRequestOperation.operationId];
         tempdownloadRequestOperation.operationStatus = @"fail";
         
-        if (retryCount_ <= 6) {
+        if (retryCount_ <= DOWNLOAD_FAIL_RETRY_TIME) {
             if (retryTimer_ != nil) {
                 [retryTimer_ invalidate];
                 retryTimer_ = nil;
             }
             else{
                 retryCount_ ++;
-                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(retry:) userInfo:tempdownloadRequestOperation repeats:NO];
+                retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL
+                                                               target:self
+                                                             selector:@selector(retry:)
+                                                             userInfo:tempdownloadRequestOperation
+                                                              repeats:NO];
                 
             }
         }
@@ -1248,13 +1252,13 @@ static CheckDownloadUrlsManager *checkDownloadUrlsManager_;
                 [operation cancel];
                 [queue cancelAllOperations];
                 
-                if (retryCount_ <= 6) {
+                if (retryCount_ <= DOWNLOAD_FAIL_RETRY_TIME) {
                     NSArray *tempArr = [NSArray arrayWithObjects:urlArr,idStr,num,nil];
                     if (retryTimer_ != nil) {
                         [retryTimer_ invalidate];
                         retryTimer_ = nil;
                     }
-                    retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(retry:) userInfo:tempArr repeats:NO];
+                    retryTimer_ = [NSTimer scheduledTimerWithTimeInterval:DOWNLOAD_FAIL_RETRY_INTERVAL target:self selector:@selector(retry:) userInfo:tempArr repeats:NO];
                     //[self performSelector:@selector(retry:) withObject:tempArr afterDelay:10.0];
                 }
                 else{

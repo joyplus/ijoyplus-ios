@@ -157,15 +157,23 @@
         NSLog(@"网络异常");
         return;
     }
-    if (retryConut <= DOWNLOAD_FAIL_RETRY_TIME)
+    
+    NSInteger retryNum = 0;
+    NSString * numberStr = [[AppDelegate instance].padDownloadManager.retryCountInfo objectForKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
+    if (numberStr)
     {
-        retryConut ++;
-        [[AppDelegate instance].padDownloadManager stopDownloading];
+        retryNum = [numberStr intValue];
+    }
+    
+    if (retryNum <= DOWNLOAD_FAIL_RETRY_TIME)
+    {
+        retryNum ++;
+        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:[NSString stringWithFormat:@"%d",retryNum] forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
         [self performSelector:@selector(restartNewDownloading) withObject:nil afterDelay:DOWNLOAD_FAIL_RETRY_INTERVAL];
     }
     else
     {
-        retryConut = 0;
+        [[AppDelegate instance].padDownloadManager.retryCountInfo setObject:@"0" forKey:[NSString stringWithFormat:@"%@_%@",operationId,suboperationId]];
         SubdownloadItem * tempDownloadingItem = (SubdownloadItem *)[DatabaseManager findFirstByCriteria:SubdownloadItem.class queryString:[NSString stringWithFormat:@"where itemId = %@ and subitemId = '%@'", operationId, suboperationId]];
         tempDownloadingItem.downloadStatus = @"fail";
         [DatabaseManager update:tempDownloadingItem];
