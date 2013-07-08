@@ -139,7 +139,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        cloundTVButton.hidden = NO;
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
        
         NSString * nameStr = @"myQueue";
@@ -467,6 +466,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self enableBottomToolBarButtons];
                 [self enableTracksSelectButton];
                 [self enaleAirPlayButton];
+                cloundTVButton.hidden = NO;
                 NSLog(@"%@",mPlayer.airPlayVideoActive? @"YES":@"NO");
                 //[self showToolBar];
                 
@@ -1445,6 +1445,11 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
     tapGesture.numberOfTapsRequired = 1;
     tapGesture.numberOfTouchesRequired = 1;
     [avplayerView_ addGestureRecognizer:tapGesture];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+    panGesture.delegate = self;
+    [avplayerView_ addGestureRecognizer:panGesture];
+    
     [self.view addSubview:avplayerView_];
     
     ariplayView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"airplay_bg.png"]];
@@ -2209,6 +2214,53 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
             break;
     }
     
+}
+
+-(void)panAction:(UIPanGestureRecognizer *)pan{//左右拖动设置进度，上下推动设置音量；
+    CGPoint offset = [pan translationInView:avplayerView_];
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan:{
+            if (fabs(offset.x)>=fabs(offset.y)){
+              [self beginScrubbing:mScrubber];
+            }
+            break;
+        }
+        case UIGestureRecognizerStateChanged:
+            if (fabs(offset.x)>=fabs(offset.y)) {//左右拖动
+                float nowValue = mScrubber.value;
+                nowValue = nowValue + 0.05*offset.x/kFullWindowHeight;
+                if (nowValue > 1) {
+                    nowValue = 1;
+                }
+                else if (nowValue < 0){
+                    nowValue = 0;
+                }
+                mScrubber.value = nowValue;
+                [self scrub:mScrubber];
+            }
+            else{//上下拖动
+                float nowValue = [MPMusicPlayerController applicationMusicPlayer].volume;
+                nowValue = nowValue - 0.05*offset.y/320;
+                if (nowValue > 1) {
+                    nowValue = 1;
+                }
+                else if (nowValue < 0){
+                    nowValue = 0;
+                }
+                [MPMusicPlayerController applicationMusicPlayer].volume = nowValue;
+            }
+            break;
+        case UIGestureRecognizerStateEnded:{
+            if (fabs(offset.x)>=fabs(offset.y)){
+              [self endScrubbing:mScrubber];
+            }
+            break;
+        }
+        default:
+            break;
+    }
+    
+
 }
 - (void)clearPlayerData
 {

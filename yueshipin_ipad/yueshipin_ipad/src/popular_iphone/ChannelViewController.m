@@ -23,7 +23,7 @@
 #import "CommonMotheds.h"
 #import "IntroductionView.h"
 #define BUNDING_HEIGHT 35
-#define BUNDING_BUTTON_TAG 20001
+#define BUNDING_BUTTON_TAG 200001
 enum
 {
     TYPE_BUNDING_TV = 1,

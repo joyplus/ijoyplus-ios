@@ -38,7 +38,7 @@
     int preProgress_;
     int netWorkStatus;
     NSLock *lock_;
-    int retryCount_;
+    NSMutableDictionary *retryCountDic_;
     NSTimer *retryTimer_;
 }
 @property (nonatomic, weak) id<DownloadManagerDelegate>downLoadMGdelegate;
