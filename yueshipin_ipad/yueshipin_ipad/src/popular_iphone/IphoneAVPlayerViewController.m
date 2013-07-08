@@ -139,7 +139,6 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
 		mURL = URL;
         
         workingUrl_ = URL.absoluteString;
-        cloundTVButton.hidden = NO;
         AVURLAsset *asset = [AVURLAsset URLAssetWithURL:mURL options:nil];
        
         NSString * nameStr = @"myQueue";
@@ -467,6 +466,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self enableBottomToolBarButtons];
                 [self enableTracksSelectButton];
                 [self enaleAirPlayButton];
+                cloundTVButton.hidden = NO;
                 NSLog(@"%@",mPlayer.airPlayVideoActive? @"YES":@"NO");
                 //[self showToolBar];
                 

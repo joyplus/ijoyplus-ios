@@ -473,6 +473,7 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
                 [self enableBottomToolBarButtons];
                 [self enableTracksSelectButton];
                 [self enaleAirPlayButton];
+                cloundTVButton.hidden = NO;
                 //[self showToolBar];
                 
                 [mPlayer play];
@@ -1639,6 +1640,7 @@ NSComparator cmptr2 = ^(NSString *obj1, NSString * obj2){
         [cloundTVButton addTarget:self
                            action:@selector(action:)
                  forControlEvents:UIControlEventTouchUpInside];
+        cloundTVButton.hidden = YES;
         [bottomToolBar_ addSubview:cloundTVButton];
     }
 }
