@@ -115,11 +115,11 @@
     //    self.actorName3Label.textColor = CMConstants.grayColor;
     self.playLabel.frame = CGRectMake(270, 170, 80, 15);
     self.playLabel.textColor = CMConstants.grayColor;
-    self.playTimeLabel.frame = CGRectMake(310, 170, 100, 15);
+    self.playTimeLabel.frame = CGRectMake(310, 170, 170, 15);
     self.playTimeLabel.textColor = CMConstants.grayColor;
     self.regionLabel.frame = CGRectMake(270, 200, 50, 15);
     self.regionLabel.textColor = CMConstants.grayColor;
-    self.regionNameLabel.frame = CGRectMake(310, 200, 100, 15);
+    self.regionNameLabel.frame = CGRectMake(310, 200, 170, 15);
     self.regionNameLabel.textColor = CMConstants.grayColor;
     
     self.playBtn.frame = CGRectMake(265, 280, 100, 50);
