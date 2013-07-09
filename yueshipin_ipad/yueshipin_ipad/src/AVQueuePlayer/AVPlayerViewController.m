@@ -277,7 +277,12 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     tapRecognizer.numberOfTapsRequired = 1;
     tapRecognizer.delegate = self;
     tapRecognizer.cancelsTouchesInView = NO;
+    
     [self.view addGestureRecognizer:tapRecognizer];
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+    panGesture.delegate = self;
+    [self.view addGestureRecognizer:panGesture];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(systemVolumeChanged:) name:@"AVSystemController_SystemVolumeDidChangeNotification" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterBackground:) name:APPLICATION_DID_ENTER_BACKGROUND_NOTIFICATION object:nil];
@@ -2264,6 +2269,55 @@ static void *AVPlayerDemoPlaybackViewControllerCurrentItemBufferingContext = &AV
     {
         [myHUD removeFromSuperview];
     }
+}
+
+#pragma mark -
+#pragma mark panAction
+-(void)panAction:(UIPanGestureRecognizer *)pan{//左右拖动设置进度，上下推动设置音量；
+    CGPoint offset = [pan translationInView:self.view];
+    switch (pan.state) {
+        case UIGestureRecognizerStateBegan:{
+            if (fabs(offset.x)>=fabs(offset.y)){
+                [self beginScrubbing:mScrubber];
+            }
+            break;
+        }
+        case UIGestureRecognizerStateChanged:
+            if (fabs(offset.x)>=fabs(offset.y)) {//左右拖动
+                float nowValue = mScrubber.value;
+                nowValue = nowValue + 0.01*offset.x/kFullWindowHeight;
+                if (nowValue > 1) {
+                    nowValue = 1;
+                }
+                else if (nowValue < 0){
+                    nowValue = 0;
+                }
+                mScrubber.value = nowValue;
+                [self scrub:mScrubber];
+            }
+            else{//上下拖动
+                float nowValue = [MPMusicPlayerController applicationMusicPlayer].volume;
+                nowValue = nowValue - 0.02*offset.y/320;
+                if (nowValue > 1) {
+                    nowValue = 1;
+                }
+                else if (nowValue < 0){
+                    nowValue = 0;
+                }
+                [MPMusicPlayerController applicationMusicPlayer].volume = nowValue;
+            }
+            break;
+        case UIGestureRecognizerStateEnded:{
+            if (fabs(offset.x)>=fabs(offset.y)){
+                [self endScrubbing:mScrubber];
+            }
+            break;
+        }
+        default:
+            break;
+    }
+    
+    
 }
 
 #pragma mark - 
