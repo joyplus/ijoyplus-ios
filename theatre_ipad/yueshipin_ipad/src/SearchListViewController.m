@@ -417,7 +417,7 @@
             label.textColor = CMConstants.grayColor;
             label.font = [UIFont systemFontOfSize: 16];
             label.text = @"很抱歉，没有找到相关影片！";
-            [cell.contentView addSubview:label];
+            //[cell.contentView addSubview:label];
         }
         return cell;
     }
